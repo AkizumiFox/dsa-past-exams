@@ -1,0 +1,75 @@
+\ProvidesPackage{sleek-recap}[2026/11/18 v2.0 Recap and note boxes (DSA book)]
+
+%%%%%%%%%%%%%%%%
+% Requirements %
+%%%%%%%%%%%%%%%%
+
+\RequirePackage{tcolorbox}
+\RequirePackage{xcolor}
+\tcbuselibrary{skins, breakable}
+
+%%%%%%%%%%%%%%%%
+% Environments %
+%%%%%%%%%%%%%%%%
+
+% 先備書回顧：用到《C 程式設計基礎》已經講過的語法（指標、malloc、struct、遞迴）時，
+% 先用這個框把重點講一遍，並寫出是那本書的第幾章，框結束後再接本書的內容。
+% 可選參數是小標題，例如
+%   \begin{cbookrecap}[第~19~章：malloc 與 free]
+%   ...
+%   \end{cbookrecap}
+\newtcolorbox{cbookrecap}[1][]{%
+    enhanced jigsaw, breakable,
+    sharp corners, boxrule=0.5mm,
+    colback=black!3, colframe=black!65, coltext=black,
+    colbacktitle=black!65, coltitle=white, fonttitle=\bfseries,
+    title={《C 程式設計基礎》回顧\if\relax\detokenize{#1}\relax\else：#1\fi},
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    before skip=\medskipamount, after skip=\medskipamount,
+}
+
+% 作答提醒：筆試（期中考、期末考、研究所考試）寫答案時的習慣，例如追蹤要畫到
+% 哪一步、證明要寫出哪些常數。只寫作答的做法，不寫任何考試的規則或猜測。
+% 每章最多兩三個。
+\definecolor{examStroke}{HTML}{B72B35}
+\newtcolorbox{examnote}{%
+    enhanced jigsaw, breakable,
+    sharp corners, boxrule=0.5mm,
+    colback=examStroke!4, colframe=examStroke, coltext=black,
+    colbacktitle=examStroke, coltitle=white, fonttitle=\bfseries,
+    title={作答提醒},
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    before skip=\medskipamount, after skip=\medskipamount,
+}
+
+% 為什麼一定對：較長的正確性論證。第一次讀可以跳過，不影響後面寫程式。
+% 可選參數是小標題。
+\newtcolorbox{whybox}[1][]{%
+    enhanced jigsaw, breakable,
+    sharp corners, boxrule=0.4mm,
+    colback=white, colframe=black!45, coltext=black,
+    colbacktitle=black!12, coltitle=black, fonttitle=\bfseries,
+    title={為什麼一定對\if\relax\detokenize{#1}\relax\else：#1\fi（第一次讀可以跳過）},
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    before skip=\medskipamount, after skip=\medskipamount,
+}
+
+% 歷屆試題：研究所入學考試原題，題目照原卷（語言、記號、配分都不改），標題寫出處。
+% 依法令舉行之考試試題依著作權法第 9 條不得為著作權之標的。詳解放在章末「歷屆試題詳解」。
+%   \begin{pastexam}[label={px:mst-1}]{臺大資工所 113 學年度 第 5 題}
+%   ...
+%   \end{pastexam}
+% 詳解用 \pastsol{px:mst-1}{臺大資工所 113 學年度 第 5 題} 開頭。
+\newtcolorbox[auto counter, number within=chapter]{pastexam}[2][]{%
+    enhanced jigsaw, breakable,
+    sharp corners, boxrule=0.4mm,
+    colback=white, colframe=examStroke!70!black, coltext=black,
+    colbacktitle=examStroke!10, coltitle=black, fonttitle=\bfseries,
+    title={歷屆試題~\thetcbcounter\quad{\normalfont #2}},
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    before skip=\medskipamount, after skip=\medskipamount,
+    #1
+}
+\newcommand{\pastsol}[2]{\par\medskip\noindent\textbf{歷屆試題~\ref{#1}}\quad{\small #2}\par\nopagebreak\smallskip}
+
+\endinput

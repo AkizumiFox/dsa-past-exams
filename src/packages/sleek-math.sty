@@ -1,0 +1,32 @@
+\ProvidesPackage{sleek-math}[2026/11/18 v1.0 Definitions, theorems and proofs (DSA book)]
+
+% 本書不載入 sleek-theorems.sty：它依賴的 thmtools 和 2026-11 以後的 LaTeX 核心
+% 衝突（見 C++ 演算法解題 2 的 book.tex 註解）。這裡只用 amsthm 定義需要的環境。
+
+\RequirePackage{amsthm}
+\RequirePackage{xcolor}
+
+\newtheoremstyle{dsaplain}%
+  {\medskipamount}{\medskipamount}%   上下間距
+  {\normalfont}{}%                    內文字型、縮排
+  {\bfseries}{}%                      標題字型、標題後標點
+  {1em}{}%                            標題後空白、標題格式
+\theoremstyle{dsaplain}
+\newtheorem{definition}{定義}[chapter]
+\newtheorem{theorem}{定理}[chapter]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{系理}
+\newtheorem{claim}[theorem]{性質}
+
+\renewcommand{\proofname}{證明}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% 漸近符號與常用記號
+\newcommand{\bigO}{O}
+\newcommand{\bigOmega}{\Omega}
+\newcommand{\bigTheta}{\Theta}
+\newcommand{\lgn}{\lg n}
+\providecommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\providecommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+
+\endinput

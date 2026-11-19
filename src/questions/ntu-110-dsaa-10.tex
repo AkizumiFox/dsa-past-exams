@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-10}]{臺大資工所 110 學年度 第 X 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+The Knuth-Morris-Pratt (KMP) algorithm is an string-matching algorithm. Its core is the prefix
+function. Given a pattern $P[1..m]$, the prefix function for the pattern $P$ is the function
+$\pi:\{1,2,\ldots,m\}\to\{0,1,\ldots,m-1\}$. What is $\pi[7]$ for the following pattern $P$?
+\underline{\makebox[5em]{(17)}}
+
+(A) 4 \qquad (B) 5 \qquad (C) 6 \qquad (D) 7
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|c|c}
+$i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+$P[i]$ & a & b & a & b & a & b & a & b & c & a \\ \hline
+$\pi[i]$ & & & & & & & & & & \\
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) 5。
+
+前綴函數就是資結書第~27.3~節的失敗函數：$\pi[q]$ 是 $P[1..q]$ 最長的邊界（同時是真前綴和真後綴
+的字串）的長度。
+
+\textbf{直接看定義}。 $P[1..7] = \mathtt{abababa}$。 長度 $6$ 的真前綴 \texttt{ababab} 和真後綴
+\texttt{bababa} 不同；長度 $5$ 的真前綴 \texttt{ababa} 和真後綴 \texttt{ababa} 相同。 所以
+$\pi[7] = 5$。
+
+\textbf{用資結書虛擬碼~27.3 把整張表填完}（$k$ 是上一格的 $\pi$ 值，對不上就退到 $\pi[k]$）：
+\begin{itemize}
+\item $q = 2$：$k = 0$，$P[1] = \mathtt{a} \ne P[2] = \mathtt{b}$，$\pi[2] = 0$。
+\item $q = 3$ 到 $8$：每一次都是 $P[k + 1] = P[q]$（\texttt{a} 對 \texttt{a}、\texttt{b} 對 \texttt{b}
+輪流），$k$ 每次加一，$\pi[3..8] = 1, 2, 3, 4, 5, 6$。 其中 $q = 7$ 時 $k = \pi[6] = 4$，比
+$P[5] = \mathtt{a}$ 和 $P[7] = \mathtt{a}$ 相同，$\pi[7] = 5$。
+\item $q = 9$：$k = 6$，$P[7] = \mathtt{a} \ne \mathtt{c}$，退到 $k = \pi[6] = 4$；$P[5] = \mathtt{a}
+\ne \mathtt{c}$，退到 $k = \pi[4] = 2$；$P[3] = \mathtt{a} \ne \mathtt{c}$，退到 $k = \pi[2] = 0$；
+$P[1] = \mathtt{a} \ne \mathtt{c}$，$\pi[9] = 0$。
+\item $q = 10$：$k = 0$，$P[1] = \mathtt{a} = P[10]$，$\pi[10] = 1$。
+\end{itemize}
+\begin{center}
+\begin{tabular}{c|cccccccccc}
+$i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+$P[i]$ & a & b & a & b & a & b & a & b & c & a \\
+$\pi[i]$ & 0 & 0 & 1 & 2 & 3 & 4 & \textbf{5} & 6 & 0 & 1 \\
+\end{tabular}
+\end{center}
+
+逐項檢查：(A) 4 是 $\pi[6]$；(C) 6 是 $\pi[8]$；(D) 7 不可能，邊界是真前綴，$\pi[7] \le 6$。
+\end{pastsoln}

@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-06}]{臺大資工所 110 學年度 第 VI 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+There are 10 hexadecimal data, 53, 3B, 66, 43, 60, 5B, 7C, 14, 30, 37, inserted in the given
+order into an empty hash table. The table is implemented using a circular array of 10 slots, and
+one slot can only have one item. The hash function for the table is $h(k)=k \mod 9$.
+\begin{enumerate}[label=(\alph*)]
+\item Which data is the first one that occurs a collision? \underline{\makebox[5em]{(11)}}
+
+(A) 43 \qquad (B) 5B \qquad (C) 14 \qquad (D) 37
+\item If the hash table uses linear probing to resolve collisions and has no resizing
+mechanism, which position in the array is 37 inserted? \underline{\makebox[5em]{(12)}}
+
+(A) 3 \qquad (B) 8 \qquad (C) 4 \qquad (D) 0
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(11) 選 (C) 14；(12) 選 (D) 0。
+
+資料是十六進位，先換成十進位再算 $k \bmod 9$。 表有 $10$ 格（編號 $0$--$9$），但 $h(k)$ 只會是
+$0$--$8$，第 $9$ 格只有探測時才會用到。 線性探測從 $h(k)$ 開始往後一格一格找空位，超過第 $9$ 格
+繞回第 $0$ 格（資結書第~12.3~節）。
+
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+資料 & 十進位 & $h(k) = k \bmod 9$ & 探測的格子 $\to$ 放在 \\
+\midrule
+53 & $5 \cdot 16 + 3 = 83$ & $83 - 81 = 2$ & $2 \to 2$ \\
+3B & $3 \cdot 16 + 11 = 59$ & $59 - 54 = 5$ & $5 \to 5$ \\
+66 & $6 \cdot 16 + 6 = 102$ & $102 - 99 = 3$ & $3 \to 3$ \\
+43 & $4 \cdot 16 + 3 = 67$ & $67 - 63 = 4$ & $4 \to 4$ \\
+60 & $6 \cdot 16 + 0 = 96$ & $96 - 90 = 6$ & $6 \to 6$ \\
+5B & $5 \cdot 16 + 11 = 91$ & $91 - 90 = 1$ & $1 \to 1$ \\
+7C & $7 \cdot 16 + 12 = 124$ & $124 - 117 = 7$ & $7 \to 7$ \\
+14 & $1 \cdot 16 + 4 = 20$ & $20 - 18 = 2$ & $2, 3, 4, 5, 6, 7, 8 \to 8$ \\
+30 & $3 \cdot 16 + 0 = 48$ & $48 - 45 = 3$ & $3, 4, 5, 6, 7, 8, 9 \to 9$ \\
+37 & $3 \cdot 16 + 7 = 55$ & $55 - 54 = 1$ & $1, 2, \ldots, 9, 0 \to 0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(11)} 前七筆的 $h(k)$ 是 $2, 5, 3, 4, 6, 1, 7$，互不相同，都直接放進空格。 第八筆 14 的
+$h = 2$，第 $2$ 格已經有 53，是第一次碰撞，選 (C)。 (A) 43 的 $h = 4$、(B) 5B 的 $h = 1$，放進去
+的時候那一格都是空的；(D) 37 也會碰撞，但在 14 之後。
+
+\textbf{(12)} 放 37 之前，第 $1$--$9$ 格全滿（14 被推到第 $8$ 格，30 從第 $3$ 格一路推到第 $9$ 格）。
+37 的 $h = 1$，從第 $1$ 格往後探測第 $1, 2, \ldots, 9$ 格都滿，繞回第 $0$ 格才是空的，放在第 $0$ 格，
+選 (D)。 最後的表：
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+37 & 5B & 53 & 66 & 43 & 3B & 60 & 7C & 14 & 30 \\
+\bottomrule
+\end{tabular}
+\end{center}
+(A) 3、(C) 4 是 66 和 43 的格子；(B) 8 是 14 的格子。 題目說「circular array」，就是要考這一步
+繞回第 $0$ 格。
+
+\end{pastsoln}

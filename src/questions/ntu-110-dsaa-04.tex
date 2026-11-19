@@ -1,0 +1,91 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-04}]{臺大資工所 110 學年度 第 IV 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+There is a large enough array $A$ with indices $p$ and $q$ which are initialized by 0, and
+functions $f(x)$ and $g()$ are defined as follows. Array $A$ and indices $p$ and $q$ can only be
+accessed in the functions $f(x)$ and $g()$.
+\begin{quote}
+$f(x)$
+\begin{itemize}[nosep]
+\item $p\leftarrow p+1$
+\item $A[p]\leftarrow x$
+\end{itemize}
+$g()$
+\begin{itemize}[nosep]
+\item $x\leftarrow A[p]$
+\item $p\leftarrow p-1$
+\item \textbf{return} $x$
+\end{itemize}
+\end{quote}
+\begin{enumerate}[label=(\alph*)]
+\item Which data structure is operated by those functions? \underline{\makebox[5em]{(7)}}
+
+(A) Queue \qquad (B) Stack \qquad (C) Hash \qquad (D) Heap
+\item If functions $f(x)$ and $g()$ are changed as following:
+\begin{quote}
+$f(x)$
+\begin{itemize}[nosep]
+\item $A[q]\leftarrow x$
+\item $q\leftarrow q+1$
+\end{itemize}
+$g()$
+\begin{itemize}[nosep]
+\item $x\leftarrow A[p]$
+\item $p\leftarrow p+1$
+\item \textbf{return} $x$
+\end{itemize}
+\end{quote}
+Which data structure is operated by those functions? \underline{\makebox[5em]{(8)}}
+
+(A) Queue \qquad (B) Stack \qquad (C) Hash \qquad (D) Heap
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(7) 選 (B) Stack；(8) 選 (A) Queue。
+
+兩小題都沒有檢查空或滿，題目說陣列夠大，又只問是哪一種結構，下面照「呼叫都合法」來看。
+看一種結構，就看取出來的是哪一個。
+
+\textbf{(a)} 只用到 $p$。 任何時候存著的資料是 $A[1..p]$，$f$ 先把 $p$ 加一再放進 $A[p]$，
+$g$ 取出 $A[p]$ 再把 $p$ 減一，兩個操作都在同一端（$p$ 那一端）。 追蹤 $f(1)$、$f(2)$、$f(3)$、
+$g()$、$g()$：
+\begin{center}
+\begin{tabular}{lcll}
+\toprule
+操作 & $p$ & 存著的 $A[1..p]$ & 回傳 \\
+\midrule
+$f(1)$ & 1 & $1$ & \\
+$f(2)$ & 2 & $1, 2$ & \\
+$f(3)$ & 3 & $1, 2, 3$ & \\
+$g()$ & 2 & $1, 2$ & $3$ \\
+$g()$ & 1 & $1$ & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+後放進去的先出來（LIFO），是堆疊，$p$ 就是堆疊頂端，$f$ 是 push、$g$ 是 pop。 這正是資結書
+第~6.1~節用陣列做的堆疊（虛擬碼~6.1）。 選 (B)。
+
+\textbf{(b)} $p$、$q$ 一開始都是 $0$。 存著的資料是 $A[p..q-1]$：$f$ 放在 $A[q]$ 再把 $q$ 加一，
+是從後端放進去；$g$ 取出 $A[p]$ 再把 $p$ 加一，是從前端拿出來。 追蹤同樣的操作：
+\begin{center}
+\begin{tabular}{lccll}
+\toprule
+操作 & $p$ & $q$ & 存著的 $A[p..q-1]$ & 回傳 \\
+\midrule
+$f(1)$ & 0 & 1 & $1$ & \\
+$f(2)$ & 0 & 2 & $1, 2$ & \\
+$f(3)$ & 0 & 3 & $1, 2, 3$ & \\
+$g()$ & 1 & 3 & $2, 3$ & $1$ \\
+$g()$ & 2 & 3 & $3$ & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+先放進去的先出來（FIFO），是佇列，$p$ 是前端（front），$q$ 是後端（rear）。 它和資結書
+第~6.2~節的佇列只差在不繞回：$p$、$q$ 只會往右走，用過的格子不再用，所以題目要說陣列「夠大」。
+選 (A)。
+
+\textbf{其他選項}： (C) Hash 依鍵值算位置，取出要給鍵值，$g()$ 沒有參數，不是雜湊表。 (D) Heap
+（優先佇列）取出的是最大或最小的值，要比較大小、上下調整；這裡的 $f$、$g$ 完全不看 $x$ 的大小，
+取出的順序只和放進去的順序有關，不是堆積。
+\end{pastsoln}

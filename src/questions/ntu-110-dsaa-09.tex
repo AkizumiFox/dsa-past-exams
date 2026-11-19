@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-09}]{臺大資工所 110 學年度 第 IX 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+What is the value of the maximum flow for the following $st$-flow network?
+\underline{\makebox[5em]{(16)}}
+
+(A) 16 \qquad (B) 17 \qquad (C) 18 \qquad (D) 19
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2mm]},v/.style={circle,draw,inner sep=0pt,minimum size=6.4mm},w/.style={inner sep=2pt}]
+\node[v] (s) at (0,0) {s};
+\node[v] (A) at (3.1,2.3) {A};
+\node[v] (B) at (6.1,2.3) {B};
+\node[v] (C) at (3.1,0) {C};
+\node[v] (D) at (6.1,0) {D};
+\node[v] (t) at (9.1,0) {t};
+\draw[->] (s)--node[w,above left]{10}(A);
+\draw[->] (s)--node[w,below]{10}(C);
+\draw[->] (A)--node[w,above]{4}(B);
+\draw[->] (A)--node[w,left]{2}(C);
+\draw[->] (A)--node[w,above right,pos=0.5]{8}(D);
+\draw[->] (C)--node[w,below]{9}(D);
+\draw[->] (D)--node[w,right]{6}(B);
+\draw[->] (B)--node[w,above right]{10}(t);
+\draw[->] (D)--node[w,below]{10}(t);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) 19。
+
+做法：先找一個割得到上界，再找一個流量等於這個上界的流。 由最大流最小割定理（資結書定理~26.6），
+兩者相等時，這個流就是最大流。
+
+\textbf{上界}。 取 $S = \{s, C\}$、$T = \{A, B, D, t\}$。 從 $S$ 到 $T$ 的邊只有 $s \to A$（$10$）和
+$C \to D$（$9$），割的容量 $c(S, T) = 10 + 9 = 19$。 $A \to C$ 是從 $T$ 指向 $S$ 的邊，不算進割的
+容量。 任何流都不超過任何割的容量，所以最大流 $\le 19$。
+
+其他容易想到的割都比較大，例如 $\{s\}$ 是 $10 + 10 = 20$；$\{s, A, C, D, B\}$ 是 $10 + 10 = 20$；
+$\{s, A, C\}$ 是 $4 + 8 + 9 = 21$。 用程式列舉全部 $2^4 = 16$ 個 $s$--$t$ 割，最小的就是 $19$，只有
+$\{s, C\}$ 這一個。
+
+\textbf{一個流量 $19$ 的流}。 用資結書第~26.4~節的 Edmonds--Karp，每次找邊數最少的增廣路徑：
+\begin{center}
+\begin{tabular}{clc}
+\toprule
+第幾次 & 增廣路徑 & 瓶頸 \\
+\midrule
+1 & $s \to A \to B \to t$ & 4（$A \to B$） \\
+2 & $s \to A \to D \to t$ & 6（$s \to A$ 剩 6） \\
+3 & $s \to C \to D \to t$ & 4（$D \to t$ 剩 4） \\
+4 & $s \to C \to D \to B \to t$ & 5（$C \to D$ 剩 5） \\
+\bottomrule
+\end{tabular}
+\end{center}
+$4 + 6 + 4 + 5 = 19$。 每條邊的流量／容量：
+\begin{center}
+\begin{tabular}{*{9}{c}}
+\toprule
+$s A$ & $s C$ & $A B$ & $A C$ & $A D$ & $C D$ & $D B$ & $B t$ & $D t$ \\
+\midrule
+10/10 & 9/10 & 4/4 & 0/2 & 6/8 & 9/9 & 5/6 & 9/10 & 10/10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+流量守恆：$A$ 進 $10$ 出 $4 + 6$；$C$ 進 $9$ 出 $9$；$D$ 進 $6 + 9$ 出 $5 + 10$；$B$ 進 $4 + 5$
+出 $9$。 流出 $s$ 的是 $10 + 9 = 19$，和割的容量相等，所以最大流是 $19$，選 (D)。 這時剩餘網路裡
+$s$ 只能走到 $C$（$s \to C$ 還剩 $1$，$C \to D$ 已滿，$s \to A$ 已滿），找不到增廣路徑，也印證了
+$\{s, C\}$ 是最小割。
+
+(A) 16、(B) 17、(C) 18 都比上面找到的流小，不是最大流。 常見的錯是只看匯點附近：$D$ 的進入容量
+$8 + 9 = 17$、$t$ 的進入容量 $20$，都不是瓶頸；真正的瓶頸是 $C$ 只能靠 $C \to D$（$9$）送出去，
+$s \to C$ 的 $10$ 用不完。
+\end{pastsoln}

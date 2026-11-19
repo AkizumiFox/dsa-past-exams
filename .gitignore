@@ -1,0 +1,32 @@
+# build artifacts
+build/
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+*.xdv
+_minted-*/
+# 規劃文件含私有的題目資料夾名稱，不進 repo（保存在私有的題目 repo）
+PLAN.md
+*PLAN*.md
+# 題目代號與題目資料夾的對照表、題目資料：一律放在 repo 外
+*.tsv
+problems/
+tests/
+# working files
+scratchpad/
+# copyrighted reference material: never commit
+references/
+curriculum/
+pipeline/
+# secrets / local data
+.env
+*.db
+.DS_Store
+# 產生的檔案
+src/generated/

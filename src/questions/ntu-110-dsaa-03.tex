@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-03}]{臺大資工所 110 學年度 第 III 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+For questions with sequences, we constantly split the problem into a number of sub-problems that
+are smaller instances of the same problem, and we try to solve the smaller problems recursively.
+We called this type of algorithm \underline{\makebox[5em]{(6)}}
+
+(A)~Dynamic~programming \qquad (B)~Divide~and~conquer \qquad (C)~Greedy~algorithms\\
+(D)~Quicksort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+題目描述的是資結書第~17~章開頭分治法的三步：把問題切成幾個同類型、規模比較小的子問題
+（分），遞迴解每個子問題（治），再把答案組合起來（合）。 例如合併排序切成兩半、各自遞迴
+排好再合併。
+
+逐項檢查：
+\begin{itemize}
+\item (A) Dynamic programming：動態規劃也把問題拆成較小的子問題，但它用在子問題\textbf{重疊}的
+時候，關鍵是每個子問題只解一次、把答案存起來（資結書第~18.1~節）。 題目只說切開、遞迴解，
+沒有提到重疊或存表，描述的是一般的分治，錯。
+\item (B) Divide and conquer：和題目的描述一致，對。
+\item (C) Greedy algorithms：貪心法每一步做一個當下看起來最好的選擇，然後只剩\textbf{一個}子問題，
+不會把問題切成好幾個子問題分別遞迴（資結書第~19~章），錯。
+\item (D) Quicksort：快速排序是一個用分治法的排序演算法，不是一\textbf{類}演算法的名稱，錯。
+\end{itemize}
+\end{pastsoln}

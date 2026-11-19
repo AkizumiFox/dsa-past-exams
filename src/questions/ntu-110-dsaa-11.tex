@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-11}]{臺大資工所 110 學年度 第 XI 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+Many string-matching algorithms build a finite automata. Below is a partially-completed state
+transition function for a string $s$ of length 10 over the alphabet $\{A,B,C\}$. It is possible
+to reconstruct $s$ from the partial table. How many A's does the string $s$ have?
+\underline{\makebox[5em]{(18)}}
+
+(A) 4 \qquad (B) 5 \qquad (C) 6 \qquad (D) 7
+\begin{center}
+\begin{tabular}{c|cccccccccc}
+ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+A & & & & 4 & 5 & & 2 & & & \\
+B & & & & 0 & 0 & & 7 & & & 3 \\
+C & & & & 0 & 0 & & 0 & & & 10 \\
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) 7。 字串是 $s = \mathtt{AABAAABAAC}$。
+
+用資結書第~27.4~節的定義：$\delta(q, a)$ 是「$s$ 的前綴之中，是 $s[1..q]\,a$ 的後綴的最長長度」。
+它最大是 $q + 1$，而且 $\delta(q, a) = q + 1$ 若且唯若 $a = s[q + 1]$。
+
+\begin{enumerate}
+\item 往前走的格子直接給出字元：$\delta(3, \mathtt{A}) = 4$ 得 $s[4] = \mathtt{A}$；
+$\delta(4, \mathtt{A}) = 5$ 得 $s[5] = \mathtt{A}$；$\delta(6, \mathtt{B}) = 7$ 得
+$s[7] = \mathtt{B}$；$\delta(9, \mathtt{C}) = 10$ 得 $s[10] = \mathtt{C}$。
+\item $\delta(6, \mathtt{A}) = 2$：$s[1..2]$ 是 $s[1..6]\,\mathtt{A}$ 的後綴，所以 $s[2] = \mathtt{A}$、
+$s[1] = s[6]$。
+\item $\delta(9, \mathtt{B}) = 3$：$s[1..3]$ 是 $s[1..9]\,\mathtt{B}$ 的後綴，所以 $s[3] = \mathtt{B}$、
+$s[1] = s[8]$、$s[2] = s[9]$，得 $s[9] = \mathtt{A}$。
+\item $\delta(3, \mathtt{B}) = 0$：如果 $s[1] = \mathtt{B}$，長度 $1$ 的前綴 \texttt{B} 就是
+$s[1..3]\,\mathtt{B}$ 的後綴，$\delta$ 至少是 $1$；所以 $s[1] \ne \mathtt{B}$。 同理
+$\delta(3, \mathtt{C}) = 0$ 得 $s[1] \ne \mathtt{C}$。 所以 $s[1] = \mathtt{A}$，再由第 2、3 步，
+$s[6] = s[8] = \mathtt{A}$。
+\end{enumerate}
+
+合起來 $s = \mathtt{A\,A\,B\,A\,A\,A\,B\,A\,A\,C}$，\texttt{A} 在第 $1, 2, 4, 5, 6, 8, 9$ 個位置，共
+$7$ 個，選 (D)。 (A)(B)(C) 的個數都對不上這個唯一的字串。
+
+\end{pastsoln}

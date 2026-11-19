@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-01}]{臺大資工所 110 學年度 第 I 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+When CAN the worst case of Quicksort occur? \underline{\makebox[5em]{(1)}}
+
+$C_1$: Quick Sort where leftmost (or rightmost) element is always chosen as pivot\\
+$C_2$: leftmost element is chosen as pivot and array is already sorted in SAME order\\
+$C_3$: leftmost element is chosen as pivot and array is already sorted in REVERSE order
+
+(A) $C_1$ \qquad (B) $C_2$ \qquad (C) $C_1$ and $C_2$ \qquad (D) $C_2$ and $C_3$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+題目問「什麼情況下會出現最壞情況」。 $C_2$、$C_3$ 是具體的輸入，$C_1$ 只是選基準的規則，沒有
+說輸入長什麼樣子。 下面先證明 $C_2$、$C_3$ 都會出現最壞情況，再說明 $C_1$ 為什麼不算。
+
+快速排序的最壞情況是每次分割都切成 $0$ 和 $m - 1$ 個（或 $1$ 和 $m - 1$ 個），遞迴式
+$T(n) = T(n - 1) + \Theta(n)$，$T(n) = \Theta(n^2)$（資結書第~14.5~節）。 取最左邊當基準的
+分割，就是資結書虛擬碼~14.10 的 \proc{Hoare-Partition}（$x \gets A[p]$），用它來追蹤。
+
+\textbf{$C_2$：已經由小到大排好}。 基準 $x = A[p]$ 是整段的最小值。 $i$ 停在 $p$（$A[p] < x$
+不成立）；$j$ 從 $r$ 往左走，經過的數都 $> x$，一路走到 $p$ 才停。 $i \ge j$，回傳 $j = p$，
+切成 $A[p..p]$ 和 $A[p+1..r]$，大小 $1$ 和 $m - 1$。 右邊那段仍然由小到大排好，下一層又是
+同樣的情形，每一層只少一個數。
+
+\textbf{$C_3$：由大到小排好}。 以 $A = \langle 5, 4, 3, 2, 1\rangle$ 為例：
+\begin{itemize}
+\item 第一層：$x = 5$ 是最大值。 $i$ 停在第 $1$ 格，$j$ 停在第 $5$ 格（$1 > 5$ 不成立），交換
+得 $\langle 1, 4, 3, 2, 5\rangle$。 接著 $i$ 往右走到第 $5$ 格（$4, 3, 2$ 都 $< 5$），$j$ 停在
+第 $4$ 格（$2 > 5$ 不成立）。 $i \ge j$，回傳 $4$，切成 $\langle 1, 4, 3, 2\rangle$ 和
+$\langle 5\rangle$。
+\item 第二層：$\langle 1, 4, 3, 2\rangle$ 的基準 $x = 1$ 是最小值，和 $C_2$ 一樣切成
+$\langle 1\rangle$ 和 $\langle 4, 3, 2\rangle$。
+\item $\langle 4, 3, 2\rangle$ 又是由大到小排好，回到第一層的情形。
+\end{itemize}
+一般的 $n$ 也一樣：基準輪流是最大值和最小值，每一層都切成 $m - 1$ 和 $1$，遞迴深度 $n - 1$，
+總時間 $\Theta(n^2)$。 改用「最左邊當基準」的 Lomuto 分割也一樣：由小到大時每次都切成 $0$ 和
+$m - 1$；由大到小時基準也是輪流為最大值和最小值，比較次數都是 $n(n - 1)/2$。
+
+\textbf{$C_1$}：固定取最左邊（或最右邊）當基準時，最壞情況「有可能」發生，但要看輸入，
+$C_2$、$C_3$ 正是會發生的那些輸入。 $C_1$ 本身沒有說出「什麼時候」，題目要的是情況，所以
+不選它。 就算把 $C_1$ 當成對的，(C) 也漏掉了 $C_3$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $C_1$：只是選基準的規則，見上。 錯。
+\item (B) $C_2$：$C_2$ 對，但漏了同樣會出現最壞情況的 $C_3$。 錯。
+\item (C) $C_1$ and $C_2$：漏了 $C_3$。 錯。
+\item (D) $C_2$ and $C_3$：兩種輸入都讓每一層切得最偏，對。
+\end{itemize}
+四個選項裡只有 (D) 含 $C_3$，而 $C_3$ 一定會出現最壞情況，所以答案是 (D)。
+
+\end{pastsoln}

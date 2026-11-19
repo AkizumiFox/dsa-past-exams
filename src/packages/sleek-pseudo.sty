@@ -1,0 +1,73 @@
+\ProvidesPackage{sleek-pseudo}[2026/11/18 v1.0 CLRS-style pseudocode boxes]
+
+%%%%%%%%%%%%%%%%
+% Requirements %
+%%%%%%%%%%%%%%%%
+
+\RequirePackage{tcolorbox}
+\tcbuselibrary{breakable}
+\RequirePackage[noend]{algpseudocode}
+\RequirePackage{xspace}
+
+%%%%%%%%%%%%
+% Settings %
+%%%%%%%%%%%%
+% 本書虛擬碼的慣例（第 1 章 1.2 節會對讀者說明一次）：
+%   - 程序名稱用小型大寫，例如 \textproc{Insertion-Sort}；
+%   - 指定用 \gets（←），比較相等用 =，和 C 的 = / == 分開；
+%   - 陣列從 1 開始編號，A[1..n]；
+%   - 用縮排表示區塊，不寫 end for / end if（noend）；
+%   - 註解寫在行尾，以 // 開頭。
+
+\algrenewcommand\alglinenumber[1]{{\footnotesize\color{black!55}#1}}
+\algrenewcommand{\algorithmiccomment}[1]{\hfill{\color{black!55}// #1}}
+% 程序開頭只印名稱和參數，不印 procedure 這個字。
+\algrenewcommand\algorithmicprocedure{}
+\algrenewcommand\algorithmicfunction{}
+% 關鍵字用粗體英文，和多數教科書、考卷一致。
+\algrenewcommand\algorithmicdo{\textbf{do}}
+\algrenewcommand\algorithmicthen{\textbf{then}}
+\algrenewcommand\algorithmicreturn{\textbf{return}}
+\algnewcommand\To{\textbf{to}\space}
+\algnewcommand\DownTo{\textbf{downto}\space}
+\algnewcommand\Break{\textbf{break}}
+\algnewcommand\Error[1]{\textbf{error} ``#1''}
+\algnewcommand\AND{\textbf{and}\xspace}  % xspace 補回控制字後面被吃掉的空白
+\algnewcommand\OR{\textbf{or}\xspace}
+\algnewcommand\NIL{\textsc{nil}}
+\algnewcommand\TRUE{\textsc{true}}
+% DFS 的三種顏色（第 21 章起用到，放在這裡單章編譯也找得到）
+\providecommand{\gtrwhite}{\textsc{white}}
+\providecommand{\gtrgray}{\textsc{gray}}
+\providecommand{\gtrblack}{\textsc{black}}
+\algnewcommand\FALSE{\textsc{false}}
+% 行內提到程序名稱：\proc{Insertion-Sort}
+\newcommand{\proc}[1]{\textproc{#1}}
+
+%%%%%%%%%%%%%%%%
+% Environments %
+%%%%%%%%%%%%%%%%
+% 虛擬碼框：「虛擬碼 <章>.<編號>：<說明>」，有自己的計數器，不和範例共用。
+% 框內直接寫 algorithmic 的內容（已經包好 \begin{algorithmic}[1]），例如
+%   \begin{pseudo}[label=alg:insertion]{插入排序}
+%   \Procedure{Insertion-Sort}{$A, n$}
+%     \For{$i \gets 2$ \To $n$} ... \EndFor
+%   \EndProcedure
+%   \end{pseudo}
+% extract_code.py 不會抽這個環境。
+\newtcolorbox[auto counter, number within=chapter]{pseudobox}[2][]{%
+    title={\textbf{虛擬碼~\thetcbcounter：}#2},
+    sharp corners, breakable,
+    colback=white, colframe=black!65,
+    colbacktitle=black!8, coltitle=black,
+    left=3mm, right=3mm, top=1.5mm, bottom=1.5mm,
+    before skip=\medskipamount, after skip=\medskipamount,
+    #1
+}
+\newenvironment{pseudo}[2][]{%
+    \begin{pseudobox}[#1]{#2}\begin{algorithmic}[1]%
+}{%
+    \end{algorithmic}\end{pseudobox}%
+}
+
+\endinput

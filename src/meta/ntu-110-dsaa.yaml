@@ -1,0 +1,21 @@
+paper: ntu-110-dsaa
+volume: 1
+school: 臺大
+dept: 資工所
+year: 110
+subject: 資料結構與演算法（A）
+instructions: 本試卷共 20 題選擇題，作答於答案卡。每題答對 5 分，不答零分，答錯倒扣 2.5 分。
+questions:
+  - {id: ntu-110-dsaa-01, label: 第 I 題, chapter: 14}
+  - {id: ntu-110-dsaa-02, label: 第 II 題, chapter: 18}
+  - {id: ntu-110-dsaa-03, label: 第 III 題, chapter: 17}
+  - {id: ntu-110-dsaa-04, label: 第 IV 題, chapter: 6}
+  - {id: ntu-110-dsaa-05, label: 第 V 題, chapter: 7}
+  - {id: ntu-110-dsaa-06, label: 第 VI 題, chapter: 12}
+  - {id: ntu-110-dsaa-07, label: 第 VII 題, chapter: 5}
+  - {id: ntu-110-dsaa-08, label: 第 VIII 題, chapter: 24}
+  - {id: ntu-110-dsaa-09, label: 第 IX 題, chapter: 26}
+  - {id: ntu-110-dsaa-10, label: 第 X 題, chapter: 27}
+  - {id: ntu-110-dsaa-11, label: 第 XI 題, chapter: 27}
+  - {id: ntu-110-dsaa-12, label: 第 XII 題, chapter: 28}
+  - {id: ntu-110-dsaa-13, label: 第 XIII 題, chapter: 28}

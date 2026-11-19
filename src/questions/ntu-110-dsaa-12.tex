@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-12}]{臺大資工所 110 學年度 第 XII 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+What can you infer from the facts that \textsc{ProblemA} is NP-complete and \textsc{ProblemA}
+linear-time reduces to \textsc{ProblemB}? \underline{\makebox[5em]{(19)}}
+
+$C_1$: If there exists an $O(N^3)$ algorithm for \textsc{ProblemB}, then $P=NP$.\\
+$C_2$: If there does not exist an $O(N^3)$ algorithm for \textsc{ProblemB}, then $P\neq NP$.\\
+$C_3$: If there exists an $O(N^3)$ algorithm for \textsc{ProblemB}, then there exists an
+$O(N^3)$ algorithm for \textsc{ProblemA}.\\
+$C_4$: If there exists an $O(N^3)$ algorithm for \textsc{ProblemA}, then there exists an
+$O(N^3)$ algorithm for \textsc{ProblemB}.
+
+(A) $C_1$ and $C_3$ \qquad (B) $C_1$ and $C_4$ \qquad (C) $C_2$ and $C_3$ \qquad (D) $C_2$ and $C_4$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+「$A$ linear-time reduces to $B$」是說：有一個 $O(N)$ 時間的轉換，把 $A$ 的任何長度 $N$ 的輸入 $x$
+轉成 $B$ 的輸入 $f(x)$，而且 $x$ 的答案是「是」若且唯若 $f(x)$ 的答案是「是」（資結書第~28.3~節）。
+轉換只花 $O(N)$ 時間，寫出來的 $f(x)$ 長度也只有 $O(N)$。 歸約的方向是：$B$ 好解，$A$ 就好解；
+反過來不成立。 下面寫 $A$、$B$ 代表 \textsc{ProblemA}、\textsc{ProblemB}。
+
+\textbf{$C_3$ 對}。 設 $B$ 有 $O(N^3)$ 的演算法。 解 $A$ 的輸入 $x$（長度 $N$）：先花 $O(N)$ 算出
+$f(x)$，長度 $|f(x)| \le cN$；再用 $B$ 的演算法解 $f(x)$，花 $O((cN)^3) = O(N^3)$。 總共
+$O(N) + O(N^3) = O(N^3)$。 這裡用到歸約是\textbf{線性}時間：如果轉換要 $\Theta(N^2)$ 時間、輸出長度
+$\Theta(N^2)$，就只能得到 $O(N^6)$。
+
+\textbf{$C_1$ 對}。 由 $C_3$，$A$ 有 $O(N^3)$ 的演算法，所以 $A \in \mathrm{P}$。 $A$ 是 NP 完備的，
+由資結書定理~28.5（有一個 NP 完備問題在 P 裡，則 $\mathrm{P} = \mathrm{NP}$），得
+$\mathrm{P} = \mathrm{NP}$。
+
+\textbf{$C_2$、$C_4$ 推不出來}。 兩句都是想從 $A$ 的情形推 $B$ 的情形，方向反了：$B$ 可以比 $A$
+難得多。 舉一個符合題目條件的 $B$：停機問題（給一支程式和輸入，問它會不會停）。 資結書第~28.4~節
+把公式 $\varphi$ 轉成「試遍所有指派，找到滿足的就停，否則無窮迴圈」的程式，說明 SAT 能歸約到停機問題。
+同樣的做法對任何 NP 裡的 $A$ 都行：把 $x$ 轉成「試遍所有可能的憑證，用 $A$ 的驗證程式檢查，通過就停，
+否則無窮迴圈」這支程式。 程式碼是固定的一段，只要把 $x$ 接上去，轉換是線性時間。 所以 $B$ 取停機問題時
+題目的兩個條件都成立，而停機問題根本沒有演算法。
+\begin{itemize}
+\item $C_2$：$B$ 取停機問題時，「$B$ 沒有 $O(N^3)$ 的演算法」是真的，但這和 P 是否等於 NP 無關，
+推不出 $\mathrm{P} \ne \mathrm{NP}$。 換個角度看：$C_1$ 的逆否命題是「若 $\mathrm{P} \ne \mathrm{NP}$，
+則 $B$ 沒有 $O(N^3)$ 的演算法」；$C_2$ 把這句話的前後顛倒，是它的逆命題，不能由它推得。
+\item $C_4$：就算 $A$ 有 $O(N^3)$ 的演算法，$B$ 是停機問題時仍然沒有任何演算法。
+\end{itemize}
+
+逐項檢查：(A) $C_1$ 和 $C_3$ 都對，選 (A)。 (B) 含 $C_4$、(C) 含 $C_2$、(D) 兩個都含，都錯。
+\end{pastsoln}

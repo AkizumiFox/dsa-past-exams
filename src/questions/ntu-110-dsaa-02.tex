@@ -1,0 +1,117 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-02}]{臺大資工所 110 學年度 第 II 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+A typical dynamic programming example is the snake sequence. Given a grid of numbers, find
+maximum length snake sequence and print it. A snake sequence is made up of adjacent numbers in
+the grid such that for each number, the number on the right or the number below it is +1 or -1
+its value. For example, if you are at location (x, y) in the grid, you can either move right
+i.e. (x+1, y) if that number is $\pm$ 1 or move down i.e. (x, y+1) if that number is $\pm$ 1.
+The length of a snake sequence is defined as the number of moves. Given the following grid (A
+matrix with $M$ rows and $N$ columns),
+\begin{quote}
+9, 6, 5, 2\\
+8, 7, 6, 5\\
+7, 3, 1, 6\\
+1, 1, 1, 7
+\end{quote}
+\begin{enumerate}[label=(\alph*)]
+\item The maximum LENGTH of snake sequence is \underline{\makebox[5em]{(2)}}
+
+(A) 6 \qquad (B) 7 \qquad (C) 5 \qquad (D) 4
+\item Time complexity of above solution is \underline{\makebox[5em]{(3)}}
+
+(A) $O(M\times N)$ \qquad (B) $O(M^2)$ \qquad (C) $O(N^2)$ \qquad (D) $O(M)$
+\item The last number of the maximum-length snake sequence is \underline{\makebox[5em]{(4)}}
+
+(A) 9(0,0) \qquad (B) 6(3,2) \qquad (C) 7(3,3) \qquad (D) 1(2,3) \qquad (E) 7(0,2)
+\item The third number of the maximum-length snake sequence is \underline{\makebox[5em]{(5)}}
+
+(A) 7(1,1) \qquad (B) 7(0,2) \qquad (C) 3(1,2) \qquad (D) 6(2,1) \qquad (E) 8(0,1)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(2) 選 (A) 6；(3) 選 (A) $O(M \times N)$；(4) 選 (C) 7(3,3)；(5) 選 (A) 7(1,1)。
+
+\textbf{座標}。 題目說往右是 $(x+1, y)$、往下是 $(x, y+1)$，所以 $x$ 是行（column）、$y$ 是
+列（row），都從 $0$ 開始。 選項也是這樣標的，例如 8(0,1) 是第 $0$ 行、第 $1$ 列的 $8$，
+7(0,2) 是左下方那個 $7$。 下面寫 $G(x, y)$ 表示格子裡的數。
+
+\textbf{子問題}（資結書第~18.1.5~節的步驟）。 令 $L(x, y)$ 是「結尾在 $(x, y)$ 的蛇」最長的長度
+（步數）。 長度至少 $1$ 的蛇走到 $(x, y)$ 的最後一步，不是從左邊 $(x-1, y)$ 往右，就是從上面
+$(x, y-1)$ 往下，而且去掉最後一步，剩下的是結尾在那一格的蛇。 所以
+\[
+L(x, y) = \max\Bigl(0,\;
+\underbrace{L(x-1, y) + 1}_{\text{若 } x > 0 \text{ 且 } |G(x,y) - G(x-1,y)| = 1},\;
+\underbrace{L(x, y-1) + 1}_{\text{若 } y > 0 \text{ 且 } |G(x,y) - G(x,y-1)| = 1}\Bigr),
+\]
+條件不成立的那一項不列入。 要的答案是所有 $L(x, y)$ 的最大值。 $L(x, y)$ 只用到左邊和上面的格子，
+一列一列、每列由左到右填就行。
+
+\begin{pseudo}{最長蛇形序列（索引從 $0$ 開始，和題目的座標一致）}
+\Function{Longest-Snake}{$G, M, N$}
+    \For{$y \gets 0$ \To $M - 1$}
+        \For{$x \gets 0$ \To $N - 1$}
+            \State $L[x, y] \gets 0$
+            \If{$x > 0$ \AND $|G[x, y] - G[x-1, y]| = 1$}
+                \State $L[x, y] \gets \max(L[x, y],\, L[x-1, y] + 1)$
+            \EndIf
+            \If{$y > 0$ \AND $|G[x, y] - G[x, y-1]| = 1$}
+                \State $L[x, y] \gets \max(L[x, y],\, L[x, y-1] + 1)$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return $L$ 的最大值和它的位置
+\EndFunction
+\end{pseudo}
+
+\textbf{填表}。 左邊是格子，右邊是 $L$，排法和格子一樣（第 $y$ 列、第 $x$ 行）：
+\begin{center}
+\begin{tabular}{c|cccc}
+$G$ & $x{=}0$ & $1$ & $2$ & $3$ \\ \hline
+$y{=}0$ & 9 & 6 & 5 & 2 \\
+$1$ & 8 & 7 & 6 & 5 \\
+$2$ & 7 & 3 & 1 & 6 \\
+$3$ & 1 & 1 & 1 & 7 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|cccc}
+$L$ & $x{=}0$ & $1$ & $2$ & $3$ \\ \hline
+$y{=}0$ & 0 & 0 & 1 & 0 \\
+$1$ & 1 & 2 & 3 & 4 \\
+$2$ & 2 & 0 & 0 & 5 \\
+$3$ & 0 & 0 & 0 & \textbf{6} \\
+\end{tabular}
+\end{center}
+逐列說明：
+\begin{itemize}
+\item $y = 0$：只能從左邊來。 $6$ 和 $9$ 差 $3$，$L = 0$；$5$ 和 $6$ 差 $1$，$L(2,0) = L(1,0) + 1 = 1$；
+$2$ 和 $5$ 差 $3$，$L = 0$。
+\item $y = 1$：$8$ 從上面的 $9$ 來，$L = 1$。 $7$ 從上面的 $6$ 來得 $0 + 1 = 1$，從左邊的 $8$ 來得
+$1 + 1 = 2$，取 $2$。 $6$ 從上面的 $5$ 來得 $2$，從左邊的 $7$ 來得 $3$，取 $3$。 $5$ 上面是 $2$
+（差 $3$），從左邊的 $6$ 來得 $4$。
+\item $y = 2$：$7$ 從上面的 $8$ 來，$2$。 $3$ 和上面的 $7$、左邊的 $7$ 都差 $4$，$0$。 $1$ 和上面的
+$6$、左邊的 $3$ 都接不上，$0$。 $6$ 從上面的 $5$ 來得 $5$（左邊的 $1$ 接不上）。
+\item $y = 3$：三個 $1$ 和上面、左邊都差 $0$ 或差 $\ge 2$，都是 $0$。 $7$ 從上面的 $6$ 來得 $6$。
+\end{itemize}
+
+最大值是 $L(3, 3) = 6$。 從 $(3, 3)$ 往回找每一格是從哪裡來的：$(3,3) \leftarrow (3,2) \leftarrow
+(3,1) \leftarrow (2,1) \leftarrow (1,1) \leftarrow (0,1) \leftarrow (0,0)$，正著寫就是
+\[
+9(0,0) \to 8(0,1) \to 7(1,1) \to 6(2,1) \to 5(3,1) \to 6(3,2) \to 7(3,3).
+\]
+七個數、六步。 用程式列舉所有蛇，長度 $6$ 的只有這一條，所以「最長的那條」沒有歧義。
+
+\textbf{(2)} 長度是步數 $6$，選 (A)。 (B) 7 是把數的個數當成長度；(C)、(D) 比最長的短。
+
+\textbf{(3)} 每一格只看左邊和上面兩格，$O(1)$；共 $MN$ 格，回頭找路徑最多 $M + N$ 步，總共
+$O(M \times N)$，選 (A)。 其他三個都不對：每一格都可能在最長的蛇上，至少要把 $MN$ 個數讀過一遍。
+$M = 1$、$N$ 很大時，(B) $O(M^2)$ 和 (D) $O(M)$ 都是常數，讀不完 $N$ 個數；$N = 1$、$M$ 很大時，
+(C) $O(N^2)$ 也一樣。
+
+\textbf{(4)} 最後一個數是 7(3,3)，選 (C)。 (A) 9(0,0) 是第一個數；(B) 6(3,2) 是倒數第二個；
+(D) 1(2,3) 和 (E) 7(0,2) 不在這條蛇上。
+
+\textbf{(5)} 第三個數是 7(1,1)，選 (A)。 (E) 8(0,1) 是第二個，(D) 6(2,1) 是第四個，(B) 7(0,2)
+和 (C) 3(1,2) 不在這條蛇上。
+\end{pastsoln}

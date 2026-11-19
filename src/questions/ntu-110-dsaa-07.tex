@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-07}]{臺大資工所 110 學年度 第 VII 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+There is a linked-list with $n$ elements, which are $x_1,x_2,\ldots,x_n$. Let $f(n)$ be the time
+complexity of inserting a new element $x_{n+1}$ to the tail of the list, and $g(n)$ be that of
+deleting the last element $x_n$. If there is only one pointer pointed to the head of the list,
+we know to access the list is time-consuming, and functions $f(n)$ and $g(n)$ are denoted as
+$f_1(n)$ and $g_1(n)$ in this case. To improve it, we may also add another pointer pointed to
+the tail of it, so the functions $f(n)$ and $g(n)$ become $f_2(n)$ and $g_2(n)$. Which of the
+following option is false if $n$ becomes large. \underline{\makebox[5em]{(13)}}
+
+(A) $\frac{f_1(n)}{g_1(n)}=1$ \qquad (B) $\frac{f_2(n)}{g_2(n)}=n$ \qquad
+(C) $\frac{f_1(n)}{f_2(n)}=n$ \qquad (D) $\frac{g_1(n)}{g_2(n)}=1$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+題目沒有說是哪一種串列。 它說刪掉最後一個元素要花時間、而且只多一個 tail 指標，這裡照單向
+串列來解（最後說明為什麼不是雙向）。 選項寫的「$= 1$」「$= n$」不能照字面當成比值，應該讀成
+成長的階數：「$= 1$」是分子和分母同階，「$= n$」是分子比分母多一個 $n$ 的因子。
+
+四個函數（資結書第~5.2~節的比較表就是這四格）：
+\begin{itemize}
+\item $f_1(n) = \Theta(n)$：只有 head，要把 $x_{n+1}$ 接到 $x_n$ 後面，得先從 head 走 $n - 1$ 步
+找到 $x_n$。
+\item $g_1(n) = \Theta(n)$：刪 $x_n$ 要把 $x_{n-1}.\mathit{next}$ 設成 \NIL，得先從 head 走到
+$x_{n-1}$。
+\item $f_2(n) = \Theta(1)$：$\mathit{tail}.\mathit{next} \gets x_{n+1}$，$\mathit{tail} \gets x_{n+1}$。
+\item $g_2(n) = \Theta(n)$：刪掉 $x_n$ 之後 tail 要改成指向 $x_{n-1}$，單向串列不能從 $x_n$ 往回走，
+還是得從 head 找 $x_{n-1}$。 多一個 tail 指標對刪除最後一個沒有幫助。
+\end{itemize}
+
+逐項檢查：
+\begin{itemize}
+\item (A) $f_1 / g_1 = \Theta(n) / \Theta(n)$，同階，對。
+\item (B) $f_2 / g_2 = \Theta(1) / \Theta(n) = \Theta(1/n)$，不是 $n$，\textbf{錯}。 加了 tail 之後
+變快的只有插入，刪除沒有變。
+\item (C) $f_1 / f_2 = \Theta(n) / \Theta(1) = \Theta(n)$，對。
+\item (D) $g_1 / g_2 = \Theta(n) / \Theta(n)$，同階，對。
+\end{itemize}
+
+如果是雙向串列，$g_2$ 會變成 $\Theta(1)$（$x_n.\mathit{prev}$ 就是 $x_{n-1}$），這時 (D) 的比值是
+$n$，也錯了，單選題會有兩個答案。 所以題意是單向串列。
+\end{pastsoln}

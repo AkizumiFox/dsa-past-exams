@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-110-dsaa-05}]{臺大資工所 110 學年度 第 V 題}
+（單選；每格答對 5 分，答錯倒扣 2.5 分）
+
+There is a binary tree stored in an array as:
+\[T[\,]=\{+,a,*,null,null,-,d,null,null,null,null,b,c\},\]
+in which $T[i]$ is the parent of $T[2i+1]$ and $T[2i+2]$, where $i$ is an index and $null$
+means there is no element in the slot.
+\begin{enumerate}[label=(\alph*)]
+\item What is its postorder traversal result? \underline{\makebox[5em]{(9)}}
+
+(A) $+a*-dbc$ \qquad (B) $a+b-c*d$ \qquad (C) $abc-d*+$ \qquad (D) $+a*-bcd$
+\item What is its BFS traversal result? \underline{\makebox[5em]{(10)}}
+
+(A) $+a*-dbc$ \qquad (B) $a+b-c*d$ \qquad (C) $abc-d*+$ \qquad (D) $+a*-bcd$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(9) 選 (C) $abc-d*+$；(10) 選 (A) $+a*-dbc$。
+
+陣列從 $0$ 開始，$T[i]$ 的子節點是 $T[2i + 1]$、$T[2i + 2]$，就是資結書第~7.2.1~節表格裡「從
+$0$ 開始（C）」那一欄。 逐格還原：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$i$ & $T[i]$ & 子節點的格子 & 說明 \\
+\midrule
+0 & $+$ & 1、2 & 根，左 $a$、右 $*$ \\
+1 & $a$ & 3、4 & 兩格都是 null，$a$ 是葉節點 \\
+2 & $*$ & 5、6 & 左 $-$、右 $d$ \\
+5 & $-$ & 11、12 & 左 $b$、右 $c$ \\
+6 & $d$ & 13、14 & 超出陣列，$d$ 是葉節點 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$T[3..4]$ 是 $a$ 的兩個空位；$T[7..10]$ 是 $T[3]$、$T[4]$（本身就不存在）的子節點位置，所以也是
+null。 樹是 $+\bigl(a,\; *(-(b, c),\; d)\bigr)$，也就是運算式 $a + (b - c) * d$ 的運算式樹：
+
+\begin{center}
+\begin{tikzpicture}[
+    btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=6.5mm, inner sep=0pt, font=\small},
+    btop/.style={btn, fill=memFill, draw=memStroke},
+    level distance=10mm, edge from parent/.style={draw=black!60, thick},
+    level 1/.style={sibling distance=22mm}, level 2/.style={sibling distance=14mm},
+    level 3/.style={sibling distance=9mm}]
+\node[btop] {$+$}
+    child {node[btn] {$a$}}
+    child {node[btop] {$*$}
+        child {node[btop] {$-$} child {node[btn] {$b$}} child {node[btn] {$c$}}}
+        child {node[btn] {$d$}}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{(9)} 後序（左、右、根）：先是 $a$；接著 $*$ 的子樹，先 $-$ 的子樹 $b\;c\;-$，再 $d$，
+最後 $*$；最後是根 $+$。 得到 $a\;b\;c\;-\;d\;*\;+$，選 (C)。
+
+\textbf{(10)} BFS 就是層序。 用陣列存時，層序正好是索引由小到大、跳過 null 的順序：
+$+\;a\;*\;-\;d\;b\;c$，選 (A)。
+
+另外兩個選項也各有來歷：(B) $a+b-c*d$ 是中序，(D) $+a*-bcd$ 是前序。 四種走訪都寫出來核對一次，
+可以確定沒有畫錯樹。
+\end{pastsoln}
