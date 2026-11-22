@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:gk3-103-ds-05}]{高考三級資訊處理 103 年 第五題}
+（申論；15 分）
+
+若處理的資料，其數值均不同且已知均為 1 到 100 之間的整數或小數。若 K$\leqq$X$<$K+1，集合 Lx 代表數值
+在[K,K-1]間全部資料，1$\leqq$K$\leqq$99, K 為整數，資料結構支援下列功能。
+\begin{enumerate}[leftmargin=3em, label=\textit{\arabic*.}]
+\item Insert(X)：增加 X，若 X 不存在 Lx 中。
+\item Delete(X)：移除 X，若 X 存在 Lx 中。
+\item List(X)：將 Lx 中的資料全部依序印出。
+\end{enumerate}
+設計一資料結構滿足在最差情況的條件分析（Worst Case Analysis），每個功能的執行時間要求為：
+Insert(X) and Delete(X)須在 O(log | Lx |)時間內完成，List(X)則須在 O(| Lx |)時間內完成。
+請說明設計的資料結構為何？並解釋其執行時間為何滿足需求？（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題意。} 原卷的「[K,K-1]」是筆誤，從前一句「K$\leqq$X$<$K+1」看，Lx 是和 X 落在同一個單位區間
+$[K, K+1)$ 的全部資料，$K = \lfloor X \rfloor$。 另外 X$=100$ 時 $\lfloor X \rfloor = 100$ 超出
+$1 \le K \le 99$，下面把它併進 $K = 99$ 那一組（也就是最後一組是 $[99, 100]$）。
+
+\textbf{資料結構：陣列＋每格一棵平衡二元搜尋樹。}
+\begin{itemize}
+\item 開一個大小 99 的陣列 $B[1..99]$，$B[K]$ 是一棵 AVL 樹（或紅黑樹，資結書第~10.2、10.3~節）
+的根，存所有落在 $[K, K+1)$ 的資料。 一開始每格都是空樹。
+\item 對任一個 X，先算 $K = \min(\lfloor X \rfloor, 99)$，$B[K]$ 這棵樹的內容就是 Lx。
+\end{itemize}
+
+\textbf{三個操作。}
+\begin{itemize}
+\item Insert(X)：算出 $K$，在 $B[K]$ 這棵 AVL 樹裡搜尋 X；找不到就插入並做旋轉調整。
+\item Delete(X)：算出 $K$，在 $B[K]$ 裡搜尋 X；找到就刪除並調整。
+\item List(X)：算出 $K$，對 $B[K]$ 做中序走訪印出。 二元搜尋樹的中序走訪就是由小到大
+（資結書定理~9.1），所以是「依序」印出。
+\end{itemize}
+
+\textbf{時間分析（最差情況）。} 算 $K$ 是一次取整數，$O(1)$；用 $K$ 直接存取陣列 $B[K]$ 也是
+$O(1)$。 之後的工作只在 Lx 這棵樹上做，和其他區間有多少資料無關。
+\begin{itemize}
+\item AVL 樹 $m$ 個節點時高度不超過約 $1.44 \lg(m+2)$（資結書定理~10.1），也就是 $O(\log m)$。
+搜尋、插入、刪除都只沿著一條從根往下的路徑走，再沿路往上做至多 $O(\log m)$ 次旋轉，每次旋轉
+$O(1)$。 取 $m = |\text{Lx}|$，Insert、Delete 都是最差 $O(\log |\text{Lx}|)$。
+\item 中序走訪每個節點進出各一次，時間 $\Theta(|\text{Lx}|)$，滿足 $O(|\text{Lx}|)$。
+\end{itemize}
+（Lx 是空的時候，Insert 只是建一個根節點，List 什麼都不印，都是 $O(1)$；上面的界寫成
+$O(\log |\text{Lx}| + 1)$、$O(|\text{Lx}| + 1)$ 比較嚴謹。）
+
+\textbf{為什麼不用別的。} 只用一棵平衡樹存全部資料，操作是 $O(\log n)$，$n$ 是總筆數，達不到
+$O(\log|\text{Lx}|)$；List 要先找到區間起點再走 $|\text{Lx}|$ 個，也多了 $O(\log n)$。 每個區間用
+排序好的串列，List 是 $O(|\text{Lx}|)$，但插入要先找位置，最差 $O(|\text{Lx}|)$。 用普通二元搜尋樹，
+最差情況會退化成一條鏈，也只有 $O(|\text{Lx}|)$。 所以每格要用\textbf{平衡}的搜尋樹，題目要求的是
+最差情況。
+\end{pastsoln}

@@ -1,0 +1,34 @@
+paper: nchu-114-dsa
+volume: 2
+school: 中興
+dept: 資工所甲組
+year: 114
+subject: 資料結構與演算法
+instructions: ※本科目依簡章規定「不可以」使用計算機。Part1：單選題，每題 3 分，未答題得 0 分，答錯不倒扣 (60\%)（本大題請於答案卡畫記作答，否則不予計分。）PART 2：計算題 40\%（本大題請於答案卷作答，否則不予計分。）
+questions:
+  - {id: nchu-114-dsa-01, label: 單選題第 1 題, chapter: 15}
+  - {id: nchu-114-dsa-02, label: 單選題第 2 題, chapter: 14}
+  - {id: nchu-114-dsa-03, label: 單選題第 3 題, chapter: 18}
+  - {id: nchu-114-dsa-04, label: 單選題第 4 題, chapter: 25}
+  - {id: nchu-114-dsa-05, label: 單選題第 5 題, chapter: 28}
+  - {id: nchu-114-dsa-06, label: 單選題第 6 題, chapter: 27}
+  - {id: nchu-114-dsa-07, label: 單選題第 7 題, chapter: 14}
+  - {id: nchu-114-dsa-08, label: 單選題第 8 題, chapter: 18}
+  - {id: nchu-114-dsa-09, label: 單選題第 9 題, chapter: 21}
+  - {id: nchu-114-dsa-10, label: 單選題第 10 題, chapter: 22}
+  - {id: nchu-114-dsa-11, label: 單選題第 11 題, chapter: 6}
+  - {id: nchu-114-dsa-12, label: 單選題第 12 題, chapter: 5}
+  - {id: nchu-114-dsa-13, label: 單選題第 13 題, chapter: 9}
+  - {id: nchu-114-dsa-14, label: 單選題第 14 題, chapter: 6}
+  - {id: nchu-114-dsa-15, label: 單選題第 15 題, chapter: 12}
+  - {id: nchu-114-dsa-16, label: 單選題第 16 題, chapter: 11}
+  - {id: nchu-114-dsa-17, label: 單選題第 17 題, chapter: 10}
+  - {id: nchu-114-dsa-18, label: 單選題第 18 題, chapter: 10}
+  - {id: nchu-114-dsa-19, label: 單選題第 19 題, chapter: 6}
+  - {id: nchu-114-dsa-20, label: 單選題第 20 題, chapter: 21}
+  - {id: nchu-114-dsa-21, label: 計算題第 1 題, chapter: 19}
+  - {id: nchu-114-dsa-22, label: 計算題第 2 題, chapter: 14}
+  - {id: nchu-114-dsa-23, label: 計算題第 3 題, chapter: 9}
+  - {id: nchu-114-dsa-24, label: 計算題第 4 題, chapter: 24}
+  - {id: nchu-114-dsa-25, label: 計算題第 5 題, chapter: 8}
+  - {id: nchu-114-dsa-26, label: 計算題第 6 題, chapter: 3}

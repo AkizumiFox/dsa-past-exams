@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-06}]{臺大資工所 111 學年度 第 6 題}
+（單選）
+
+(5 points) Which of the following is NOT an in-place sorting algorithm (in their standard
+implementations)?
+\begin{enumerate}[label=(\Alph*)]
+\item bubble sort
+\item insertion sort
+\item merge sort
+\item heap sort
+\item all choices are in-place sorting algorithms
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) merge sort。
+
+原地（in place）排序指除了輸入陣列以外，只用 $O(1)$ 個元素大小的額外空間（資結書第~14.1~節）。
+\begin{itemize}
+\item (A) 氣泡排序：只交換相鄰的兩格，額外只用一個暫存變數，原地。
+\item (B) 插入排序：把 $\mathit{key}$ 存起來，前面比它大的往右挪一格，額外 $O(1)$，原地。
+\item (C) 合併排序：標準的陣列版本在合併兩段時要把資料搬到另一個長度 $n$ 的輔助陣列
+（資結書虛擬碼~14.4），額外空間 $\Theta(n)$，\textbf{不是}原地。 （串列版本不需要輔助陣列，
+但題目說的是標準實作。）
+\item (D) 堆積排序：堆積就建在輸入陣列裡，每次把根和最後一格交換再往下調整，額外 $O(1)$，原地
+（資結書第~14.6~節）。
+\item (E)：(C) 不是原地，所以 (E) 錯。
+\end{itemize}
+\end{pastsoln}

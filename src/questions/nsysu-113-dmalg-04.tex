@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-04}]{中山資工所資安組 113 學年度 第 4 題}
+（計算）
+
+(10\%) Find the generating function for the sequence 1, 2, 3, 4, 5, 5, 5, \ldots.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\displaystyle \frac{1 - x^5}{(1 - x)^2} = \frac{1 + x + x^2 + x^3 + x^4}{1 - x}$。
+
+數列是 $a_k = \min(k + 1, 5)$，$k = 0, 1, 2, \ldots$。 拆成兩部分：
+\[
+a_k = (k + 1) - \max(k - 4,\, 0) .
+\]
+已知 $\sum_{k \ge 0} (k + 1) x^k = \frac{1}{(1 - x)^2}$（把 $\frac{1}{1-x}$ 平方，或逐項微分）。 後一部分在
+$k \ge 5$ 時是 $k - 4 = (k - 5) + 1$，所以
+\[
+\sum_{k \ge 5} (k - 4) x^k = x^5 \sum_{j \ge 0} (j + 1) x^j = \frac{x^5}{(1 - x)^2} .
+\]
+相減得
+\[
+A(x) = \sum_{k \ge 0} a_k x^k = \frac{1 - x^5}{(1 - x)^2} .
+\]
+再用 $1 - x^5 = (1 - x)(1 + x + x^2 + x^3 + x^4)$ 約掉一個 $1 - x$，得第二種寫法。 第二種寫法也可以直接看出來：
+$\frac{1}{1 - x}$ 乘一個多項式等於把多項式的係數做前綴和，$1, 1, 1, 1, 1, 0, 0, \ldots$ 的前綴和正是
+$1, 2, 3, 4, 5, 5, 5, \ldots$。
+
+檢查：$(1 + x + x^2 + x^3 + x^4)(1 + x + x^2 + \cdots)$ 中 $x^k$ 的係數是 $\min(k + 1, 5)$，前幾項
+$1 + 2x + 3x^2 + 4x^3 + 5x^4 + 5x^5 + \cdots$，和題目相符。
+\end{pastsoln}

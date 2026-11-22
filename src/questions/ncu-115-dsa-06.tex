@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncu-115-dsa-06}]{中央資工所 115 學年度 第 6 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Let $f(n)$ and $g(n)$ be non-negative functions defined for all sufficiently large integer $n$. Select one or more correct statements.
+\begin{enumerate}[label=\Alph*.]
+\item If $f(n)=O(g(n))$, then $g(n)=\Omega(f(n))$.
+\item If $f(n)=\Theta(g(n))$, then $f(n)=O\big(g(n)\big)$.
+\item $n=o(n\log n)$.
+\item If $f(n)=O(g(n))$ and $g(n)=O(f(n))$, then $f(n)=\Theta(g(n))$.
+\item $n^2+20000000^2n=\Theta(n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、C、D。
+
+以下都直接用資結書第~1.5~節的定義。
+
+\textbf{A 對}。 $f(n) = O(g(n))$：存在 $c > 0$、$n_0$，$n \ge n_0$ 時 $f(n) \le c\,g(n)$。 兩邊除以
+$c$，得 $g(n) \ge \frac{1}{c} f(n)$，常數 $\frac1c > 0$，這正是 $g(n) = \Omega(f(n))$ 的定義。
+
+\textbf{B 對}。 $f(n) = \Theta(g(n))$ 的定義是存在 $c_1, c_2 > 0$ 使
+$c_1 g(n) \le f(n) \le c_2 g(n)$；只取右半邊就是 $f(n) = O(g(n))$。
+
+\textbf{C 對}。 $\displaystyle\lim_{n \to \infty} \frac{n}{n \log n} = \lim_{n \to \infty} \frac{1}{\log n} = 0$，
+所以 $n = o(n \log n)$：對任何 $c > 0$，$n > 2^{1/c}$ 以後都有 $n < c\, n \lg n$。
+
+\textbf{D 對}。 $f(n) \le c_1 g(n)$（$n \ge n_1$）且 $g(n) \le c_2 f(n)$（$n \ge n_2$）。 後者改寫成
+$f(n) \ge \frac{1}{c_2} g(n)$。 取 $n_0 = \max(n_1, n_2)$，$n \ge n_0$ 時
+$\frac{1}{c_2} g(n) \le f(n) \le c_1 g(n)$，就是 $f(n) = \Theta(g(n))$。
+
+\textbf{E 錯}。 $20000000^2 = 4 \times 10^{14}$ 再大也只是常數，$n^2$ 那一項終究會超過它：
+\[
+\frac{n^2 + 4 \times 10^{14}\, n}{n} = n + 4 \times 10^{14} \to \infty,
+\]
+不可能被某個常數 $c$ 壓在 $c\,n$ 以下，所以不是 $O(n)$，也就不是 $\Theta(n)$。 正確的是
+$n^2 + 20000000^2 n = \Theta(n^2)$。
+\end{pastsoln}

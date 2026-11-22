@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:gw3-097-ds-02}]{關務三等資料處理 97 年 第二題}
+（申論；15 分）
+
+假設有 20 個整數資料已依大小順序排好存放在陣列中，利用二分搜尋法尋找其中的資料，試寫出其演算法。
+（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+設資料由小到大存在 $A[1..20]$（$n = 20$），要找 $x$；找到時傳回位置，找不到傳回 $0$。
+
+\textbf{作法。} 用 $\mathit{low}$、$\mathit{high}$ 標出 $x$ 可能在的範圍，一開始是整個陣列。 每次看
+範圍正中間的 $A[\mathit{mid}]$：相等就找到；$x$ 比較小，$x$ 只可能在左半，把 $\mathit{high}$ 移到
+$\mathit{mid} - 1$；$x$ 比較大就把 $\mathit{low}$ 移到 $\mathit{mid} + 1$。 範圍變空還沒找到，表示
+$x$ 不在陣列裡（資結書第~17.1~節）。
+\begin{pseudo}{二分搜尋}
+\Function{Binary-Search}{$A, n, x$}
+    \State $\mathit{low} \gets 1$；$\mathit{high} \gets n$
+    \While{$\mathit{low} \le \mathit{high}$}
+        \State $\mathit{mid} \gets \lfloor (\mathit{low} + \mathit{high}) / 2 \rfloor$
+        \If{$x = A[\mathit{mid}]$}
+            \State \Return $\mathit{mid}$ \Comment{找到}
+        \ElsIf{$x < A[\mathit{mid}]$}
+            \State $\mathit{high} \gets \mathit{mid} - 1$ \Comment{只可能在左半}
+        \Else
+            \State $\mathit{low} \gets \mathit{mid} + 1$ \Comment{只可能在右半}
+        \EndIf
+    \EndWhile
+    \State \Return $0$ \Comment{範圍已空，找不到}
+\EndFunction
+\end{pseudo}
+呼叫 \proc{Binary-Search}($A, 20, x$)。
+
+\textbf{正確性}：迴圈不變量是「若 $x$ 在陣列裡，它一定在 $A[\mathit{low}..\mathit{high}]$ 之中」。
+一開始範圍是全部，成立。 $x < A[\mathit{mid}]$ 時，因為已排序，$A[\mathit{mid}..n]$ 都 $> x$，丟掉
+它們不會丟掉 $x$；另一邊同理。 每輪範圍至少縮小一格，一定會結束；結束時若範圍是空的，由不變量 $x$
+不在陣列裡。
+
+\textbf{追蹤}：設 $A = \langle 3, 7, 10, 15, 18, 21, 25, 30, 34, 40, 42, 47, 51, 56, 60, 63, 70, 77, 81,
+90 \rangle$，找 $x = 56$：
+\begin{center}
+\small
+\begin{tabular}{cccccl}
+\toprule
+輪 & $\mathit{low}$ & $\mathit{high}$ & $\mathit{mid}$ & $A[\mathit{mid}]$ & 結果 \\
+\midrule
+1 & 1 & 20 & 10 & 40 & $56 > 40$，$\mathit{low} \gets 11$ \\
+2 & 11 & 20 & 15 & 60 & $56 < 60$，$\mathit{high} \gets 14$ \\
+3 & 11 & 14 & 12 & 47 & $56 > 47$，$\mathit{low} \gets 13$ \\
+4 & 13 & 14 & 13 & 51 & $56 > 51$，$\mathit{low} \gets 14$ \\
+5 & 14 & 14 & 14 & 56 & 相等，傳回 $14$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+找 $x = 57$ 時前四輪相同，第 5 輪 $57 > 56$，$\mathit{low} \gets 15 > \mathit{high} = 14$，傳回 $0$。
+
+\textbf{比較次數}：每輪範圍大小 $m$ 變成至多 $\lfloor m/2 \rfloor$，$20 \to 10 \to 5 \to 2 \to 1$，最多
+做 $5 = \lfloor \lg 20 \rfloor + 1$ 輪就能確定找到或找不到；一般 $n$ 筆是 $O(\lg n)$。 循序搜尋最壞要
+比 $20$ 次。
+\end{pastsoln}

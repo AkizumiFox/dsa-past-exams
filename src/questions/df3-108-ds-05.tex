@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:df3-108-ds-05}]{地方三等資訊處理 108 年 第五題}
+（申論；20 分）
+
+將下列六個鍵值:
+\begin{center}
+33,\quad 72,\quad 71,\quad 55,\quad 112,\quad 109
+\end{center}
+存入大小為 19 的雜湊表（a hash table of size 19）\\
+雜湊函數 h 為: h(key) = key mod 19\\
+分別用下面兩種衝突處理方式（collision handler）：
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 間隔為 1（offset of 1）（12 分）
+\item[㈡] 間隔為商（quotient-offset）（8 分）
+\end{itemize}
+請分別寫出兩個雜湊表；並在間隔為 1 的雜湊表上，標示出一次聚集（primary clustering）。
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 位置 $0{:}\,109$、$14{:}\,33$、$15{:}\,72$、$16{:}\,71$、$17{:}\,55$、$18{:}\,112$，一次聚集是 $14 \sim 18$
+再繞回 $0$ 的這一段；㈡ 位置 $0{:}\,55$、$3{:}\,112$、$5{:}\,109$、$14{:}\,33$、$15{:}\,72$、$17{:}\,71$。
+
+\textbf{兩種方法。} 都是開放定址（資結書第~12.3~節）：位置被佔用時，往後跳一個間隔再試，位址超過 $18$ 就
+mod $19$ 繞回前面。
+\begin{itemize}
+\item 間隔為 $1$：就是線性探測，依序試 $h, h + 1, h + 2, \ldots \pmod{19}$。
+\item 間隔為商：間隔取 $\lfloor \mathit{key} / 19 \rfloor$（鍵除以表長的商），依序試 $h, h + q, h + 2q, \ldots \pmod{19}$。
+不同的鍵就算 $h$ 相同，商通常不同，探測路線也就不同，是雙重雜湊的一種（Gilberg 與 Forouzan 的教科書稱為
+key offset）。 商為 $0$ 時要改用 $1$，本題的鍵都 $\ge 19$，不會發生。
+\end{itemize}
+先算出每個鍵的 $h$ 和商：
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+鍵 & 33 & 72 & 71 & 55 & 112 & 109 \\
+$h = \mathit{key} \bmod 19$ & 14 & 15 & 14 & 17 & 17 & 14 \\
+商 $q = \lfloor \mathit{key}/19 \rfloor$ & 1 & 3 & 3 & 2 & 5 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{㈠ 間隔為 1。}
+\begin{itemize}
+\item $33$：$h = 14$，空，放 $14$。
+\item $72$：$h = 15$，空，放 $15$。
+\item $71$：$14$（$33$）、$15$（$72$）都被佔用，$16$ 空，放 $16$。
+\item $55$：$h = 17$，空，放 $17$。
+\item $112$：$17$（$55$）被佔用，$18$ 空，放 $18$。
+\item $109$：$14, 15, 16, 17, 18$ 都被佔用，$(18 + 1) \bmod 19 = 0$ 空，放 $0$，試了 $6$ 次。
+\end{itemize}
+
+\textbf{㈡ 間隔為商。}
+\begin{itemize}
+\item $33$：放 $14$。 $72$：放 $15$。
+\item $71$：$14$ 被佔用，間隔 $3$，試 $14 + 3 = 17$，空，放 $17$。
+\item $55$：$17$（$71$）被佔用，間隔 $2$，試 $(17 + 2) \bmod 19 = 0$，空，放 $0$。
+\item $112$：$17$ 被佔用，間隔 $5$，試 $(17 + 5) \bmod 19 = 3$，空，放 $3$。
+\item $109$：$14$ 被佔用，間隔 $5$，試 $(14 + 5) \bmod 19 = 0$（$55$）被佔用，再試 $5$，空，放 $5$。
+\end{itemize}
+
+兩個雜湊表（空白是空格）；㈠下方標 $\blacktriangle$ 的格子就是一次聚集：
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{l|*{19}{>{\centering\arraybackslash}p{5.6mm}|}}
+\cline{2-20}
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 \\
+\cline{2-20}
+㈠ & 109 & & & & & & & & & & & & & & 33 & 72 & 71 & 55 & 112 \\
+\cline{2-20}
+\multicolumn{1}{l}{} & \multicolumn{1}{c}{$\blacktriangle$} & \multicolumn{13}{c}{} &
+\multicolumn{1}{c}{$\blacktriangle$} & \multicolumn{1}{c}{$\blacktriangle$} & \multicolumn{1}{c}{$\blacktriangle$} & \multicolumn{1}{c}{$\blacktriangle$} & \multicolumn{1}{c}{$\blacktriangle$} \\
+\cline{2-20}
+㈡ & 55 & & & 112 & & 109 & & & & & & & & & 33 & 72 & & 71 & \\
+\cline{2-20}
+\end{tabular}
+\end{center}
+
+\textbf{一次聚集。} 線性探測時，被佔用的格子會連成一長段：任何雜湊到這一段裡的鍵，都要一路探測到這段的尾端，
+放進去之後這段又變得更長。 本題 $h$ 只落在 $14$、$15$、$17$ 三個位置，㈠卻形成位置 $14, 15, 16, 17, 18, 0$ 連續
+$6$ 格（表是環狀的，$18$ 接回 $0$）的一大段，$109$ 也因此要試 $6$ 次。 這種「不同的起始位置共用同一段探測路線、
+聚成一塊」的現象就是一次聚集（primary clustering）。 ㈡的間隔隨鍵而變，$71$、$109$ 雖然和 $33$ 同樣雜湊到 $14$，
+卻跳到別處，表中最長的連續佔用只有 $14, 15$ 兩格；總探測次數也從㈠的 $1 + 1 + 3 + 1 + 2 + 6 = 14$ 次降為
+$1 + 1 + 2 + 2 + 2 + 3 = 11$ 次。
+\end{pastsoln}

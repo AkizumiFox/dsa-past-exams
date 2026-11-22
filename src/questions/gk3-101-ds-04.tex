@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:gk3-101-ds-04}]{高考三級資訊處理 101 年 第四題}
+（申論；25 分）
+
+我們想設計一個動態資料結構儲存數字集合 $S = \{0, 1, 2, \ldots, n - 1\}$ 的倆倆沒有交集，而且聯集等於
+$S$ 的子集合。初始時有 $n$ 個元素，個數為 1 的子集合，分別為 $\{0\}, \{1\}, \ldots, \{n - 1\}$。我們
+希望這個資料結構可以支援以下兩個功能：
+\begin{enumerate}[label=\textit{\arabic*.}, leftmargin=2.2em, itemsep=1pt]
+\item union($x$, $y$): \ $x, y \in S$。union($x$, $y$) 將包含 $x$ 的子集合與包含 $y$ 的子集合聯集得到
+一個新的子集合，原來的子集合不再存在。
+\item equivalence($x$, $y$): \ $x, y \in S$。equivalence($x$, $y$) 判斷 $x$ 與 $y$ 是否屬於同一個
+子集合，若屬於同一個子集合，則回傳 ``TRUE''，否則回傳 ``FALSE''。
+\end{enumerate}
+上述兩個函式必須能夠依任何順序交替執行。
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請描述一個可以達成上述需求而且 union($x$, $y$) 與 equivalence($x$, $y$) 的時間複雜度均為
+$O(\log n)$ 的資料結構。（15 分）
+\item[㈡] 請用虛擬碼描述可以在上述資料結構運作的 union($x$, $y$) 函式。（5 分）
+\item[㈢] 請用虛擬碼描述可以在上述資料結構運作的 equivalence($x$, $y$) 函式。（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+這是互斥集合（disjoint sets，union-find）問題，用\textbf{樹狀森林加上依大小合併}（weighted union）
+就能做到兩個操作都 $O(\log n)$（資結書第~13.2~節）。
+
+\textbf{㈠ 資料結構。}
+\begin{itemize}[nosep]
+\item 每個子集合是一棵樹，樹根當作這個集合的代表。 只需要一個陣列 $p[0..n-1]$：$p[x]$ 是 $x$ 的
+父節點；$x$ 是樹根時 $p[x] = x$。 另一個陣列 $\mathit{size}[r]$ 記錄以 $r$ 為根的樹有幾個元素（只對
+樹根有意義）。 也可以省掉 $\mathit{size}$，在樹根存 $p[r] = -(\text{集合大小})$。
+\item 初始：$p[x] = x$、$\mathit{size}[x] = 1$，$n$ 棵只有一個節點的樹，對應 $\{0\}, \ldots,
+\{n-1\}$。
+\item \proc{Find}($x$)：沿 $p$ 往上走到樹根，傳回樹根。 兩個元素在同一集合 $\iff$ 樹根相同。
+\item union：找出兩個樹根，把\textbf{元素少的那棵樹的根接到元素多的那棵的根下面}，更新大小。
+\end{itemize}
+\textbf{為什麼是 $O(\log n)$。} 兩個操作的時間都由 \proc{Find} 走的步數決定，也就是樹高。 依大小
+合併時，任何一個元素 $x$ 的深度只有在「$x$ 所在的樹被接到另一棵\textbf{不比它小}的樹下面」時才
+加一，而這時 $x$ 所在的樹的元素個數至少變成原來的兩倍。 元素個數從 $1$ 開始、最多 $n$，所以
+$x$ 的深度最多加 $\lfloor \lg n \rfloor$ 次。 因此每個節點到樹根最多 $\lfloor \lg n \rfloor$ 條邊，樹最多 $\lfloor \lg n \rfloor + 1$
+層（資結書定理~13.2），\proc{Find} 是 $O(\log n)$，union 和 equivalence 各做兩次 \proc{Find} 加上常數時間，
+都是 $O(\log n)$。 不依大小、隨便接的話，依序 union$(0,1)$、union$(0,2)$、$\ldots$ 可能接成一條
+長度 $n - 1$ 的鏈，\proc{Find} 就要 $\Theta(n)$。
+
+例：$n = 6$，union$(0, 1)$：兩棵大小都是 $1$，把 $1$ 接到 $0$ 下，$\mathit{size}[0] = 2$。
+union$(2, 3)$：$3$ 接到 $2$ 下。 union$(1, 3)$：樹根分別是 $0$、$2$，大小相同，把 $2$ 接到 $0$ 下，
+$\mathit{size}[0] = 4$，$p = \langle 0, 0, 0, 2, 4, 5 \rangle$，最深的 $3$ 到樹根 $2$ 條邊，$2 = \lg 4$。
+equivalence$(3, 1)$：$3 \to 2 \to 0$、$1 \to 0$，樹根相同，傳回 TRUE；equivalence$(3, 4)$：樹根
+$0 \ne 4$，傳回 FALSE。
+
+\textbf{㈡、㈢ 虛擬碼。}
+\begin{pseudo}{互斥集合：依大小合併}
+\Procedure{Init}{$n$}
+    \For{$x \gets 0$ \To $n - 1$}
+        \State $p[x] \gets x$；$\mathit{size}[x] \gets 1$
+    \EndFor
+\EndProcedure
+\Function{Find}{$x$}
+    \While{$p[x] \ne x$}
+        \State $x \gets p[x]$ \Comment{往上走到樹根}
+    \EndWhile
+    \State \Return $x$
+\EndFunction
+\Procedure{Union}{$x, y$}
+    \State $r \gets$ \Call{Find}{$x$}；$s \gets$ \Call{Find}{$y$}
+    \If{$r = s$}
+        \State \Return \Comment{本來就在同一個集合}
+    \EndIf
+    \If{$\mathit{size}[r] < \mathit{size}[s]$}
+        \State 交換 $r$ 和 $s$ \Comment{讓 $r$ 是元素較多的根}
+    \EndIf
+    \State $p[s] \gets r$ \Comment{小的接到大的下面}
+    \State $\mathit{size}[r] \gets \mathit{size}[r] + \mathit{size}[s]$
+\EndProcedure
+\Function{Equivalence}{$x, y$}
+    \If{\Call{Find}{$x$} $=$ \Call{Find}{$y$}}
+        \State \Return \TRUE
+    \Else
+        \State \Return \FALSE
+    \EndIf
+\EndFunction
+\end{pseudo}
+union 和 equivalence 可以依任何順序交替呼叫：每次 union 之後，$p$ 和 $\mathit{size}$ 仍然滿足
+上面的結構，高度上界也一直成立。 若在 \proc{Find} 裡再加上路徑壓縮（走完後把路上每個節點直接
+接到樹根），一連串 $m$ 個操作的總時間是 $O(m\,\alpha(n))$，平均每次幾乎是常數（資結書第~13.3~
+節）；但題目要求的 $O(\log n)$，只靠依大小合併就做到了。
+\end{pastsoln}

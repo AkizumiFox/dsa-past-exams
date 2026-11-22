@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-114-dsa-13}]{中興資工所甲組 114 學年度 單選題第 13 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+If you have a binary search tree (BST) containing the numbers 1 through 100, which element's search time would be the shortest (assuming balanced distribution)?
+
+(A)~1 \qquad (B)~50 \qquad (C)~100 \qquad (D)~75
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+在 BST 裡搜尋一個鍵值，比較的次數是它的深度加一（資結書第~9.1~節）；深度越淺，搜尋越快，最快的是根。
+「balanced distribution」指樹是平衡的：根是中位數，左右子樹各放一半，再遞迴下去（資結書第~9.3~節）。
+$1$ 到 $100$ 的中位數是 $50$ 或 $51$；照「取中間 $\lfloor (\mathit{lo} + \mathit{hi})/2 \rfloor$ 當根」的做法，
+根是 $50$。
+\begin{itemize}
+\item (A) $1$：最小值在最左邊的路徑末端，上面的做法下深度 $5$，要比較 $6$ 次。
+\item (B) $50$：根，比較 $1$ 次。 最快。
+\item (C) $100$：最大值在最右邊的路徑末端，深度 $6$，比較 $7$ 次。
+\item (D) $75$：右子樹 $51..100$ 的根，深度 $1$，比較 $2$ 次。
+\end{itemize}
+如果每次改取上中位數 $\lceil (\mathit{lo} + \mathit{hi})/2 \rceil$，根是 $51$，四個選項的深度變成
+$6, 5, 5, 5$，沒有哪一個特別快。 題目的選項顯然是以中間的 $50$ 為根設計的，答 (B)。
+\end{pastsoln}

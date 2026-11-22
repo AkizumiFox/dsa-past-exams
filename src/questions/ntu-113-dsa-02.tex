@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:ntu-113-dsa-02}]{臺大資工所 113 學年度 第 2 題}
+（複選；每個選項單獨計分）
+
+(5 points) A Maximum Binary Tree (abbreviated as MaxBT) is defined as a binary tree that adheres to
+the max-heap property without the necessity of following the complete binary tree property. In a
+MaxBT, each node $p$ consists of a value ($p$.data) and two links ($p$.left and $p$.right) pointing to
+the left and right children, respectively. A link to nil indicates the absence of further children.
+
+The provided pseudocode, although incomplete, implements a recursive function for merging two MaxBTs
+into a single MaxBT. This function takes the root nodes of the two MaxBTs ($\mathit{root1}$ and
+$\mathit{root2}$) as input and returns the root node of the merged MaxBT.
+\begin{center}
+\begin{tabular}{rl}
+1: & function MergeMaxBinaryTrees($\mathit{root1}$, $\mathit{root2}$) \\
+2: & \quad if $\mathit{root1}$ = nil then return \blank{a} end if \\
+3: & \quad if $\mathit{root2}$ = nil then return \blank{b} end if \\
+4: & \quad if $\mathit{root1}$.data $>$ $\mathit{root2}$.data then \\
+5: & \quad\quad \blank{c} $\leftarrow$ MergeMaxBinaryTrees(\blank{d}, \blank{e}) \\
+6: & \quad\quad return \blank{f} \\
+7: & \quad else \\
+8: & \quad\quad \blank{g} $\leftarrow$ MergeMaxBinaryTrees(\blank{h}, \blank{i}) \\
+9: & \quad\quad return \blank{j} \\
+10: & \quad end if \\
+11: & end function
+\end{tabular}
+\end{center}
+Assuming all the blanks in the above function have been appropriately filled to ensure its proper
+functioning, please select the correct description(s) below.
+\begin{enumerate}[label=\Alph*.]
+\item (b) and (f) are the same.
+\item (c), (d), and (e) are all distinct.
+\item In the cases of (c) and (g), each has only one correct answer.
+\item Exchanging the filled content of (h) and (i) leads to a correct implementation.
+\item The function works correctly even when the two arguments passed into it refer to the same
+tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、D。
+
+先把函式補完。 兩棵樹都不空時，根比較大的那個當新的根（$>$ 不成立時選 $\mathit{root2}$，
+相等也可以），把它的某一棵子樹和另一整棵樹遞迴合併，結果接回同一邊。 這和資結書
+虛擬碼~8.9 左傾樹的 \proc{Meld} 是同一個架構，只是少了比較 $s$、對調左右那兩步。
+一種正確的填法：
+
+\begin{pseudo}[unbreakable]{一種正確的填法}
+\Function{MergeMaxBinaryTrees}{$\mathit{root1}, \mathit{root2}$}
+    \If{$\mathit{root1} = \NIL$} \Return $\mathit{root2}$ \Comment{(a)} \EndIf
+    \If{$\mathit{root2} = \NIL$} \Return $\mathit{root1}$ \Comment{(b)} \EndIf
+    \If{$\mathit{root1}.\mathit{data} > \mathit{root2}.\mathit{data}$}
+        \State $\mathit{root1}.\mathit{right} \gets$ \Call{MergeMaxBinaryTrees}{$\mathit{root1}.\mathit{right}, \mathit{root2}$} \Comment{(c)(d)(e)}
+        \State \Return $\mathit{root1}$ \Comment{(f)}
+    \Else
+        \State $\mathit{root2}.\mathit{right} \gets$ \Call{MergeMaxBinaryTrees}{$\mathit{root1}, \mathit{root2}.\mathit{right}$} \Comment{(g)(h)(i)}
+        \State \Return $\mathit{root2}$ \Comment{(j)}
+    \EndIf
+\EndFunction
+\end{pseudo}
+
+正確性對兩棵樹的節點總數歸納：遞迴呼叫的兩棵樹節點總數少了一個（新的根不在裡面），由歸納假
+設回傳一棵 MaxBT，它的節點都來自原本的兩棵樹，所以都不大於新的根；接回去以後新的根仍然不小
+於兩棵子樹的所有節點，整棵是 MaxBT。
+
+逐個選項：
+\begin{itemize}
+\item[A.] 對。 (b) 是 $\mathit{root2}$ 為空時回傳 $\mathit{root1}$；(f) 是 $\mathit{root1}$ 當新的
+根時回傳 $\mathit{root1}$。 兩格都必須是 $\mathit{root1}$。
+\item[B.] 錯。 (c) 是被改寫的那個欄位，它原本指的子樹必須當作遞迴的一個參數傳進去，否則那棵子
+樹就從樹上掉了。 所以 (c) 一定和 (d)、(e) 其中一個相同（例如上面的 (c) 和 (d) 都是
+$\mathit{root1}$.right）。
+\item[C.] 錯。 MaxBT 不要求形狀，(c) 填 $\mathit{root1}$.left（同時 (d) 或 (e) 改成
+$\mathit{root1}$.left）也一樣正確；(g) 同理。 每一格都至少有兩種正確答案。
+\item[D.] 對。 上面的正確性論證沒有用到兩個參數的順序：交換 (h)、(i) 之後，遞迴呼叫仍然是合併同
+樣兩棵樹，回傳的仍然是一棵包含它們全部節點的 MaxBT。 相等的情況也沒問題，相等時選誰當根都
+滿足最大堆積性質。
+\item[E.] 錯。 兩個參數是同一棵樹時，資料相等，走 else，把 $\mathit{root2}$.right 改成「這棵樹和它
+自己的右子樹合併」的結果，同一批節點被接到兩個地方。 最簡單的例子是只有一個節點 $r$：
+\proc{MergeMaxBinaryTrees}$(r, r)$ 走 else，$r.\mathit{right} \gets$
+\proc{MergeMaxBinaryTrees}$(r, \NIL) = r$，$r$ 的右子節點變成自己，不再是一棵樹。
+\end{itemize}
+
+補充：沒有像左傾樹那樣控制右邊路徑的長度，這個合併最壞要沿著很長的路徑遞迴，時間是
+$\Theta(n)$，而左傾樹保證 $O(\lg n)$（資結書定理~8.2）。
+\end{pastsoln}

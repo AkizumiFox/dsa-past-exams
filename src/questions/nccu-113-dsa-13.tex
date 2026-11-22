@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nccu-113-dsa-13}]{政大資科所 113 學年度 第 13 題}
+（問答）
+
+(10\%) Consider the following task: given a sorted doubly linked list (i.e., the $i$th node in the list
+stores the $i$th smallest data in the list) and a number $x$, determine if $x$ is stored in the sorted
+doubly linked list. Is it possible to accomplish this task in $O(\log n)$ time using binary search? Please
+explain your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：不行。 在只有頭尾指標的排序雙向鏈結串列上，任何方法（包括二分搜尋）最壞都要 $\Omega(n)$ 時間。
+
+\textbf{二分搜尋為什麼快}。 陣列的二分搜尋（資結書虛擬碼~17.1）每一步取中間位置 $A[\lfloor (lo + hi)/2 \rfloor]$，
+陣列可以在 $O(1)$ 時間存取任何一格，所以 $O(\log n)$ 步、每步 $O(1)$。
+
+\textbf{串列做不到這件事}。 鏈結串列只能從頭（或尾）沿著 $\mathit{next}$、$\mathit{prev}$ 一個一個走（資結書
+第~5.1、5.2~節），要走到第 $i$ 個節點就得經過 $\min(i, n - i)$ 個節點。 照二分搜尋的步驟做：
+\begin{itemize}
+\item 第一步要找中間那個，從頭走 $n/2$ 個節點；
+\item 之後每一步要從目前位置走到剩下區段的中間，依序走 $n/4$、$n/8$、$\ldots$ 個節點。
+\end{itemize}
+比較次數確實只有 $O(\log n)$，但走路的總步數是 $n/2 + n/4 + \cdots = \Theta(n)$，時間是 $\Theta(n)$，和從頭循序搜尋
+同一級。
+
+\textbf{任何方法都做不到 $O(\log n)$}。 演算法只能從頭尾出發、每一步沿一個指標移動一格，所以 $t$ 步之內看過的
+節點都在離頭或尾 $t$ 格以內。 若 $t < n/2 - 1$，中間那個節點 $v$ 沒被看過。 考慮兩個輸入：$v$ 前後兩個鄰居存
+$x - 1$、$x + 1$，第一個輸入的 $v$ 存 $x$，第二個存 $x + 0.5$，其他節點都一樣。 兩個串列都排好序，演算法看到的
+東西完全一樣，答案卻一個是「有」、一個是「沒有」，所以一定有一個會答錯。 最壞情況至少要 $\Omega(n)$ 步。
+
+想要 $O(\log n)$ 的搜尋，就要換資料結構：排序陣列、平衡二元搜尋樹，或在串列上加多層捷徑的跳躍串列
+（資結書第~10.7~節）。
+\end{pastsoln}

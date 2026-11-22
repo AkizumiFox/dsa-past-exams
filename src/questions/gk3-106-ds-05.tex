@@ -1,0 +1,131 @@
+\begin{pastexam}[label={px:gk3-106-ds-05}]{高考三級資訊處理 106 年 第五題}
+（申論；20 分）
+
+請依序將 17, 23, 36, 13, 38, 11, 52, 44, 25, 35, 2, 18, 21 儲存至下列 13 桶（buckets）$\times$ 1 槽
+（slots）的雜湊表（hashing table）。請以各小題所設定的雜湊函式（hashing function）將資料依序存入並顯示
+最後的雜湊表。
+\begin{center}
+\small
+\begin{tabular}{|c|*{13}{c|}}
+\hline
+\multirow{2}{*}{雜湊表} & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \cline{2-14}
+ & \rule{0pt}{4.5ex}\phantom{00} & & & & & & & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 雜湊函式 $\mathrm{F}(x) = x \bmod 13$，碰撞時，採取「線性探測法」（open addressing with linear
+probing）來放入資料。請顯示最後的雜湊表。（5 分）
+\item[㈡] 雜湊函式 $\mathrm{F}(x) = x \bmod 13$，碰撞時，採取「二次方探測法」（open addressing with quadratic
+probing）來放入資料。請顯示最後的雜湊表。（5 分）
+\item[㈢] 雜湊函式 $\mathrm{F}_1(x) = x \bmod 13$，碰撞時，採取「雙探測法」(open addressing with double
+hashing) 來放入資料，第二雜湊函式為 $\mathrm{F}_2(x) = 7 - (x \bmod 7)$。請顯示最後的雜湊表。（5 分）
+\item[㈣] 若雜湊表夠大（例如 slots = 2 或更大）但資料量多時，針對三種碰撞時所採取的處理方式，請說明那一種
+方式較能有效率的儲存或搜尋資料？請說明那一種處理方式效率最差？（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l*{13}{c}}
+\toprule
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+㈠ 線性 & 13 & 11 & 52 & 25 & 17 & 44 & 2 & 18 & 21 & 35 & 23 & 36 & 38 \\
+㈡ 二次 & 13 & 52 & 11 & 25 & 17 & 44 & 2 & 21 & 18 & 35 & 23 & 36 & 38 \\
+㈢ 雙雜湊 & 13 & 18 & 25 & 36 & 17 & 44 & 21 & 2 & 52 & 35 & 23 & 11 & 38 \\
+\bottomrule
+\end{tabular}
+\end{center}
+㈣ 雙重雜湊最有效率，線性探測最差。
+
+探測序列照資結書第~12.3~節：第 $i$ 次探測（$i = 0, 1, 2, \ldots$）看的位置是線性
+$h(x, i) = (\mathrm{F}(x) + i) \bmod 13$；二次 $h(x, i) = (\mathrm{F}(x) + i^2) \bmod 13$；雙重雜湊
+$h(x, i) = (\mathrm{F}_1(x) + i \cdot \mathrm{F}_2(x)) \bmod 13$。 二次探測也有人用 $\pm i^2$ 交替的
+版本，本題採最常見的 $+i^2$，題目沒有指定時作答要寫出用的是哪一種。 $13$ 筆資料放進 $13$ 格，最後表是
+滿的。 先算每筆的 $x \bmod 13$：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l*{13}{c}}
+\toprule
+$x$ & 17 & 23 & 36 & 13 & 38 & 11 & 52 & 44 & 25 & 35 & 2 & 18 & 21 \\
+$x \bmod 13$ & 4 & 10 & 10 & 0 & 12 & 11 & 0 & 5 & 12 & 9 & 2 & 5 & 8 \\
+$7 - (x \bmod 7)$ & 4 & 5 & 6 & 1 & 4 & 3 & 4 & 5 & 3 & 7 & 5 & 3 & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{㈠ 線性探測}。 每筆依序看過的位置（最後一個是放入的位置）：
+\begin{center}
+\small
+\begin{tabular}{cl|cl}
+$x$ & 探測位置 & $x$ & 探測位置 \\
+\hline
+17 & 4 & 52 & 0, 1, \textbf{2} \\
+23 & 10 & 44 & 5 \\
+36 & 10, \textbf{11} & 25 & 12, 0, 1, 2, \textbf{3} \\
+13 & 0 & 35 & 9 \\
+38 & 12 & 2 & 2, 3, 4, 5, \textbf{6} \\
+11 & 11, 12, 0, \textbf{1} & 18 & 5, 6, \textbf{7} \\
+   &                      & 21 & 8 \\
+\end{tabular}
+\end{center}
+可以看到 $0$--$6$ 很快連成一大串，後來的 $25$、$2$ 都要走好幾格才找到空位，這就是一次群聚（primary
+clustering）。
+
+\textbf{㈡ 二次探測}，位置 $\mathrm{F}(x) + 0, 1, 4, 9, 16, 25, \ldots$（模 $13$）：
+\begin{center}
+\small
+\begin{tabular}{cl|cl}
+$x$ & 探測位置 & $x$ & 探測位置 \\
+\hline
+17 & 4 & 52 & 0, \textbf{1} \\
+23 & 10 & 44 & 5 \\
+36 & 10, \textbf{11} & 25 & 12, 0, \textbf{3} \\
+13 & 0 & 35 & 9 \\
+38 & 12 & 2 & 2, 3, \textbf{6} \\
+11 & 11, 12, \textbf{2} & 18 & 5, 6, 9, 1, \textbf{8} \\
+   &                      & 21 & 8, 9, 12, 4, 11, \textbf{7} \\
+\end{tabular}
+\end{center}
+模 $13$ 的計算例如：$11 + 2^2 = 15 \equiv 2$；$18$ 的第 $3$、$4$ 次是 $5 + 9 = 14 \equiv 1$、$5 + 16 = 21 \equiv 8$；$21$ 的第 $3$、$4$、$5$ 次是 $8 + 9 = 17 \equiv 4$、$8 + 16 = 24 \equiv 11$、$8 + 25 = 33 \equiv 7$。
+注意二次探測一般只保證看得到 $\lceil 13/2 \rceil = 7$ 個不同的位置（$i^2 \bmod 13$ 只有 $7$ 種值），
+表快滿時可能找不到空位；本題最後兩筆分別在第 $5$、$6$ 次探測找到，剛好都放得進去。
+
+\textbf{㈢ 雙重雜湊}，第二雜湊值 $\mathrm{F}_2(x)$ 在 $1$--$7$ 之間、不會是 $0$，且 $13$ 是質數，所以
+每一筆的探測序列都會走遍 $13$ 格：
+\begin{center}
+\small
+\begin{tabular}{cl|cl}
+$x$ & 探測位置（步長） & $x$ & 探測位置（步長） \\
+\hline
+17 & 4 & 52 & 0, 4, \textbf{8}（4） \\
+23 & 10 & 44 & 5 \\
+36 & 10, \textbf{3}（6） & 25 & 12, \textbf{2}（3） \\
+13 & 0 & 35 & 9 \\
+38 & 12 & 2 & 2, \textbf{7}（5） \\
+11 & 11 & 18 & 5, 8, 11, \textbf{1}（3） \\
+   &    & 21 & 8, 2, 9, 3, 10, 4, 11, 5, 12, \textbf{6}（7） \\
+\end{tabular}
+\end{center}
+最後一筆 $21$ 時表只剩 $6$ 號是空的，所以要探測 $10$ 次；這是表全滿時的特例，裝載因子不高時雙重雜湊
+平均的探測次數最少。
+
+\textbf{㈣} 三種開放定址的方式比較（資結書第~12.4~節）：
+\begin{itemize}
+\item \textbf{雙重雜湊最好}：探測的步長由第二個雜湊函式決定，不同的鍵即使起點相同，步長通常也不同，
+探測序列各走各的，接近「均勻雜湊」的理想情形，不會群聚。 裝載因子 $\alpha$ 時，不成功搜尋平均約
+$1/(1 - \alpha)$ 次探測。
+\item 二次探測次之：起點不同的鍵不會沿同一串連續格子擠在一起，避開了一次群聚；但起點相同的鍵探測序列
+完全一樣，有二次群聚（secondary clustering），而且不保證看得到所有位置。
+\item \textbf{線性探測最差}：佔用的格子連成一串後，落在這串任何位置的鍵都要走到串尾，串又因此變得更長
+（一次群聚）。 不成功搜尋平均約 $\frac12\bigl(1 + 1/(1 - \alpha)^2\bigr)$ 次，$\alpha$ 接近 $1$ 時增加
+得最快。
+\end{itemize}
+每個桶子有 $2$ 個以上的槽時，一個桶子能放好幾筆、溢位比較晚發生，但資料一多、桶子滿了之後還是要探測其他
+桶子，三種方法的優劣順序不變。 （若不限於這三種，用鏈結串列串起同一桶的資料的鏈結法，在資料量很多時
+效能下降得最平緩。）
+\end{pastsoln}

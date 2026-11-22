@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-01}]{中山資工所資安組 111 學年度 第 2 題}
+（計算）
+
+{[10\%]} In how many ways can Alice place 36 different books on five shelves so that there is at least
+two books on each shelf? (For any of these arrangements consider the books on each shelf to be placed
+one next to the other, with the first book at the left of the shelf.)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\dbinom{30}{4} \cdot 36! = 27405 \cdot 36!$ 種。
+
+書是不同的，書在架上的左右順序也算數，所以一種擺法由兩件事決定：五個書架各放幾本，以及書的排列。
+把它拆成兩步：
+\begin{enumerate}
+\item \textbf{先把 36 本書排成一列}：$36!$ 種。
+\item \textbf{再把這一列切成五段}，第 $i$ 段由左到右放到第 $i$ 個書架上。 設第 $i$ 個書架放 $x_i$
+本，要求
+\[
+x_1 + x_2 + x_3 + x_4 + x_5 = 36, \qquad x_i \ge 2 .
+\]
+令 $y_i = x_i - 2 \ge 0$，變成 $y_1 + \cdots + y_5 = 36 - 10 = 26$ 的非負整數解，用隔板法
+（$26$ 個球、$4$ 根隔板排成一列，資結書附錄~A.3~節）共有
+\[
+\binom{26 + 4}{4} = \binom{30}{4} = \frac{30 \cdot 29 \cdot 28 \cdot 27}{24} = 27405
+\]
+種。
+\end{enumerate}
+反過來，給一種擺法，把五個書架上的書依書架順序、由左到右接起來，就得到唯一的一個排列和唯一的
+一組 $(x_1, \ldots, x_5)$。 所以「擺法」和「（排列，切法）」一一對應，總數是兩步相乘：
+\[
+27405 \cdot 36! .
+\]
+（用小例子檢查同樣的算法：$6$ 本書放 $2$ 個書架、每架至少 $2$ 本，公式給 $6! \cdot \binom{3}{1}
+= 2160$；直接數，三種分法 $(2,4), (3,3), (4,2)$ 各有 $6!$ 種，合計 $2160$，一致。）
+\end{pastsoln}

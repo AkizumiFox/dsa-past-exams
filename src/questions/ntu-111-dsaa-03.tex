@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-03}]{臺大資工所 111 學年度 第 3 題}
+（單選。 第 1--5 題共用下面的說明和表格）
+
+For each of the following algorithms in the next five problems, what is the tightest asymptotic
+upper bound for its runtime complexity for $n$ numbers? Please use the following table of (A)-(E)
+choices when answering.
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+(A) & (B) & (C) & (D) & (E) \\ \hline
+$O(1)$ & $O(\lg n)$ & $O(n)$ & $O(n\lg n)$ & $O(n^2)$
+\end{tabular}
+\end{center}
+
+(3 points) MAX\_HEAPIFY for a max-heap: expected time?
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) $O(\lg n)$。
+
+題目說「for $n$ numbers」，指在 $n$ 個數的最大堆積的根呼叫 \proc{Max-Heapify}（例如
+\proc{Extract-Max} 把最後一個數搬到根以後的那一次，資結書第~8.1~節、虛擬碼~8.1、8.2）。
+
+\proc{Max-Heapify} 每一步拿目前的節點和兩個孩子比，比較大的孩子比它大就交換，往下一層繼續；
+否則停。 每一層做的事是 $O(1)$，最多走到葉子，$n$ 個節點的完全二元樹高度是 $\lfloor \lg n \rfloor$
+（資結書定理~7.3），所以時間 $O(\lg n)$。 這個界也是緊的：\proc{Extract-Max} 搬到根的是原本
+最後一個葉子，通常是很小的數，會一路沉到底層附近，平均也要走 $\Theta(\lg n)$ 層。
+
+(A) $O(1)$ 只在新的根已經比兩個孩子大時成立，不是一般情形。 (C)、(D)、(E) 是上界但不是最緊的。
+
+補充：如果是對高度為 $h$ 的節點呼叫，時間是 $O(h)$；\proc{Build-Max-Heap} 就是靠「大部分節點
+的高度都很小」證出 $O(n)$（資結書定理~8.1）。 這題問的是對整個堆積（根）呼叫，所以是 $O(\lg n)$。
+\end{pastsoln}

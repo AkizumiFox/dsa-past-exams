@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:nccu-111-dsa-03}]{政大資科所 111 學年度 第 3 題}
+（設計）
+
+(15\%) A \textit{stack} can be implemented by a linked list. Design the following stack operations in C or pseudo code mainly based on the operations of Question 2.
+\begin{enumerate}[label=3.\arabic*]
+\item Inserting (or `push') an element at the top of the stack
+\item Removing (or `pop') an element at the top of the stack
+\item Getting the value of the element at the top of the stack
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+第 2 題的串列見歷屆試題~\ref{px:nccu-111-dsa-02}：\proc{List-Init}、\proc{Insert-Front}、
+\proc{Insert-Before}、\proc{Delete}。 堆疊 $S$ 就是一條這樣的串列，\textbf{堆疊頂端放在串列的第一個
+元素}（資結書第~6.1~節、虛擬碼~6.2）。 建立空堆疊就是 \proc{List-Init}$(S)$。
+
+\begin{pseudo}{用第 2 題的串列做堆疊}
+\Procedure{Push}{$S, x$} \Comment{3.1}
+    \State \Call{Insert-Front}{$S, x$}
+\EndProcedure
+\Statex
+\Function{Pop}{$S$} \Comment{3.2}
+    \If{$S.\mathit{head} = \NIL$}
+        \State \Error{stack underflow}
+    \EndIf
+    \State $x \gets S.\mathit{head}.\mathit{key}$ \Comment{先把值取出來}
+    \State \Call{Delete}{$S, 1$}
+    \State \Return $x$
+\EndFunction
+\Statex
+\Function{Top}{$S$} \Comment{3.3}
+    \If{$S.\mathit{head} = \NIL$}
+        \State \Error{stack is empty}
+    \EndIf
+    \State \Return $S.\mathit{head}.\mathit{key}$
+\EndFunction
+\Statex
+\Function{Is-Empty}{$S$}
+    \State \Return $S.\mathit{head} = \NIL$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 堆疊要求後進先出。 \proc{Push} 把新元素放到串列最前面，所以串列從頭到尾就是
+「從最後推進去的到最早推進去的」；\proc{Pop} 和 \proc{Top} 都看串列的第一個元素，拿到的正是最後
+推進去、還沒被拿走的那一個。 \proc{Pop} 要先取出 $\mathit{key}$ 再呼叫 \proc{Delete}，因為
+\proc{Delete} 會釋放那個節點，釋放後就不能再讀它的欄位。 第 4 題的 DFS 還會用到 \proc{Is-Empty}，
+一併寫出。
+
+\textbf{複雜度}。 \proc{Insert-Front} 是 $\Theta(1)$；\proc{Delete}$(S, 1)$ 走 $i = 1$ 的分支，不必找前一
+個節點，也是 $\Theta(1)$。 所以三個操作都是 $\Theta(1)$，堆疊的大小不受限制（只受可用記憶體限制），
+不會像陣列堆疊那樣溢位。
+
+\textbf{為什麼頂端不放在串列尾巴}。 如果用 \proc{Insert-Before}$(S, n + 1, x)$ 推進尾巴、用
+\proc{Delete}$(S, n)$ 從尾巴拿，兩個操作都要先從頭走到第 $n - 1$ 個節點，每次 $\Theta(n)$，而且還得
+另外記 $n$。 單向串列只有頭端能 $\Theta(1)$ 插入和刪除，所以頂端一定放在頭。
+\end{pastsoln}

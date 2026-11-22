@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:nsysu-113-osds-02}]{中山資工所甲組 113 學年度 第 2 題}
+（問答）
+
+(10\%) A two-dimensional array $N$ stores the nonnegative integers with the style shown in
+the following table. For example, $N$[0][0]=0, then $N$[0][1] = 3, $N$[0][2] = 4,
+$N$[1][0]=2, and so on. Please present a formula for the value stored in $N[i][j]$,
+expressed in terms of $i$ and $j$.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+0 & 3 & 4 & 15 & 16 & $\cdots$\\\hline
+1 & 2 & 5 & 14 & 17 & $\cdots$\\\hline
+8 & 7 & 6 & 13 & 18 & $\cdots$\\\hline
+9 & 10 & 11 & 12 & 19 & $\cdots$\\\hline
+24 & 23 & 22 & 21 & 20 & $\cdots$\\\hline
+$\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$ & $\cdots$\\\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：令 $k = \max(i, j)$，
+\[
+N[i][j] = k^2 + k + (-1)^k\,(i - j) .
+\]
+
+推導的步驟和資結書第~4.2~節一樣：先數「前面有幾個」，再加上自己這一段裡
+的位置。
+\begin{itemize}
+\item 把 $\max(i, j) = k$ 的格子叫第 $k$ 圈，是一個 L 形：第 $k$ 行的
+$(0,k), \ldots, (k,k)$ 加上第 $k$ 列的 $(k,0), \ldots, (k,k-1)$，共 $2k + 1$ 格。
+\item 第 $0$ 到第 $k - 1$ 圈共有 $1 + 3 + \cdots + (2k - 1) = k^2$ 格，所以第 $k$ 圈放的
+是 $k^2, k^2 + 1, \ldots, k^2 + 2k$，轉角 $(k, k)$ 在正中間，是 $k^2 + k$。
+\item 從表看方向。 $k$ 是偶數時（例如 $k = 2$：$4, 5, 6, 7, 8$），從 $(0, k)$ 沿第 $k$
+行往下走到轉角，再沿第 $k$ 列往左走到 $(k, 0)$。 行上的格子 $N[i][k] = k^2 + i$；列上
+的格子 $N[k][j] = k^2 + k + (k - j)$。 兩者都等於 $k^2 + k + (i - j)$（行上 $j = k$，
+列上 $i = k$）。
+\item $k$ 是奇數時（例如 $k = 3$：$9, \ldots, 15$），從 $(k, 0)$ 沿第 $k$ 列往右走到
+轉角，再沿第 $k$ 行往上。 同樣整理得 $k^2 + k + (j - i)$。
+\end{itemize}
+兩種情形合起來就是上面的公式。 代入表上的幾格檢查：$N[4][1]$：$k = 4$，$16 + 4 + 3 = 23$；
+$N[1][3]$：$k = 3$，$9 + 3 - (1 - 3) = 14$；$N[3][4]$：$k = 4$，$20 + (3 - 4) = 19$，
+都相符。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ccu-113-csb-03}]{中正資工所乙組 113 學年度 第 7 題}
+（單選，並說明理由）
+
+(5\%) Which statement is \textbf{true}?
+\begin{enumerate}[label=(\alph*),itemsep=0pt]
+\item The lower bound of worst-case time complexity of any sorting algorithm is $\Omega(n\log n)$.
+\item A heap can be used to implement a binary search tree.
+\item A bi-connected graph is a connected graph that has two articulation points.
+\item The maximum number of nodes in an AVL tree of depth 5 is 31.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d)。
+
+(d) 的「depth 5」有兩種讀法：樹共有 $5$ 層（根在第 $1$ 層），或最深的節點離根 $5$ 條邊（共 $6$ 層）。
+前一種讀法最多 $31$ 個節點，後一種最多 $63$ 個。 (a)(b)(c) 都確定是錯的，所以題目用的是前一種，
+也就是資結書的高度定義（以層數計）。 四個敘述分屬第~15、9、23、10~章，答案 (d) 是 AVL 樹，放在
+本章。
+\begin{itemize}
+\item (a) 錯。 $\Omega(n \lg n)$ 是\textbf{比較排序}的下界（資結書定理~15.1）：只靠兩兩比較得知
+順序的演算法，決策樹有 $n!$ 片葉子，高度至少 $\lg n! = \Omega(n \lg n)$。 不靠比較的計數排序、
+基數排序在值域受限時是 $\Theta(n + k)$ 或 $\Theta(d(n + k))$，可以是線性時間（資結書第~15.2~節）。
+「any sorting algorithm」太廣了。
+\item (b) 錯。 堆積只要求父節點不小於（或不大於）子節點，左右子樹之間沒有大小關係；二元搜尋樹要
+求左子樹全部小於、右子樹全部大於。 在堆積裡找一個鍵不知道該往左還是往右，最壞要看遍 $\Theta(n)$
+個節點，提供不了二元搜尋樹的搜尋、前驅、後繼等操作。
+\item (c) 錯。 雙連通圖是\textbf{沒有}割點的連通圖（資結書第~23.6~節）：拿掉任何一個頂點都還連通。
+有割點的圖反而不是雙連通的。
+\item (d) 對。 高度 $h$（$h$ 層）的二元樹最多 $1 + 2 + 4 + \cdots + 2^{h-1} = 2^h - 1$ 個節點，
+$h = 5$ 時是 $31$。 $5$ 層的滿二元樹每個節點左右子樹高度相同，平衡因子都是 $0$，本身就是 AVL 樹，
+所以最大值 $31$ 達得到。
+\end{itemize}
+附帶一提，$5$ 層的 AVL 樹\textbf{最少}要 $N(5) = 12$ 個節點（$N(h) = N(h-1) + N(h-2) + 1$，
+$N(1) = 1$、$N(2) = 2$，資結書第~10.2.2~節）。
+\end{pastsoln}

@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ncku-113-prog-01}]{成大資訊聯招 113 學年度 第 1 題}
+（單選）
+
+\textbf{[3\%, 2\%]} You are given an empty binary search tree (BST).
+\begin{enumerate}[label=\roman*)]
+\item {[Step 1]} Please successively insert the data pairs containing the following keys 15, 8,
+13, 18, 17, 6, 11, 14, 5 into the tree. What is the level of the node containing 5 in the
+resultant BST?
+
+\textbf{Note: In a tree, each step from top to bottom is called as level of a tree. The level
+count starts with 1 and increments by 1 at each level or step.}
+
+(A)~1 \qquad (B)~2 \qquad (C)~3 \qquad (D)~4 \qquad (E)~None of the above
+\item {[Step 2]} After Step 1 is executed, please delete the node containing 15 from the BST. To
+delete a nonleaf node, the pair to be deleted should be replaced by the largest pair in its left
+subtree or the smallest one in the right subtree. Which of the following keys is a suitable key
+to replace 15?
+
+(A)~8 \qquad (B)~13 \qquad (C)~17 \qquad (D)~18 \qquad (E)~None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：i) (D)；ii) (C)。
+
+i) 依序插入（資結書第~9.2~節），每個鍵從根往下比較，小的往左、大的往右，接在第一個空位：
+\begin{itemize}
+\item $15$ 是根；$8 < 15$ 接在 $15$ 左邊；$13$：$< 15$、$> 8$，接在 $8$ 右邊；
+\item $18 > 15$ 接在 $15$ 右邊；$17$：$> 15$、$< 18$，接在 $18$ 左邊；
+\item $6$：$< 15$、$< 8$，接在 $8$ 左邊；$11$：$< 15$、$> 8$、$< 13$，接在 $13$ 左邊；
+$14$：$< 15$、$> 8$、$> 13$，接在 $13$ 右邊；
+\item $5$：$< 15$、$< 8$、$< 6$，接在 $6$ 左邊。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[x=0.75cm,y=0.95cm,
+  bn/.style={circle, draw=black!65, minimum size=0.62cm, inner sep=0pt, font=\small},
+  be/.style={draw=black!55}]
+\node[bn] (15) at (4,0) {15};
+\node[bn] (8) at (2,-1) {8};
+\node[bn] (18) at (6.5,-1) {18};
+\node[bn] (6) at (1,-2) {6};
+\node[bn] (13) at (3,-2) {13};
+\node[bn] (17) at (5.5,-2) {17};
+\node[bn, draw=memStroke, thick, fill=memFill] (5) at (0.4,-3) {5};
+\node[bn] (11) at (2.4,-3) {11};
+\node[bn] (14) at (3.6,-3) {14};
+\draw[be] (15)--(8) (15)--(18) (8)--(6) (8)--(13) (18)--(17) (6)--(5) (13)--(11) (13)--(14);
+\foreach \y/\l in {0/1, -1/2, -2/3, -3/4} \node[font=\scriptsize, text=black!55] at (-1,\y) {level \l};
+\end{tikzpicture}
+\end{center}
+$5$ 的路徑是 $15 \to 8 \to 6 \to 5$，照題目的定義根在第 $1$ 層，$5$ 在第 $4$ 層，選 (D)。
+
+ii) $15$ 有兩個子節點，要用左子樹的最大鍵（前驅）或右子樹的最小鍵（後繼）來取代。
+\begin{itemize}
+\item 左子樹（根 $8$）的最大鍵：從 $8$ 一直往右走，$8 \to 13 \to 14$，是 $14$。
+\item 右子樹（根 $18$）的最小鍵：從 $18$ 一直往左走，$18 \to 17$，是 $17$。
+\end{itemize}
+可以用的是 $14$ 或 $17$，選項裡只有 $17$，選 (C)。 用 $17$ 取代後，把原本 $17$ 那個葉節點刪掉，
+$18$ 的左邊變空。 其他選項：(A) $8$ 是左子樹的根，不是最大的，換上去後左子樹的 $13$、$14$
+比根大，違反二元搜尋樹性質；(B) $13$ 也不是左子樹的最大（$14 > 13$）；(D) $18$ 不是右子樹的最小
+（$17 < 18$）。 (E) 錯，因為 (C) 可以。
+\end{pastsoln}

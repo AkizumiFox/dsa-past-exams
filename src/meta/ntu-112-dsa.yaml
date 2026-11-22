@@ -1,0 +1,24 @@
+paper: ntu-112-dsa
+volume: 2
+school: 臺大
+dept: 資工所
+year: 112
+subject: 資料結構與演算法
+instructions: 本試卷有 14 題選擇題(題號 1-14)，第 4,5,7 題為單選題，其他選擇題為複選題。單選題該題答對得 5 分，答錯倒扣 1 分，未答者得 0 分。複選題每個選項單獨計分，選項答對者得 1 分，選項答錯者倒扣 0.5 分，另若該題整題未作答者，整題得 0 分。選擇題請於答案卡上作答。另有 2 題非選擇題(題號 15-16)，請於試卷本上作答。
+questions:
+  - {id: ntu-112-dsa-01, label: 第 1 題, chapter: 14}
+  - {id: ntu-112-dsa-02, label: 第 2 題, chapter: 11}
+  - {id: ntu-112-dsa-03, label: 第 3 題, chapter: 19}
+  - {id: ntu-112-dsa-04, label: 第 4 題, chapter: 7}
+  - {id: ntu-112-dsa-05, label: 第 5 題, chapter: 8}
+  - {id: ntu-112-dsa-06, label: 第 6 題, chapter: 10}
+  - {id: ntu-112-dsa-07, label: 第 7 題, chapter: 12}
+  - {id: ntu-112-dsa-08, label: 第 8 題, chapter: 6}
+  - {id: ntu-112-dsa-09, label: 第 9 題, chapter: 20}
+  - {id: ntu-112-dsa-10, label: 第 10 題, chapter: 8}
+  - {id: ntu-112-dsa-11, label: 第 11 題, chapter: 18}
+  - {id: ntu-112-dsa-12, label: 第 12 題, chapter: 25}
+  - {id: ntu-112-dsa-13, label: 第 13 題, chapter: 24}
+  - {id: ntu-112-dsa-14, label: 第 14 題, chapter: 7}
+  - {id: ntu-112-dsa-15, label: 第 15 題, chapter: 8}
+  - {id: ntu-112-dsa-16, label: 第 16 題, chapter: 27}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-113-dsa-11}]{臺大資工所 113 學年度 第 11 題}
+（複選；每個選項單獨計分）
+
+（「the previous problem」是第 10 題：從 $(v_1,\ldots,v_n)$ 拿掉 $k$ 個數、留下 $k+1$ 段非空的段，使最大段和
+最小；$m(i,j,k)$ 是對 $v_i,\ldots,v_j$ 拿掉 $k$ 個數時的答案。）
+
+(5 points) Which of the following descriptions is true for the previous problem?
+\begin{enumerate}[label=\Alph*.]
+\item We can always find an optimal solution that removes one of the largest $v$.
+\item We can always find an optimal solution that does not remove one of the smallest $v$.
+\item The initial value for $m(i,i,0)$ is $v_i$.
+\item The initial value for $m(i,j,k)$ when $k>(j-i)/2$ is 0.
+\item The initial value for $m(i,i+2,1)$, $1\le i\le n-2$ is $\max(v_i,v_{i+2})$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：C、E。
+
+A、B 是兩種直覺的貪心選擇，關鍵是\textbf{頭尾的數不能拿掉}，拿掉的數也不能相鄰（否則有空段），
+所以拿哪些數不是自由的（資結書第~19~章說過，貪心的選擇要證明，不能只靠直覺）。
+\begin{itemize}
+\item A 錯。 反例 $(9, 1, 1)$、$k = 1$：只能拿掉中間的 $1$（拿掉頭尾會留下空段），最大的 $9$ 在頭上，
+沒有任何解會拿掉它。
+\item B 錯。 反例 $(5, 1, 5)$、$k = 1$：唯一的拿法是拿掉中間的 $1$，而它正是最小的數。 （B 的意思是
+「最小的數可以都留著」；這個例子裡最小的數只有一個，非拿不可。）
+\item C 對。 只有一個數、不拿，唯一的一段就是 $(v_i)$，段和 $v_i$。
+\item D 錯。 $k > (j - i)/2$ 時根本拿不出 $k + 1$ 段非空的段，這個子問題無解，值要設成 $+\infty$，取
+$\min$ 時才不會被選到。 設成 $0$ 會讓不可能的拿法看起來最好。 例如 $(1, 1, 3, 1, 1)$、$k = 2$：只能拿掉
+第 $2$、$4$ 個，三段 $(1), (3), (1)$，正確答案是 $3$。 用第 10 題 B 的式子，$x = 3$ 那一項是
+$\max(v_4 + v_5,\ m(1, 2, 1))$；$m(1, 2, 1)$ 是「兩個數拿掉一個留兩段」，無解，設成 $0$ 時這項是
+$\max(2, 0) = 2$，於是算出 $m(1, 5, 2) = 2$，錯了。
+\item E 對。 三個數拿掉一個，只能拿中間的 $v_{i+1}$，剩下兩段 $(v_i)$、$(v_{i+2})$，最大段和
+$\max(v_i, v_{i+2})$。
+\end{itemize}
+\end{pastsoln}

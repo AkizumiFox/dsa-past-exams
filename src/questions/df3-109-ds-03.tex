@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:df3-109-ds-03}]{地方三等資訊處理 109 年 第三題}
+（申論；14 分）
+
+請利用 Double Hashing 將下列 key 值放入 hash table of size 13中（如表1）：（14分）\\
+\{24, 53, 17, 46, 14, 32, 37, 92\}\\
+$\mathrm{h}_1(\mathrm{k})=\mathrm{k} \bmod 13$，$\mathrm{h}_2(\mathrm{k})=1+(\mathrm{k} \bmod 11)$，\\
+$\mathrm{h}(\mathrm{k,i})=(\mathrm{h}_1(\mathrm{k})+\mathrm{i}*\mathrm{h}_2(\mathrm{k})) \bmod 13$
+(i=0, 1,\ldots, 12)
+\begin{center}
+表1\\[2pt]
+\begin{tabular}{|*{13}{c|}}
+\hline
+\makebox[1.6em]{0} & \makebox[1.6em]{1} & \makebox[1.6em]{2} & \makebox[1.6em]{3} & \makebox[1.6em]{4} &
+\makebox[1.6em]{5} & \makebox[1.6em]{6} & \makebox[1.6em]{7} & \makebox[1.6em]{8} & \makebox[1.6em]{9} &
+\makebox[1.6em]{10} & \makebox[1.6em]{11} & \makebox[1.6em]{12} \\ \hline
+\rule{0pt}{3ex} & & & & & & & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{|*{13}{c|}}
+\hline
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
+ & 53 & & 37 & 17 & 14 & 32 & 46 & 92 & & & 24 & \\ \hline
+\end{tabular}
+\end{center}
+
+依序插入，第 $i$ 次探測（$i$ 從 $0$ 開始）看位置 $h(k, i) = (h_1(k) + i \cdot h_2(k)) \bmod 13$，遇到空格就放
+（資結書第~12.3~節）。 $h_2(k)$ 介於 $1$ 和 $11$ 之間，不會是 $0$；$13$ 是質數，所以每把 key 的探測序列都會走遍
+$13$ 格，只要表沒滿一定放得進去。
+\begin{center}
+\small
+\begin{tabular}{rcclc}
+\toprule
+$k$ & $h_1(k)$ & $h_2(k)$ & 探測位置 & 放入 \\
+\midrule
+24 & 11 & $1 + 2 = 3$ & 11 & 11 \\
+53 & 1 & $1 + 9 = 10$ & 1 & 1 \\
+17 & 4 & $1 + 6 = 7$ & 4 & 4 \\
+46 & 7 & $1 + 2 = 3$ & 7 & 7 \\
+14 & 1 & $1 + 3 = 4$ & 1（53 占用）, 5 & 5 \\
+32 & 6 & $1 + 10 = 11$ & 6 & 6 \\
+37 & 11 & $1 + 4 = 5$ & 11（24 占用）, 3 & 3 \\
+92 & 1 & $1 + 4 = 5$ & 1（53）, 6（32）, 11（24）, 3（37）, 8 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+各步的計算：
+\begin{itemize}
+\item $14$：$h(14, 1) = (1 + 4) \bmod 13 = 5$。
+\item $37$：$37 \bmod 11 = 4$，$h(37, 1) = (11 + 5) \bmod 13 = 16 \bmod 13 = 3$。
+\item $92$：$92 \bmod 13 = 1$（$13 \cdot 7 = 91$），$92 \bmod 11 = 4$（$11 \cdot 8 = 88$），步長 $5$。
+$h(92, i)$ 依序是 $1$、$6$、$11$、$16 \bmod 13 = 3$、$21 \bmod 13 = 8$；前四格都有人，$i = 4$ 時放進 $8$ 號。
+\end{itemize}
+最後 $8$ 個 key 占了 $1, 3, 4, 5, 6, 7, 8, 11$ 號，$0, 2, 9, 10, 12$ 號空著。 總共探測
+$1 + 1 + 1 + 1 + 2 + 1 + 2 + 5 = 14$ 次。
+\end{pastsoln}

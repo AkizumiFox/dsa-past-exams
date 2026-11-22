@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nccu-115-dsa-04}]{政大資科所 115 學年度 第 4 題}
+（單選）
+
+(5\%) The Floyd-Warshall algorithm is used to find which of the following?
+\begin{enumerate}[label=(\Alph*)]
+\item Single-Source Shortest Path (SSSP)
+\item All-Pairs Shortest Path (APSP)
+\item Minimum Spanning Tree (MST)
+\item Longest Common Subsequence (LCS)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+Floyd--Warshall（資結書第~25.6~節，虛擬碼~25.8）的子問題是 $d^{(k)}_{ij}$：「中間點只能用
+$1, \ldots, k$ 時，$i$ 到 $j$ 的最短距離」，遞迴式
+\[
+d^{(k)}_{ij} = \min\bigl(d^{(k-1)}_{ij},\; d^{(k-1)}_{ik} + d^{(k-1)}_{kj}\bigr).
+\]
+三層迴圈跑完，$d^{(n)}_{ij}$ 就是每一對 $(i, j)$ 的最短距離，時間 $\Theta(|V|^3)$。 它一次算出所有點對，
+是全點對最短路徑演算法。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 單源最短路徑用 Dijkstra（邊權非負）或 Bellman--Ford。 Floyd--Warshall 當然也順便算出某一個
+起點的答案，但它是為全點對設計的，單源只要一列的話用它太浪費。 不選。
+\item (B) 全點對最短路徑，對。
+\item (C) 最小生成樹用 Kruskal、Prim、Sollin（資結書第~24~章），和 Floyd--Warshall 無關。 錯。
+\item (D) 最長共同子序列是另一個動態規劃（資結書第~18.3~節），子問題是兩個字串的前綴。 錯。
+\end{itemize}
+\end{pastsoln}

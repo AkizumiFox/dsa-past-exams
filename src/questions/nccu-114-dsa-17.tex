@@ -1,0 +1,194 @@
+\begin{pastexam}[label={px:nccu-114-dsa-17}]{政大資科所 114 學年度 第 17 題}
+（設計；20 分）
+
+(20\%) Please design an O(log$n$) algorithm to search for the $k$-th element in an AVL tree
+of $n$ elements while the time complexity of insertion operation remains O(log$n$).\\
+(1) (5\%) How to modify the data structure of an AVL tree to support this search operation?\\
+(2) (10\%) Give the O(log$n$) algorithm to search for the k-element.\\
+(3) (5\%) How to modify the insertion operation to accommodate for the modification of the
+data structure. (Please illustrate your answer by using the AVL-tree provided in Figure 2.)
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,
+  t/.style={circle,draw,thick,inner sep=0pt,minimum size=7.5mm,font=\sffamily},
+  every path/.style={thick},>={Stealth[length=2mm]}]
+  \node[t] (54) at (9.65,-0.75) {54};
+  \node[t] (23) at (8.4,-2.05) {23};
+  \node[t] (79) at (10.8,-2.0) {79};
+  \node[t] (11) at (7.3,-3.45) {11};
+  \node[t] (45) at (9.15,-3.45) {45};
+  \node[t] (66) at (10.1,-3.5) {66};
+  \node[t] (88) at (11.4,-3.5) {88};
+  \node[t] (36) at (8.3,-4.85) {36};
+  \draw[->] (54)--(23); \draw[->] (54)--(79);
+  \draw[->] (23)--(11); \draw[->] (23)--(45);
+  \draw[->] (79)--(66); \draw[->] (79)--(88);
+  \draw[->] (45)--(36);
+\end{tikzpicture}\\
+Figure 2
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目的「the $k$-th element」解讀成第 $k$ 小的鍵。 (3) 沒有指定插入哪個鍵，下面用插
+入 $40$ 示範，這個鍵會引起雙旋轉，最能看出新欄位在旋轉時怎麼更新。
+
+(1) 每個節點多存一個欄位 $\mathit{size}$：以這個節點為根的子樹有幾個節點，約定
+$\mathit{size}(\NIL) = 0$，所以 $x.\mathit{size} = \mathit{size}(x.\mathit{left}) +
+\mathit{size}(x.\mathit{right}) + 1$。 和資結書第~9.4~節的二元搜尋樹一樣，每
+個節點多 $O(1)$ 空間。
+
+(2) 用資結書虛擬碼~9.8 的 \proc{Tree-Select}，一行都不用改：
+\begin{pseudo}[unbreakable]{第 $k$ 小的節點（$k$ 從 $1$ 開始）}
+\Function{Tree-Select}{$T, k$}
+    \State $x \gets T.\mathit{root}$
+    \While{$x \ne \NIL$}
+        \State $r \gets \mathit{size}(x.\mathit{left}) + 1$ \Comment{$x$ 在這棵子樹裡的名次}
+        \If{$k = r$}
+            \State \Return $x$
+        \ElsIf{$k < r$}
+            \State $x \gets x.\mathit{left}$
+        \Else
+            \State $k \gets k - r$
+            \State $x \gets x.\mathit{right}$
+        \EndIf
+    \EndWhile
+    \State \Return \NIL \Comment{$k < 1$ 或 $k > n$}
+\EndFunction
+\end{pseudo}
+在節點 $x$，
+$r = \mathit{size}(x.\mathit{left}) + 1$ 是 $x$ 在它的子樹裡的名次：$k = r$ 就回傳
+$x$；$k < r$ 往左子樹找第 $k$ 小；$k > r$ 時左子樹和 $x$ 共 $r$ 個都比答案小，往右
+子樹找第 $k - r$ 小。 正確性是對子樹大小歸納，每一步都把問題換成「在一棵比較小的子
+樹裡找第幾小」，見資結書第~9.4~節。 每一步往下一層，時間 $O(h)$；AVL 樹的
+$h < 1.4405 \lg(n+1)$（資結書定理~10.1），所以是 $O(\lg n)$。
+
+(3) 改資結書虛擬碼~10.2 的三個地方：
+\begin{itemize}
+\item 第 3 行建立新節點時，$\mathit{size} = 1$。
+\item 第 10 行更新高度的地方，同時更新
+$t.\mathit{size} \gets \mathit{size}(t.\mathit{left}) + \mathit{size}(t.\mathit{right}) + 1$。
+\item 旋轉（資結書虛擬碼~10.1 和左旋）改完指標之後，和更新高度一樣，
+先重算降下去的節點的 $\mathit{size}$，再重算升上來的節點。 C 程式只要在資結書範例~10.1
+的 \texttt{update} 裡多寫一行。
+\end{itemize}
+為什麼對：插入只改變新節點到根這條路徑上的子樹，旋轉只改變被轉的兩個（雙旋轉是三個）
+節點的子樹，其他節點的 $\mathit{size}$ 都不變。 遞迴在回程時由下往上處理路徑上的節點，
+重算 $t$ 的時候它的兩個子節點已經是對的；旋轉時先算下面那個，理由相同。 用「從子節點
+重算」而不是「往下走時沿路加 $1$」還有一個好處：鍵已經在樹裡時（第 9 行直接回傳），
+不會把路徑上的 $\mathit{size}$ 多加。 每個節點多做 $O(1)$ 的事，插入仍然是 $O(\lg n)$。
+
+以圖 2 插入 $40$ 為例（右上方的數字是 $\mathit{size}$）。 $40$ 走 $54 \to 23 \to 45
+\to 36$，接成 $36$ 的右子節點 (b)。 回程：$36$ 的 $\mathit{size}$ 變 $2$、高度 $2$；$45$
+的 $\mathit{size}$ 變 $3$，左高 $2$、右高 $0$，平衡因子 $+2$，左子節點 $36$ 是 $-1$，是
+LR。 先對 $36$ 左旋：$40$ 升上來，$36$ 成為 $40$ 的左子節點，重算 $36$ 是 $1$、$40$ 是
+$2$；再對 $45$ 右旋：$40$ 升到 $45$ 的位置，重算 $45$ 是 $1$、$40$ 是 $3$ (c)。 繼續往
+上，$23$ 重算成 $1 + 3 + 1 = 5$，$54$ 重算成 $5 + 3 + 1 = 9$。
+\begin{center}
+\begin{tikzpicture}[x=0.55cm,y=0.75cm,
+  tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small},
+  tnA/.style={draw=memStroke, very thick, fill=memFill},
+  tnN/.style={draw=coreStroke, thick, fill=coreFill},
+  te/.style={draw=black!60},
+  bfl/.style={anchor=north west, font=\scriptsize, text=black!70, inner sep=0.5pt},
+  plab/.style={font=\small},
+  baseline=(current bounding box.north)]
+\node[tn] (nca11) at (0,-2) {11};
+\node[tn] (nca23) at (1,-1) {23};
+\node[tn] (nca36) at (2,-3) {36};
+\node[tn] (nca45) at (3,-2) {45};
+\node[tn] (nca54) at (4,0) {54};
+\node[tn] (nca66) at (5,-2) {66};
+\node[tn] (nca79) at (6,-1) {79};
+\node[tn] (nca88) at (7,-2) {88};
+\draw[te] (nca54) -- (nca23);
+\draw[te] (nca23) -- (nca11);
+\draw[te] (nca23) -- (nca45);
+\draw[te] (nca45) -- (nca36);
+\draw[te] (nca54) -- (nca79);
+\draw[te] (nca79) -- (nca66);
+\draw[te] (nca79) -- (nca88);
+\node[plab] at (3.5,-4.75) {(a) 圖 2 的樹};
+\node[bfl] at (nca54.north east) {$8$};
+\node[bfl] at (nca23.north east) {$4$};
+\node[bfl] at (nca11.north east) {$1$};
+\node[bfl] at (nca45.north east) {$2$};
+\node[bfl] at (nca36.north east) {$1$};
+\node[bfl] at (nca79.north east) {$3$};
+\node[bfl] at (nca66.north east) {$1$};
+\node[bfl] at (nca88.north east) {$1$};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[x=0.55cm,y=0.75cm,
+  tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small},
+  tnA/.style={draw=memStroke, very thick, fill=memFill},
+  tnN/.style={draw=coreStroke, thick, fill=coreFill},
+  te/.style={draw=black!60},
+  bfl/.style={anchor=north west, font=\scriptsize, text=black!70, inner sep=0.5pt},
+  plab/.style={font=\small},
+  baseline=(current bounding box.north)]
+\node[tn] (ncb11) at (0,-2) {11};
+\node[tn] (ncb23) at (1,-1) {23};
+\node[tn] (ncb36) at (2,-3) {36};
+\node[tn,tnN] (ncb40) at (3,-4) {40};
+\node[tn,tnA] (ncb45) at (4,-2) {45};
+\node[tn] (ncb54) at (5,0) {54};
+\node[tn] (ncb66) at (6,-2) {66};
+\node[tn] (ncb79) at (7,-1) {79};
+\node[tn] (ncb88) at (8,-2) {88};
+\draw[te] (ncb54) -- (ncb23);
+\draw[te] (ncb23) -- (ncb11);
+\draw[te] (ncb23) -- (ncb45);
+\draw[te] (ncb45) -- (ncb36);
+\draw[te] (ncb36) -- (ncb40);
+\draw[te] (ncb54) -- (ncb79);
+\draw[te] (ncb79) -- (ncb66);
+\draw[te] (ncb79) -- (ncb88);
+\node[plab] at (4.0,-4.75) {(b) 40 接成葉節點};
+\node[bfl] at (ncb54.north east) {$9$};
+\node[bfl] at (ncb23.north east) {$5$};
+\node[bfl] at (ncb11.north east) {$1$};
+\node[bfl] at (ncb45.north east) {$3$};
+\node[bfl] at (ncb36.north east) {$2$};
+\node[bfl] at (ncb40.north east) {$1$};
+\node[bfl] at (ncb79.north east) {$3$};
+\node[bfl] at (ncb66.north east) {$1$};
+\node[bfl] at (ncb88.north east) {$1$};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[x=0.55cm,y=0.75cm,
+  tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small},
+  tnA/.style={draw=memStroke, very thick, fill=memFill},
+  tnN/.style={draw=coreStroke, thick, fill=coreFill},
+  te/.style={draw=black!60},
+  bfl/.style={anchor=north west, font=\scriptsize, text=black!70, inner sep=0.5pt},
+  plab/.style={font=\small},
+  baseline=(current bounding box.north)]
+\node[tn] (ncc11) at (0,-2) {11};
+\node[tn] (ncc23) at (1,-1) {23};
+\node[tn] (ncc36) at (2,-3) {36};
+\node[tn,tnN] (ncc40) at (3,-2) {40};
+\node[tn] (ncc45) at (4,-3) {45};
+\node[tn] (ncc54) at (5,0) {54};
+\node[tn] (ncc66) at (6,-2) {66};
+\node[tn] (ncc79) at (7,-1) {79};
+\node[tn] (ncc88) at (8,-2) {88};
+\draw[te] (ncc54) -- (ncc23);
+\draw[te] (ncc23) -- (ncc11);
+\draw[te] (ncc23) -- (ncc40);
+\draw[te] (ncc40) -- (ncc36);
+\draw[te] (ncc40) -- (ncc45);
+\draw[te] (ncc54) -- (ncc79);
+\draw[te] (ncc79) -- (ncc66);
+\draw[te] (ncc79) -- (ncc88);
+\node[plab] at (4.0,-4.75) {(c) LR 之後};
+\node[bfl] at (ncc54.north east) {$9$};
+\node[bfl] at (ncc23.north east) {$5$};
+\node[bfl] at (ncc11.north east) {$1$};
+\node[bfl] at (ncc40.north east) {$3$};
+\node[bfl] at (ncc36.north east) {$1$};
+\node[bfl] at (ncc45.north east) {$1$};
+\node[bfl] at (ncc79.north east) {$3$};
+\node[bfl] at (ncc66.north east) {$1$};
+\node[bfl] at (ncc88.north east) {$1$};
+\end{tikzpicture}
+\end{center}
+在 (c) 找第 $4$ 小：在 $54$，$r = 5 + 1 = 6$，$4 < 6$ 往左；在 $23$，$r = 1 + 1 = 2$，
+$4 > 2$，往右找第 $2$ 小；在 $40$，$r = 1 + 1 = 2$，回傳 $40$。 由小到大是
+$11, 23, 36, 40, \ldots$，第 $4$ 小確實是 $40$。
+\end{pastsoln}

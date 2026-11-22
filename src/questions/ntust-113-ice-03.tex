@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntust-113-ice-03}]{臺科大資工所 113 學年度 第 I-3 題}
+（複選）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) Select all the correct statements for finding the shortest paths from a given node in a graph.
+\begin{enumerate}[label=(\alph*)]
+\item Dijkstra's algorithm can be applied if the graph is undirected without negative weights.
+\item Dijkstra's algorithm can be applied if the graph is directed with negative weights but without
+negative cycles.
+\item Dijkstra's algorithm can be applied if the graph is undirected with negative cycles.
+\item Bellman-ford algorithm can be applied if the graph is undirected without negative weights.
+\item Bellman-ford algorithm can indicate that no solution exists if the graph is directed with
+negative cycles.
+\item The answers must be the same for every graph that can successfully find shortest path
+solutions using both Dijkstra's and Bellman-ford algorithms.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案是 (a)、(d)、(e)、(f)。
+
+無向圖的每條邊 $\{u, v\}$ 都可以看成兩條有向邊 $u \to v$、$v \to u$，權重相同；有向圖的單源最短
+路徑演算法都可以這樣套用到無向圖上。
+\begin{itemize}
+\item \textbf{(a) 對。} 換成有向圖後權重仍然都 $\ge 0$，滿足 Dijkstra 的條件（資結書定理~25.6）。
+\item \textbf{(b) 錯。} Dijkstra 要求權重都 $\ge 0$，沒有負環但有負邊時就可能算錯（資結書
+第~25.2.5~節）。 反例：$s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重 $-2$。 Dijkstra 先確定
+$d[a] = 2$，之後才取出 $b$，但這時 $a$ 已經確定，不會再改；正確答案 $\delta(s, a) = 1$。
+\item \textbf{(c) 錯。} 有負環時，經過負環可以無限變小，最短路徑根本不存在，任何演算法都給不出
+答案；Dijkstra 連負邊都處理不了。 （無向圖只要有一條負邊 $\{u, v\}$，$u \to v \to u$ 就是負環。）
+\item \textbf{(d) 對。} Bellman--Ford 只要求從起點走得到的地方沒有負環（資結書定理~25.7）。 無向圖
+沒有負權重，換成兩條有向邊後也沒有負環，可以用。
+\item \textbf{(e) 對。} Bellman--Ford 做完 $|V| - 1$ 輪放鬆後再檢查一輪，還能放鬆就回傳 \textsc{false}，
+表示有從起點走得到的負環、最短路徑不存在（資結書第~25.3.4~節）。 若負環從起點走不到，那些點的
+最短路徑仍然存在，它也正確回傳；題目說「can indicate」，成立。
+\item \textbf{(f) 對。} 兩者都成功時，算出的是同一個圖的最短路徑距離 $\delta(s, v)$，而最短距離是
+唯一的，所以答案一樣。 （最短路徑本身可能有好幾條一樣短的，兩個演算法回報的路徑可以不同，但
+距離一定相同；題目的「answers」指最短路徑的解，也就是距離。）
+\end{itemize}
+\end{pastsoln}

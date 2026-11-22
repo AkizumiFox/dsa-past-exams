@@ -1,0 +1,145 @@
+\begin{pastexam}[label={px:gk3-112-ds-03}]{高考三級資訊處理 112 年 第三題}
+（申論；25 分）
+
+在電腦網路中，透過IP位址以查詢對應的裝置是常見的動作。今某電腦網路有以下表格所示的IP位址以及對應裝置（假設每個IP位址有8個位元），當輸入某一IP位址以查詢對應的裝置時，最壞情況為此表格中的每個IP位址的每個位元皆需要搜尋一次，以確認此輸入的IP位址是否有對應的裝置。由於這樣的IP位址儲存方式，將造成查詢時的高複雜度（例如，若表內有m個IP時，查詢的複雜度為m*8），因此運用適當的資料結構以減低查詢複雜度，已成為電腦網路的重要課題。
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|*{9}{c|}}
+\hline
+IP位元0 & IP位元1 & IP位元2 & IP位元3 & IP位元4 & IP位元5 & IP位元6 & IP位元7 & 裝置 \\ \hline
+0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & A \\ \hline
+0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 & B \\ \hline
+1 & 1 & 0 & 0 & 0 & 0 & 1 & 1 & C \\ \hline
+1 & 1 & 0 & 0 & 1 & 1 & 0 & 0 & D \\ \hline
+1 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & E \\ \hline
+\textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} & \textbf{\dots} \\ \hline
+\end{tabular}
+\end{center}
+試建立並驗證一個樹狀資料結構，不僅可以儲存以上表格方式的IP位址以及對應裝置資訊，並可使得查詢IP位址所對應的裝置的最壞情況複雜度維持在常數8（也就是IP位址位元數）。（25分）
+\end{pastexam}
+
+\begin{pastsoln}
+用\textbf{二元字典樹}（binary trie，資結書第~11.5~節）：從根往下，第 $i$ 層依 IP 的位元 $i$ 決定往哪邊走，位元是
+$0$ 走 0 號子節點、是 $1$ 走 1 號子節點；走完 $8$ 個位元到達的葉節點存對應的裝置。 查詢時每個位元只看一次，
+和表裡有幾個 IP（$m$）無關。
+
+\textbf{節點結構}。 每個節點有兩個子指標 $\mathit{child}[0]$、$\mathit{child}[1]$（沒有就是 $\NIL$），葉節點另存裝置名稱
+$\mathit{dev}$。 根在第 $0$ 層，第 $8$ 層是葉。
+
+\textbf{建立}。 依序插入表中的五筆。 例如插入 A $= 00111100$：從根沿 $0, 0, 1, 1, 1, 1, 0, 0$ 往下走，沒有的節點就新建，
+第 $8$ 層的葉存 A。 B $= 00110011$ 和 A 共用前 $4$ 個位元 $0011$ 的路徑，在第 $4$ 層分開。 C、D、E 都以 $110$ 開頭；
+C $= 11000011$、D $= 11001100$ 共用 $1100$，在第 $4$ 層分開，E $= 11011100$ 在第 $3$ 層（位元 3 是 $1$）就和 C、D
+分開。 建好的字典樹如下（往右是往下一層，邊上的數字是那一層的位元值，最右邊一欄是葉節點）：
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,t/.style={circle,draw,fill=white,inner sep=0pt,minimum size=2.2mm},
+  lb/.style={font=\scriptsize,fill=white,inner sep=0.8pt}]
+\foreach \i in {0,...,8} \node[font=\scriptsize,color=black!60] at (\i*1.05,4.0) {\i};
+\node[font=\scriptsize,color=black!60,anchor=east] at (-0.2,4.0) {層};
+\node[t] (r) at (0.0,1.80) {};
+\node[t] (n0) at (1.1,3.15) {};
+\node[t] (n1) at (1.1,0.90) {};
+\node[t] (n00) at (2.1,3.15) {};
+\node[t] (n11) at (2.1,0.90) {};
+\node[t] (n001) at (3.2,3.15) {};
+\node[t] (n110) at (3.2,0.90) {};
+\node[t] (n0011) at (4.2,3.15) {};
+\node[t] (n1100) at (4.2,1.35) {};
+\node[t] (n1101) at (4.2,0.00) {};
+\node[t] (n00110) at (5.2,2.70) {};
+\node[t] (n00111) at (5.2,3.60) {};
+\node[t] (n11000) at (5.2,1.80) {};
+\node[t] (n11001) at (5.2,0.90) {};
+\node[t] (n11011) at (5.2,0.00) {};
+\node[t] (n001100) at (6.3,2.70) {};
+\node[t] (n001111) at (6.3,3.60) {};
+\node[t] (n110000) at (6.3,1.80) {};
+\node[t] (n110011) at (6.3,0.90) {};
+\node[t] (n110111) at (6.3,0.00) {};
+\node[t] (n0011001) at (7.4,2.70) {};
+\node[t] (n0011110) at (7.4,3.60) {};
+\node[t] (n1100001) at (7.4,1.80) {};
+\node[t] (n1100110) at (7.4,0.90) {};
+\node[t] (n1101110) at (7.4,0.00) {};
+\node[t] (n00110011) at (8.4,2.70) {};
+\node[t] (n00111100) at (8.4,3.60) {};
+\node[t] (n11000011) at (8.4,1.80) {};
+\node[t] (n11001100) at (8.4,0.90) {};
+\node[t] (n11011100) at (8.4,0.00) {};
+\draw (r) -- node[lb]{0} (n0);
+\draw (r) -- node[lb]{1} (n1);
+\draw (n0) -- node[lb]{0} (n00);
+\draw (n1) -- node[lb]{1} (n11);
+\draw (n00) -- node[lb]{1} (n001);
+\draw (n11) -- node[lb]{0} (n110);
+\draw (n001) -- node[lb]{1} (n0011);
+\draw (n110) -- node[lb]{0} (n1100);
+\draw (n110) -- node[lb]{1} (n1101);
+\draw (n0011) -- node[lb]{0} (n00110);
+\draw (n0011) -- node[lb]{1} (n00111);
+\draw (n1100) -- node[lb]{0} (n11000);
+\draw (n1100) -- node[lb]{1} (n11001);
+\draw (n1101) -- node[lb]{1} (n11011);
+\draw (n00110) -- node[lb]{0} (n001100);
+\draw (n00111) -- node[lb]{1} (n001111);
+\draw (n11000) -- node[lb]{0} (n110000);
+\draw (n11001) -- node[lb]{1} (n110011);
+\draw (n11011) -- node[lb]{1} (n110111);
+\draw (n001100) -- node[lb]{1} (n0011001);
+\draw (n001111) -- node[lb]{0} (n0011110);
+\draw (n110000) -- node[lb]{1} (n1100001);
+\draw (n110011) -- node[lb]{0} (n1100110);
+\draw (n110111) -- node[lb]{0} (n1101110);
+\draw (n0011001) -- node[lb]{1} (n00110011);
+\draw (n0011110) -- node[lb]{0} (n00111100);
+\draw (n1100001) -- node[lb]{1} (n11000011);
+\draw (n1100110) -- node[lb]{0} (n11001100);
+\draw (n1101110) -- node[lb]{0} (n11011100);
+\node[right=1pt of n00111100,font=\small] {A};
+\node[right=1pt of n00110011,font=\small] {B};
+\node[right=1pt of n11000011,font=\small] {C};
+\node[right=1pt of n11001100,font=\small] {D};
+\node[right=1pt of n11011100,font=\small] {E};
+\end{tikzpicture}
+\end{center}
+樹有 $30$ 個節點（根 $1$ 個、A/B 共用的 $4$ 個、A 和 B 各自的 $4$ 個、C/D/E 共用的 $3$ 個、C/D 共用的 $1$ 個、C 和 D
+各自的 $4$ 個、E 自己的 $5$ 個）。
+\begin{pseudo}[unbreakable]{二元字典樹的查詢與插入（$\mathit{ip}[0..7]$ 是 $8$ 個位元）}
+\Function{Lookup}{$\mathit{root}, \mathit{ip}$}
+    \State $x \gets \mathit{root}$
+    \For{$i \gets 0$ \To $7$}
+        \State $x \gets x.\mathit{child}[\mathit{ip}[i]]$
+        \If{$x = \NIL$}
+            \State \Return 「沒有對應的裝置」
+        \EndIf
+    \EndFor
+    \State \Return $x.\mathit{dev}$
+\EndFunction
+\Statex
+\Procedure{Insert}{$\mathit{root}, \mathit{ip}, d$}
+    \State $x \gets \mathit{root}$
+    \For{$i \gets 0$ \To $7$}
+        \If{$x.\mathit{child}[\mathit{ip}[i]] = \NIL$}
+            \State $x.\mathit{child}[\mathit{ip}[i]] \gets$ 新節點（兩個子指標都是 $\NIL$）
+        \EndIf
+        \State $x \gets x.\mathit{child}[\mathit{ip}[i]]$
+    \EndFor
+    \State $x.\mathit{dev} \gets d$
+\EndProcedure
+\end{pseudo}
+
+\textbf{驗證}。
+\begin{itemize}
+\item \textbf{正確性}：根到每個葉的路徑和一個 $8$ 位元字串一一對應（每一層的選擇就是那個位元），所以查詢 $\mathit{ip}$ 時
+走到的葉，正好是插入同一個 $\mathit{ip}$ 時建出來的葉，裡面存的是它的裝置；中途碰到 $\NIL$ 表示沒有任何已存的 IP
+有這個前綴，當然也沒有這個 IP。
+\item \textbf{例 1}：查 $11001100$。 位元依序是 $1,1,0,0,1,1,0,0$，從根走 $8$ 步到葉，得到 D，共看 $8$ 個位元。
+\item \textbf{例 2}：查 $11100000$。 走 $1, 1$ 之後，第 $2$ 層的節點（前綴 $11$）只有 0 號子節點，位元 2 是 $1$，碰到
+$\NIL$，看了 $3$ 個位元就確定沒有對應的裝置。
+\item \textbf{複雜度}：\proc{Lookup} 的迴圈最多 $8$ 次，每次 $O(1)$，最壞情況恰好看 $8$ 個位元，不論表中有多少個 IP；
+插入也是 $8$ 步。 空間：每個 IP 最多新增 $8$ 個節點，$m$ 個 IP 最多 $8m + 1$ 個節點，共用前綴時更少（本例 $5$ 個 IP 只用
+$30$ 個節點）。 原本的表格最壞要比對 $m \times 8$ 個位元，字典樹降到 $8$。
+\end{itemize}
+實務上路由器用的是這種字典樹的壓縮版本（把只有一個子節點的鏈縮成一條邊，即 Patricia 樹，資結書第~11.5.3~節），
+查詢步數仍然不超過位元數。
+\end{pastsoln}

@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntut-115-ci-01}]{北科大資工所 115 學年度 第 1 題}
+（簡答；只寫答案）
+
+Please answer the following questions concisely with asymptotic notations and you do not need to
+give the reasons or prove it. (10\%)
+\begin{enumerate}[label=(\arabic*)]
+\item What is the growth rate of $T(n) = 20n^2 + 7\sqrt{n}\log n + 5n\,(\log n)^2$? (2\%)
+\item Give the growth rate of the recursive function $T(n) = \sqrt{n}\,T(\sqrt{n}) + cn$ for
+$n > 2$ and $T(2) = 1$, where $c$ is some positive constant, using $\Theta$ notation. (2\%)
+\item What is the worst-case running time for Quicksort algorithm? (2\%)
+\item Give the best running time for finding the median in an unsorted set of size $n$. (2\%)
+\item Give the best running time for merging two sorted sequences of sizes $n$ and $m$. (2\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $\Theta(n^2)$；(2) $\Theta(n \lg \lg n)$；(3) $\Theta(n^2)$；(4) $\Theta(n)$；(5) $\Theta(n + m)$。
+
+五個小題分別對應資結書第~1~章（(1)）、第~2~章（(2)）、第~14~章（(3)(5)）、第~16~章（(4)），都是
+漸近記號的應用，放在第~1~章。 題目只要答案，下面寫出推導。
+
+\textbf{(1)} 比較三項的成長速度（資結書第~1.6~節）：任何 $\log$ 的次方都比任何正次方的 $n$ 慢，所以
+$\sqrt{n}\log n = o(n)$、$(\log n)^2 = o(n)$，後兩項都是 $o(n^2)$：
+\[
+\frac{7\sqrt{n}\log n}{n^2} \to 0, \qquad \frac{5n(\log n)^2}{n^2} = \frac{5(\log n)^2}{n} \to 0 .
+\]
+$n$ 夠大時 $20n^2 \le T(n) \le 21n^2$，$T(n) = \Theta(n^2)$。
+
+\textbf{(2)} 這題不能套主定理：子問題的個數 $\sqrt{n}$ 不是常數（資結書第~2.4~節「不能用的時候」）。
+兩邊除以 $n$：
+\[
+\frac{T(n)}{n} = \frac{T(\sqrt{n})}{\sqrt{n}} + c .
+\]
+令 $S(n) = T(n)/n$，得到 $S(n) = S(\sqrt{n}) + c$，$S(2) = 1/2$。 這是資結書第~2.5~節開根號的形式：
+考慮 $n = 2^{2^k}$（每次開根號都是整數），從 $n$ 開到 $2$ 要 $k = \lg \lg n$ 次，每次加 $c$，所以
+\[
+S(n) = \frac{1}{2} + c \lg \lg n, \qquad T(n) = n \left(c \lg \lg n + \frac{1}{2}\right)
+= \Theta(n \lg \lg n).
+\]
+驗算 $c = 1$：$T(4) = 2T(2) + 4 = 6 = 4(1 + \frac{1}{2})$，
+$T(16) = 4T(4) + 16 = 40 = 16(2 + \frac{1}{2})$。
+
+\textbf{(3)} 快速排序的最壞情況是每次分割都切成 $0$ 和 $m - 1$ 個（例如取第一個數當基準、輸入已經
+排好），$T(n) = T(n - 1) + \Theta(n)$，$T(n) = \Theta(n^2)$（資結書第~14.5~節）。
+
+\textbf{(4)} 中位數就是第 $\lceil n/2 \rceil$ 小的數。 中位數的中位數選擇演算法（資結書第~16.3~節、
+定理~16.6）在最壞情況下 $O(n)$ 時間找出第 $k$ 小；而任何演算法至少要看過每個數一次（沒看過的那個
+數可能就是中位數），所以是 $\Omega(n)$。 最好的時間是 $\Theta(n)$。 （先排序再取中間要 $\Theta(n \log n)$，
+不是最好的。）
+
+\textbf{(5)} 合併排序的合併步驟（資結書虛擬碼~14.4）：兩個指標各從頭往後走，每比較一次就輸出一個數，
+共 $O(n + m)$。 輸出本身就有 $n + m$ 個數，所以是 $\Theta(n + m)$。
+\end{pastsoln}

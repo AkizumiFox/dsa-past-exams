@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nccu-114-dsa-10}]{政大資科所 114 學年度 第 10 題}
+（單選；每題 4 分）
+
+(4\%) Given an undirected graph of $n$ vertices, $m$ edges and $p$ connected components, what is
+the minimum number of edges required to make this graph connected?
+
+A.~$n$-$p$+1 \qquad B.~$p$-1 \qquad C.~$n$-1 \qquad D.~$p$ \qquad E.~$n$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。 題目問的是「最少要\textbf{再加}幾條邊」才能讓圖連通。
+
+\textbf{$p - 1$ 條夠}：每個連通元件挑一個代表頂點 $v_1, v_2, \ldots, v_p$，加上
+$p - 1$ 條邊 $(v_1, v_2)$、$(v_2, v_3)$、……、$(v_{p-1}, v_p)$。 任兩個元件都經過這條鏈連起來，元件內部本來就
+連通，所以整張圖連通，共加了 $p - 1$ 條。
+
+\textbf{少於 $p - 1$ 條不夠}：加一條邊最多把兩個連通元件合成一個，元件數最多減 $1$。 從 $p$ 個
+元件變成 $1$ 個，至少要減 $p - 1$ 次，所以至少要加 $p - 1$ 條邊。
+
+例如 $n = 5$，邊只有 $(1, 2)$、$(3, 4)$，連通元件是 $\{1, 2\}$、$\{3, 4\}$、$\{5\}$，$p = 3$。
+加 $(2, 3)$、$(4, 5)$ 兩條就連通了，一條不夠。
+
+逐項檢查：
+\begin{itemize}
+\item A.~$n - p + 1$：$n - p$ 是一個有 $p$ 個元件的森林的邊數，和「要加幾條」無關，錯（上例是
+$3$，不是 $2$）。
+\item B.~$p - 1$：對。
+\item C.~$n - 1$：這是一棵生成樹的總邊數，原圖已經有的邊不必再加，錯。
+\item D.~$p$：多了一條，$p - 1$ 條就夠，錯。
+\item E.~$n$：錯。
+\end{itemize}
+\end{pastsoln}

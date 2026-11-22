@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntut-114-ci-01}]{北科大資工所 114 學年度 第 1 題}
+（簡答）
+
+Please answer the following questions concisely and you do not need to give the reason or prove it.
+\begin{enumerate}[label=(\arabic*)]
+\item Use Big-O notation to represent the growth rate of $f(n)=n^3\log n+2^n\sqrt{n}$. (2 pts)
+\item Give the asymptotic bound on the recursive function $T(n)=7T\left(\frac{n}{5}\right)+8n^5$, where $T(n)=1$ when $n=1$. (2 pts)
+\item What is the rule (or principle) for managing the data items in a stack? (2 pts)
+\item What is the maximum possible number of edges in a directed graph with $n$ nodes (vertices)? (2 pts)
+\item What are the possible degrees of internal nodes (except the root) in a B-tree of order 9? (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $O(2^n\sqrt n)$；(2) $\Theta(n^5)$；(3) 後進先出（LIFO）；(4) $n(n-1)$；(5) $5, 6, 7, 8, 9$。
+
+這題五個小題分屬第~1、2、6、21、11~章，放在第~1~章。 題目不用寫理由，下面的說明是讓讀者確定答案。
+
+\textbf{(1)} 兩項中 $2^n\sqrt n$ 成長得快：$\dfrac{n^3 \log n}{2^n \sqrt n} = \dfrac{n^{2.5}\log n}{2^n} \to 0$
+（指數函數比任何多項式乘對數都快，資結書第~1.6~節）。 所以 $f(n) = \Theta(2^n\sqrt n)$，寫成 Big-O
+是 $O(2^n\sqrt n)$；只寫 $O(2^n)$ 不對，$\sqrt n$ 這個因子不能丟。
+
+\textbf{(2)} 主定理（資結書第~2.4~節）：$a = 7$、$b = 5$，$n^{\log_5 7} \approx n^{1.21}$；
+$f(n) = 8n^5$ 多項式地大於它。 正則條件 $7f(n/5) = \frac{7}{3125} \cdot 8n^5 \le c\, f(n)$，取
+$c = \frac{7}{3125} < 1$ 成立。 第三種情形，$T(n) = \Theta(n^5)$。
+
+\textbf{(3)} 後進先出（last in, first out）：只在頂端放入和取出，最後放進去的最先取出（資結書
+第~6.1~節）。
+
+\textbf{(4)} 每一對相異的頂點 $(u, v)$ 最多一條 $u \to v$ 的邊，有序對共 $n(n-1)$ 個，所以最多 $n(n-1)$
+條（資結書第~21.1~節）。 這是不允許自我迴圈、不允許重邊的簡單有向圖；如果允許自我迴圈 $u \to u$，
+最多是 $n^2$。
+
+\textbf{(5)} $m$ 階 B 樹根以外的內部節點有 $\lceil m/2 \rceil$ 到 $m$ 個子節點（資結書第~11.2~節）。
+$m = 9$：$\lceil 9/2 \rceil = 5$ 到 $9$，也就是 $5, 6, 7, 8, 9$。 這裡的 degree 是子節點數；如果問的是
+鍵數，就是 $4$ 到 $8$。
+\end{pastsoln}

@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-12}]{臺大資工所 111 學年度 第 12 題}
+（單選）
+
+(5 points) Which of the following statement has been proved to be true?
+\begin{enumerate}[label=(\Alph*)]
+\item An NP problem of size $n$ must take more than $poly(n)$ time to solve.
+\item Any NP problem is polnomial-reducible to any NP-complete problem.
+\item Any NP-complete problem is polnomial-reducible to any NP problem.
+\item If an NP-complete problem can be solved by an approximation algorithm with ratio 2, any
+other NP-complete problem can also be solved by an approximation algorithm with a constant ratio.
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。 原卷的 polnomial 是 polynomial 的錯字。
+
+題目問的是「已經被證明」的敘述，P 是否等於 NP 還沒有定論，凡是需要 $\mathrm{P} \ne \mathrm{NP}$ 或
+$\mathrm{P} = \mathrm{NP}$ 才成立的，都不算。
+\begin{itemize}
+\item (A) 錯。 $\mathrm{P} \subseteq \mathrm{NP}$（資結書定理~28.1），排序、最短路徑這些 NP 問題都有
+多項式時間的解法，所以「每個 NP 問題都要超過多項式時間」是錯的；就算只看 NP 完備問題，要不要超過
+多項式時間也就是 $\mathrm{P} \ne \mathrm{NP}$ 這個未解的問題。
+\item (B) 對。 這就是 NP 完備的定義（資結書第~28.4~節）：$Y$ 是 NP 完備，表示 $Y \in \mathrm{NP}$ 而且
+\textbf{每一個} NP 問題 $X$ 都有 $X \le_p Y$。 「任何 NP 問題可以歸約到任何 NP 完備問題」正是把定義
+對每一個 NP 完備問題 $Y$ 寫出來。
+\item (C) 沒有被證明。 若它成立，取一個 P 裡的問題 $X$（例如「給定的數是不是偶數」），SAT $\le_p X$，
+就能在多項式時間解 SAT，推出 $\mathrm{P} = \mathrm{NP}$（資結書定理~28.5）。 這是未解問題，所以 (C)
+不算「已證明」。
+\item (D) 錯（至少沒被證明）。 一般的多項式時間歸約不保留近似比。 頂點覆蓋有比值 $2$ 的近似演算法
+（資結書定理~29.1），但一般的旅行推銷員問題，除非 $\mathrm{P} = \mathrm{NP}$，否則沒有任何常數比值的
+近似演算法（資結書定理~29.4）。 所以 (D) 的結論在 $\mathrm{P} \ne \mathrm{NP}$ 時是錯的，不可能已被證明。
+\item (E)：(B) 成立，不選。
+\end{itemize}
+\end{pastsoln}

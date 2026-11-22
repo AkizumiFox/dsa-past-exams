@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ntut-114-ci-03}]{北科大資工所 114 學年度 第 3 題}
+（作圖與問答）
+
+Consider the entries with key values 42, 21, 38, 62, 51, 18, and 8.
+\begin{enumerate}[label=(\arabic*)]
+\item Suppose we would like to use the hash function \underline{$f(i)=(3i+2)\bmod 7$} to build a 7-entry hash table as an index over the entries on the keys in the same order given above. Please draw the resulting hash table that uses \textit{linear probing} strategy to handle collisions. (4 pts)
+\item Instead of the hash table, we now would like to construct an AVL tree for the entries with keys in the same order given above. Please show the resulting AVL tree. (3 pts)
+\item On the constructed AVL tree in (2), which traversal can be used to list all the keys in an increasing order? Please also provide the reason. (3 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) 第 $0$ 到 $6$ 格依序是 $18, 51, 42, 21, 38, 8, 62$；(2) 根 $38$，左子樹 $18(8, 21)$，右子樹
+$51(42, 62)$；(3) 中序走訪。
+
+三個小題分屬第~12、10、9~章；雜湊的 (1) 佔 $4$ 分，放在第~12~章。
+
+\textbf{(1)} 依序計算 $f(k) = (3k + 2) \bmod 7$，有人就往下一格找（資結書第~12.3~節）：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+鍵 $k$ & $3k + 2$ & $f(k)$ & 放在 \\
+\midrule
+42 & 128 & 2 & 2 \\
+21 & 65 & 2 & 2 有 42，放 3 \\
+38 & 116 & 4 & 4 \\
+62 & 188 & 6 & 6 \\
+51 & 155 & 1 & 1 \\
+18 & 56 & 0 & 0 \\
+8 & 26 & 5 & 5 \\
+\bottomrule
+\end{tabular}
+\qquad
+\begin{tabular}{|c|c|}
+\hline
+索引 & 鍵 \\ \hline
+0 & 18 \\ \hline
+1 & 51 \\ \hline
+2 & 42 \\ \hline
+3 & 21 \\ \hline
+4 & 38 \\ \hline
+5 & 8 \\ \hline
+6 & 62 \\ \hline
+\end{tabular}
+\end{center}
+只有 $21$ 碰撞一次，七個鍵剛好填滿七格。
+
+\textbf{(2)} 照資結書第~10.2.3~節的插入：先照二元搜尋樹插入，再從新節點往上找第一個平衡因子變成
+$\pm 2$ 的祖先，依 LL、LR、RL、RR 旋轉。
+\begin{itemize}
+\item 插入 $42$、$21$：$21$ 是 $42$ 的左子節點。
+\item 插入 $38$：$38 < 42$、$38 > 21$，接在 $21$ 的右邊。 $42$ 的平衡因子變成 $+2$，新節點在它左子節點
+的右邊，是 LR 型：先對 $21$ 左旋、再對 $42$ 右旋，$38$ 升為根，得 $38(21, 42)$。
+\item 插入 $62$：接在 $42$ 的右邊，各節點平衡因子都在 $\pm1$ 以內。
+\item 插入 $51$：$51 > 38$、$51 > 42$、$51 < 62$，接在 $62$ 的左邊。 $42$ 的平衡因子變成 $-2$，新節點在
+它右子節點的左邊，是 RL 型：先對 $62$ 右旋、再對 $42$ 左旋，$51$ 升上來，得 $51(42, 62)$。
+\item 插入 $18$：接在 $21$ 的左邊，仍然平衡。
+\item 插入 $8$：接在 $18$ 的左邊。 $21$ 的平衡因子變成 $+2$，新節點在它左子節點的左邊，是 LL 型：對 $21$
+右旋，$18$ 升上來，得 $18(8, 21)$。 根 $38$ 左右高度都是 $2$，平衡。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[
+    tn/.style={circle, draw=black!65, minimum size=0.6cm, inner sep=0pt, font=\small},
+    level distance=9mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=10mm}, level 2/.style={sibling distance=10mm}]
+\node[tn] {38} child {node[tn] {21}} child {node[tn] {42}};
+\node[font=\small] at (0,-2.2) {插入 38 後（LR）};
+\begin{scope}[xshift=3.6cm, level 1/.style={sibling distance=14mm}, level 2/.style={sibling distance=9mm}]
+\node[tn] {38} child {node[tn] {21}} child {node[tn] {51} child {node[tn] {42}} child {node[tn] {62}}};
+\node[font=\small] at (0,-2.2) {插入 51 後（RL）};
+\end{scope}
+\begin{scope}[xshift=8.2cm, level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=10mm}]
+\node[tn] {38}
+    child {node[tn] {18} child {node[tn] {8}} child {node[tn] {21}}}
+    child {node[tn] {51} child {node[tn] {42}} child {node[tn] {62}}};
+\node[font=\small] at (0,-2.2) {插入 8 後（LL），最後的 AVL 樹};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\textbf{(3)} 中序走訪（左子樹、根、右子樹）。 AVL 樹是二元搜尋樹：每個節點左子樹的鍵都比它小、右子樹
+的鍵都比它大。 對樹高做歸納：中序先依序列出左子樹的鍵（由歸納假設是遞增的，而且都比根小），再列根，
+再依序列出右子樹的鍵（遞增，而且都比根大），接起來就是遞增的（資結書第~9.1~節）。 這棵樹的中序是
+$8, 18, 21, 38, 42, 51, 62$。
+\end{pastsoln}

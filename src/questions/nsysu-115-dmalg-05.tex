@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-05}]{中山資工所資安組 115 學年度 第 6 題}
+（計算）
+
+Find the exponential generating function for the number of ways to arrange $n$ letters, $n\ge 0$, selected from each of the following words,
+\begin{enumerate}[label=(\alph*)]
+\item {[}5\%{]} BOOKKEEPER
+\item {[}5\%{]} ACCOMMODATIONIST
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{方法}。 數列 $a_0, a_1, \ldots$ 的指數生成函數是 $\sum_{n \ge 0} a_n \frac{x^n}{n!}$。 從一個字裡選 $n$ 個字母排成一列：如果
+某個字母在字裡出現 $m$ 次，它在排列裡可以用 $0, 1, \ldots, m$ 次，對應的因子是
+\[
+1 + x + \frac{x^2}{2!} + \cdots + \frac{x^m}{m!} .
+\]
+把各個字母的因子乘起來，$\frac{x^n}{n!}$ 的係數就是排列數 $a_n$。 理由：選定每個字母用 $k_1, k_2, \ldots$ 次（和為 $n$）時，
+排列數是 $\frac{n!}{k_1! \, k_2! \cdots}$，而乘積裡對應的項是 $\frac{x^{k_1}}{k_1!} \frac{x^{k_2}}{k_2!} \cdots
+= \frac{n!}{k_1! \, k_2! \cdots} \cdot \frac{x^n}{n!}$，所有選法加起來正好是 $a_n$。
+
+\textbf{(a) BOOKKEEPER}。 $10$ 個字母：B $1$ 次、O $2$ 次、K $2$ 次、E $3$ 次、P $1$ 次、R $1$ 次（$1 + 2 + 2 + 3 + 1 + 1 = 10$）。
+\[
+E(x) = (1 + x)^3 \left(1 + x + \frac{x^2}{2!}\right)^2 \left(1 + x + \frac{x^2}{2!} + \frac{x^3}{3!}\right),
+\]
+$(1 + x)^3$ 來自 B、P、R，平方那項來自 O、K，最後一項來自 E。 $\frac{x^n}{n!}$ 的係數就是用 BOOKKEEPER 的字母排出
+長度 $n$ 的字串數。
+
+\textbf{(b) ACCOMMODATIONIST}。 $16$ 個字母：A $2$、C $2$、O $3$、M $2$、D $1$、T $2$、I $2$、N $1$、S $1$
+（$2 + 2 + 3 + 2 + 1 + 2 + 2 + 1 + 1 = 16$）。
+\[
+E(x) = (1 + x)^3 \left(1 + x + \frac{x^2}{2!}\right)^5 \left(1 + x + \frac{x^2}{2!} + \frac{x^3}{3!}\right),
+\]
+$(1 + x)^3$ 來自 D、N、S，五次方那項來自 A、C、M、T、I，最後一項來自 O。
+
+\textbf{檢查}。 (a) 的前幾個係數（$a_0, a_1, a_2, a_3$）是 $1, 6, 33, 166$：$a_1 = 6$ 是六種不同的字母；$a_2$ 是兩個不同
+字母的排列 $6 \cdot 5 = 30$，加上 O、K、E 各自重複的 OO、KK、EE 三種，共 $33$。 最高次 $\frac{x^{10}}{10!}$ 的係數是
+$\frac{10!}{2! \, 2! \, 3!} = 151{,}200$，正是 BOOKKEEPER 全部字母的排列數。 (b) 最高次的係數是
+$\frac{16!}{(2!)^5 \, 3!} = 108{,}972{,}864{,}000$，也是全部字母的排列數；$a_1 = 9$（九種字母）。
+\end{pastsoln}

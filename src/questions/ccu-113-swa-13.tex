@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ccu-113-swa-13}]{中正資工所甲組 113 學年度 第 18 題}
+（是非）
+
+(2\%) Determine if the following statement is true or false: "There is no polynomial time algorithm that can find the value of an s-t minimum cut in a directed graph".
+\end{pastexam}
+
+\begin{pastsoln}
+答案：False。
+
+由最大流最小割定理（資結書定理~26.6），有向圖裡 $s$-$t$ 最小割的容量等於最大流的值。 最大流可以在多項式時間求出：
+Edmonds--Karp 演算法（Ford--Fulkerson 每次用 BFS 找最短的增廣路徑）最多增廣 $nm$ 次，時間 $O(nm^2)$（資結書定理~26.3），
+和容量的大小無關。 所以最小割的值有多項式時間演算法。
+
+不只是值，割本身也找得到：最大流做完後，從 $s$ 在剩餘網路裡走得到的頂點集合 $S$ 和其餘的 $T$ 就是一個最小割
+（資結書第~26.5.3~節），再多一次 BFS，$O(n + m)$。
+
+容易混淆的是\textbf{最大割}（max-cut），那是 NP 困難的；最小割沒有這個問題。
+\end{pastsoln}

@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-113-dsa-02}]{中央資工所 113 學年度 第 2 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Consider the following five sorting algorithms: Quick Sort, Heap Sort, Merge Sort, Insertion Sort and Radix
+Sort. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Insertion Sort gives best performance when applied on an array which is sorted or almost sorted
+(maximum 1 or two elements are misplaced).
+\item Radix Sort is most efficient to sort string consisting of ASCII characters?
+\item All these five sorting algorithms are comparison based sorting algorithms.
+\item All these five sorting algorithms are stable.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)。
+
+(B) 句尾多了一個問號，照敘述句來判斷；「most efficient」是和題目列的五種排序相比。
+
+\begin{itemize}
+\item (A) 對。 插入排序的時間是 $\Theta(n + I)$，$I$ 是逆序對個數（資結書第~14.1~節）。 已經排好時
+$I = 0$，只比 $n - 1$ 次；只有一兩個元素放錯位置時，$I$ 最多是 $O(n)$，時間仍是 $\Theta(n)$。 其他四種
+在這種輸入上沒有更快的：合併排序、堆積排序還是 $\Theta(n\lg n)$；快速排序固定取頭或尾當基準時，排好的
+輸入反而是最壞情況 $\Theta(n^2)$；基數排序不管輸入順序，固定做 $d$ 輪。
+\item (B) 對。 ASCII 字元只有 $128$ 種，可以把每個字元直接當成一位數，基數排序只要一輪計數排序
+（資結書第~15.2~節），$\Theta(n + 128) = \Theta(n)$。 排一串字串時，每個字元一位，LSD 基數排序
+（資結書第~15.2.2~節）是 $\Theta(d(n + 128))$，對輸入的總長度是線性的。 其他四種都是比較排序，
+至少要 $\Omega(n\lg n)$ 次比較（資結書定理~15.1），所以五種裡基數排序最快。
+\item (C) 錯。 基數排序不比較兩個鍵的大小，它看的是每一位的值，用計數排序分配，所以不受
+$\Omega(n\lg n)$ 下界的限制。
+\item (D) 錯。 快速排序和堆積排序都不穩定（資結書第~14.7~節的比較表）。 例如堆積排序排
+$\langle 2_a, 2_b, 1\rangle$：建堆後 $2_a$ 在根，第一次把根和最後一格的 $1$ 交換，$2_a$ 被放到最後，
+輸出是 $1, 2_b, 2_a$，兩個 $2$ 的相對順序反了。
+\end{itemize}
+\end{pastsoln}

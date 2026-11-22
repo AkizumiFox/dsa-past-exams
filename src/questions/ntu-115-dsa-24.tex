@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntu-115-dsa-24}]{臺大資工所 115 學年度 第 24 題}
+（單選）
+
+(4 points) Let $G=(V,E)$ be a directed graph represented using adjacency lists without edge weights. A standard Breadth-First Search (BFS) is run from a source vertex $s$, producing distance labels $d[v]$ for all reachable vertices $v$. Which of the following statements is always true?
+\begin{enumerate}[label=(\Alph*)]
+\item For every edge $(u,v)\in E$, we must have $d[v]\le d[u]+1$.
+\item If $d[v]=d[u]+1$, then $(u,v)$ must be a tree edge in the BFS tree.
+\item In a directed graph, BFS always produces a shortest-path tree that is also a topological ordering of the reachable subgraph.
+\item If the graph is represented by an adjacency matrix instead of adjacency lists, BFS may compute incorrect distances due to repeated edge relaxations.
+\item If BFS discovers vertices in the order $v_1,v_2,\ldots,v_k$, then this order is a shortest-path ordering for all pairs of vertices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+\begin{itemize}
+\item (A) 對。 資結書第~21.3.4~節的事實 (a)：每條邊 $(u, v)$ 都有 $\delta(s, v) \le
+\delta(s, u) + 1$；資結書定理~21.4 說 BFS 結束時 $d = \delta$，所以 $d[v] \le d[u] + 1$。
+題目只替可到達的頂點定義 $d$；$u$ 到不了時照資結書的約定 $d[u] = \infty$，不等式自動成立（$u$ 可到
+達時 $v$ 也可到達，不會出現 $d[v]$ 沒有定義的情形）。
+\item (B) 錯。 反例：邊 $s \to a$、$s \to b$、$a \to c$、$b \to c$，串列依字母排。 BFS 依序發現
+$a$、$b$（$d = 1$），拿出 $a$ 時發現 $c$，$\pi[c] = a$、$d[c] = 2$。 $(b, c)$ 也滿足 $d[c] =
+d[b] + 1$，卻不是樹邊：每個頂點只有一個 $\pi$，由誰先發現決定。
+\item (C) 錯。 可到達的部分可能有環，例如 $s \to a$、$a \to s$，根本沒有拓樸順序（第~22~章）。
+就算沒有環，BFS 的順序也不一定是拓樸順序：邊 $s \to a$、$s \to b$、$b \to a$，發現順序是
+$s, a, b$，但邊 $b \to a$ 從後面指向前面。
+\item (D) 錯。 表示法只影響時間（矩陣是 $\Theta(n^2)$）。 BFS 的 $d[v]$ 在 $v$ 第一次被發現時設定一
+次，之後不再修改（資結書虛擬碼~21.1 第 11--15 行只處理白色頂點），沒有「重複放鬆」這回事，
+算出來的距離和用串列時一樣。 放鬆是第~25~章加權最短路徑的操作。
+\item (E) 錯。 發現順序只保證「從 $s$ 出發的距離」不減（資結書第~21.3.4~節的 (c)），
+和其他頂點之間的距離無關。 用 (C) 的第二個例子：發現順序是 $s, a, b$，但從 $a$ 根本到不了 $b$，
+從 $b$ 到 $a$ 卻只要一步。
+\end{itemize}
+\end{pastsoln}

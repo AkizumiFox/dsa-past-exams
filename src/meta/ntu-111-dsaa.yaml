@@ -1,0 +1,30 @@
+paper: ntu-111-dsaa
+volume: 2
+school: 臺大
+dept: 資工所
+year: 111
+subject: 資料結構與演算法（A）
+instructions: ※ 注意：請用 2B 鉛筆作答於答案卡，並先詳閱答案卡上之「畫記說明」。
+questions:
+  - {id: ntu-111-dsaa-01, label: 第 1 題, chapter: 14}
+  - {id: ntu-111-dsaa-02, label: 第 2 題, chapter: 14}
+  - {id: ntu-111-dsaa-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-111-dsaa-04, label: 第 4 題, chapter: 14}
+  - {id: ntu-111-dsaa-05, label: 第 5 題, chapter: 15}
+  - {id: ntu-111-dsaa-06, label: 第 6 題, chapter: 14}
+  - {id: ntu-111-dsaa-07, label: 第 7 題, chapter: 8}
+  - {id: ntu-111-dsaa-08, label: 第 8 題, chapter: 8}
+  - {id: ntu-111-dsaa-09, label: 第 9 題, chapter: 14}
+  - {id: ntu-111-dsaa-10, label: 第 10 題, chapter: 17}
+  - {id: ntu-111-dsaa-11, label: 第 11 題, chapter: 27}
+  - {id: ntu-111-dsaa-12, label: 第 12 題, chapter: 28}
+  - {id: ntu-111-dsaa-13, label: 第 13 題, chapter: 12}
+  - {id: ntu-111-dsaa-14, label: 第 14 題, chapter: 10}
+  - {id: ntu-111-dsaa-15, label: 第 15 題, chapter: 10}
+  - {id: ntu-111-dsaa-16, label: 第 16 題, chapter: 18}
+  - {id: ntu-111-dsaa-17, label: 第 17 題, chapter: 18}
+  - {id: ntu-111-dsaa-18, label: 第 18 題, chapter: 25}
+  - {id: ntu-111-dsaa-19, label: 第 19 題, chapter: 24}
+  - {id: ntu-111-dsaa-20, label: 第 20 題, chapter: 25}
+  - {id: ntu-111-dsaa-21, label: 第 21 題, chapter: 26}
+  - {id: ntu-111-dsaa-22, label: 第 22 題, chapter: 19}

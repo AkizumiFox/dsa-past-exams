@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:gw3-098-ds-01}]{關務三等資訊處理 98 年 第一題}
+（申論；20 分）
+
+有 $N$ 份資料，每份資料皆以兩個大寫英文字母標記（例如 AK、TA 等等）。請設計一 O($N$) 時間的演算法，將此組資料依
+標記的字典順序排序，並請說明此演算法所需使用的空間。（20 分）
+\end{pastexam}
+
+\begin{pastsoln}
+比較排序最快只到 $\Theta(N \log N)$（資結書第~15.1~節），要做到 $O(N)$ 必須利用「鍵值範圍很小」：每個字母只有
+$26$ 種。 用 \textbf{LSD 基數排序}（資結書第~15.2.2~節）：先依第二個字母做一次穩定的計數排序，再依第一個字母
+做一次穩定的計數排序。
+
+\begin{pseudo}{兩個字母標記的基數排序}
+\Procedure{Sort-Labels}{$A, N$} \Comment{$A[1..N]$ 的標記是 $A[i].\mathit{c}[1]\,A[i].\mathit{c}[2]$}
+    \For{$d \gets 2$ \DownTo $1$} \Comment{先排第二個字母，再排第一個}
+        \State $\mathit{cnt}[0..25] \gets 0$
+        \For{$i \gets 1$ \textbf{to} $N$}
+            \State $\mathit{cnt}[A[i].c[d] - \text{'A'}] \gets \mathit{cnt}[A[i].c[d] - \text{'A'}] + 1$
+        \EndFor
+        \For{$j \gets 1$ \textbf{to} $25$} \Comment{前綴和：$\mathit{cnt}[j]$ 是字母 $\le j$ 的筆數}
+            \State $\mathit{cnt}[j] \gets \mathit{cnt}[j] + \mathit{cnt}[j-1]$
+        \EndFor
+        \For{$i \gets N$ \DownTo $1$} \Comment{由後往前放，保持穩定}
+            \State $x \gets A[i].c[d] - \text{'A'}$
+            \State $B[\mathit{cnt}[x]] \gets A[i]$
+            \State $\mathit{cnt}[x] \gets \mathit{cnt}[x] - 1$
+        \EndFor
+        \State 把 $B[1..N]$ 複製回 $A[1..N]$
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 計數排序是穩定的：同一個字母的資料，由後往前放進各自區段的尾端，原本在後面的仍在後面。 第一趟
+做完，資料依第二個字母排好；第二趟依第一個字母排，第一個字母不同的分出先後，第一個字母相同的保持第一趟的順序，
+也就是依第二個字母排好。 合起來正是字典順序（資結書第~15.2.2~節 LSD 基數排序的正確性）。 例如
+$\langle \mathrm{AK}, \mathrm{TA}, \mathrm{KA}, \mathrm{AB} \rangle$：第一趟依第二個字母得
+$\langle \mathrm{TA}, \mathrm{KA}, \mathrm{AB}, \mathrm{AK} \rangle$（TA 原本在 KA 前，仍在前）；第二趟依第一個
+字母得 $\langle \mathrm{AB}, \mathrm{AK}, \mathrm{KA}, \mathrm{TA} \rangle$。
+
+\textbf{時間}。 每一趟：清計數 $O(26)$、數一遍 $O(N)$、前綴和 $O(26)$、放置 $O(N)$、複製 $O(N)$，共 $O(N + 26)$。
+兩趟是 $O(2(N + 26)) = O(N)$。
+
+\textbf{空間}。 除了輸入，需要計數陣列 $26$ 格和輸出陣列 $B[1..N]$，額外空間 $O(N + 26) = O(N)$。 若資料很大，
+$B$ 只存指標（或下標）即可，仍是 $O(N)$ 個指標。
+
+另一種做法是把標記看成一個 $0$ 到 $26^2 - 1 = 675$ 的整數（$26 \times$ 第一個字母 $+$ 第二個字母），直接做
+一次計數排序，計數陣列 $676$ 格，時間 $O(N + 676) = O(N)$，空間 $O(N + 676)$。 $N$ 很小時兩趟 $26$ 格的
+基數排序比較省。 也可以用 $26$ 個桶子（佇列）代替計數陣列，效果相同。
+\end{pastsoln}

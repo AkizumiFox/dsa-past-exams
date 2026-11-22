@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncu-114-dsa-14}]{中央資工所 114 學年度 第 14 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Which of the following statements about the Maximum Flow problem are incorrect?
+\begin{enumerate}[label=(\alph*)]
+\item In a flow network, source node has no incoming flow and terminal (sink) node has no outgoing flow.
+\item Each edge has forward flow and backflow, and the two flows must always be inverses of each other.
+\item Ford-Fulkerson algorithm finds the maximum flow from source to terminal with time complexity
+$O(Ef)$, where $E$ represents the number of edges and $f$ is the maximum flow of the final graph.
+\item If we look at all the possible cuts in the graph, and find the largest capacity of those cuts,
+then that value is the value of the maximum flow for that network.
+\item If a network has antiparallel edges (i.e., the edges connecting two nodes back and forth), we can
+convert it to an equivalent one with no antiparallel edges.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(d)。 題目問的是\textbf{錯誤}的敘述。
+
+(a)(b) 兩句是某些教材的定義或約定，對錯取決於採用哪一套定義，先說明本題的讀法。 (a) 是 Kleinberg 與
+Tardos 等教材對流網路的假設：沒有邊進入源點、沒有邊離開匯點。 (b) 說的是「淨流」寫法（CLRS 第二版）
+的斜對稱性 $f(u, v) = -f(v, u)$：$u \to v$ 送 $3$ 單位，就記成 $v \to u$ 送 $-3$ 單位。 照這些定義，
+兩句都是對的。 資結書第~26.1~節的定義比較一般：允許有邊指進源點，流量寫成 $0 \le f(u, v) \le c(u, v)$
+而不用斜對稱；在那套定義下，(a)(b) 不是定義的一部分。 本題照出題的語氣，把 (a)(b) 當成正確的敘述。
+
+\begin{itemize}
+\item (a) 正確（見上）。 就算網路有邊指進 $s$，也一定有一個最大流在這些邊上流量為 $0$，所以這個約定
+不影響最大流的值。
+\item (b) 正確（見上）。 在剩餘網路裡看也是同一件事：邊 $(u, v)$ 上流了 $f$，就多一條反向的剩餘邊
+$(v, u)$，容量 $f$，代表可以把這些流「退回去」（資結書第~26.2~節）。
+\item (c) 正確。 容量是整數時，每次增廣至少增加 $1$ 單位，最多 $|f^*|$ 次；每次用 BFS 或 DFS 在剩餘
+網路找路徑 $O(E)$，總共 $O(E\,|f^*|)$（資結書第~26.3~節）。 （容量是無理數時 Ford--Fulkerson 可能
+不會停，題目的 $O(Ef)$ 隱含整數容量。）
+\item (d) 錯誤。 最大流最小割定理（資結書第~26.5~節）：最大流的值等於所有割裡\textbf{最小}的容量，
+不是最大的。 任何流的值都 $\le$ 任何割的容量，所以最大流只會碰到最小的那個割。 反例：$s \to a$ 容量
+$1$、$a \to t$ 容量 $5$，割 $(\{s\}, \{a, t\})$ 容量 $1$、割 $(\{s, a\}, \{t\})$ 容量 $5$，最大流是 $1$，
+不是 $5$。
+\item (e) 正確。 有 $u \to v$ 和 $v \to u$ 時，挑一條，例如 $(v, u)$，加一個新頂點 $x$，換成
+$v \to x$、$x \to u$，容量都是原來的 $c(v, u)$（資結書第~26.1.2~節）。 新網路的最大流值和原網路一樣。
+\end{itemize}
+\end{pastsoln}

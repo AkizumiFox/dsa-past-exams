@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ccu-113-swa-15}]{中正資工所甲組 113 學年度 第 20 題}
+（是非）
+
+(2\%) Determine if the following statement is true or false: "Find the median of $n$ elements takes $\Omega(nlogn)$ time for any algorithms working in the comparison-based model".
+\end{pastexam}
+
+\begin{pastsoln}
+答案：False。
+
+\textbf{上界。} 資結書第~16.3~節的 \proc{Select}（中位數的中位數）只透過比較元素的大小得知資訊（各組的插入排序、找基準的
+位置、分割都只比較元素），是比較模型裡的演算法；由資結書定理~16.6，它找第 $\lfloor (n+1)/2 \rfloor$ 小的元素最壞時間是
+$O(n)$。 既然有比較模型裡的 $O(n)$ 演算法，「任何」演算法都要 $\Omega(n \lg n)$ 就不對。
+
+\textbf{為什麼排序的下界搬不過來。} 排序的 $\Omega(n \lg n)$ 來自「答案有 $n!$ 種」（資結書第~15~章的決策樹）。 找中位數只要
+回答「是哪一個元素」，答案只有 $n$ 種，決策樹只能給出 $\lceil \lg n \rceil$ 的下界。
+
+\textbf{真正的下界是線性。} 設演算法回答 $m$，而另一個元素 $y$ 一次都沒有參加比較。 $y < m$ 時把 $y$ 改成比所有數都大，
+$y > m$ 時改成比所有數都小；所有比較的結果都不變，演算法仍然回答 $m$，但比 $m$ 小的數的個數變了，$m$ 不再是中位數。
+所以除了 $m$，每個元素都至少要參加一次比較，一次比較只碰兩個元素，至少要 $(n-1)/2$ 次。 找中位數在比較模型裡是
+$\Theta(n)$。
+\end{pastsoln}

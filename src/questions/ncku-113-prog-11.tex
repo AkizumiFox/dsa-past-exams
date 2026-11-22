@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncku-113-prog-11}]{成大資訊聯招 113 學年度 第 11 題}
+（計算）
+
+(10\%) Consider three $n\times n$ matrices, denoted as $A$, $B$, and $C$. Each of these
+matrices is partitioned into four $n/2\times n/2$ submatrices. Assuming that $n$ is an exact
+power of 2, we can guarantee that, for $n\ge 2$, the dimension $n/2$ is an integer. The
+subdivisions for matrix $A$ yield $A_{11}$, $A_{12}$, $A_{21}$, and $A_{22}$. Similarly,
+matrix $B$ is decomposed into $B_{11}$, $B_{12}$, $B_{21}$, and $B_{22}$, while matrix $C$
+undergoes division into $C_{11}$, $C_{12}$, $C_{21}$, and $C_{22}$. We have the following
+procedure:
+\par\vspace{1ex}
+{\centering
+\begin{tabular}{|l|}
+\hline
+F($A$, $B$)\\
+\hspace*{2em}$n=A$.rows\\
+\hspace*{2em}if $n==1$\\
+\hspace*{4em}$c_{11}=a_{11}\cdot b_{11}$\\
+\hspace*{2em}else\\
+\hspace*{4em}$C_{11}=\mathrm{F}(A_{11},B_{11})+\mathrm{F}(A_{12},B_{21})$\\
+\hspace*{4em}$C_{12}=\mathrm{F}(A_{11},B_{12})+\mathrm{F}(A_{12},B_{22})$\\
+\hspace*{4em}$C_{21}=\mathrm{F}(A_{21},B_{11})+\mathrm{F}(A_{22},B_{21})$\\
+\hspace*{4em}$C_{22}=\mathrm{F}(A_{21},B_{12})$\\
+\hspace*{2em}return $C$\\
+\hline
+\end{tabular}\par}
+\vspace{1ex}
+It is important to note that the procedure for $C_{22}$ is invoked only once and '+' is
+matrix addition. Let $T(n)$ represent the time required to process two $n\times n$ matrices
+using this particular procedure. Provide an asymptotic tight bound ($\Theta$) for $T(n)$,
+assuming that $T(n)$ is a constant for sufficiently small $n$.
+\end{pastexam}
+
+\begin{pastsoln}
+$T(n) = \Theta(n^{\lg 7})$，$\lg 7 \approx 2.807$。
+
+\textbf{寫出遞迴式}。 $n = 1$ 時做一次乘法，$\Theta(1)$。 $n \ge 2$ 時：
+\begin{itemize}
+\item 遞迴呼叫：$C_{11}$、$C_{12}$、$C_{21}$ 各兩次，$C_{22}$ 一次，共 $7$ 次，每次的
+矩陣是 $\frac{n}{2} \times \frac{n}{2}$，合計 $7T(n/2)$。
+\item 矩陣加法：$C_{11}$、$C_{12}$、$C_{21}$ 各一次，每次是 $\frac{n}{2} \times \frac{n}{2}$
+的 $(n/2)^2$ 次加法，合計 $3n^2/4 = \Theta(n^2)$。
+\item 切塊和組合 $C$：用下標計算切塊是 $\Theta(1)$，把子矩陣複製出來是 $\Theta(n^2)$；
+組合 $C$ 最多 $\Theta(n^2)$。 不論哪一種實作都是 $O(n^2)$，和加法合起來仍是
+$\Theta(n^2)$。
+\end{itemize}
+所以
+\[
+T(n) = 7T(n/2) + \Theta(n^2).
+\]
+
+\textbf{解遞迴式}。 $a = 7$、$b = 2$，$n^{\log_b a} = n^{\lg 7}$。 $\lg 7 \approx 2.807$，取
+$\varepsilon = 0.8$，$n^2 = O(n^{\lg 7 - 0.8})$（$\lg 7 - 0.8 \approx 2.007 > 2$），主定理
+情況 1（資結書定理~2.4）給出 $T(n) = \Theta(n^{\lg 7})$。
+
+用遞迴樹檢查：第 $i$ 層有 $7^i$ 個子問題，每個的加法成本是 $c(n/2^i)^2$，整層是
+$cn^2 (7/4)^i$，是公比 $7/4 > 1$ 的等比數列，總和由最後一層決定；最後一層有
+$7^{\lg n} = n^{\lg 7}$ 個葉節點，每個 $\Theta(1)$。 兩種方法一致。
+
+\textbf{說明}。 這個程序其實算錯了：正確的 $C_{22} = A_{21}B_{12} + A_{22}B_{22}$，它少了
+$A_{22}B_{22}$。 但題目只問時間。 它的遞迴式和 Strassen 演算法（資結書第~17.3.4~節）
+一樣，都是 $7$ 次半大的乘法加上 $\Theta(n^2)$ 的加減，所以時間也一樣；差別是 Strassen
+用 $7$ 次乘法算出\textbf{正確}的四塊。 常見的錯誤是看到 $C_{11}$ 到 $C_{21}$ 各兩次就寫
+$8T(n/2)$，要數清楚題目特別提醒的 $C_{22}$ 只呼叫一次。
+\end{pastsoln}

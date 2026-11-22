@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:df3-113-ds-03}]{地方三等資訊處理 113 年 第三題}
+（申論；15 分）
+
+在許多應用中，往往需要以物件的優先權來進行處理，為了區別物件的優先順序，我們可以簡單地賦予物件一個鍵值
+（Key）來代表優先權，此鍵值通常是一個數值可以用來區別物件前後順序。在此，我們考慮物件的鍵值是一個數值
+而其值愈小，物件的優先權愈高，優先佇列（Priority Queue）則是一種以物件的優先權來管理物件的資料結構。
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請說明優先佇列的抽象資料型態（abstract data type, ADT）定義。（10 分）
+\item[㈡] 給定一個最小二元堆積（Minimum Heap）$H$ 與一個鍵值 $k$，在 $H$ 中快速地找出所有鍵值小於或等於
+$k$ 的資料物件。請描述一個有效的方法，此方法所花的時間（或運算量）與欲找出的資料物件之數量成線性比例。
+（5 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠ 優先佇列 ADT}（最小優先佇列，資結書第~8.3~節）。
+
+\textbf{資料}：一個多重集合 $S$，元素是（鍵值 $\mathit{key}$，資料物件 $x$）的配對；鍵值可以互相比較大小，
+鍵值愈小優先權愈高。 不同物件的鍵值可以相同。
+
+\textbf{操作}：
+\begin{itemize}
+\item $\proc{Create}()$：建立一個空的優先佇列。
+\item $\proc{IsEmpty}(S)$、$\proc{Size}(S)$：是否為空、目前的元素個數。
+\item $\proc{Insert}(S, \mathit{key}, x)$：把 $(\mathit{key}, x)$ 加入 $S$。
+\item $\proc{Min}(S)$：回傳鍵值最小的元素，不移除；$S$ 為空時是錯誤。
+\item $\proc{Extract-Min}(S)$（又稱 RemoveMin、DeleteMin）：移除並回傳鍵值最小的元素；$S$ 為空時是錯誤。
+\end{itemize}
+常見的擴充操作：$\proc{Decrease-Key}(S, x, k')$ 把物件 $x$ 的鍵值降為 $k' \le$ 原鍵值（Dijkstra、Prim 會用到），
+以及 $\proc{Delete}(S, x)$。 ADT 只規定「做什麼」，不規定怎麼存；用二元堆積實作時 \proc{Min} 是 $O(1)$，
+\proc{Insert}、\proc{Extract-Min}、\proc{Decrease-Key} 是 $O(\log n)$。 和一般佇列的差別是：取出的順序
+由鍵值決定，不是由進入的先後決定。
+
+\textbf{㈡ 找出所有鍵值 $\le k$ 的物件}。 關鍵性質：最小堆積裡每個節點的鍵值都 $\le$ 它的子孫的鍵值。
+所以若某個節點的鍵值 $> k$，它整棵子樹的鍵值都 $> k$，可以整棵跳過。 從根開始做深度優先（前序）走訪，
+遇到鍵值 $> k$ 的節點就不往下走：
+\begin{pseudo}{在最小堆積中找出鍵值不超過 $k$ 的元素}
+\Procedure{Report-At-Most}{$H, i, k$} \Comment{$H[1..n]$ 是陣列存的最小堆積，從 $i = 1$ 呼叫}
+    \If{$i > H.\mathit{size}$ \OR $H[i].\mathit{key} > k$}
+        \State \Return \Comment{不存在，或整棵子樹都 $> k$}
+    \EndIf
+    \State 輸出 $H[i]$
+    \State \Call{Report-At-Most}{$H, 2i, k$} \Comment{左子}
+    \State \Call{Report-At-Most}{$H, 2i + 1, k$} \Comment{右子}
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}：輸出的節點都滿足 $\mathit{key} \le k$。 反過來，任一個 $\mathit{key} \le k$ 的節點 $v$，從根到
+$v$ 路徑上每個祖先的鍵值都 $\le v$ 的鍵值 $\le k$，所以走訪不會在祖先處停下，一定會走到 $v$ 並輸出它。
+
+\textbf{時間}：設符合的物件有 $m$ 個。 每次呼叫要嘛輸出一個物件（共 $m$ 次），要嘛立刻返回；立刻返回的呼叫
+是由某個已輸出節點對它的兩個子節點發出的（或是對根的第一次呼叫），最多 $2m + 1$ 次。 總呼叫數
+$\le 3m + 1$，每次 $O(1)$，所以時間是 $O(m + 1)$，和找出的物件數量成線性比例，與堆積的大小 $n$ 無關。
+（不能用反覆 \proc{Extract-Min} 來做，那樣要 $O(m \log n)$ 而且會破壞堆積；也不能掃整個陣列，那是 $O(n)$。）
+遞迴深度最多到樹高 $O(\log n)$；若要避免遞迴，可以改用一個堆疊放待查的下標，做法相同。
+\end{pastsoln}

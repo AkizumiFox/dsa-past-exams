@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-113-dsa-01}]{中興資工所甲組 113 學年度 選擇題第 1 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+If a binary tree is represented in an array, what formula can be used to locate a left child, if the node
+has an \textbf{index} $\boldsymbol{i}$?
+
+(A)~$2i$ \qquad (B)~$2i+1$ \qquad (C)~$2(i+1)$ \qquad (D)~$2(i-1)+1$ \qquad (E)~None of these.
+\end{pastexam}
+
+\begin{pastsoln}
+本書採用的答案是 (B)。
+
+題目沒有說陣列從 $0$ 還是從 $1$ 開始編號，兩種編號的公式不同（資結書第~7.2.1~節的表格）：
+\begin{itemize}
+\item 從 $0$ 開始（C 語言的陣列 index）：根在 $0$，節點 $i$ 的左子節點是 $2i + 1$、右子節點是 $2i + 2$、
+父節點是 $\lfloor (i - 1)/2 \rfloor$。
+\item 從 $1$ 開始（很多課本的寫法，第 $0$ 格不用）：根在 $1$，左子節點 $2i$、右子節點 $2i + 1$、父節點
+$\lfloor i/2 \rfloor$。
+\end{itemize}
+題目特別把 \textbf{index} 加粗，指的是程式語言陣列的索引，從 $0$ 開始，所以選 (B)。 如果照從 $1$ 開始的
+編號，答案是 (A)。
+
+其他選項：(C) $2(i + 1) = 2i + 2$ 是從 $0$ 開始時的\textbf{右}子節點；(D) $2(i - 1) + 1 = 2i - 1$ 兩種編號都
+不對，例如從 $1$ 開始時根 $i = 1$ 會算出 $1$，就是根自己。
+\end{pastsoln}

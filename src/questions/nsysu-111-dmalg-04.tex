@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-04}]{中山資工所資安組 111 學年度 第 6 題}
+（計算）
+
+{[10\%]} In how many ways can one parenthesize the product $stuvwxyz$?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$429$ 種，是卡塔蘭數 $C_7$。
+
+設 $P(m)$ 是 $m$ 個因子連乘、加滿括號（每次只乘兩個）的方法數。 看\textbf{最後做的那一次乘法}：
+它把乘積分成左邊前 $k$ 個因子和右邊後 $m - k$ 個因子（$1 \le k \le m - 1$），兩邊各自獨立地加
+括號。 不同的 $k$ 給出不同的加法，所以
+\[
+P(1) = 1, \qquad P(m) = \sum_{k=1}^{m-1} P(k)\, P(m - k) \quad (m \ge 2).
+\]
+這和二元樹個數的遞迴式一樣：每一種加括號對應一棵有 $m - 1$ 個內部節點（乘號）的完整二元樹，所以
+$P(m) = C_{m-1}$（資結書第~7.6~節、定理~7.6）。 由遞迴式逐項算：
+\begin{center}
+\begin{tabular}{c|cccccccc}
+$m$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+$P(m)$ & 1 & 1 & 2 & 5 & 14 & 42 & 132 & 429 \\
+\end{tabular}
+\end{center}
+例如 $P(4) = P(1)P(3) + P(2)P(2) + P(3)P(1) = 2 + 1 + 2 = 5$；
+$P(8) = 1 \cdot 132 + 1 \cdot 42 + 2 \cdot 14 + 5 \cdot 5 + 14 \cdot 2 + 42 \cdot 1 + 132 \cdot 1
+= 429$。 用公式驗證：
+\[
+C_7 = \frac{1}{8}\binom{14}{7} = \frac{3432}{8} = 429 .
+\]
+$stuvwxyz$ 有 $8$ 個因子，共 $429$ 種。 注意 $n$ 個因子對應的是 $C_{n-1}$，不是 $C_n$（$C_8 = 1430$
+是常見的錯）。
+\end{pastsoln}

@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ccu-114-swa-05}]{中正資工所甲組 114 學年度 第 5 題}
+（單選）
+
+(5\%) (Choose \underline{one} best answer) Consider the integer array \{52, 21, 40, 88, 33, 57, 46, 71\}.
+Using the two-pointer version of quicksort, what will the array look like after moving the first pivot
+(i.e., 52) to its correct position? Note that the first and the second pointers start at the positions of
+21 and 71, respectively.
+\begin{enumerate}[label=(\alph*)]
+\item \{21, 40, 33, 46, 52, 71, 57, 88\}
+\item \{21, 33, 40, 46, 52, 57, 71, 88\}
+\item \{33, 21, 40, 46, 52, 57, 88, 71\}
+\item \{46, 21, 40, 33, 52, 57, 88, 71\}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)。
+
+雙指標的分割以第一個數 $x = 52$ 為基準：左指標 $i$ 從 $21$ 往右找第一個 $\ge x$ 的數，右指標 $j$ 從 $71$
+往左找第一個 $\le x$ 的數；$i < j$ 就交換兩者、兩個指標各走一步，繼續找；$i \ge j$ 時停止，把基準和
+$A[j]$ 交換，基準就到了正確位置。 這是資結書第~14.5~節 Hoare 分割的做法，差別只在最後把基準換到中間。 位置從 $1$ 編號。
+
+\begin{center}
+\small
+\begin{tabular}{l*{8}{c}l}
+\toprule
+& 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 說明 \\
+\midrule
+開始 & 52 & 21 & 40 & 88 & 33 & 57 & 46 & 71 & $i = 2$，$j = 8$ \\
+找 & & & & $i$ & & & $j$ & & $21, 40 < 52$，$i$ 停在 $88$；$71 > 52$，$j$ 停在 $46$ \\
+交換 & 52 & 21 & 40 & 46 & 33 & 57 & 88 & 71 & $i = 5$，$j = 6$ \\
+找 & & & & & $j$ & $i$ & & & $33 < 52$，$i$ 停在 $57$；$57 > 52$，$j$ 停在 $33$ \\
+歸位 & 33 & 21 & 40 & 46 & 52 & 57 & 88 & 71 & $i \ge j$，交換 $A[1]$ 和 $A[j] = A[5]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 $\{33, 21, 40, 46, 52, 57, 88, 71\}$，$52$ 左邊都比它小、右邊都比它大，就是 (c)。
+
+其他選項：(a)(b) 的左半段已經排好或重排過，一次分割做不到；(b) 是整個排好的結果。 (d) 的 $52$ 也在第 $5$
+格、兩邊也分好了，但 $46$、$33$ 的位置不對：第一次交換是 $88$ 和 $46$，$46$ 留在第 $4$ 格，最後和基準交換、
+換到第 $1$ 格的是 $33$。 (c) 正確，所以 (e) 不選。
+\end{pastsoln}

@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-02}]{中山資工所資安組 111 學年度 第 4 題}
+（計算）
+
+{[10\%]} A company buys 22 vending machines, each of them is to be assigned to one of six
+sub-divisions. Each sub-division will get at least two vending machines. In how many ways can these
+assignments be made?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\dbinom{15}{5} = 3003$ 種。
+
+題目沒說販賣機是否可以區分。 這是同一批買進的販賣機，分配時只在乎每個部門拿到幾台，所以把它們
+當成\textbf{相同}的物品，部門則是不同的。 設第 $i$ 個部門分到 $x_i$ 台：
+\[
+x_1 + x_2 + \cdots + x_6 = 22, \qquad x_i \ge 2 .
+\]
+先發給每個部門 $2$ 台，用掉 $12$ 台；令 $y_i = x_i - 2 \ge 0$，剩下的問題是
+$y_1 + \cdots + y_6 = 10$ 的非負整數解個數。 用隔板法：$10$ 個球和 $5$ 根隔板排成一列，選出
+隔板的位置（資結書附錄~A.3~節），
+\[
+\binom{10 + 5}{5} = \binom{15}{5} = \frac{15 \cdot 14 \cdot 13 \cdot 12 \cdot 11}{120} = 3003 .
+\]
+常見的錯是直接用 $\binom{22 + 5}{5}$，忘了「至少兩台」的條件，或是只扣掉 $6$ 台（那是「至少
+一台」的情形）。
+\end{pastsoln}

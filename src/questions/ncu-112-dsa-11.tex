@@ -1,0 +1,114 @@
+\begin{pastexam}[label={px:ncu-112-dsa-11}]{中央資工所 112 學年度 問答題第 1 題}
+（問答）
+
+Given a directed graph $G=(V,E)$, and two vertices $u$ and $v$ in $V$, we call vertex $v$ is reachable
+from $u$, if there exists a directed path from $u$ to $v$. A vertex $s$ in $V$ is called a source vertex
+if every vertex in $V$ is reachable from $s$.
+
+(a) (8\%) Given a directed graph $G=(V,E)$, and a specified vertex $v$ in $V$, design a linear time
+algorithm (i.e. your algorithm should run in $O(|V|+|E|)$ time) to determine if $v$ is a source vertex.
+You need to describe the data structure used in your algorithm.
+
+(b) (8\%) Given a directed acyclic graph (DAG; a directed graph is acyclic if it contains no directed
+cycles) $G=(V,E)$, you are asked to determine if $G$ contains a source vertex. If you apply the algorithm
+of subproblem (a) on every vertex of $G$, you will get an algorithm runs in $O(|V|^2+|V||E|)$ time. It
+is not desirable. Design a more efficient algorithm for this problem. Analyze the time complexity of
+your algorithm.
+
+(c) (9\%) Given a directed graph $G=(V,E)$, you are asked to determine if $G$ contains a source vertex.
+Note that the given graph may contain directed cycles. As in subproblem (b) an $O(|V|^2+|V||E|)$ time
+algorithm is not acceptable. Design a more efficient algorithm for this problem and analyze the time
+complexity of your algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+(a) 屬資結書第~21~章（BFS／DFS），(b) 屬第~22~章（DAG 的源點），(c) 屬第~23~章（強連通元件）。 先注意
+用詞：題目的 source vertex 是「走得到所有頂點的頂點」，和資結書的\textbf{源點}（入度 $0$ 的頂點）不是
+同一個意思。 下面照題目稱它為 source vertex。 $n = |V|$、$m = |E|$。
+
+\textbf{(a)} 資料結構：鄰接串列（$\mathit{Adj}[u]$ 存 $u$ 的出邊另一端，資結書第~21.2~節）、顏色陣列
+$\mathit{color}[1..n]$，以及 BFS 用的佇列（長度 $n$ 的陣列就夠，資結書第~21.3~節）。 演算法：從 $v$ 做
+一次 BFS（資結書虛擬碼~21.1），數被發現的頂點個數；等於 $n$ 就回答「是」，否則「不是」。 BFS 發現的
+頂點恰好是從 $v$ 可到達的頂點（資結書定理~21.4：可到達的頂點 $d$ 有限，到不了的仍是 $\infty$），所以
+數到 $n$ 個若且唯若每個頂點都可從 $v$ 到達。 每個頂點進出佇列一次、每個串列掃一次，時間
+$\Theta(n + m)$。 用 DFS 也可以。
+
+\textbf{(b)} 結論：DAG 有 source vertex，若且唯若\textbf{恰好有一個}入度 $0$ 的頂點；這時那個頂點就是
+source vertex。
+
+\textbf{證明。} 由資結書引理~22.1，至少一個頂點的 DAG 一定有入度 $0$ 的頂點。
+
+（只有一個入度 $0$ 的頂點 $z$ $\Rightarrow$ $z$ 是 source vertex。）任取頂點 $v$，從 $v$ 沿著\textbf{進來}的
+邊往回走：入度不是 $0$ 就一定能再退一步。 圖沒有環，退的路上不會重複頂點，最多 $n - 1$ 步就停在一個
+入度 $0$ 的頂點，也就是 $z$。 把這條退回去的路倒過來，就是從 $z$ 到 $v$ 的路徑。
+
+（有兩個以上入度 $0$ 的頂點 $\Rightarrow$ 沒有 source vertex。）設 $z_1 \ne z_2$ 入度都是 $0$。 沒有邊指向
+$z_1$，所以除了 $z_1$ 自己，誰都到不了 $z_1$；同理只有 $z_2$ 到得了 $z_2$。 一個 source vertex 要同時
+到得了 $z_1$ 和 $z_2$，只能既是 $z_1$ 又是 $z_2$，不可能。\hfill$\blacksquare$
+
+\begin{pseudo}{DAG 有沒有 source vertex}
+\Function{DAG-Source}{$G$}
+    \For{$v \gets 1$ \To $n$}
+        \State $\mathit{in}[v] \gets 0$
+    \EndFor
+    \For{$u \gets 1$ \To $n$}
+        \For{每個 $v \in \mathit{Adj}[u]$}
+            \State $\mathit{in}[v] \gets \mathit{in}[v] + 1$
+        \EndFor
+    \EndFor
+    \State $c \gets 0$
+    \For{$v \gets 1$ \To $n$}
+        \If{$\mathit{in}[v] = 0$}
+            \State $c \gets c + 1$；$z \gets v$
+        \EndIf
+    \EndFor
+    \If{$c = 1$}
+        \State \Return $z$ \Comment{$z$ 是 source vertex}
+    \EndIf
+    \State \Return \NIL \Comment{沒有 source vertex}
+\EndFunction
+\end{pseudo}
+
+第 2--6 行和 Kahn 演算法（資結書虛擬碼~22.1）算入度的部分一樣，$\Theta(n + m)$；第 7--13 行
+$\Theta(n)$。 總時間 $\Theta(n + m)$，比對每個頂點做一次 (a) 的 $O(n^2 + nm)$ 好。 題目保證是 DAG，所以
+不必檢查環；如果不確定，可以把第 2--6 行換成整個 Kahn 演算法，順便檢查有沒有排完。 另一種做法是先做
+拓樸排序，再從排第一的頂點做一次 (a)：有 source vertex 時它一定排第一（別人都得排在它後面），只要檢查
+這一個，總時間也是 $\Theta(n + m)$。
+
+\textbf{(c)} 有環的圖不能直接用 (b) 的「數入度 $0$ 的頂點」：一個環上的頂點入度都不是 $0$，卻可能每個都是
+source vertex。 做法是先把強連通元件縮成一點，把問題變回 DAG。
+
+\textbf{結論。} 由資結書定理~23.6，$G$ 有 source vertex 若且唯若元件圖 $G^{\mathrm{SCC}}$ 恰好有一個入度
+$0$ 的元件；這時那個元件裡的每個頂點都是 source vertex，其他頂點都不是。
+
+\begin{pseudo}{一般有向圖有沒有 source vertex}
+\Function{Has-Source-Vertex}{$G$}
+    \State 用 Tarjan 或 Kosaraju 演算法求出每個頂點的元件編號 $\mathit{comp}[u] \in \{1, \ldots, k\}$
+    \For{$c \gets 1$ \To $k$}
+        \State $\mathit{hasIn}[c] \gets \FALSE$
+    \EndFor
+    \For{每條邊 $(u, v) \in E$}
+        \If{$\mathit{comp}[u] \ne \mathit{comp}[v]$}
+            \State $\mathit{hasIn}[\mathit{comp}[v]] \gets \TRUE$
+        \EndIf
+    \EndFor
+    \State $\mathit{cnt} \gets$ 滿足 $\mathit{hasIn}[c] = \FALSE$ 的 $c$ 的個數
+    \State \Return $\mathit{cnt} = 1$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 第 5--7 行標記的正是元件圖裡有邊指進來的元件，所以 $\mathit{cnt}$ 是元件圖的源點個數。
+元件圖是 DAG（資結書引理~23.1），至少一個源點。 只有一個源點 $S$ 時，元件圖的每個元件都能從 $S$ 到達
+（從任何元件逆著邊往回走一定停在源點，而源點只有 $S$），再加上元件內部互相可達，$S$ 的頂點走得到每個
+頂點；有兩個源點 $S_1$、$S_2$ 時，沒有邊進入 $S_1$，只有 $S_1$ 自己的頂點到得了 $S_1$，同樣只有 $S_2$ 的
+頂點到得了 $S_2$，沒有頂點兩個都到得了。
+
+\textbf{時間。} 第 2 行 $\Theta(n + m)$（資結書第~23.2、23.3~節），第 3--4 行 $\Theta(k)$，第 5--7 行掃每條
+邊一次 $\Theta(m)$，第 8 行 $\Theta(k)$。 總共 $\Theta(n + m)$。 這裡不需要去掉元件圖的重複邊，因為只問
+「有沒有邊進來」。
+
+\textbf{另一種做法（只要兩次走訪）。} 對 $G$ 做一次完整的 DFS，取完成時間最大的頂點 $r$，再從 $r$ 做一次
+(a)。 由資結書引理~23.2，$r$ 所在的元件是元件圖的源點；如果 $G$ 有 source vertex，源點元件只有一個，就是
+$r$ 的元件，$r$ 一定走得到全部頂點。 所以「$r$ 走得到全部」若且唯若「$G$ 有 source vertex」。 時間也是
+$\Theta(n + m)$。
+\end{pastsoln}

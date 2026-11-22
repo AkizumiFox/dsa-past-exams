@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntu-112-dsa-04}]{臺大資工所 112 學年度 第 4 題}
+（單選；5 分，答錯倒扣 1 分）
+
+We now use several algorithms to traverse a binary tree. Assuming there are a total number of $N$
+nodes, how many of the following statements about the \textbf{worst-case space complexity} are TRUE?
+\begin{itemize}
+\item Using DFS to traverse a balanced binary tree takes $O(N)$.
+\item Using DFS to traverse a binary tree takes $O(N)$.
+\item Using BFS to traverse a balanced binary tree takes $O(N)$.
+\item Using BFS to traverse a binary tree takes $O(N)$.
+\end{itemize}
+(A)~0 \qquad (B)~1 \qquad (C)~2 \qquad (D)~3 \qquad (E)~4
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案是 (E)。
+
+這題的關鍵是 $O$ 的意思：$O(N)$ 是\textbf{上界}，$f(N) = O(N)$ 只說 $f$ 不會比 $N$ 的常數倍大
+（資結書第~1~章）。 先算出四種情形的最壞空間（不算樹本身，只算走訪用的額外空間），再和 $O(N)$
+比較。
+
+\begin{itemize}
+\item \textbf{DFS}（前序、中序、後序，用遞迴或堆疊，資結書第~7.3~節）：堆疊裡同時放的是根到目前
+節點的一條路徑，額外空間 $\Theta(h)$，$h$ 是樹高。
+\begin{itemize}
+\item 平衡的二元樹 $h = \Theta(\lg N)$，空間 $\Theta(\lg N)$。
+\item 一般的二元樹最壞是一條鏈（每個節點只有一個子節點），$h = N - 1$，空間 $\Theta(N)$。
+\end{itemize}
+\item \textbf{BFS}（層序走訪，用佇列，資結書第~7.3.2~節）：佇列裡同時放的最多是一層多一點的節點，
+額外空間 $\Theta(w)$，$w$ 是最寬那一層的節點數。
+\begin{itemize}
+\item 平衡的二元樹（例如完全二元樹）最底層約有 $N/2$ 個節點，空間 $\Theta(N)$。
+\item 一般的二元樹最壞也是 $\Theta(N)$；任何情形都不會超過 $N$ 個。
+\end{itemize}
+\end{itemize}
+
+四個敘述：
+\begin{enumerate}
+\item DFS、平衡樹：$\Theta(\lg N)$。 $\lg N \le N$，所以 $\Theta(\lg N) \subseteq O(N)$，敘述成立（只是
+不緊）。
+\item DFS、一般樹：$\Theta(N) = O(N)$，成立。
+\item BFS、平衡樹：$\Theta(N) = O(N)$，成立。
+\item BFS、一般樹：$\Theta(N) = O(N)$，成立。
+\end{enumerate}
+四個都成立，選 (E)。 任何走訪的額外空間都不會超過 $O(N)$（每個節點最多在堆疊或佇列裡出現一次），
+所以照 $O$ 的定義，四句話都對。
+
+這題的陷阱在第 1 句。 如果把 $O(N)$ 誤當成「緊的界」，就會覺得 DFS 走平衡樹「應該是 $O(\lg N)$
+而不是 $O(N)$」而判它錯，選 (D) 3。 但題目沒有要求緊的界，$O$ 的定義就是上界，本書照定義選 (E)。
+\end{pastsoln}

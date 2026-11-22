@@ -4,7 +4,7 @@
   src/generated/vol<N>-papers.tex 附錄「依考卷查題」：每份考卷每一題在第幾頁
 用法：scripts/assemble.py 1
 """
-import sys, glob, yaml, os
+import sys, glob, yaml, os, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHAPTERS = {
@@ -50,7 +50,7 @@ def main():
         out.append(f'\\setcounter{{chapter}}{{{ch - 1}}}')
         out.append(f'\\chapter{{{CHAPTERS[ch]}}}')
         out.append(f'本章的題目對應《資料結構與演算法：C 語言、虛擬碼與研究所考試》第~{ch}~章。'
-                   '依學校、學年度排列。\n')
+                   + (('依考試、年度排列。\n') if vol == 4 else '依學校、學年度排列。\n'))
         for _, _, m, q in sorted(bych[ch], key=lambda x: (x[0], x[1])):
             out.append(f'\\input{{questions/{q["id"]}}}')
         out.append('')
@@ -63,18 +63,18 @@ def main():
     if 'A' in bych:
         ma.append('\\chapter{數學工具}')
         ma.append('本章收組合計數、數學歸納法、數論這類題目，對應資結書附錄~A。'
-                  '依學校、學年度排列。\n')
+                  + (('依考試、年度排列。\n') if vol == 4 else '依學校、學年度排列。\n'))
         for _, _, m, q in sorted(bych['A'], key=lambda x: (x[0], x[1])):
             ma.append(f'\\input{{questions/{q["id"]}}}')
     open(os.path.join(gen, f'vol{vol}-math.tex'), 'w').write('\n'.join(ma) + '\n')
 
     ap = ['% 由 scripts/assemble.py 產生，不要手改。', '\\chapter{依考卷查題}',
           '想用整份考卷計時練習時，照下表找出每一題在書裡的頁碼。'
-          '只列資料結構與演算法的題目；合卷裡其他科目的題目沒有收。\n']
+          + ('\n' if vol == 4 else '只列資料結構與演算法的題目；合卷裡其他科目的題目沒有收。\n')]
     for m in papers:
-        ap.append(f"\\section*{{{m['school']}{m['dept']} {m['year']} {m.get('year_word', '學年度')}　{m['subject']}}}")
+        ap.append(f"\\section*{{{m['school']}{m['dept']} {int(m['year'])} {m.get('year_word', '學年度')}　{m['subject']}}}")
         if m.get('instructions'):
-            ap.append('\\begin{paperinfo}原卷說明：' + m['instructions'].strip() + '\\end{paperinfo}')
+            ap.append('\\begin{paperinfo}原卷說明：' + re.sub(r'(?<!\\)%', r'\\%', m['instructions'].strip()) + '\\end{paperinfo}')
         ap.append('\\begin{tabular}{llr}\\toprule 題號 & 主題（章） & 頁 \\\\ \\midrule')
         for q in m['questions']:
             where = '附錄~A' if str(q['chapter']) == 'A' else f"第~{q['chapter']}~章"

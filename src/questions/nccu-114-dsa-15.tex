@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nccu-114-dsa-15}]{政大資科所 114 學年度 第 15 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following problems is NP-Hard?
+\begin{enumerate}[label=\Alph*.]
+\item Given an undirected graph, find the maximum number of vertices that form a complete subgraph.
+\item Given a directed network, find the maximum flow from the source to the sink.
+\item Given a bipartite graph, find the maximum number of matching pairs.
+\item Given two sequences, find the common subsequence of maximal length.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+\begin{itemize}
+\item A.~最大團（maximum clique）。 它的判定版本「圖裡有沒有 $k$ 個頂點的團」是 NP 完備的：$G$ 有
+$k$ 個點的團，若且唯若補圖 $\bar G$ 有 $k$ 個點的獨立集（資結書引理~28.4），而獨立集是 NP 完備的
+（資結書定理~28.9）。 會求最大團的大小就能回答判定版本（看它是不是 $\ge k$），所以求最大團是 NP 難。
+\item B.~最大流：Edmonds--Karp 演算法 $O(VE^2)$（資結書定理~26.3），有多項式時間解。 除非
+$\mathrm{P} = \mathrm{NP}$，否則它不是 NP 難的。
+\item C.~二分圖最大匹配：歸約成最大流（資結書第~26.6~節），多項式時間。
+\item D.~兩個序列的最長共同子序列：動態規劃 $O(nm)$（資結書第~18.3~節），多項式時間。 （序列個數
+不固定的多序列 LCS 才是 NP 難的。）
+\end{itemize}
+B、C、D 都已知有多項式時間演算法，說它們 NP 難等於說 $\mathrm{P} = \mathrm{NP}$，目前沒有人知道
+是否成立，所以答案是 A。
+\end{pastsoln}

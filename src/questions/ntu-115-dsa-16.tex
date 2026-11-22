@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-115-dsa-16}]{臺大資工所 115 學年度 第 16 題}
+（單選）
+
+(4 points) Assume that there are $K$ possible keys $\{1,2,\ldots,K\}$ and $m$ hash table slots $\{0,1,\ldots,m-1\}$ with $m>1$. In double hashing, the probe sequence is
+\[ h(k,i)=\bigl(h_1(k)+i\,h_2(k)\bigr)\bmod m. \]
+For a fixed key $k$, we want the sequence $h(k,0),h(k,1),\ldots$ to visit all $m$ table slots before repeating, so that insertion succeeds whenever the table is not full. Which of the following conditions is necessary and sufficient for this property (for that key $k$)?
+
+
+\begin{enumerate}[label=(\Alph*)]
+\item $m$ must be prime.
+\item $h_2(k)$ must be odd.
+\item $\gcd(h_2(k),m)=1$.
+\item The first hash function $h_1$ must be injective (one-to-one) from $\{1,2,\ldots,K\}$ to $\{0,1,\ldots,m-1\}$.
+\item None of the other choices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+固定一個鍵 $k$，記 $h_1 = h_1(k)$、$h_2 = h_2(k)$、$g = \gcd(h_2, m)$。 探測序列是 $h_1 + i h_2 \pmod m$，$i = 0, 1, \ldots$。
+\begin{itemize}
+\item \textbf{充分}（資結書定理~12.4）：$g = 1$ 時，若 $0 \le i < j \le m - 1$ 而 $h_1 + i h_2 \equiv h_1 + j h_2$，則
+$m \mid (j - i) h_2$；$m$ 和 $h_2$ 互質，所以 $m \mid j - i$，但 $0 < j - i < m$，矛盾。 前 $m$ 個探測位置兩兩
+不同，剛好走遍 $m$ 格。
+\item \textbf{必要}：$g > 1$ 時，$i h_2$ 是 $g$ 的倍數，$m$ 也是，所以每個探測位置 $\bmod g$ 都和 $h_1$ 同餘，只會
+落在 $m/g < m$ 格上，永遠到不了其他格。 例如 $m = 10$、$h_2 = 4$、$h_1 = 1$：序列是 $1, 5, 9, 3, 7, 1, \ldots$，只
+走過 $5$ 格。
+\end{itemize}
+所以「走遍所有格」$\iff$ $\gcd(h_2(k), m) = 1$。
+
+其他選項：
+\begin{itemize}
+\item (A) $m$ 是質數：不必要，例如 $m = 8$、$h_2 = 3$，$\gcd = 1$ 就走得遍。 它甚至不充分：若 $h_2(k) = m$
+（或 $0$），每次都探測同一格。 $m$ 取質數再讓 $1 \le h_2(k) < m$，才是一種保證 $\gcd = 1$ 的設計。
+\item (B) $h_2(k)$ 是奇數：$m$ 是 $2$ 的次方時才對。 一般不充分：$m = 9$、$h_2 = 3$ 是奇數，只走 $3$ 格；也不必要：
+$m = 9$、$h_2 = 2$ 是偶數，卻走得遍。
+\item (D) $h_1$ 一對一：和單一個鍵的探測序列無關；何況鍵的個數 $K$ 比 $m$ 大時根本不可能一對一。
+\item (E)：(C) 是對的。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nccu-114-dsa-12}]{政大資科所 114 學年度 第 12 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following statements concerning time complexity is false?
+\begin{enumerate}[label=\Alph*.]
+\item The time complexity of rotation operation of an AVL tree of size $n$ is O(log$n$).
+\item The worst-case time complexity of merge sort is O($n$log$n$).
+\item The time complexity of KMP algorithm to search for a pattern of length $m$ in a text of length
+$n$ is O($n$+$m$).
+\item The time complexity of the dynamic programming approach to find the longest common subsequence
+between two sequences of length n and m is O($n\times m$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+逐項檢查：
+\begin{itemize}
+\item A.~錯，這是答案。 一次旋轉（資結書虛擬碼~10.1）只改三個指標、重算兩個節點的高度，和樹有多大
+無關，是 $O(1)$。 插入或刪除整體是 $O(\log n)$，那是因為要沿著路徑往下找、再往上檢查平衡因子，
+不是旋轉本身。 嚴格說 $O(1)$ 的東西也是 $O(\log n)$（大 $O$ 只是上界），但題目的意思顯然是說旋轉
+要花對數時間，那是錯的。
+\item B.~對。 合併排序的遞迴式 $T(n) = 2T(n/2) + \Theta(n)$，任何輸入都是 $\Theta(n \log n)$
+（資結書第~14.4~節）。
+\item C.~對。 KMP 演算法算失敗函數 $O(m)$，比對 $O(n)$，共 $O(n + m)$（資結書定理~27.4）。
+\item D.~對。 LCS 的表格有 $(n + 1)(m + 1)$ 格，每格 $O(1)$，共 $O(nm)$（資結書第~18.3~節）。
+\end{itemize}
+\end{pastsoln}

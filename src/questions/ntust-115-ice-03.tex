@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntust-115-ice-03}]{臺科大資工所 115 學年度 第 I-3 題}
+（複選）
+
+(5\%) Select all the correct statements.
+\begin{enumerate}[label=(\alph*)]
+\item The conversion of the infix expression $(\boldsymbol{A}+\boldsymbol{B})\times \boldsymbol{C}$ into
+postfix expression results in $\times +\boldsymbol{ABC}$.
+\item Given the postfix expression $\mathbf{8\ 2\ 3}\ \times\ +$, the result of the evaluation is $14$.
+\item Converting the infix expression $\boldsymbol{A}+\boldsymbol{B}\times(\boldsymbol{C}-\boldsymbol{D})\div
+\boldsymbol{E}$ into postfix expression (assuming standard left-associativity for operators of equal
+precedence) results in $\boldsymbol{ABCD}-\boldsymbol{E}\div\times+$.
+\item A stack follows the LIFO (Last-In-First-Out) access principle.
+\item In graph traversal algorithms, Depth-First Search (DFS) typically utilizes a stack, whereas
+Breadth-First Search (BFS) utilizes a queue.
+\item The worst-case time complexity for searching for a specific element within a stack containing $n$
+elements is $O(1)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)、(d)、(e)。
+
+\begin{itemize}
+\item[(a)] 錯。 $(A + B) \times C$ 的後序式是 $A\,B + C\,\times$：先算括號裡的 $A + B$（寫成 $A\,B\,+$），再和 $C$
+相乘。 題目給的 $\times + A\,B\,C$ 是\textbf{前序}式（資結書第~6.3、6.3.5~節）。
+\item[(b)] 對。 由左往右掃，數字推入堆疊（資結書虛擬碼~6.7）：推入 $8$、$2$、$3$；遇到 $\times$，彈出 $3$、$2$，
+推入 $2 \times 3 = 6$，堆疊是 $8, 6$；遇到 $+$，彈出 $6$、$8$，推入 $14$。 結果 $14$。
+\item[(c)] 錯。 $\times$、$\div$ 同優先、由左往右結合，所以原式是 $A + \bigl((B \times (C - D)) \div E\bigr)$，後序式
+\[
+A\;B\;C\;D\;-\;\times\;E\;\div\;+ .
+\]
+照資結書虛擬碼~6.8 追蹤：$A$、$B$ 輸出；$+$ 入堆疊；$\times$ 比 $+$ 優先，入堆疊；$($ 入堆疊；$C$、$D$ 輸出，
+中間的 $-$ 入堆疊；遇到 $)$ 彈出 $-$；遇到 $\div$，堆疊頂的 $\times$ 優先權相同、左結合，先彈出 $\times$，再把
+$\div$ 推入；$E$ 輸出；最後彈出 $\div$、$+$。 題目給的 $A\,B\,C\,D - E \div \times +$ 對應的是
+$A + B \times \bigl((C - D) \div E\bigr)$，把 $\div$ 當成比 $\times$ 先算了。
+\item[(d)] 對。 堆疊後進先出（資結書第~6.1~節）。
+\item[(e)] 對。 DFS 一路往深處走、回頭時回到最近的分岔點，用堆疊（或遞迴）；BFS 一層一層往外，用佇列
+（資結書第~21.3、21.4~節）。
+\item[(f)] 錯。 堆疊只能看頂端；要找某個元素，最壞要把 $n$ 個都看過（或一個一個彈出來），$\Theta(n)$。
+\end{itemize}
+\end{pastsoln}

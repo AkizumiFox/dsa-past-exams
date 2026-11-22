@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ncu-111-dsa-02}]{中央資工所 111 學年度 複選題第 2 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Dynamic programming is a technique that avoids the recursive explosion.
+\item Overlapping recursive calls tend to yield exponential algorithm.
+\item Greedy algorithm makes locally optimal decision at each step.
+\item Divide and conquer is a type of recursive algorithm. The recursion is the divide part.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(C)。
+\begin{itemize}
+\item (A) 對。 直接照遞迴式寫的遞迴，同一個子問題會被算很多次，呼叫次數爆炸；動態規劃把每個子問題的
+答案存起來（記憶化或由下而上填表），每個子問題只算一次（資結書第~18.1.2、18.1.3~節）。
+\item (B) 對。 子問題重疊時，單純的遞迴會把同樣的呼叫一再展開。 例如直接遞迴算二項式係數
+$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$，呼叫次數是 $2\binom{n}{k} - 1$（資結書定理~18.1），
+$k = n/2$ 時是指數級；費氏數列的直接遞迴也是 $\Theta(\varphi^n)$ 次呼叫。 「tend to」說的是一般的
+傾向，這句成立。
+\item (C) 對。 貪心法每一步只依目前的情況選看起來最好的（局部最佳），選了就不再改；它能不能得到整體
+最佳，要另外證明貪心選擇性質（資結書第~19.1.6~節）。
+\item (D) 錯。 分治的三步是分割（divide）、解決（conquer）、合併（combine）。 分割只是把問題切成子問題，
+遞迴發生在「解決」那一步：對每個子問題遞迴呼叫自己（資結書第~17~章）。 前半句「分治是一種遞迴演算法」
+沒問題，後半句把遞迴說成分割，錯。
+\end{itemize}
+\end{pastsoln}

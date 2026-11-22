@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-08}]{臺大資工所 111 學年度 第 8 題}
+（單選）
+
+(5 points) Following the previous problem, what is the value of the left child of the node with
+value 3?
+\begin{enumerate}[label=(\Alph*)]
+\item 1
+\item 2
+\item 4
+\item 5
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) 2。
+
+「前一題」是歷屆試題~\ref{px:ntu-111-dsaa-07}：依序插入 5, 4, 2, 6, 1, 3 到空的最大堆積，結果
+陣列是 $A[1..6] = 6, 5, 3, 4, 1, 2$（過程見該題詳解）。 值 $3$ 在索引 $3$，左孩子在索引
+$2 \cdot 3 = 6$，$A[6] = 2$，選 (B)。 它的右孩子在索引 $7$，超過 $6$，不存在。
+
+(C) 4、(A) 1 是值 $5$（索引 $2$）的左、右孩子；(D) 5 是 $3$ 的兄弟。
+\end{pastsoln}

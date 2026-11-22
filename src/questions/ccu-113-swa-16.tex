@@ -1,0 +1,16 @@
+\begin{pastexam}[label={px:ccu-113-swa-16}]{中正資工所甲組 113 學年度 第 21 題}
+（是非）
+
+(2\%) Determine if the following statement is true or false: "Given T is a minimum spanning tree of a graph G, for any pair of vertices ($s$, $t$), the shortest path from $s$ to $t$ in G is the path from $s$ to $t$ in T".
+\end{pastexam}
+
+\begin{pastsoln}
+答案：False。
+
+最小生成樹讓\textbf{整棵樹的權重總和}最小，最短路徑讓\textbf{兩點之間的路徑長}最小，兩件事不同（資結書第~24.5.4~節）。
+反例：三角形 $s, x, t$，邊 $s$--$x$ 權重 $1$、$x$--$t$ 權重 $1$、$s$--$t$ 權重 $1.5$。 最小生成樹是 $\{s\text{--}x,\ x\text{--}t\}$
+（總和 $2$，比含 $s$--$t$ 的任何生成樹的 $2.5$ 小），樹上 $s$ 到 $t$ 的路徑長 $2$；但圖裡 $s$ 到 $t$ 的最短路徑是直接那條邊，
+長 $1.5$。 所以 MST 上的路徑不一定是最短路徑。
+
+（MST 上的路徑保證的是另一件事：在所有 $s$--$t$ 路徑裡，它的\textbf{最大邊}最小，也就是瓶頸路徑，見資結書第~24.5.3~節。）
+\end{pastsoln}

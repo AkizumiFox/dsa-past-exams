@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:gk3-103-ds-02}]{高考三級資訊處理 103 年 第二題}
+（申論；15 分）
+
+L 為一鏈結串列（Linked List），函數 Reverse(L)是要求把在原來 L 的每個節點（Node）的地址指標
+（Pointer），更改為指向它在鏈結串列 L 中的前面一個節點。請設計一個以疊代（Iterative）方式的程式
+來執行函數 Reverse(L)的功能，程式限制只能使用常數個（constant）額外空間（External Memory），
+可用程式語言 C、C++、Java 或 Pseudocode，寫出你的答案。請先說明你的作法，再寫出程式。（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有給節點的宣告，下面假設是單向串列，節點有資料欄 \texttt{data} 和指標 \texttt{next}，
+L 指向第一個節點，空串列時 L 是 \texttt{NULL}。 反轉後原本的最後一個節點變成第一個，所以函式
+回傳新的開頭（呼叫時寫 \texttt{L = Reverse(L);}）。
+
+\textbf{作法。} 用三個指標由前往後走一遍：
+\begin{itemize}
+\item \texttt{done}：已經反轉好的那一段的開頭，一開始是 \texttt{NULL}；
+\item \texttt{cur}：目前要處理的節點，一開始是 L；
+\item \texttt{rest}：\texttt{cur} 原本的下一個節點。
+\end{itemize}
+每一輪先用 \texttt{rest} 記住 \texttt{cur->next}（改掉之後就找不到後面了），再把
+\texttt{cur->next} 改成指向前一個節點 \texttt{done}，然後 \texttt{done}、\texttt{cur} 各往後
+移一個。 \texttt{cur} 走到 \texttt{NULL} 時，\texttt{done} 就是反轉後的開頭。 這就是資結書
+虛擬碼~5.12 的 \proc{List-Reverse}。
+
+\begin{code}{c}{就地反轉單向串列}
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *Reverse(struct node *L)
+{
+    struct node *done = NULL;   /* 已反轉的一段 */
+    struct node *cur = L;       /* 還沒處理的第一個節點 */
+    struct node *rest;
+    while (cur != NULL) {
+        rest = cur->next;       /* 先記住後面那一段 */
+        cur->next = done;       /* 指向原本的前一個節點 */
+        done = cur;
+        cur = rest;
+    }
+    return done;                /* 原本的最後一個節點 */
+}
+\end{code}
+
+\textbf{追蹤。} 以 $a \to b \to c$ 為例，每一列是一輪做完的狀態：
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+輪 & \texttt{done} 那一段 & \texttt{cur} 那一段 & 改了哪個指標 \\
+\midrule
+開始 & （空） & $a \to b \to c$ & -- \\
+1 & $a$ & $b \to c$ & $a.\mathit{next} = \texttt{NULL}$ \\
+2 & $b \to a$ & $c$ & $b.\mathit{next} = a$ \\
+3 & $c \to b \to a$ & （空） & $c.\mathit{next} = b$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{正確性。} 迴圈不變量：每一輪開始時，\texttt{done} 是原串列前面已處理的節點反過來接成的
+串列，\texttt{cur} 是後面還沒動過的部分（它們的 \texttt{next} 都還是原本的值）。 一開始已處理的
+部分是空的，成立；每一輪把 \texttt{cur} 從後段拆下、接到 \texttt{done} 的最前面，兩段的性質都保持；
+\texttt{cur} 為 \texttt{NULL} 時沒有未處理的節點，\texttt{done} 就是整條反轉後的串列。 每個節點的
+\texttt{next} 都改成指向原本的前一個節點，原本的第一個節點指向 \texttt{NULL}。 空串列和只有
+一個節點時迴圈做 0 輪或 1 輪，結果也對。
+
+\textbf{複雜度。} 每個節點處理一次，時間 $\Theta(n)$；只多用了 \texttt{done}、\texttt{cur}、
+\texttt{rest} 三個指標，額外空間 $\Theta(1)$，符合題目的限制。
+\end{pastsoln}

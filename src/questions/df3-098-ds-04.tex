@@ -1,0 +1,110 @@
+\begin{pastexam}[label={px:df3-098-ds-04}]{地方三等資訊處理 98 年 第四題}
+（申論；25 分）
+
+排序（Sorting）：參考下表之程式一與程式二回答問題。
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 程式一是那一種排序演算法的實作？又其中的 s 變數有何功用？（6 分）
+\item[㈡] 當程式一結束執行後，第 9 行的 swap()函數共被呼叫幾次？又此時變數 i 的值為何？（6 分）
+\item[㈢] 程式二是那一種排序演算法的實作？當其中的 while 迴圈第一輪執行完畢後，陣列 a 的內容為何？（6 分）
+\item[㈣] 參考程式二，假設陣列 a 的元素個數為 N（N>1），若要成功完成排序，整數變數 p 的值需有那些限制？
+請說明原因。（7 分）
+\end{enumerate}
+\begin{center}
+\footnotesize
+\begin{tabular}{|r|l|l|}
+\hline
+ & \multicolumn{1}{c|}{程式一} & \multicolumn{1}{c|}{程式二} \\
+\hline
+1 & int a[] = \{17, 88, 19, 7, 43, 23, 56, 35\} ; & int a[] = \{17, 88, 19, 109, 7, 43, 1, 23, 99, 56\} ; \\
+2 & int n = 8; & int n = 10; \\
+3 & int i, j, s=0 ; & int i, j, g = n, p=2 ; \\
+4 & for (i = 0; i<n-1 \&\& s==0; i++)\{ & while ((g=g/p)>0) \{ \\
+5 & \hspace*{1.5em}s = 1 ; & \hspace*{1.5em}for (i = g; i<n; i++) \{ \\
+6 & \hspace*{1.5em}for (j=0; j<n-i-1; j++) \{ & \hspace*{3em}int temp = a[i] ; \\
+7 & \hspace*{3em}if (a[j]>a[j+1]) \{ & \hspace*{3em}for (j = i ; j>=g \&\& a[j-g]>temp ; j-=g) \{ \\
+8 & \hspace*{4.5em}/*將 a[j]與 a[j+1]互換*/ & \hspace*{4.5em}a[j] = a[j-g] ; \\
+9 & \hspace*{4.5em}swap(a, j, j+1) ; & \hspace*{3em}\} \\
+10 & \hspace*{4.5em}s = 0 ; & \hspace*{3em}a[j] = temp ; \\
+11 & \hspace*{3em}\} & \hspace*{1.5em}\} \\
+12 & \hspace*{1.5em}\} & \} \\
+13 & \} & \\
+\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠ 程式一是氣泡排序（bubble sort，由小到大）。} 第 $i$ 輪從頭比較相鄰的
+\texttt{a[j]}、\texttt{a[j+1]}，前面比較大就交換，一輪下來最大的元素「浮」到這一輪範圍的最後面
+（資結書第~14.2~節）。 \texttt{s} 是「這一輪有沒有交換」的旗標：每輪開始設成 1，只要交換過一次就
+改成 0。 某一輪完全沒交換（\texttt{s} 維持 1），表示每一對相鄰元素都已經是小在前，整個陣列排好了，
+外層條件 \texttt{s==0} 不成立，提早結束，不必跑滿 $n-1$ 輪。 已經排好的輸入只要一輪、$n-1$ 次比較。
+
+\textbf{㈡ swap 呼叫 11 次，結束時 i = 4。} 逐輪追蹤（每列是那一輪結束時的陣列）：
+\begin{center}
+\begin{tabular}{cclc}
+\toprule
+\texttt{i} & 比較範圍 \texttt{j} & 這一輪結束後的 \texttt{a} & 交換次數 \\
+\midrule
+開始 & & 17, 88, 19, 7, 43, 23, 56, 35 & \\
+0 & 0..6 & 17, 19, 7, 43, 23, 56, 35, \textbf{88} & 6 \\
+1 & 0..5 & 17, 7, 19, 23, 43, 35, \textbf{56, 88} & 3 \\
+2 & 0..4 & 7, 17, 19, 23, 35, \textbf{43, 56, 88} & 2 \\
+3 & 0..3 & 7, 17, 19, 23, 35, 43, 56, 88 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item \texttt{i}$=0$：88 一路和 19, 7, 43, 23, 56, 35 交換，6 次。
+\item \texttt{i}$=1$：19 與 7、43 與 23、56 與 35 各交換一次，3 次。
+\item \texttt{i}$=2$：17 與 7、43 與 35，2 次。 這時已經排好，但這一輪有交換，\texttt{s} 是 0，
+還要再跑一輪。
+\item \texttt{i}$=3$：沒有交換，\texttt{s} 維持 1。 這輪結束時 \texttt{i++} 先執行，\texttt{i} 變成 4，
+再檢查條件 \texttt{s==0} 不成立，迴圈結束。
+\end{itemize}
+swap 共 $6 + 3 + 2 + 0 = 11$ 次（等於原陣列的逆序對個數），結束時 \texttt{i} 的值是 \textbf{4}。
+
+\textbf{㈢ 程式二是謝爾排序（Shell sort），間隔序列是 $n/p, n/p^2, \dots$。} \texttt{while} 每一輪先把
+間隔 \texttt{g} 除以 \texttt{p}，再對「相隔 \texttt{g} 的元素」做插入排序（第 6--10 行就是插入排序，
+只是每次往前跳 \texttt{g} 格），資結書第~14.3~節。 \texttt{n = 10}、\texttt{p = 2}，間隔依序是 5、2、1。
+
+第一輪 \texttt{g = 5}：把陣列分成 5 組，第 $k$ 組是位置 $k$ 和 $k+5$，各組排序：
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+組 & 位置 & 原本 & 排好 \\
+\midrule
+0 & a[0], a[5] & 17, 43 & 17, 43 \\
+1 & a[1], a[6] & 88, 1 & 1, 88 \\
+2 & a[2], a[7] & 19, 23 & 19, 23 \\
+3 & a[3], a[8] & 109, 99 & 99, 109 \\
+4 & a[4], a[9] & 7, 56 & 7, 56 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第一輪結束後 \texttt{a} 是 \textbf{17, 1, 19, 99, 7, 43, 88, 23, 109, 56}。 （之後 \texttt{g = 2}
+得到 7, 1, 17, 23, 19, 43, 88, 56, 109, 99，\texttt{g = 1} 排好。）
+
+\textbf{㈣ p 的限制。} 間隔序列由 \texttt{g = g/p} 決定（整數除法），要排好有兩個條件：
+\begin{enumerate}
+\item \textbf{$p \ge 2$。}
+\begin{itemize}
+\item $p = 1$：\texttt{g = g/1} 永遠等於 $N > 0$，\texttt{while} 永不結束。
+\item $p = 0$：除以 0，執行錯誤。
+\item $p < 0$：C 的整數除法向 0 截斷，$N/p \le 0$，\texttt{while} 一輪都不做，陣列沒被排序。
+\end{itemize}
+\item \textbf{最後一個間隔必須是 1。} Shell sort 只有在最後用間隔 1 做一次完整的插入排序時，才保證
+排好；前面的間隔只是讓資料「大致」有序。 這裡的間隔是 $\lfloor N/p \rfloor, \lfloor N/p^2 \rfloor, \dots$
+（連續做整數除法等於一次除以 $p^k$ 取整數部分），一直做到變成 0 為止，所以最後一個正的間隔 $g$
+滿足 $g < p$，不一定是 1。 例如 $N = 10$、$p = 4$：間隔只有 $\lfloor 10/4 \rfloor = 2$，下一個就是 0，
+只做了間隔 2 的排序，題目的陣列會變成 1, 23, 7, 43, 17, 56, 19, 88, 99, 109，沒有排好。 $p > N$ 時
+第一個間隔就是 0，什麼都不做。
+\end{enumerate}
+合起來：$p$ 是 $\ge 2$ 的整數，而且存在某個 $k \ge 1$ 使 $\lfloor N/p^k \rfloor = 1$，也就是
+\[
+p^k \le N < 2p^k.
+\]
+$p = 2$ 對任何 $N > 1$ 都成立（取 $2^k \le N < 2^{k+1}$），題目用的就是 $p = 2$。 以 $N = 10$ 為例，
+可以的 $p$ 是 2, 3, 6, 7, 8, 9, 10（$p = 3$ 的間隔是 3, 1；$p = 6..10$ 只有間隔 1，等於直接做插入
+排序），不行的是 4、5（最後間隔 2）和所有 $p > 10$。
+\end{pastsoln}

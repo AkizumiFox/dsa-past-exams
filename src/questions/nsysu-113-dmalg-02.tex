@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-02}]{中山資工所資安組 113 學年度 第 2 題}
+（計算）
+
+{[10\%]} How many positive integers up to 188,071 that are relatively prime to 188,071?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\varphi(188071) = 152064$。
+
+要的是歐拉函數 $\varphi(188071)$。 先分解質因數（不能用計算機，從小的質數試起）：
+\begin{itemize}
+\item $2$：是奇數。 $3$：位數和 $1 + 8 + 8 + 0 + 7 + 1 = 25$，不是 $3$ 的倍數。 $5$：個位數不是 $0$、$5$。
+\item $7$：$7 \times 26867 = 188069$，餘 $2$。 $11$：交錯和 $1 - 7 + 0 - 8 + 8 - 1 = -7$，不是 $11$ 的倍數。
+\item $13$：$13 \times 14467 = 188071$，整除。
+\item $14467$：$17 \times 851 = 14467$，整除（$13$ 再試一次：$13 \times 1112 = 14456$，餘 $11$）。
+\item $851 = 23 \times 37$，兩個都是質數。
+\end{itemize}
+所以 $188071 = 13 \times 17 \times 23 \times 37$，四個相異質數。
+
+$\varphi$ 是積性函數，$p$ 是質數時 $\varphi(p) = p - 1$（$1$ 到 $p$ 裡只有 $p$ 本身和 $p$ 不互質）。 所以
+\[
+\varphi(188071) = (13 - 1)(17 - 1)(23 - 1)(37 - 1) = 12 \times 16 \times 22 \times 36 = 152064 .
+\]
+等價的寫法是排容原理：$1$ 到 $N$ 裡不被 $13, 17, 23, 37$ 任何一個整除的數有
+$N \prod_{p} \bigl(1 - \frac{1}{p}\bigr)$ 個，算出來相同。
+\end{pastsoln}

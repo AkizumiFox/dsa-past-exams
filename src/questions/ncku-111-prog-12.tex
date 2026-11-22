@@ -1,0 +1,87 @@
+\begin{pastexam}[label={px:ncku-111-prog-12}]{成大資訊聯招 111 學年度 第 12 題}
+（單選）
+
+\textbf{[2\%, 2\%, 2\%, 2\%]} Consider the two missing parts for the decrease key operation in F-heap.
+
+\begin{quote}
+$DecreaseKey(H,x,k)$\{\\
+\hspace*{0.5em}if k > x.key return "error"\\
+\hspace*{0.5em}x.key = k\\
+\hspace*{0.5em}y = x.p \quad //note: x.p represents the parent node of x\\
+\hspace*{0.5em}if y $\neq$ NIL and \underline{(1)} \{\\
+\hspace*{2em}$CUT(H,x,y)$\\
+\hspace*{1.5em}$CASCADING-CUT(H,y)$\\
+\hspace*{0.5em}\}\\
+\hspace*{0.5em}if x.key < H.min.key\\
+\hspace*{2em}H.min = x\\
+\}
+
+$CUT(H,x,y)$\{\\
+\hspace*{0.5em}x.p = \underline{(2)}\\
+\hspace*{0.5em}x.mark = FALSE\\
+\}
+\end{quote}
+
+\begin{quote}
+$CASCADING-CUT(H,y)$\{\\
+\hspace*{0.5em}z = y.p\\
+\hspace*{0.5em}if z $\neq$ NIL\\
+\hspace*{2em}if y.mark == FALSE\\
+\hspace*{3.5em}y.mark = TRUE\\
+\hspace*{2em}else \{\\
+\hspace*{3.5em}$CUT(H,y,z)$\\
+\hspace*{3.5em}$CASCADING-CUT(H,z)$\\
+\hspace*{1em}\}\\
+\}
+\end{quote}
+
+(i) Which of the following for \underline{(1)} is true?\\
+(A) $x.key < y.key$\\
+(B) $x.key > y.key$\\
+(C) $x.key \ge y.key$\\
+(D) $x.key \le y.key$
+
+(ii) Which of the followings is true for \underline{(2)}?\\
+(A) $NIL$\\
+(B) $y$\\
+(C) $x$\\
+(D) None of the above
+
+(iii) What is the amortized time complexity of function \underline{DecreaseKey}?\\
+(A) $O(1)$\\
+(B) $O(n)$\\
+(C) $O(lg\ n)$\\
+(D) $O(lg\ n^2)$
+
+(iv) What is the time complexity of inserting node into F-heap?\\
+(A) $O(1)$\\
+(B) $O(n)$\\
+(C) $O(lg\ n)$\\
+(D) $O(lg\ n^2)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(i) (A)；(ii) (A)；(iii) (A)；(iv) (A)。
+
+這是費氏堆積（F-heap）的 decrease-key（資結書第~8.6~節），寫法和 CLRS 相同。 題目印的 \proc{CUT} 只剩
+兩行，完整的 \proc{CUT}$(H, x, y)$ 是：把 $x$ 從 $y$ 的子串列移除、$y$ 的度數減一、把 $x$ 加進根串列，
+再設 $x.p = \mathrm{NIL}$、$x.\mathit{mark} = \mathrm{FALSE}$。
+
+\textbf{(i)} 鍵變小以後，只有在 $x$ 違反最小堆積的性質，也就是 $x.\mathit{key} < y.\mathit{key}$ 時，才需要
+把 $x$ 切下來。 $x.\mathit{key} \ge y.\mathit{key}$ 時堆積性質仍然成立，什麼都不用做。 選 (A)。 (B)、(C)
+方向相反；(D) 的 $\le$ 在相等時也會切，多做一次切割雖然不會出錯，但不必要，標準寫法是嚴格小於。
+
+\textbf{(ii)} $x$ 被切下來放進根串列，成為一棵樹的根，沒有父節點，所以 $x.p = \mathrm{NIL}$，選 (A)。 (B)
+$y$ 是原本的父節點，切下來之後就不是了；(C) 指向自己會讓 \proc{CASCADING-CUT} 一路往上時無窮迴圈。
+
+\textbf{(iii)} 平攤 $O(1)$，選 (A)。 用位能函數 $\Phi = t(H) + 2m(H)$（$t$ 是根的個數，$m$ 是有標記的節點數）：
+一次 decrease-key 若引發 $c$ 次切割（一次是 $x$，$c - 1$ 次是串聯切割），實際成本 $O(c)$。 根多了 $c$ 個；
+串聯切割的 $c - 1$ 個節點原本都有標記，切下後清掉，最後最多新標一個，所以有標記的節點至少少了 $c - 2$ 個。
+位能變化 $\le c + 2(2 - c) = 4 - c$，平攤成本 $O(c) + 4 - c = O(1)$（把位能的單位放大到能抵掉每次切割的
+常數成本）。
+
+\textbf{(iv)} 插入只是建一個單一節點的樹放進根串列、必要時更新 $H.\mathit{min}$，實際成本和平攤成本都是
+$O(1)$，選 (A)。 (C) $O(\lg n)$ 是二項堆積插入的最壞情況；費氏堆積把整理工作延到 extract-min 才做。
+
+(iii)、(iv) 的選項 (D) $O(\lg n^2) = O(2 \lg n) = O(\lg n)$，和 (C) 其實一樣。
+\end{pastsoln}

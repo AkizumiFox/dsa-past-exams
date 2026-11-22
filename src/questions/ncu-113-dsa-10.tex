@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ncu-113-dsa-10}]{中央資工所 113 學年度 第 10 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+What does the following function do for a given binary tree?
+\begin{minted}[fontsize=\small]{c}
+int f(struct node *root)
+{
+    if (root == NULL)
+        return 0;
+    if (root->left == NULL && root->right == NULL)
+        return 0;
+    return 1 + f(root->left) + f(root->right);
+}
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item Counts leaf nodes when x =1 and y=0;
+\item Counts internal nodes when x =0 and y=1.
+\item Returns height where height is defined as number of edges on the path from root to deepest node when
+x=0 and y=1
+\item Return diameter where diameter is number of edges on the longest path between any two nodes when x =1
+and y=0
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)。
+
+\textbf{題目的 x、y}。 程式裡沒有 $x$、$y$，選項卻寫「when x = \ldots and y = \ldots」。 合理的讀法是：
+程式原本是一般的形式，葉子回傳 $x$，最後一行是 \texttt{return y + f(root->left) + f(root->right);}，
+印出來的是 $x = 0$、$y = 1$ 的版本。 下面照這個讀法判斷；如果只看印出來的程式本身，它數的是內部節點，
+只有 (B) 描述它。
+
+一般形式的 $f$ 對一棵非空的樹回傳：每個葉子貢獻 $x$，每個內部節點（至少有一個兒子）貢獻 $y$。 證明對節點數
+歸納：空樹回傳 $0$；葉子回傳 $x$；內部節點回傳 $y$ 加上兩棵子樹的值，由歸納假設，子樹的值正是子樹裡
+「葉子數 $\times x$ + 內部節點數 $\times y$」，加起來就是整棵樹的。 所以
+\[
+f(\text{root}) = x \cdot (\text{葉子數}) + y \cdot (\text{內部節點數}).
+\]
+
+\begin{itemize}
+\item (A) 對。 $x = 1$、$y = 0$ 時 $f$ 等於葉子數。
+\item (B) 對。 $x = 0$、$y = 1$ 時 $f$ 等於內部節點數，也就是印出來的這個程式。
+\item (C) 錯。 $x = 0$、$y = 1$ 數的是內部節點，不是高度。 反例：根有左右兩個兒子，兩個兒子都是葉子，
+高度（邊數）是 $1$，$f$ 也是 $1$；但如果兩個兒子各再有一個兒子，高度是 $2$，內部節點卻有 $3$ 個，
+$f = 3$。 要算高度，兩棵子樹要取最大值，不是相加。
+\item (D) 錯。 $x = 1$、$y = 0$ 數的是葉子。 反例：一條三個節點的鏈，直徑是 $2$，葉子只有 $1$ 個。
+\end{itemize}
+\end{pastsoln}

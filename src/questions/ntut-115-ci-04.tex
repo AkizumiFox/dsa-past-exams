@@ -1,0 +1,140 @@
+\begin{pastexam}[label={px:ntut-115-ci-04}]{北科大資工所 115 學年度 第 4 題}
+（追蹤、計算）
+
+Please answer the following questions about the graph $G$ in Figure 1. (10\%)
+\begin{center}
+\begin{tikzpicture}[x=0.0035cm,y=-0.0035cm,>={Stealth[length=1.8mm,width=1.4mm]},
+  every node/.style={circle,draw,line width=0.6pt,minimum size=7.6mm,inner sep=0pt}]
+\node (A) at (380,330) {A};
+\node (C) at (1425,300) {C};
+\node (B) at (390,810) {B};
+\node (F) at (1730,800) {F};
+\node (D) at (1365,1065) {D};
+\node (E) at (910,1285) {E};
+\node (H) at (405,1475) {H};
+\node (G) at (1655,1455) {G};
+\begin{scope}[line width=0.6pt]
+\draw[->] (C) -- (A);
+\draw[->] (A) -- (B);
+\draw[->] (B) -- (C);
+\draw[->] (B) -- (F);
+\draw[->] (B) -- (D);
+\draw[->] (C) -- (D);
+\draw[->] (C) -- (H);
+\draw[->] (F) -- (C);
+\draw[->] (D) -- (F);
+\draw[->] (D) -- (E);
+\draw[->] (E) -- (B);
+\draw[->] (H) -- (E);
+\draw[->] (E) -- (G);
+\draw[->] (F) -- (G);
+\draw[->] (G) -- (H);
+\end{scope}
+\end{tikzpicture}
+
+Figure 1. A digraph $G$ for problem 4
+\end{center}
+\begin{enumerate}[label=(\arabic*)]
+\item List the nodes as the depth-first search (DFS) starting from node A and suppose the adjacency-list of each node is ordered in strict alphabetical order. (3\%)
+\item How many edges at least should be removed to make $G$ be a directed acyclic graph (DAG)? (3\%)
+\item Perform a breadth-first search (BFS) traversal, starting from node A, with alphabetical adjacency-list ordering. Please show the corresponding BFS-tree. (4\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+照題目的約定，鄰接串列依字母排：
+\[
+A\colon B \quad B\colon C, D, F \quad C\colon A, D, H \quad D\colon E, F \quad
+E\colon B, G \quad F\colon C, G \quad G\colon H \quad H\colon E
+\]
+
+(1) 照資結書虛擬碼~21.3 從 $A$ 開始，一個時間一列（灰色頂點由底到頂）：
+
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+時間 & 事件 & 灰色頂點 \\
+\midrule
+1 & 發現 $A$ & $A$ \\
+2 & 發現 $B$（$\mathit{Adj}[A]$ 第一個） & $A\ B$ \\
+3 & 發現 $C$（$\mathit{Adj}[B]$ 第一個） & $A\ B\ C$ \\
+4 & $C \to A$：$A$ 是灰色（後向邊）；發現 $D$ & $A\ B\ C\ D$ \\
+5 & 發現 $E$（$\mathit{Adj}[D]$ 第一個） & $A\ B\ C\ D\ E$ \\
+6 & $E \to B$：灰色（後向邊）；發現 $G$ & $A\ B\ C\ D\ E\ G$ \\
+7 & 發現 $H$ & $A\ B\ C\ D\ E\ G\ H$ \\
+8 & $H \to E$：灰色（後向邊）；完成 $H$ & $A\ B\ C\ D\ E\ G$ \\
+9 & 完成 $G$ & $A\ B\ C\ D\ E$ \\
+10 & 完成 $E$ & $A\ B\ C\ D$ \\
+11 & 回到 $D$，發現 $F$ & $A\ B\ C\ D\ F$ \\
+12 & $F \to C$ 後向邊；$F \to G$ 交叉邊（$G$ 黑、$d[F] > d[G]$）；完成 $F$ & $A\ B\ C\ D$ \\
+13 & 完成 $D$ & $A\ B\ C$ \\
+14 & $C \to H$：黑色、$d[C] < d[H]$（前向邊）；完成 $C$ & $A\ B$ \\
+15 & $B \to D$、$B \to F$ 都是前向邊；完成 $B$ & $A$ \\
+16 & 完成 $A$ & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+所以 DFS 拜訪（發現）的順序是 $A, B, C, D, E, G, H, F$。
+
+(2) 至少要刪 $4$ 條。
+\begin{itemize}
+\item \textbf{$4$ 條就夠。} (1) 的 DFS 有 $4$ 條後向邊：$C \to A$、$E \to B$、$H \to E$、$F \to C$。 由資結書第~21~章觀
+念題第~8~題 (a)，把一次 DFS 的後向邊全部刪掉，剩下的圖沒有環。
+\item \textbf{少於 $4$ 條不夠。} 下面四個環兩兩沒有共同的邊：
+\[
+A \to B \to C \to A,\quad B \to D \to E \to B,\quad C \to D \to F \to C,\quad E \to G \to H \to E.
+\]
+每個環至少要刪掉一條自己的邊才會斷，四個環的邊互不相同，刪 $3$ 條最多斷掉 $3$ 個環。
+\end{itemize}
+注意上界和下界都要寫：DFS 的後向邊條數一般\textbf{不是}最少的刪法（資結書第~21~章觀念題第~8~題
+(b) 有反例），這裡剛好相等，是靠下界的四個環證明的。 
+
+(3) 照資結書虛擬碼~21.1 從 $A$ 開始：
+
+\begin{center}
+\small
+\begin{tabular}{cll>{\raggedright\arraybackslash}p{0.3\linewidth}l}
+\toprule
+輪 & 拿出 & 依序看的鄰居 & 新發現：$d$，$\pi$ & 之後的佇列 \\
+\midrule
+0 & --- & --- & $A$：$d = 0$ & $A$ \\
+1 & $A$ & $B$ & $B$：$1$，$A$ & $B$ \\
+2 & $B$ & $C$，$D$，$F$ & $C$、$D$、$F$：$2$，$B$ & $C\ D\ F$ \\
+3 & $C$ & $A$（黑），$D$（灰），$H$ & $H$：$3$，$C$ & $D\ F\ H$ \\
+4 & $D$ & $E$，$F$（灰） & $E$：$3$，$D$ & $F\ H\ E$ \\
+5 & $F$ & $C$（黑），$G$ & $G$：$3$，$F$ & $H\ E\ G$ \\
+6 & $H$ & $E$（灰） & --- & $E\ G$ \\
+7 & $E$ & $B$（黑），$G$（灰） & --- & $G$ \\
+8 & $G$ & $H$（黑） & --- & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+拜訪順序 $A, B, C, D, F, H, E, G$。 BFS 樹的邊是 $(\pi[v], v)$：
+
+\begin{center}
+\begin{tikzpicture}[x=1.1cm, y=1cm,
+  gtr-v/.style={circle, draw=black!70, thick, minimum size=0.62cm, inner sep=0pt, font=\small, fill=white},
+  gtr-treea/.style={draw=coreStroke, very thick, -{Stealth[length=2.4mm]}},
+  gtr-lvl/.style={font=\scriptsize, text=black!55, anchor=east}]
+\node[gtr-lvl] at (-1.3, 0) {距離 $0$};
+\node[gtr-lvl] at (-1.3, -1) {距離 $1$};
+\node[gtr-lvl] at (-1.3, -2) {距離 $2$};
+\node[gtr-lvl] at (-1.3, -3) {距離 $3$};
+\node[gtr-v] (pA) at (1, 0) {$A$};
+\node[gtr-v] (pB) at (1, -1) {$B$};
+\node[gtr-v] (pC) at (0, -2) {$C$};
+\node[gtr-v] (pD) at (1, -2) {$D$};
+\node[gtr-v] (pF) at (2, -2) {$F$};
+\node[gtr-v] (pH) at (0, -3) {$H$};
+\node[gtr-v] (pE) at (1, -3) {$E$};
+\node[gtr-v] (pG) at (2, -3) {$G$};
+\foreach \a/\b in {A/B, B/C, B/D, B/F, C/H, D/E, F/G}
+    \draw[gtr-treea] (p\a) -- (p\b);
+\end{tikzpicture}
+\end{center}
+
+也就是 $A \to B$；$B \to C$、$B \to D$、$B \to F$；$C \to H$、$D \to E$、$F \to G$。
+\end{pastsoln}

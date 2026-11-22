@@ -1,0 +1,202 @@
+\begin{pastexam}[label={px:ncku-113-prog-08}]{成大資訊聯招 113 學年度 第 8 題}
+（單選）
+
+\textbf{[5\%]} Given the following red-black tree, where the dark color indicates a black node and
+white color indicates a red node.
+
+\begin{center}
+\begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=1.05cm,minimum height=0.68cm,font=\sffamily\bfseries},bn/.style={wn,fill=black,text=white},baseline=(current bounding box.north)]
+\node[bn] (n30) at (530,962) {30};
+\node[wn] (n12) at (364,1035) {12};
+\node[wn] (n70) at (725,1032) {70};
+\node[bn] (n5) at (280,1113) {5};
+\node[bn] (n25) at (440,1113) {25};
+\node[bn] (n36) at (618,1115) {36};
+\node[bn] (n90) at (831,1113) {90};
+\node[wn] (n2) at (214,1192) {2};
+\node[wn] (n10) at (337,1192) {10};
+\node[wn] (n32) at (564,1190) {32};
+\node[wn] (n47) at (678,1190) {47};
+\node[wn] (n81) at (793,1190) {81};
+\draw (n30)--(n12);
+\draw (n30)--(n70);
+\draw (n12)--(n5);
+\draw (n12)--(n25);
+\draw (n5)--(n2);
+\draw (n5)--(n10);
+\draw (n70)--(n90);
+\draw (n90)--(n81);
+\draw (n70)--(n36);
+\draw (n36)--(n32);
+\draw (n36)--(n47);
+\end{tikzpicture}
+\end{center}
+
+After inserting 62, which of the followings is true?
+\begin{enumerate}[label=(\Alph*)]
+\item \begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.8cm,minimum height=0.52cm,font=\sffamily\bfseries\small},bn/.style={wn,fill=black,text=white},baseline=(current bounding box.north)]
+\node[bn] (n30) at (480,1354) {30};
+\node[bn] (n12) at (357,1408) {12};
+\node[bn] (n70) at (621,1405) {70};
+\node[bn] (n5) at (294,1467) {5};
+\node[bn] (n25) at (412,1467) {25};
+\node[wn] (n36) at (545,1471) {36};
+\node[bn] (n90) at (702,1466) {90};
+\node[wn] (n2) at (246,1523) {2};
+\node[wn] (n10) at (336,1523) {10};
+\node[bn] (n32) at (503,1523) {32};
+\node[bn] (n47) at (580,1523) {47};
+\node[wn] (n81) at (673,1522) {81};
+\node[bn] (n62) at (608,1573) {62};
+\draw (n30)--(n12);
+\draw (n30)--(n70);
+\draw (n12)--(n5);
+\draw (n12)--(n25);
+\draw (n5)--(n2);
+\draw (n5)--(n10);
+\draw (n70)--(n90);
+\draw (n90)--(n81);
+\draw (n70)--(n36);
+\draw (n36)--(n32);
+\draw (n36)--(n47);
+\draw (n47)--(n62);
+\end{tikzpicture}
+\item \begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.8cm,minimum height=0.52cm,font=\sffamily\bfseries\small},bn/.style={wn,fill=black,text=white},baseline=(current bounding box.north)]
+\node[bn] (n30) at (475,331) {30};
+\node[bn] (n12) at (353,383) {12};
+\node[bn] (n70) at (615,380) {70};
+\node[bn] (n5) at (291,439) {5};
+\node[bn] (n25) at (408,439) {25};
+\node[wn] (n47) at (545,439) {47};
+\node[bn] (n90) at (694,439) {90};
+\node[wn] (n2) at (245,495) {2};
+\node[wn] (n10) at (333,495) {10};
+\node[bn] (n36) at (505,489) {36};
+\node[bn] (n62) at (586,489) {62};
+\node[wn] (n81) at (666,494) {81};
+\node[wn] (n32) at (467,545) {32};
+\draw (n30)--(n12);
+\draw (n30)--(n70);
+\draw (n12)--(n5);
+\draw (n12)--(n25);
+\draw (n5)--(n2);
+\draw (n5)--(n10);
+\draw (n70)--(n90);
+\draw (n90)--(n81);
+\draw (n70)--(n47);
+\draw (n47)--(n36);
+\draw (n47)--(n62);
+\draw (n36)--(n32);
+\end{tikzpicture}
+\item \begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.8cm,minimum height=0.52cm,font=\sffamily\bfseries\small},bn/.style={wn,fill=black,text=white},baseline=(current bounding box.north)]
+\node[bn] (n30) at (485,653) {30};
+\node[wn] (n12) at (359,709) {12};
+\node[wn] (n70) at (631,706) {70};
+\node[bn] (n5) at (295,768) {5};
+\node[bn] (n25) at (416,768) {25};
+\node[bn] (n36) at (550,768) {36};
+\node[bn] (n90) at (712,767) {90};
+\node[wn] (n2) at (246,826) {2};
+\node[wn] (n10) at (338,826) {10};
+\node[wn] (n32) at (510,825) {32};
+\node[wn] (n47) at (596,825) {47};
+\node[wn] (n81) at (684,825) {81};
+\node[wn] (n62) at (639,877) {62};
+\draw (n30)--(n12);
+\draw (n30)--(n70);
+\draw (n12)--(n5);
+\draw (n12)--(n25);
+\draw (n5)--(n2);
+\draw (n5)--(n10);
+\draw (n70)--(n90);
+\draw (n90)--(n81);
+\draw (n70)--(n36);
+\draw (n36)--(n32);
+\draw (n36)--(n47);
+\draw (n47)--(n62);
+\end{tikzpicture}
+\item \begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.8cm,minimum height=0.52cm,font=\sffamily\bfseries\small},bn/.style={wn,fill=black,text=white},baseline=(current bounding box.north)]
+\node[bn] (n30) at (485,980) {30};
+\node[wn] (n12) at (359,1035) {12};
+\node[wn] (n70) at (631,1033) {70};
+\node[bn] (n5) at (295,1094) {5};
+\node[bn] (n25) at (416,1094) {25};
+\node[bn] (n47) at (557,1094) {47};
+\node[bn] (n90) at (712,1094) {90};
+\node[wn] (n2) at (246,1153) {2};
+\node[wn] (n10) at (338,1153) {10};
+\node[bn] (n36) at (516,1146) {36};
+\node[wn] (n62) at (600,1146) {62};
+\node[wn] (n81) at (684,1152) {81};
+\node[wn] (n32) at (477,1203) {32};
+\draw (n30)--(n12);
+\draw (n30)--(n70);
+\draw (n12)--(n5);
+\draw (n12)--(n25);
+\draw (n5)--(n2);
+\draw (n5)--(n10);
+\draw (n70)--(n90);
+\draw (n90)--(n81);
+\draw (n70)--(n47);
+\draw (n47)--(n36);
+\draw (n47)--(n62);
+\draw (n36)--(n32);
+\end{tikzpicture}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。 正確的結果和 (A) 只差在 $62$ 的顏色：$62$ 應該是紅色，(A) 畫成黑色。 如果 (A) 的
+$62$ 是印刷時塗錯顏色，出題本意可能是 (A)；但照原卷的圖，(A) 不是合法的紅黑樹，選 (E)。
+
+先檢查原樹：根 $30$ 黑；從根到每個 \NIL 都經過 $2$ 個黑節點（例如 $30, 5$、$30, 25$、$30, 36$、
+$30, 90$），紅節點的子節點都是黑的，是合法的紅黑樹。
+
+\textbf{插入 62}（資結書第~10.3.4~節，由下往上修正）。
+\begin{enumerate}
+\item 照二元搜尋樹插入：$62 > 30$ 往右，$62 < 70$ 往左，$62 > 36$ 往右，$62 > 47$ 往右，接成 $47$ 的
+右子節點，塗紅色。
+\item $62$ 的父節點 $47$ 是紅的，違反「紅節點的子節點是黑的」。 叔叔 $32$（$47$ 的兄弟）也是紅的：
+\textbf{情況 1，變色}。 $47$、$32$ 變黑，祖父 $36$ 變紅，問題往上移到 $36$。
+\item $36$ 是紅的，父節點 $70$ 也是紅的。 $36$ 的叔叔 $12$（$70$ 的兄弟）是紅的：又是情況 1。 $70$、$12$
+變黑，祖父 $30$ 變紅，問題移到 $30$。
+\item $30$ 是根，塗回黑色，結束。 整個過程只有變色，沒有旋轉。
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,
+  wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.8cm,minimum height=0.52cm,font=\sffamily\bfseries\small},
+  bn/.style={wn,fill=black,text=white}]
+\node[bn] (n30) at (480,1354) {30};
+\node[bn] (n12) at (357,1408) {12};
+\node[bn] (n70) at (621,1405) {70};
+\node[bn] (n5) at (294,1467) {5};
+\node[bn] (n25) at (412,1467) {25};
+\node[wn] (n36) at (545,1471) {36};
+\node[bn] (n90) at (702,1466) {90};
+\node[wn] (n2) at (246,1523) {2};
+\node[wn] (n10) at (336,1523) {10};
+\node[bn] (n32) at (503,1523) {32};
+\node[bn] (n47) at (580,1523) {47};
+\node[wn] (n81) at (673,1522) {81};
+\node[wn] (n62) at (608,1573) {62};
+\draw (n30)--(n12) (n30)--(n70) (n12)--(n5) (n12)--(n25) (n5)--(n2) (n5)--(n10)
+  (n70)--(n90) (n90)--(n81) (n70)--(n36) (n36)--(n32) (n36)--(n47) (n47)--(n62);
+\end{tikzpicture}
+\end{center}
+（黑底是黑節點，白底是紅節點，和題目的畫法相同。） 檢查：從根到每個 \NIL 都經過 $3$ 個黑節點，
+沒有紅節點有紅的子節點。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯。 結構和顏色都和上圖相同，只有 $62$ 是黑的。 這樣從 $47$ 往左直接到 \NIL 經過 $0$ 個黑節點，
+往右經過 $62$ 有 $1$ 個，黑高度不相等，不是紅黑樹。 新插入的節點是紅的，這裡只做了變色，$62$ 不會
+變黑。
+\item (B) 錯。 (B) 本身是一棵合法的紅黑樹（每條路徑都是 $3$ 個黑節點），但不是插入演算法產生的：它把
+$47$ 旋轉到 $36$ 的位置，那是叔叔為黑時（旋轉的情況）的做法。 這裡 $62$ 的叔叔 $32$ 是紅的，應該
+變色而不是旋轉；由上往下（遇到兩個紅子節點就先變色）的插入也會得到同一個結果，不會有旋轉。
+\item (C) 錯。 只是把 $62$ 塗紅接上去，沒有修正，$47$ 和 $62$ 是相連的兩個紅節點。
+\item (D) 錯。 也是用旋轉，而且 $47$ 往左經過黑的 $36$，往右經過紅的 $62$ 直接到 \NIL，黑高度不相等。
+\item (E) 對，因為 (A) 到 (D) 都不是插入 $62$ 之後的正確結果。
+\end{itemize}
+\end{pastsoln}

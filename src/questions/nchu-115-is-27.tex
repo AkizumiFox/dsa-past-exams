@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nchu-115-is-27}]{中興資工所乙組 115 學年度 第 27 題}
+（單選；每題 2 分，答錯不倒扣）
+
+What is the time complexity of the following code?
+\begin{minted}[fontsize=\small]{c}
+for (int i = 0; i < n; i++) {
+    for (int j = n; j > 0; j /= 2) {
+        // constant work
+    }
+}
+\end{minted}
+A.~O(n) \qquad B.~O(n log n) \qquad C.~O(log n) \qquad D.~O(n$^2$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+內層的 $j$ 從 $n$ 開始，每次整數除以 $2$，依序是 $n, \lfloor n/2 \rfloor, \lfloor n/4 \rfloor,
+\ldots, 1$，到 $0$ 停。 $j$ 的值 $\ge 1$ 的次數是 $\lfloor \lg n \rfloor + 1$（$n \ge 1$），而且和
+$i$ 無關。 外層跑 $n$ 次，兩層互不影響，直接相乘（資結書第~1.7~節）：
+\[
+n \cdot (\lfloor \lg n \rfloor + 1) = \Theta(n \log n).
+\]
+例如 $n = 100$：$j = 100, 50, 25, 12, 6, 3, 1$，內層 $7$ 次，總共 $700$ 次。
+\begin{itemize}
+\item A 錯：少算了內層的 $\log n$。
+\item B 對。
+\item C 錯：只是內層一輪的次數。
+\item D 錯：內層不是 $n$ 次，而是每次減半。
+\end{itemize}
+和歷屆試題~\ref{px:nchu-115-is-24}（同一份考卷第 24 題）對照：那一題內層的次數跟著外層加倍，總和是等比級數，被最後一項主導，得到 $\Theta(n)$；
+這一題內層次數固定，才是單純相乘。
+\end{pastsoln}

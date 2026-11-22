@@ -1,0 +1,114 @@
+\begin{pastexam}[label={px:gk3-110-ds-01}]{高考三級資訊處理 110 年 第一題}
+（申論；25 分）
+
+A 為（8×4）矩陣、B 為（4×10）矩陣、C 為（10×3）矩陣、D 為（3×20）矩陣、E 為（20×4）矩陣，
+㈠請列出此 5 個矩陣相乘 A×B×C×D×E 所有可能的乘法順序（請用括號表示乘法順序）。（5 分）
+㈡請使用 Dynamic Programming（動態規劃）的技巧計算出此五個矩陣相乘 A×B×C×D×E 的最佳乘法順序
+（請用括號表示乘法順序），使得五個矩陣相乘所需要花費的乘法數量最少。（15 分）
+㈢請列出此五個矩陣相乘所需要花費的最少乘法數量。（5 分）（注意：未說明 Dynamic Programming 的
+計算過程，不予計分。）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最佳順序 $(A((BC)(DE)))$，最少 $536$ 次乘法。
+
+記號照資結書第~18.2~節：$A_1, \ldots, A_5$ 依序是 A、B、C、D、E，$A_i$ 是 $p_{i-1} \times p_i$，
+\[
+\langle p_0, p_1, p_2, p_3, p_4, p_5 \rangle = \langle 8, 4, 10, 3, 20, 4 \rangle .
+\]
+$p \times q$ 乘 $q \times r$ 要 $pqr$ 次純量乘法。
+
+\textbf{㈠ 所有順序}。 $n$ 個矩陣加滿括號的方法有卡特蘭數 $C_{n-1}$ 種，$5$ 個矩陣是
+$C_4 = 14$ 種。 依最後一次乘法把鏈切在哪裡分類（切在第 $k$ 個之後，左邊 $k$ 個有 $C_{k-1}$
+種、右邊 $5 - k$ 個有 $C_{4-k}$ 種）：$C_0 C_3 + C_1 C_2 + C_2 C_1 + C_3 C_0 = 5 + 2 + 2 + 5 = 14$。
+下表列出全部 $14$ 種和各自的乘法次數（次數是㈡的驗證用）：
+\begin{center}
+\small
+\begin{tabular}{llr@{\qquad}llr}
+\toprule
+最後切點 & 順序 & 次數 & 最後切點 & 順序 & 次數 \\
+\midrule
+A $|$ BCDE & $A(B(C(DE)))$ & 648 & ABC $|$ DE & $(A(BC))(DE)$ & 552 \\
+ & $A(B((CD)E))$ & 1688 & & $((AB)C)(DE)$ & 896 \\
+ & $A((BC)(DE))$ & \textbf{536} & ABCD $|$ E & $(A(B(CD)))E$ & 2680 \\
+ & $A((B(CD))E)$ & 1848 & & $(A((BC)D))E$ & 1640 \\
+ & $A(((BC)D)E)$ & 808 & & $((AB)(CD))E$ & 3160 \\
+AB $|$ CDE & $(AB)(C(DE))$ & 1000 & & $((A(BC))D)E$ & 1336 \\
+ & $(AB)((CD)E)$ & 2040 & & $(((AB)C)D)E$ & 1680 \\
+\bottomrule
+\end{tabular}
+\end{center}
+（最外層的括號省略。）
+
+\textbf{㈡ 動態規劃}。 令 $m[i, j]$ 為算出 $A_i A_{i+1} \cdots A_j$ 最少的乘法次數。 最後一次乘法把
+這段切成 $A_i \cdots A_k$ 和 $A_{k+1} \cdots A_j$，兩段各自也要用最省的方法算（最佳子結構），
+所以（資結書第~18.2~節）
+\[
+m[i, j] = \begin{cases}
+0, & i = j, \\
+\displaystyle\min_{i \le k < j} \bigl\{ m[i, k] + m[k+1, j] + p_{i-1} p_k p_j \bigr\}, & i < j,
+\end{cases}
+\]
+並記下取到最小值的 $k$ 為 $s[i, j]$。 依鏈長 $2, 3, 4, 5$ 的順序填表：
+
+長度 $2$（只有一種切法）：
+\begin{itemize}
+\item $m[1,2] = 8 \cdot 4 \cdot 10 = 320$；$m[2,3] = 4 \cdot 10 \cdot 3 = 120$；
+$m[3,4] = 10 \cdot 3 \cdot 20 = 600$；$m[4,5] = 3 \cdot 20 \cdot 4 = 240$。
+\end{itemize}
+長度 $3$：
+\begin{itemize}
+\item $m[1,3] = \min\{\, m[2,3] + 8 \cdot 4 \cdot 3,\; m[1,2] + 8 \cdot 10 \cdot 3 \,\}
+= \min\{120 + 96, 320 + 240\} = \min\{216, 560\} = 216$，$s = 1$。
+\item $m[2,4] = \min\{\, m[3,4] + 4 \cdot 10 \cdot 20,\; m[2,3] + 4 \cdot 3 \cdot 20 \,\}
+= \min\{600 + 800, 120 + 240\} = \min\{1400, 360\} = 360$，$s = 3$。
+\item $m[3,5] = \min\{\, m[4,5] + 10 \cdot 3 \cdot 4,\; m[3,4] + 10 \cdot 20 \cdot 4 \,\}
+= \min\{240 + 120, 600 + 800\} = \min\{360, 1400\} = 360$，$s = 3$。
+\end{itemize}
+長度 $4$：
+\begin{itemize}
+\item $m[1,4]$：$k = 1$：$0 + 360 + 8 \cdot 4 \cdot 20 = 1000$；$k = 2$：$320 + 600 + 8 \cdot 10 \cdot 20 = 2520$；
+$k = 3$：$216 + 0 + 8 \cdot 3 \cdot 20 = 696$。 $m[1,4] = 696$，$s = 3$。
+\item $m[2,5]$：$k = 2$：$0 + 360 + 4 \cdot 10 \cdot 4 = 520$；$k = 3$：$120 + 240 + 4 \cdot 3 \cdot 4 = 408$；
+$k = 4$：$360 + 0 + 4 \cdot 20 \cdot 4 = 680$。 $m[2,5] = 408$，$s = 3$。
+\end{itemize}
+長度 $5$：
+\begin{itemize}
+\item $m[1,5]$：$k = 1$：$0 + 408 + 8 \cdot 4 \cdot 4 = 536$；$k = 2$：$320 + 360 + 8 \cdot 10 \cdot 4 = 1000$；
+$k = 3$：$216 + 240 + 8 \cdot 3 \cdot 4 = 552$；$k = 4$：$696 + 0 + 8 \cdot 20 \cdot 4 = 1336$。
+$m[1,5] = 536$，$s = 1$。
+\end{itemize}
+整理成表（左：$m[i,j]$；右：$s[i,j]$）：
+\begin{center}
+\small
+\begin{tabular}{c|ccccc}
+$m$ & $j=1$ & 2 & 3 & 4 & 5 \\
+\hline
+$i=1$ & 0 & 320 & 216 & 696 & 536 \\
+2 & & 0 & 120 & 360 & 408 \\
+3 & & & 0 & 600 & 360 \\
+4 & & & & 0 & 240 \\
+5 & & & & & 0 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|cccc}
+$s$ & $j=2$ & 3 & 4 & 5 \\
+\hline
+$i=1$ & 1 & 1 & 3 & 1 \\
+2 & & 2 & 3 & 3 \\
+3 & & & 3 & 3 \\
+4 & & & & 4 \\
+\end{tabular}
+\end{center}
+由 $s$ 表還原順序：$s[1,5] = 1$，切成 $A_1 \mid A_2 \cdots A_5$；$s[2,5] = 3$，切成
+$A_2 A_3 \mid A_4 A_5$。 所以最佳順序是
+\[
+(A((BC)(DE))) .
+\]
+也就是先算 $BC$（$4 \times 3$）和 $DE$（$3 \times 4$），再相乘得 $4 \times 4$，最後用 A 去乘。
+
+\textbf{㈢ 最少次數}：$m[1,5] = 536$。 照順序加一遍驗證：$BC$ 要 $4 \cdot 10 \cdot 3 = 120$，$DE$ 要
+$3 \cdot 20 \cdot 4 = 240$，$(BC)(DE)$ 要 $4 \cdot 3 \cdot 4 = 48$，$A$ 乘上去要 $8 \cdot 4 \cdot 4 = 128$，
+合計 $120 + 240 + 48 + 128 = 536$，和㈠的表裡最小的一個相同。 次佳的 $((A(BC))(DE))$ 要 $552$ 次，
+由左往右依序乘要 $1680$ 次。
+\end{pastsoln}

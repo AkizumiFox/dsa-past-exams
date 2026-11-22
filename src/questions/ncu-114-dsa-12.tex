@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ncu-114-dsa-12}]{中央資工所 114 學年度 第 12 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+The Longest Common Subsequence (LCS) problem finds a longest subsequence common to two given sequences
+$x[1..m]$ and $y[1..n]$. Which of the following statements are incorrect?
+\begin{enumerate}[label=(\alph*)]
+\item If we simply check every subsequence of $x[1..m]$ to see if it is also a subsequence of $y[1..n]$,
+the worst-case running time is $O(n2^m)$.
+\item If we define $c[i,j]=|LCS(x[1..i],y[1..j])|$, where $|.|$ denotes the length of the string, then
+$c[m,n]=|LCS(x,y)|$.
+\item $c[i,j]=c[i-1,j-1]+1$ if $x[i]=y[j]$; Otherwise, $c[i,j]=c[i-1,j]+c[i,j-1]$.
+\item The recursive formulation of LCS indicates that the complexity of its dynamic algorithm is
+potentially exponential.
+\item If $z=LCS(x,y)$, then any prefix of $z$ is an LCS of a prefix of $x$ and a prefix of $y$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)(d)。 題目問的是\textbf{錯誤}的敘述。
+
+\begin{itemize}
+\item (a) 正確。 $x$ 有 $2^m$ 個子序列，檢查一個子序列是不是 $y$ 的子序列，用兩個指標由左往右掃
+$y$ 一遍，$O(n)$。 總共 $O(n 2^m)$。
+\item (b) 正確。 $c[i, j]$ 是前綴的 LCS 長度，取 $i = m$、$j = n$ 就是整個 $x$、$y$ 的 LCS 長度。
+\item (c) 錯誤。 不相等時要取\textbf{較大}的，不是相加（資結書第~18.3~節）：
+\[
+c[i, j] = \begin{cases}
+0, & i = 0 \text{ 或 } j = 0,\\
+c[i-1, j-1] + 1, & x[i] = y[j],\\
+\max(c[i-1, j],\, c[i, j-1]), & x[i] \ne y[j].
+\end{cases}
+\]
+相加會重複計算。 反例：$x = \texttt{AB}$、$y = \texttt{BA}$，$c[2, 2]$：$x[2] = \texttt{B} \ne y[2] = \texttt{A}$，$c[1, 2] + c[2, 1] = 1 + 1 = 2$，
+但 \texttt{AB} 和 \texttt{BA} 的 LCS 長度是 $1$。
+\item (d) 錯誤。 直接照遞迴式遞迴，同一個 $c[i, j]$ 會被算很多次，時間可能是指數的；動態規劃把每個
+$c[i, j]$ 只算一次存起來，共 $(m+1)(n+1)$ 格、每格 $O(1)$，是 $\Theta(mn)$（資結書第~18.3~節）。 遞迴
+式說明的是子問題重疊，正是動態規劃能做到多項式時間的原因，不表示動態規劃的演算法會是指數時間。
+\item (e) 正確。 設 $z = z_1 \cdots z_k$，在 $x$、$y$ 裡分別對到位置 $i_1 < \cdots < i_k$、
+$j_1 < \cdots < j_k$。 對任一個 $t$，$z_1 \cdots z_t$ 是 $x[1..i_t]$ 和 $y[1..j_t]$ 的 LCS：它是
+共同子序列；若這兩個前綴有更長的共同子序列 $w$，$|w| > t$，把 $z_{t+1} \cdots z_k$（在 $x$、$y$ 裡的
+位置都在 $i_t$、$j_t$ 之後）接在 $w$ 後面，得到 $x$、$y$ 長度大於 $k$ 的共同子序列，和 $z$ 是 LCS
+矛盾。 （$t = 0$ 時是空字串，顯然成立。）
+\end{itemize}
+\end{pastsoln}

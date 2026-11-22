@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:gk3-099-ds-01}]{高考三級資訊處理 99 年 第一題}
+（申論；20 分）
+
+本題是關於演算法效率分析（Algorithm and performance analysis）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請分別寫出下列程式第一行（line 1）到第五行（line 5）的執行次數（frequency count），於試卷上請
+標明是第幾行，次數是多少。（10 分）
+\begin{minted}[fontsize=\small]{c}
+void mult(int a[][n], int b[][n], int c[][n])
+{
+        int i, j, k;
+        for(i = 0; i < n; i++)              ........................line 1
+            for(j = 0; j < n; j++)          ........................line 2
+            {
+                c[i][j] = 0;                ........................line 3
+                for(k = 0; k < n; k++)      ........................line 4
+                    c[i][j] += a[i][k] * b[k][j];   ................line 5
+            }
+}
+\end{minted}
+\item[㈡] 於下列程式，請計算指令 $x$++；一共會執行多少次？（5 分）
+\begin{minted}[fontsize=\small]{c}
+for (i =0; i < n ; i ++)
+    for (j = i +1; j < n; j++)
+        x++;
+\end{minted}
+\item[㈢] 請根據下列表格的數據，size是問題量（或問題大小），count是程式指令的總執行次數，來推測程式執行的
+時間複雜度（time complexity），請以Big-Theta $\Theta$ 表示之（例如：$\Theta(3^n)$）。（5 分）
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{size} & 1,000 & 2,000 & 3,000 & 4,000 & 5,000 & 6,000 & 7,000 & 8,000 \\ \hline
+\textbf{count} & 11,863 & 24,227 & 40,003 & 53,217 & 67,393 & 78,961 & 91,985 & 113,997 \\ \hline
+\end{tabular}
+\end{center}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ line 1：$n + 1$；line 2：$n(n + 1)$；line 3：$n^2$；line 4：$n^2(n + 1)$；line 5：$n^3$。
+㈡ $n(n-1)/2$ 次。 ㈢ $\Theta(n \log n)$。
+
+\textbf{㈠} 照資結書第~1.3~節的算法：一個 \texttt{for} 迴圈如果本體做 $m$ 次，那一行的條件判斷要做
+$m + 1$ 次（最後一次判斷失敗才離開），本體裡的敘述做 $m$ 次。
+\begin{itemize}
+\item \textbf{line 1}：$i = 0, 1, \ldots, n - 1$ 時條件成立，$i = n$ 時判斷失敗，共 $n + 1$ 次。
+\item \textbf{line 2}：line 1 的本體做 $n$ 次，每次進來 line 2 要判斷 $n + 1$ 次，共 $n(n + 1)$ 次。
+\item \textbf{line 3}：在 line 2 的本體裡，$(i, j)$ 每一組做一次，共 $n^2$ 次。
+\item \textbf{line 4}：每一組 $(i, j)$ 進來一次，判斷 $n + 1$ 次，共 $n^2(n + 1)$ 次。
+\item \textbf{line 5}：每一組 $(i, j, k)$ 做一次，共 $n^3$ 次。
+\end{itemize}
+合計 $2n^3 + 3n^2 + 2n + 1$，是 $\Theta(n^3)$。 （有的課本把 \texttt{for} 那一行算成和本體一樣多次，
+得到 $n, n^2, n^2, n^3, n^3$；考卷要求的是「執行次數」，條件判斷最後失敗的那一次也是執行，所以寫上面
+的答案，並在答案卷註明這個算法。）
+
+\textbf{㈡} $i$ 固定時，$j$ 從 $i + 1$ 跑到 $n - 1$，\texttt{x++} 做 $n - 1 - i$ 次：
+\[
+\sum_{i=0}^{n-1} (n - 1 - i) = (n-1) + (n-2) + \cdots + 1 + 0 = \frac{n(n-1)}{2}.
+\]
+也可以這樣看：每一組 $0 \le i < j \le n - 1$ 恰好做一次，共 $\binom{n}{2}$ 組。
+
+\textbf{㈢} 先看 $\text{count}/\text{size}$，再看 $\text{count}/(\text{size} \cdot \lg \text{size})$：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccccc}
+\toprule
+size $n$ & 1,000 & 2,000 & 3,000 & 4,000 & 5,000 & 6,000 & 7,000 & 8,000 \\
+\midrule
+count$/n$ & 11.9 & 12.1 & 13.3 & 13.3 & 13.5 & 13.2 & 13.1 & 14.2 \\
+count$/(n \lg n)$ & 1.19 & 1.10 & 1.15 & 1.11 & 1.10 & 1.05 & 1.03 & 1.10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item count$/n$ 不是常數，從 $11.9$ 慢慢爬到 $14.2$，所以比線性多一點。 它增加的幅度和 $\lg n$ 相當：
+$\lg 1000 \approx 10$、$\lg 8000 \approx 13$。
+\item count$/(n \lg n)$ 一直在 $1.0$ 到 $1.2$ 之間，沒有往上或往下的趨勢，可以看成常數（約 $1.1$）。
+\item 平方或更高次方完全不合：$n$ 變成 $8$ 倍，$n^2$ 會變 $64$ 倍，實際只變 $113997/11863 \approx 9.6$ 倍；
+$n \lg n$ 預期 $8 \times (\lg 8000/\lg 1000) \approx 10.4$ 倍，線性預期 $8$ 倍，實測落在兩者之間、比較接近
+$n \lg n$。 $n$ 加倍時（$1000 \to 2000 \to 4000 \to 8000$）count 分別變成 $2.04$、$2.20$、$2.14$ 倍，
+也都比 $2$ 大，和 $n \lg n$ 預期的約 $2.2$ 倍相符。
+\end{itemize}
+所以推測時間複雜度是 $\Theta(n \log n)$。 實測數據有誤差，只能「推測」；同樣的數據也有人讀成
+$\Theta(n)$，答題時要像上面這樣把比值算出來，說明為什麼選這一個。
+\end{pastsoln}

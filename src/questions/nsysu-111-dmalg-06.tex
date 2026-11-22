@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-06}]{中山資工所資安組 111 學年度 第 9 題}
+（證明）
+
+(Algorithm points) {[10\%]} Let $T=(V,E)$ be a complete n-ary tree of height $h$ with $q$ leaves.
+Prove that $q\le n^h$ and $h\ge\lceil\log_n q\rceil$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{名詞。} 這題的用語來自離散數學課本：complete $n$-ary tree 是每個內部節點\textbf{恰好}有
+$n$ 個子節點的有根樹；高度是根到最深的葉子經過的\textbf{邊數}，只有根的樹高度是 $0$。 資結書以
+層數計高度（只有根時是 $1$），比這裡多 $1$；用層數計時結論 $q \le n^{h-1}$ 更強，原題的兩個不等式
+仍然成立。 另外要 $n \ge 2$，$\log_n$ 才有意義。 下面的證明只用到「每個節點最多 $n$ 個子節點」，
+所以對任何 $n$ 元樹都對。
+
+\textbf{第一部分：$q \le n^h$。}
+
+\textbf{證明。} 對高度 $h$ 做強歸納法（資結書附錄~A.4~節）。 命題 $P(h)$：任何高度 $h$、每個節點
+最多 $n$ 個子節點的有根樹，葉子數 $q \le n^h$。
+
+\textbf{基底} $h = 0$：樹只有根，根就是唯一的葉子，$q = 1 = n^0$。
+
+\textbf{歸納步驟。} 設 $h \ge 1$，且 $P(0), \ldots, P(h-1)$ 都成立。 高度 $h \ge 1$ 的樹，根不是葉子，
+有 $k$ 個子節點，$1 \le k \le n$。 以第 $i$ 個子節點為根的子樹 $T_i$，高度 $h_i \le h - 1$（$T_i$ 裡
+每條往下的路徑，接上根到它的那條邊，就是 $T$ 裡的路徑），葉子數記為 $q_i$。 由歸納假設
+$q_i \le n^{h_i} \le n^{h-1}$。 $T$ 的葉子就是各個 $T_i$ 的葉子合起來（根不是葉子，各子樹不重疊），
+所以
+\[
+q = \sum_{i=1}^{k} q_i \le k \cdot n^{h-1} \le n \cdot n^{h-1} = n^h .
+\]
+$P(h)$ 成立。 由歸納法，對所有 $h \ge 0$ 都有 $q \le n^h$。\hfill$\blacksquare$
+
+\textbf{第二部分：$h \ge \lceil \log_n q \rceil$。}
+
+\textbf{證明。} $n \ge 2$ 時 $\log_n x$ 是遞增函數，對 $q \le n^h$ 兩邊取 $\log_n$ 得 $\log_n q \le h$。
+$h$ 是整數，而 $\lceil \log_n q \rceil$ 是\textbf{不小於} $\log_n q$ 的最小整數，所以
+$\lceil \log_n q \rceil \le h$。\hfill$\blacksquare$
+
+\textbf{等號何時成立。} 所有葉子都在第 $h$ 層、每個內部節點都有 $n$ 個子節點時（滿 $n$ 元樹），
+第 $i$ 層恰有 $n^i$ 個節點，$q = n^h$。 例如 $n = 2$、$h = 3$ 的滿二元樹有 $8$ 片葉子。 這個不等式
+的意義是：要分出 $q$ 種結果，每一步最多 $n$ 個分支，至少要走 $\lceil \log_n q \rceil$ 步，比較排序
+的下界（決策樹有 $n!$ 片葉子，高度至少 $\lceil \lg n! \rceil$，資結書第~15.1~節）就是 $n = 2$ 的情形。
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-02}]{臺大資工所 111 學年度 第 2 題}
+（單選。 第 1--5 題共用下面的說明和表格）
+
+For each of the following algorithms in the next five problems, what is the tightest asymptotic
+upper bound for its runtime complexity for $n$ numbers? Please use the following table of (A)-(E)
+choices when answering.
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+(A) & (B) & (C) & (D) & (E) \\ \hline
+$O(1)$ & $O(\lg n)$ & $O(n)$ & $O(n\lg n)$ & $O(n^2)$
+\end{tabular}
+\end{center}
+
+(3 points) Merge sort: expected time?
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) $O(n \lg n)$。
+
+合併排序（資結書第~14.4~節）不管輸入怎麼排，都是切成兩半、各自排好、再花 $\Theta(n)$ 合併：
+\[
+T(n) = 2T(n/2) + \Theta(n).
+\]
+$a = 2$、$b = 2$，$n^{\log_b a} = n$ 和 $f(n) = \Theta(n)$ 同階，由主定理（資結書定理~2.4）的
+情況 2，$T(n) = \Theta(n \lg n)$。 每一層合併至少要把該層的 $n$ 個數各搬一次，所以最好的情況也是
+$\Theta(n \lg n)$，期望時間當然也是。
+
+(C) $O(n)$ 太小，連最好的情況都做不到；(E) $O(n^2)$ 是上界但不是最緊的。
+\end{pastsoln}

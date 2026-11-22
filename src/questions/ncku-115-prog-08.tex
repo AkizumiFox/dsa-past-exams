@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncku-115-prog-08}]{成大資訊聯招 115 學年度 資料結構複選第 11 題}
+（複選；答對得 4 分）
+
+[4\%] A database index is stored on disk. Minimizing disk I/O is important. Fan-out means the maximum
+number of children of a node. Please select all that are correct.
+\begin{enumerate}[label=(\Alph*),nosep]
+\item A B-tree is suitable for disk because a node can store many keys and child pointers in one disk
+page/block. This gives high fan-out and small height (few page reads).
+\item A red-black tree is suitable for disk because its fan-out is 2, which reduces the number of disk
+page reads.
+\item A B+ tree is suitable for disk indexes for the same reason as a B-tree (high fan-out, small height).
+\item A B+ tree is often used when range queries are common, because its leaves can be linked for fast
+sequential scan on disk.
+\item For disk-based indexes, a red-black tree usually needs more page reads than a B-tree/B+ tree when
+searching for a key, because the tree is taller.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)(D)(E)。
+
+磁碟上讀一個頁面（block）的時間，比在記憶體裡比較幾百次鍵還久，所以索引的成本看的是「讀幾個頁面」，
+也就是從根到葉經過幾個節點（資結書第~11.3.1~節）。
+\begin{itemize}
+\item (A) 對。 一個 B 樹節點剛好放滿一個頁面，可以有幾百個鍵和子指標，分支數 $t$ 很大，高度約
+$\log_t n$。 例如每個節點 $200$ 個子節點，$10^9$ 筆資料只要 $4$ 層左右。
+\item (B) 錯。 分支數 $2$ 是缺點不是優點：高度約 $\lg n$ 到 $2 \lg n$，$10^9$ 筆要 $30$ 層以上，每層的節點
+又散在不同頁面，讀的頁面反而多。
+\item (C) 對。 B$^+$ 樹的內部節點只放鍵和指標，不放資料，同樣大小的頁面能放更多分支，扇出更大、樹更矮
+（資結書第~11.3~節）。
+\item (D) 對。 B$^+$ 樹的資料都在葉子，葉子依序用指標串起來；範圍查詢先找到起點的葉子，接著沿串列循序
+讀下去，不必回到上層。 B 樹的資料散在各層，範圍查詢要做中序走訪，在各層之間跳來跳去。
+\item (E) 對。 就是 (B) 錯的理由：紅黑樹比 B 樹、B$^+$ 樹高很多，找一個鍵要讀的頁面多。
+\end{itemize}
+\end{pastsoln}

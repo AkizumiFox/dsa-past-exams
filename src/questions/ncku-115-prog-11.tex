@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ncku-115-prog-11}]{成大資訊聯招 115 學年度 演算法是非第 14 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+[2\%] If a decision problem belongs to the class NP, it implies that given a specific candidate solution,
+there exists a deterministic algorithm that can verify whether this solution is correct in polynomial time.\\
+(A) True \qquad (B) False
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) True。
+
+這就是 NP 的驗證者定義（資結書第~28.2~節）：決策問題 $L$ 在 NP 裡，若且唯若存在一個確定性的多項式時間
+演算法 $V$（驗證者），對答案是「是」的輸入 $x$，存在長度是 $|x|$ 的多項式的憑證 $y$ 讓 $V(x, y)$ 接受；
+對答案是「否」的輸入，任何 $y$ 都不被接受。 題目說的「candidate solution」就是憑證。 例如哈密頓環
+問題，憑證是頂點的一個排列，檢查它是不是走遍每個頂點一次、相鄰的都有邊，$O(n^2)$ 就做得到。
+
+注意這裡的「多項式時間」是對輸入 $x$ 的長度而言，候選解本身的長度也要是多項式的。 另一個等價的定義是
+「非確定性圖靈機在多項式時間內可以解」，NP 的 N 指的是非確定性（nondeterministic），不是「非多項式」。
+\end{pastsoln}

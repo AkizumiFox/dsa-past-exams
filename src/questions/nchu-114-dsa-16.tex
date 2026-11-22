@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-114-dsa-16}]{中興資工所甲組 114 學年度 單選題第 16 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+When inserting a key into a B-Tree node that is already full, which operation occurs first to maintain the B-Tree properties?
+
+(A)~Merge two nodes\\
+(B)~Split the full node into two nodes\\
+(C)~Rotate keys from a sibling node\\
+(D)~Remove keys to reduce the node size
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+B 樹插入時，滿的節點（$2t - 1$ 個鍵）要分裂：中間的鍵往上送到父節點，剩下的分成兩個各有 $t - 1$ 個鍵的
+節點（資結書第~11.2.4~節、虛擬碼~11.4）。 CLRS 的寫法是往下走的途中遇到滿的節點就先分裂，保證要插入的
+葉子不滿；另一種寫法是先插入、溢位了再分裂並往上傳。 兩種寫法處理「滿的節點」的動作都是分裂。
+\begin{itemize}
+\item (A) 合併兩個節點是刪除時，節點鍵數太少才做的。 錯。
+\item (C) 向兄弟借鍵（經過父節點的旋轉）也是刪除時的修補。 有些 B 樹變形（例如 B* 樹）插入時會先把鍵
+挪給不滿的兄弟，但一般的 B 樹不是。 錯。
+\item (D) 不能為了插入而丟掉已有的鍵。 錯。
+\end{itemize}
+\end{pastsoln}

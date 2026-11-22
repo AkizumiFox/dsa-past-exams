@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-112-dsa-10}]{臺大資工所 112 學年度 第 10 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Heap applications:} Which one(s) of the following applications may involve the use of heaps
+to increase time efficiency?
+\begin{enumerate}[label=(\Alph*)]
+\item Find the k largest numbers from a given stream of numbers.
+\item Given a stream of numbers coming one after another, calculate the median of the currently
+received set of numbers.
+\item Compute the page rank of a given set of web pages
+\item Detect appropriate "buy" and "sell" requests to create transactions in stock market
+\item Identify the next timing for collisions in event-driven simulation for molecular dynamics
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(D)、(E)。
+
+堆積適合的情形是：資料一直變動（插入、刪除），而每次只需要其中最大或最小的那一個
+（資結書第~8.3~節）。 用這個標準逐項看：
+\begin{itemize}
+\item \textbf{(A) 對。} 用一個最多 $k$ 個元素的\textbf{最小}堆積：每來一個數，堆積不滿就放進去；
+滿了而新的數比根大，就把根換成新的數再下沉。 堆積裡始終是目前最大的 $k$ 個數，每個數
+$O(\lg k)$，比每次重新排序快得多（資結書第~8.3~節「找前 $k$ 大」）。
+\item \textbf{(B) 對。} 用兩個堆積：最大堆積放較小的一半、最小堆積放較大的一半，並保持兩邊個數
+相差不超過 $1$。 每來一個數，放進其中一邊、必要時把一邊的根搬到另一邊，$O(\lg n)$；中位數就是
+兩個根（之一），$O(1)$ 讀出。
+\item \textbf{(C) 錯。} PageRank 是把所有網頁的分數反覆乘上連結矩陣（冪迭代）直到收斂，每一輪
+要更新\textbf{全部}網頁的分數，不是反覆取出最大或最小的一個，用不到堆積。
+\item \textbf{(D) 對。} 撮合交易時，買單要找出價最高的、賣單要找要價最低的：買單放最大堆積、
+賣單放最小堆積，比較兩個根，買價 $\ge$ 賣價就成交。 新的委託一直進來，正是優先佇列的用法。
+\item \textbf{(E) 對。} 事件驅動模擬把所有「預定會發生的碰撞」依時間放進最小優先佇列，每次取出
+最早的事件處理，處理完再把新算出的碰撞時間放進去。 用堆積每個事件 $O(\lg n)$，不必每一步都檢查
+所有粒子對。
+\end{itemize}
+\end{pastsoln}

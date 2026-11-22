@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ccu-115-swa-11}]{中正資工所甲組 115 學年度 第 21 題}
+（複選；全對才給分）
+
+(3\%) (\qquad) The following directed graph represents a project network, where each node denotes
+an event and each directed edge represents an activity with its duration. What is the critical path
+of the project?
+\begin{center}
+\begin{tikzpicture}[x=0.95cm,y=0.95cm,>={Latex[length=1.8mm]},
+  v/.style={circle,draw,minimum size=5.5mm,inner sep=0pt,font=\footnotesize},
+  big/.style={v,minimum size=11mm},
+  l/.style={font=\footnotesize\sffamily,inner sep=1.5pt}]
+\node[big] (1) at (1.0,-2.4) {1};
+\node[v] (2) at (2.57,-0.81) {2};
+\node[v] (3) at (2.57,-3.85) {3};
+\node[v] (4) at (4.45,-0.81) {4};
+\node[v] (5) at (4.45,-3.85) {5};
+\node[v] (6) at (8.17,-0.81) {6};
+\node[v] (7) at (6.03,-2.25) {7};
+\node[v] (8) at (7.17,-3.85) {8};
+\node[v] (9) at (8.21,-2.25) {9};
+\node[big] (10) at (10.57,-2.25) {10};
+\draw[->] (1) -- node[l,above left]{a1=5} (2);
+\draw[->] (1) -- node[l,below left]{a2=6} (3);
+\draw[->] (2) -- node[l,above]{a3=3} (4);
+\draw[->] (3) -- node[l,left,pos=0.5]{a4=6} (4);
+\draw[->] (3) -- node[l,below]{a5=3} (5);
+\draw[->] (4) -- node[l,above,pos=0.45]{a6=4} (6);
+\draw[->] (4) -- node[l,fill=white,inner sep=1pt,pos=0.58]{a7=3} (5);
+\draw[->] (4) -- node[l,above right,pos=0.35]{a8=5} (7);
+\draw[->] (5) -- node[l,below right,pos=0.45]{a9=1} (7);
+\draw[->] (5) -- node[l,below,pos=0.5]{a10=4} (8);
+\draw[->] (7) -- node[l,above]{a11=5} (9);
+\draw[->] (8) -- node[l,below right,pos=0.6]{a12=2} (9);
+\draw[->] (6) -- node[l,above right,pos=0.4]{a13=4} (10);
+\draw[->] (9) -- node[l,above]{a14=2} (10);
+\end{tikzpicture}
+\end{center}
+(a)~1 $\to$ 2 $\to$ 4 $\to$ 6 $\to$ 10 \qquad (b)~1 $\to$ 3 $\to$ 4 $\to$ 7 $\to$ 9 $\to$ 10\\
+(c)~1 $\to$ 3 $\to$ 4 $\to$ 5 $\to$ 8 $\to$ 9 $\to$ 10 \qquad
+(d)~1 $\to$ 2 $\to$ 4 $\to$ 5 $\to$ 7 $\to$ 9 $\to$ 10\\
+(e)~none of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)。
+
+照資結書第~22.5~節的 AOE 網路做法：先依拓樸順序算每個事件的最早時間 $\mathit{ee}$，再倒過來算
+最晚時間 $\mathit{le}$；活動 $a = (u, v)$ 的最早開始 $e(a) = \mathit{ee}[u]$、最晚開始
+$l(a) = \mathit{le}[v] - \mathit{dur}(a)$，$l(a) - e(a) = 0$ 的是關鍵活動（資結書定理~22.6）。
+
+\textbf{最早時間}（取所有進來的邊的最大值）：
+\[
+\begin{aligned}
+&\mathit{ee}[1] = 0,\quad \mathit{ee}[2] = 5,\quad \mathit{ee}[3] = 6,\quad
+\mathit{ee}[4] = \max(5 + 3, 6 + 6) = 12,\\
+&\mathit{ee}[5] = \max(6 + 3, 12 + 3) = 15,\quad \mathit{ee}[6] = 12 + 4 = 16,\\
+&\mathit{ee}[7] = \max(12 + 5, 15 + 1) = 17,\quad \mathit{ee}[8] = 15 + 4 = 19,\\
+&\mathit{ee}[9] = \max(17 + 5, 19 + 2) = 22,\quad \mathit{ee}[10] = \max(16 + 4, 22 + 2) = 24.
+\end{aligned}
+\]
+整個工程最少要 $24$。
+
+\textbf{最晚時間}（$\mathit{le}[10] = 24$，取所有出去的邊的最小值）：
+\[
+\begin{aligned}
+&\mathit{le}[9] = 22,\quad \mathit{le}[6] = 20,\quad \mathit{le}[8] = 22 - 2 = 20,\quad
+\mathit{le}[7] = 22 - 5 = 17,\\
+&\mathit{le}[5] = \min(17 - 1, 20 - 4) = 16,\quad \mathit{le}[4] = \min(20 - 4, 16 - 3, 17 - 5) = 12,\\
+&\mathit{le}[3] = \min(12 - 6, 16 - 3) = 6,\quad \mathit{le}[2] = 12 - 3 = 9,\quad
+\mathit{le}[1] = \min(9 - 5, 6 - 6) = 0.
+\end{aligned}
+\]
+
+\textbf{各活動的寬裕時間} $l - e$：
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{c*{14}{c}}
+\toprule
+活動 & a1 & a2 & a3 & a4 & a5 & a6 & a7 & a8 & a9 & a10 & a11 & a12 & a13 & a14 \\
+\midrule
+$e$ & 0 & 0 & 5 & 6 & 6 & 12 & 12 & 12 & 15 & 15 & 17 & 19 & 16 & 22 \\
+$l$ & 4 & 0 & 9 & 6 & 13 & 16 & 13 & 12 & 16 & 16 & 17 & 20 & 20 & 22 \\
+$l - e$ & 4 & \textbf{0} & 4 & \textbf{0} & 7 & 4 & 1 & \textbf{0} & 1 & 1 & \textbf{0} & 1 & 4 & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+關鍵活動是 a2、a4、a8、a11、a14，連成 $1 \to 3 \to 4 \to 7 \to 9 \to 10$，長度
+$6 + 6 + 5 + 5 + 2 = 24$，等於 $\mathit{ee}[10]$。 關鍵路徑只有這一條，就是 (b)。
+\begin{itemize}
+\item (a) 錯：長度 $5 + 3 + 4 + 4 = 16$，a1、a3、a6、a13 都有寬裕時間 $4$。
+\item (c) 錯：長度 $6 + 6 + 3 + 4 + 2 = 21$，a7、a10、a12 各有寬裕時間 $1$。
+\item (d) 錯：長度 $5 + 3 + 3 + 1 + 5 + 2 = 19$。
+\item (e) 錯，(b) 對。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nchu-115-is-15}]{中興資工所乙組 115 學年度 第 15 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You are designing an auto-complete feature for a mobile keyboard app. The system must
+efficiently return all dictionary words that share a given prefix, such as ``com--''. What data
+structure is most suitable for storing the dictionary?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item A binary search tree storing words in lexicographical order, enabling in-order traversal
+for sorted output.
+\item A hash set storing all full words and scanning for any entry that begins with the requested
+prefix.
+\item A Trie (prefix tree) where each character corresponds to a node, allowing fast
+prefix-based lookup.
+\item A balanced heap storing all words based on their length, allowing quick access to short
+words.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+Trie 從根往下，每一層對應字的一個字元（資結書第~11.5.1~節）。 有相同前綴的字，在 trie 裡共用
+同一條從根出發的路徑。 查前綴 \texttt{com}：從根照 \texttt{c}、\texttt{o}、\texttt{m} 走三步，
+走到的那個節點底下的子樹就是所有以 \texttt{com} 開頭的字，把子樹走一遍全部列出。 找到節點只要
+$O(\text{前綴長度})$，和字典有多少字無關；列出答案的時間和答案的總長度成正比。
+\begin{itemize}
+\item A：以字典序排的 BST 其實也做得到，先找第一個 $\ge$ \texttt{com} 的字，再依中序往後走到
+不再以 \texttt{com} 開頭為止。 但每一步比較都是整個字串的比較，平衡時還要 $O(\log n)$ 次，
+而且題目描述的用途是「排序輸出」，不是前綴查詢。 和 trie 比，不是最合適的（資結書
+第~11.5.4~節）。
+\item B 錯：雜湊表只支援「整個字一樣」的查詢，雜湊值和前綴沒有關係，只能把 $n$ 個字全部掃過
+一遍，$O(n)$。
+\item C 對。
+\item D 錯：堆積只能快速拿到最大（或最小）的一個，依長度排和前綴毫無關係。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:gw3-114-ds-04}]{關務三等資訊處理 114 年 第四題}
+（申論；25 分）
+
+請逐步寫出下列使用遞迴函式的呼叫與輸出過程。（25 分）
+\begin{minted}[fontsize=\small, style=perldoc]{cpp}
+#include <iostream>
+using namespace std;
+int A(int n, int c = 1) {
+     if (n == 0)
+           return c + 1;
+     return A(n - 2, c * n);
+}
+int main() {
+     cout << A(6) << endl;
+     return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+\texttt{A(6)} 只給了一個引數，第二個參數 \texttt{c} 用預設值 $1$，所以實際呼叫的是 \texttt{A(6, 1)}。 每次
+$n \ne 0$ 就呼叫 \texttt{A(n - 2, c * n)}：$n$ 每次減 $2$，$c$ 累乘目前的 $n$；$n = 0$ 時傳回 $c + 1$。
+
+\textbf{呼叫過程}（往下呼叫）：
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+層 & 呼叫 & $n = 0$？ & 動作 \\
+\midrule
+1 & \texttt{A(6, 1)} & 否 & 呼叫 \texttt{A(6-2, 1*6)} $=$ \texttt{A(4, 6)} \\
+2 & \texttt{A(4, 6)} & 否 & 呼叫 \texttt{A(4-2, 6*4)} $=$ \texttt{A(2, 24)} \\
+3 & \texttt{A(2, 24)} & 否 & 呼叫 \texttt{A(2-2, 24*2)} $=$ \texttt{A(0, 48)} \\
+4 & \texttt{A(0, 48)} & 是 & 傳回 $48 + 1 = 49$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{返回過程}（往上傳回）：第 4 層傳回 $49$ 給第 3 層；第 3 層的 \texttt{return A(0, 48);} 直接把
+$49$ 傳回給第 2 層；同樣第 2 層傳回 $49$ 給第 1 層，第 1 層傳回 $49$ 給 \texttt{main}。 呼叫堆疊的變化：
+\begin{gather*}
+\texttt{main} \to \texttt{A(6,1)} \to \texttt{A(4,6)} \to \texttt{A(2,24)} \to \texttt{A(0,48)} \\
+\texttt{A(0,48)} \xrightarrow{\ 49\ } \texttt{A(2,24)} \xrightarrow{\ 49\ } \texttt{A(4,6)}
+\xrightarrow{\ 49\ } \texttt{A(6,1)} \xrightarrow{\ 49\ } \texttt{main}
+\end{gather*}
+
+\textbf{輸出}：\texttt{main} 印出 \texttt{49} 並換行。
+\begin{minted}[fontsize=\small]{text}
+49
+\end{minted}
+
+\textbf{說明}：$c$ 一路累積 $6 \times 4 \times 2 = 48$，所以 \texttt{A(n)}（$n$ 為偶數）算的是
+$n!! + 1$（$n!! = n(n-2)(n-4)\cdots 2$），$6!! + 1 = 48 + 1 = 49$。 這個函式的遞迴呼叫是最後一個動作
+（尾遞迴），回來後不必再做任何計算，可以直接改寫成迴圈（資結書第~6.4~節）。 另外注意：若 $n$ 是奇數，
+$n$ 會跳過 $0$ 變成負數，永遠不會停，最後堆疊溢位；題目的 $n = 6$ 沒有這個問題。
+\end{pastsoln}

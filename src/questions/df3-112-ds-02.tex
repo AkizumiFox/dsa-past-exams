@@ -1,0 +1,151 @@
+\begin{pastexam}[label={px:df3-112-ds-02}]{地方三等資訊處理 112 年 第二題}
+（申論；24 分）
+
+請為數列 0, 10, 30, 20, 50, 80, 40, 90, 70, 60 建立 AVL tree, Min/Max heap, 2$-$4 tree，並依它們的
+性質以 yes or no 完成下表。註：所建立的 tree or heap 請以圖示，如果是 Searching Tree，請以左小右
+大的方式建立。（24 分）
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+ & Balance & Searching Tree \\ \hline
+AVL tree & & \\ \hline
+Min heap & & \\ \hline
+Max heap & & \\ \hline
+2$-$4 tree & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目說「建立」，下面都照數列的順序\textbf{一個一個插入}（堆積也是逐一插入、往上調）；2-4 樹用
+資結書第~11.1.5~節由上而下的插入（往下走時遇到 4-節點先分裂）。 這題主要考 AVL 樹和 2-3-4 樹，
+歸在第~10~章。
+
+\textbf{AVL 樹}（資結書第~10.2~節）。 只有三次插入破壞平衡：
+\begin{itemize}[nosep]
+\item 插入 $30$：$0 \to 10 \to 30$ 一路向右，$0$ 的平衡因子 $-2$，RR 型，對 $0$ 左旋，得根 $10$、
+左 $0$、右 $30$。
+\item 插入 $20$、$50$：$20$ 成為 $30$ 的左子、$50$ 成為 $30$ 的右子，都平衡。
+\item 插入 $80$：路徑 $10 \to 30 \to 50 \to 80$，根 $10$ 的左高 $1$、右高 $3$，平衡因子 $-2$；
+$80$ 在右子 $30$ 的右子樹，RR 型，對 $10$ 左旋：$30$ 成為根，左子 $10$（帶 $0$、$20$），右子
+$50$（右子 $80$）。
+\item 插入 $40$（$50$ 的左子）、$90$（$80$ 的右子）、$70$（$80$ 的左子）：都平衡。
+\item 插入 $60$：路徑 $30 \to 50 \to 80 \to 70 \to 60$。 $50$ 的左高 $1$（$40$）、右高 $3$，平衡
+因子 $-2$；$60$ 在右子 $80$ 的\textbf{左}子樹，RL 型：先對 $80$ 右旋，再對 $50$ 左旋，$70$ 上來
+接在 $30$ 的右邊，左子 $50$（帶 $40$、$60$），右子 $80$（帶 $90$）。
+\end{itemize}
+
+\textbf{最小堆積}（逐一插入）：每個新數都比它的父節點大（數列 $0, 10, 30, 20, \ldots$ 正好已經
+滿足 $A[\lfloor i/2 \rfloor] \le A[i]$），一次都不用往上調，陣列就是原數列：
+\[ \langle 0, 10, 30, 20, 50, 80, 40, 90, 70, 60 \rangle . \]
+
+\textbf{最大堆積}（逐一插入、比父節點大就往上換）：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+插入 & 往上換 & 之後的陣列 \\
+\midrule
+0 & — & 0 \\
+10 & 和 0 換 & 10, 0 \\
+30 & 和 10 換 & 30, 0, 10 \\
+20 & 和 0 換 & 30, 20, 10, 0 \\
+50 & 和 20、30 換 & 50, 30, 10, 0, 20 \\
+80 & 和 10、50 換 & 80, 30, 50, 0, 20, 10 \\
+40 & 不換（父 50） & 80, 30, 50, 0, 20, 10, 40 \\
+90 & 和 0、30、80 換 & 90, 80, 50, 30, 20, 10, 40, 0 \\
+70 & 和 30 換（父 80 停） & 90, 80, 50, 70, 20, 10, 40, 0, 30 \\
+60 & 和 20 換（父 80 停） & 90, 80, 50, 70, 60, 10, 40, 0, 30, 20 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2-4 樹}（由上而下插入；方括號是一個節點）：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+插入 & 之後的樹（根；第二層；第三層） \\
+\midrule
+0, 10, 30 & $[0, 10, 30]$ \\
+20 & 根是 4-節點先分裂：$[10]$；$[0]$, $[20, 30]$ \\
+50 & $[10]$；$[0]$, $[20, 30, 50]$ \\
+80 & 往右走遇到 4-節點 $[20,30,50]$，分裂，$30$ 上去：$[10, 30]$；$[0]$, $[20]$, $[50, 80]$ \\
+40 & $[10, 30]$；$[0]$, $[20]$, $[40, 50, 80]$ \\
+90 & 分裂 $[40,50,80]$，$50$ 上去：$[10, 30, 50]$；$[0]$, $[20]$, $[40]$, $[80, 90]$ \\
+70 & 根是 4-節點先分裂：$[30]$；$[10]$, $[50]$；$[0]$, $[20]$, $[40]$, $[70, 80, 90]$ \\
+60 & 分裂 $[70,80,90]$，$80$ 上去：$[30]$；$[10]$, $[50, 80]$；$[0]$, $[20]$, $[40]$, $[60, 70]$, $[90]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+（若改用「葉子滿 4 個鍵才分裂」的由下而上插入，樹的形狀會不同，但下面表格的答案不變。）
+
+四個結構的最後樣子：
+\begin{center}
+\begin{tikzpicture}[level distance=9mm,
+  every node/.style={circle, draw, minimum size=6.5mm, inner sep=0pt, font=\small},
+  level 1/.style={sibling distance=36mm}, level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=8.5mm}]
+\node[draw=none] at (0,0.8) {AVL 樹};
+\node at (0,0) {30}
+  child {node {10} child {node {0}} child {node {20}}}
+  child {node {70} child {node {50} child {node {40}} child {node {60}}}
+                   child {node {80} child[missing] child {node {90}}}};
+\end{tikzpicture}
+\qquad
+\begin{tikzpicture}[level distance=9mm,
+  every node/.style={circle, draw, minimum size=6.5mm, inner sep=0pt, font=\small},
+  level 1/.style={sibling distance=36mm}, level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=8.5mm}]
+\node[draw=none] at (0,0.8) {最小堆積};
+\node at (0,0) {0}
+  child {node {10} child {node {20} child {node {90}} child {node {70}}}
+                   child {node {50} child {node {60}} child[missing]}}
+  child {node {30} child {node {80}} child {node {40}}};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[level distance=9mm,
+  every node/.style={circle, draw, minimum size=6.5mm, inner sep=0pt, font=\small},
+  level 1/.style={sibling distance=36mm}, level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=8.5mm}]
+\node[draw=none] at (0,0.8) {最大堆積};
+\node at (0,0) {90}
+  child {node {80} child {node {70} child {node {0}} child {node {30}}}
+                   child {node {60} child {node {20}} child[missing]}}
+  child {node {50} child {node {10}} child {node {40}}};
+\end{tikzpicture}
+\qquad
+\begin{tikzpicture}[level distance=10mm,
+  every node/.style={draw, rectangle, minimum height=5.5mm, inner sep=2pt, font=\small},
+  level 1/.style={sibling distance=34mm}, level 2/.style={sibling distance=15mm}]
+\node[draw=none] at (0,0.8) {2-4 樹};
+\node at (0,0) {30}
+  child {node {10} child {node {0}} child {node {20}}}
+  child {node {50 | 80} child {node {40}} child {node {60 | 70}} child {node {90}}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{填表。}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+ & Balance & Searching Tree \\ \hline
+AVL tree & Yes & Yes \\ \hline
+Min heap & Yes & No \\ \hline
+Max heap & Yes & No \\ \hline
+2$-$4 tree & Yes & Yes \\ \hline
+\end{tabular}
+\end{center}
+理由：
+\begin{itemize}[nosep]
+\item \textbf{AVL 樹}：每個節點左右子樹高度差 $\le 1$（上圖 $30$ 的左高 $2$、右高 $3$；$80$ 的
+左高 $0$、右高 $1$），高度 $O(\lg n)$，是平衡樹；它是二元搜尋樹，左小右大，可以用比大小往下找。
+\item \textbf{最小／最大堆積}：是完整二元樹（complete binary tree），只有最後一層可能不滿而且
+靠左，高度恰為 $\lfloor \lg n \rfloor$，形狀是平衡的；但堆積只規定父節點和子節點的大小（父
+$\le$ 子或父 $\ge$ 子），左右子樹之間沒有大小關係，例如最小堆積裡 $90$ 在左子樹、$40$ 在右子
+樹，找一個鍵不能只走一條路，最壞要看 $O(n)$ 個節點，所以不是搜尋樹。
+\item \textbf{2-4 樹}：所有葉節點在同一層（上圖都在第三層），高度 $\le \lg(n+1)$，是平衡樹；
+每個節點裡的鍵由小到大，第 $i$ 個子樹的鍵介於第 $i-1$、第 $i$ 個鍵之間，是多路搜尋樹。
+\end{itemize}
+\end{pastsoln}

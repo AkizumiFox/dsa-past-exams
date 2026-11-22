@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:df3-105-ds-05}]{地方三等資訊處理 105 年 第五題}
+（申論；20 分）
+
+二項式係數（Binomial Coefficient）的計算公式如下：
+\[
+\binom{n}{m} = \frac{n!}{m!(n-m)!} = \binom{n-1}{m} + \binom{n-1}{m-1}
+\]
+\[
+\mathrm{Bino}(n, m) = \begin{cases}
+1, \text{ if } m = 0 \text{ or } m = n \\
+\mathrm{Bino}(n-1, m) + \mathrm{Bino}(n-1, m-1); \text{ otherwise}
+\end{cases}
+\]
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 求 Bino(5,3)的值？（5 分）
+\item[㈡] 求 Bino(5,3)時，共呼叫 Bino 此函數多少次？（5 分）
+\item[㈢] 當 $n, m \in$ N 且 $n \ge m \ge 0$ 求 Bino($n$, $m$)時，共呼叫 Bino 函數 T($n$, $m$)次，求 T($n$, $m$) =？（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $10$；㈡ $19$ 次；㈢ $T(n, m) = 2\binom{n}{m} - 1$。 這正是資結書第~18.1.1~節的例子
+（資結書虛擬碼~18.1 \proc{Plain-Binom}、定理~18.1）。
+
+\textbf{㈠} $\mathrm{Bino}(5,3) = \binom{5}{3} = \dfrac{5!}{3!\,2!} = 10$。 用遞迴式也一樣：
+$\mathrm{Bino}(5,3) = \mathrm{Bino}(4,3) + \mathrm{Bino}(4,2) = 4 + 6 = 10$。
+
+\textbf{㈡} 令 $T(n, m)$ 為呼叫次數（含最外層那一次）。 $m = 0$ 或 $m = n$ 時只呼叫自己一次；否則是
+自己一次加上兩個子呼叫：
+\[
+T(n, m) = \begin{cases} 1, & m = 0 \text{ 或 } m = n, \\ 1 + T(n-1, m) + T(n-1, m-1), & \text{其他.} \end{cases}
+\]
+由小算到大：
+\begin{itemize}
+\item $T(2,1) = 1 + T(1,1) + T(1,0) = 1 + 1 + 1 = 3$；
+\item $T(3,2) = 1 + T(2,2) + T(2,1) = 1 + 1 + 3 = 5$；$T(3,1) = 1 + T(2,1) + T(2,0) = 1 + 3 + 1 = 5$；
+\item $T(4,3) = 1 + T(3,3) + T(3,2) = 1 + 1 + 5 = 7$；$T(4,2) = 1 + T(3,2) + T(3,1) = 1 + 5 + 5 = 11$；
+\item $T(5,3) = 1 + T(4,3) + T(4,2) = 1 + 7 + 11 = 19$。
+\end{itemize}
+共呼叫 $19$ 次。
+
+\textbf{㈢} 猜想 $T(n, m) = 2\binom{n}{m} - 1$（$T(5,3) = 2 \cdot 10 - 1 = 19$，$T(4,2) = 2 \cdot 6 - 1 = 11$，都對），
+對 $n$ 用數學歸納法證明。
+
+\textbf{證明。} $n = 0$ 時只有 $m = 0$，$T(0, 0) = 1 = 2\binom{0}{0} - 1$。 設對 $n - 1$ 的所有
+$0 \le m \le n - 1$ 都成立，看 $n$：
+\begin{itemize}
+\item $m = 0$ 或 $m = n$：$T(n, m) = 1 = 2 \cdot 1 - 1 = 2\binom{n}{m} - 1$。
+\item $0 < m < n$：兩個子呼叫的參數 $(n-1, m)$、$(n-1, m-1)$ 都滿足 $0 \le$ 第二個 $\le n - 1$，由歸納假設
+\[
+T(n, m) = 1 + \Bigl(2\tbinom{n-1}{m} - 1\Bigr) + \Bigl(2\tbinom{n-1}{m-1} - 1\Bigr)
+= 2\Bigl(\tbinom{n-1}{m} + \tbinom{n-1}{m-1}\Bigr) - 1 = 2\tbinom{n}{m} - 1,
+\]
+最後一步是題目給的巴斯卡公式。 \hfill$\blacksquare$
+\end{itemize}
+
+直觀的看法：遞迴樹的每個葉節點（$m = 0$ 或 $m = n$ 的呼叫）都回傳 $1$，而答案是所有葉節點回傳值的和，
+所以葉節點恰有 $\binom{n}{m}$ 個；每個內部節點都有兩個孩子，內部節點數 $=$ 葉節點數 $- 1$，總呼叫數
+$2\binom{n}{m} - 1$。 這個次數是指數級的（例如 $T(2k, k) \ge 4^k/(2k+1)$），因為同一組參數被重算很多次；
+改用記憶化或由下而上填巴斯卡三角形，只要 $O(nm)$ 的時間（資結書第~18.1.2、18.1.3~節）。
+\end{pastsoln}

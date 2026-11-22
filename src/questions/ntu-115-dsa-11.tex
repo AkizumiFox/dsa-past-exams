@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-115-dsa-11}]{臺大資工所 115 學年度 第 11 題}
+（單選）
+
+(4 points) Which pivot selection strategy in Quicksort is usually the most effective at avoiding the $O(n^2)$ worst-case runtime across arbitrary input distributions?
+
+
+\begin{enumerate}[label=(\Alph*)]
+\item Always select the first element.
+\item Always select the maximum element.
+\item Select a random element.
+\item Select the maximum of the first and last elements.
+\item Pivot selection does not change the algorithm's execution time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+快速排序最壞是每次分割都切成 $0$ 和 $m - 1$ 個，$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$（資結書第~14.5~節）。
+固定規則選基準（第一個、最大的……），總有某種輸入讓它每次都選到極端值；隨機選基準時（資結書虛擬碼~14.12），
+對\textbf{任何}輸入，期望時間都是 $O(n \log n)$（資結書定理~14.3），沒有哪一種輸入是固定的壞輸入。 最壞情況
+仍是 $\Theta(n^2)$，但機率極小，所以題目說「usually the most effective」。
+\begin{itemize}
+\item (A) 永遠選第一個：已經排好（或反向排好）的輸入每次都切得最偏，$\Theta(n^2)$。
+\item (B) 永遠選最大值：每次都切成 $m - 1$ 和 $0$，對所有輸入都是 $\Theta(n^2)$，最差的選法（還要先花
+$\Theta(m)$ 找最大值）。
+\item (D) 選頭尾較大的那個：仍是固定規則，例如由小到大排好的輸入，選到的是最後一個（最大值），每次都切成
+$m - 1$ 和 $0$。
+\item (E) 錯：基準決定兩邊切得多平均，正是時間的關鍵，見 (A)(B)。
+\end{itemize}
+\end{pastsoln}

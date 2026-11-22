@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:nccu-114-dsa-03}]{政大資科所 114 學年度 第 3 題}
+（單選；每題 4 分）
+
+(4\%) If an array is used to implement a binary search tree with $n$ nodes, where index 1 (the
+first position) of the array stores the root, what is the maximal index $i$ that stores the
+smallest key in the tree?
+
+A.~1 \qquad B.~$n$ \qquad C.~$\lceil\log n\rceil$ \qquad D.~$2^{n-1}$ \qquad E.~$2^n$+1
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+用陣列存二元樹（資結書第~7.2.1~節）：根放在索引 $1$，索引 $i$ 的左子節點在 $2i$、右子節點在
+$2i + 1$。
+
+二元搜尋樹裡最小的鍵在「從根一直往左走、走到沒有左子節點為止」的那個節點（資結書第~9.1~節的
+\proc{Tree-Minimum}）。 從索引 $1$ 往左走 $d$ 步，索引是 $2^d$，所以最小鍵一定放在某個 $2^d$，
+$d$ 是那個節點的深度。 $n$ 個節點的樹，深度最多 $n - 1$，所以索引最大是 $2^{n-1}$。
+
+這個上限做得到：依序插入 $n, n - 1, \ldots, 1$，每個新鍵都比前面的小，一路接在左邊，整棵樹是
+一條往左的鏈，最小鍵 $1$ 的深度是 $n - 1$，放在索引 $2^{n-1}$。 例如 $n = 3$，插入 $3, 2, 1$，
+三個鍵依序放在索引 $1, 2, 4$。
+
+逐項檢查：
+\begin{itemize}
+\item A.~$1$：根沒有左子節點時最小鍵才在索引 $1$，是最小的情形，不是最大，錯。
+\item B.~$n$：$n$ 不一定是 $2$ 的次方，而且 $n \ge 3$ 時 $2^{n-1} > n$，錯。
+\item C.~$\lceil \log n \rceil$：這是完全二元樹（或很平衡的樹）的深度量級，二元搜尋樹不保證平衡，錯。
+\item D.~$2^{n-1}$：往左的鏈，對。
+\item E.~$2^n + 1$：是奇數，奇數索引（$1$ 以外）都是右子節點，最小鍵不會在右子節點上（它的父節點
+比它小），而且 $2^n + 1 > 2^{n-1}$，超過上限，錯。
+\end{itemize}
+\end{pastsoln}

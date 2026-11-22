@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-115-dsa-20}]{臺大資工所 115 學年度 第 20 題}
+（單選）
+
+(4 points) Consider a red--black tree augmented for dynamic order statistics by storing, at each node $x$, the attribute
+\[ x.\texttt{size} = \text{number of nodes in the subtree rooted at } x\text{, including } x \text{ itself.} \]
+Which of the following statements is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item During insertion, the \texttt{size} field needs to be updated only along the path from the root to the inserted node; rotations do not require any update to \texttt{size}.
+\item During a left or right rotation, the \texttt{size} fields of exactly two nodes can be recomputed in $O(1)$ time using their children's sizes.
+\item The SELECT$(i)$ operation (finding the $i$-th smallest key) requires $O(\log n)$ extra space due to recursion.
+\item Maintaining the \texttt{size} field may violate the red--black tree properties and thus requires additional recoloring rules.
+\item The presence of duplicate keys makes it impossible to support SELECT$(i)$ correctly using subtree sizes.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+這是資結書第~9.4~節「加上子樹大小」放到紅黑樹上。 $x.\mathit{size} = x.\mathit{left}.\mathit{size} +
+x.\mathit{right}.\mathit{size} + 1$（nil 的 $\mathit{size}$ 當成 $0$）。
+\begin{itemize}
+\item (A) 錯。 插入時往下走的路徑上每個節點的 $\mathit{size}$ 加 $1$，這部分對；但修正紅黑性質時會旋轉，旋轉
+改變了兩個節點的子樹，它們的 $\mathit{size}$ 也要改，不能不管。
+\item (B) 對。 以右旋為例：$y$ 的左子節點 $x$ 升上去，$x$ 原本的右子樹 $\beta$ 換到 $y$ 底下（資結書第~10.1~節）。
+只有 $x$、$y$ 兩個節點底下的節點集合變了，其他節點的子樹內容都不變。 先重算降下去的
+$y.\mathit{size} = \beta.\mathit{size} + \gamma.\mathit{size} + 1$，再重算升上來的
+$x.\mathit{size} = \alpha.\mathit{size} + y.\mathit{size} + 1$；其實 $x$ 的新值就是 $y$ 原本的值。 兩個都是 $O(1)$。
+左旋對稱。
+\item (C) 錯。 SELECT 可以寫成迴圈（資結書虛擬碼~9.8 的 \proc{Tree-Select}），每一步只往左或往右走，只用 $O(1)$
+的額外空間，不必遞迴。
+\item (D) 錯。 $\mathit{size}$ 只是另外存的數，和顏色無關，紅黑樹的修正規則完全不用改，只要在旋轉時順便重算
+$\mathit{size}$。
+\item (E) 錯。 $\mathit{size}$ 數的是節點個數，鍵重複時（約定相等的鍵放一邊，例如右子樹）照樣可以依名次找出
+第 $i$ 個節點；重複的鍵只是排名相鄰的幾個節點鍵值相同。
+\end{itemize}
+\end{pastsoln}

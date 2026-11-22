@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntust-115-ice-02}]{臺科大資工所 115 學年度 第 I-2 題}
+（複選）
+
+(5\%) Select all statements that are true about a Binary Heap.
+\begin{enumerate}[label=(\alph*)]
+\item In a max heap, the value of the left child node must be greater than the value of the right child
+node.
+\item A binary heap must satisfy the structural property of a complete binary tree.
+\item In a binary heap containing $n$ elements, the worst-case time complexity for inserting a new element
+is $O(nlogn)$.
+\item The sequence $\{2,10,5,7,15,12\}$, when represented as an array, satisfies the definition of a min
+heap.
+\item In a full binary heap of height $h$, if the height of a single root node is defined as $0$, the total
+number of nodes is $2h$.
+\item If a value smaller than all existing elements is inserted into a Max Heap, the best time complexity
+for that specific insertion is $O(1)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)、(f)。
+
+\begin{itemize}
+\item[(a)] 錯。 堆積只規定父節點和孩子的大小關係（資結書定義~8.1），兩個兄弟之間沒有規定。 例如 $[9, 3, 5]$ 是
+最大堆積，左孩子 $3$ 比右孩子 $5$ 小。
+\item[(b)] 對。 二元堆積的形狀一定是完整二元樹（每層填滿，最後一層靠左），所以才能存在陣列裡、高度是
+$\lfloor \lg n \rfloor$。
+\item[(c)] 錯（照題意）。 插入是放在最後再往上浮，最多浮 $\lfloor \lg n \rfloor$ 層，最壞 $\Theta(\log n)$
+（資結書第~8.1~節）。 嚴格說 $O(\cdot)$ 只是上界，$\Theta(\log n)$ 也屬於 $O(n \log n)$；但這種敘述在考卷上
+的意思是「最壞時間是 $n \log n$ 這一級」，那是錯的，所以不選。
+\item[(d)] 錯。 陣列從 $1$ 開始編號：$A[1] = 2$ 的孩子是 $A[2] = 10$、$A[3] = 5$，都比 $2$ 大，沒問題；但
+$A[2] = 10$ 的孩子是 $A[4] = 7$、$A[5] = 15$，$7 < 10$，違反最小堆積。
+\item[(e)] 錯。 高度 $h$（根的高度是 $0$）的滿二元樹，第 $i$ 層有 $2^i$ 個節點，共
+$1 + 2 + \cdots + 2^h = 2^{h+1} - 1$ 個，不是 $2h$。 例如 $h = 1$ 有 $3$ 個，$2h = 2$。
+\item[(f)] 對。 新元素放在陣列最後，和父節點比一次：比所有元素都小，當然不大於父節點，不用往上浮，插入就結束了。
+這次插入是 $O(1)$（不算陣列要擴大的情況）。
+\end{itemize}
+\end{pastsoln}

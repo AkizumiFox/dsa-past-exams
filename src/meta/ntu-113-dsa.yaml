@@ -1,0 +1,24 @@
+paper: ntu-113-dsa
+volume: 2
+school: 臺大
+dept: 資工所
+year: 113
+subject: 資料結構與演算法
+instructions: >-
+  本試題有 12 題選擇題（題號 1-12）。第 3 題及第 6 題為單選題，其餘為複選題。單選題答對得 5 分，答錯倒扣
+  1 分，未答者得零分。複選題每個選項單獨計分，選項答對者得該題五分之一分數，選項答錯者倒扣該題十分之一分數，
+  另若該題整題未作答者，整題得 0 分。選擇題請於答案卡上作答。另有一題非選擇題（題號 13），請於試卷本上作答。
+questions:
+  - {id: ntu-113-dsa-01, label: 第 1 題, chapter: 16}
+  - {id: ntu-113-dsa-02, label: 第 2 題, chapter: 8}
+  - {id: ntu-113-dsa-03, label: 第 3 題, chapter: 3}
+  - {id: ntu-113-dsa-04, label: 第 4 題, chapter: 17}
+  - {id: ntu-113-dsa-05, label: 第 5 題, chapter: 10}
+  - {id: ntu-113-dsa-06, label: 第 6 題, chapter: 18}
+  - {id: ntu-113-dsa-07, label: 第 7 題, chapter: 18}
+  - {id: ntu-113-dsa-08, label: 第 8 題, chapter: 7}
+  - {id: ntu-113-dsa-09, label: 第 9 題, chapter: 18}
+  - {id: ntu-113-dsa-10, label: 第 10 題, chapter: 18}
+  - {id: ntu-113-dsa-11, label: 第 11 題, chapter: 18}
+  - {id: ntu-113-dsa-12, label: 第 12 題, chapter: 22}
+  - {id: ntu-113-dsa-13, label: 第 13 題, chapter: 29}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:df3-108-ds-01}]{地方三等資訊處理 108 年 第一題}
+（申論；20 分）
+
+對下列三個程式片段，請使用 Big-O 符號，分別估計其最長執行時間（worst time）。程式片段中，S 代表一段沒有與 n
+相關的迴圈（no n-dependent loops）。
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] \texttt{for (int i = 0; i * i < n; i++)}\quad（5 分）\\
+\texttt{\ \ \ \ \ \ \ \ S}
+\item[㈡] \texttt{for (int i = 0; Math.sqrt (i) < n; i++)}\quad（5 分）\\
+\texttt{\ \ \ \ \ \ \ \ S}
+\item[㈢] \texttt{int\ \ \ k = 1;}\quad（10 分）\\
+\texttt{\ for (int i = 0; i < n; i++)}\\
+\texttt{\ \ \ \ \ k *= 2;}\\
+\texttt{\ for (int i = 0; i < k; i++)}\\
+\texttt{\ \ \ \ \ \ \ S}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $O(\sqrt{n})$；㈡ $O(n^2)$；㈢ $O(2^n)$。
+
+和歷屆試題~\ref{px:gk3-105-ds-05} 同一類型：S 是 $O(1)$，數 S 執行幾次即可（資結書第~1.7~節）。 程式是
+Java 的寫法（\texttt{Math.sqrt}），分析和 C 一樣。
+
+\textbf{㈠} 條件 $i^2 < n$，$i = 0, 1, \ldots, \lceil \sqrt{n}\,\rceil - 1$，共 $\lceil \sqrt{n}\,\rceil$ 次，
+$O(\sqrt{n})$。 和歷屆試題~\ref{px:gk3-105-ds-05} 第㈠小題相同。
+
+\textbf{㈡} 條件 $\sqrt{i} < n$ 等價於 $i < n^2$（兩邊都非負，平方保持大小），$i = 0, 1, \ldots, n^2 - 1$，
+共 $n^2$ 次，$O(n^2)$。 和㈠對照：㈠是「$i$ 的平方」小於 $n$，所以只跑 $\sqrt{n}$ 次；這裡是「$i$ 的平方根」
+小於 $n$，要跑 $n^2$ 次，方向剛好相反。
+
+\textbf{㈢} 第一個迴圈跑 $n$ 次，每次 $k$ 乘 $2$，結束時 $k = 2^n$，這部分 $O(n)$。 第二個迴圈跑 $k = 2^n$ 次。
+總時間 $O(n + 2^n) = O(2^n)$。 兩個迴圈是\textbf{先後}執行，不是巢狀，所以是相加而不是相乘；但第一個迴圈
+決定了第二個迴圈的次數，時間由後者主導。 （實際的 \texttt{int} 在 $n \ge 31$ 時會溢位，這裡照題意只看
+次數的成長。）
+\end{pastsoln}

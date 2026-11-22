@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-112-dsa-10}]{中央資工所 112 學年度 複選題第 10 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The postfix of infix expression \textbf{b+a*c/d} is \textbf{bac+d/*}.
+\item The postfix of \textbf{(a+b)/(c-d)*e} is \textbf{ab+cd-*/}.
+\item The infix of the postfix expression \textbf{ab+c*d/ef-/} is \textbf{(a+b)*c/(d/(e-f))}.
+\item The prefix of the postfix expression \textbf{abc+d/*} is \textbf{*a/+bcd}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+中序轉後序用資結書第~6.3.3~節的規則（$*$、$/$ 高於 $+$、$-$，同級由左往右結合）；後序轉中序或前序，
+從左到右掃描，堆疊裡放子運算式，遇到運算子就彈出兩個組起來（資結書第~6.3.5~節）。
+\begin{itemize}
+\item (A) 錯。 $b+a*c/d$ 是 $b + ((a * c) / d)$：先算 $a*c$ 得 $ac*$，再除以 $d$ 得 $ac*d/$，最後
+加到 $b$ 上，後序是 $bac*d/+$。 題目的 $bac+d/*$ 對應 $(b * ((a + c)/d))$，運算子都放錯了。
+\item (B) 錯。 $(a+b)/(c-d)*e$ 是 $((a+b)/(c-d)) * e$（$/$、$*$ 同級，由左往右），後序是
+$ab+cd-/e*$。 題目的 $ab+cd-*/$ 少了運算元 $e$，五個符號配兩個二元運算子，根本不是合法的後序式。
+\item (C) 錯。 掃描 $ab+c*d/ef-/$：$ab+$ 得 $(a+b)$；$c*$ 得 $(a+b)*c$；$d/$ 得 $((a+b)*c)/d$；
+$ef-$ 得 $(e-f)$；最後的 $/$ 把兩者相除：
+\[
+\bigl(((a+b)*c)/d\bigr)/(e-f).
+\]
+題目的 $(a+b)*c/(d/(e-f))$ 等於 $(a+b)*c*(e-f)/d$，是另一個式子；它的後序是 $ab+c*def-//$。
+\item (D) 對。 掃描 $abc+d/*$：$bc+$ 得 $+bc$；$d/$ 得 $/{+bc}\,d$；最後 $a$ 和它相乘得
+$*\,a\,/{+bc}\,d$，也就是 $*a/+bcd$，和題目一樣。 對應的中序是 $a * ((b + c)/d)$。
+\end{itemize}
+\end{pastsoln}

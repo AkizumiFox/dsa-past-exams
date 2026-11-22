@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:df3-107-ds-04}]{地方三等資訊處理 107 年 第四題}
+（申論；20 分）
+
+假設有個陣列 $A[1..n]$ 儲存著 $n$ 個整數。可將 $A[1..n]$ 看成二元樹，其中 $A[1]$ 是樹根。$A[i]$ 的左右子節點分別為 $A[2i]$ 和 $A[2i+1]$, $i=1, 2, \ldots, n/2$。若 $2i>n$ 或 $2i+1>n$，則這些子節點是不存在的。若 $A$ 滿足 $A[i] \ge \max\{A[2i], A[2i+1]\}$, $1 \le i \le n/2$，則稱陣列 $A[1..n]$ 是一個堆疊（heap）。假設有個副程式 $\mathrm{sift}(A, r, n)$ 其輸入參數 $A$ 是一個陣列，$n$ 是 $A$ 的大小，$r \le n$ 是一個指標，指向此子樹的樹根。副程式 $\mathrm{sift}(A, r, n)$ 的功能是將 $A[r]$ 為樹根的子樹變成 heap。在呼叫 $\mathrm{sift}(A, r, n)$ 之前，它的左右子樹都已經是 heap。副程式 $\mathrm{sift}(A, r, n)$ 所需的計算時間是 $O(h(r))$，其中 $h(r)$ 是以 $A[r]$ 為樹根的子樹的高度，也就是從樹根到任一樹葉的最長距離。
+
+（每小題 10 分，共 20 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 用 $\mathrm{sift}(A, r, n)$ 設計一個線性時間的演算法，將陣列 $A[1..n]$ 變成 heap。
+\item[㈡] 分析以上所設計演算法的計算複雜度為 $O(n)$。
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+原卷把 heap 寫成「堆疊」，指的是堆積（最大堆積）。 做法和 歷屆試題~\ref{px:gk3-096-ds-04} ㈢ 相同（資結書第~8.2~節，虛擬碼~8.3），
+這裡用題目給的 sift，並把 ㈡ 的分析寫完整。 高度 $h(r)$ 照題目定義用「邊數」：葉節點的高度是 $0$。
+
+\textbf{㈠}。 由下往上：葉節點本身就是 heap，從最後一個非葉節點 $\lfloor n/2 \rfloor$ 往回到根，逐一呼叫 sift。
+\begin{pseudo}[unbreakable]{由下而上建 heap}
+\Procedure{Build-Heap}{$A, n$}
+    \For{$r \gets \lfloor n/2 \rfloor$ \DownTo $1$}
+        \State \Call{sift}{$A, r, n$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}。 要確認每次呼叫 sift 時前提成立。 迴圈不變量：第 2 行每一輪開始時，所有位置 $> r$ 的節點都是一個 heap 的根。
+\begin{itemize}
+\item 初始 $r = \lfloor n/2 \rfloor$：位置 $\lfloor n/2 \rfloor + 1..n$ 滿足 $2i > n$，沒有子節點，是只有一個節點的 heap。
+\item 維持：$r$ 的子節點 $2r$、$2r + 1$ 都 $> r$，由不變量它們都是 heap 的根，正是 sift 的前提；呼叫後以 $r$ 為根的子樹是 heap。
+sift 只改動 $r$ 的子樹，其他位置 $> r$ 的子樹不受影響（它們和 $r$ 的子樹不相交，或整個包含在裡面而已經被處理成 heap）。 $r$ 減一後
+不變量成立。
+\item 結束 $r = 0$：位置 $1$ 是 heap 的根，整個陣列是 heap。
+\end{itemize}
+
+\textbf{㈡ 時間 $O(n)$}。 總時間是 $\sum_{r=1}^{\lfloor n/2 \rfloor} O(h(r))$ 再加迴圈本身的 $O(n)$。 $A[1..n]$ 是完整二元樹，樹高
+$H = \lfloor \log_2 n \rfloor$。
+
+\textbf{第一步：高度為 $h$ 的節點最多 $n / 2^{h}$ 個}。 以高度為 $h$ 的節點為根的子樹，至少有一條長度 $h$ 的往下路徑，而且（完整二元樹
+裡）除了最底一層以外是滿的，所以至少有 $2^{h}$ 個節點。 高度相同的兩個節點，誰也不是誰的祖先（祖先的高度一定比較大），它們的子樹
+互不相交；所有高度為 $h$ 的子樹加起來不超過 $n$ 個節點，所以高度為 $h$ 的節點數 $\le n / 2^{h}$。
+
+\textbf{第二步：加總}。 設 sift 的時間 $\le c \cdot (h(r) + 1)$（加 $1$ 是讓高度 $0$ 也算常數時間）。
+\[
+\sum_{r=1}^{\lfloor n/2 \rfloor} c\,(h(r) + 1) \le \sum_{h=0}^{H} \frac{n}{2^{h}} \cdot c\,(h + 1)
+= c\,n \sum_{h=0}^{H} \frac{h + 1}{2^{h}} \le c\,n \sum_{h=0}^{\infty} \frac{h + 1}{2^{h}} = c\,n \cdot 4 = 4cn.
+\]
+這裡用到 $\sum_{h \ge 0} h / 2^{h} = 2$、$\sum_{h \ge 0} 1/2^{h} = 2$（資結書附錄~A.2）。 所以 \proc{Build-Heap} 是 $O(n)$。
+
+直觀的說法：大部分節點都在底層附近，高度小、sift 很便宜；只有很少數靠近根的節點要往下走很多層。 例如 $n = 15$（滿二元樹）時，高度
+$0, 1, 2, 3$ 的節點分別有 $8, 4, 2, 1$ 個，sift 的總層數最多 $4 \cdot 1 + 2 \cdot 2 + 1 \cdot 3 = 11 < 15$。 若只說「呼叫 $n/2$ 次、每次
+$O(\log n)$」，得到的是 $O(n \log n)$，那是正確但不夠緊的上界，本題要的是上面這個分析。
+\end{pastsoln}

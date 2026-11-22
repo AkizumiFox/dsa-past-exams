@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-115-dsa-07}]{臺大資工所 115 學年度 第 7 題}
+（單選）
+
+(4 points) A company needs to assign \textbf{3 workers} to \textbf{3 tasks}. Each worker can perform only the tasks listed below:
+\begin{itemize}
+\item Worker $W_1$: Tasks $T_1,T_2$
+\item Worker $W_2$: Task $T_1$
+\item Worker $W_3$: Tasks $T_2,T_3$
+\end{itemize}
+Each worker can be assigned to at most one task, and each task to at most one worker. Which of the following statements is true?
+\begin{enumerate}[label=(\Alph*)]
+\item The maximum matching has size 2.
+\item The maximum matching has size 1.
+\item No matching exists.
+\item There are exactly two distinct maximum matchings.
+\item There exists a perfect matching.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+把工人放在 $L$、工作放在 $R$，可以做的組合是邊，得到二分圖，邊是 $W_1T_1$、$W_1T_2$、$W_2T_1$、
+$W_3T_2$、$W_3T_3$。 先找最大匹配。 $W_2$ 只會 $T_1$，要讓 $W_2$ 有工作，$T_1$ 只能給 $W_2$；
+這時 $W_1$ 只剩 $T_2$，$W_3$ 只剩 $T_3$。 得到 $\{W_1T_2, W_2T_1, W_3T_3\}$，三位工人、三項工作全
+部配到，是大小 $3$ 的完美匹配。 匹配的邊沒有共同端點，一邊只有 $3$ 個頂點，所以最大匹配就是 $3$。
+（也可以照資結書第~26.6.2~節建 $G'$ 跑最大流，得到的值是 $3$。）
+
+\begin{itemize}
+\item (A) 錯。 最大匹配的大小是 $3$，不是 $2$。 $\{W_1T_1, W_3T_2\}$ 這種大小 $2$ 的匹配是
+極大匹配（加不進任何一條邊），但不是最大匹配。
+\item (B) 錯。 同上。
+\item (C) 錯。 上面已經找到大小 $3$ 的匹配；何況只含一條邊的 $\{W_1T_1\}$、甚至空集合都是匹配，
+「沒有匹配」不可能成立。
+\item (D) 錯。 大小 $3$ 的匹配裡每位工人都要配到。 $W_2$ 一定配 $T_1$，於是 $W_1$ 一定配 $T_2$，
+$W_3$ 一定配 $T_3$，每一步都沒有別的選擇，所以最大匹配只有一個，不是兩個。
+\item (E) 對。 $\{W_1T_2, W_2T_1, W_3T_3\}$ 讓每個頂點都已匹配，是完美匹配（資結書定義~26.6）。
+\end{itemize}
+\end{pastsoln}

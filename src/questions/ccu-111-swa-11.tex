@@ -1,0 +1,144 @@
+\begin{pastexam}[label={px:ccu-111-swa-11}]{中正資工所甲組 111 學年度 第 19 題}
+（問答）
+
+(17\%)
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},
+  v/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\sffamily},lab/.style={font=\sffamily\small,inner sep=1.5pt}]
+\node[v] (a) at (0,2) {a}; \node[v] (b) at (2.2,2) {b};
+\node[v] (c) at (0,0) {c}; \node[v] (d) at (2.2,0) {d};
+\draw[->] ([yshift=3pt]a.east) -- node[lab,above] {6} ([yshift=3pt]b.west);
+\draw[->] (a) -- node[lab,left] {3} (c);
+\draw[->] (b) -- node[lab,right] {2} (d);
+\draw[->] (d) -- node[lab,above right,pos=0.45] {$-7$} (a);
+\draw[->] ([yshift=3pt]c.east) -- node[lab,above] {5} ([yshift=3pt]d.west);
+\draw[->] ([yshift=-3pt]d.west) -- node[lab,below] {$-3$} ([yshift=-3pt]c.east);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*.,itemsep=2pt,topsep=2pt]
+\item (2\%) Argue what the output will be if we specify a source node and input the graph at
+left into the Dijkstra algorithm. Write down your reasoning.
+\item (4\%) Reweight the graph at left.
+\item (8\%) Apply Floyd-Warshall algorithm to the left graph and derive the distance and
+predecessor matrices. Write down your derivation.
+\item (3\%) Given another graph G=\{V,E\}, how do you tell which of Floyd-Warshall algorithm and
+Johnson's algorithm is theoretically faster to solve the shortest path problem?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+圖有 $4$ 個頂點、$6$ 條有向邊：$a \to b$：$6$、$a \to c$：$3$、$b \to d$：$2$、$c \to d$：$5$、
+$d \to a$：$-7$、$d \to c$：$-3$。 先確認沒有負環：簡單環只有 $a \to b \to d \to a$（$6 + 2 - 7 =
+1$）、$a \to c \to d \to a$（$3 + 5 - 7 = 1$）、$c \to d \to c$（$5 - 3 = 2$），都 $\ge 0$。 所以
+每一對頂點的最短距離都是有限的，(c) 的答案就是正確的 $\delta$。
+
+\textbf{a.} 圖有負邊，Dijkstra 演算法的正確性定理（資結書定理~25.6）不適用：它取出一
+個頂點就宣布距離確定，不再回頭，可能錯過「之後經過負邊才變短」的路徑（資結書第~25.2.5~節）。
+例如四條邊 $s \to x$：$2$、$s \to y$：$3$、$y \to x$：$-2$、$x \to z$：$2$，從 $s$ 出發，取出順序是
+$s, x, y, z$：$x$ 先以 $d[x] = 2$ 確定，放鬆 $x \to z$ 得 $d[z] = 4$；之後取出 $y$ 才看到 $s \to y \to x$ 只要
+$1$，但 $x$ 已經確定，$x \to z$ 不會再放鬆，輸出 $d[z] = 4$，真正的 $\delta(s, z) = 3$。 所以一般的答案是：輸出\textbf{不保證}是最短距離。
+
+但這張圖實際跑一次，結果剛好都對。 以起點 $a$ 為例（資結書虛擬碼~25.3，平手取字母小
+的；表裡粗體是這一輪取出的頂點，底線是這一輪改小的值，灰色是已經確定的）：
+
+\begin{center}
+\small
+\begin{tabular}{cc*{4}{c}l}
+\toprule
+輪 & 取出 & $a$ & $b$ & $c$ & $d$ & 說明 \\
+\midrule
+1 & $a$ & \textbf{0} & \underline{6} & \underline{3} & $\infty$ & \\
+2 & $c$ & \textcolor{black!45}{0} & $6$ & \textbf{3} & \underline{8} & \\
+3 & $b$ & \textcolor{black!45}{0} & \textbf{6} & \textcolor{black!45}{3} & $8$ & $6 + 2 = 8$，相等不更新 \\
+4 & $d$ & \textcolor{black!45}{0} & \textcolor{black!45}{6} & \textcolor{black!45}{3} & \textbf{8} & $d \to a$、$d \to c$ 指向 $S$ 裡的頂點，跳過 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+輸出 $(0, 6, 3, 8)$。 四個起點的輸出和真正的最短距離（(c) 的 $D^{(4)}$）如下：
+
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+起點 & 取出順序 & Dijkstra 的輸出 $d[a, b, c, d]$ & 正確的 $\delta$ \\
+\midrule
+$a$ & $a, c, b, d$ & $0, 6, 3, 8$ & $0, 6, 3, 8$ \\
+$b$ & $b, d, a, c$ & $-5, 0, -2, 2$ & $-5, 0, -2, 2$ \\
+$c$ & $c, d, a, b$ & $-2, 4, 0, 5$ & $-2, 4, 0, 5$ \\
+$d$ & $d, a, c, b$ & $-7, -1, -4, 0$ & $-7, -1, -4, 0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+例如起點 $b$：取出 $b$ 得 $d[d] = 2$；取出 $d$ 得 $d[a] = -5$、$d[c] = -1$；取出 $a$（$-5$ 最小），
+$a \to c$ 得 $-5 + 3 = -2 < -1$，更新；最後取出 $c$。 四個起點都剛好正確：每個頂點被取出時，它的 $d$ 已經
+等於 $\delta$。 這是這張圖的巧合，不是 Dijkstra 的保證。 作答時兩件事都要寫：理論上不保
+證正確（舉上面這種反例，或說明正確性證明哪裡用到邊權非負），這張圖實際跑出的輸出是上表，剛好正確。
+
+\textbf{b.} 照 Johnson 演算法（資結書第~25.7~節）：加新頂點 $q$，連 $q \to a, b, c, d$，
+權重 $0$，從 $q$ 跑 Bellman--Ford，令 $h(v) = \delta(q, v)$：
+\begin{itemize}
+\item $h(d) = 0$（$q \to d$；其他走法 $q \to b \to d = 2$、$q \to c \to d = 5$ 都比較大）；
+\item $h(a) = -7$（$q \to d \to a$）；
+\item $h(c) = -4$（$q \to d \to a \to c = -7 + 3$，比 $q \to d \to c = -3$ 小）；
+\item $h(b) = -1$（$q \to d \to a \to b = -7 + 6$）。
+\end{itemize}
+新的權重 $\hat{w}(u, v) = w(u, v) + h(u) - h(v)$：
+\begin{center}
+\small
+\begin{tabular}{cccccc}
+\toprule
+$a \to b$ & $a \to c$ & $b \to d$ & $c \to d$ & $d \to a$ & $d \to c$ \\
+\midrule
+$6 - 7 + 1 = 0$ & $3 - 7 + 4 = 0$ & $2 - 1 - 0 = 1$ & $5 - 4 - 0 = 1$ & $-7 + 0 + 7 = 0$ & $-3 + 0 + 4 = 1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+全部 $\ge 0$。 由資結書引理~25.11，$\hat{w}$ 之下的最短路徑和原本相同，$\delta(u, v) =
+\hat{\delta}(u, v) - h(u) + h(v)$，之後就能對每個起點跑 Dijkstra。
+
+\textbf{c.} 頂點依 $a, b, c, d$ 當成第 $1..4$ 個，照資結書虛擬碼~25.8，粗體是這一層改過的格子，
+$\Pi$ 裡的「$-$」是 \NIL，列是起點、行是終點。
+\begin{gather*}
+D^{(0)} = \begin{pmatrix} 0 & 6 & 3 & \infty \\ \infty & 0 & \infty & 2 \\ \infty & \infty & 0 & 5 \\ -7 & \infty & -3 & 0 \end{pmatrix},\quad
+\Pi^{(0)} = \begin{pmatrix} - & a & a & - \\ - & - & - & b \\ - & - & - & c \\ d & - & d & - \end{pmatrix}; \\
+D^{(1)} = \begin{pmatrix} 0 & 6 & 3 & \infty \\ \infty & 0 & \infty & 2 \\ \infty & \infty & 0 & 5 \\ -7 & \mathbf{-1} & \mathbf{-4} & 0 \end{pmatrix},\quad
+\Pi^{(1)} = \begin{pmatrix} - & a & a & - \\ - & - & - & b \\ - & - & - & c \\ d & \mathbf{a} & \mathbf{a} & - \end{pmatrix}; \\
+D^{(2)} = \begin{pmatrix} 0 & 6 & 3 & \mathbf{8} \\ \infty & 0 & \infty & 2 \\ \infty & \infty & 0 & 5 \\ -7 & -1 & -4 & 0 \end{pmatrix},\quad
+\Pi^{(2)} = \begin{pmatrix} - & a & a & \mathbf{b} \\ - & - & - & b \\ - & - & - & c \\ d & a & a & - \end{pmatrix}; \\
+D^{(3)} = D^{(2)},\quad \Pi^{(3)} = \Pi^{(2)}; \\
+D^{(4)} = \begin{pmatrix} 0 & 6 & 3 & 8 \\ \mathbf{-5} & 0 & \mathbf{-2} & 2 \\ \mathbf{-2} & \mathbf{4} & 0 & 5 \\ -7 & -1 & -4 & 0 \end{pmatrix},\quad
+\Pi^{(4)} = \begin{pmatrix} - & a & a & b \\ \mathbf{d} & - & \mathbf{a} & b \\ \mathbf{d} & \mathbf{a} & - & c \\ d & a & a & - \end{pmatrix}.
+\end{gather*}
+逐層的推導（只看可能改變的格子：第 $k$ 行有限的列、第 $k$ 列有限的行）：
+\begin{itemize}
+\item $k = a$：第 $a$ 行有限的只有 $d_{da} = -7$，第 $a$ 列有限的是 $d_{ab} = 6$、$d_{ac} = 3$。 候選
+$d_{db}$：$-7 + 6 = -1 < \infty$，改，$\pi_{db} \gets \pi_{ab} = a$；$d_{dc}$：$-7 + 3 = -4 < -3$，改，
+$\pi_{dc} \gets \pi_{ac} = a$。
+\item $k = b$：第 $b$ 行有限的是 $d_{ab} = 6$、$d_{db} = -1$；第 $b$ 列有限的只有 $d_{bd} = 2$。
+$d_{ad}$：$6 + 2 = 8 < \infty$，改，$\pi_{ad} \gets \pi_{bd} = b$；$d_{dd}$：$-1 + 2 = 1$，不比 $0$ 小。
+\item $k = c$：第 $c$ 行有限的是 $d_{ac} = 3$、$d_{dc} = -4$；第 $c$ 列有限的只有 $d_{cd} = 5$。
+$d_{ad}$：$3 + 5 = 8$，不比 $8$ 小（相等不更新）；$d_{dd}$：$-4 + 5 = 1$，不變。 這一層沒有改變。
+\item $k = d$：第 $d$ 行有限的是 $d_{ad} = 8$、$d_{bd} = 2$、$d_{cd} = 5$；第 $d$ 列全部有限
+（$-7, -1, -4$）。 $d_{ab}$：$8 - 1 = 7$，不比 $6$ 小；$d_{ac}$：$8 - 4 = 4$，不比 $3$ 小；$d_{ba}$：
+$2 - 7 = -5$，改，$\pi_{ba} \gets \pi_{da} = d$；$d_{bc}$：$2 - 4 = -2$，改，$\pi_{bc} \gets \pi_{dc} = a$；
+$d_{ca}$：$5 - 7 = -2$，改，$\pi_{ca} \gets \pi_{da} = d$；$d_{cb}$：$5 - 1 = 4$，改，$\pi_{cb} \gets
+\pi_{db} = a$。
+\end{itemize}
+最後對角線都是 $0$，沒有負環，和開頭的檢查一致。 驗算一格：$b$ 到 $c$，$\pi_{bc} = a$、
+$\pi_{ba} = d$、$\pi_{bd} = b$，路徑 $b \to d \to a \to c$，權重 $2 - 7 + 3 = -2 = d_{bc}$。
+
+\textbf{d.} 設 $n = |V|$、$m = |E|$。 Floyd--Warshall 是 $\Theta(n^3)$，和邊數無關。 Johnson 是一次
+Bellman--Ford $O(nm)$，加上 $n$ 次 Dijkstra：用二元堆積共 $O(nm \lg n)$，用費氏堆積共
+$O(n^2 \lg n + nm)$。 所以看 $m$ 和 $n^2$ 的關係（資結書第~25.7~節）：
+\begin{itemize}
+\item 稀疏圖，$m = o(n^2 / \lg n)$（例如 $m = O(n)$）：Johnson 用二元堆積的 $O(nm \lg n)$ 就是
+$o(n^3)$，Johnson 比較快。
+\item 稠密圖，$m = \Theta(n^2)$：Johnson 用二元堆積是 $\Theta(n^3 \lg n)$，用費氏堆積是
+$\Theta(n^3)$，最好也只和 Floyd--Warshall 同級；Floyd--Warshall 常數小、程式短，選它。
+\item 介於中間（$n^2 / \lg n \lesssim m = o(n^2)$）：用費氏堆積的 Johnson 理論上仍是 $o(n^3)$，比較快。
+\end{itemize}
+簡單說：理論上 Johnson 用費氏堆積時，只要 $m = o(n^2)$ 就比 Floyd--Warshall 快；$m = \Theta(n^2)$ 時
+兩者同級。
+\end{pastsoln}

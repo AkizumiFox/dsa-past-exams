@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntust-113-ice-09}]{臺科大資工所 113 學年度 第 II-3 題}
+（填充）
+
+II.\quad \underline{(65\%) Fill in the following blanks.}
+
+(5\%) If a complete undirected graph has 3,403 distinct edges, there are \blank{D} nodes in this
+graph.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D) 填 $83$。
+
+$n$ 個頂點的無向完全圖，任兩個頂點之間恰有一條邊，邊數是 $\binom{n}{2} = n(n - 1)/2$（資結書
+第~21.1~節）。 解
+\[
+\frac{n(n - 1)}{2} = 3403 \iff n^2 - n - 6806 = 0 ,
+\]
+\[
+n = \frac{1 + \sqrt{1 + 4 \cdot 6806}}{2} = \frac{1 + \sqrt{27225}}{2} = \frac{1 + 165}{2} = 83 .
+\]
+（負根 $-82$ 不合。） 檢查：$83 \times 82 / 2 = 83 \times 41 = 3403$。
+\end{pastsoln}

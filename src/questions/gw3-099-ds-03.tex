@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:gw3-099-ds-03}]{關務三等資訊處理 99 年 第四題}
+（申論；20 分）
+
+以下程式的時間複雜度（time complexity）Big-O 為何？（20 分）
+\begin{minted}[fontsize=\small]{c}
+int C(int N, int K)
+{
+       if ((K == 0) || (K == N))
+             return 1;
+       else if (K > N)
+             return 0;
+       else
+             return C(N-1, K-1) + C(N-1, K);
+  }
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{答案：$\Theta\bigl(\binom{N}{K}\bigr)$，以 $N$ 表示是 $O(2^N)$。} 下面設 $0 \le K \le N$
+（$K > N$ 時第一次呼叫就回傳 0，是 $O(1)$；$K < 0$ 不是合法輸入，會無窮遞迴）。
+
+這個函式用巴斯卡公式 $\binom{N}{K} = \binom{N-1}{K-1} + \binom{N-1}{K}$ 算組合數，回傳值就是
+$\binom{N}{K}$。 每次呼叫除了遞迴以外只做常數個比較和一次加法，所以時間和\textbf{呼叫次數}成正比。
+
+\textbf{寫成遞迴式。} 令 $T(N, K)$ 是呼叫次數：
+\[
+T(N, K) = \begin{cases}
+1, & K = 0 \text{ 或 } K = N, \\
+1 + T(N-1, K-1) + T(N-1, K), & 0 < K < N.
+\end{cases}
+\]
+從 $0 < K < N$ 出發，兩個子呼叫 $(N-1, K-1)$、$(N-1, K)$ 都還滿足 $0 \le K' \le N'$，所以
+\texttt{K > N} 那一支永遠不會在遞迴中出現。
+
+\textbf{數遞迴樹。} 畫出遞迴樹（資結書第~2.3~節）：
+\begin{itemize}
+\item 葉節點是 $K = 0$ 或 $K = N$ 的呼叫，各回傳 1；內部節點把兩個子節點的回傳值相加。 所以根的回傳值
+$\binom{N}{K}$ 等於葉節點的個數：葉節點恰有 $\binom{N}{K}$ 個。
+\item 每個內部節點恰好有兩個子節點。 這種樹的內部節點數比葉節點少 1，所以內部節點有 $\binom{N}{K} - 1$ 個。
+\end{itemize}
+總呼叫次數
+\[
+T(N, K) = 2\binom{N}{K} - 1,
+\]
+時間是 $\Theta\bigl(\binom{N}{K}\bigr)$。 例如 $C(4, 2)$：$\binom{4}{2} = 6$，呼叫 11 次。
+
+\textbf{用 $N$ 表示。} $\binom{N}{K} \le \sum_{j=0}^{N} \binom{N}{j} = 2^N$，所以時間是 $O(2^N)$。
+最差的 $K$ 是 $\lfloor N/2 \rfloor$，此時 $\binom{N}{\lfloor N/2 \rfloor} = \Theta(2^N / \sqrt{N})$，比 $2^N$ 只
+少一個 $\sqrt{N}$ 的因子，仍然是指數時間。 也可以直接從遞迴式看上界：令 $T(N) = \max_K T(N, K)$，
+則 $T(N) \le 2T(N-1) + 1$，$T(0) = 1$，解得 $T(N) \le 2^{N+1} - 1 = O(2^N)$。
+
+慢的原因是同一個子問題被重複算很多次（例如 $C(N-2, K-1)$ 會從 $C(N-1, K-1)$ 和 $C(N-1, K)$ 各算一次）。
+改用動態規劃填巴斯卡三角形，每個 $\binom{i}{j}$ 只算一次，時間降到 $O(NK)$（資結書第~18.1~節）。
+\end{pastsoln}

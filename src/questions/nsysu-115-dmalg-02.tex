@@ -1,0 +1,79 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-02}]{中山資工所資安組 115 學年度 第 3 題}
+（計算）
+
+\begin{enumerate}[label=(\alph*)]
+\item {[}5\%{]} How many two-factor unordered factorizations, where each factor is greater than 1, are there for 22,069,649?
+\item {[}5\%{]} In how many ways can 22,069,649 be factored into two or more factors, each greater than 1, with no regard to the order of the factors?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $11$；(b) $51$。
+
+\textbf{先分解質因數}。 $22{,}069{,}649$ 的各位數和是 $38$，不是 $3$ 的倍數；試除 $7$：
+$22{,}069{,}649 = 7 \times 3{,}152{,}807$，$3{,}152{,}807 = 7 \times 450{,}401$，$450{,}401 = 7 \times 64{,}343$，
+$64{,}343$ 不是 $7$ 的倍數（$7 \times 9191 = 64{,}337$，餘 $6$）。 繼續試除 $11, 13, \ldots$，到 $37$：
+$64{,}343 = 37 \times 1739$，$1739 = 37 \times 47$。 所以
+\[
+22{,}069{,}649 = 7^3 \cdot 37^2 \cdot 47 .
+\]
+下面記 $p = 7$、$q = 37$、$r = 47$，$N = p^3 q^2 r$。
+
+\textbf{(a)}。 $N$ 的正因數是 $p^a q^b r^c$，$0 \le a \le 3$、$0 \le b \le 2$、$0 \le c \le 1$，共
+$4 \cdot 3 \cdot 2 = 24$ 個。 每個因數 $d$ 和 $N/d$ 配成一對 $\{d, N/d\}$；$r$ 的次方是 $1$（奇數），$N$ 不是完全
+平方數，所以不會有 $d = N/d$，$24$ 個因數恰好配成 $12$ 對。 扣掉 $\{1, N\}$ 這一對（因數要大於 $1$），答案是
+$12 - 1 = \mathbf{11}$。
+
+\textbf{(b)}。 把 $N$ 寫成不計順序、每個都大於 $1$ 的因數的乘積，等於把 $6$ 個質因數
+$\{p, p, p, q, q, r\}$ 分成若干組，每組的乘積是一個因數；同一個質數的幾個複本彼此沒有分別。 令 $P(a, b)$ 是
+$p^a q^b$ 的分法數（包括「只有一個因數」，並約定 $P(0, 0) = 1$）。
+
+\textbf{第一步：看 $r$ 那一組}。 $r$ 只有一個，它所在的那一組是 $r \cdot p^i q^j$（$0 \le i \le 3$，$0 \le j \le 2$），
+剩下的 $p^{3-i} q^{2-j}$ 隨便分。 所以 $N$ 的分法總數（含只有一個因數 $N$ 本身）是
+\[
+\sum_{i=0}^{3} \sum_{j=0}^{2} P(3 - i, 2 - j) = \sum_{a=0}^{3} \sum_{b=0}^{2} P(a, b).
+\]
+
+\textbf{第二步：算 $P(a, b)$}。 只有一種質數時，$P(a, 0)$ 是整數 $a$ 的分割數：$P(1, 0) = 1$、$P(2, 0) = 2$
+（$p^2$；$p \cdot p$）、$P(3, 0) = 3$（$p^3$；$p^2 \cdot p$；$p \cdot p \cdot p$）；同理 $P(0, 1) = 1$、$P(0, 2) = 2$。
+其餘逐一列出（用 $\cdot$ 分隔各個因數）：
+\begin{itemize}
+\item $P(1, 1) = 2$：$pq$；$p \cdot q$。
+\item $P(2, 1) = 4$：$p^2 q$；$p^2 \cdot q$；$pq \cdot p$；$p \cdot p \cdot q$。 同理 $P(1, 2) = 4$。
+\item $P(3, 1) = 7$：$p^3 q$；$p^3 \cdot q$；$p^2 q \cdot p$；$p^2 \cdot pq$；$p^2 \cdot p \cdot q$；$pq \cdot p \cdot p$；
+$p \cdot p \cdot p \cdot q$。
+\item $P(2, 2) = 9$：$p^2 q^2$；$p^2 q \cdot q$；$p^2 \cdot q^2$；$p^2 \cdot q \cdot q$；$pq^2 \cdot p$；$pq \cdot pq$；
+$pq \cdot p \cdot q$；$p \cdot p \cdot q^2$；$p \cdot p \cdot q \cdot q$。
+\item $P(3, 2) = 16$：依含 $p$ 最多的那個因數分類。
+  \begin{itemize}
+  \item 含 $p^3$：$p^3 q^2$；$p^3 q \cdot q$；$p^3 \cdot q^2$；$p^3 \cdot q \cdot q$，共 $4$ 種。
+  \item 最多含 $p^2$：$p^2 q^2 \cdot p$；$p^2 q \cdot pq$；$p^2 q \cdot p \cdot q$；$p^2 \cdot pq^2$；$p^2 \cdot pq \cdot q$；
+  $p^2 \cdot p \cdot q^2$；$p^2 \cdot p \cdot q \cdot q$，共 $7$ 種。
+  \item 每個因數最多含一個 $p$：三個 $p$ 分在三個因數裡，$q^2$ 的分法是 $pq^2 \cdot p \cdot p$；$pq \cdot pq \cdot p$；
+  $pq \cdot p \cdot p \cdot q$；$p \cdot p \cdot p \cdot q^2$；$p \cdot p \cdot p \cdot q \cdot q$，共 $5$ 種。
+  \end{itemize}
+  合計 $4 + 7 + 5 = 16$。
+\end{itemize}
+
+\textbf{第三步：加總}。
+\begin{center}
+\begin{tabular}{c|ccc|c}
+\toprule
+$P(a, b)$ & $b = 0$ & $b = 1$ & $b = 2$ & 列和 \\
+\midrule
+$a = 0$ & 1 & 1 & 2 & 4 \\
+$a = 1$ & 1 & 2 & 4 & 7 \\
+$a = 2$ & 2 & 4 & 9 & 15 \\
+$a = 3$ & 3 & 7 & 16 & 26 \\
+\bottomrule
+\end{tabular}
+\end{center}
+總和 $4 + 7 + 15 + 26 = 52$。 這包括「只有一個因數 $N$」那一種，題目要兩個以上的因數，答案是
+$52 - 1 = \mathbf{51}$。
+
+檢查：依因數的個數分，$2, 3, 4, 5, 6$ 個因數的分法分別是 $11, 20, 14, 5, 1$ 種，和是 $51$；其中兩個因數的
+$11$ 種正是 (a) 的答案，六個因數的 $1$ 種是 $7 \cdot 7 \cdot 7 \cdot 37 \cdot 37 \cdot 47$。
+
+如果 $N$ 的質因數都相異（例如 $k$ 個相異質數的乘積），分法數就是把 $k$ 個相異物件分組的方法數，即
+Bell 數 $B_k$；這一題的 $N$ 有重複的質因數，所以要像上面這樣分類計算。
+\end{pastsoln}

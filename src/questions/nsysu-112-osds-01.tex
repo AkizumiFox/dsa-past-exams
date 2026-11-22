@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:nsysu-112-osds-01}]{中山資工所甲組 112 學年度 第 1 題（節錄 (b) 小題）}
+（追蹤）
+
+What are printed by each of the following C program?
+\begin{enumerate}[label=(\alph*), start=2]
+\item (10\%)
+\begin{minted}[fontsize=\small]{c}
+int b[ ]={ 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42};
+int h(int i) {
+   if (i==1)  {
+      printf("%d  ", b[i]);
+      return (b[1]);
+   }
+   else  if (i % 2 == 0) {
+      printf("%d   ", b[i]);
+      b[i/2] += i/2;
+      return (h(i/2));
+   }
+   else {
+      b[i+1] ++;
+      return (h(i+1));
+   }
+}
+int main( )
+{
+   h(9);
+}
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：印出 \texttt{41~~~37~~~35~~~34~~~32}（每個數後面接程式裡的空白）。
+
+（第 (a) 小題是 C 的位元運算，不屬資料結構，本書不收。）
+
+陣列從 $b[0] = 30$ 開始，所以一開始 $b[k] = 30 + k$。 $h$ 的規則：$i$ 是奇數（而且不是 $1$）時先把
+$b[i+1]$ 加 $1$，再呼叫 $h(i+1)$，不印東西；$i$ 是偶數時先印 $b[i]$，再把 $b[i/2]$ 加上 $i/2$，呼叫
+$h(i/2)$；$i = 1$ 時印 $b[1]$ 並結束。 每次呼叫都是尾端呼叫，照順序追蹤（資結書第~6.4~節）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+呼叫 & 情況 & 印出 & 對陣列的修改 \\
+\midrule
+$h(9)$ & 奇數 & & $b[10]$：$40 \to 41$ \\
+$h(10)$ & 偶數 & $b[10] = 41$ & $b[5]$：$35 \to 35 + 5 = 40$ \\
+$h(5)$ & 奇數 & & $b[6]$：$36 \to 37$ \\
+$h(6)$ & 偶數 & $b[6] = 37$ & $b[3]$：$33 \to 33 + 3 = 36$ \\
+$h(3)$ & 奇數 & & $b[4]$：$34 \to 35$ \\
+$h(4)$ & 偶數 & $b[4] = 35$ & $b[2]$：$32 \to 32 + 2 = 34$ \\
+$h(2)$ & 偶數 & $b[2] = 34$ & $b[1]$：$31 \to 31 + 1 = 32$ \\
+$h(1)$ & $i = 1$ & $b[1] = 32$ & 回傳 $32$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+要注意的是被印出的值都是「剛被前一步改過」的：$b[10]$ 在 $h(9)$ 加了 $1$，$b[6]$ 在 $h(5)$ 加了 $1$，
+$b[4]$ 在 $h(3)$ 加了 $1$，$b[2]$ 在 $h(4)$ 加了 $2$，$b[1]$ 在 $h(2)$ 加了 $1$。 而 $b[5]$、$b[3]$ 雖然
+被加大，之後的呼叫是 $h(5)$、$h(3)$，奇數不印，所以那兩個新值不會出現。 \texttt{main} 沒有用到回傳值。
+\end{pastsoln}

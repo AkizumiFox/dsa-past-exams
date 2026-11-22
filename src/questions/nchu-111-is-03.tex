@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:nchu-111-is-03}]{中興資工所乙組 111 學年度 第 3 題}
+（單選）
+
+(3 pts) What does the following function do for a given Linked List with first node as \textit{head}?
+\begin{minted}[fontsize=\small]{c}
+void fun1(struct node* head)
+{
+  if(head == NULL)
+    return;
+
+  fun1(head->next);
+  printf("%d  ", head->data);
+}
+\end{minted}
+\begin{enumerate}[label=(\alph*).]
+\item Prints all nodes of linked lists
+\item Prints all nodes of linked list in reverse order
+\item Prints alternate nodes of Linked List
+\item Prints alternate nodes in reverse order
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)。
+
+\texttt{fun1} 先遞迴處理「從下一個節點開始的串列」，回來之後才印自己。 以 $1 \to 2 \to 3$ 為例：
+\texttt{fun1(1)} 呼叫 \texttt{fun1(2)}，再呼叫 \texttt{fun1(3)}，再呼叫 \texttt{fun1(NULL)} 直接返回；
+接著依返回的順序印出：\texttt{fun1(3)} 印 $3$，\texttt{fun1(2)} 印 $2$，\texttt{fun1(1)} 印 $1$。
+輸出是 $3\ 2\ 1$。
+
+一般地，對串列長度歸納：空串列什麼都不印；長度 $k \ge 1$ 時先把後面 $k - 1$ 個反向印出（歸納假設），再印
+第一個，正好是整條串列的反向。 每個節點都會印到（不會跳過），所以是 (b)，不是 (a) 正向、也不是隔一個印
+的 (c)(d)。
+
+遞迴呼叫的深度是串列長度 $n$，用到 $\Theta(n)$ 的堆疊空間（資結書第~6.4~節）；如果先呼叫
+\texttt{printf} 再遞迴，印出的就是正向的順序 (a)。
+\end{pastsoln}

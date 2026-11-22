@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:gw3-099-ds-01}]{關務三等資訊處理 99 年 第一題}
+（申論；20 分）
+
+假設運算子（operator）的運算先後次序的規則（Precedence and Associativity）之優先順序如下：指標
+（pointer,→）、乘除、加減、比大小；同等類的運算子按照運算子在 infix expression 出現的優先次序（例如+、-
+為同一等類）。請列出如何利用堆疊（stack）轉換 infix expression：\ \texttt{a+b/c>(d->e*f+g)/h}\ 成 prefix
+表示法。（20 分）
+\end{pastexam}
+
+\begin{pastsoln}
+原卷把指標運算子印成「d- >e」，指的就是 \texttt{->}（題目說的 pointer,→），下面把它當成一個運算子。
+優先順序由高到低：\texttt{->}，\texttt{*} \texttt{/}，\texttt{+} \texttt{-}，\texttt{>}；同一等級由左往右算。
+
+\textbf{先確定答案。} 加滿括號：
+\[
+\bigl(a + (b / c)\bigr) > \Bigl(\bigl(((d \to e) * f) + g\bigr) / h\Bigr)
+\]
+括號裡的 \texttt{d->e} 最先算，再乘 \texttt{f}、加 \texttt{g}，括號整體除以 \texttt{h}；左邊先算
+\texttt{b/c} 再加 \texttt{a}；最後比大小。 每個運算子移到它那對括號的最前面，得到前序：
+\[
+\texttt{> + a / b c / + * -> d e f g h}
+\]
+
+\textbf{用堆疊轉換。} 前序的運算子在運算元前面，所以\textbf{由右往左}讀中序式，做法和中序轉後序
+（資結書第~6.3.3、6.3.5~節）對稱：
+\begin{itemize}
+\item 運算元直接輸出。
+\item 右括號 \texttt{)} 直接 push；讀到左括號 \texttt{(} 就一直 pop 並輸出，直到 pop 出 \texttt{)}（括號不輸出）。
+\item 運算子 $op$：只要堆疊頂端是運算子、而且優先順序\textbf{嚴格高於} $op$，就 pop 並輸出；然後 push $op$。
+同等級的不 pop，因為反著讀時，同等級中原本在右邊的要後算（結合性跟著反過來）。
+\item 讀完後把堆疊剩下的全部 pop 輸出。
+\item 最後把整個輸出\textbf{反過來}，就是前序。
+\end{itemize}
+追蹤（堆疊由底寫到頂）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀到 & 動作 & 堆疊 & 輸出（反向） \\
+\midrule
+\texttt{h} & 輸出 & & \texttt{h} \\
+\texttt{/} & 堆疊空，push & \texttt{/} & \texttt{h} \\
+\texttt{)} & push & \texttt{/ )} & \texttt{h} \\
+\texttt{g} & 輸出 & \texttt{/ )} & \texttt{h g} \\
+\texttt{+} & 頂端是 \texttt{)}，push & \texttt{/ ) +} & \texttt{h g} \\
+\texttt{f} & 輸出 & \texttt{/ ) +} & \texttt{h g f} \\
+\texttt{*} & \texttt{+} 比 \texttt{*} 低，push & \texttt{/ ) + *} & \texttt{h g f} \\
+\texttt{e} & 輸出 & \texttt{/ ) + *} & \texttt{h g f e} \\
+\texttt{->} & \texttt{*} 比 \texttt{->} 低，push & \texttt{/ ) + * ->} & \texttt{h g f e} \\
+\texttt{d} & 輸出 & \texttt{/ ) + * ->} & \texttt{h g f e d} \\
+\texttt{(} & pop 到 \texttt{)} 為止 & \texttt{/} & \texttt{h g f e d -> * +} \\
+\texttt{>} & pop \texttt{/}（較高），push & \texttt{>} & \texttt{h g f e d -> * + /} \\
+\texttt{c} & 輸出 & \texttt{>} & \texttt{h g f e d -> * + / c} \\
+\texttt{/} & \texttt{>} 比 \texttt{/} 低，push & \texttt{> /} & \texttt{h g f e d -> * + / c} \\
+\texttt{b} & 輸出 & \texttt{> /} & \texttt{h g f e d -> * + / c b} \\
+\texttt{+} & pop \texttt{/}（較高），push & \texttt{> +} & \texttt{h g f e d -> * + / c b /} \\
+\texttt{a} & 輸出 & \texttt{> +} & \texttt{h g f e d -> * + / c b / a} \\
+結束 & pop 全部 & & \texttt{h g f e d -> * + / c b / a + >} \\
+\bottomrule
+\end{tabular}
+\end{center}
+把輸出反過來：
+\[
+\texttt{> + a / b c / + * -> d e f g h},
+\]
+和加括號的結果一樣。
+
+另一種常見的堆疊做法是用兩個堆疊（運算子堆疊、運算元堆疊）由左往右讀：每次 pop 一個運算子時，從
+運算元堆疊 pop 出右、左兩個字串，組成「運算子 左 右」再 push 回去。 兩種做法答案相同，作答時寫出
+其中一種的完整過程即可。
+\end{pastsoln}

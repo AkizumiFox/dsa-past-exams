@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-15}]{臺大資工所 111 學年度 第 15 題}
+（單選）
+
+(5 points) In the red-black tree with 26 nodes that reaches the solution of the problem above,
+what is the maximum height of the tree? A tree with one node is assumed to have height 1.
+\begin{enumerate}[label=(\Alph*)]
+\item 5
+\item 6
+\item 7
+\item 8
+\item 9
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) 6。
+
+「上一題」是歷屆試題~\ref{px:ntu-111-dsaa-14}：$n$ 個節點的紅黑樹裡，恰好有一個紅色孩子的黑色節點
+最多 $n/2$ 個。 這一題的樹有 $26$ 個節點、$13$ 個這樣的黑色節點。
+
+\textbf{第一步：達到上界時樹的樣子是固定的。} 上一題的證明是「$k$ 個黑色節點，配上 $k$ 個不同的紅色
+孩子，$n \ge 2k$」。 $n = 2k = 26$ 時等號成立，所以：
+\begin{itemize}
+\item 黑色節點恰好 $13$ 個，全部都是「恰好一個紅色孩子」的；
+\item 紅色節點恰好 $13$ 個，每一個都是某個黑色節點的那個紅色孩子。
+\end{itemize}
+所以每個黑色節點都是：一個孩子紅色，另一個孩子是黑色節點或 \textsc{nil}；紅色節點的兩個孩子是
+黑色節點或 \textsc{nil}。
+
+\textbf{第二步：黑高決定了節點數。} 設黑色節點 $x$ 往下到 \textsc{nil} 經過 $b$ 個黑色節點（含 $x$）。
+$x$ 的紅色孩子的兩個孩子、和 $x$ 的另一個孩子，往下都只經過 $b - 1$ 個黑色節點。 $b = 1$ 時它們都是
+\textsc{nil}；$b \ge 2$ 時它們不能是 \textsc{nil}（\textsc{nil} 的黑高是 $0$），一定是黑高 $b - 1$
+的黑色節點，而且同樣符合第一步的形狀。 所以以 $x$ 為根的子樹的節點數 $g(b)$ 滿足
+\[
+g(1) = 2, \qquad g(b) = \underbrace{1}_{x} + \underbrace{1}_{\text{紅色孩子}} + 3\,g(b-1),
+\]
+得 $g(1) = 2$、$g(2) = 8$、$g(3) = 26$、$g(4) = 80$。 $26$ 個節點只能是 $b = 3$，樹就是上一題的
+$T_3$。
+
+\textbf{第三步：高度。} 每條從根往下的路徑恰好經過 $3$ 個黑色節點，紅色節點不相鄰，所以最多再有
+$3$ 個紅色節點，路徑上最多 $6$ 個節點，高度 $\le 6$。 從根開始一直往紅色孩子走、再往它的孩子走：
+黑、紅、黑、紅、黑、紅，正好 $6$ 個節點，所以高度是 $6$。 這一題的樹只有這一種形狀，「最大高度」
+就是 $6$，選 (B)。
+
+(A) 5 比實際的高度小。 (C) 7、(D) 8、(E) 9 都超過 $2b = 6$；一般紅黑樹的上界
+$2\log_2(n+1) = 2\log_2 27 \approx 9.5$（資結書定理~10.4）只說高度不超過 $9$，是因為它沒有用到
+「每個黑色節點都有一個紅色孩子」這個額外條件。
+\end{pastsoln}

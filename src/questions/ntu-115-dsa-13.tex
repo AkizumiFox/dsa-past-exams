@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-115-dsa-13}]{臺大資工所 115 學年度 第 13 題}
+（單選）
+
+(4 points) Which algorithm guarantees finding the median (the $n/2$-th order statistic) of an array of $n$ elements in $O(n)$ worst-case time?
+
+
+\begin{enumerate}[label=(\Alph*)]
+\item Sorting the array and then picking the median.
+\item Quickselect using random pivots.
+\item Using a max-heap or min-heap to extract the median.
+\item The median-of-medians selection algorithm.
+\item None of the other choices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+中位數的中位數（資結書第~16.3~節、虛擬碼~16.3）每組 $5$ 個取中位數，再遞迴取這些中位數的中位數當基準，
+保證兩邊都至少去掉約 $3n/10$ 個，$T(n) \le T(\lceil n/5 \rceil) + T(7n/10 + O(1)) + O(n)$，解出最壞 $O(n)$
+（資結書定理~16.6）。
+\begin{itemize}
+\item (A) 先排序：比較排序最壞要 $\Omega(n \log n)$（資結書定理~15.1），不是 $O(n)$。
+\item (B) 隨機基準的 quickselect：期望 $O(n)$（資結書定理~16.3），但最壞情況（每次都選到最大或最小）是
+$\Theta(n^2)$，不是「保證」。
+\item (C) 用堆積：建堆積 $O(n)$，再取出 $n/2$ 次各 $O(\log n)$，共 $\Theta(n \log n)$。
+\item (E)：(D) 是對的。
+\end{itemize}
+\end{pastsoln}

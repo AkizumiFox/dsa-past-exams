@@ -1,0 +1,81 @@
+\begin{pastexam}[label={px:gk3-096-ds-03}]{高考三級資訊處理 96 年 第三題}
+（申論；25 分）
+
+遞迴演算法（recursive algorithm）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 令 $A$ 為 $N$ 個數的整數陣列（Integer array）。請用虛擬碼（Pseudo Code）描述求陣列 $A$ 中最大值的遞迴演算法。（5 分）
+\item[㈡] 令 $A$ 為 $N$ 個數的整數陣列（Integer array）。假設 $A$ 中的數字已經由小到大排列好。請用儘量接近程式語言的虛擬碼（Pseudo Code）描述搜尋整數 $X$ 是否存在陣列 $A$ 中的二元搜尋（Binary Search）的遞迴演算法（recursive algorithm）。請說明此一搜尋法的時間複雜度。（10 分）
+\item[㈢] 請用儘量接近程式語言的虛擬碼（pseudo code）描述計算費氏數列（Fibonacci numbers）第 $N$ 項的遞迴演算法。請問該遞迴演算法的時間複雜度（time complexity）是否為多項式時間（polynomial time）複雜度？（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+三小題都是「寫遞迴、列遞迴式、解遞迴式」（資結書第~2~章）。 陣列的註標用 $1..N$。
+
+\textbf{㈠ 最大值}。 $A[1..k]$ 的最大值是「$A[1..k-1]$ 的最大值」和 $A[k]$ 較大的那個；$k = 1$ 時就是
+$A[1]$。 呼叫 \proc{Max}$(A, N)$（$N \ge 1$）。
+\begin{pseudo}[unbreakable]{遞迴求 $A[1..k]$ 的最大值}
+\Function{Max}{$A, k$}
+    \If{$k = 1$}
+        \State \Return $A[1]$
+    \EndIf
+    \State $m \gets$ \Call{Max}{$A, k - 1$}
+    \If{$A[k] > m$}
+        \State \Return $A[k]$
+    \Else
+        \State \Return $m$
+    \EndIf
+\EndFunction
+\end{pseudo}
+正確性用對 $k$ 的歸納法：$k = 1$ 只有一個數，對；假設 \proc{Max}$(A, k-1)$ 傳回 $A[1..k-1]$ 的最大值
+$m$，則 $\max(m, A[k])$ 就是 $A[1..k]$ 的最大值。 時間 $T(k) = T(k-1) + \Theta(1)$，$T(1) = \Theta(1)$，
+展開得 $T(N) = \Theta(N)$。
+
+\textbf{㈡ 遞迴二元搜尋}。 在 $A[\mathit{lo}..\mathit{hi}]$ 裡找 $X$，第一次呼叫
+\proc{BSearch}$(A, X, 1, N)$；找到傳回位置，找不到傳回 $0$。
+\begin{pseudo}[unbreakable]{遞迴二元搜尋（$A$ 由小到大排好）}
+\Function{BSearch}{$A, X, \mathit{lo}, \mathit{hi}$}
+    \If{$\mathit{lo} > \mathit{hi}$}
+        \State \Return $0$ \Comment{範圍是空的，$X$ 不在 $A$ 裡}
+    \EndIf
+    \State $\mathit{mid} \gets \lfloor (\mathit{lo} + \mathit{hi}) / 2 \rfloor$
+    \If{$A[\mathit{mid}] = X$}
+        \State \Return $\mathit{mid}$
+    \ElsIf{$X < A[\mathit{mid}]$}
+        \State \Return \Call{BSearch}{$A, X, \mathit{lo}, \mathit{mid} - 1$}
+    \Else
+        \State \Return \Call{BSearch}{$A, X, \mathit{mid} + 1, \mathit{hi}$}
+    \EndIf
+\EndFunction
+\end{pseudo}
+正確性：$A$ 排好序，$X < A[\mathit{mid}]$ 時 $A[\mathit{mid}..\mathit{hi}]$ 都 $\ge A[\mathit{mid}] > X$，
+$X$ 只可能在左半；另一邊同理。 每次遞迴範圍至少少一個（$\mathit{mid}$ 被排除），所以一定會停。
+
+時間：每層只做常數個比較，然後進入一個大小不超過一半的範圍：
+\[
+T(N) = T(\lfloor N/2 \rfloor) + \Theta(1),\qquad T(0) = \Theta(1).
+\]
+由主定理（$a = 1$、$b = 2$、$f(N) = \Theta(1) = \Theta(N^{\log_2 1})$，資結書定理~2.4）或直接展開，
+$T(N) = \Theta(\log N)$。 最壞情況（找不到）遞迴深度約 $\lfloor \log_2 N \rfloor + 1$ 層；最好情況第一次就
+在中間找到，$\Theta(1)$。 所以最壞與平均是 $O(\log N)$。
+
+\textbf{㈢ 費氏數列}。 定義 $F_0 = 0$、$F_1 = 1$、$F_n = F_{n-1} + F_{n-2}$（$n \ge 2$），直接照定義寫：
+\begin{pseudo}[unbreakable]{照定義遞迴計算 $F_n$}
+\Function{Fib}{$n$}
+    \If{$n \le 1$}
+        \State \Return $n$
+    \EndIf
+    \State \Return \Call{Fib}{$n - 1$} $+$ \Call{Fib}{$n - 2$}
+\EndFunction
+\end{pseudo}
+令 $C(n)$ 是計算 \proc{Fib}$(n)$ 的總呼叫次數：$C(0) = C(1) = 1$，$C(n) = 1 + C(n-1) + C(n-2)$。 令
+$D(n) = C(n) + 1$，得 $D(n) = D(n-1) + D(n-2)$，$D(0) = D(1) = 2$，所以 $D(n) = 2F_{n+1}$、
+$C(n) = 2F_{n+1} - 1$。 例如 $C(5) = 2 \cdot 8 - 1 = 15$。 每次呼叫本身是常數時間，所以時間
+$T(N) = \Theta(F_{N+1}) = \Theta(\phi^{N})$，$\phi = (1 + \sqrt 5)/2 \approx 1.618$。
+
+\textbf{不是多項式時間}。 只要說明 $T(N)$ 比任何多項式長得快。 由 $C(n) \ge 2C(n-2)$（因為
+$C(n-1) \ge C(n-2)$），得 $C(N) \ge 2^{\lfloor N/2 \rfloor} = \Omega(\sqrt{2}^{\,N})$。 對任何常數 $k$，
+$\lim_{N \to \infty} N^k / \sqrt{2}^{\,N} = 0$，指數函數終究超過 $N^k$，所以 $T(N)$ 不是 $O(N^k)$，不是
+多項式時間，是指數時間。 原因是同一個 $F_i$ 被重算很多次（例如算 $F_5$ 時 $F_2$ 被算了 $3$ 次）；
+用陣列記住算過的值，或由小到大迭代，就只要 $\Theta(N)$ 次加法（資結書第~18.1~節）。
+\end{pastsoln}

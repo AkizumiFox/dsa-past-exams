@@ -1,0 +1,23 @@
+paper: ncu-111-dsa
+volume: 2
+school: 中央
+dept: 資工所
+year: 111
+subject: 資料結構與演算法
+instructions: '一、複選題(50 分)，每題 5 分，全對才給分，答錯倒扣 1 分，倒扣至複選題 0 分為止。二、多選題(10 分)，每題 5 分，每個選項答對得 1 分，答錯倒扣 1 分，倒扣至多選題 0 分為止。三、問答題(40 分) 請用深色筆書寫，勿用鉛筆。'
+questions:
+  - {id: ncu-111-dsa-01, label: 複選題第 1 題, chapter: 6}
+  - {id: ncu-111-dsa-02, label: 複選題第 2 題, chapter: 18}
+  - {id: ncu-111-dsa-03, label: 複選題第 3 題, chapter: 10}
+  - {id: ncu-111-dsa-04, label: 複選題第 4 題, chapter: 8}
+  - {id: ncu-111-dsa-05, label: 複選題第 5 題, chapter: 6}
+  - {id: ncu-111-dsa-06, label: 複選題第 6 題, chapter: 4}
+  - {id: ncu-111-dsa-07, label: 複選題第 7 題, chapter: 6}
+  - {id: ncu-111-dsa-08, label: 複選題第 8 題, chapter: 12}
+  - {id: ncu-111-dsa-09, label: 複選題第 9 題, chapter: 5}
+  - {id: ncu-111-dsa-10, label: 複選題第 10 題, chapter: 22}
+  - {id: ncu-111-dsa-11, label: 多選題第 11 題, chapter: 14}
+  - {id: ncu-111-dsa-12, label: 多選題第 12 題, chapter: 28}
+  - {id: ncu-111-dsa-13, label: 問答題第 1 題, chapter: 24}
+  - {id: ncu-111-dsa-14, label: 問答題第 2 題, chapter: 18}
+  - {id: ncu-111-dsa-15, label: 問答題第 3 題, chapter: 13}

@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ntu-114-dsa-16}]{臺大資網所 114 學年度 第 16 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Consider the following 0-1 integer linear program $P$:
+\[\begin{array}{ll}
+\text{maximize} & 2\cdot x_1+0\cdot x_2+2\cdot x_3+5\cdot x_4\\
+\text{subject to} & 2x_1+x_2+3x_3+4x_4\le 8\\
+ & 4x_1+x_2+2x_3+3x_4\le 8\\
+ & x_1+8x_2+x_3+7x_4\le 8\\
+ & x_1,x_2,x_3,x_4\in\{0,1\}
+\end{array}\]
+Let $\alpha$ be the number of feasible solutions to $P$. Let $\beta$ be the number of optimal solutions to $P$. Let
+$\gamma$ be the integrality gap. Let $P'$ be the relaxed linear program of $P$. Let $\nu_4$ be the
+four-dimensional volume of the convex polytope that consists of all feasible solutions to $P'$. Let $\nu_3$ be the
+three-dimensional volume of the convex polyhedron that consists of all optimal solutions to $P'$. Select all
+correct statement(s) below.
+
+(A)~$\alpha=8$ \hfill (B)~$\beta\neq1$ \hfill (C)~$\gamma=1$ \hfill (D)~$\nu_4<1$ \hfill (E)~$\nu_3=0$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(D)、(E)。 線性規劃和整數規劃不在資結書的範圍；用到的只有「鬆弛」和「整數間隙」兩個觀念：把
+$x_i \in \{0, 1\}$ 放寬成 $0 \le x_i \le 1$ 得到線性規劃 $P'$，整數間隙 $\gamma$ 是兩者最佳值的比（最大化問題寫成
+$\mathrm{OPT}(P') / \mathrm{OPT}(P)$，有的書寫倒數；兩種寫法都只在兩者相等時才是 $1$）。
+
+\textbf{(A)(B) 列出所有可行解}。 第三條限制 $x_1 + 8x_2 + x_3 + 7x_4 \le 8$ 很緊：
+\begin{itemize}
+\item $x_2 = 1$ 時已經用掉 $8$，其他都要是 $0$：只有 $(0,1,0,0)$，三條限制分別是 $1, 1, 8$，可行，目標值 $0$。
+\item $x_2 = 0$、$x_4 = 1$ 時剩 $1$，$x_1 + x_3 \le 1$：$(0,0,0,1)$、$(1,0,0,1)$、$(0,0,1,1)$。 檢查前兩條限制：
+$(1,0,0,1)$ 是 $6, 7$；$(0,0,1,1)$ 是 $7, 5$，都可行。 目標值 $5, 7, 7$。
+\item $x_2 = x_4 = 0$：$(x_1, x_3)$ 四種。 $(1, 1)$ 的第二條限制是 $4 + 2 = 6$、第一條 $2 + 3 = 5$、第三條 $2$，都可行；
+其他三種顯然可行。 目標值：$(0,0)$ 是 $0$，$(1,0)$、$(0,1)$ 是 $2$，$(1,1)$ 是 $4$。
+\end{itemize}
+共 $1 + 3 + 4 = 8$ 個可行解，$\alpha = 8$，(A) 對。 最大的目標值是 $7$，由 $(1,0,0,1)$ 和 $(0,0,1,1)$ 兩個解取到，
+$\beta = 2 \ne 1$，(B) 對。
+
+\textbf{(C) 鬆弛後的最佳值是 $8$}。 取 $x = (\frac89, 0, \frac89, \frac89)$：三條限制都是 $\frac89 \cdot 9 = 8$，剛好滿足，
+目標值 $\frac89 (2 + 2 + 5) = 8$。 它是最佳解：把三條限制分別乘 $\frac25, \frac15, \frac25$ 相加，
+\[
+\tfrac25(2, 1, 3, 4) + \tfrac15(4, 1, 2, 3) + \tfrac25(1, 8, 1, 7) = (2,\ 3.8,\ 2,\ 5),
+\]
+右邊是 $\frac25 \cdot 8 + \frac15 \cdot 8 + \frac25 \cdot 8 = 8$。 因為 $x \ge 0$，
+\[
+2x_1 + 0x_2 + 2x_3 + 5x_4 \le 2x_1 + 3.8x_2 + 2x_3 + 5x_4 \le 8
+\]
+對 $P'$ 的每個可行解都成立（這是對偶的證明）。 所以 $\mathrm{OPT}(P') = 8 > 7 = \mathrm{OPT}(P)$，$\gamma = 8/7 \ne 1$，
+(C) 錯。
+
+\textbf{(E) 最佳解只有一個點}。 目標值要等於 $8$，上式兩個不等號都要取等號：第一個要求 $3.8 x_2 = 0$，即 $x_2 = 0$；第二個
+要求三條限制都取等號（乘數 $\frac25, \frac15, \frac25$ 都是正的）。 於是
+\[
+2x_1 + 3x_3 + 4x_4 = 8,\quad 4x_1 + 2x_3 + 3x_4 = 8,\quad x_1 + x_3 + 7x_4 = 8 ,
+\]
+這個 $3 \times 3$ 方程組的係數行列式是 $2(14 - 3) - 3(28 - 3) + 4(4 - 2) = 22 - 75 + 8 = -45 \ne 0$，解唯一，就是
+$(\frac89, \frac89, \frac89)$。 $P'$ 的最佳解集合只有一個點，三維體積 $\nu_3 = 0$，(E) 對。
+
+\textbf{(D) $\nu_4 < 1$}。 $P'$ 的可行區域在單位超立方體 $[0, 1]^4$ 裡，立方體的體積是 $1$。 點 $(1, 1, 1, 1)$ 附近
+（例如所有 $x_i > 0.9$ 的小立方體，體積 $10^{-4} > 0$）違反第一條限制（$2 + 1 + 3 + 4 = 10 > 8$，各座標都大於 $0.9$ 時
+左邊大於 $9$），整塊不在可行區域裡，所以 $\nu_4 \le 1 - 10^{-4} < 1$，(D) 對。 （實際數值約 $0.438$。）
+\end{pastsoln}

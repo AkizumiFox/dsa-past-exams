@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntut-114-ci-02}]{北科大資工所 114 學年度 第 2 題}
+（是非）
+
+Mark by \textbf{True} or \textbf{False} each of the followings:
+\begin{enumerate}[label=(\arabic*)]
+\item With Polish (or prefix) notation, the parentheses are necessary to override the operator precedence. (2 pts)
+\item Removing at the tail of a singly linked list needs O(1) time in worse case. (2 pts)
+\item If $T$ is a proper binary tree and let $e$ and $i$ denote the numbers of external and internal nodes, respectively, then $e$=$i$+1. (2 pts)
+\item There is an efficient way to construct a binary heap with a collection of $n$ entries in linear time. (2 pts)
+\item Suppose problem A can be reduced to problem B in linear time. If problem B can be solved in O($n^2$), then problem A can be solved in O($n^2$). (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) False；(2) False；(3) True；(4) True；(5) True。
+
+這題五個小題分屬第~6、5、7、8、28~章，放在第~7~章。
+
+\textbf{(1) False}。 前序式（波蘭表示法）不需要括號。 每個運算子都知道自己有幾個運算元，從左往右讀
+（或從右往左用堆疊求值）時，運算子作用在哪些運算元上是唯一確定的，運算順序完全由位置決定，沒有
+優先順序的問題（資結書第~6.3.5~節）。 例如 $(a + b) * c$ 的前序是 $*\,{+}\,a\,b\,c$，$a + b * c$ 的
+前序是 $+\,a\,{*}\,b\,c$，兩者不用括號就分得開。 需要括號的是中序式。
+
+\textbf{(2) False}。 刪掉最後一個節點後，要把\textbf{倒數第二個}節點的 \texttt{next} 改成 \texttt{NULL}。
+單向串列只能往後走，找倒數第二個必須從頭走過去，最壞 $\Theta(n)$（資結書第~5.1~節）。 就算另外存了
+尾端指標也一樣：尾端指標指的是最後一個節點，拿不到它的前一個。 在尾端\textbf{插入}才是 $O(1)$；
+要在尾端刪除做到 $O(1)$，得用雙向串列。
+
+\textbf{(3) True}。 proper（full）二元樹的每個內部節點恰有兩個子節點，外部節點（葉節點）沒有子節點。
+數邊：每個內部節點往下有 $2$ 條邊，共 $2i$ 條；樹有 $e + i$ 個節點，邊數是 $e + i - 1$。 所以
+$2i = e + i - 1$，$e = i + 1$。 這就是資結書定理~7.2 的 $n_0 = n_2 + 1$（proper 二元樹沒有度數 $1$ 的
+節點）。
+
+\textbf{(4) True}。 由下往上建堆積：把 $n$ 個數直接放進陣列，從最後一個內部節點往前，對每個節點做
+一次往下調整（資結書虛擬碼~8.3 的 \proc{Build-Max-Heap}）。 高度為 $h$ 的節點最多 $\lceil n/2^{h+1}
+\rceil$ 個，往下調整 $O(h)$ 步，總和 $\sum_h \frac{n}{2^{h+1}} O(h) = O(n)$（資結書定理~8.1）。 一個一個
+插入才是 $O(n \lg n)$。
+
+\textbf{(5) True}。 設 A 的輸入大小為 $n$。 歸約在 $O(n)$ 時間內把它轉成 B 的輸入，因為輸出要一個一個
+寫出來，B 的輸入大小 $m$ 也是 $O(n)$。 用 B 的演算法花 $O(m^2) = O(n^2)$，再把答案（判定問題直接
+就是答案）交回去，總時間 $O(n) + O(n^2) = O(n^2)$。 這正是歸約的用法：A 不會比 B 難（資結書
+第~28.3~節，那裡用的是多項式時間歸約，道理相同）。
+\end{pastsoln}

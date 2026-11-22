@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncu-111-dsa-06}]{中央資工所 111 學年度 複選題第 6 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+We have a 2-dimension integer array arr[5][5],\\
+Which of the followings are equal to arr[2][3]?\\
+(A) \texttt{*(*arr+13)} \quad (B) \texttt{(*(arr+2))[3]} \quad
+(C) \texttt{*((*(arr+2))+3)} \quad (D) \texttt{(*arr+2)[3]}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)。
+
+先複習兩件事（資結書第~4.1~節「C 的陣列」）：\texttt{a[i]} 就是
+\texttt{*(a + i)}；\texttt{arr} 在運算式裡變成指向第 $0$ 列的指標，加 $1$ 跳過一整
+列（$5$ 個 \texttt{int}），\texttt{*arr} 是第 $0$ 列，再變成指向 \texttt{arr[0][0]}
+的 \texttt{int *}，加 $1$ 只跳一個 \texttt{int}。 \texttt{arr[2][3]} 在列優先排列裡
+前面有 $2 \times 5 + 3 = 13$ 個元素。
+\begin{itemize}
+\item (A) 對。 \texttt{*arr + 13} 從 \texttt{arr[0][0]} 往後數 $13$ 個 \texttt{int}，
+正是 \texttt{arr[2][3]} 的位置。 嚴格照 C 標準，\texttt{*arr} 只是一個 $5$ 格的陣列，
+指標加 $13$ 超出了它的範圍，屬於未定義行為；考卷問的是位址怎麼算，實際的編譯器也都得
+到 \texttt{arr[2][3]}，所以算對。 自己寫程式時不要這樣用。
+\item (B) 對。 \texttt{*(arr + 2)} 是第 $2$ 列 \texttt{arr[2]}，再取 \texttt{[3]}。
+\item (C) 對。 \texttt{*(arr + 2)} 變成指向 \texttt{arr[2][0]} 的指標，加 $3$ 指到
+\texttt{arr[2][3]}，再取值。 這就是 \texttt{arr[2][3]} 展開後的樣子。
+\item (D) 錯。 \texttt{(*arr + 2)[3]} $=$ \texttt{*(*arr + 2 + 3)} $=$
+\texttt{*(*arr + 5)}，位移 $5 = 1 \times 5 + 0$，是 \texttt{arr[1][0]}。
+\end{itemize}
+\end{pastsoln}

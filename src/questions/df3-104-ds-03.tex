@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:df3-104-ds-03}]{地方三等資訊處理 104 年 第三題}
+（申論；20 分）
+
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請說明使用何種資料結構及其演算法，可有效判斷一運算式（expression）中的巢狀（nested）
+括號是否正確配對（matched）。（10 分）
+\item[㈡] 請以兩個運算式實例 $\{A*[B-(C+D)+8]-16\}$ 及 $\{A+[B-(C+5])\}$，分別說明此演算法判斷
+的過程及結果。（10 分）
+\end{itemize}
+（注意：未說明判斷的過程，不予計分）
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠ 用堆疊。} 巢狀括號的規則是「最後打開的，要最先關掉」，正好是堆疊後進先出的順序
+（資結書第~6.1.4~節）。 由左到右掃描運算式：
+\begin{itemize}[nosep]
+\item 遇到左括號 \texttt{(}、\texttt{[}、\texttt{\{}：推入堆疊。
+\item 遇到右括號：堆疊是空的，表示多了右括號，不配對；否則彈出頂端，它必須是同一種的左括號，
+不同種就不配對。
+\item 其他字元（變數、數字、運算子）跳過。
+\item 掃完時堆疊必須是空的，否則有左括號沒被關掉，不配對。
+\end{itemize}
+\begin{pseudo}{括號配對}
+\Function{Balanced}{$s[1..n]$}
+    \State $S \gets$ 空堆疊
+    \For{$i \gets 1$ \To $n$}
+        \If{$s[i]$ 是左括號}
+            \State \Call{Push}{$S, s[i]$}
+        \ElsIf{$s[i]$ 是右括號}
+            \If{$S$ 是空的}
+                \State \Return \FALSE \Comment{右括號多了}
+            \EndIf
+            \State $t \gets$ \Call{Pop}{$S$}
+            \If{$t$ 和 $s[i]$ 不是同一種}
+                \State \Return \FALSE \Comment{種類不對}
+            \EndIf
+        \EndIf
+    \EndFor
+    \State \Return ($S$ 是空的) \Comment{不空就是左括號多了}
+\EndFunction
+\end{pseudo}
+\textbf{為什麼對}：正確配對時，每個右括號對應的是「離它最近、還沒被關掉的左括號」，而那正是
+堆疊頂端；三種錯誤（右括號多、種類不對、左括號多）分別在第 8、11、12 行抓到。 每個字元處理
+一次，每次推入、彈出 $O(1)$，時間 $\Theta(n)$，堆疊最多放 $n$ 個，空間 $O(n)$。
+
+\textbf{㈡} 只列出括號字元（其他字元跳過），堆疊由左到右寫，右邊是頂端。
+
+\textbf{(1) $\{A*[B-(C+D)+8]-16\}$}
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 讀到 & 動作 & 之後的堆疊 \\
+\midrule
+1 & \texttt{\{} & 推入 & \texttt{\{} \\
+2 & \texttt{[} & 推入 & \texttt{\{ [} \\
+3 & \texttt{(} & 推入 & \texttt{\{ [ (} \\
+4 & \texttt{)} & 彈出 \texttt{(}，和 \texttt{)} 同種，配對 & \texttt{\{ [} \\
+5 & \texttt{]} & 彈出 \texttt{[}，和 \texttt{]} 同種，配對 & \texttt{\{} \\
+6 & \texttt{\}} & 彈出 \texttt{\{}，和 \texttt{\}} 同種，配對 & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+掃完時堆疊是空的，過程中沒有錯誤，\textbf{結果：正確配對}。
+
+\textbf{(2) $\{A+[B-(C+5])\}$}
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 讀到 & 動作 & 之後的堆疊 \\
+\midrule
+1 & \texttt{\{} & 推入 & \texttt{\{} \\
+2 & \texttt{[} & 推入 & \texttt{\{ [} \\
+3 & \texttt{(} & 推入 & \texttt{\{ [ (} \\
+4 & \texttt{]} & 彈出 \texttt{(}，和 \texttt{]} \textbf{不同種} & （停止） \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 4 步讀到 \texttt{]} 時，最近一個還沒關掉的是 \texttt{(}，種類不符，演算法在這裡傳回
+\FALSE，\textbf{結果：括號沒有正確配對}。 錯在 \texttt{(C+5]} 用 \texttt{]} 去關 \texttt{(}，
+後面的 \texttt{)\}} 不用再看。 注意這個式子三種括號各自的個數都是一左一右，只數個數會誤判成
+對的，所以一定要用堆疊檢查「順序」。
+\end{pastsoln}

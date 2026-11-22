@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntu-112-dsa-01}]{臺大資工所 112 學年度 第 1 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+Assuming we have $n$ data points. Among the variant characteristics of the data points, please
+select the correct descriptions.
+\begin{enumerate}[label=(\Alph*)]
+\item If the worst-case running time is the most important, \textit{merge sort} can be a good choice with
+$O(n\log n)$ time.
+\item If the input happens to be sorted already, \textit{bubble sort} can be a best choice with $O(n)$ time.
+\item If the input array is in random order and the average sorting time is most important, \textit{quick
+sort} can be a good choice with $O(n\log n)$ time.
+\item If the exchanges of the items in the array are very expensive, \textit{selection sort} will incur the
+least ``swaps'' or ``moves''.
+\item If the input array consists of integers in the range $1\ldots n^k$, \textit{radix sort} with radix $n$
+with $O(k\log n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)。
+
+各種排序的時間和交換次數見資結書第~14.7~節的比較表。 逐項看：
+\begin{itemize}
+\item \textbf{(A) 對。} 合併排序不管輸入長什麼樣子，遞迴式都是 $T(n) = 2T(n/2) + \Theta(n)$，
+最壞情況也是 $\Theta(n \lg n)$（資結書第~14.4~節）。 只在乎最壞情況時它是好選擇（堆積排序也是）。
+\item \textbf{(B) 對。} 這裡的氣泡排序指「一趟沒有交換就提早結束」的版本（資結書虛擬碼~14.1）。
+輸入已經排好時，第一趟比較 $n - 1$ 次、沒有交換，馬上結束，$\Theta(n)$。 合併、快速、堆積排序
+在這種輸入上都要 $\Omega(n \lg n)$（快速排序取最左邊當基準時甚至是 $\Theta(n^2)$），所以氣泡排序
+（和插入排序一樣）是最好的選擇之一。 沒有提早結束的版本不論輸入都要 $\Theta(n^2)$，但題目說
+「can be」，用提早結束的版本就成立。
+\item \textbf{(C) 對。} 輸入是隨機順序時，快速排序的期望比較次數約 $1.39\, n \lg n$，
+$\Theta(n \lg n)$（資結書定理~14.3），而且內層迴圈很短、原地排序，實務上通常是最快的比較排序。
+\item \textbf{(D) 對。} 選擇排序每一趟找出剩下的最小值，只做一次交換，總共最多 $n - 1$ 次交換，
+$\Theta(n)$ 次搬移。 其他常見的排序：氣泡排序和插入排序最壞要 $\Theta(n^2)$ 次交換（搬移），
+合併排序每一層都把 $n$ 個數複製一次，共 $\Theta(n \lg n)$ 次；快速排序、堆積排序也是
+$\Theta(n \lg n)$ 次交換。 搬移很貴時選擇排序最省。
+\item \textbf{(E) 錯。} 範圍 $1$ 到 $n^k$ 的整數寫成以 $n$ 為基數，最多 $k$ 位（$n^k$ 本身是
+$k + 1$ 位，可以先把每個數減 $1$）。 基數排序做 $k$ 趟計數排序，每趟 $\Theta(n + n) = \Theta(n)$
+（資結書第~15.2.2~節），總共 $\Theta(kn)$，不是 $O(k \log n)$。 光是讀一遍 $n$ 個輸入就要
+$\Omega(n)$，比 $k \log n$ 大得多，所以 $O(k \log n)$ 不可能。
+\end{itemize}
+\end{pastsoln}

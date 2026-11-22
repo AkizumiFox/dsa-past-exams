@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ntu-114-dsa-01}]{臺大資網所 114 學年度 第 1 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Consider the following randomized algorithm, which prints out some number of exclamation marks (!)
+and some number of asterisks (*). Assume that the size of A is $n$ initially. What are the expected numbers of
+!'s and *'s that the algorithm prints out? Choose the tightest possible answers.
+\begin{minted}[fontsize=\small]{text}
+RandomizedPrint(A):
+    n = length(A)
+    if n <= 1:
+        print "!"
+        return
+    for i in {0,...,n-1}:
+        print "*"
+    Choose a uniformly random integer p in {1,...,n-1}
+    RandomizedPrint(A[:p])
+    RandomizedPrint(A[p:])
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item !: $O(\log n)$, *: $O(n\log n)$
+\item !: $O(\log n)$, *: $O(n^2)$
+\item !: $O(n)$, *: $O(n\log n)$
+\item !: $O(n)$, *: $O(n^2)$
+\item !: $O(n\log n)$, *: $O(n^2)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。 $n \ge 1$；\texttt{A[:p]} 是前 $p$ 個、\texttt{A[p:]} 是其餘 $n - p$ 個，$1 \le p \le n - 1$，兩段都至少
+有一個元素。
+
+\textbf{驚嘆號：恰好 $n$ 個}。 令 $E(n)$ 是印出的 ! 個數（不必取期望值，它是確定的）。 $E(1) = 1$；$n \ge 2$ 時
+$E(n) = E(p) + E(n - p)$。 對 $n$ 做強歸納：假設比 $n$ 小的都有 $E(k) = k$，則 $E(n) = p + (n - p) = n$。 直觀來說，
+遞迴樹的每片葉子是一個長度 $1$ 的片段，$n$ 個元素恰好分成 $n$ 片。 所以 ! 的個數是 $\Theta(n)$，$O(\log n)$ 不夠，
+$O(n \log n)$ 不是最緊的。
+
+\textbf{星號：期望 $2nH_n - 2n = \Theta(n \log n)$}。 令 $S(n)$ 是 * 個數的期望值。 $S(1) = 0$；$n \ge 2$ 時這一層印 $n$
+個，$p$ 在 $1, \ldots, n - 1$ 中均勻分布：
+\[
+S(n) = n + \frac{1}{n-1}\sum_{p=1}^{n-1} \bigl(S(p) + S(n-p)\bigr) = n + \frac{2}{n-1}\sum_{p=1}^{n-1} S(p) .
+\]
+這和快速排序平均比較次數的遞迴式同一型（資結書第~14.5~節）。 兩邊乘 $n - 1$，再減去 $n - 1$ 的同一式乘 $n - 2$
+（$n \ge 3$）：
+\[
+(n-1)S(n) - (n-2)S(n-1) = n(n-1) - (n-1)(n-2) + 2S(n-1) = 2(n-1) + 2S(n-1),
+\]
+即 $(n-1)S(n) = nS(n-1) + 2(n-1)$。 兩邊除以 $n(n-1)$：$\frac{S(n)}{n} = \frac{S(n-1)}{n-1} + \frac{2}{n}$。 由
+$S(2) = 2$ 往上疊加：
+\[
+\frac{S(n)}{n} = 1 + 2\Bigl(\frac{1}{3} + \cdots + \frac{1}{n}\Bigr) = 2H_n - 2,
+\qquad S(n) = 2nH_n - 2n ,
+\]
+$H_n = 1 + \frac12 + \cdots + \frac1n = \ln n + O(1)$（資結書定理~A.7），所以 $S(n) = \Theta(n \log n)$。 例如
+$S(3) = 5$、$S(4) = 26/3$。
+
+所以 ! 是 $\Theta(n)$、* 的期望是 $\Theta(n \log n)$，選項中最緊的是 (C)。 (A)(B) 的 ! 太小；(D) 的 * 給 $O(n^2)$，
+是最壞情況（每次都切成 $1$ 和 $n - 1$）的量，不是期望值的最緊上界；(E) 兩個都不緊。
+\end{pastsoln}

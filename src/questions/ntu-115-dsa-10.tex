@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntu-115-dsa-10}]{臺大資工所 115 學年度 第 10 題}
+（單選）
+
+(4 points) Consider an array $[4,5,1,10,2,7]$. What does the array look like after \proc{Build-Max-Heap} (bottom-up heapify) is performed, a process that converts the array into a max-heap by adjusting subtrees starting from the bottom non-leaf nodes and working up to the root?
+
+
+(A)~$[10,5,7,4,2,1]$ \qquad (B)~$[10,7,5,4,2,1]$ \qquad (C)~$[1,2,4,5,7,10]$ \qquad (D)~$[10,7,1,5,2,4]$ \qquad (E)~None of the other choices.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+照資結書第~8.2~節由下而上建堆積：陣列索引 $1$--$6$，最後一個非葉節點是 $\lfloor 6/2 \rfloor = 3$，對
+$i = 3, 2, 1$ 依序做 \proc{Max-Heapify}（往下篩：和較大的子節點比，比它小就交換，繼續往下）。 節點 $i$ 的
+子節點是 $2i$、$2i + 1$。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+$i$ & 動作 & 陣列 \\
+\midrule
+ & 開始 & $[4, 5, 1, 10, 2, 7]$ \\
+$3$ & $A[3] = 1$，子節點 $A[6] = 7$，交換 & $[4, 5, 7, 10, 2, 1]$ \\
+$2$ & $A[2] = 5$，子節點 $10, 2$，和 $10$ 交換；$5$ 到了第 $4$ 格，沒有子節點 & $[4, 10, 7, 5, 2, 1]$ \\
+$1$ & $A[1] = 4$，子節點 $10, 7$，和 $10$ 交換 & $[10, 4, 7, 5, 2, 1]$ \\
+ & $4$ 到了第 $2$ 格，子節點 $5, 2$，和 $5$ 交換 & $[10, 5, 7, 4, 2, 1]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果是 $[10, 5, 7, 4, 2, 1]$，選 (A)。
+
+其他選項：(B) $[10, 7, 5, 4, 2, 1]$ 是由大到小排好的陣列，也是最大堆積，但建堆積只做上面這些交換，不會排序。
+(C) 是由小到大排好，不是最大堆積（根不是最大值）。 (D) $[10, 7, 1, 5, 2, 4]$ 中第 $3$ 格的 $1$ 比它的子節點
+$4$（第 $6$ 格）小，不是最大堆積。
+\end{pastsoln}

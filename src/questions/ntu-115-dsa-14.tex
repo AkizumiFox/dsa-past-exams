@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-115-dsa-14}]{臺大資工所 115 學年度 第 14 題}
+（單選）
+
+(4 points) A queue $Q$ is implemented using two stacks $S_{in}$ and $S_{out}$ as follows. If each \proc{Push} or \proc{Pop} with the stack has a cost of $\Theta(1)$, what is the amortized cost per operation over a sequence of $m$ legal queue operations, starting from an empty state with the first operation being \proc{Enqueue}?
+
+\proc{Enqueue}$(Q,x)$
+\par\smallskip\noindent\begin{tabular}{@{}r@{\quad}l@{}}
+1 & \proc{Push}$(Q.S_{in},x)$
+\end{tabular}\par\smallskip
+\proc{Dequeue}$(Q)$
+\par\smallskip\noindent\begin{tabular}{@{}r@{\quad}l@{}}
+1 & \textbf{if} $Q.S_{out}$ is not empty\\
+2 & \qquad \textbf{return} \proc{Pop}$(Q.S_{out})$\\
+3 & \textbf{while} $Q.S_{in}$ is not empty\\
+4 & \qquad \proc{Push}$(Q.S_{out},\proc{Pop}(Q.S_{in}))$\\
+5 & \textbf{return} \proc{Pop}$(Q.S_{out})$
+\end{tabular}\par\smallskip
+
+
+(A)~$\Theta(1)$ \qquad (B)~$\Theta(\lg m)$ \qquad (C)~$\Theta(m)$ \qquad (D)~$\Theta(m^2)$ \qquad (E)~None of the other choices.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+用聚集分析（資結書第~3.1~節）。 追蹤任一個元素 $x$：\proc{Enqueue} 時 push 進 $S_{\mathit{in}}$ 一次；第一次在
+\proc{Dequeue} 的第 3--4 行被搬家時，從 $S_{\mathit{in}}$ pop 一次、push 進 $S_{\mathit{out}}$ 一次；最後被
+\proc{Dequeue} 取出時從 $S_{\mathit{out}}$ pop 一次。 元素只會從 $S_{\mathit{in}}$ 搬到 $S_{\mathit{out}}$，不會搬回去，
+所以每個元素一生最多 $4$ 次堆疊操作。 $m$ 個操作裡最多 $m$ 個 \proc{Enqueue}，每個 \proc{Dequeue} 除了搬家
+以外只有常數次判斷，總成本
+\[
+\le 4m + O(m) = O(m),
+\]
+每個操作平攤 $O(1)$；每個操作至少花常數，所以是 $\Theta(1)$。
+
+也可以用記帳法（資結書第~3.2~節）：\proc{Enqueue} 收 $4$ 元，$1$ 元付 push，另外 $3$ 元存在元素身上，日後搬家
+的 pop、push 和最後的 pop 都由它支付；\proc{Dequeue} 收 $1$ 元付判斷。 存款永遠不是負的。
+
+單一次 \proc{Dequeue} 最壞要搬 $\Theta(m)$ 個（例如先 enqueue $m/2$ 個再 dequeue），所以 (C) 是單次的最壞
+成本，不是平攤成本；(B)(D) 都不對，(A) 對，(E) 也就不對。
+\end{pastsoln}

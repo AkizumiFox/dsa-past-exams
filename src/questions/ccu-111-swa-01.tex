@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ccu-111-swa-01}]{中正資工所甲組 111 學年度 第 1 題}
+（單選）
+
+(2\%) The maximum number of comparisons needed for the binary search of a 2,000 element
+array is
+
+(a)~1,999 \qquad (b)~9 \qquad (c)~11 \qquad (d)~13
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)。
+
+照考卷的慣例，二分搜尋每一輪把要找的 $x$ 和中間那一格比一次（相等、較小、較大三種結果算一
+次比較）。 資結書第~17.1~節證明了：還要找的格數 $k$ 每一輪之後最多剩 $\lfloor k/2 \rfloor$，
+所以迴圈最多跑 $\lfloor \lg n \rfloor + 1$ 輪。 $2^{10} = 1024 \le 2000 < 2048 = 2^{11}$，
+$\lfloor \lg 2000 \rfloor = 10$，最多 $11$ 次。
+
+這個上界達得到：$x$ 比全部都大時每一輪都往右，格數依序是
+\[
+2000 \to 1000 \to 500 \to 250 \to 125 \to 62 \to 31 \to 15 \to 7 \to 3 \to 1 \to 0,
+\]
+每個箭頭是一次比較，共 $11$ 次。
+
+\begin{itemize}
+\item (a) $1999$：這是循序搜尋那一級的次數，二分搜尋用不到這麼多。 錯。
+\item (b) $9$：上面的例子做完 $9$ 次比較後還剩 $3$ 格沒找，無法確定答案。 錯。
+\item (c) $11$：上面算的最壞情況。 對。
+\item (d) $13$：比最壞情況還多。 錯。
+\end{itemize}
+
+如果把「是否相等」和「是否較小」算成兩次比較，最壞是 $22$ 次，不在選項裡，所以題目用的是一
+輪算一次的算法。
+\end{pastsoln}

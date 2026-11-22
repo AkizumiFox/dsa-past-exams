@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ncku-115-prog-09}]{成大資訊聯招 115 學年度 演算法是非第 12 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+[2\%] Consider an algorithm with a running time function $\mathrm{T(n)} = 50n^2 + 200n\log n + 10^6$.
+Is it mathematically correct to claim that $\mathrm{T(n)} = O(n^2)$?\\
+(A) True \qquad (B) False
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) True。
+
+照定義（資結書第~1.5~節），要找正數 $c$ 和 $n_0$，使得 $n \ge n_0$ 時 $T(n) \le c\,n^2$。 取 $n_0 = 1$：
+$n \ge 1$ 時 $\log n \le n$、$1 \le n^2$，所以
+\[
+T(n) = 50n^2 + 200 n \log n + 10^6 \le 50n^2 + 200 n^2 + 10^6 n^2 = 1000250\, n^2 .
+\]
+取 $c = 1000250$ 就成立。 常數很大沒關係，$O$ 只問成長的速度。 事實上 $T(n) \ge 50 n^2$，所以
+$T(n) = \Theta(n^2)$，說它是 $O(n^2)$ 當然對。 常數項 $10^6$ 只影響小的 $n$，$n$ 很大時主導的是 $50n^2$。
+\end{pastsoln}

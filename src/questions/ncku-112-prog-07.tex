@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ncku-112-prog-07}]{成大資訊聯招 112 學年度 第 7 題}
+（選擇）
+
+{[5\%]} A hash table in size of 10 adopts open addressing with linear probing, where its hash function
+is defined as h(k)=k\%10. The table is initially empty. We insert 6 data items into the table, resulting
+in the following table. Which of the following choices gives a possible order for inserting the data
+items to the table?
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+0 & \\ \hline
+1 & \\ \hline
+2 & 22 \\ \hline
+3 & 43 \\ \hline
+4 & 14 \\ \hline
+5 & 32 \\ \hline
+6 & 26 \\ \hline
+7 & 53 \\ \hline
+8 & \\ \hline
+9 & \\ \hline
+\end{tabular}
+\end{center}
+(A)~32, 14, 53, 26, 22, 43\\
+(B)~42, 22, 13, 26, 53, 32\\
+(C)~22, 43, 14, 32, 53, 26\\
+(D)~43, 22, 14, 26, 32, 53\\
+(E)~14, 43, 22, 32, 26, 53
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)(E)。
+
+線性探測（資結書第~12.3~節）從 $h(k)$ 開始往後找第一個空格。 一個鍵落在 $h(k) + t$，表示它插入時
+$h(k), \ldots, h(k) + t - 1$ 都已經有鍵，而 $h(k) + t$ 是空的。 逐個看：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+鍵 & $h(k)$ & 所在格 & 插入前必須已經有鍵的格 \\
+\midrule
+$22$ & $2$ & $2$ & 無 \\
+$43$ & $3$ & $3$ & 無 \\
+$14$ & $4$ & $4$ & 無 \\
+$32$ & $2$ & $5$ & $2, 3, 4$（$22, 43, 14$） \\
+$26$ & $6$ & $6$ & 無 \\
+$53$ & $3$ & $7$ & $3, 4, 5, 6$（$43, 14, 32, 26$） \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以 $32$ 要在 $22, 43, 14$ 之後，$53$ 要在 $43, 14, 32, 26$ 之後。 另外，落在自己家（$h(k)$）的鍵，插入時那一格
+必須是空的；會搶走這些格子的只有 $32$（從 $2$ 開始找）和 $53$（從 $3$ 開始找），而它們都排在後面，所以上面
+兩個條件就夠了。
+
+\begin{itemize}
+\item (A) $32$ 第一個插入，會直接放在第 $2$ 格。 錯。
+\item (B) 有 $42$、$13$，表裡沒有這兩個數（而且少了 $43$、$14$）。 錯。
+\item (C) $53$ 在 $26$ 之前：插入 $53$ 時第 $3$--$5$ 格有鍵、第 $6$ 格是空的，$53$ 放進第 $6$ 格，之後 $26$ 只能
+放第 $7$ 格，和表不同。 錯。
+\item (D) $43, 22, 14, 26, 32, 53$：$32$ 在 $22, 43, 14$ 之後；$53$ 在最後。 照著插一遍得到的表和題目一樣。 對。
+\item (E) $14, 43, 22, 32, 26, 53$：$32$ 在前三個之後，$53$ 在最後。 對。
+\end{itemize}
+\end{pastsoln}

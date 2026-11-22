@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nchu-115-is-08}]{中興資工所乙組 115 學年度 第 8 題}
+（單選；每題 2 分，答錯不倒扣）
+
+What is the primary advantage of using divide-and-conquer algorithms?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item They avoid recursion entirely and use only iterative loops.
+\item They break a problem into smaller subproblems, solve them independently, and combine their
+solutions efficiently.
+\item They always guarantee constant-time performance regardless of input size.
+\item They require no additional memory beyond a few local variables.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+分治的三步是：分成幾個較小的同類子問題、各自遞迴解、把子問題的答案合起來（資結書第~17~章）。
+子問題互不重疊，各解各的；合併做得快時，整體就快，例如合併排序的
+$T(n) = 2T(n/2) + \Theta(n) = \Theta(n \log n)$。
+\begin{itemize}
+\item A 錯：分治天生是遞迴的。 有些可以改寫成迴圈（例如由下而上的合併排序、迴圈版的二分
+搜尋），但「完全不用遞迴」不是它的特色，更不是優點。
+\item B 對：就是分治的定義。
+\item C 錯：分治的時間會隨 $n$ 增加，二分搜尋 $\Theta(\log n)$、合併排序 $\Theta(n \log n)$，
+沒有常數時間的保證。
+\item D 錯：遞迴本身要堆疊空間（二分搜尋 $\Theta(\log n)$ 層），合併排序還要 $\Theta(n)$ 的
+暫存陣列。
+\end{itemize}
+\end{pastsoln}

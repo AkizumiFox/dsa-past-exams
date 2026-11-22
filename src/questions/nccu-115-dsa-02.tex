@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:nccu-115-dsa-02}]{政大資科所 115 學年度 第 2 題}
+（單選）
+
+(5\%) A queue is implemented using two stacks, $S_{in}$ and $S_{out}$. The implementation ensures the
+FIFO property by defining the operations as follows:
+\begin{itemize}
+\item Enqueue: The new element is simply pushed onto $S_{in}$.
+\item Dequeue:
+\begin{itemize}
+\item If $S_{out}$ is not empty, the top element is popped from $S_{out}$.
+\item If $S_{out}$ is empty, all elements are first transferred from $S_{in}$ to $S_{out}$ (by repeatedly
+popping from $S_{in}$ and pushing onto $S_{out}$, and then the top element is popped from $S_{out}$.
+\end{itemize}
+\end{itemize}
+What is the amortized time complexity of the dequeue operation?
+
+(A)~$O(1)$ \qquad (B)~$O(\log n)$ \qquad (C)~$O(n)$ \qquad (D)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+原題的左括號「(by repeatedly popping ...」沒有對應的右括號，不影響題意。 下面把一次 push 或 pop
+的成本算成 $1$。
+
+\textbf{實際成本}。 Enqueue 是一次 push，成本 $1$。 Dequeue 在 $S_{out}$ 不空時是一次 pop，成本
+$1$；$S_{out}$ 空的時候，若 $S_{in}$ 有 $t$ 個元素，要 $t$ 次 pop、$t$ 次 push 搬過去，再 pop
+一次，成本 $2t + 1$。 所以單一次 dequeue 最壞是 $\Theta(n)$，但這種貴的 dequeue 不會常常發生。
+
+\textbf{聚集法}（資結書第~3.1~節）。 看任意 $m$ 個操作組成的序列，其中 $e$ 次 enqueue、$d$ 次
+dequeue。 每個元素一生最多經過四次堆疊操作：推入 $S_{in}$、從 $S_{in}$ 彈出、推入 $S_{out}$、從
+$S_{out}$ 彈出，而且「搬家」對每個元素最多發生一次（搬到 $S_{out}$ 之後不會再回到 $S_{in}$）。
+所以總成本不超過 $4e \le 4m$，平均每個操作 $O(1)$。
+
+\textbf{位能法}（資結書第~3.3~節）。 取位能 $\Phi = 2\,|S_{in}|$，一開始是 $0$，永遠 $\ge 0$。
+\begin{itemize}
+\item Enqueue：實際成本 $1$，$|S_{in}|$ 加 $1$，位能加 $2$，平攤成本 $1 + 2 = 3$。
+\item Dequeue，$S_{out}$ 不空：實際成本 $1$，位能不變，平攤成本 $1$。
+\item Dequeue，$S_{out}$ 空、$S_{in}$ 有 $t$ 個：實際成本 $2t + 1$，$S_{in}$ 被清空，位能減少
+$2t$，平攤成本 $(2t + 1) - 2t = 1$。
+\end{itemize}
+每個操作的平攤成本都是常數，dequeue 的平攤時間是 $O(1)$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $O(1)$：如上。 對。
+\item (B) $O(\log n)$：搬家的成本由先前的 enqueue 付掉，跟 $\log n$ 沒有關係。 錯。
+\item (C) $O(n)$：這是單一次 dequeue 的最壞情況，不是平攤時間。 錯。
+\item (D) $O(n\log n)$：連單次的最壞情況都沒有這麼大。 錯。
+\end{itemize}
+\end{pastsoln}

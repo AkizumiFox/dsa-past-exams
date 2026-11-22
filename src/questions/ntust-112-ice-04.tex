@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ntust-112-ice-04}]{臺科大資工所 112 學年度 第 4 題}
+（問答）
+
+(5\%) Alice tries to insert a set of keys $[17,88,62,30,28,77,90,45,51]$ sequentially into a fresh
+hash table with size 3 based on the linear probing strategy $g(x,i)=(h(x)+i)\bmod M$, where $M$ is
+the size of the hash table and $h(x)=x\bmod M$. If the overflow condition happens, rehash will be
+performed by doubling the table size and computing the new hash value for the elements from the
+beginning in the old table. Following that, the new table continues to be filled with uninserted
+elements. Please write down the final result of the hash table.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最後的表大小 $M = 12$：
+\begin{center}
+\small
+\begin{tabular}{l*{12}{c}}
+\toprule
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
+\midrule
+鍵 & -- & -- & 62 & 51 & 28 & 77 & 30 & 88 & 17 & 90 & 45 & -- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+「overflow」讀成「要插入時表已經滿了，線性探測找不到空位」。 這時表的大小加倍，依舊表的位置
+$0, 1, 2, \ldots$ 的順序把舊的鍵用新的 $M$ 重新插入，再繼續插入還沒放的鍵（資結書第~12.3~節的線性
+探測、第~12.5~節的加倍再雜湊）。
+
+\textbf{$M = 3$。}
+\begin{itemize}
+\item $17 \bmod 3 = 2$，放在 $2$。
+\item $88 \bmod 3 = 1$，放在 $1$。
+\item $62 \bmod 3 = 2$，$2$ 被占，試 $(2 + 1) \bmod 3 = 0$，放在 $0$。 表：$[62, 88, 17]$，滿了。
+\item $30$：表滿，overflow，加倍成 $M = 6$。
+\end{itemize}
+
+\textbf{$M = 6$。} 先依舊表的順序重新插入 $62, 88, 17$：$62 \bmod 6 = 2$；$88 \bmod 6 = 4$；
+$17 \bmod 6 = 5$。 表：$[-, -, 62, -, 88, 17]$。 接著繼續：
+\begin{itemize}
+\item $30 \bmod 6 = 0$，放在 $0$。
+\item $28 \bmod 6 = 4$，$4$、$5$、$0$ 被占，放在 $1$。
+\item $77 \bmod 6 = 5$，$5$、$0$、$1$、$2$ 被占，放在 $3$。 表：$[30, 28, 62, 77, 88, 17]$，滿了。
+\item $90$：表滿，overflow，加倍成 $M = 12$。
+\end{itemize}
+
+\textbf{$M = 12$。} 依舊表的順序重新插入 $30, 28, 62, 77, 88, 17$：
+\begin{itemize}
+\item $30 \bmod 12 = 6$，放在 $6$；$28 \bmod 12 = 4$，放在 $4$；$62 \bmod 12 = 2$，放在 $2$；
+$77 \bmod 12 = 5$，放在 $5$。
+\item $88 \bmod 12 = 4$，$4$、$5$、$6$ 被占，放在 $7$。
+\item $17 \bmod 12 = 5$，$5$、$6$、$7$ 被占，放在 $8$。
+\end{itemize}
+再繼續插入剩下的鍵：
+\begin{itemize}
+\item $90 \bmod 12 = 6$，$6$、$7$、$8$ 被占，放在 $9$。
+\item $45 \bmod 12 = 9$，$9$ 被占，放在 $10$。
+\item $51 \bmod 12 = 3$，放在 $3$。
+\end{itemize}
+九個鍵都放完，得到上面的表。 注意重新插入的順序會影響結果：例如 $88$ 和 $28$ 在 $M = 12$ 時都雜湊到
+$4$，照舊表的順序是 $28$（舊位置 $1$）先放、$88$（舊位置 $4$）後放，所以 $28$ 在 $4$、$88$ 被擠到 $7$。
+\end{pastsoln}

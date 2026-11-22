@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:nccu-111-dsa-04}]{政大資科所 111 學年度 第 4 題}
+（設計）
+
+(10\%) Design Depth First Search algorithm, \textit{DFS-search($G$, $s$)}, traversing a graph $G$ from a source vertex $s$ using the above stack operations.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}。 $G = (V, E)$ 有 $n$ 個頂點、$m$ 條邊，用鄰接串列存（資結書第~21.2~節）：
+$\mathit{Adj}[u]$ 是 $u$ 的鄰居串列，每個節點有 $\mathit{vertex}$ 和 $\mathit{next}$。 堆疊操作用
+第 3 題的 \proc{Push}、\proc{Pop}、\proc{Top}、\proc{Is-Empty}（歷屆試題~\ref{px:nccu-111-dsa-03}）。
+「拜訪」一個頂點就是對它做題目要的事（例如印出來）。
+
+遞迴的 DFS 每次走到一個沒去過的鄰居就往下鑽，鄰居都看完了才退回上一層。 改用自己的堆疊時，
+堆疊裡放「正在處理、還沒退回的頂點」，另外用 $\mathit{cur}[u]$ 記住 $u$ 的鄰居串列看到哪裡
+（資結書第~21.4.6~節、虛擬碼~21.4 的做法）。
+
+\begin{pseudo}{用堆疊做 DFS}
+\Procedure{DFS-Search}{$G, s$}
+    \For{每個頂點 $u \in V$}
+        \State $\mathit{visited}[u] \gets \FALSE$
+        \State $\mathit{cur}[u] \gets \mathit{Adj}[u]$ 的第一個節點
+    \EndFor
+    \State $S \gets$ 空堆疊 \Comment{\proc{List-Init}$(S)$}
+    \State 拜訪 $s$；$\mathit{visited}[s] \gets \TRUE$
+    \State \Call{Push}{$S, s$}
+    \While{\textbf{not} \Call{Is-Empty}{$S$}}
+        \State $u \gets \Call{Top}{S}$ \Comment{目前所在的頂點}
+        \If{$\mathit{cur}[u] \ne \NIL$} \Comment{$u$ 還有鄰居沒看}
+            \State $v \gets \mathit{cur}[u].\mathit{vertex}$
+            \State $\mathit{cur}[u] \gets \mathit{cur}[u].\mathit{next}$
+            \If{$\mathit{visited}[v] = \FALSE$}
+                \State 拜訪 $v$；$\mathit{visited}[v] \gets \TRUE$
+                \State \Call{Push}{$S, v$} \Comment{往下走到 $v$}
+            \EndIf
+        \Else \Comment{$u$ 的鄰居都看完了，退回去}
+            \State \Call{Pop}{$S$}
+        \EndIf
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 這個程序和遞迴版一步一步對應：堆疊由底到頂是遞迴版「目前呼叫堆疊上的那幾層」，
+頂端 $u$ 就是遞迴版正在執行的那一層。 遞迴版在 $u$ 的 \textbf{for} 迴圈前進一個鄰居，對應第 11、12 行；
+遇到沒拜訪過的鄰居就遞迴呼叫，對應第 14、15 行的拜訪並推進堆疊；$u$ 的鄰居看完、遞迴返回，對應第 17
+行的 \proc{Pop}。 所以拜訪頂點的順序和遞迴版的 DFS 完全一樣。 另外：
+\begin{itemize}
+\item 每個頂點只拜訪一次：拜訪時立刻標成 \TRUE，第 13 行只對 \FALSE 的頂點拜訪。
+\item 從 $s$ 走得到的頂點都會被拜訪：假設有一個走得到的 $w$ 沒被拜訪，取 $s$ 到 $w$ 路徑上第一個沒被
+拜訪的頂點 $y$，它前一個頂點 $x$ 被拜訪過，所以 $x$ 被推進過堆疊；$x$ 要被彈出，$\mathit{cur}[x]$ 必須
+走到 \NIL，途中一定看過鄰居 $y$，那時 $y$ 沒被拜訪就會被拜訪，矛盾。
+\item 走不到的頂點不會被拜訪：只有從堆疊頂端沿著一條邊才會拜訪新頂點。
+\end{itemize}
+
+\textbf{複雜度}。 每個頂點最多推進、彈出各一次，堆疊裡最多 $n$ 個頂點。 迴圈每做一輪，要嘛讓某個
+$\mathit{cur}[u]$ 前進一格（全部加起來是鄰接串列的總長度，無向圖 $2m$、有向圖 $m$），要嘛彈出一個頂點
+（最多 $n$ 次），所以迴圈最多 $O(n + m)$ 輪，每輪 $\Theta(1)$。 加上初始化 $\Theta(n)$，總時間
+$\Theta(n + m)$，額外空間 $\Theta(n)$。 用鄰接矩陣存圖時，找鄰居要掃整列，時間變成 $\Theta(n^2)$。
+
+\textbf{另一種常見寫法}：堆疊裡放「等著拜訪的頂點」。 推進 $s$；每次 \proc{Pop} 出一個 $u$，拜訪過就
+跳過，否則拜訪它，再把它所有沒拜訪過的鄰居反著順序推進堆疊。 這樣也是 DFS，拜訪順序和遞迴版相同，
+但同一個頂點可能被推進好幾次，堆疊最多要放 $\Theta(m)$ 個元素。 要注意\textbf{不能}在推進堆疊時就
+標成已拜訪、彈出時不再檢查：那樣走出來的順序已經不是 DFS（資結書第~21.4.6~節有反例）。
+\end{pastsoln}

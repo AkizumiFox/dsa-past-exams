@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nchu-115-is-17}]{中興資工所乙組 115 學年度 第 17 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You are implementing a GPS navigation system that computes the shortest path from a user's
+current location to a destination. All road weights (distances) are non-negative. Which
+algorithm should be used?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item Bellman--Ford algorithm, which handles negative weights but is slower.
+\item Floyd--Warshall algorithm, which computes all-pairs shortest paths.
+\item Dijkstra's algorithm with a min-priority queue for efficient relaxation.
+\item Depth-first search, which always finds the shortest path in weighted graphs.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+從一個起點出發、邊權非負，正是 Dijkstra 演算法的適用範圍（資結書第~25.2~節）。 用二元堆積當
+優先佇列，時間 $O((|V| + |E|) \log |V|)$；道路圖很稀疏（$|E|$ 和 $|V|$ 同一級），這比其他選項快
+得多。 只要到某一個終點時，終點一被取出就可以停。
+\begin{itemize}
+\item A：Bellman--Ford 算得出正確答案，但 $O(|V||E|)$ 慢很多，而它能處理負邊的長處在這裡用不到。
+\item B：Floyd--Warshall 算所有點對，$\Theta(|V|^3)$，只需要一個起點時浪費。
+\item C 對。
+\item D 錯：DFS 找到的是「某一條」路徑，連在無權圖上都不保證最短（無權圖要用 BFS），有權圖
+更不用說。 「always finds the shortest path」是錯的敘述。
+\end{itemize}
+\end{pastsoln}

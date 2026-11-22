@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-113-dsa-07}]{臺大資工所 113 學年度 第 7 題}
+（複選；每個選項單獨計分）
+
+(5 points) When we compute all $m_{i,j}$'s with Equation 1, we must follow an order of $i$ and $j$ so
+that the $m$'s on the right-hand side are all known when we compute $m_{i,j}$. Please select all the
+correct orders in the following choices.
+
+（Equation 1 是第 6 題的 $m_{i,j}=\min_{i\le k<j}(m_{i,k}+m_{k+1,j}+r_ic_kc_j)$。）
+\begin{enumerate}[label=\Alph*.]
+\item decreasing order of $i+j$
+\item increasing order of $i+j$
+\item increasing order of $(i-j)^2$
+\item decreasing order of $(i-j)^3$
+\item increasing order of $|(i+j)(i-j)|$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：C、D、E。
+
+先整理依賴關係。 $i < j$ 時，$m_{i,j}$ 用到的是 $m_{i,k}$ 和 $m_{k+1,j}$，$i \le k < j$：同一列
+（列號 $i$）左邊的格子，以及同一欄（欄號 $j$）下面的格子。 一個順序是對的，只要每個 $m_{i,j}$
+用到的格子都排在它前面。 只要找到一個值 $\mathrm{key}(i, j)$，讓每個被用到的格子的 key 都
+\textbf{嚴格小於} $m_{i,j}$ 的 key，依 key 由小到大算就一定對：key 相同的格子彼此不依賴，誰
+先誰後都可以。 反過來，只要有一個被用到的格子排在後面，順序就錯。 以下都假設 $n \ge 3$。
+
+A.\ 錯。 $m_{1,3}$ 用到 $m_{1,2}$；$1 + 3 = 4 > 1 + 2 = 3$，依 $i + j$ 遞減時 $m_{1,3}$ 先算，
+這時 $m_{1,2}$ 還沒算。
+
+B.\ 錯。 $m_{1,3}$ 也用到 $m_{2,3}$；$2 + 3 = 5 > 4$，依 $i + j$ 遞增時 $m_{2,3}$ 排在後面。 看
+依賴關係就知道 $i + j$ 不行：左邊的格子 $i + k$ 比較小，下面的格子 $(k + 1) + j$ 比較大，不管
+遞增或遞減，總有一邊排錯。
+
+C.\ 對。 $(i - j)^2 = (j - i)^2$，由小到大就是依鏈長由短到長，正是資結書虛擬碼~18.4
+的順序（資結書第~18.2~節）。 被用到的 $m_{i,k}$ 和 $m_{k+1,j}$ 的 $j - i$ 分別是
+$k - i$ 和 $j - k - 1$，都小於 $j - i$，平方也嚴格比較小。
+
+D.\ 對。 只會用到 $i \le j$ 的格子，$(i - j)^3 = -(j - i)^3 \le 0$。 依 $(i - j)^3$ 遞減，就是依
+$(j - i)^3$ 遞增，也就是依鏈長由短到長，和 C 相同。
+
+E.\ 對。 $i \le j$ 時 $|(i + j)(i - j)| = (i + j)(j - i) = j^2 - i^2$。 被用到的格子：
+$m_{i,k}$ 的 key 是 $k^2 - i^2 < j^2 - i^2$（因為 $k < j$）；$m_{k+1,j}$ 的 key 是
+$j^2 - (k + 1)^2 < j^2 - i^2$（因為 $k + 1 > i \ge 1$）。 都嚴格比較小，所以這個順序對。 它和依
+鏈長的順序不一樣，例如 $m_{1,3}$（key $8$）排在 $m_{4,5}$（key $9$）前面，但這兩格互不依賴，沒
+有關係。 另外，$m_{i,i}$ 的 key 是 $0$，在 C、D、E 三種順序裡都是最先算的，不必另外假設已經初
+始化。
+\end{pastsoln}

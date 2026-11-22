@@ -1,0 +1,100 @@
+\begin{pastexam}[label={px:nccu-111-dsa-07}]{政大資科所 111 學年度 第 7 題}
+（設計、證明）
+
+(20\%) Design an algorithm for the following task and prove its correctness.
+
+\hspace*{2em}Input: a graph $G(V,E)$
+
+\hspace*{2em}\parbox[t]{0.9\textwidth}{Task: find the compact set $C$ of $G$, $C$ is a compact set if $\min\{E(v_i,v_k)\,|\,v_i\in C, v_k\in V\backslash C)\} > \max\{E(v_i,v_j)\,|\,v_i,v_j\in C\}$ (the smallest external distance of $C$ is still larger than the longest internal distance in $C$, i.e., the $C$ of Question 6 is $\{v_1, v_6\}, \{v_1, v_2, v_6\}, \{v_3, v_4, v_5\}$)}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題意}。 $E(v_i, v_j)$ 是 $v_i$ 和 $v_j$ 的距離，定義要用到每一對頂點的距離，所以把輸入看成
+第 6 題那樣的\textbf{加權完全圖}（每一對頂點都有一條邊，權重就是距離）。 原式右括號前多了一個
+「)」，是筆誤。 單一頂點（沒有內部距離）和 $C = V$（沒有外部距離）兩種情形的 $\min$ 或 $\max$
+是空集合，沒有意義；題目的例子也沒有列它們，所以只找 $2 \le |C| \le n - 1$ 的緊緻集合，而且要找出
+\textbf{全部}（例子列了三個）。 記 $\mathrm{in}(C) = \max\{E(u, v) : u, v \in C\}$、
+$\mathrm{out}(C) = \min\{E(u, v) : u \in C, v \notin C\}$，$C$ 緊緻就是 $\mathrm{out}(C) > \mathrm{in}(C)$。
+
+\textbf{想法}。 Kruskal 演算法（資結書第~24.2~節）由輕到重加邊，森林裡的每一棵樹都是「用短邊連在一起
+的一群頂點」。 緊緻集合內部都很近、和外面都很遠，所以它一定會在某個時刻恰好成為 Kruskal 森林裡的一棵
+樹。 Kruskal 一共只合併 $n - 1$ 次，每次合併產生一個新的集合，這 $n - 1$ 個集合就是全部的候選，逐一用
+定義檢查即可。
+
+\begin{pseudo}{找出所有緊緻集合}
+\Function{Compact-Sets}{$V, E$}
+    \State $\mathcal{R} \gets \emptyset$
+    \For{每個頂點 $v \in V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \State 把所有邊依權重由小到大排序
+    \For{依排好的順序，每條邊 $(u, v)$}
+        \If{$\Call{Find-Set}{u} \ne \Call{Find-Set}{v}$}
+            \State \Call{Union}{$u, v$}
+            \State $C \gets$ 合併後 $u$ 所在集合的所有頂點
+            \If{$|C| < |V|$ \AND \Call{Is-Compact}{$C$}}
+                \State $\mathcal{R} \gets \mathcal{R} \cup \{C\}$
+            \EndIf
+        \EndIf
+    \EndFor
+    \State \Return $\mathcal{R}$
+\EndFunction
+\Statex
+\Function{Is-Compact}{$C$}
+    \State $\mathit{in} \gets \max\{E(x, y) : x, y \in C,\ x \ne y\}$
+    \State $\mathit{out} \gets \min\{E(x, y) : x \in C,\ y \in V \setminus C\}$
+    \State \Return $\mathit{out} > \mathit{in}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 回傳的每個集合都通過了 \proc{Is-Compact}，直接照定義檢查，一定是緊緻集合。 要證明的
+是反方向：每一個緊緻集合都會被檢查到。
+
+\textbf{引理}。 設 $C$ 是緊緻集合，$2 \le |C| \le n - 1$。 那麼 $C$ 是第 9 行某一次算出的集合。
+
+\textbf{證明。} 令 $t = \mathrm{in}(C)$，令 $G_t$ 是只留下權重 $\le t$ 的邊所成的圖。
+\begin{enumerate}
+\item $C$ 在 $G_t$ 裡是連通的：$C$ 內任兩點的距離都 $\le t$，那條邊在 $G_t$ 裡。
+\item $G_t$ 裡沒有邊離開 $C$：離開 $C$ 的邊權重 $\ge \mathrm{out}(C) > t$。
+\end{enumerate}
+所以 $C$ 恰好是 $G_t$ 的一個連通元件。 考慮 Kruskal 處理完所有權重 $\le t$ 的邊、還沒處理任何權重 $> t$
+的邊的那一刻（邊已經由小到大排好，這一刻存在）。 這時已處理過的邊恰好是 $G_t$ 的邊；Kruskal 只在兩端已經
+連通時跳過一條邊，所以森林的連通情形和 $G_t$ 相同（資結書第~24.2~節），森林的各棵樹的頂點集合就是 $G_t$
+的各個連通元件，其中一個是 $C$。 $|C| \ge 2$，所以 $C$ 不是一開始就有的單點集合，它是某一次 \proc{Union}
+做出來的：最後一次讓這棵樹長大的合併，第 9 行算出的就是 $C$。 \hfill$\blacksquare$
+
+由引理，每個緊緻集合都在第 10 行被檢查並加入 $\mathcal{R}$；而 $\mathcal{R}$ 裡只有緊緻集合。 所以演算法
+恰好找出全部的緊緻集合。 順帶得到：緊緻集合最多 $n - 2$ 個（$n - 1$ 次合併扣掉最後得到 $V$ 的那一次）。
+
+為什麼還要用 \proc{Is-Compact} 檢查，不能把 Kruskal 合併出的集合全部輸出？ 因為不是每個都緊緻。
+第 6 題的圖就有反例：合併出 $\{v_3, v_4\}$ 時，它內部距離是 $9$，但 $E(v_4, v_5) = 9$，外部最小距離也是
+$9$，不是嚴格大於，所以 $\{v_3, v_4\}$ 不緊緻。 平手時，或內部有一對點距離很遠（$C$ 是靠別的短邊連起來的）
+時，都會發生這種情形。
+
+\textbf{用第 6 題驗證}。 Kruskal 依序合併出 $\{v_1, v_6\}$、$\{v_1, v_2, v_6\}$、$\{v_3, v_4\}$、
+$\{v_3, v_4, v_5\}$、$V$（見歷屆試題~\ref{px:nccu-111-dsa-06} 的表）。
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+候選 $C$ & $\mathrm{in}(C)$ & $\mathrm{out}(C)$ & 緊緻？ \\
+\midrule
+$\{v_1, v_6\}$ & $8$ & $\min(10, 16, 18, 13, 9, 12, 19, 11) = 9$ & 是 \\
+$\{v_1, v_2, v_6\}$ & $\max(10, 8, 9) = 10$ & $\min(16, 18, 13, 14, 17, 15, 12, 19, 11) = 11$ & 是 \\
+$\{v_3, v_4\}$ & $9$ & $9$（$v_4$--$v_5$） & 否 \\
+$\{v_3, v_4, v_5\}$ & $\max(9, 10, 9) = 10$ & $11$（$v_5$--$v_6$） & 是 \\
+$V$ & & & 不考慮 \\
+\bottomrule
+\end{tabular}
+\end{center}
+得到 $\{v_1, v_6\}$、$\{v_1, v_2, v_6\}$、$\{v_3, v_4, v_5\}$，和題目給的一樣。
+
+\textbf{複雜度}。 $n = |V|$，完全圖有 $\Theta(n^2)$ 條邊。 排序 $\Theta(n^2 \log n)$；互斥集合操作
+（資結書第~13~章）幾乎是線性。 第 9 行列出集合的頂點 $O(n)$，\proc{Is-Compact} 看 $C$ 內和 $C$ 與外面
+的所有點對，$O(n^2)$；共 $n - 1$ 次，$O(n^3)$。 總時間 $O(n^3)$。
+
+想更快可以讓每個集合 $C$ 自己記住 $\mathrm{in}(C)$ 和一個陣列 $\mathit{dist}_C[y] = \min_{x \in C} E(x, y)$：
+合併 $A$、$B$ 時，$\mathrm{in}(A \cup B) = \max(\mathrm{in}(A), \mathrm{in}(B), \max_{x \in A, y \in B} E(x, y))$，
+$\mathit{dist}_{A \cup B}$ 是兩個陣列逐格取小，$\mathrm{out}(A \cup B)$ 是 $\mathit{dist}_{A \cup B}$ 在
+$A \cup B$ 以外的最小值。 每一對頂點只會在它們被併到同一個集合的那一次被看一次，所有合併加起來
+$O(n^2)$，總時間由排序主導，$O(n^2 \log n)$。
+\end{pastsoln}

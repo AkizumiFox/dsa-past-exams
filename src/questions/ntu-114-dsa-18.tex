@@ -1,0 +1,88 @@
+\begin{pastexam}[label={px:ntu-114-dsa-18}]{臺大資網所 114 學年度 第 18 題}
+（問答）
+
+(5 points) Consider the task of incrementing a $k$-bit binary counter from all zeroes to all ones. Let $A$ be an
+array of length $k$ that simulates the counter, where $A[0]$ represents the least significant bit and $A[k-1]$
+represents the most significant bit. We implement the \textsc{Increment}() operation as follows:
+\begin{center}
+\begin{tabular}{l}
+\hline
+\textbf{function} \textsc{Increment}() \\
+\quad $i=0$ \\
+\quad \textbf{while} $A[i]==1$ \textbf{do} \\
+\quad\quad $A[i]=0$ \\
+\quad\quad $i=i+1$ \\
+\quad $A[i]=1$ \\
+\hline
+\end{tabular}
+\end{center}
+Unfortunately, this counter is implemented on a deficient random access machine (RAM). On this machine, each
+read-access to a single array entry takes 1 unit of time. However, a write to an entry may take different amount
+of time. In particular, for any index $i$ ($0\le i<k$), if $i$ is a multiple of 3 but not a multiple of 5, the
+memory stick will fizz and it will take exactly $3^{i/3}$ units of time to write the data into $A[i]$. If $i$ is a
+multiple of 5 but not a multiple of 3, the memory stick will buzz and it will take exactly $5^{i/5}$ units of time
+to write the data into $A[i]$. Writing into all other entries not mentioned above takes 1 unit of time as usual.
+
+Please design a potential function $\Phi(A)$ such that the amortized time (using $\Phi(A)$) per
+\textsc{Increment}() operation is still $O(1)$ when incrementing from zero. Make sure your potential function is
+rigurously defined, can be evaluated into an actual number by human beings, and as clean and clear without
+ambiguity. For example, if you left any undetermined variable (such as ``for some constant $c$'') in your
+expression, you \textbf{must} state an actual number for that variable (e.g., ``$c=1$''). You do \textbf{not} need
+to verify your answer in the answer sheet. This problem has no partial score.
+\end{pastexam}
+
+\begin{pastsoln}
+寫 $w(i)$ 表示寫入 $A[i]$ 的時間：$i$ 是 $3$ 的倍數但不是 $5$ 的倍數時
+$w(i) = 3^{i/3}$；$i$ 是 $5$ 的倍數但不是 $3$ 的倍數時 $w(i) = 5^{i/5}$；其他
+$w(i) = 1$（包括 $i = 0$、$15$、$30$ 這些同時是兩者倍數的）。 令
+$L_i(A) = \sum_{j=0}^{i-1} A[j]\, 2^j$，也就是計數器最低 $i$ 位表示的數。
+
+\textbf{答案}：
+\[
+\Phi(A) = \sum_{i=1}^{k-1} \frac{w(i) + 1}{2^{\,i-1}} \, L_i(A) .
+\]
+式子裡沒有未定的常數。 例如 $k = 4$、$A[3..0] = 0110$：$L_1 = 0$、$L_2 = 2$、
+$L_3 = 6$，$w(1) = w(2) = 1$、$w(3) = 3$，$\Phi = 2 \cdot 0 + \frac{2}{2} \cdot 2 +
+\frac{4}{4} \cdot 6 = 8$。
+
+\textbf{想法}。 資結書第~3.3~節的位能「$1$ 的個數」在這裡不夠用。 只看
+哪些位是 $1$ 的位能（例如每個 $1$ 存 $w(i) + 1$），在把 $A[t]$ 從 $0$ 寫成 $1$ 的那一
+次，要付這次寫入的 $w(t)$，還要替它存下以後清回 $0$ 的錢，平攤成本大約是 $2w(t)$，
+$t$ 大的時候沒有上界。 所以寫入 $A[t]$ 的錢（不論寫 $0$ 或寫
+$1$）必須在\textbf{之前}就存好。 $A[i]$ 每 $2^i$ 次加一才被寫一次（最低 $i$ 位從全
+$1$ 進位的時候），$L_i$ 正好記錄「上次寫 $A[i]$ 之後又加了幾次」：每次加一 $L_i$ 加
+$1$，進位到第 $i$ 位時歸零。 每次加一替第 $i$ 位存 $(w(i) + 1)/2^{i-1}$，存 $2^i - 1$
+次之後就夠付一次讀加寫。
+
+\textbf{驗證}（題目說答案卷上不用寫，這裡寫完整）。 一開始全是 $0$，$\Phi = 0$；每一
+項都不是負的，$\Phi \ge 0$，所以資結書定理~3.2 的條件成立。 從全 $0$ 加到全
+$1$ 的過程中不會溢位。 設某次加一之前，最低位起有連續 $t$ 個 $1$（$0 \le t \le k -
+1$），$A[t] = 0$。
+\begin{itemize}
+\item 實際成本：\textbf{while} 讀了 $A[0], \ldots, A[t]$ 共 $t + 1$ 次；寫了
+$A[0..t-1]$ 為 $0$、$A[t]$ 為 $1$。 $c = \sum_{i=0}^{t} \bigl(1 + w(i)\bigr)$。
+\item $1 \le i \le t$：最低 $i$ 位原本全是 $1$，加一後全是 $0$，$L_i$ 從 $2^i - 1$ 變
+成 $0$。
+\item $i \ge t + 1$：最低 $i$ 位裡沒有進位出去（$A[t]$ 原本是 $0$），$L_i$ 剛好加 $1$。
+\end{itemize}
+所以平攤成本是
+\[
+\hat{c} = \bigl(1 + w(0)\bigr)
++ \sum_{i=1}^{t} \bigl(w(i) + 1\bigr)\left(1 - \frac{2^i - 1}{2^{\,i-1}}\right)
++ \sum_{i=t+1}^{k-1} \frac{w(i) + 1}{2^{\,i-1}} .
+\]
+$w(0) = 1$。 $i \ge 1$ 時 $\frac{2^i - 1}{2^{i-1}} = 2 - 2^{1-i} \ge 1$，中間的每一項
+都 $\le 0$。 所以
+\[
+\hat{c} \le 2 + \sum_{i=1}^{\infty} \frac{w(i) + 1}{2^{\,i-1}} .
+\]
+這個無窮級數收斂：$5^{1/5} \approx 1.380 < 3^{1/3} \approx 1.442$，所以每個 $i$ 都有
+$w(i) \le (3^{1/3})^i$。 令 $r = 3^{1/3}/2 < 0.73$，
+\[
+\sum_{i \ge 1} \frac{w(i)}{2^{i-1}} \le 2 \sum_{i \ge 1} r^i = \frac{2r}{1 - r}
+< \frac{2 \times 0.73}{0.27} < 5.5, \qquad \sum_{i \ge 1} \frac{1}{2^{i-1}} = 2 ,
+\]
+因此每次 \textsc{Increment} 的平攤成本 $\hat{c} < 2 + 2 + 5.5 = 9.5$，和 $k$ 無關，
+是 $O(1)$。 由資結書定理~3.2，從全 $0$ 開始做 $N$ 次加一的實際總時間不超過
+$9.5N$。 實際把級數加起來大約是 $5.20$，所以 $\hat{c} \le 7.2$。
+\end{pastsoln}

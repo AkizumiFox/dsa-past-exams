@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:gk3-102-ds-02}]{高考三級資訊處理 102 年 第二題}
+（申論；10 分）
+
+請寫出執行下列程式碼的時間複雜度，並敘明理由。（10 分）
+\begin{minted}[fontsize=\small]{c}
+for (i = 1;  i < n;  i++){
+   a = 1;
+   b = n;
+   while( a < b ){
+       a = 3 * a;
+       b = b / 3;
+   }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $\Theta(n \log n)$。 以下把 $a$、$b$ 當整數（C 的整數除法，$b / 3$ 捨去小數）。
+
+\textbf{內層 while 迴圈跑幾次}。 每一輪開始時 $a$、$b$ 的值和外層的 $i$ 無關：$a = 1, b = n$。
+第 $k$ 輪結束後 $a = 3^k$，$b = \lfloor n / 3^k \rfloor$（連續做 $k$ 次 $\lfloor \cdot / 3 \rfloor$
+等於一次除以 $3^k$ 再取地板）。 迴圈在 $a \ge b$ 時停，所以內層的次數 $K$ 是滿足
+$3^K \ge \lfloor n / 3^K \rfloor$ 的最小 $K$。
+\begin{itemize}
+\item 若 $3^k < \lfloor n/3^k \rfloor$，則 $3^k < n/3^k$，$9^k < n$，$k < \log_9 n$。 所以還沒停之前的
+$k$ 都小於 $\log_9 n$，$K \le \lceil \log_9 n \rceil$。
+\item 若 $3^k \ge \lfloor n/3^k \rfloor$，則 $3^k > n/3^k - 1$，$2 \cdot 9^k \ge 9^k + 3^k > n$，
+$k > \log_9 (n/2)$。 所以 $K > \log_9 (n/2)$。
+\end{itemize}
+合起來 $K = \Theta(\log n)$，例如 $n = 1000$ 時 $K = 4$，$n = 10^6$ 時 $K = 7$，大約是
+$\log_9 n$：$a$ 每次乘 $3$、$b$ 每次除以 $3$，兩者的比值每輪縮小 $9$ 倍，從 $n$ 縮到 $1$
+以下要 $\log_9 n$ 輪。
+
+\textbf{外層}。 外層 for 跑 $i = 1, 2, \ldots, n - 1$，共 $n - 1$ 次，每次都把 $a$、$b$ 重設，內層
+都跑 $K$ 輪，每輪是常數時間。 總時間
+\[
+(n - 1)\,(c_1 + c_2 K) = \Theta(n \log n).
+\]
+外層的 $i$ 沒有出現在內層裡，這是兩層迴圈可以直接相乘的原因（資結書第~1.7~節）。 對數的底數
+不影響階：$\log_9 n = \log_2 n / \log_2 9$，所以也可以寫成 $\Theta(n \lg n)$。
+\end{pastsoln}

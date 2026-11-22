@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:gw3-097-ds-06}]{關務三等資料處理 97 年 第六題}
+（申論；15 分）
+
+試說明遞迴（recursive）程式為何？試以任一電腦語言（或虛擬碼）以遞迴程式來計算 $\sin(x)$ 的值。（15 分）
+
+計算 $\sin(x)$ 的公式如下：
+\[
+\sin(x) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!} - \cdots
+\]
+（考慮求值到小數以下第六位）
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{遞迴程式。} 一個函式在執行過程中直接或間接呼叫自己，稱為遞迴。 寫遞迴要有兩部分：
+\begin{enumerate}[nosep]
+\item \textbf{終止條件}（base case）：問題小到可以直接回答時，不再呼叫自己，直接傳回。
+\item \textbf{遞迴關係}：把問題化成同樣形式、但更接近終止條件的較小問題，呼叫自己去解，再用它的答案
+組出原問題的答案。
+\end{enumerate}
+每一次呼叫都有自己的參數和區域變數，存在系統的呼叫堆疊上，返回時依後進先出的順序取回（資結書
+第~6.4~節）。 遞迴寫起來接近數學定義，但每層呼叫有額外的時間和堆疊空間；層數太多會堆疊溢位。
+例如 $n! = n \cdot (n-1)!$、$0! = 1$。
+
+\textbf{計算 $\sin(x)$。} 第 $k$ 項（$k = 0, 1, 2, \ldots$）是 $t_k = (-1)^k x^{2k+1}/(2k+1)!$。 每一項
+都從前一項乘一個因子得到，不必重算次方和階乘：
+\[
+t_0 = x, \qquad t_{k+1} = t_k \cdot \frac{-x^2}{(2k+2)(2k+3)} .
+\]
+令 $\mathit{Rest}(t_k, k)$ 表示「從第 $k$ 項加到最後」的和，則
+\[
+\mathit{Rest}(t_k, k) = t_k + \mathit{Rest}(t_{k+1}, k+1), \qquad \sin(x) = \mathit{Rest}(x, 0).
+\]
+\textbf{什麼時候停}：要精確到小數第六位，誤差要小於 $0.5 \times 10^{-6}$。 當 $|t_k| < 0.5 \times 10^{-6}$
+時停止（這一項以後都不加）。 這個級數是交錯級數，項的絕對值（在 $|x|$ 不太大時，或 $k$ 夠大之後）
+遞減趨近 $0$，依交錯級數的性質，截斷的誤差不超過第一個沒加進去的項的絕對值，所以誤差
+$< 0.5 \times 10^{-6}$。
+
+\textbf{程式（C）}：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+#include <math.h>
+
+/* term 是第 k 項 (-1)^k x^(2k+1)/(2k+1)!，傳回從第 k 項加到最後的和 */
+double sin_rest(double x, double term, int k)
+{
+    if (fabs(term) < 0.5e-6)        /* 終止條件：這一項已不影響小數第六位 */
+        return 0.0;
+    double next = -term * x * x / ((2 * k + 2) * (2 * k + 3));   /* 下一項 */
+    return term + sin_rest(x, next, k + 1);                       /* 遞迴 */
+}
+
+double my_sin(double x)
+{
+    return sin_rest(x, x, 0);       /* 從第 0 項 x 開始 */
+}
+\end{minted}
+\textbf{追蹤} $x = 1$：$t_0 = 1$，$t_1 = -1/6 \approx -0.1666667$，$t_2 = 1/120 \approx 0.0083333$，
+$t_3 = -1/5040 \approx -0.0001984$，$t_4 = 1/362880 \approx 0.0000028$，$t_5 \approx -2.5 \times 10^{-8}
+< 0.5 \times 10^{-6}$，在 $k = 5$ 停下。 遞迴展開成 $1 + (-0.1666667 + (0.0083333 + (-0.0001984 +
+(0.0000028 + 0))))$，由內往外加回來，得 $0.841471$，和 $\sin 1 = 0.8414709\ldots$ 到小數第六位相同。
+
+\textbf{補充}：$|x|$ 很大時，前面幾項會非常大再互相抵消，浮點誤差變大、遞迴層數也變多。 實際使用時先
+利用週期性把 $x$ 換算到 $[-\pi, \pi]$ 之間（$x \gets x - 2\pi \cdot \mathrm{round}(x / 2\pi)$），再
+代入上面的函式。 在 $[-\pi, \pi]$ 上，最多約十層遞迴就停止，誤差都在 $0.5 \times 10^{-6}$ 以內。
+\end{pastsoln}

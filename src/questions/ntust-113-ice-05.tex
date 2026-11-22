@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ntust-113-ice-05}]{臺科大資工所 113 學年度 第 I-5 題}
+（選擇；可能不只一個）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) The following is the height data for eight students in a class. If we use a sorting algorithm
+to sort the students from low to high according to their height, which algorithm will get a
+different student sequence than using tree sorting?
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Name & Alpha & Bella & Cock & Duke & Elsa & Fiona & Gina & Hulk \\ \hline
+Height (cm) & 160 & 170 & 185 & 173 & 160 & 153 & 170 & 180 \\ \hline
+\end{tabular}
+\end{center}
+(a)~Bubble\\
+(b)~Insertion sort\\
+(c)~Merge sort\\
+(d)~Selection sort\\
+(e)~Heap sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d)、(e)。
+
+身高有兩組相同：Alpha 和 Elsa 都是 $160$，Bella 和 Gina 都是 $170$。 排序結果會不同，只會發生在
+這兩組的先後；也就是要看各個排序法是不是\textbf{穩定}的（資結書第~14.1~節）。 下面用名字的第一個
+字母代表學生，原本的順序是
+\[
+\text{A}160,\ \text{B}170,\ \text{C}185,\ \text{D}173,\ \text{E}160,\ \text{F}153,\ \text{G}170,\ \text{H}180 .
+\]
+
+\textbf{樹排序。} 依序插入二元搜尋樹，再做中序走訪。 照資結書虛擬碼~9.6，鍵比節點小才往左，
+相等時往右，所以後插入的相等鍵一定落在先插入者的右子樹，中序走訪時排在後面，樹排序是穩定的：
+\[
+\text{F, A, E, B, G, D, H, C}.
+\]
+
+\textbf{(a) 氣泡、(b) 插入、(c) 合併：結果相同。} 三者照標準寫法（只在左邊比右邊\textbf{大}時才
+交換或搬移；合併時相等取左邊的）都是穩定的，相同身高的人維持原本的先後，得到和樹排序一樣的
+F, A, E, B, G, D, H, C。
+
+\textbf{(d) 選擇排序：不同。} 每一輪找出剩下最矮的（相同時取最前面的），和這一輪的位置交換：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+輪 & 交換 & 結果 \\
+\midrule
+1 & 位置 1 的 A 和最矮的 F & F, B, C, D, E, \textbf{A}, G, H \\
+2 & 位置 2 的 B 和 E（$160$，比後面的 A 前面） & F, E, C, D, B, A, G, H \\
+3 & 位置 3 的 C 和 A & F, E, A, D, B, C, G, H \\
+4 & 位置 4 的 D 和 B & F, E, A, B, D, C, G, H \\
+5 & 位置 5 的 D 和 G & F, E, A, B, G, C, D, H \\
+6 & 位置 6 的 C 和 D & F, E, A, B, G, D, C, H \\
+7 & 位置 7 的 C 和 H & F, E, A, B, G, D, H, C \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 1 輪把 A 換到 E 的後面，結果 E 在 A 前面，和樹排序不同。
+
+\textbf{(e) 堆積排序：不同。} 照資結書第~14.6~節：先由下而上建最大堆積，再反覆把根和最後一格交換、
+下沉。 陣列（位置 $1$--$8$）的變化：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+步驟 & 陣列 \\
+\midrule
+建堆積後 & C185, H180, G170, D173, E160, F153, A160, B170 \\
+取出 C & H180, D173, G170, B170, E160, F153, A160 $\mid$ C \\
+取出 H & D173, B170, G170, A160, E160, F153 $\mid$ H, C \\
+取出 D & B170, A160, G170, F153, E160 $\mid$ D, H, C \\
+取出 B & G170, A160, E160, F153 $\mid$ B, D, H, C \\
+取出 G & A160, F153, E160 $\mid$ G, B, D, H, C \\
+取出 A & E160, F153 $\mid$ A, G, B, D, H, C \\
+取出 E & F153 $\mid$ E, A, G, B, D, H, C \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 F, E, A, G, B, D, H, C：E 在 A 前、G 在 B 前，兩組都和樹排序相反。 （例如「取出 B」那一步：
+根 B170 和最後一格 E160 交換後，E 下沉時兩個子節點 A160、G170 中 G 較大，G 換到根，下一步就先被
+取出放到 B 前面。）
+
+所以會得到不同順序的是 (d) 選擇排序和 (e) 堆積排序，它們都不穩定。
+\end{pastsoln}

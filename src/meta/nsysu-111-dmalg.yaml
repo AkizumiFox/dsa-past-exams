@@ -1,0 +1,15 @@
+paper: nsysu-111-dmalg
+volume: 2
+school: 中山
+dept: 資工所資安組
+year: 111
+subject: 離散數學與演算法
+instructions: '考試時間：100 分鐘。※本科目依簡章規定「不可以」使用計算機（問答申論題）。There are 10 problems in this test. Note that you should write down detailed steps for the solution to each problem; otherwise, no credits for that problem will be given.'
+questions:
+  - {id: nsysu-111-dmalg-01, label: 第 2 題, chapter: A}
+  - {id: nsysu-111-dmalg-02, label: 第 4 題, chapter: A}
+  - {id: nsysu-111-dmalg-03, label: 第 5 題, chapter: 2}
+  - {id: nsysu-111-dmalg-04, label: 第 6 題, chapter: 7}
+  - {id: nsysu-111-dmalg-05, label: 第 8 題, chapter: 14}
+  - {id: nsysu-111-dmalg-06, label: 第 9 題, chapter: 7}
+  - {id: nsysu-111-dmalg-07, label: 第 10 題, chapter: 18}

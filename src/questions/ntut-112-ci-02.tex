@@ -1,0 +1,107 @@
+\begin{pastexam}[label={px:ntut-112-ci-02}]{北科大資工所 112 學年度 第 2 題}
+（簡答）
+
+Please answer the following question shortly and concisely. You do not need to provide the details. (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item Please write the following infix expression in prefix form: (2 pts)\\
+$((6\times(5-2))-(8+4))+((9/3)\times(1+3))$.
+\item Consider the skip list data structure. Suppose that we use only two levels, i.e., two (sorted) linked lists, for $n$ elements. Each element is in linked list $S_0$ and some elements are also in the other linked list $S_1$. Please draw the skip list structure where the minimized search cost is $O(\sqrt{n})$. (2 pts)
+\item Consider an 11-entry hash table that uses the hash function, $h(i)=(2i+5)\bmod 11$, to hash the keys 34, 22, 2, 88, 23, 72, 11, 39, 20, 16, and 5, with this order. Suppose the collisions are handled by \textit{linear probing}. What's the index of key 72 in the hash table? (2 pts)
+\item As the problem in (3), suppose that the collisions are now handled by \textit{double hashing} with the second hash function $h'(k)=7-(k\bmod 7)$. What's the index of key 72 in the hash table? (2 pts)
+\item Please give the number of binary search trees with $n$ keys. (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $+\;-\;\times\;6\;-\;5\;2\;+\;8\;4\;\times\;/\;9\;3\;+\;1\;3$；(2) 見下圖，$S_1$ 每隔
+$\sqrt n$ 個放一個；(3) $10$；(4) $6$；(5) $\frac{1}{n+1}\binom{2n}{n}$。
+
+這題五個小題分屬第~6、10、12、7~章，雜湊的 (3)(4) 佔 $4$ 分，放在第~12~章。
+
+\textbf{(1)} 前序式是「運算子、左運算元的前序、右運算元的前序」（資結書第~6.3.5~節）。 由外往內拆：
+最外層是 $+$，左邊 $(6 \times (5-2)) - (8+4)$ 的前序是 $-\;\times\;6\;-\;5\;2\;+\;8\;4$，右邊
+$(9/3) \times (1+3)$ 的前序是 $\times\;/\;9\;3\;+\;1\;3$。 接起來：
+\[
++\;-\;\times\;6\;-\;5\;2\;+\;8\;4\;\times\;/\;9\;3\;+\;1\;3 .
+\]
+（順帶一提，值是 $(18 - 12) + (3 \times 4) = 18$。）
+
+\textbf{(2)} $S_0$ 存全部 $n$ 個元素（由小到大），$S_1$ 每隔 $\sqrt n$ 個挑一個，也就是 $S_0$ 的第
+$\sqrt n$、$2\sqrt n$、$3\sqrt n$、……個（$\sqrt n$ 不是整數時取 $\lceil \sqrt n \rceil$），$S_1$ 共約
+$\sqrt n$ 個元素。 下圖是 $n = 9$ 的例子，下層是 $S_0$，上層 $S_1$ 是第 $3$、$6$、$9$ 個：
+$13, 31, 52$。
+\begin{center}
+\begin{tikzpicture}[x=1.0cm,y=0.55cm,
+    skbox/.style={rectangle, draw=black!65, fill=white, minimum size=0.4cm, inner sep=0pt},
+    skhead/.style={skbox, fill=black!15},
+    sklab/.style={font=\small},
+    skarr/.style={-{Stealth[length=1.5mm]}, draw=black!55, shorten >=0.5pt}]
+\node[skhead] (h1) at (0,0) {}; \node[skhead] (h2) at (0,1) {};
+\node[sklab] at (0,-0.75) {head};
+\foreach \x/\k in {1/4, 2/9, 3/13, 4/18, 5/26, 6/31, 7/37, 8/45, 9/52} {
+  \node[skbox] (a\x) at (\x,0) {};
+  \node[sklab] at (\x,-0.75) {\k};
+}
+\foreach \x in {3, 6, 9} \node[skbox] (b\x) at (\x,1) {};
+\node[skhead] (t1) at (10,0) {}; \node[skhead] (t2) at (10,1) {};
+\node[sklab] at (10,-0.75) {NIL};
+\draw[skarr] (h1) -- (a1);
+\foreach \x [evaluate=\x as \y using int(\x+1)] in {1,...,8} \draw[skarr] (a\x) -- (a\y);
+\draw[skarr] (a9) -- (t1);
+\draw[skarr] (h2) -- (b3); \draw[skarr] (b3) -- (b6); \draw[skarr] (b6) -- (b9); \draw[skarr] (b9) -- (t2);
+\end{tikzpicture}
+\end{center}
+搜尋 $k$：先在 $S_1$ 往右走到最後一個小於 $k$ 的元素，再往下到 $S_0$，從那裡往右找（資結書
+第~10.7.2~節的方法只用兩層）。 例如找 $37$：$S_1$ 上 $13 < 37$、$31 < 37$，下一個 $52 \ge 37$，在
+$31$ 往下；$S_0$ 上 $31$ 的下一個就是 $37$。
+
+為什麼 $\sqrt n$ 最好：設 $S_1$ 有 $k$ 個元素，平均分開，把 $S_0$ 切成每段約 $n/k$ 個。 在 $S_1$ 最多
+走 $k$ 步，在 $S_0$ 只在一段裡面走，最多約 $n/k$ 步，總成本約 $k + n/k$。 由算幾不等式
+$k + n/k \ge 2\sqrt{k \cdot n/k} = 2\sqrt n$，等號在 $k = n/k$，也就是 $k = \sqrt n$ 時成立。 所以
+$S_1$ 每隔 $\sqrt n$ 個放一個時，搜尋成本最小，約 $2\sqrt n = O(\sqrt n)$。 （層數增加到大約
+$\lg n$ 層，每層各減半，搜尋就降到 $O(\lg n)$，就是資結書第~10.7~節的跳躍串列。）
+
+\textbf{(3)} 線性探測從 $h(k)$ 開始依序試 $h(k), h(k) + 1, \ldots$（$\bmod 11$）。 只需要做到 $72$：
+\begin{center}
+\small
+\begin{tabular}{ccll}
+\toprule
+鍵 $k$ & $h(k) = (2k + 5) \bmod 11$ & 試過的格子 & 放在 \\
+\midrule
+34 & $73 \bmod 11 = 7$ & 7 & 7 \\
+22 & $49 \bmod 11 = 5$ & 5 & 5 \\
+2 & $9$ & 9 & 9 \\
+88 & $181 \bmod 11 = 5$ & 5, 6 & 6 \\
+23 & $51 \bmod 11 = 7$ & 7, 8 & 8 \\
+72 & $149 \bmod 11 = 6$ & 6, 7, 8, 9, 10 & \textbf{10} \\
+\bottomrule
+\end{tabular}
+\end{center}
+$72$ 放在第 $10$ 格。 後面的鍵只會放在空格，不會移動已經放好的鍵，所以最後 $72$ 仍在第 $10$ 格。
+
+\textbf{(4)} 雙重雜湊第 $i$ 次試 $(h(k) + i \cdot h'(k)) \bmod 11$，$i = 0, 1, 2, \ldots$（資結書
+第~12.3~節）。
+\begin{center}
+\small
+\begin{tabular}{cccll}
+\toprule
+鍵 $k$ & $h(k)$ & $h'(k) = 7 - (k \bmod 7)$ & 試過的格子 & 放在 \\
+\midrule
+34 & 7 & $7 - 6 = 1$ & 7 & 7 \\
+22 & 5 & $7 - 1 = 6$ & 5 & 5 \\
+2 & 9 & $7 - 2 = 5$ & 9 & 9 \\
+88 & 5 & $7 - 4 = 3$ & 5, 8 & 8 \\
+23 & 7 & $7 - 2 = 5$ & 7, $12 \bmod 11 = 1$ & 1 \\
+72 & 6 & $7 - 2 = 5$ & 6 & \textbf{6} \\
+\bottomrule
+\end{tabular}
+\end{center}
+這次 $88$ 跳到第 $8$ 格，第 $6$ 格還空著，$72$ 一次就放進第 $6$ 格。
+
+\textbf{(5)} $n$ 個相異的鍵，二元搜尋樹的形狀決定了鍵放的位置（中序必須是由小到大），所以不同的
+二元搜尋樹個數等於 $n$ 個節點的不同形二元樹個數，就是卡塔蘭數（資結書定理~7.6）：
+\[
+b_n = \frac{1}{n+1}\binom{2n}{n},\qquad b_0 = 1,\ b_n = \sum_{i=0}^{n-1} b_i\, b_{n-1-i}.
+\]
+例如 $n = 3$ 有 $5$ 棵。
+\end{pastsoln}

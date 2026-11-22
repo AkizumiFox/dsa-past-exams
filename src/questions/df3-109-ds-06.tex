@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:df3-109-ds-06}]{地方三等資訊處理 109 年 第六題}
+（申論；22 分）
+
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請利用 KMP（Knuth, Morris, Pratt）演算法寫出失敗函數（failure function)之定義。（4分）
+\item[㈡] 找出 pattern “abcdabcabcdabcdabc”之失敗函數（failure function）值（請填入表2 failure value 中）。
+（14分）
+\item[㈢] 假設㈡之 pattern 嘗試在 string “abcdabcabcdabcabcda…..”找出 pattern。當 pattern 從 index 0開始比對到
+index 13都一樣，而在 index 14時發現字母不一樣，請問 pattern 如何利用 failure function 所得之結果很快找到下一
+個要對應之位置？也就是 pattern 的那一位置的值要位移到 string 的那一對應位置。（4分）
+\end{itemize}
+\begin{center}
+表2\\[2pt]
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|c|*{19}{c|}}
+\hline
+index & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 \\ \hline
+string & a & b & c & d & a & b & c & a & b & c & d & a & b & c & a & b & c & d & a \\ \hline
+pattern & a & b & c & d & a & b & c & a & b & c & d & a & b & c & d & a & b & c & \\ \hline
+failure value & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈡ 依㈠的定義，index $0$--$17$ 的失敗函數值是
+0, 0, 0, 0, 1, 2, 3, 1, 2, 3, 4, 5, 6, 7, 4, 5, 6, 7；㈢ 把 pattern 的 index $7$ 對到 string 的 index $14$
+（pattern 往右移 $7$ 格），從這兩個位置繼續比較。
+
+\textbf{㈠} 表 2 的 index 從 $0$ 開始，pattern 寫成 $P[0..m-1]$。 字串 $x$ 的\textbf{邊界}（border）是 $x$ 的真
+前綴（不等於 $x$ 本身）中，同時也是 $x$ 的後綴的那些。 失敗函數定義為
+\[
+f(j) = P[0..j] \text{ 最長的邊界的長度} = \max\{\, k \le j : P[0..k-1] = P[j-k+1..j] \,\},
+\]
+其中 $0 \le j \le m - 1$，
+沒有非空的邊界時 $f(j) = 0$。 意思是：已經比對成功 $P[0..j]$ 之後下一個字元不合時，$P$ 的前 $f(j)$ 個字元
+仍然和文字對得上，下一步可以直接拿 $P[f(j)]$ 和文字中不合的那個字元比較，文字不必往回退。 這就是資結書
+第~27.3~節的 $\pi$，那裡的 pattern 從 $1$ 編號，$f(j) = \pi[j + 1]$。
+
+另一種常見的寫法（Horowitz 等人的課本）定義成「最大的 $i < j$ 使 $P[0..i] = P[j-i..j]$，沒有就是 $-1$」，
+記作 $f'(j)$，它是最長邊界最後一個字元的 index，所以 $f'(j) = f(j) - 1$。 兩種都是 KMP 的失敗函數，作答時
+寫清楚用哪一種。
+
+\textbf{㈡} 用資結書虛擬碼~27.3 的方法由左往右算：已知 $f(j - 1) = k$，若 $P[k] = P[j]$ 則 $f(j) = k + 1$；
+否則令 $k \gets f(k - 1)$ 再試，直到 $k = 0$ 且仍不相等時 $f(j) = 0$。
+\begin{center}
+\small
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{l*{18}{>{\centering\arraybackslash}p{1.45em}}}
+\toprule
+index $j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 \\
+pattern & a & b & c & d & a & b & c & a & b & c & d & a & b & c & d & a & b & c \\
+\midrule
+$f(j)$ & 0 & 0 & 0 & 0 & 1 & 2 & 3 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 4 & 5 & 6 & 7 \\
+$f'(j)$ & $-1$ & $-1$ & $-1$ & $-1$ & 0 & 1 & 2 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 3 & 4 & 5 & 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+逐步說明：
+\begin{itemize}
+\item $j = 0$：只有一個字元，沒有真前綴，$f(0) = 0$。 $j = 1, 2, 3$：b、c、d 都不等於 $P[0] = $ a，都是 $0$。
+\item $j = 4, 5, 6$：a、b、c 依序等於 $P[0], P[1], P[2]$，$f = 1, 2, 3$（邊界 a、ab、abc）。
+\item $j = 7$（a）：$k = 3$，$P[3] = $ d $\ne$ a；退到 $k = f(2) = 0$，$P[0] = $ a $=$ a，$f(7) = 1$。
+\item $j = 8$--$13$（b c d a b c）：依序等於 $P[1..6]$，$f = 2, 3, 4, 5, 6, 7$。 例如 $f(13) = 7$：$P[0..13] =
+$ abcdabc\,abcdabc，前 $7$ 個和後 $7$ 個都是 abcdabc。
+\item $j = 14$（d）：$k = 7$，$P[7] = $ a $\ne$ d；退到 $k = f(6) = 3$，$P[3] = $ d $=$ d，$f(14) = 4$（邊界 abcd）。
+\item $j = 15$--$17$（a b c）：依序等於 $P[4..6]$，$f = 5, 6, 7$。
+\end{itemize}
+
+\textbf{㈢} 比對到 string 的 index $14$ 時，pattern 的 $P[0..13]$ 已經和 string 的 index $0$--$13$ 相同，而
+string$[14] = $ a $\ne P[14] = $ d。 查 $f(13) = 7$：已經比對過的 abcdabcabcdabc 中，最後 $7$ 個字元
+abcdabc（string 的 index $7$--$13$）正好等於 pattern 的前 $7$ 個字元。 所以把 pattern 往右移
+$14 - 7 = 7$ 格，讓 pattern 的 index $0$ 對到 string 的 index $7$；此時 pattern 的 index $0$--$6$ 不用再比，
+\textbf{pattern 的 index $7$ 對到 string 的 index $14$}，從這裡繼續比較。 （用 $f'$ 的寫法：$f'(13) = 6$，
+拿 $P[f'(13) + 1] = P[7]$ 和 string$[14]$ 比，是同一件事。）
+
+接著 $P[7] = $ a $=$ string$[14]$，比對繼續往右進行；string 本身完全沒有往回讀。 不用失敗函數的暴力法要把
+pattern 只右移一格、從 string 的 index $1$ 重新比起，前面比過的字元都要重比。
+\end{pastsoln}

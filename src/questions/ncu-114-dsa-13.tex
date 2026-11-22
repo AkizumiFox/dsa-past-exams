@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-114-dsa-13}]{中央資工所 114 學年度 第 13 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Which of the following statements about Minimum Spanning Tree are incorrect?
+\begin{enumerate}[label=(\alph*)]
+\item The spanning tree of a graph exists uniquely which connects all vertices with the minimum total
+edge weight.
+\item Both Prim's and Kruskal's algorithms are greedy algorithms.
+\item After optimization, Prim's and Kruskal's algorithms have the same (worst case) time complexity.
+\item Disjoint-set data structure can be used to improve the time complexity of the Prim's algorithm.
+\item Fibonacci heap can be used to improve the time complexity of the Kruskal's algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(c)(d)(e)。 題目問的是\textbf{錯誤}的敘述。 以下 $n = |V|$、$m = |E|$。
+
+\begin{itemize}
+\item (a) 錯誤。 最小生成樹不一定唯一（資結書第~24.1.7~節）：三角形三條邊權重都是 $1$，任兩條邊都是
+最小生成樹，有三棵。 邊權重全部不同時才唯一。 另外圖不連通時根本沒有生成樹。
+\item (b) 正確。 兩者每一步都挑目前最便宜、又不違反條件的邊（Kruskal 挑全域最小、不成環的邊；Prim 挑
+跨過目前樹的最小邊），正確性都來自切割性質（資結書第~24.1~節）。
+\item (c) 錯誤。 Kruskal 要排序邊，$O(m \log n)$；Prim 用費氏堆積可以做到 $O(m + n \log n)$
+（資結書第~24.3~節）。 稠密的圖（$m = \Theta(n^2)$）上，前者是 $\Theta(n^2 \log n)$，後者是
+$\Theta(n^2)$，不一樣。 只用二元堆積時兩者都是 $O(m \log n)$，但題目說的是「最佳化之後」。
+\item (d) 錯誤。 互斥集合（disjoint set）是 \textbf{Kruskal} 用來判斷兩端點是否已經連通、避免成環的
+結構（資結書第~24.2~節）。 Prim 只長一棵樹，判斷「在不在樹裡」用一個布林陣列就好，用不到互斥集合。
+\item (e) 錯誤。 費氏堆積加快的是 \textbf{Prim}（$n$ 次 \textsc{Extract-Min}、$m$ 次
+\textsc{Decrease-Key}，後者平攤 $O(1)$）。 Kruskal 的瓶頸是排序，用不到優先佇列的 \textsc{Decrease-Key}。
+\end{itemize}
+(d)(e) 是把兩個演算法的資料結構對調了。
+\end{pastsoln}

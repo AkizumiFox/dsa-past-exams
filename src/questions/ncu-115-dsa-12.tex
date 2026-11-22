@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ncu-115-dsa-12}]{中央資工所 115 學年度 第 12 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Given an empty 11-bucket hash table with hash function h(k)=k\%11. Below is the resulting hash table after inserting 8 items.
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+0 & \\ \hline
+1 & \\ \hline
+2 & 24 \\ \hline
+3 & 57 \\ \hline
+4 & 37 \\ \hline
+5 & 27 \\ \hline
+6 & 16 \\ \hline
+7 & 17 \\ \hline
+8 & 15 \\ \hline
+9 & 38 \\ \hline
+10 & \\ \hline
+\end{tabular}
+\end{center}
+Which of the following statements is/are true?
+\begin{enumerate}[label=\Alph*.]
+\item 27 37 16 17 24 15 57 38 is a possible input sequence when quadratic probing is adopted.
+\item 37 27 16 24 15 57 38 17 is a possible input sequence when quadratic probing is adopted.
+\item 37 27 16 24 57 17 15 38 is a possible input sequence when liner probing is adopted.
+\item 27 16 37 38 57 15 17 24 is a possible input sequence when liner probing is adopted.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、C。
+
+題目的「liner probing」是 linear probing 的筆誤。 題目沒有寫出二次探測的公式，這裡照資結書
+第~12.3~節的 $h(k, i) = (h(k) + i^2) \bmod 11$，$i$ 從 $0$ 開始。 如果改用正負交替的跳法
+（$h, h + 1^2, h - 1^2, h + 2^2, \ldots$），A、B 都不成立：$15$ 從第 $4$ 格出發依序試 $4, 5, 3$，在
+A、B 裡 $15$ 插入時 $57$ 還沒來，第 $3$ 格是空的，$15$ 會放在第 $3$ 格，和表不符，答案只剩 C。 作答時
+先寫明用的是哪一種。
+
+八個鍵的起始位置是：
+\[
+24 \to 2,\ 57 \to 2,\ 37 \to 4,\ 15 \to 4,\ 27 \to 5,\ 16 \to 5,\ 38 \to 5,\ 17 \to 6 .
+\]
+判斷方法就是照每個選項的順序真的插一次，看最後的表是不是和題目一樣。 二次探測從 $h$ 出發依序試
+$h, h + 1, h + 4, h + 9, \ldots$。 下面每個鍵寫出試過的格子，最後一個是放進去的位置。
+\begin{itemize}
+\item \textbf{A（二次探測）}：$27$：5；$37$：4；$16$：5, 6；$17$：6, 7；$24$：2；$15$：4, 5, 8；
+$57$：2, 3；$38$：5, 6, 9。 和題目的表完全相同，對。
+\item \textbf{B（二次探測）}：$37$：4；$27$：5；$16$：5, 6；$24$：2；$15$：4, 5, 8；$57$：2, 3；
+$38$：5, 6, 9；$17$：6, 7。 也完全相同，對。（$17$ 最後才放，第 $7$ 格一直空著，所以它還是落在
+第 $7$ 格。）
+\item \textbf{C（線性探測）}：$37$：4；$27$：5；$16$：5, 6；$24$：2；$57$：2, 3；$17$：6, 7；
+$15$：4, 5, 6, 7, 8；$38$：5, 6, 7, 8, 9。 完全相同，對。
+\item \textbf{D（線性探測）}：$27$：5；$16$：5, 6；$37$：4；$38$：5, 6, 7，放在第 $7$ 格。 但題目的表
+第 $7$ 格是 $17$，第 $9$ 格才是 $38$，已經不同，錯。 原因是 $38$ 比 $17$ 先插入，搶走了第 $7$ 格；
+繼續做下去，最後的表是 $2$：57、$3$：24、$7$：38、$9$：17，和題目不同。
+\end{itemize}
+也可以只用一個必要條件先刪選項：線性探測裡，鍵 $k$ 放在第 $j$ 格，那麼從 $h(k)$ 到 $j - 1$ 的每一格
+在 $k$ 插入時都已經有鍵。 D 裡 $38$ 放在第 $9$ 格需要第 $7$ 格先有鍵，也就是 $17$ 要比 $38$ 先插入，
+但 D 的順序是 $38$ 在前，所以不可能。
+\end{pastsoln}

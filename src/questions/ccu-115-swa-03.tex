@@ -1,0 +1,104 @@
+\begin{pastexam}[label={px:ccu-115-swa-03}]{中正資工所甲組 115 學年度 第 13 題}
+（複選；全對才給分）
+
+\begin{center}
+\begin{tikzpicture}[x=1.45cm,y=1.45cm,>={Stealth[length=2.2mm]},
+  v/.style={circle,draw,thick,minimum size=8mm,inner sep=0pt,font=\small\bfseries},
+  e/.style={->,thick},
+  l/.style={font=\small\bfseries,inner sep=1.5pt}]
+% ---- Residual network G_f ----
+\begin{scope}
+\node[anchor=west,font=\large] at (-0.6,1.75) {Residual network G$_{\mathrm f}$};
+\node[v] (s)  at (0,0)    {S};
+\node[v] (v1) at (1.5,1)  {v1};
+\node[v] (v2) at (1.5,-1) {v2};
+\node[v] (v3) at (3,1)    {v3};
+\node[v] (v4) at (3,-1)   {v4};
+\node[v] (t)  at (4.5,0)  {t};
+\draw[e] (v3) -- node[l,above]{12} (v1);
+\draw[e,transform canvas={shift={(-0.045,0.068)}}] (s) -- node[l,above,sloped]{4} (v1);
+\draw[e,transform canvas={shift={(0.045,-0.068)}}] (v1) -- node[l,below,sloped]{12} (s);
+\draw[e,transform canvas={shift={(0.045,0.068)}}] (v2) -- node[l,above,sloped]{11} (s);
+\draw[e,transform canvas={shift={(-0.045,-0.068)}}] (s) -- node[l,below,sloped,pos=0.4]{2} (v2);
+\draw[e,transform canvas={xshift=-0.08cm}] (v1) -- node[l,left,rotate=90,anchor=south]{10} (v2);
+\draw[e,transform canvas={xshift=0.08cm}] (v2) -- node[l,right,rotate=90,anchor=north]{4} (v1);
+\draw[e] (v3) -- node[l,below right,pos=0.6]{9} (v2);
+\draw[e] (v3) -- node[l,rotate=-90,anchor=south]{7} (v4);
+\draw[e,transform canvas={shift={(0.045,0.068)}}] (v3) -- node[l,above,sloped]{1} (t);
+\draw[e,transform canvas={shift={(-0.045,-0.068)}}] (t) -- node[l,below,sloped]{19} (v3);
+\draw[e] (t) -- node[l,below,sloped]{4} (v4);
+\draw[e,transform canvas={yshift=0.08cm}] (v4) -- node[l,above]{11} (v2);
+\draw[e,transform canvas={yshift=-0.08cm}] (v2) -- (v4);
+\end{scope}
+% ---- Flow network G ----
+\begin{scope}[yshift=-5.6cm]
+\node[anchor=west,font=\large] at (-0.6,1.75) {Flow network G};
+\node[v] (s)  at (0,0)    {S};
+\node[v] (v1) at (1.5,1)  {v1};
+\node[v] (v2) at (1.5,-1) {v2};
+\node[v] (v3) at (3,1)    {v3};
+\node[v] (v4) at (3,-1)   {v4};
+\node[v] (t)  at (4.5,0)  {t};
+\draw[e] (s) -- node[l,above,sloped]{12/16} (v1);
+\draw[e] (s) -- node[l,below,sloped]{11/13} (v2);
+\draw[e] (v1) -- node[l,above]{12/12} (v3);
+\draw[e,transform canvas={xshift=-0.08cm}] (v1) -- node[l,left,rotate=90,anchor=south]{10} (v2);
+\draw[e,transform canvas={xshift=0.08cm}] (v2) -- node[l,right,rotate=90,anchor=north]{4} (v1);
+\draw[e] (v3) -- node[l,below right,pos=0.6]{9} (v2);
+\draw[e] (v4) -- node[l,rotate=-90,anchor=south]{7/7} (v3);
+\draw[e] (v3) -- node[l,above,sloped]{19/20} (t);
+\draw[e] (v4) -- node[l,below,sloped]{4/4} (t);
+\draw[e] (v2) -- node[l,below]{11/14} (v4);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+(5\%) (\qquad) Consider the $S,t$ flow network shown above.
+
+After three augmenting paths have already been applied, the residual graph contains a backward edge
+with capacity 7.\\
+Which of the following statements are \textbf{true}?\\
+(a)~The current flow is maximum \qquad (b)~The flow violates capacity constraints\\
+(c)~The residual graph must contain a cycle \qquad (d)~A previous augmenting path used that edge
+forward\\
+(e)~none of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(d)。
+
+先核對兩張圖（原圖 $G_f$ 裡 v2$\to$v4 那條沒有標數字，由 $14 - 11 = 3$ 可知是 $3$）。 流量守恆：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+頂點 & 流入 & 流出 \\
+\midrule
+v1 & S$\to$v1 $12$ & v1$\to$v3 $12$ \\
+v2 & S$\to$v2 $11$ & v2$\to$v4 $11$ \\
+v3 & v1$\to$v3 $12$ $+$ v4$\to$v3 $7$ $= 19$ & v3$\to$t $19$ \\
+v4 & v2$\to$v4 $11$ & v4$\to$v3 $7$ $+$ v4$\to$t $4$ $= 11$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+每條邊的流量都不超過容量，流量值是從 S 流出的 $12 + 11 = 23$。 剩餘容量照資結書定義~26.3：
+原有的邊 $(u, v)$ 剩 $c(u, v) - f(u, v)$，反向剩 $f(u, v)$，算出來和 $G_f$ 一致。 「容量 $7$ 的
+反向邊」是 v3$\to$v4，因為 v4$\to$v3 流了 $7$（而 v4$\to$v3 已經滿了，$G_f$ 裡沒有 v4$\to$v3）。
+
+\begin{itemize}
+\item (a) 對。 從 S 在 $G_f$ 裡走得到的頂點：S$\to$v1（$4$）、S$\to$v2（$2$）、v1$\leftrightarrow$v2、
+v2$\to$v4（$3$）；v4 出去的只有 v4$\to$v2，v1 出去的 v1$\to$v3 已經滿了，v2$\to$v3 不存在（v3$\to$v2
+沒有流量）。 所以走得到的是 $\{\mathrm{S}, \mathrm{v1}, \mathrm{v2}, \mathrm{v4}\}$，到不了 t，沒有
+增廣路徑，目前的流是最大流（資結書定理~26.6）。 對應的割 $(\{\mathrm{S}, \mathrm{v1}, \mathrm{v2},
+\mathrm{v4}\}, \{\mathrm{v3}, \mathrm{t}\})$ 的容量是 v1$\to$v3 $12$ $+$ v4$\to$v3 $7$ $+$ v4$\to$t $4$
+$= 23$，等於流量值，再次確認。
+\item (b) 錯。 上面逐邊檢查過，每條邊都 $0 \le f \le c$，而且守恆。
+\item (c) 錯（照題意）。 「must」是說從題目的條件（有一條容量 $7$ 的反向邊）一定推得出有環，
+這推不出來：反向邊 v3$\to$v4 本身不一定在環上，例如只有一條邊 $s \to t$ 而且流滿時，$G_f$ 只有
+一條 $t \to s$，沒有環。 補充：就這張圖而言，$G_f$ 確實有環（例如 S$\to$v1$\to$S，因為 S$\to$v1
+流了 $12$、還沒滿，兩個方向都有剩），如果把 (c) 讀成「這張 $G_f$ 有環」，它是對的。 我們照
+「must」的語氣，把它當成一般性的推論，判為錯。
+\item (d) 對。 v3$\to$v4 的剩餘容量 $7$ 等於 $f(\mathrm{v4}, \mathrm{v3}) = 7$。 原圖沒有 v3$\to$v4
+這條邊，v4$\to$v3 的流量只能來自之前某條增廣路徑順著 v4$\to$v3 送流（資結書第~26.3~節）。
+\item (e) 錯。
+\end{itemize}
+\end{pastsoln}

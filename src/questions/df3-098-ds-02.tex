@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:df3-098-ds-02}]{地方三等資訊處理 98 年 第二題}
+（申論；20 分）
+
+線性探測（linear probing）、平方探測（quadratic probing）與雙雜湊（double hashing）可用來解決雜湊
+（hashing）時發生的碰撞（collision）問題，它們使用不同的 g(key, i)函數來決定發生第 i 次（i$\geq$0）
+碰撞時，鍵值 key 在雜湊表中的探測位置。
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 線性探測為何會產生群集（clustering）問題？假設雜湊函數與表格容量分別為 h(key)與 T，先寫出
+其 g(key, i)函數後，再說明之。（4 分）
+\item[㈡] 問題同㈠，但將線性探測改為平方探測。（4 分）
+\item[㈢] 設計雙雜湊函數時，有何基本原則？先寫出其 g(key, i)函數，再說明之。（4 分）
+\item[㈣] 在何種狀況下，使用雙雜湊才能探測到雜湊表中所有可用的位置？（3 分）
+\item[㈤] 某空雜湊表共有 7 個位置，使用線性探測來排解碰撞問題。假設鍵值 k1, k2, k3 均對應至相同的
+雜湊值 4，先依序將 k1, k2 與 k3 加入雜湊表後，再刪除 k2。請問此時查詢表中是否含有 k3，其結果為
+成功或失敗？請配合圖形說明之。（5 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+以下位置編號 $0, 1, \dots, T-1$，$i = 0$ 是第一次探測（雜湊值本身），資結書第~12.3~節。
+
+\textbf{㈠ 線性探測：$g(\mathit{key}, i) = (h(\mathit{key}) + i) \bmod T$。} 探測序列是
+$h, h+1, h+2, \dots$，一格一格往後找。 表裡一旦出現一段連續被占用的位置，任何雜湊值落在這一段裡
+（或剛好在它前一格）的鍵，都要一路探測到這段的尾端才找到空位，然後把這段再加長一格。 段越長，
+落進來的機率越大、長得越快，幾段還會黏成更長的一段。 這種現象叫\textbf{主要群集}（primary
+clustering）：不同雜湊值的鍵也互相干擾，平均探測次數隨負載變大而急速上升。
+
+\textbf{㈡ 平方探測：$g(\mathit{key}, i) = (h(\mathit{key}) + i^2) \bmod T$}（也有寫成
+$h + c_1 i + c_2 i^2$ 或 $h \pm i^2$ 的版本）。 探測位置 $h, h+1, h+4, h+9, \dots$ 跳得越來越遠，
+不會沿著一段連續區域爬，主要群集消失。 但探測序列只由 $h(\mathit{key})$ 決定：雜湊值相同的鍵，
+探測序列完全一樣，彼此還是會一再碰撞，這叫\textbf{次要群集}（secondary clustering）。 此外平方
+探測不一定能走遍整張表（例如 $T$ 是奇質數時只保證前 $(T+1)/2$ 個探測位置兩兩不同，資結書
+定理~12.3）。
+
+\textbf{㈢ 雙雜湊：$g(\mathit{key}, i) = (h_1(\mathit{key}) + i \cdot h_2(\mathit{key})) \bmod T$。}
+用第二個雜湊函數決定「每次跳幾格」。 設計 $h_2$ 的原則：
+\begin{itemize}
+\item $h_2(\mathit{key}) \ne 0$，否則永遠探測同一格。 常見寫法 $h_2(\mathit{key}) = R - (\mathit{key} \bmod R)$，
+$R$ 是比 $T$ 小的質數，值落在 $1..R$。
+\item $h_2$ 要和 $h_1$ 獨立：$h_1$ 相同的鍵，$h_2$ 最好不同，探測序列才會分開，次要群集也跟著消失。
+\item $h_2(\mathit{key})$ 要和 $T$ 互質，才能走遍整張表（見㈣）。
+\item 計算要快，和 $h_1$ 一樣只用幾個算術運算。
+\end{itemize}
+
+\textbf{㈣ 走遍整張表的條件：$\gcd(h_2(\mathit{key}), T) = 1$。} 探測位置是 $h_1 + i \cdot h_2 \pmod T$，
+$i = 0, 1, \dots, T-1$。 若 $d = \gcd(h_2, T) > 1$，每一步都跳 $d$ 的倍數，只會走到 $T/d$ 個位置就
+繞回起點；若 $d = 1$，這 $T$ 個位置兩兩不同，剛好走遍整張表（資結書定理~12.4）。 實務上
+常讓 $T$ 是質數（$h_2$ 的值在 $1..T-1$ 就自動互質），或讓 $T$ 是 $2$ 的冪次、$h_2$ 永遠是奇數。
+
+\textbf{㈤ 結果是失敗（刪除時直接把 k2 的位置清空的話）。} 三個鍵的雜湊值都是 4，依序加入：
+k1 放在 4；k2 在 4 碰撞，放 5；k3 在 4、5 碰撞，放 6。
+\begin{center}
+\begin{tikzpicture}[cell/.style={draw, minimum width=11mm, minimum height=7mm, font=\small}]
+\foreach \i/\k in {0/,1/,2/,3/,4/k1,5/k2,6/k3}{
+  \node[cell] at (1.1*\i,0) {\k};
+  \node[font=\scriptsize] at (1.1*\i,0.6) {\i};
+}
+\node[anchor=east, font=\small] at (-0.8,0) {加入後};
+\foreach \i/\k in {0/,1/,2/,3/,4/k1,5/,6/k3}{
+  \node[cell] at (1.1*\i,-1.3) {\k};
+}
+\node[anchor=east, font=\small] at (-0.8,-1.3) {刪除 k2 後};
+\draw[->, thick] (4.4,-1.95) to[bend right=40] node[below, font=\scriptsize] {查 k3：4 不是，5 空的，停} (5.5,-1.95);
+\end{tikzpicture}
+\end{center}
+刪除 k2 若只是把位置 5 清成空的，查詢 k3 時從 $h(k3) = 4$ 開始：位置 4 是 k1，不是 k3，往下一格；
+位置 5 是空的，線性探測遇到空格就判定「k3 不在表裡」，結果\textbf{失敗}。 但 k3 明明在位置 6，
+這是錯誤的答案：k3 當初就是因為 5 被占用才放到 6，清空 5 切斷了 k3 的探測鏈。
+
+正確的做法是刪除時不清空，而是放一個「已刪除」標記（tombstone，資結書第~12.3.4~節）：查詢遇到
+標記時當成被占用、繼續往下找，插入時可以把它當成空位重複利用。 這樣查 k3 會經過 4（k1）、5（標記）
+找到 6，結果\textbf{成功}。 另一種做法是刪除後把後面同一段的鍵重新插入一次。
+\end{pastsoln}

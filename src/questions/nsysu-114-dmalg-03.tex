@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-03}]{中山資工所資安組 114 學年度 第 4 題}
+（計算）
+
+{[10\%]} For $\Sigma = \{0, 1\}$, let $A \subseteq \Sigma^*$, where $A = \{01, 1\}$. How many strings
+in $A^*$ have length 6?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$13$ 個。
+
+$A^*$ 是由 $A$ 的字串（\texttt{01} 和 \texttt{1}）任意串接零次以上得到的所有字串。 要數的是
+\textbf{不同的字串}，所以先確認「不同的串接方式不會拼出同一個字串」。
+
+\textbf{拆法唯一}。 \texttt{1} 和 \texttt{01} 互相不是對方的前綴（一個以 \texttt{1} 開頭，一個以
+\texttt{0} 開頭），所以從左邊讀：看到 \texttt{1} 一定是一個 \texttt{1}，看到 \texttt{0} 一定是
+\texttt{01} 的開頭。 每個 $A^*$ 裡的字串只有一種拆法，字串個數等於拼法個數。
+
+\textbf{遞迴式}。 令 $s_n$ 是 $A^*$ 裡長度 $n$ 的字串個數。 長度 $n \ge 2$ 的字串，最後一塊是
+\texttt{1}（前面是長度 $n - 1$ 的 $A^*$ 字串）或 \texttt{01}（前面是長度 $n - 2$ 的），兩種情況
+不重疊，所以
+\[
+s_n = s_{n-1} + s_{n-2}, \qquad s_0 = 1 \ (\text{空字串}),\quad s_1 = 1 \ (\texttt{1}).
+\]
+依序算：$s_2 = 2$、$s_3 = 3$、$s_4 = 5$、$s_5 = 8$、$s_6 = 13$。
+
+\textbf{另一種數法}：長度 $6$ 的字串用了 $j$ 個 \texttt{01} 和 $6 - 2j$ 個 \texttt{1}，共
+$6 - j$ 塊，選哪幾塊是 \texttt{01} 有 $\binom{6-j}{j}$ 種：
+\[
+\binom{6}{0} + \binom{5}{1} + \binom{4}{2} + \binom{3}{3} = 1 + 5 + 6 + 1 = 13 .
+\]
+兩種算法一致。 換個角度看，這些字串正好是「長度 $6$、每個 \texttt{0} 後面緊跟著 \texttt{1}」的
+二進位字串（例如 \texttt{010101}、\texttt{111111}、\texttt{101101}）。
+\end{pastsoln}

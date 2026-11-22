@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntu-115-dsa-18}]{臺大資工所 115 學年度 第 18 題}
+（單選）
+
+(4 points) Which of the following properties is true for \textit{some} optimal prefix-free binary code and directly justifies the greedy choice made in the Huffman algorithm?
+\begin{enumerate}[label=(\Alph*)]
+\item The two symbols with the lowest frequencies must appear at the same depth in the code tree.
+\item The symbol with the lowest frequency must be assigned the longest codeword, but the symbol with the second smallest frequency need not be.
+\item All leaves at the maximum depth must correspond to symbols with the lowest frequency.
+\item The two symbols with the lowest frequencies must have equal codeword lengths, but they need not share the same parent.
+\item The two symbols with the lowest frequencies must be siblings at the maximum depth of the code tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 \textbf{(E)}。
+
+霍夫曼演算法第一步把頻率最小的兩個符號 $x$、$y$ 接到同一個新節點底下，也就是讓它們成為兄
+弟。 要說明這一步不會錯，需要的正是「存在一棵最佳碼樹，$x$、$y$ 是兄弟，而且都在最深的一
+層」：這就是資結書引理~19.3。 有了它，把 $x$、$y$ 收成一個符號之後，剩下的問
+題的最佳解展開回去就是原問題的最佳解（資結書引理~19.4）。 逐項看：
+
+\begin{itemize}
+\item (A)：對某一棵最佳碼樹成立（(E) 成立時 (A) 也成立），但「一樣深」不代表是兄弟。 霍夫曼
+把 $x$、$y$ 合成同一個節點，需要的是兄弟關係，所以 (A) 不足以支持這個選擇。
+\item (B)：前半句對某棵最佳碼樹成立，但它只講頻率最小的那一個；後半句還說第二小的不必在最深
+層。 霍夫曼同時處理最小的兩個，(B) 支持不了。
+\item (C)：錯，連「某一棵最佳碼樹」都找不到。 例如頻率 $1, 2, 2, 2$：$4$ 個葉節點的嚴格二元
+樹只有兩種形狀，碼長 $(2, 2, 2, 2)$ 或 $(1, 2, 3, 3)$ 的某種排列。 前者總位元數
+$(1 + 2 + 2 + 2) \cdot 2 = 14$；後者最好是頻率 $1$ 和一個 $2$ 放在深度 $3$，
+$1 \cdot 3 + 2 \cdot 3 + 2 \cdot 2 + 2 \cdot 1 = 15$。 所以唯一的最佳形狀是四個碼長都是 $2$，
+最深的一層有頻率 $2$ 的符號，它們不是頻率最小的。
+\item (D)：碼長相等對某棵最佳碼樹成立，但它明說「不必有同一個父節點」，正好不是霍夫曼需要的
+性質。
+\item (E)：正確，就是資結書引理~19.3，證明用交換論證：任取一棵最佳碼樹，把
+$x$、$y$ 和最深的一對兄弟葉節點交換，總位元數不會變大。
+\end{itemize}
+\end{pastsoln}

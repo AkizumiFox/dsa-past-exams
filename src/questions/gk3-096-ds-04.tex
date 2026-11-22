@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:gk3-096-ds-04}]{高考三級資訊處理 96 年 第四題}
+（申論；25 分）
+
+堆積排序（Heap Sort）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 堆積排序將堆積樹（heap tree）用一個陣列（array）$A$ 儲存。陣列的指標（index）從 1 到 $N$。請說明堆積樹的根（root）在陣列中的位置。請說明陣列（array）$A$ 第 $i$ 個位置 $A[i]$ 所儲存的堆積樹節點的左子節點（left child）、右子節點（right child）、以及父節點（parent）各自在陣列 $A$ 中的位置。（5 分）
+\item[㈡] 在 Max-堆積樹中，除了根節點（root）外，每一個節點所儲存的數小於或等於其父節點所儲存的數。假設陣列 $A$ 儲存一個十個節點的Max-堆積樹。陣列 $A$ 中的數字從第一個位置到第 10 個位置所存數字依序為 16, 14, 10, 8, 7, 9, 3, 2, 4, 1。請畫出陣列 $A$ 所儲存的堆積樹以及各節點所儲存的數。（5 分）
+\item[㈢] 請以儘量接近程式語言虛擬碼描述如何將一個不符合Max-堆積樹性質的陣列轉換成符合 Max-堆積樹性質的陣列。請分析你的演算法的時間複雜度。（15 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+陣列表示的堆積見資結書第~8.1~節，由下而上建堆積見第~8.2~節。
+
+\textbf{㈠}。 根在 $A[1]$。 $A[i]$ 的左子節點在 $A[2i]$、右子節點在 $A[2i+1]$、父節點在
+$A[\lfloor i/2 \rfloor]$（$i \ge 2$；根沒有父節點）。 位置超過 $N$ 表示那個子節點不存在：$2i > N$ 時
+$A[i]$ 是葉節點，$2i = N$ 時只有左子節點。 這是因為堆積樹是完整二元樹，一層一層、由左而右依序放進
+陣列：第 $d$ 層（根是第 $1$ 層）的節點佔 $A[2^{d-1}..2^{d}-1]$，$A[i]$ 的兩個子節點正好排在
+$2i$、$2i + 1$。
+
+\textbf{㈡}。 依 ㈠ 的規則，$A[1] = 16$ 是根，$A[2..3] = 14, 10$ 是第二層，$A[4..7] = 8, 7, 9, 3$
+是第三層，$A[8..10] = 2, 4, 1$ 是第四層，靠左放：
+\begin{center}
+\begin{tikzpicture}[level distance=11mm,
+  level 1/.style={sibling distance=44mm},level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=11mm},
+  every node/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\small},
+  lb/.style={draw=none,font=\scriptsize,color=black!60}]
+\node (n1) {16}
+  child {node (n2) {14}
+    child {node (n4) {8} child {node (n8) {2}} child {node (n9) {4}}}
+    child {node (n5) {7} child {node (n10) {1}} child[missing]}}
+  child {node (n3) {10}
+    child {node (n6) {9}}
+    child {node (n7) {3}}};
+\foreach \i in {1,...,10} \node[lb,above right=-1.5mm and -0.5mm] at (n\i.north east) {\i};
+\end{tikzpicture}
+\end{center}
+節點右上角的小字是陣列位置。 檢查一下：每個節點都 $\ge$ 它的子節點（例如 $14 \ge 8, 7$；$7 \ge 1$；
+$8 \ge 2, 4$），確實是 Max-堆積樹。
+
+\textbf{㈢ 建堆積}。 先寫「下沉」\proc{Max-Heapify}：假設 $A[i]$ 的左右子樹都已經是 Max-堆積樹，只有
+$A[i]$ 可能比子節點小；讓它和較大的子節點交換，一路往下，直到不小於子節點或成為葉節點。 再由最後
+一個非葉節點 $\lfloor N/2 \rfloor$ 往回到根，對每個節點做一次下沉。 這就是資結書虛擬碼~8.1 的
+\proc{Sift-Down} 和虛擬碼~8.3。
+\begin{pseudo}[unbreakable]{把陣列 $A[1..N]$ 調成 Max-堆積樹}
+\Procedure{Max-Heapify}{$A, i, N$}
+    \While{$2i \le N$}
+        \State $j \gets 2i$ \Comment{左子節點}
+        \If{$j + 1 \le N$ \AND $A[j + 1] > A[j]$}
+            \State $j \gets j + 1$ \Comment{右子節點比較大}
+        \EndIf
+        \If{$A[i] \ge A[j]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$
+        \State $i \gets j$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Build-Max-Heap}{$A, N$}
+    \For{$i \gets \lfloor N/2 \rfloor$ \DownTo $1$}
+        \State \Call{Max-Heapify}{$A, i, N$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}。 位置 $\lfloor N/2 \rfloor + 1..N$ 都是葉節點，各自就是一棵 Max-堆積樹。 迴圈不變量：
+第 11 行每一輪開始時，位置 $i + 1, \ldots, N$ 的每個節點都是一棵 Max-堆積樹的根。 處理 $i$ 時，它的子節點
+$2i$、$2i + 1$ 都大於 $i$，已經是堆積的根，正好符合 \proc{Max-Heapify} 的前提，做完後 $i$ 也是堆積的根，
+不變量維持（而且下沉只動到 $i$ 的子樹，不破壞其他節點）。 迴圈結束時 $i = 0$，根 $A[1]$ 是 Max-堆積樹的根，
+整個陣列符合 Max-堆積樹性質。
+
+例：$A = 4, 1, 3, 2, 16, 9, 10, 14, 8, 7$ 依序對 $i = 5, 4, 3, 2, 1$ 下沉，結果正好是 ㈡ 的
+$16, 14, 10, 8, 7, 9, 3, 2, 4, 1$。
+
+\textbf{時間}。 簡單的上界：呼叫 $N/2$ 次下沉，每次最多走樹高 $\lfloor \log_2 N \rfloor$ 層，是
+$O(N \log N)$。 更緊的分析：高度為 $h$ 的節點（往下到葉最多 $h$ 層）下沉最多 $h$ 次交換，而高度 $h$ 的
+節點最多 $\lceil N / 2^{h+1} \rceil$ 個，所以總工作量
+\[
+\sum_{h=0}^{\lfloor \log_2 N \rfloor} \left\lceil \frac{N}{2^{h+1}} \right\rceil \cdot O(h)
+= O\!\left( N \sum_{h=0}^{\infty} \frac{h}{2^{h}} \right) = O(2N) = O(N),
+\]
+用到 $\sum_{h \ge 0} h/2^h = 2$。 所以建堆積是 $\Theta(N)$（每個元素至少看一次，下界是 $\Omega(N)$）。
+（資結書定理~8.1。）
+\end{pastsoln}

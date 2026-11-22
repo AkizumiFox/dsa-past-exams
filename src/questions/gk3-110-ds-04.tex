@@ -1,0 +1,82 @@
+\begin{pastexam}[label={px:gk3-110-ds-04}]{高考三級資訊處理 110 年 第四題}
+（申論；25 分）
+
+㈠請使用 C 語言寫一副程式 void FindMeanAverage(int A [], int n, int * mean, int * average)，對一個
+未排序的（unsorted）且長度為 n 的陣列 A[0:n$-$1]，尋找陣列中的中位數與平均數，並分別存入 mean 及
+average 運算複雜度。（17 分）㈡請舉例說明此副程式最差情況（worst case）所花費的運算複雜度。（8 分）
+（注意：請加註解說明程式碼作法。）
+\end{pastexam}
+
+\begin{pastsoln}
+原題㈠的句子有缺字：「並分別存入 mean 及 average 運算複雜度」應是「並分別存入 mean 及 average，並
+說明其運算複雜度」，以下照這個意思作答。 另外，參數名稱 \texttt{mean} 在英文裡是「平均數」，但題目
+說中位數存入 \texttt{mean}、平均數存入 \texttt{average}，以下照題目的對應。 再約定兩點：$n$ 是偶數時
+中位數取「較小的那個中間數」，也就是第 $\lceil n/2 \rceil$ 小（從 $0$ 算是第 $\lfloor (n-1)/2 \rfloor$ 小）；
+\texttt{average} 是 \texttt{int}，平均數取整數除法的結果（捨去小數）。
+
+\textbf{㈠ 程式}。 平均數掃一遍即可。 中位數不必整個排序，用快速選擇（資結書第~16.2~節）：和快速
+排序一樣分割，但只往含有答案的那一邊繼續。 為了不改動呼叫者的陣列，先複製一份。
+\begin{minted}[fontsize=\small]{c}
+#include <stdlib.h>
+
+/* 把 B[lo..hi] 以 B[hi] 為基準分割：
+   小於等於基準的放左邊、大於的放右邊，回傳基準最後的位置 */
+static int partition(int B[], int lo, int hi) {
+    int pivot = B[hi], i = lo - 1, t;
+    for (int j = lo; j < hi; j++)
+        if (B[j] <= pivot) { i++; t = B[i]; B[i] = B[j]; B[j] = t; }
+    t = B[i + 1]; B[i + 1] = B[hi]; B[hi] = t;
+    return i + 1;
+}
+
+/* 傳回 B[0..n-1] 裡第 k 小的數（k 從 0 算） */
+static int select_kth(int B[], int n, int k) {
+    int lo = 0, hi = n - 1;
+    while (lo < hi) {
+        int q = partition(B, lo, hi);
+        if (q == k) return B[q];      /* 基準剛好是第 k 小 */
+        if (k < q) hi = q - 1;        /* 答案在左邊 */
+        else lo = q + 1;              /* 答案在右邊 */
+    }
+    return B[lo];                     /* 只剩一格 */
+}
+
+void FindMeanAverage(int A[], int n, int *mean, int *average) {
+    /* 1. 平均數：掃一遍求和（用 long long 免得溢位） */
+    long long sum = 0;
+    for (int i = 0; i < n; i++) sum += A[i];
+    *average = (int)(sum / n);
+
+    /* 2. 中位數：複製一份，不改動呼叫者的陣列，
+          再用快速選擇找第 (n-1)/2 小（從 0 算） */
+    int *B = malloc(sizeof(int) * n);
+    for (int i = 0; i < n; i++) B[i] = A[i];
+    *mean = select_kth(B, n, (n - 1) / 2);
+    free(B);
+}
+\end{minted}
+正確性：\texttt{partition} 做完後，基準在位置 $q$，左邊都 $\le$ 它、右邊都 $>$ 它，所以它就是整段裡
+第 $q$ 小的數。 $q = k$ 就找到；$k < q$ 時第 $k$ 小一定在左邊，$k > q$ 時在右邊（位置編號是整個
+陣列的，不必換算）。 每輪範圍至少縮小一格，迴圈一定結束。 例：$A = \langle 2, 9, 4, 7, 5\rangle$，
+和是 $27$，平均 $\lfloor 27/5 \rfloor = 5$；第一次分割以 $5$ 為基準得 $\langle 2, 4, 5, 7, 9\rangle$，
+$q = 2 = k$，中位數是 $5$。
+
+複雜度：平均數 $\Theta(n)$；複製 $\Theta(n)$，額外空間 $\Theta(n)$。 快速選擇每次分割的成本和
+當時範圍的長度成正比，基準若大致落在中間，範圍每次縮小一個常數比例，總共 $n + cn + c^2 n + \cdots =
+O(n)$；對隨機的輸入，期望時間是 $\Theta(n)$（資結書第~16.2~節，用隨機選基準時對任何輸入都成立）。
+所以整個副程式平均是 $\Theta(n)$，比先排序再取中間的 $\Theta(n \log n)$ 好。
+
+\textbf{㈡ 最差情況}。 每次分割的基準都是範圍裡的最大值（或最小值）時，範圍每次只少一格。 例如
+$A$ 已經由小到大排好，$A = \langle 1, 2, \ldots, n\rangle$：基準 $B[hi]$ 每次都是最大值，分割後 $q = hi$，
+因為 $k < q$，範圍變成 $[lo, hi - 1]$。 要從長度 $n$ 一路縮到長度 $k + 1$（約 $n/2$）才會碰到
+$q = k$，分割的比較次數是
+\[
+(n - 1) + (n - 2) + \cdots + k \approx \frac{n^2}{2} - \frac{n^2}{8} = \frac{3n^2}{8},
+\]
+所以最差是 $\Theta(n^2)$。 以 $n = 8$ 為例，$\langle 1, \ldots, 8\rangle$ 找第 $3$ 小（從 $0$ 算），
+分割範圍依序長 $8, 7, 6, 5, 4$，共 $7 + 6 + 5 + 4 + 3 = 25$ 次比較，前四次基準都是 $8, 7, 6, 5$，
+第五次基準 $4$ 落在位置 $3$ 結束。
+
+要把最差情況也壓到 $\Theta(n)$，可以把選基準換成「中位數的中位數」（資結書第~16.3~節），最差
+$\Theta(n)$，但常數較大；實務上用隨機選基準，最差 $\Theta(n^2)$ 只會以極小的機率發生。
+\end{pastsoln}

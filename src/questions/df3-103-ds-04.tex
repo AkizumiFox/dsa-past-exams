@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:df3-103-ds-04}]{地方三等資訊處理 103 年 第四題}
+（申論；20 分）
+
+給定一個陣列（array）A[0], A[1],…, A[99] 用以表示一個循環佇列（circular queue）。另外再以兩個整數變數
+\textit{front} 及 \textit{back} 記錄該循環佇列之前端（front of the queue）及尾端（back of the queue）。一個尚未
+有任何資料的循環佇列之 front = back = -1：
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 若要新增加一筆資料於此循環佇列，\textit{front} 及 \textit{back} 變數該如何改變？（5 分）
+\item[㈡] 若要從循環佇列中取出並刪除一筆資料，\textit{front} 及 \textit{back} 變數該如何改變？（5 分）
+\item[㈢] 此循環佇列最多可以儲存幾筆資料？（5 分）
+\item[㈣] 若此循環佇列已經全滿，在未刪除任何資料前已不能再儲存新資料，請問此時 \textit{front} 及 \textit{back}
+的關連為何？（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 原本空的：$\mathit{front} = \mathit{back} = 0$；否則 $\mathit{back} \gets (\mathit{back} + 1) \bmod 100$，
+$\mathit{front}$ 不變。 ㈡ 取出 $A[\mathit{front}]$；若它是最後一筆（$\mathit{front} = \mathit{back}$）就設回
+$-1, -1$，否則 $\mathit{front} \gets (\mathit{front} + 1) \bmod 100$，$\mathit{back}$ 不變。 ㈢ $100$ 筆。
+㈣ $(\mathit{back} + 1) \bmod 100 = \mathit{front}$。
+
+\textbf{採用的解讀。} 題目用 $\mathit{front} = \mathit{back} = -1$ 表示空佇列，$-1$ 不是陣列的合法索引，所以
+這裡把 $\mathit{front}$ 解讀成「第一筆資料的位置」、$\mathit{back}$ 是「最後一筆資料的位置」，空佇列另外用 $-1$
+標記。 這樣空和滿可以分辨，$100$ 格都能用。 （另一種常見寫法是讓 $\mathit{front}$ 指向第一筆的前一格、只用
+$\mathit{front} = \mathit{back}$ 判斷空，那種寫法要空出一格，只能存 $99$ 筆，見資結書第~6.2~節；但那種寫法通常
+從 $0$ 開始，不需要 $-1$。）
+
+\textbf{㈠ 加入}（\textproc{Enqueue}）：
+\begin{itemize}
+\item 佇列滿（見㈣）：不能加，回報溢位。
+\item 佇列空（$\mathit{front} = -1$）：$\mathit{front} \gets 0$，$\mathit{back} \gets 0$，$A[0] \gets x$。
+\item 其他：$\mathit{back} \gets (\mathit{back} + 1) \bmod 100$，$A[\mathit{back}] \gets x$；$\mathit{front}$ 不變。
+$\bmod 100$ 讓 $\mathit{back}$ 從 $99$ 繞回 $0$，這就是「循環」。
+\end{itemize}
+
+\textbf{㈡ 刪除}（\textproc{Dequeue}）：
+\begin{itemize}
+\item 佇列空（$\mathit{front} = -1$）：不能刪，回報空佇列。
+\item 取出 $x \gets A[\mathit{front}]$。 若 $\mathit{front} = \mathit{back}$，表示剛取走的是唯一一筆，佇列變空：
+$\mathit{front} \gets -1$，$\mathit{back} \gets -1$。
+\item 否則 $\mathit{front} \gets (\mathit{front} + 1) \bmod 100$；$\mathit{back}$ 不變。
+\end{itemize}
+
+\textbf{㈢ 容量。} 佇列裡的資料是從 $\mathit{front}$ 往後（循環地）到 $\mathit{back}$ 的連續一段，筆數是
+$(\mathit{back} - \mathit{front} + 100) \bmod 100 + 1$，最多 $100$ 筆，$A[0..99]$ 全部用上。 因為空佇列用
+$-1$ 表示，不必犧牲一格來分辨空和滿。
+
+\textbf{㈣ 滿的條件。} $100$ 格都有資料時，$\mathit{back}$ 的下一格（循環地）就是 $\mathit{front}$：
+\[
+(\mathit{back} + 1) \bmod 100 = \mathit{front},
+\]
+例如 $\mathit{front} = 0$、$\mathit{back} = 99$，或 $\mathit{front} = 37$、$\mathit{back} = 36$。 此時再加入，
+$\mathit{back}$ 前進一格就會蓋掉 $\mathit{front}$ 那筆資料，所以必須擋下來。 注意只有一筆資料時
+$\mathit{front} = \mathit{back}$，和滿的條件不同，不會混淆。
+\end{pastsoln}

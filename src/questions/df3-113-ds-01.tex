@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:df3-113-ds-01}]{地方三等資訊處理 113 年 第一題}
+（申論；20 分）
+
+考慮下面以虛擬碼（Pseudocode）表示的遞迴演算法，請回答相關問題：
+\begin{center}
+\fbox{\begin{minipage}{0.42\linewidth}
+Algorithm $Q(n)$\\
+\hspace*{1.5em}\textbf{if} $n = 1$\\
+\hspace*{3em}\textbf{return} 1\\
+\hspace*{1.5em}\textbf{else return} $Q(n - 1) + 2 \times n - 1$
+\end{minipage}}
+\end{center}
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 列出虛擬碼中 $Q(n)$ 的遞迴關係式，並說明此虛擬碼最終計算的是什麼？（5 分）
+\item[㈡] 用遞迴函式表示此虛擬碼所使用的乘法運算次數，並用漸進式符號 Big-O 表示此遞迴函式的成長速率。（5 分）
+\item[㈢] 以遞迴函式表示此虛擬碼的執行時間 $T(n)$ 並說明其時間複雜度（以 Big-O 表示）。（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠} 遞迴關係式：
+\[
+Q(n) = \begin{cases} 1, & n = 1, \\ Q(n-1) + 2n - 1, & n \ge 2. \end{cases}
+\]
+展開（資結書第~2.1~節）：
+\[
+Q(n) = (2n - 1) + (2n - 3) + \cdots + 3 + 1 = \sum_{i=1}^{n} (2i - 1) = 2 \cdot \frac{n(n+1)}{2} - n = n^2 .
+\]
+（$Q(1) = 1$ 正好是 $i = 1$ 那一項。）前幾個值 $Q(1), \ldots, Q(5) = 1, 4, 9, 16, 25$。 所以這個演算法計算
+的是 $n^2$，做法是把前 $n$ 個奇數加起來。 也可以用歸納法驗證：$Q(1) = 1 = 1^2$；若 $Q(n-1) = (n-1)^2$，
+則 $Q(n) = (n-1)^2 + 2n - 1 = n^2$。
+
+\textbf{㈡} 每次進到 \textbf{else} 分支做一次乘法 $2 \times n$，$n = 1$ 時不做乘法。 令 $M(n)$ 為乘法次數：
+\[
+M(n) = \begin{cases} 0, & n = 1, \\ M(n-1) + 1, & n \ge 2, \end{cases}
+\]
+展開得 $M(n) = n - 1$，成長速率 $O(n)$（也是 $\Theta(n)$）。
+
+\textbf{㈢} 每一層呼叫除了遞迴以外，只做常數個運算（一次比較、一次乘法、一次加法、一次減法、回傳），設
+為 $c$；$n = 1$ 時是常數 $c'$（一次比較和回傳）：
+\[
+T(n) = \begin{cases} c', & n = 1, \\ T(n-1) + c, & n \ge 2. \end{cases}
+\]
+展開：$T(n) = T(n-1) + c = T(n-2) + 2c = \cdots = T(1) + (n-1)c = c' + (n-1)c$，所以 $T(n) = O(n)$
+（也是 $\Theta(n)$）。 遞迴深度是 $n$，堆疊空間也是 $O(n)$。 （算 $n^2$ 本來一次乘法就夠，這裡是為了
+練習遞迴式。 若把數字的位數也算進成本，$Q(n)$ 的值有 $O(\log n)$ 位，題目的層次不考慮。）
+\end{pastsoln}

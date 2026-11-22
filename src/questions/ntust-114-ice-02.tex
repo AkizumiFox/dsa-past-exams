@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntust-114-ice-02}]{臺科大資工所 114 學年度 第 2 題}
+（複選；每格 5 分）
+
+(5\%) Select all the tasks from the following options where using a stack is preferable to using a
+queue.
+\begin{enumerate}[label=(\alph*)]
+\item Mazing problem.
+\item Level-order traversal of a binary tree.
+\item Operating system job scheduler.
+\item Depth-first search.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)、(d)。
+
+堆疊是後進先出，適合「先往深處走，走不通再退回最近的分岔點」；佇列是先進先出，適合「依到達順序
+處理、一層一層往外」（資結書第~6.1、6.2~節）。
+\begin{itemize}
+\item (a) 對。 迷宮問題的標準解法是回溯：走到死路就回到最近一個還有路可試的岔口，這個「最近的」正是
+堆疊頂端。 課本的迷宮程式就是用堆疊記錄走過的路徑。 （若要求最短路徑，會改用佇列做 BFS；題目只說
+迷宮問題，照一般的回溯解法。）
+\item (b) 錯。 層序走訪要先處理完同一層才到下一層，先放進去的先處理，用佇列（資結書第~7.3.2~節）。
+\item (c) 錯。 作業系統排程（例如 FCFS、輪轉）讓先到的工作先執行，用佇列；用堆疊會讓最早的工作一直
+被後來的壓在底下。
+\item (d) 對。 深度優先搜尋可以寫成迴圈加上明確的堆疊（資結書第~21.4.6~節），遞迴版本則是借用呼叫
+堆疊。
+\end{itemize}
+\end{pastsoln}

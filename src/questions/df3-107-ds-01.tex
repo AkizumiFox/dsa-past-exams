@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:df3-107-ds-01}]{地方三等資訊處理 107 年 第一題}
+（申論；20 分）
+
+計算正整數 $a$ 和 $b$ 的最大公因數 $\gcd(a, b)$ 的演算法，以類似 C 語言表示如下:
+\begin{quote}
+\begin{tabular}{@{}r@{\qquad}l@{}}
+1 & integer $\gcd(a, b)$ \{ \\
+2 & \qquad $x = a$; $y = b$; \\
+3 & \qquad \textbf{while} $(y > 0)$ \{$r = x \mathbin{\%} y$; $x = y$; $y = r$;\} \\
+4 & \qquad return $x$; \\
+5 & \}
+\end{tabular}
+\end{quote}
+其中資料型態 integer 表示整數，$x \mathbin{\%} y$ 表示 $x$ 除以 $y$ 的餘數。請回答下列問題：（每小題 10 分，共 20 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請證明：輸入任意兩個正整數，此程式執行一定時間後就會停止，不會造成無窮迴圈。
+\item[㈡] 假設 $a > b$，請證明此程式之 \textbf{while} 迴圈（第 3 行）至多只會被執行 $2\log_2 b + 1$ 次。
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+這是輾轉相除法（資結書虛擬碼~6.10 是同一個迴圈）。 「迴圈執行一次」指迴圈本體 $\{r = x \mathbin{\%} y; x = y; y = r;\}$ 做一次。
+令 $y_0 = b$，$y_i$ 是迴圈做完第 $i$ 次之後 $y$ 的值；設迴圈共做 $t$ 次，則 $y_t = 0$，而 $y_1, \ldots, y_{t-1} \ge 1$。
+
+\textbf{關鍵事實}：第 $i + 1$ 次做完後，新的 $x$ 是 $y_i$，新的 $y$ 是 $y_{i+1} = (\text{舊的 } x) \bmod y_i$。 因此
+\begin{itemize}
+\item (a) 餘數小於除數：$0 \le y_{i+1} < y_i$。
+\item (b) 第 $i + 2$ 次時被除的數是 $y_i$、除數是 $y_{i+1}$，所以 $y_{i+2} = y_i \bmod y_{i+1}$。
+\end{itemize}
+
+\textbf{㈠}。 \textbf{證明。} 一開始 $y = b \ge 1$。 由 (a)，每執行一次迴圈，$y$ 都嚴格變小而且仍是非負整數：
+$b = y_0 > y_1 > y_2 > \cdots \ge 0$。 非負整數不可能無限地嚴格遞減，所以至多 $b$ 次之後 $y$ 一定變成 $0$，迴圈條件
+$y > 0$ 不成立而離開，接著第 4 行傳回。 每次迴圈本體只做常數個運算，所以程式在有限時間內停止。 \hfill$\blacksquare$
+
+\textbf{㈡}。 先證明：\textbf{每做兩次，$y$ 至少減半}，即只要 $y_{i+1} \ge 1$，就有 $y_{i+2} < y_i / 2$。
+
+\textbf{證明。} 由 (a)，$y_{i+1} < y_i$。 分兩種情況：
+\begin{itemize}
+\item 若 $y_{i+1} \le y_i / 2$：由 (a)，$y_{i+2} < y_{i+1} \le y_i / 2$。
+\item 若 $y_{i+1} > y_i / 2$：這時 $y_{i+1} < y_i < 2y_{i+1}$，所以 $y_i$ 除以 $y_{i+1}$ 的商是 $1$，由 (b)，
+$y_{i+2} = y_i - y_{i+1} < y_i - y_i/2 = y_i / 2$。
+\end{itemize}
+兩種情況都有 $y_{i+2} < y_i / 2$。 反覆使用（從 $y_0 = b$ 出發），得 $y_{2j} \le b / 2^{j}$（$j = 0$ 時取等號，$j \ge 1$ 時
+是嚴格小於）。
+
+現在算 $t$。 分 $t$ 是奇數或偶數：
+\begin{itemize}
+\item $t = 2j + 1$：第 $t$ 次迴圈有執行，表示當時 $y_{2j} \ge 1$。 於是 $1 \le y_{2j} \le b / 2^j$，$2^j \le b$，
+$j \le \log_2 b$，所以 $t = 2j + 1 \le 2\log_2 b + 1$。
+\item $t = 2j + 2$：$y_{2j+1} \ge 1$，而 $y_{2j} > y_{2j+1}$，所以 $y_{2j} \ge 2$。 於是 $2 \le b / 2^j$，
+$2^{j+1} \le b$，$j + 1 \le \log_2 b$，所以 $t = 2(j+1) \le 2\log_2 b < 2\log_2 b + 1$。
+\end{itemize}
+兩種情況都是 $t \le 2\log_2 b + 1$。 \hfill$\blacksquare$
+
+例：$\gcd(89, 55)$（相鄰費氏數，是最慢的情形之一）：$y$ 依序是 $55, 34, 21, 13, 8, 5, 3, 2, 1, 0$，迴圈做 $9$ 次；
+上界 $2\log_2 55 + 1 \approx 12.6$，成立。 證明其實沒有用到 $a > b$；若 $a < b$，第一次迴圈只是把 $a$、$b$ 對調
+（$a \bmod b = a$），上界仍然成立。 這個結果說明輾轉相除法的迴圈次數是 $O(\log b)$，和 $b$ 的位數成正比。
+\end{pastsoln}

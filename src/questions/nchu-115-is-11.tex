@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nchu-115-is-11}]{中興資工所乙組 115 學年度 第 11 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which statement best describes the approach used by dynamic programming?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item It uses randomization to select among many possible solutions with equal probability.
+\item It enumerates all possible solutions and then discards those that violate constraints.
+\item It stores solutions to overlapping subproblems and reuses them to avoid redundant
+computation.
+\item It selects the next step based solely on the immediate local gain without considering
+future consequences.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+動態規劃適用在有最佳子結構、而且子問題大量重疊的問題（資結書第~18.1~節）。 直接遞迴時同一個
+子問題會被算很多次，例如費氏數的遞迴呼叫次數以指數成長（資結書第~18.1.1~節）；把每個子問題
+的答案記下來（由上而下的記憶化，或由下而上填表），每個只算一次，時間就變成「子問題個數 $\times$
+每個的成本」。
+\begin{itemize}
+\item A 錯：DP 是確定性的，不靠隨機。
+\item B 錯：先列出所有解再刪掉不合格的是窮舉（產生再測試）。 DP 不列出所有解，而是用子問題的
+最佳值組出大問題的最佳值。
+\item C 對。
+\item D 錯：只看眼前的好處、不管後果是貪心法。 DP 正好相反，每一步都比較所有選擇接上子問題
+最佳值的結果。
+\end{itemize}
+\end{pastsoln}

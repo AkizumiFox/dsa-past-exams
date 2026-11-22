@@ -1,0 +1,12 @@
+paper: ntut-113-ci
+volume: 2
+school: 北科大
+dept: 資工所
+year: 113
+subject: 計算機概論
+instructions: 本試題共八題，共 100 分。不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-113-ci-01, label: 第一題, chapter: 24}
+  - {id: ntut-113-ci-02, label: 第二題, chapter: 19}
+  - {id: ntut-113-ci-03, label: 第三題, chapter: 18}
+  - {id: ntut-113-ci-04, label: 第四題, chapter: 21}

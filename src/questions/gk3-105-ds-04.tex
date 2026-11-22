@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:gk3-105-ds-04}]{高考三級資訊處理 105 年 第四題}
+（申論；20 分）
+
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 依序插入 2, 1, 4, 5, 9, 3, 6, 7 於原來為空的堆（min heap），請畫圖顯示此堆（min heap）的樹狀
+結構，並請寫出此堆（min heap）的陣列內容。（10 分）
+\item[㈡] 從上面㈠小題的結果刪除兩個元素，請畫圖顯示此堆（min heap）的樹狀結構，並請寫出此堆（min heap）
+的陣列內容。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 陣列 $[1, 2, 3, 5, 9, 4, 6, 7]$；㈡ 陣列 $[3, 5, 4, 7, 9, 6]$。
+
+堆積只能刪除根（最小值），所以㈡的「刪除兩個元素」解讀成做兩次刪除最小值。 陣列從索引 $1$ 開始，
+$A[i]$ 的父節點是 $A[\lfloor i/2 \rfloor]$，子節點是 $A[2i]$、$A[2i+1]$（資結書第~8.1~節）。
+
+\textbf{㈠ 逐一插入。} 新元素放在陣列最後，再往上和父節點比，比父節點小就交換（上浮，資結書虛擬碼
+~8.1、8.2 的最小堆積版）。
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+插入 & 上浮過程 & 陣列 \\
+\midrule
+$2$ & 成為根 & $[2]$ \\
+$1$ & 放在 $A[2]$，$1 < 2$，和 $A[1]$ 交換 & $[1, 2]$ \\
+$4$ & 放在 $A[3]$，父 $1 < 4$，不動 & $[1, 2, 4]$ \\
+$5$ & 放在 $A[4]$，父 $A[2] = 2 < 5$，不動 & $[1, 2, 4, 5]$ \\
+$9$ & 放在 $A[5]$，父 $A[2] = 2 < 9$，不動 & $[1, 2, 4, 5, 9]$ \\
+$3$ & 放在 $A[6]$，父 $A[3] = 4 > 3$，交換；父 $A[1] = 1 < 3$，停 & $[1, 2, 3, 5, 9, 4]$ \\
+$6$ & 放在 $A[7]$，父 $A[3] = 3 < 6$，不動 & $[1, 2, 3, 5, 9, 4, 6]$ \\
+$7$ & 放在 $A[8]$，父 $A[4] = 5 < 7$，不動 & $[1, 2, 3, 5, 9, 4, 6, 7]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{㈡ 刪除兩次最小值。} 取出根，把最後一個元素搬到根，再往下和較小的子節點比，比它大就交換
+（下沉）。
+\begin{itemize}
+\item 第一次：取出 $1$，最後的 $7$ 搬到根，得 $[7, 2, 3, 5, 9, 4, 6]$。 $7$ 的子節點 $2, 3$，較小的
+$2 < 7$，交換：$[2, 7, 3, 5, 9, 4, 6]$。 $A[2] = 7$ 的子節點 $5, 9$，$5 < 7$，交換：
+$[2, 5, 3, 7, 9, 4, 6]$。 $A[4] = 7$ 沒有子節點，停。
+\item 第二次：取出 $2$，最後的 $6$ 搬到根，得 $[6, 5, 3, 7, 9, 4]$。 子節點 $5, 3$，較小的 $3 < 6$，
+交換：$[3, 5, 6, 7, 9, 4]$。 $A[3] = 6$ 只有子節點 $A[6] = 4 < 6$，交換：$[3, 5, 4, 7, 9, 6]$。
+$A[6]$ 沒有子節點，停。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+  lab/.style={draw=none,rectangle,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=24mm}, level 2/.style={sibling distance=12mm},
+  level 3/.style={sibling distance=8mm}]
+\node {1}
+  child {node {2} child {node {5} child {node {7}} child[missing]} child {node {9}}}
+  child {node {3} child {node {4}} child {node {6}}};
+\node[lab] at (0,-3.7) {㈠ 插入完：$[1, 2, 3, 5, 9, 4, 6, 7]$};
+\begin{scope}[xshift=65mm]
+\node {3}
+  child {node {5} child {node {7}} child {node {9}}}
+  child {node {4} child {node {6}} child[missing]};
+\node[lab] at (0,-3.7) {㈡ 刪除兩次後：$[3, 5, 4, 7, 9, 6]$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+檢查：兩棵樹都是完整二元樹，而且每個節點都不大於它的子節點，是合法的最小堆積。
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ccu-114-csb-03}]{中正資工所乙組 114 學年度 第 3 題}
+（是非組合；單選）
+
+(5\%) Please answer the following \textbf{true-or-false} questions and select the correct set of answers from the provided options.
+\begin{enumerate}[label=\Roman*.]
+\item Finding an arbitrary element in a heap with $n$ elements takes O($\log n$) time in the worst case.
+\item Merge sort is a stable sorting algorithm.
+\item If there are negative edges in a graph, but no negative cycles, Dijkstra's algorithm still runs correctly.
+\end{enumerate}
+
+A.~False, False, False \qquad B.~False, False, True \qquad C.~False, True, False\\
+D.~False, True, True \qquad E.~True, False, False \qquad F.~True, False, True\\
+G.~True, Ture, False \qquad H.~Ture, True, True
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C（False, True, False）。 I 是資結書第~8~章、II 是第~14~章、III 是第~25~章的內容；歸在第~8~章。
+
+\begin{itemize}
+\item \textbf{I：False。} 堆積只保證父節點不小於（最大堆積）子節點，兄弟之間、不同子樹之間沒有大小關係，不能像二元搜尋樹那樣
+往一邊找。 找任意一個值，最壞要看過所有節點，$O(n)$（資結書第~8.1~節）。 $O(\log n)$ 的是插入、刪除最大值這類沿一條路徑走的
+操作；找最大值則是 $O(1)$。
+\item \textbf{II：True。} 合併時兩邊相等取左邊（資結書虛擬碼~14.4 的 $B[i] \le B[j]$），左段的元素原本就在右段前面，相等的鍵
+相對順序不變，所以合併排序是穩定的（資結書第~14.1~節的定義）。
+\item \textbf{III：False。} Dijkstra 演算法的正確性要求邊權非負（資結書第~25.2.5~節）；只要有負邊，即使沒有負環也可能算錯。
+反例：$s \to x$：$2$、$s \to y$：$3$、$y \to x$：$-2$、$x \to z$：$2$。 Dijkstra 依序取出 $s, x, y, z$，$x$ 以距離 $2$ 確定後放鬆出
+$d[z] = 4$；之後才發現 $s \to y \to x$ 只要 $1$，但 $x$ 已經確定，不會再放鬆 $x \to z$，輸出 $d[z] = 4$，正確的是 $3$。 圖裡沒有
+環，更沒有負環。 有負邊、無負環時要用 Bellman--Ford。
+\end{itemize}
+三個依序是 False, True, False，選 C。
+\end{pastsoln}

@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ntu-115-dsa-04}]{臺大資工所 115 學年度 第 4 題}
+（單選）
+
+(4 points) Which of the following $\square$ generates a uniformly random permutation of an array $A$ of size $n$ in place, assuming that \proc{Random}$(\ell,r)$ returns an integer chosen uniformly at random from $\{\ell,\ell+1,\ldots,r-1,r\}$?
+
+\proc{Random-Permute}$(A)$
+\par\smallskip\noindent\begin{tabular}{@{}r@{\quad}l@{}}
+1 & for $i=1$ to $n$\\
+2 & \qquad $\square$\\
+3 & \qquad if $a\le b$\\
+4 & \qquad\qquad swap $A[i]$ with $A[\proc{Random}(a,b)]$
+\end{tabular}\par\smallskip
+\begin{enumerate}[label=(\Alph*)]
+\item $a=\proc{Random}(1,n),\ b=\proc{Random}(a,n)$
+\item $a=1,\ b=i-1$
+\item $a=i,\ b=n$
+\item $a=i+1,\ b=n$
+\item $a=1,\ b=n$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+(C) 就是 Fisher--Yates 洗牌：第 $i$ 輪從 $A[i..n]$ 裡均勻挑一個放到第 $i$ 格。 \textbf{證明它均勻。} 對任一個排列
+$\langle b_1, \ldots, b_n \rangle$，要得到它，第 $1$ 輪必須從 $n$ 個裡挑到 $b_1$（機率 $1/n$）；第 $2$ 輪從剩下的
+$n - 1$ 個裡挑到 $b_2$（機率 $1/(n-1)$）；依此類推，各輪的亂數獨立，機率是
+$\frac{1}{n} \cdot \frac{1}{n-1} \cdots \frac{1}{1} = \frac{1}{n!}$。 每一種排列的機率都是 $1/n!$，所以是均勻的。
+
+其他選項都不均勻：
+\begin{itemize}
+\item (B) $a = 1, b = i - 1$：第 $i$ 輪一定和前面某一格交換，不會留在原地。 這樣做出來的一定是「一個大環」的
+排列（Sattolo 演算法的變形），$n$ 個元素只能得到 $(n-1)!$ 種。 例如 $n = 3$ 只會得到 $\langle 2, 3, 1\rangle$ 和
+$\langle 3, 1, 2\rangle$（原本是 $\langle 1, 2, 3\rangle$），各 $1/2$，其他四種機率是 $0$。
+\item (D) $a = i + 1, b = n$：同樣不會讓 $A[i]$ 和自己交換，也只得到 $(n-1)!$ 種大環排列（就是 Sattolo 演算法）；
+$n = 3$ 時結果和 (B) 一樣只有兩種。
+\item (E) $a = 1, b = n$：每輪 $n$ 種選法，共 $n^n$ 種等機率的執行過程，每種排列的機率是 $(\text{次數})/n^n$。 要
+均勻，$n!$ 必須整除 $n^n$；$n = 3$ 時 $27$ 不能被 $6$ 整除，所以不可能均勻。 實際算出來三種排列各 $5/27$、另三種
+各 $4/27$。
+\item (A)：$\proc{Random}(a, b)$ 選到的位置不是均勻的。 $n = 2$ 時，選到 $1$ 的機率是
+$\frac{1}{2} \cdot \bigl(\frac{1}{2} \cdot 1 + \frac{1}{2} \cdot \frac{1}{2}\bigr) = \frac{3}{8}$（$a = 1$ 且 $b = 1$，
+或 $a = 1$、$b = 2$ 再選到 $1$），選到 $2$ 的機率是 $\frac{5}{8}$。 結果是對調的機率為
+$\bigl(\frac{5}{8}\bigr)^2 + \bigl(\frac{3}{8}\bigr)^2 = \frac{17}{32} \ne \frac{1}{2}$（第 $1$ 輪選 $2$、第 $2$ 輪選 $2$，
+或兩輪都選 $1$，恰好換一次）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ccu-114-swa-02}]{中正資工所甲組 114 學年度 第 2 題}
+（複選）
+
+(5\%) (Select \underline{multiple} correct answers) Please select all the correct statement(s).
+\begin{enumerate}[label=(\alph*)]
+\item A 2-3-4 tree is a B-tree of order 5.
+\item A red-black tree is a binary tree form of a 2-3 tree.
+\item All the external nodes in a B-tree are on the same level.
+\item Any internal node (excluding the root) has at least $\lceil \frac{m}{2}\rceil$ children in a B-tree
+of order $m$.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)(d)。
+
+\begin{itemize}
+\item (a) 錯。 2-3-4 樹的節點最多 $4$ 個子節點，是 $4$ 階 B 樹（資結書第~11.2~節的表）。 $5$ 階 B 樹的
+非根節點至少要 $2$ 個鍵，2-3-4 樹允許只有 $1$ 個鍵的非根節點；$5$ 階 B 樹允許 $4$ 個鍵的節點，2-3-4 樹
+最多 $3$ 個。 兩者不同。
+\item (b) 錯。 紅黑樹對應的是 2-3-4 樹（資結書第~11.1.6~節）。 反例：根 $20$ 是黑色，左右子節點 $10$、
+$30$ 都是紅色，這是合法的紅黑樹，三個鍵合起來是一個 4-節點，2-3 樹沒有這種節點。 只有規定紅色子節點
+只能在左邊的左傾紅黑樹（Sedgewick 的版本，資結書第~10~章延伸閱讀）才和 2-3 樹一一對應，一般的紅黑樹
+不是。
+\item (c) 對。 外部節點是畫在葉節點底下、代表搜尋失敗的方塊（資結書第~11.2~節）。 B 樹的定義
+（資結書定義~11.2）規定所有葉節點在同一層，外部節點都是葉節點的子節點，所以都在下一層。
+\item (d) 對。 這就是 B 樹定義的一條：根以外的內部節點至少 $\lceil m/2 \rceil$ 個子節點。
+\item (e) 錯，(c)(d) 是對的。
+\end{itemize}
+\end{pastsoln}

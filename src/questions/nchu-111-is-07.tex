@@ -1,0 +1,97 @@
+\begin{pastexam}[label={px:nchu-111-is-07}]{中興資工所乙組 111 學年度 第 7 題}
+（問答）
+
+(7 pts) Draw the contents of the two open addressing hash tables in the boxes below. The size of the hash
+table is 9. The hash function used is H(k) = k mod 9. What values will be in the hash table after the following
+sequence of insertions? Draw the values in the boxes below, and show your work for partial credit.
+\begin{center}
+18, 16, 10, 7, 26
+\end{center}
+\begin{center}
+\begin{tabular}{c@{\hspace{3cm}}c}
+(a). Linear Probing & (b). Quadratic Probing\\[2pt]
+\begin{tabular}{c|p{1.2cm}|}
+\cline{2-2}
+0 & \\ \cline{2-2}
+1 & \\ \cline{2-2}
+2 & \\ \cline{2-2}
+3 & \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & \\ \cline{2-2}
+6 & \\ \cline{2-2}
+7 & \\ \cline{2-2}
+8 & \\ \cline{2-2}
+\end{tabular}
+&
+\begin{tabular}{c|p{1.2cm}|}
+\cline{2-2}
+0 & \\ \cline{2-2}
+1 & \\ \cline{2-2}
+2 & \\ \cline{2-2}
+3 & \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & \\ \cline{2-2}
+6 & \\ \cline{2-2}
+7 & \\ \cline{2-2}
+8 & \\ \cline{2-2}
+\end{tabular}
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒寫探測公式，照資結書第~12.3~節：線性探測試 $H(k) + i$，二次探測試 $H(k) + i^2$，
+$i = 0, 1, 2, \ldots$，都取 $\bmod 9$。
+
+起始位置：$18 \bmod 9 = 0$，$16 \bmod 9 = 7$，$10 \bmod 9 = 1$，$7 \bmod 9 = 7$，$26 \bmod 9 = 8$。
+前三個鍵都直接放進去，衝突從 $7$ 開始。
+
+\textbf{(a) 線性探測}。
+\begin{itemize}
+\item $18 \to 0$，$16 \to 7$，$10 \to 1$。
+\item $7$：第 $7$ 格有 $16$，試第 $8$ 格，空的，放入。
+\item $26$：第 $8$ 格有 $7$，往後試第 $0$ 格（有 $18$）、第 $1$ 格（有 $10$）、第 $2$ 格，空的，放入。
+\end{itemize}
+
+\textbf{(b) 二次探測}。
+\begin{itemize}
+\item $18 \to 0$，$16 \to 7$，$10 \to 1$。
+\item $7$：$7 + 0 = 7$ 有 $16$；$7 + 1 = 8$，空的，放入。
+\item $26$：$8 + 0 = 8$ 有 $7$；$8 + 1 = 9 \bmod 9 = 0$ 有 $18$；$8 + 4 = 12 \bmod 9 = 3$，空的，放入。
+\end{itemize}
+
+結果：
+\begin{center}
+\begin{tabular}{c@{\hspace{2.5cm}}c}
+(a) 線性探測 & (b) 二次探測\\[2pt]
+\begin{tabular}{c|c|}
+\cline{2-2}
+0 & 18 \\ \cline{2-2}
+1 & 10 \\ \cline{2-2}
+2 & 26 \\ \cline{2-2}
+3 & \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & \\ \cline{2-2}
+6 & \\ \cline{2-2}
+7 & 16 \\ \cline{2-2}
+8 & 7 \\ \cline{2-2}
+\end{tabular}
+&
+\begin{tabular}{c|c|}
+\cline{2-2}
+0 & 18 \\ \cline{2-2}
+1 & 10 \\ \cline{2-2}
+2 & \\ \cline{2-2}
+3 & 26 \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & \\ \cline{2-2}
+6 & \\ \cline{2-2}
+7 & 16 \\ \cline{2-2}
+8 & 7 \\ \cline{2-2}
+\end{tabular}
+\end{tabular}
+\end{center}
+線性探測時 $26$ 要經過 $0, 1$ 兩個被佔的格子，這就是主叢集（primary clustering）：$0$--$1$ 和 $7$--$8$
+兩段連在一起（表是環狀的），落在其中任何一格的鍵都要一路走到尾端。 二次探測跳得比較開，$26$ 只試了
+三格。
+\end{pastsoln}

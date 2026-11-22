@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncku-115-prog-07}]{成大資訊聯招 115 學年度 資料結構複選第 10 題}
+（複選；答對得 4 分）
+
+[4\%] A system needs a priority queue with: frequent \texttt{meld(A, B)}, frequent \texttt{delete-min},
+and occasional \texttt{find-max}. Please select all that are correct.
+\begin{enumerate}[label=(\Alph*),nosep]
+\item A Fibonacci heap is a good match for frequent meld and delete-min.
+\item A leftist heap is a good match for frequent meld and delete-min.
+\item An SMMH directly supports find-max and find-min efficiently.
+\item A Fibonacci heap supports find-max in O(1) without any extra structure.
+\item A leftist heap supports find-max in O(1) without extra structure.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)。
+
+\begin{itemize}
+\item (A) 對。 費氏堆積的 meld 是把兩條根串列接起來，$O(1)$；delete-min 平攤 $O(\lg n)$（資結書
+第~8.6~節）。 兩種操作都很快。
+\item (B) 對。 左傾樹的 meld 沿兩棵樹的右路徑合併，右路徑長度 $O(\lg n)$（資結書定理~8.2），最壞
+$O(\lg n)$；delete-min 是拿掉根、把左右子樹 meld 起來，也是 $O(\lg n)$（資結書第~8.5~節）。 也很適合。
+\item (C) 對。 對稱最小最大堆積（SMMH）的根不放元素，根的左子節點是最小值、右子節點是最大值（資結書
+第~8.5.3~節），find-min、find-max 都是 $O(1)$。 這個敘述只說它能直接支援 find-max 和 find-min，沒說它
+能有效率地 meld（它不行），所以是對的。
+\item (D) 錯。 費氏堆積是最小堆積排序的森林，只有一個指標指向最小的根。 最大值一定在某個葉節點，但
+沒有任何結構記住它，要把所有節點看一遍，$\Theta(n)$。
+\item (E) 錯。 理由同 (D)：最小左傾樹只維護最小值在根，最大值要找遍所有節點（至少所有葉節點），
+$\Theta(n)$。
+\end{itemize}
+題目的情境裡，find-max 只是偶爾用，所以 (A)(B) 的結構仍然適合；如果真的要常常 find-max，常見做法是另外
+維護一個最大堆積或記錄最大值，那就是 (D)(E) 說的「extra structure」。
+\end{pastsoln}

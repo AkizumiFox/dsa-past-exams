@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:gk3-104-ds-05}]{高考三級資訊處理 104 年 第五題}
+（申論；20 分）
+
+假設有個矩陣 $A[1..n]$ 儲存 $n$ 個整數。Quick sort 是一個排序演算法。假設有個副程式 $\mathrm{partition}(A,l,r)$ 其輸入參數 $A$ 是一個矩陣，$l,r$，$l<r<n$，是兩個指標。其回傳的值 $m$ 也是一個指標。這個副程式可將矩陣中從 $l$ 到 $r$ 的這一段資料 $A[l..r]$ 區分成兩段：$A[l..m]$ 和 $A[m+1..r]$，使得在 $A[l..m]$ 中的元素都小於或等於 $x$，而在 $A[m+1..r]$ 中的元素都大於或等於 $x$，其中 $x$ 是從 $A[l..r]$ 中隨機選擇的一個整數。接下來要在此兩段資料遞迴執行 partition。避免這些遞迴計算可以用一個堆疊（stack）來處理。假設 $\mathrm{partition}(A,l,r)$ 回傳 $m$，則執行：
+\begin{quote}
+\textbf{if} $(l<m)$\ \ push\ \ $(l,m)$\ \ into stack\\
+\textbf{if} $(m+1<r)$\ \ push\ \ $(m+1,r)$\ \ into stack
+\end{quote}
+一開始，堆疊中只有一組資料，$(1,n)$ 表示 $A[1..n]$ 需要排序。如此反覆將堆疊最上面的資料 $(l,r)$ 移出，執行 $\mathrm{partition}(A,l,r)$，直到堆疊沒有資料為止。
+
+（每小題 10 分，共 20 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 證明在最糟情況下，堆疊的高度可以達到 $n/2$。
+\item[㈡] 設計一個好的演算法以降低 stack 的高度，並證明堆疊的高度最多只需要 $\log n+1$。
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+原題寫「$l<r<n$」，應該是 $l < r \le n$（一開始就要處理 $(1, n)$）；題目的分割保證兩段都不空
+（$l \le m < r$），否則可能無窮迴圈。 堆疊的高度指執行過程中堆疊裡同時存放的資料組數的最大值；$\log$ 以
+$2$ 為底。 非遞迴的快速排序和「先處理小的一段」見資結書第~14.5~節。
+
+\textbf{㈠}。 照題目的順序，先推 $(l, m)$ 再推 $(m+1, r)$，所以下一個彈出的是\textbf{右段}，左段留在堆疊裡。
+要讓堆疊長高，就讓每次留下的左段盡量小、但又要被推進去：左段要被推進去需要 $l < m$，也就是左段至少
+$2$ 個元素。 最壞的情形是\textbf{每次分割左段都恰好 $2$ 個元素}。 這是可能發生的：例如元素都不相同，而每次
+隨機選到的 $x$ 都恰好是 $A[l..r]$ 中第二小的數，分割把 $\le x$ 的兩個數放在左段（題目只要求左段 $\le x$、
+右段 $\ge x$，這樣的分割符合規定）。
+
+設 $n$ 為偶數。 追蹤：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+彈出 & 分割結果 $m$ & 彈出、推入後的堆疊（底 $\to$ 頂） \\
+\midrule
+$(1, n)$ & $2$ & $(1,2), (3,n)$ \\
+$(3, n)$ & $4$ & $(1,2), (3,4), (5,n)$ \\
+$\vdots$ & & \\
+$(n-3, n)$ & $n-2$ & $(1,2), (3,4), \ldots, (n-3,n-2), (n-1,n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+每彈出一組、推入兩組，堆疊淨增 $1$；處理 $(2k-1, n)$ 以後堆疊有 $k + 1$ 組。 最後一列時堆疊裡是
+$(1,2), (3,4), \ldots, (n-1,n)$，共 $n/2$ 組，高度達到 $n/2$。 （之後每組彈出分割成兩個單一元素，不再
+推入，堆疊只會變矮。）$n$ 為奇數時同樣做法高度是 $\lfloor n/2 \rfloor$。 所以最壞情況下堆疊高度可以
+達到 $n/2$，是 $\Theta(n)$。 \hfill$\blacksquare$
+
+\textbf{㈡ 先處理短的一段}。 分割之後，\textbf{先推長的一段、再推短的一段}，讓短的一段在堆疊頂端、先被處理：
+\begin{pseudo}[unbreakable]{非遞迴快速排序，短段先處理}
+\Procedure{Quick-Sort-Stack}{$A, n$}
+    \State $S \gets$ 空堆疊；\Call{Push}{$S, (1, n)$}
+    \While{$S$ 不空}
+        \State $(l, r) \gets$ \Call{Pop}{$S$}
+        \State $m \gets$ \Call{partition}{$A, l, r$}
+        \If{$m - l + 1 \ge r - m$} \Comment{左段比較長}
+            \State \textbf{if} $l < m$ \textbf{then} \Call{Push}{$S, (l, m)$}
+            \State \textbf{if} $m + 1 < r$ \textbf{then} \Call{Push}{$S, (m + 1, r)$}
+        \Else \Comment{右段比較長}
+            \State \textbf{if} $m + 1 < r$ \textbf{then} \Call{Push}{$S, (m + 1, r)$}
+            \State \textbf{if} $l < m$ \textbf{then} \Call{Push}{$S, (l, m)$}
+        \EndIf
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+排序結果和原本一樣（只改處理順序，每一段還是會被分割到只剩一個元素），時間也一樣。
+
+\textbf{證明高度 $\le \log n + 1$}。 一組 $(l, r)$ 的大小記為 $r - l + 1$。 把堆疊由底往頂編號 $1, 2, \ldots, h$。
+\textbf{主張}：任何時候，第 $i$ 層那一組的大小 $\le n / 2^{i-1}$。
+
+\begin{itemize}
+\item \textbf{初始}：只有第 $1$ 層 $(1, n)$，大小 $n = n/2^0$，成立。
+\item \textbf{維持}：彈出頂端第 $h$ 層的一組，大小 $s \le n/2^{h-1}$，分成兩段，長的一段大小 $< s$，短的一段大小
+$\le s/2$。 若兩段都推入：長段放在第 $h$ 層，大小 $< s \le n/2^{h-1}$；短段放在第 $h+1$ 層，大小
+$\le s/2 \le n/2^{h}$，都成立。 只推入一段時它放在第 $h$ 層，大小 $< s$，成立；都不推入時沒有新資料。
+其他層沒有變動。
+\end{itemize}
+
+只有大小 $\ge 2$ 的段才會被推入（$l < m$ 或 $m + 1 < r$）。 若堆疊高度達到 $h$，第 $h$ 層那一組滿足
+$2 \le n / 2^{h-1}$，即 $2^{h} \le n$、$h \le \log n$。 （$n = 1$ 時堆疊只有開始的一組，高度 $1$。）所以
+任何時候堆疊高度 $\le \log n + 1$。 \hfill$\blacksquare$
+
+和 ㈠ 的例子對照：每次左段 $2$ 個、右段 $r - l - 1$ 個，改成先推右段（長）再推左段（短），左段一彈出就
+分割完、不再推入，堆疊高度始終不超過 $2$。
+\end{pastsoln}

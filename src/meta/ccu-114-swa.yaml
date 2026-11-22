@@ -1,0 +1,17 @@
+paper: ccu-114-swa
+volume: 2
+school: 中正
+dept: 資工所甲組
+year: 114
+subject: 軟體設計
+questions:
+  - {id: ccu-114-swa-01, label: 第 1 題, chapter: 10}
+  - {id: ccu-114-swa-02, label: 第 2 題, chapter: 11}
+  - {id: ccu-114-swa-03, label: 第 3 題, chapter: 8}
+  - {id: ccu-114-swa-04, label: 第 4 題, chapter: 10}
+  - {id: ccu-114-swa-05, label: 第 5 題, chapter: 14}
+  - {id: ccu-114-swa-06, label: 第 6 題, chapter: 26}
+  - {id: ccu-114-swa-07, label: 第 7 題, chapter: 14}
+  - {id: ccu-114-swa-08, label: 第 8 題, chapter: 2}
+  - {id: ccu-114-swa-09, label: 第 9 題, chapter: 18}
+  - {id: ccu-114-swa-10, label: 第 10 題, chapter: 26}

@@ -1,0 +1,227 @@
+\begin{pastexam}[label={px:nccu-112-dsa-01}]{政大資科所 112 學年度 第 1 題}
+（單選，共 12 小題）
+
+(60\%) Select the best answer.\ 選擇題請在答案卡上作答，否則不予計分。
+
+Unless otherwise stated, $n$ is the number of data in a data structure.
+\begin{enumerate}[label=\arabic*),itemsep=2pt,topsep=2pt]
+\item (5\%) Consider a linked list in which each node stores an integer. Which of the following
+statements is true?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item If the list is a doubly linked list, then inserting a node to the front of the list takes $O(1)$ time.
+\item If the list is a singly linked list, then deleting a given node from the list takes $O(1)$ time.
+\item If the list is a doubly linked sorted list (i.e., the $i$th node contains the $i$th smallest
+integer), then searching an integer in the list takes $O(\log n)$ time.
+\item If the list is a singly-linked sorted list, then searching an integer in the list takes
+$O(\log n)$ time.
+\end{enumerate}
+
+\item (5\%) Let \texttt{arr} be an array that contains $n$ ($n>3$) integers. Moreover,
+\texttt{arr[0]=arr[1]=arr[2]=n+1} and \texttt{arr[i]=i} for every $3\le \texttt{i} \le \texttt{n-1}$.
+What is the time complexity of sorting \texttt{arr} in non-decreasing order using insertion sort?
+
+A.~$\Theta(n^3)$. \qquad B.~$\Theta(n^2)$. \qquad C.~$\Theta(n\log n)$. \qquad D.~$\Theta(n)$.
+
+\item (5\%) Which of the following statements is true?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item The worst-case time complexity of counting sort is $\Theta(n\log n)$.
+\item The worst-case time complexity of quick sort is $\Theta(n\log n)$.
+\item The average-case time complexity of quick sort is $\Theta(n\log n)$.
+\item The best-case time complexity of counting sort is $\Theta(n\log n)$.
+\end{enumerate}
+
+\item (5\%) Consider a variant of merge sort where merging two sorted arrays of sizes $n_a$ and
+$n_b$ ($n_a\ge n_b$) takes $\Theta(n_a^2)$ time in the worst case. Let $T(n)$ be the worst-case
+time complexity of this variant of merge sort. Which of the following recurrence relations is true?
+
+A.~$T(n)=T(n/2)+\Theta(n)$. \qquad B.~$T(n)=2T(n/2)+\Theta(n)$.\\
+C.~$T(n)=T(n/2)+\Theta(n^2)$. \qquad D.~$T(n)=2T(n/2)+\Theta(n^2)$.
+
+\item (5\%) Consider again the above variant of merge sort. What is the worst-case time complexity?
+
+A.~$\Theta(n\log n)$. \qquad B.~$\Theta(n^2)$. \qquad C.~$\Theta(n^2\log n)$. \qquad D.~$\Theta(n^3)$.
+
+\item (5\%) Which of the following statements about binary search trees is false?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item Tree height is always $\Omega(\log n)$.
+\item Given the root of the tree, there is an $O(n)$-time algorithm that sorts all the data in the tree.
+\item Given the root of the tree and an integer $k$ in $\{1,2,\dots,n\}$, there is an $O(hk)$-time
+algorithm that outputs the $k$th smallest data in the tree, where $h$ is the tree height.
+\item The smallest data is always stored in a leaf node.
+\end{enumerate}
+
+\item (5\%) Which of the following statements about binary heaps is false?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item It is a binary tree.
+\item Given the root of the tree, there is an $O(n)$-time algorithm that sorts all the data in the tree.
+\item Tree height is always $\Theta(\log n)$.
+\item It can be implemented using an array.
+\end{enumerate}
+
+\item (5\%) Which of the following data structures is best suited for range query (i.e., output
+all the data in the data structure that are between $x$ and $y$, where $x$ and $y$ are input numbers)?
+
+A.~Red black tree. \qquad B.~Stack. \qquad C.~Fibonacci heap. \qquad D.~Hash table.
+
+\item (5\%) Which of the following statements about hash tables is true?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item The best-case time complexity of inserting a key-value pair is $\Theta(\log n)$.
+\item After a hash table is created, the hash function cannot be changed.
+\item The best-case time complexity of searching a key is $O(1)$.
+\item Let $h$ be the hash function. If $x\ne y$, then $h(x)\ne h(y)$.
+\end{enumerate}
+
+\item (5\%) Which of the following problem is NP-hard?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item Find the largest cycle in a graph.
+\item Find the largest component in a graph.
+\item Find the minimum spanning tree in an edge-weighted graph.
+\item Find the maximum spanning tree in an edge-weighted graph\\
+(i.e., find the spanning tree that has the largest total edge weight).
+\end{enumerate}
+
+\item (5\%) Which of the following statements is true?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item If a problem is NP-hard, then no algorithm can solve the problem.
+\item If a problem is NP-complete, then every algorithm needs $\Omega(2^n)$ time to solve the
+problem in the worst case, where $n$ is the input size of the problem.
+\item If there is a polynomial time algorithm that solves some NP-hard problem, then every NP
+problem has a polynomial time algorithm.
+\item If a problem is NP-hard, then it is an NP problem.
+\end{enumerate}
+
+\item (5\%) Which of the following statements about graphs is false?
+\begin{enumerate}[label=\Alph*.,itemsep=0pt,topsep=2pt]
+\item The sum of the degrees of all vertices is equal to twice the number of edges.
+\item Let $G$ be a connected graph, and let $n$ be the number of vertices in $G$.\\
+Then $G$ has at least $n-1$ edges.
+\item If a graph is stored in an adjacency matrix, then it takes $O(1)$ time to check whether two
+given vertices are adjacent or not.
+\item Let $G$ be a graph stored in an adjacency matrix. Let $d_{max}$ be the largest vertex degree
+in $G$.\\
+Then it takes $O(d_{max})$ time to compute the degree of any given vertex.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1) A；2) D；3) C；4) D；5) B；6) D；7) B；8) A；9) C；10) A；11) C；12) D。
+
+這一大題的十二個小題分屬不同章：1) 鏈結串列（資結書第~5~章）；2)\,3) 排序（第~14、15~章）；
+4)\,5) 合併排序的遞迴式（第~2、14~章）；6) 二元搜尋樹（第~9~章）；7) 堆積（第~8~章）；8) 範圍
+查詢（第~9、10~章）；9) 雜湊（第~12~章）；10)\,11) NP 完備（第~28~章）；12) 圖的表示（第~21~章）。
+排序相關的小題最多，整題放在本章。
+
+\textbf{1) 答案 A。}
+\begin{itemize}
+\item A：在雙向串列最前面插入，只要設定新節點的兩個指標、原本第一個節點的 \textit{prev} 和
+\textit{head}，固定幾個步驟，$O(1)$（資結書第~5.2~節）。 對。
+\item B：從單向串列刪掉給定的節點 $p$，要改的是 $p$ 前一個節點的 \textit{next}；單向串列從 $p$
+走不回前一個，只能從 \textit{head} 找，最壞 $\Theta(n)$。 「把下一個節點的資料複製到 $p$，改刪
+下一個」的技巧在 $p$ 是最後一個節點時不能用。 錯。
+\item C：排好序的串列仍然不能直接跳到第 $i$ 個節點，二分搜尋要的「直接看中間」做不到，走到中間
+就要 $\Theta(n)$。 雙向只是多了往回走的指標，搜尋還是 $\Theta(n)$。 錯。
+\item D：理由同 C。 錯。
+\end{itemize}
+
+\textbf{2) 答案 D。} 陣列是 $\langle n+1, n+1, n+1, 3, 4, \ldots, n-1\rangle$。 插入排序（資結書
+第~14.2~節）處理一個數時，從它左邊往左比，比到第一個 $\le$ 它的數就停：
+\begin{itemize}
+\item 第 $2$、$3$ 個數和前面相等，各比一次就停，不搬動。
+\item 之後的數 $i$（$3 \le i \le n-1$）：左邊已排好的是 $3, \ldots, i-1, n+1, n+1, n+1$。 $i$ 要
+越過三個 $n+1$（搬 $3$ 次），再和 $i-1$ 比一次停下（$i = 3$ 時是走到陣列開頭停下）。 每個數最多
+比較 $4$ 次、搬 $3$ 次。
+\end{itemize}
+總共搬 $3(n-3)$ 次、比較不到 $4n$ 次，$\Theta(n)$。 換個角度：插入排序的搬動次數等於逆序對的個數，
+這個陣列的逆序對只有「前三個 $n+1$ 和後面每個數」這 $3(n-3)$ 對。
+
+\textbf{3) 答案 C。}
+\begin{itemize}
+\item A：計數排序不做比較，最壞 $\Theta(n + k)$，$k$ 是值域大小（資結書第~15.2.1~節）。 錯。
+\item B：快速排序最壞是每次都切成 $0$ 和 $n-1$ 個，$\Theta(n^2)$。 錯。
+\item C：平均 $\Theta(n \lg n)$（資結書第~14.5~節、定理~14.3）。 對。
+\item D：計數排序不管輸入長怎樣都做一樣多的事，最好也是 $\Theta(n + k)$。 錯。
+\end{itemize}
+
+\textbf{4) 答案 D。} 合併排序把 $n$ 個數分成兩半，遞迴排兩半，是 $2T(n/2)$；再把兩段合併，這時
+$n_a = n_b = n/2$（$n$ 是奇數時 $n_a = \lceil n/2 \rceil$），花 $\Theta(n_a^2) = \Theta(n^2/4) =
+\Theta(n^2)$。 所以 $T(n) = 2T(n/2) + \Theta(n^2)$。 A、C 只有一個遞迴呼叫，B 是一般的合併排序。
+
+\textbf{5) 答案 B。} 用主定理（資結書定理~2.4）：$a = b = 2$，$n^{\log_2 2} = n$；
+$f(n) = \Theta(n^2) = \Omega(n^{1 + \varepsilon})$，取 $\varepsilon = 1$；規則性條件
+$a f(n/b) = 2 (n/2)^2 = \frac{1}{2} n^2$，取 $c = \frac{1}{2} < 1$ 成立。 是情況 3，
+$T(n) = \Theta(n^2)$。 用遞迴樹看更直接：第 $j$ 層有 $2^j$ 個子問題，每個合併花 $(n/2^{j+1})^2$
+的量級，整層合計 $n^2 / 2^{j+2}$ 的量級，每往下一層減半，總和小於第一層的兩倍，由第一層決定。
+
+\textbf{6) 答案 D}（選錯的）。
+\begin{itemize}
+\item A：高度 $h$（以層數計）的二元樹最多 $2^h - 1$ 個節點，所以 $n \le 2^h - 1$，
+$h \ge \lg(n+1)$，是 $\Omega(\log n)$。 對。
+\item B：中序走訪依由小到大的順序拜訪（資結書定理~9.1），每個節點一次，$O(n)$。 對。
+\item C：先找最小值，再連續取 $k - 1$ 次後繼（資結書虛擬碼~9.3、9.4），每次 $O(h)$，總共 $O(hk)$。
+對。
+\item D：最小值是從根一直往左走到底的節點。 它沒有左子節點，但可以有右子節點：依序插入 $1$、$2$，
+最小值 $1$ 是根，右子節點是 $2$，不是葉節點。 錯，所以選 D。
+\end{itemize}
+
+\textbf{7) 答案 B}（選錯的）。
+\begin{itemize}
+\item A：二元堆積是完整二元樹。 對。
+\item B：建堆積只要 $O(n)$（資結書定理~8.1）。 如果堆積還能 $O(n)$ 排好，任何 $n$ 個數都能用比較
+在 $O(n)$ 時間排好，違反比較排序的下界 $\Omega(n \lg n)$（資結書定理~15.1）。 堆積只靠比較維持
+順序，題目也沒有給鍵值的其他條件。 錯，所以選 B。
+\item C：完整二元樹的高度是 $\lfloor \lg n \rfloor + 1$（以層數計），$\Theta(\log n)$。 對。
+\item D：存在陣列裡，$A[i]$ 的子節點是 $A[2i]$、$A[2i+1]$（資結書第~8.1~節）。 對。
+\end{itemize}
+
+\textbf{8) 答案 A。} 紅黑樹是二元搜尋樹，高度 $O(\lg n)$（資結書定理~10.4）。 先找到 $\ge x$ 的
+最小鍵，$O(\lg n)$；再依中序往後走，走到 $> y$ 為止。 共 $O(\lg n + k)$，$k$ 是輸出的筆數，
+多花的時間只跟答案的大小有關。 其他三個都只能把資料全部看一遍，$\Theta(n)$：
+\begin{itemize}
+\item B：堆疊只能看頂端，要看其他資料得全部彈出來。
+\item C：費氏堆積只保證能快速拿到最小值，其他元素之間沒有大小順序。
+\item D：雜湊函數把大小相近的鍵打散到不相關的位置，鍵的大小順序沒有留下來。
+\end{itemize}
+
+\textbf{9) 答案 C。}
+\begin{itemize}
+\item A：最好的情況是那一格沒有碰撞，算一次雜湊函數就放進去，$\Theta(1)$。 錯。
+\item B：表太滿時會換一個更大的表、配一個新的雜湊函數，把元素重新放一次（再雜湊，資結書
+第~12.5~節）。 錯。
+\item C：最好的情況是第一次探測就找到（或確定不在），$O(1)$。 對。
+\item D：鍵的種類比表的格數多時，一定有 $x \ne y$ 但 $h(x) = h(y)$（鴿籠原理），這就是碰撞。 錯。
+\end{itemize}
+
+\textbf{10) 答案 A。}
+\begin{itemize}
+\item A：找最長的環。 能在多項式時間找到最長的環，就能判斷圖有沒有哈密頓環（看最長環是不是
+經過全部 $n$ 個頂點）；哈密頓環是 NP 完備的（資結書定理~28.11），所以這個問題是 NP 難的。
+\item B：最大的連通元件，用 BFS 或 DFS 把每個元件走一遍就知道各有幾個頂點，$O(n + m)$（資結書
+第~21.6~節）。
+\item C：最小生成樹，Kruskal 或 Prim，$O(m \lg n)$（資結書第~24~章）。
+\item D：最大生成樹，把每條邊的權重變號再求最小生成樹，或把 Kruskal 改成由大到小挑邊，也是
+$O(m \lg n)$。
+\end{itemize}
+B、C、D 都有多項式時間演算法，除非 P $=$ NP，它們都不是 NP 難的。
+
+\textbf{11) 答案 C。}
+\begin{itemize}
+\item A：NP 難只是說「至少和 NP 裡每個問題一樣難」，不是不能解。 旅行推銷員問題試遍所有排列就
+解得出來，只是要指數時間。 沒有演算法能解的是不可判定的問題，例如停機問題。 錯。
+\item B：目前沒有人證明 NP 完備問題一定要 $\Omega(2^n)$。 如果 P $=$ NP，它們都有多項式時間演算法；
+就算 P $\ne$ NP，也只能推出不是多項式，不一定到 $2^n$（例如 $n^{\lg n}$ 介於兩者之間）。 錯。
+\item C：NP 裡每個問題都能在多項式時間歸約到這個 NP 難問題，再用它的多項式時間演算法解，總時間
+仍是多項式（資結書引理~28.2），所以 P $=$ NP。 對。
+\item D：NP 難不一定在 NP 裡。 停機問題是 NP 難的（\textsc{SAT} 可以歸約到它），但它不可判定，
+不在 NP 裡。 NP 難而且在 NP 裡的才叫 NP 完備。 錯。
+\end{itemize}
+
+\textbf{12) 答案 D}（選錯的）。
+\begin{itemize}
+\item A：每條邊讓兩個端點的度數各加 $1$，握手定理（資結書定理~21.1）。 對。
+\item B：連通圖一定有生成樹，生成樹有 $n - 1$ 條邊。 對。
+\item C：直接看矩陣的第 $u$ 列第 $v$ 行，$O(1)$。 對。
+\item D：鄰接矩陣裡算頂點 $v$ 的度數，要把第 $v$ 列的 $n$ 格全部看過，$\Theta(n)$。 例如 $n$ 個頂點
+只有一條邊，$d_{max} = 1$，但算度數還是要看 $n$ 格。 用鄰接串列才是 $O(\deg v)$。 錯，所以選 D。
+\end{itemize}
+\end{pastsoln}

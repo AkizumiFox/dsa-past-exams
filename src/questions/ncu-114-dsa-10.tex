@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:ncu-114-dsa-10}]{中央資工所 114 學年度 第 10 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+（第 8--10 題共用下面的說明和程式。）
+
+Consider a UAV (Unmanned Aerial Vehicle) with F unit of fuel travels from NCU to a destination
+``target'' km away. There are n gas stations along the way. When the UAV refuels at a gas station, all
+the fuel of the gas station is transferred into the UAV.
+
+Suppose that the UAV consumes one unit of fuel for every kilometer it travels. Let the position and fuel
+of a gas station indicate the distance between the gas station and NCU and its volume of fuel,
+respectively. Return the minimum number of refueling stops the UAV must make in order to reach its
+destination.
+\begin{minted}[fontsize=\small]{c}
+typedef struct {
+    int position;
+    int fuel;
+} stop_info;
+
+int Refuel(int target, int F, int n, stop_info s[]) {
+    int N_R = 0;   // number of refuel
+    int i;   //gas stations ID
+    stop_info X;
+
+    while (F < target) {
+        for (i=0;  L1  ; ++i)
+            Q.push(s[i].fuel);
+        if (Q.empty()) return -1;
+        X=Q.pop();
+        F += X.fuel
+        N_R++;
+    }
+    return N_R;
+}
+\end{minted}
+
+Consider Refuel algorithm above. Which of the following statements is true?
+\begin{enumerate}[label=(\alph*)]
+\item The time complexity of Refuel algorithm above is $\theta$(n$^2$logn)
+\item The time complexity of the minimum number of refuel problem is $\theta$(n$^2$ logn)
+\item The time complexity in Refuel algorithm above is $\theta$(nlogn)
+\item The time complexity of the minimum number of refuel problem is $\theta$(nlogn)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)。
+
+程式照歷屆試題~\ref{px:ncu-114-dsa-08} 詳解的讀法：加油站依位置排好，\texttt{i} 只在開始時設成 $0$，
+\texttt{Q} 是最大堆積。 時間複雜度指最壞情況。
+
+\textbf{Refuel 演算法是 $\Theta(n \log n)$}。 用整體來數，不要一輪一輪乘（資結書第~1.7~節）：
+\begin{itemize}
+\item \texttt{i} 從 $0$ 只往上加到最多 $n$，內層 \texttt{for} 在整個執行過程中總共只跑 $O(n)$ 次，
+每個站最多推入一次：$n$ 次 \texttt{push}，每次 $O(\log n)$。
+\item 每一輪 \texttt{while} 彈出一個站。 站最多 $n$ 個，所以 \texttt{while} 最多 $n + 1$ 輪（最後一輪
+可能因為 \texttt{Q} 空了而回傳 $-1$），\texttt{pop} 最多 $n$ 次，每次 $O(\log n)$。
+\end{itemize}
+合計 $O(n \log n)$。 最壞情況也真的要這麼多：起始油量就到得了所有的站、站的油量由小到大排，而且
+油量總和剛好在最後才夠，例如 $F = n$、$\mathit{target} = F + 1 + 2 + \cdots + n$、第 $i$ 站位置 $i$、
+油量 $i$。 推入時每個新值都是最大的，要一路往上調到根，第 $j$ 次推入要調 $\lfloor\lg j\rfloor$ 層，合計
+$\Theta(n \log n)$；而且 $n$ 個站都要用上，\texttt{pop} 也做 $n$ 次。 所以是 $\Theta(n \log n)$，
+(c) 對。 若站沒有事先排序，先排序也只要 $\Theta(n \log n)$，結論不變。
+
+\textbf{逐項}：
+\begin{itemize}
+\item (a) 把 \texttt{while}（最多 $n$ 輪）乘上內層 \texttt{for}（最多 $n$ 次）再乘 $\log n$，是把
+\texttt{i} 誤當成每輪重來的上界，不是緊的界。 錯。
+\item (b) 問題本身的複雜度指「解這個問題的最好演算法」的時間。 上面的演算法已經是 $O(n \log n)$，問題
+不可能需要 $\Theta(n^2 \log n)$。 錯。
+\item (c) 對，見上。
+\item (d) 要說問題是 $\Theta(n \log n)$，除了有 $O(n \log n)$ 的演算法，還要證明\textbf{任何}演算法都
+需要 $\Omega(n \log n)$。 這要另外做下界證明，題目和一般教材都沒有，上面的分析只說明演算法是 $\Theta(n \log n)$，不能拿來斷言問題本身的複雜度。 錯。
+\end{itemize}
+題目說「Which of the following statements is true?」，只有 (c)。
+\end{pastsoln}

@@ -1,0 +1,102 @@
+\begin{pastexam}[label={px:ncku-113-prog-07}]{成大資訊聯招 113 學年度 第 7 題}
+（單選）
+
+\textbf{[5\%]} Given an initial empty Fibonacci heap (F heap). After a sequence of insertion
+operations and delete-min operations, the Fibonacci heap becomes as follows:
+\begin{center}
+\begin{tikzpicture}[x=0.0145cm,y=-0.0145cm,wn/.style={ellipse,draw,fill=white,inner sep=0pt,minimum width=0.86cm,minimum height=0.56cm,font=\sffamily\bfseries\small},bn/.style={wn,fill=black,text=white}]
+\node[wn] (n8) at (474,281) {8};
+\node[wn] (n10) at (292,352) {10};
+\node[wn] (n15) at (387,352) {15};
+\node[wn] (n21) at (474,352) {21};
+\node[wn] (n14) at (205,424) {14};
+\node[wn] (n12) at (292,424) {12};
+\node[wn] (n18) at (387,424) {18};
+\node[wn] (n30) at (205,507) {30};
+\draw (n8)--(n10);
+\draw (n8)--(n15);
+\draw (n8)--(n21);
+\draw (n10)--(n14);
+\draw (n10)--(n12);
+\draw (n15)--(n18);
+\draw (n14)--(n30);
+\end{tikzpicture}
+\end{center}
+
+Then, please proceed to perform operations in the following order: decrease the key 14 by 5,
+decrease the key 21 by 14, delete the key 12, insert the key 14, delete the minimum key.
+Considering these operations, which of the following statements is true?
+\begin{enumerate}[label=(\Alph*)]
+\item After performing ``delete the key 12'', the F heap has two min trees.
+\item A cascading cut occurs when performing ``decrease the key 14 by 5.''
+\item The resultant F heap has 4 min trees.
+\item The resultant F heap has 2 min trees.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+\textbf{約定}。 圖上沒有標記任何節點，所以一開始每個節點的標記（ChildCut）都是 false。 題目用的「F heap」
+「min tree」是 Horowitz 課本的說法，那裡的「刪除任意節點」是：把節點從所在的串列拿掉，它的子節點
+併入根串列，再從它的父節點開始做連鎖剪下，\textbf{不}整理根串列。 資結書第~8.6~節（和 CLRS）的
+刪除則是「減少鍵值到 $-\infty$，再取出最小值」，取出最小值時會整理根串列。 兩種做法在 (A) 會得到
+不同的結果，下面兩種都寫出來；最後的結果兩種一樣。 下面用 $x(\ldots)$ 表示以 $x$ 為根、括號裡是
+子樹，$^{*}$ 表示有標記。
+
+\textbf{1. 把 14 減 5，變成 9}。 $9 < $ 父節點 $10$，違反堆積性質，把 $9$ 連同子樹 $30$ 剪下放進根
+串列。 父節點 $10$ 原本沒有標記，而且不是根，做標記，停止。 \textbf{沒有}連鎖剪下。
+\[
+8\bigl(10^{*}(12),\ 15(18),\ 21\bigr),\quad 9(30).
+\]
+\textbf{2. 把 21 減 14，變成 7}。 $7 < 8$，剪下放進根串列；父節點 $8$ 是根，不做標記。 最小值變成 $7$。
+\[
+8\bigl(10^{*}(12),\ 15(18)\bigr),\quad 9(30),\quad 7.
+\]
+\textbf{3. 刪除 12}。 $12$ 沒有子節點。 把它從 $10$ 的子節點串列拿掉之後，從父節點 $10$ 開始連鎖剪下：
+$10$ 已經有標記，剪下放進根串列並清除標記；再往上是根 $8$，停止。
+\begin{itemize}
+\item Horowitz 的做法到這裡結束，有 $4$ 棵最小樹：$8(15(18))$、$9(30)$、$7$、$10$。
+\item 資結書的做法是把 $12$ 減到 $-\infty$（同樣剪下 $12$、連鎖剪下 $10$），再取出最小值 $-\infty$，
+接著整理根串列：$8$、$9$ 都是 $1$ 階，連成 $8(15(18), 9(30))$；$7$、$10$ 都是 $0$ 階，連成 $7(10)$。
+剩 $2$ 棵。
+\end{itemize}
+\textbf{4. 插入 14}：直接加進根串列。
+
+\textbf{5. 取出最小值}。 最小值是 $7$。
+\begin{itemize}
+\item Horowitz：根串列是 $8(15(18))$、$9(30)$、$7$、$10$、$14$。 拿掉 $7$（沒有子節點），整理：$10$、
+$14$ 都是 $0$ 階，連成 $10(14)$；這時 $8$、$9$、$10$ 都是 $1$ 階，$8$ 和 $9$ 連成 $8(15(18), 9(30))$，
+是 $2$ 階；剩下 $10(14)$ 是 $1$ 階。
+\item 資結書：根串列是 $8(15(18), 9(30))$、$7(10)$、$14$。 拿掉 $7$，它的子節點 $10$ 進根串列；整理：
+$14$、$10$ 都是 $0$ 階，連成 $10(14)$。
+\end{itemize}
+兩種做法最後都是兩棵最小樹：
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=0.9cm,
+  fn/.style={ellipse, draw, minimum width=0.86cm, minimum height=0.56cm, inner sep=0pt, font=\sffamily\small},
+  fe/.style={draw=black!65}]
+\node[fn] (r8) at (1,0) {8};
+\node[fn] (r15) at (0,-1) {15};
+\node[fn] (r9) at (2,-1) {9};
+\node[fn] (r18) at (0,-2) {18};
+\node[fn] (r30) at (2,-2) {30};
+\node[fn] (r10) at (4,0) {10};
+\node[fn] (r14) at (4,-1) {14};
+\draw[fe] (r8)--(r15) (r8)--(r9) (r15)--(r18) (r9)--(r30) (r10)--(r14);
+\draw[fe, densely dashed] (r8)--(r10);
+\end{tikzpicture}
+\end{center}
+（虛線表示兩個根在同一個根串列裡；最小指標指向 $8$。）
+
+逐項檢查：
+\begin{itemize}
+\item (A) 照 Horowitz 的刪除，刪掉 $12$ 之後有 $4$ 棵最小樹，錯。 （照資結書「減到 $-\infty$ 再取出
+最小值」的刪除會有 $2$ 棵；但那樣 (A)、(D) 都對，和單選不合，所以題目用的是 Horowitz 的刪除。）
+\item (B) 錯。 減少 $14$ 時父節點 $10$ 原本沒有標記，只是做上標記，沒有連鎖剪下。 連鎖剪下發生在
+刪除 $12$ 的時候（剪下 $10$）。
+\item (C) 錯，最後是 $2$ 棵。
+\item (D) 對。
+\end{itemize}
+\end{pastsoln}

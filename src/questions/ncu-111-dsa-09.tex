@@ -1,0 +1,82 @@
+\begin{pastexam}[label={px:ncu-111-dsa-09}]{中央資工所 111 學年度 複選題第 9 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+The pseudo code below aims to reverse a linked list.
+\begin{minted}[fontsize=\small]{c}
+struct Node {
+    int data;
+    struct Node* next;
+};
+typedef struct Node* NPtr;
+
+int main()
+{
+    NPtr head = NULL; /* Start with an empty linked list */
+    push(&head, ...); /* insert items into the linked list */
+    reverse(&head); /* reverse the linked list */
+ }
+
+void reverse(NPtr* Href)
+{
+    NPtr P = NULL;
+    NPtr C = *Href;
+    NPtr N = NULL;
+
+    while (__(1)__) {
+        N = C->next;
+        C->next = __(2)__;
+        P = C;
+        C = N;
+    }
+    __(3)__
+}
+\end{minted}
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Blank (1) should be C* != NULL.
+\item Blank (2) should be N.
+\item Blank (3) should be *Href = C;
+\item Statement P = C; moves the pointer to the next.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。 (A) 寫成 \texttt{C* != NULL}，照字面不是合法的 C 運算式；如果出題者的意思是
+\texttt{C != NULL}（少打或多打一個 \texttt{*}），(A) 也對，答案就是 (A)、(D)。 下面照字面作答。
+
+這是資結書第~5.5~節（虛擬碼~5.12）的反轉：$P$ 指向已經反轉好的那一段的頭，$C$ 是目前要處理的節點，
+$N$ 先記住 $C$ 原本的下一個，免得改了 \texttt{C->next} 以後找不到。 完整的程式：
+\begin{minted}[fontsize=\small]{c}
+while (C != NULL) {      /* (1) */
+    N = C->next;
+    C->next = P;         /* (2) */
+    P = C;
+    C = N;
+}
+*Href = P;               /* (3) */
+\end{minted}
+以 $1 \to 2 \to 3$ 追蹤（每列是一輪做完以後）：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+輪 & $P$ & $C$ & 已反轉的部分（從 $P$ 往後走） \\
+\midrule
+開始 & \NIL & 1 & （空） \\
+1 & 1 & 2 & $1$ \\
+2 & 2 & 3 & $2 \to 1$ \\
+3 & 3 & \NIL & $3 \to 2 \to 1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+迴圈結束時 $C = \NIL$，新的頭是 $P$。
+\begin{itemize}
+\item (A) 照字面錯：\texttt{C* != NULL} 無法編譯；就算想成 \texttt{*C != NULL}，\texttt{*C} 是一個
+\texttt{struct Node}，也不能和 \texttt{NULL} 比。 正確的條件是 \texttt{C != NULL}。 （見第一段的說明。）
+\item (B) 錯。 (2) 要讓 $C$ 指回前一個節點，應該填 \texttt{P}。 填 \texttt{N} 等於什麼都沒改（$N$ 就是
+原本的 \texttt{C->next}）。
+\item (C) 錯。 迴圈結束時 $C$ 是 \texttt{NULL}，\texttt{*Href = C} 會把串列變成空的。 應該是
+\texttt{*Href = P;}。
+\item (D) 對。 \texttt{P = C;} 和 \texttt{C = N;} 一起把兩個指標往前推一個節點：$P$ 移到剛處理完的節點，
+$C$ 移到下一個要處理的節點。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-05}]{中山資工所資安組 113 學年度 第 5 題}
+（計算）
+
+A ship carries 60 food cans, 15 of each the chicken, beef, pork, and fish. Fifteen of these cans are placed
+to a lifeboat in order to supply foods for the rescue event.
+\begin{enumerate}[label=(\alph*)]
+\item {[5\%]} How many possible choices that contains an even number of beef cans and an odd number of
+chicken cans?
+\item {[5\%]} How many possible choices that contains at least three pork cans or no pork cans at all?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $204$；(b) $591$。
+
+同一種罐頭沒有分別，一種選法就是 $(c, b, p, f)$：雞、牛、豬、魚各拿幾罐，$c + b + p + f = 15$。 每種有 $15$ 罐，
+而總共只拿 $15$ 罐，所以「每種最多 $15$ 罐」的限制自動成立，可以當成數量不限。
+
+\textbf{(a)} 牛肉偶數、雞肉奇數。 生成函數
+\[
+\frac{x}{1 - x^2} \cdot \frac{1}{1 - x^2} \cdot \frac{1}{(1 - x)^2},
+\]
+要 $x^{15}$ 的係數。 直接數比較快：令 $c = 2i + 1$、$b = 2j$，$t = i + j$，則 $p + f = 14 - 2t \ge 0$，
+$t = 0, 1, \ldots, 7$。 固定 $t$ 時 $(i, j)$ 有 $t + 1$ 種，$(p, f)$ 有 $15 - 2t$ 種：
+\[
+\sum_{t=0}^{7} (t + 1)(15 - 2t) = 15 + 26 + 33 + 36 + 35 + 30 + 21 + 8 = 204 .
+\]
+
+\textbf{(b)} 「豬肉至少 $3$ 罐或一罐都沒有」的反面是「豬肉剛好 $1$ 或 $2$ 罐」。
+\begin{itemize}
+\item 全部選法：$c + b + p + f = 15$ 的非負整數解，$\binom{15 + 3}{3} = \binom{18}{3} = 816$。
+\item $p = 1$：$c + b + f = 14$，$\binom{16}{2} = 120$。
+\item $p = 2$：$c + b + f = 13$，$\binom{15}{2} = 105$。
+\end{itemize}
+答案 $816 - 120 - 105 = 591$。 也可以正面算：$p = 0$ 有 $\binom{17}{2} = 136$ 種；$p \ge 3$ 時令 $p' = p - 3$，
+$c + b + p' + f = 12$，有 $\binom{15}{3} = 455$ 種；$136 + 455 = 591$。
+\end{pastsoln}

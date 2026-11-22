@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:nccu-113-dsa-14}]{政大資科所 113 學年度 第 14 題}
+（問答）
+
+(10\%) Consider the following task: given $n$ numbers $d_1,d_2,\ldots,d_n$, compute the average of these $n$
+numbers. A straightforward approach is to directly compute $\frac{d_1+d_2+\cdots+d_n}{n}$. However, this may
+cause overflow because $d_1+d_2+\cdots+d_n$ may overflow. Design an algorithm to compute the average without
+causing overflow. You can assume that each number alone does not cause overflow.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{設定}。 題目沒說是整數還是浮點數。 下面假設 $d_i$ 是整數，型別能表示的範圍是 $[-M, M]$ 附近（例如
+C 的 \texttt{int}），每個 $|d_i| \le M$，$n \le M$；要求的是精確的平均 $\frac{S}{n}$，$S = d_1 + \cdots + d_n$。
+最後的答案寫成「整數部分 $Q$ 加上分數 $R/n$」，$0 \le R < n$。
+
+\textbf{想法}：不累加 $S$，改成累加 $S$ 除以 $n$ 的商和餘數。 把每個數寫成
+$d_i = q_i n + r_i$，$q_i = \lfloor d_i / n \rfloor$、$0 \le r_i < n$。 商的部分加起來不大，餘數的部分每湊滿 $n$
+就進位到商。 整個過程維持不變量
+\[
+Q \cdot n + R = d_1 + \cdots + d_i, \qquad 0 \le R < n .
+\]
+
+\begin{pseudo}{不溢位的平均值}
+\Function{Average}{$d, n$}
+    \State $Q \gets 0$；$R \gets 0$
+    \For{$i \gets 1$ \To $n$}
+        \State $q \gets d_i$ 除以 $n$ 的商（向零取整）；$r \gets d_i$ 除以 $n$ 的餘數 \Comment{C 的 \texttt{/}、\texttt{\%}}
+        \If{$r < 0$} \Comment{$d_i < 0$ 時調成 $0 \le r < n$}
+            \State $r \gets r + n$；$q \gets q - 1$
+        \EndIf
+        \If{$R \ge n - r$} \Comment{等於 $R + r \ge n$，但不會算出 $R + r$}
+            \State $R \gets R - (n - r)$；$Q \gets Q + 1$
+        \Else
+            \State $R \gets R + r$
+        \EndIf
+        \State $Q \gets Q + q$
+    \EndFor
+    \State \Return $Q + R / n$ \Comment{$R/n$ 用浮點數或分數表示}
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 一開始 $Q = R = 0$，不變量成立。 第 $i$ 輪：$Q$ 加 $q$ 使 $Q n$ 多了 $q n$；餘數部分，若
+$R + r \ge n$，改成 $R + r - n$ 並讓 $Q$ 再加 $1$，$Qn + R$ 多了 $r$；否則 $R$ 直接加 $r$。 兩種情形 $Qn + R$
+都剛好多了 $qn + r = d_i$。 $R$ 仍在 $[0, n)$：第一種 $0 \le R + r - n < n$（$R, r < n$），第二種 $R + r < n$。
+迴圈結束時 $Qn + R = S$，所以 $S/n = Q + R/n$。
+
+\textbf{不會溢位}。 每個中間值都要在 $[-M, M]$ 裡：
+\begin{itemize}
+\item $q$、$r$：C 的 \texttt{/}、\texttt{\%} 不會溢位，$|q| \le |d_i|/n + 1$，$0 \le r < n \le M$。 這裡不用
+$r = d_i - q n$ 來算：$d_i$ 接近 $-M$ 時 $qn$ 可能比 $-M$ 還小。
+\item $R$ 和 $n - r$、$R - (n - r)$ 都在 $[0, n)$ 裡。 這就是用 $R \ge n - r$ 比較、不直接算 $R + r$ 的原因
+（$R + r$ 可能到 $2n - 2$）。
+\item $Q$：第 $i$ 輪結束時 $Q = \lfloor (d_1 + \cdots + d_i)/n \rfloor$，而 $|d_1 + \cdots + d_i| \le iM \le nM$，
+所以 $|Q| \le M$。 輪中先處理進位：進位前 $Q = \lfloor (d_1 + \cdots + d_{i-1})/n \rfloor \le (n-1)M/n < M$，加 $1$
+後仍不超過 $M$；接著加上 $q$ 得到的就是這一輪結束時的值。 先加 $q$ 再進位的話，中間值可能比 $-M$ 再小 $1$，
+所以順序要這樣排。
+\end{itemize}
+最後的平均 $Q + R/n$ 本身介於 $\min d_i$ 和 $\max d_i$ 之間，一定能表示。
+
+\textbf{時間}：每個數做常數次運算，$\Theta(n)$；額外空間 $O(1)$。
+
+\textbf{如果 $d_i$ 是浮點數}，比較簡單的做法是逐步更新平均值：令 $\mu_0 = 0$，
+$\mu_i = \mu_{i-1} + (d_i - \mu_{i-1})/i$，可以用歸納法證明 $\mu_i = (d_1 + \cdots + d_i)/i$。 $\mu_{i-1}$ 是前面
+數的平均，絕對值不超過 $M$，但 $d_i - \mu_{i-1}$ 在 $d_i$ 和 $\mu_{i-1}$ 異號時可能到 $2M$；改成
+$\mu_i = \mu_{i-1} \cdot \frac{i-1}{i} + \frac{d_i}{i}$ 就每一項都不超過 $M$。 也可以先除再加：$\sum_i (d_i / n)$，
+每一項不超過 $M/n$，總和不超過 $M$。 浮點數的這些做法都會有捨入誤差，整數的商餘做法是精確的。
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-115-is-13}]{中興資工所乙組 115 學年度 第 13 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which of the following is a characteristic of NP-complete problems?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item They can be solved in polynomial time using a known deterministic algorithm.
+\item They cannot be solved at all by any finite algorithm.
+\item They are in NP, and every problem in NP can be polynomial-time reduced to them.
+\item They are guaranteed to have unique solutions for all valid inputs.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+一個判定問題 $L$ 是 NP 完備，定義是兩個條件同時成立（資結書定義~28.4）：(1) $L \in \mathrm{NP}$；
+(2) 每個 NP 裡的問題都能在多項式時間歸約到 $L$（也就是 $L$ 是 NP-hard）。 C 正好是這兩條。
+\begin{itemize}
+\item A 錯：目前沒有任何 NP 完備問題有已知的多項式時間確定性演算法；有的話就證明了
+$\mathrm{P} = \mathrm{NP}$（資結書定理~28.5）。
+\item B 錯：NP 完備問題都可以解，只是已知的演算法要指數時間（例如把所有候選解試一遍，每個用
+多項式時間驗證）。 完全沒有演算法能解的是不可判定問題，例如停機問題，那不在 NP 裡。
+\item C 對。
+\item D 錯：NP 完備是判定問題（答案是或否），和解是不是唯一無關。 例如 3-SAT 的一個式子可能
+有很多組滿足的指派，也可能一組都沒有。
+\end{itemize}
+\end{pastsoln}

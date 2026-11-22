@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-05}]{臺大資工所 111 學年度 第 5 題}
+（單選。 第 1--5 題共用下面的說明和表格）
+
+For each of the following algorithms in the next five problems, what is the tightest asymptotic
+upper bound for its runtime complexity for $n$ numbers? Please use the following table of (A)-(E)
+choices when answering.
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+(A) & (B) & (C) & (D) & (E) \\ \hline
+$O(1)$ & $O(\lg n)$ & $O(n)$ & $O(n\lg n)$ & $O(n^2)$
+\end{tabular}
+\end{center}
+
+(3 points) Bucket sort when there are $\Theta(n)$ buckets: expected time?
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) $O(n)$。
+
+桶子排序（資結書第~15.2.5~節）照一般的前提：輸入是在 $[0, 1)$ 上均勻、獨立分布的 $n$ 個數。
+用 $k = \Theta(n)$ 個桶子，把數丟進對應的桶子花 $\Theta(n)$，每個桶子用插入排序，最後依序串起來
+花 $\Theta(n + k)$。
+
+令 $n_i$ 是第 $i$ 個桶子裡的數的個數，插入排序那一桶花 $O(n_i^2)$。 每個數落在第 $i$ 桶的機率
+是 $1/k$，$n_i$ 是二項分布 $B(n, 1/k)$：
+\[
+E[n_i^2] = \mathrm{Var}[n_i] + (E[n_i])^2 = n \cdot \frac{1}{k}\Bigl(1 - \frac{1}{k}\Bigr) + \frac{n^2}{k^2}.
+\]
+$k = \Theta(n)$ 時 $n/k = \Theta(1)$，所以 $E[n_i^2] = O(1)$。 期望時間是
+\[
+\Theta(n + k) + \sum_{i=1}^{k} O(E[n_i^2]) = \Theta(n) + k \cdot O(1) = O(n).
+\]
+（$k = n$ 時 $E[n_i^2] = 2 - 1/n$，就是資結書裡的式子。）
+
+(D)、(E) 是上界但不緊；最壞情況（全部落在同一桶）才是 $\Theta(n^2)$，題目問的是期望。 (A)、(B)
+不可能：每個數至少要看一次。
+\end{pastsoln}

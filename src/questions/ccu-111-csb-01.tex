@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ccu-111-csb-01}]{中正資工所乙組 111 學年度 第 1 題（節錄 (a)--(d) 小題）}
+（是非）
+
+(10\%) Carefully examine the following sentences and give your answer, true (T) or false (F), for each
+sentence. Two points are given for each correct answer.
+\begin{enumerate}[label=(\alph*)]
+\item The worst-case time complexity of any sorting algorithm is $\Omega(n\log n)$.
+\item If $f_1(n)=O\big(g(n)\big)$ and $f_2(n)=O\big(g(n)\big)$, then $f_1(n)=f_2(n)$.
+\item The maximum number of nodes in a binary tree of depth $k$ is $2^k-1$.
+\item 2 3 4 $\times$ $+$ is the postfix expression of $2+3\times 4$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) F；(b) F；(c) T；(d) T。
+
+原題還有 (e) 小題（C++ 的函式多載），不屬於本書範圍，沒有收。 (a)--(d) 分屬資結書第~15、1、7、6~章。
+\begin{itemize}
+\item \textbf{(a) F。} $\Omega(n \log n)$ 是\textbf{比較排序}的下界（資結書定理~15.1：決策樹至少有 $n!$ 個葉節點，高度至少
+$\lg(n!) = \Omega(n \log n)$）。 不靠比較的排序不受這個限制：例如鍵是 $0$ 到 $k$ 的整數、$k = O(n)$ 時，計數排序
+最壞 $\Theta(n + k) = \Theta(n)$（資結書第~15.2.1~節）。 「any sorting algorithm」太廣了。
+\item \textbf{(b) F。} $O$ 只是上界，兩個函數有同一個上界不代表相等。 反例：$f_1(n) = n$、$f_2(n) = 1$、$g(n) = n$，
+$f_1 = O(g)$、$f_2 = O(g)$，但 $f_1 \ne f_2$（資結書定義~1.2）。 何況 $f(n) = O(g(n))$ 裡的等號本來就是「屬於」的意思，
+不能像一般等式那樣兩邊交換或遞移。
+\item \textbf{(c) T。} 這句照的是「根在第 $1$ 層、深度 $k$ 表示共 $k$ 層」的定義（也就是資結書以節點數計的高度）：第
+$i$ 層最多 $2^{i-1}$ 個節點，共 $\sum_{i=1}^{k} 2^{i-1} = 2^k - 1$ 個（資結書定理~7.1）。 如果深度以邊數計（根的深度
+是 $0$），深度 $k$ 的樹有 $k + 1$ 層，最多 $2^{k+1} - 1$ 個，這句就不對；作答時寫一句「依根在第 $1$ 層的定義」。
+\item \textbf{(d) T。} $2 + 3 \times 4$ 中 $\times$ 優先，運算式樹是 $+$ 的左子樹 $2$、右子樹 $3 \times 4$。 後序是先左子樹、
+再右子樹、最後運算子：$2$，然後 $3\ 4\ \times$，最後 $+$，得到 $2\ 3\ 4\ \times\ +$（資結書第~6.3.3~節）。 反過來用
+堆疊求值：推入 $2, 3, 4$；遇到 $\times$ 彈出 $4, 3$ 推回 $12$；遇到 $+$ 彈出 $12, 2$ 推回 $14 = 2 + 3 \times 4$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:gk3-113-ds-03}]{高考三級資訊處理 113 年 第三題}
+（申論；25 分）
+
+請使用虛擬碼（Pseudo Code）或任何程式語言，完成下列問題：
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 撰寫二元搜尋（Binary Search）的遞迴及非遞迴程式。（20 分）
+\item[㈡] 推導二元搜尋的時間複雜度（Time Complexity）。（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈡ 最壞 $O(\log n)$，最多比較 $\lfloor \lg n \rfloor + 1$ 次。
+
+\textbf{㈠} 輸入：由小到大排好的 $A[1..n]$ 和要找的 $x$；找到傳回位置，找不到傳回 \NIL。 兩個版本都
+維持同一件事：$x$ 若在陣列裡，一定在目前的區間 $A[\mathit{lo}..\mathit{hi}]$ 裡（資結書第~17.1~節）。
+
+遞迴版（資結書虛擬碼~2.1）：
+\begin{pseudo}{二分搜尋：遞迴版}
+\Function{Rec-Binary-Search}{$A, \mathit{lo}, \mathit{hi}, x$}
+    \If{$\mathit{lo} > \mathit{hi}$}
+        \State \Return \NIL \Comment{區間空了，找不到}
+    \EndIf
+    \State $\mathit{mid} \gets \lfloor (\mathit{lo} + \mathit{hi}) / 2 \rfloor$
+    \If{$A[\mathit{mid}] = x$}
+        \State \Return $\mathit{mid}$
+    \ElsIf{$A[\mathit{mid}] < x$}
+        \State \Return \Call{Rec-Binary-Search}{$A, \mathit{mid} + 1, \mathit{hi}, x$}
+    \Else
+        \State \Return \Call{Rec-Binary-Search}{$A, \mathit{lo}, \mathit{mid} - 1, x$}
+    \EndIf
+\EndFunction
+\end{pseudo}
+第一次呼叫 \proc{Rec-Binary-Search}$(A, 1, n, x)$。
+
+非遞迴版（資結書虛擬碼~17.1）：
+\begin{pseudo}{二分搜尋：非遞迴版}
+\Function{Binary-Search}{$A, n, x$}
+    \State $\mathit{lo} \gets 1$；$\mathit{hi} \gets n$
+    \While{$\mathit{lo} \le \mathit{hi}$}
+        \State $\mathit{mid} \gets \lfloor (\mathit{lo} + \mathit{hi}) / 2 \rfloor$
+        \If{$A[\mathit{mid}] = x$}
+            \State \Return $\mathit{mid}$
+        \ElsIf{$A[\mathit{mid}] < x$}
+            \State $\mathit{lo} \gets \mathit{mid} + 1$ \Comment{$x$ 只可能在右半}
+        \Else
+            \State $\mathit{hi} \gets \mathit{mid} - 1$ \Comment{$x$ 只可能在左半}
+        \EndIf
+    \EndWhile
+    \State \Return \NIL
+\EndFunction
+\end{pseudo}
+\textbf{正確性。} 陣列由小到大排好：$A[\mathit{mid}] < x$ 時，$A[\mathit{lo}..\mathit{mid}]$ 都 $< x$，丟掉
+它們不會丟掉 $x$；$A[\mathit{mid}] > x$ 時同理丟掉右半。 所以「$x$ 若存在必在 $A[\mathit{lo}..\mathit{hi}]$」
+一直成立；區間每次至少縮小一格，最後不是找到就是區間變空，變空時 $x$ 一定不在陣列裡。 非遞迴版就是把
+遞迴版的尾遞迴改成迴圈（資結書第~6.4~節），額外空間從 $O(\log n)$ 的呼叫堆疊降成 $O(1)$。
+
+\textbf{㈡ 時間複雜度。} 每呼叫一次（或每跑一圈）只做常數個比較和指定，花 $c$。 區間長度 $m$ 時，
+左半 $\lceil m/2 \rceil - 1$ 個、右半 $\lfloor m/2 \rfloor$ 個，往下一層的長度都 $\le \lfloor m/2 \rfloor$。
+最壞情況（一直找不到或最後才找到）：
+\[
+T(n) = T(\lfloor n/2 \rfloor) + c,\qquad T(0) = c.
+\]
+展開：$T(n) = T(\lfloor n/4 \rfloor) + 2c = \cdots = T(\lfloor n/2^k \rfloor) + kc$。 當
+$2^k > n$，即 $k = \lfloor \lg n \rfloor + 1$ 時區間長度變成 $0$，所以
+\[
+T(n) = c(\lfloor \lg n \rfloor + 2) = O(\log n).
+\]
+也可以用主定理（資結書第~2.4~節）：$a = 1$、$b = 2$、$f(n) = \Theta(1) = \Theta(n^{\log_2 1})$，情況 2，
+$T(n) = \Theta(\lg n)$。 換成比較次數：最多和 $\lfloor \lg n \rfloor + 1$ 個元素比較，例如 $n = 1000$ 時最多
+$10$ 次。 最好情況第一次就在中間找到，$O(1)$。
+\end{pastsoln}

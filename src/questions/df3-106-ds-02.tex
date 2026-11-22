@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:df3-106-ds-02}]{地方三等資訊處理 106 年 第二題}
+（申論；20 分）
+
+下表列出四種常見的資料結構，請填滿該表以顯示各資料結構在一般狀況下（average case），搜尋（search）、
+插入（insertion）、刪除（deletion）資料之時間複雜度。陣列的各項資料已事先填入作為範例。（每小題 5 分，
+共 20 分）
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & \begin{tabular}{@{}c@{}}搜尋\\（search）\end{tabular} & \begin{tabular}{@{}c@{}}插入\\（insertion）\end{tabular} & \begin{tabular}{@{}c@{}}刪除\\（deletion）\end{tabular} \\
+\hline
+\multicolumn{1}{|c|}{陣列} & $O(n)$ & $O(n)$ & $O(n)$ \\
+\hline
+㈠佇列（queue） & & & \\
+\hline
+㈡雙向連結串列（doubly-linked list） & & & \\
+\hline
+㈢二元搜尋樹（binary search tree） & & & \\
+\hline
+㈣AVL樹（AVL tree） & & & \\
+\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+四列分屬資結書第~6、5、9、10~章，這裡歸在第~9~章。 $n$ 是資料筆數。 表中「插入」「刪除」照各資料
+結構本身的操作來算：佇列是從尾端加入、從前端取出；串列是已經知道要在哪裡插入、要刪哪個節點。
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+ & 搜尋 & 插入 & 刪除 \\
+\midrule
+陣列（題目給的範例） & $O(n)$ & $O(n)$ & $O(n)$ \\
+㈠ 佇列 & $O(n)$ & $O(1)$ & $O(1)$ \\
+㈡ 雙向鏈結串列 & $O(n)$ & $O(1)$ & $O(1)$ \\
+㈢ 二元搜尋樹 & $O(\log n)$ & $O(\log n)$ & $O(\log n)$ \\
+㈣ AVL 樹 & $O(\log n)$ & $O(\log n)$ & $O(\log n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{㈠ 佇列。} 佇列沒有依鍵值排序，要找某筆資料只能從前端一個一個看，平均看一半，$O(n)$。
+插入（enqueue）接在 rear、刪除（dequeue）從 front 拿，不管用環狀陣列還是鏈結串列，都只動幾個
+指標或索引，$O(1)$（資結書第~6.2~節）。
+
+\textbf{㈡ 雙向鏈結串列。} 搜尋要從頭沿著指標走，平均 $O(n)$。 插入：在已知節點的前或後（或串列
+頭尾）接上新節點，只改四個指標，$O(1)$。 刪除：已知要刪的節點 $x$ 時，靠 $x.\mathit{prev}$ 直接
+找到前一個節點，把前後兩個接起來，$O(1)$；這是雙向串列比單向串列好的地方，單向串列要先從頭找
+前一個節點（資結書第~5.2~節）。 若「刪除某個鍵值」要先搜尋，就是 $O(n) + O(1) = O(n)$，作答時
+可以補充這一點。
+
+\textbf{㈢ 二元搜尋樹。} 三個操作都沿著一條從根往下的路徑，時間 $O(h)$，$h$ 是樹高。 鍵值以隨機
+順序插入時，期望高度是 $O(\log n)$（資結書定理~9.2），所以一般狀況是 $O(\log n)$。 最差情況
+（例如依序插入已排序的資料）樹退化成一條鏈，$h = n$，三個操作都是 $O(n)$。
+
+\textbf{㈣ AVL 樹。} AVL 樹是高度平衡的二元搜尋樹，$n$ 個節點時高度一定是 $O(\log n)$（資結書
+定理~10.1）。 搜尋走一條路徑；插入、刪除之後沿路往上調整平衡因子，必要時旋轉，每次旋轉 $O(1)$，
+最多 $O(\log n)$ 次。 所以三個操作不只平均，最差情況也是 $O(\log n)$。
+\end{pastsoln}

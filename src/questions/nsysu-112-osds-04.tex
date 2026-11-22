@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:nsysu-112-osds-04}]{中山資工所甲組 112 學年度 第 4 題}
+（設計）
+
+(10\%) The stamp cost problem (SCP) is to stick the exact cost of stamps on an envelope. In the post
+office, there are five types of stamps: 1, 2, 3, 4, 5 dollars. You are asked to calculate all possible
+combination ways for getting $j$ dollars. Let $g(i,j)$ denote the number of combination ways for $j$
+dollars, where only stamps with $1, 2, \ldots, i$ dollars are used. Note that $i$ and $j$ are both positive
+integers, $1\le i\le 5$ and $1\le j\le n$ (an integer constant). For example, $g(2,3)=2$, since there are
+two ways for constituting 3 dollars with 1-dollar and 2-dollar stamps: 1+1+1 and 1+2. As another example,
+$g(3,4)=4$, since four ways can be used to get 4 dollars with 1-dollar, 2-dollar and 3-dollar stamps:
+1+1+1+1, 1+1+2, 2+2 and 1+3. However, the stamps with 3-dollar and 4-dollar have been sold out (no such
+stamps) today. Other stamps are assumed to be unlimited. Please give the recursive formula to calculate
+$g(i,j)$. You can assume that $g(i,0)=1$, $g(i,j)=0$ for $1\le i\le 5$ and $j\le -1$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題意說明。} 題目先用五種郵票都有的情況舉例（$g(2,3) = 2$、$g(3,4) = 4$），最後才說今天 $3$ 元和
+$4$ 元郵票賣完了。 下面先寫五種都有時的遞迴式，再寫今天的版本，並用題目的兩個例子驗算。 題目只定義了
+$i \ge 1$，所以 $i = 1$ 直接寫成邊界。
+
+\textbf{一般的遞迴式。} 「只用 $1..i$ 元湊出 $j$ 元」的組合分成兩類：一張 $i$ 元都沒用，是 $g(i - 1, j)$；
+至少用一張 $i$ 元，拿掉一張後是「只用 $1..i$ 元湊出 $j - i$ 元」的一種組合，而且一一對應，共
+$g(i, j - i)$ 種。 兩類不重疊、也沒有遺漏（資結書第~18.7.2~節的湊零錢計數），所以
+\[
+g(i, j) = \begin{cases}
+1, & i = 1,\ j \ge 0, \\
+g(i - 1, j) + g(i, j - i), & 2 \le i \le 5,\ j \ge 1,
+\end{cases}
+\]
+再加上題目給的 $g(i, 0) = 1$、$j \le -1$ 時 $g(i, j) = 0$。 （只用 $1$ 元時只有一種湊法；若想從 $i = 0$
+開始，可以補 $g(0, 0) = 1$、$g(0, j) = 0$（$j \ge 1$），$i = 1$ 那一行就會自動得到。）
+驗算：$g(2, 3) = g(1, 3) + g(2, 1) = 1 + \bigl(g(1, 1) + g(2, -1)\bigr) = 1 + 1 + 0 = 2$；
+$g(2, 4) = g(1, 4) + g(2, 2) = 1 + 2 = 3$，$g(3, 1) = g(2, 1) + g(3, -2) = 1$，所以
+$g(3, 4) = g(2, 4) + g(3, 1) = 3 + 1 = 4$，和題目的例子相同。
+
+\textbf{今天的遞迴式（沒有 $3$、$4$ 元郵票）。} 第 $i$ 種郵票沒有時，「至少用一張」那一類是空的：
+\[
+g(i, j) = \begin{cases}
+1, & i = 1,\ j \ge 0, \\
+g(i - 1, j) + g(i, j - i), & i \in \{2, 5\},\ j \ge 1, \\
+g(i - 1, j), & i \in \{3, 4\},\ j \ge 1,
+\end{cases}
+\]
+邊界同上，答案是 $g(5, n)$。 例如今天 $g(3, 4) = g(2, 4) = 3$，只剩 $1 + 1 + 1 + 1$、$1 + 1 + 2$、$2 + 2$。
+
+\textbf{填表順序與時間。} $g(i, j)$ 用到上一列的同一格和同一列左邊的格子，$i$ 由 $1$ 到 $5$、每一列 $j$
+由 $0$ 到 $n$ 填，共 $5(n + 1)$ 格，每格 $O(1)$，時間和空間都是 $O(n)$；只留一列時就是資結書
+第~18.7.2~節的 \proc{Coin-Ways}（面額 $1, 2, 5$）。 今天的表的前幾欄如下：
+\begin{center}
+\small
+\begin{tabular}{c*{11}{c}}
+\toprule
+$j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+$g(1, j)$ & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+$g(2, j) = g(3, j) = g(4, j)$ & 1 & 1 & 2 & 2 & 3 & 3 & 4 & 4 & 5 & 5 & 6 \\
+$g(5, j)$ & 1 & 1 & 2 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $g(5, 5) = g(4, 5) + g(5, 0) = 3 + 1 = 4$：$1 + 1 + 1 + 1 + 1$、$1 + 1 + 1 + 2$、$1 + 2 + 2$、$5$。
+\end{pastsoln}

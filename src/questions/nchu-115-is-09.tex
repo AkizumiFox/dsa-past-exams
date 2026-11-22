@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-115-is-09}]{中興資工所乙組 115 學年度 第 9 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which of the following is a key characteristic of a greedy algorithm?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item It explores all possible solutions and selects the best one at the end.
+\item It chooses the locally optimal choice at each step in the hope of reaching a global optimum.
+\item It always uses dynamic programming to store subproblem solutions.
+\item It relies on random choices to approximate the optimal solution.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+貪心法每一步只看眼前，挑當下最好的選擇，選了就不再回頭。 它不保證一定得到最佳解；要證明
+對，得證明「貪心選擇性質」和「最佳子結構」兩件事（資結書第~19.1.6~節）。 B 的 in the hope
+of 正好說出這一點：希望局部最好能湊成整體最好，不一定成功（資結書第~19.5~節有反例，例如
+0/1 背包）。
+\begin{itemize}
+\item A 錯：把所有解都試一遍是窮舉（或回溯），和貪心相反。
+\item C 錯：存子問題的答案是動態規劃。 兩者都要最佳子結構，但貪心每步只解一個子問題，不用
+填表。
+\item D 錯：貪心的選擇是確定的規則（例如最早結束的活動、最輕的邊），不是隨機。 靠隨機近似
+最佳解的是隨機化演算法。
+\end{itemize}
+\end{pastsoln}

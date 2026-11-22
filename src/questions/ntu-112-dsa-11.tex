@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-112-dsa-11}]{臺大資工所 112 學年度 第 11 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Properties of dynamic programming (DP):} Which of the following statements is/are correct
+about DP?
+\begin{enumerate}[label=(\Alph*)]
+\item Any DP problem can be visualized as the optimal path finding problem.
+\item Once a DP problem is solved, all the related sub-problems are also solved.
+\item Once a DP problem is solved, it is straightforward to obtain the second-best solution.
+\item The optimal solution of a DP problem can be obtained using optimal solutions of its
+sub-problems.
+\item A DP problem has overlapping sub-problems which are reused several times when solving the
+original problem.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案是 (B)、(D)、(E)。
+
+動態規劃的兩個要素是最佳子結構和重疊子問題（資結書第~18.1~節）。
+\begin{itemize}
+\item \textbf{(A) 錯。} 子問題和「誰用到誰」畫成一張有向無環圖（子問題圖）。 如果每個子問題的
+最佳解只由\textbf{一個}較小的子問題加上一步選擇得到（例如 LCS、0/1 背包），求最佳解確實等於在這張
+圖上找最長或最短路徑。 但很多 DP 的遞迴式要把\textbf{兩個以上}子問題的解合起來，例如矩陣鏈乘法
+$m[i, j] = \min_{i \le k < j} (m[i, k] + m[k + 1, j] + p_{i-1} p_k p_j)$（資結書第~18.2~節）、最佳二元
+搜尋樹（資結書第~18.4~節），一個選擇同時用到左右兩個子問題，那不是一條路徑。 另外，計數的 DP
+（例如湊零錢的方法數，資結書第~18.7.2~節）根本不是求最佳解。 所以「任何」不成立。
+\item \textbf{(B) 對。} 由下而上的 DP 把表格裡的子問題全部算完才得到答案；由上而下的備忘錄版本
+只算原問題用得到的子問題，而那些正是「相關的」子問題。 兩種做法算完時，相關的子問題都已經有
+答案存在表格裡，例如 LCS 的表格 $c[i, j]$ 同時給出所有前綴對的 LCS 長度。
+\item \textbf{(C) 錯。} 表格裡每格只記最佳值，第二好的解通常不在表格裡：第二好的解可能在某個子問題
+用了次佳的選擇，要找它得在每格多記第二名（甚至前 $k$ 名）並重新推導遞迴式，或另外設計演算法，
+不是「直接」就能拿到。
+\item \textbf{(D) 對。} 這就是最佳子結構：原問題的最佳解由子問題的最佳解組合出來，DP 的遞迴式就是
+建立在這個性質上（資結書第~18.1.4~節）。
+\item \textbf{(E) 對。} 重疊子問題：同一個子問題在遞迴裡被用到很多次，DP 只算一次、存起來重複用，
+這正是它比直接遞迴快的原因（資結書第~18.1.1~節）。 子問題不重疊時（例如合併排序），用分治就夠了，
+不需要 DP。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,121 @@
+\begin{pastexam}[label={px:ncku-115-prog-16}]{成大資訊聯招 115 學年度 演算法問答第 3 題}
+（問答）
+
+[10\%] You are analyzing the routing latencies for a constellation of 4 satellites (Nodes A, B, C, D).
+Below is the adjacency list with the latency between specific nodes:
+
+\textbf{Adjacency List:}
+\begin{itemize}[label=$\blacksquare$,nosep]
+\item A $\to$ B: 10
+\item A $\to$ C: -5
+\item C $\to$ B: 4
+\item B $\to$ D: 5
+\item D $\to$ C: 2
+\item D $\to$ A: 3
+\end{itemize}
+
+\textbf{Requirement:} You need to analyze the latency characteristics of the network so that shortest
+communication paths can be efficiently determined when needed
+
+\underline{\textbf{Questions}}:
+\begin{enumerate}[label=(\arabic*)]
+\item {[4\%]} Based on the specific properties of the edges in this graph and the problem requirement,
+identify the \textbf{single most appropriate standard algorithm} to use. \textbf{Explain your choice}
+by pointing out the specific graph feature that disqualifies other algorithms, and explicitly state
+\textbf{why} at least one other commonly used shortest-path algorithm would fail or be inappropriate in
+this case.
+\begin{itemize}
+\item Algorithm: \underline{\hspace{6cm}}
+\item Why choosing this algorithm? \underline{\hspace{4.5cm}}
+\end{itemize}
+\item {[2\%]} Let $M$ be the initial $\mathbf{4\times 4}$ \textbf{distance matrix} used at the start of
+your chosen algorithm. Please construct and write down $M$ clearly.\\
+(Note: Use ``$\infty$'' for non-existing edges and ``0'' for self-loops. Order: A, B, C, D)
+\begin{itemize}\item $M = \left[\rule{0pt}{2.2em}\hspace{4cm}\right]$\end{itemize}
+\item {[4\%]} After the algorithm completes execution
+\begin{enumerate}[label=(\alph*)]
+\item {[2\%]} What is the \textbf{final shortest path cost} from Node D to Node B? Please
+\textbf{trace the path logic} (e.g., D $\to$ \dots $\to$ B).
+\begin{itemize}
+\item Final shortest path cost: \underline{\hspace{6cm}}
+\item Final path logic: \underline{\hspace{6cm}}
+\end{itemize}
+\item {[2\%]} State the asymptotic \textbf{Time Complexity} $\Theta$ of this algorithm.
+\begin{itemize}\item Time Complexity: \underline{\hspace{6cm}}\end{itemize}
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) Floyd--Warshall；(2) 見下；(3)(a) $2$，D $\to$ A $\to$ C $\to$ B；(b) $\Theta(V^3)$，這裡
+$V = 4$。
+
+\textbf{(1) 選 Floyd--Warshall。} 圖有兩個特徵決定了選擇：
+\begin{itemize}
+\item \textbf{有負權重的邊} A $\to$ C $= -5$。 Dijkstra 演算法假設邊權重非負：一個點被取出後距離就
+定案，負邊可能在之後讓它變得更短，Dijkstra 卻不會再更新（資結書第~25.2.5~節）。 實際在這張圖上從 D
+跑 Dijkstra：先定案 D $= 0$，鬆弛得 C $= 2$、A $= 3$；取出 C 定案為 $2$，鬆弛得 B $= 6$；取出 A，
+A $\to$ C 給出 $3 - 5 = -2 < 2$，但 C 已經定案；最後 B 定案為 $6$。 真正的 D 到 B 是 $2$，Dijkstra 錯了。
+\item \textbf{沒有負環}，所以最短路徑有定義。 檢查所有的環：A $\to$ C $\to$ B $\to$ D $\to$ A 是
+$-5 + 4 + 5 + 3 = 7$，A $\to$ B $\to$ D $\to$ A 是 $18$，C $\to$ B $\to$ D $\to$ C 是 $11$，都是正的。
+\end{itemize}
+題目要的是「需要時能快速查到任兩點的最短路徑」，也就是所有點對最短路徑，算好一張表之後每次查詢
+$O(1)$。 能處理負邊的所有點對演算法裡，Floyd--Warshall 最直接（資結書第~25.6~節），$V^3 = 64$ 次運算。
+Bellman--Ford 也能處理負邊，但它是單一起點的，要所有點對得跑 $V$ 次，$O(V^2 E)$，在稠密圖上是
+$O(V^4)$；Johnson 演算法適合稀疏的大圖，對 $4$ 個點太複雜。
+
+\textbf{(2) 初始矩陣}（列是起點、行是終點，順序 A, B, C, D）：
+\[
+M = D^{(0)} =
+\begin{bmatrix}
+0 & 10 & -5 & \infty \\
+\infty & 0 & \infty & 5 \\
+\infty & 4 & 0 & \infty \\
+3 & \infty & 2 & 0
+\end{bmatrix}.
+\]
+
+\textbf{(3)(a)} Floyd--Warshall 依序讓 A、B、C、D 可以當中間點，
+\[
+D^{(k)}[i][j] = \min\bigl\{D^{(k-1)}[i][j],\; D^{(k-1)}[i][k] + D^{(k-1)}[k][j]\bigr\}
+\]
+（資結書虛擬碼~25.8）。 粗體是這一輪變小的格子：
+\[
+D^{(1)}_{\text{經 A}} = \begin{bmatrix}
+0 & 10 & -5 & \infty \\
+\infty & 0 & \infty & 5 \\
+\infty & 4 & 0 & \infty \\
+3 & \mathbf{13} & \mathbf{-2} & 0
+\end{bmatrix}\!,\quad
+D^{(2)}_{\text{經 B}} = \begin{bmatrix}
+0 & 10 & -5 & \mathbf{15} \\
+\infty & 0 & \infty & 5 \\
+\infty & 4 & 0 & \mathbf{9} \\
+3 & 13 & -2 & 0
+\end{bmatrix}\!,
+\]
+\[
+D^{(3)}_{\text{經 C}} = \begin{bmatrix}
+0 & \mathbf{-1} & -5 & \mathbf{4} \\
+\infty & 0 & \infty & 5 \\
+\infty & 4 & 0 & 9 \\
+3 & \mathbf{2} & -2 & 0
+\end{bmatrix}\!,\quad
+D^{(4)}_{\text{經 D}} = \begin{bmatrix}
+0 & -1 & -5 & 4 \\
+\mathbf{8} & 0 & \mathbf{3} & 5 \\
+\mathbf{12} & 4 & 0 & 9 \\
+3 & 2 & -2 & 0
+\end{bmatrix}\!.
+\]
+D 到 B 的變化：一開始沒有直接的邊（$\infty$）；經 A 時 D $\to$ A $\to$ B $= 3 + 10 = 13$；經 C 時
+D $\to$ C 已經是 $-2$（第一輪得到的 D $\to$ A $\to$ C），再接 C $\to$ B：$-2 + 4 = 2 < 13$。 最後一輪
+沒有再變小。 所以最短距離是 $2$，路徑
+\[
+\text{D} \to \text{A} \to \text{C} \to \text{B}: \quad 3 + (-5) + 4 = 2 .
+\]
+直接走 D $\to$ C $\to$ B 是 $2 + 4 = 6$，繞到 A 去走那條 $-5$ 的邊反而更短。 對角線最後都是 $0$，也確認了
+沒有負環。
+
+\textbf{(3)(b)} 三層迴圈，$k$、$i$、$j$ 各跑 $V$ 次，每次 $O(1)$：$\Theta(V^3)$，空間 $\Theta(V^2)$。
+\end{pastsoln}

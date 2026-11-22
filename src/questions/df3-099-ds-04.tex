@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:df3-099-ds-04}]{地方三等資訊處理 99 年 第四題}
+（申論；25 分）
+
+給予資料：3, 1, 5, 7, 15, 13, 9, 11，
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請寫出 Shell 排序演算法。（15 分）
+\item[㈡] 並用 Shell 排序法，將資料排成由大到小排列，請務必將每一步驟詳細畫出並詳細說明。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：間隔依序取 $4, 2, 1$，三輪後依序是 $15, 13, 9, 11, 3, 1, 5, 7$；$15, 13, 9, 11, 5, 7, 3, 1$；
+$15, 13, 11, 9, 7, 5, 3, 1$。
+
+\textbf{㈠ Shell 排序}（資結書第~14.3~節）。 選一串遞減到 $1$ 的間隔 $h$。 對每個 $h$，把位置相差 $h$ 的元素看成同一組
+（共 $h$ 組），每一組各自做插入排序；最後 $h = 1$ 就是一般的插入排序，保證排好。 前面幾輪讓元素以大步移動到大致的
+位置，最後一輪需要移動的就很少。 這裡用 Shell 原始的間隔 $h = \lfloor n/2 \rfloor, \lfloor h/2 \rfloor, \ldots, 1$。 由大到小排時，
+插入排序的比較改成「前面的比較小就往後移」：
+\begin{pseudo}[unbreakable]{Shell 排序，$A[1..n]$ 排成由大到小}
+\Procedure{Shell-Sort}{$A, n$}
+    \State $h \gets \lfloor n/2 \rfloor$
+    \While{$h \ge 1$}
+        \For{$i \gets h + 1$ \To $n$} \Comment{各組交錯著做插入排序}
+            \State $x \gets A[i]$；$j \gets i$
+            \While{$j > h$ \AND $A[j - h] < x$} \Comment{由小到大排時改成 $>$}
+                \State $A[j] \gets A[j - h]$；$j \gets j - h$
+            \EndWhile
+            \State $A[j] \gets x$
+        \EndFor
+        \State $h \gets \lfloor h/2 \rfloor$
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+第 4 行的 $i$ 從 $h + 1$ 依序跑到 $n$，每個 $A[i]$ 插進它那一組（位置 $i - h, i - 2h, \ldots$）前面已經排好的部分；這和
+「一組一組分開做」結果一樣。 正確性：最後一輪 $h = 1$ 是完整的插入排序，不論前面做了什麼，結果一定有序。 時間依間隔
+序列而定，用這種折半的間隔最壞是 $\Theta(n^2)$，平均比插入排序快很多；Shell 排序不穩定，額外空間 $O(1)$。
+
+\textbf{㈡ 追蹤}。 $n = 8$，間隔 $4, 2, 1$。 位置 $1$ 到 $8$ 的初始資料是 $3, 1, 5, 7, 15, 13, 9, 11$。
+
+\textbf{第一輪 $h = 4$}：分成 $4$ 組，每組 $2$ 個，各自排成由大到小。
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+組（位置） & 原本 & 排好 & 說明 \\
+\midrule
+1, 5 & 3, 15 & 15, 3 & 3 $<$ 15，交換 \\
+2, 6 & 1, 13 & 13, 1 & 1 $<$ 13，交換 \\
+3, 7 & 5, 9 & 9, 5 & 5 $<$ 9，交換 \\
+4, 8 & 7, 11 & 11, 7 & 7 $<$ 11，交換 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果：$15, 13, 9, 11, 3, 1, 5, 7$。
+
+\textbf{第二輪 $h = 2$}：分成 $2$ 組，每組 $4$ 個。
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+組（位置） & 原本 & 排好 & 說明 \\
+\midrule
+1, 3, 5, 7 & 15, 9, 3, 5 & 15, 9, 5, 3 & 插入 5 時 3 往後移一格 \\
+2, 4, 6, 8 & 13, 11, 1, 7 & 13, 11, 7, 1 & 插入 7 時 1 往後移一格 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果：$15, 13, 9, 11, 5, 7, 3, 1$。 （照虛擬碼的順序是 $i = 3, 4, \ldots, 8$ 交錯著做，$i = 7$ 時 $A[7] = 5$ 插到 $3$ 前面、
+$i = 8$ 時 $A[8] = 7$ 插到 $1$ 前面，其他的 $i$ 都不用移，結果相同。）
+
+\textbf{第三輪 $h = 1$}：對整個陣列做插入排序（由大到小）。
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+$i$ & 插入 & 結果 \\
+\midrule
+2 & 13 & $15, 13 \mid 9, 11, 5, 7, 3, 1$（不用移） \\
+3 & 9 & $15, 13, 9 \mid 11, 5, 7, 3, 1$（不用移） \\
+4 & 11 & $15, 13, \mathbf{11}, 9 \mid 5, 7, 3, 1$（9 往後移） \\
+5 & 5 & $15, 13, 11, 9, 5 \mid 7, 3, 1$（不用移） \\
+6 & 7 & $15, 13, 11, 9, \mathbf{7}, 5 \mid 3, 1$（5 往後移） \\
+7 & 3 & $15, 13, 11, 9, 7, 5, 3 \mid 1$（不用移） \\
+8 & 1 & $15, 13, 11, 9, 7, 5, 3, 1$（不用移） \\
+\bottomrule
+\end{tabular}
+\end{center}
+直線左邊是已經排好的部分。 最後一輪只移動了 $2$ 次，因為前兩輪已經把資料排得差不多。 最後結果：
+\[
+15, 13, 11, 9, 7, 5, 3, 1.
+\]
+\end{pastsoln}

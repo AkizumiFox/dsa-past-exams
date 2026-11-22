@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-20}]{臺大資工所 111 學年度 第 20 題}
+（單選）
+
+(5 points) Given a graph $G=(V,E)$ with the adjacent matrix $W=w_{ij}$ with $W$ an $n\times n$
+matrix. The following algorithm can compute the All-Pairs Shortest Path of $G$.
+
+\begin{quote}
+\textsc{Floyd-Warshall'}$(W)$\\
+1\quad $D=W$\\
+2\quad \textbf{for} $k=1,2,\ldots,n$\\
+3\quad\quad \textbf{for} $i=1,2,\ldots,n$\\
+4\quad\quad\quad \textbf{for} $j=1,2,\ldots,n$\\
+5\quad\quad\quad\quad $d_{ij}=\min(d_{ij},d_{ik}+d_{kj})$
+\end{quote}
+What is the SPACE complexity of this algorithm?
+\begin{enumerate}[label=(\Alph*)]
+\item $\Theta(n^2)$
+\item $\Theta(n^3)$
+\item $\Theta(n)$
+\item $\Theta(n^4)$
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) $\Theta(n^2)$。
+
+這個版本只用一個 $n \times n$ 的矩陣 $D$，第 5 行直接在 $D$ 上更新，沒有為每個 $k$ 另存一份
+$D^{(k)}$（資結書第~25.6~節）。 空間是 $D$ 的 $n^2$ 格加上 $i, j, k$ 三個變數，$\Theta(n^2)$；
+輸出本身就有 $n^2$ 個距離，不可能更少。
+
+直接覆蓋為什麼不會出錯：第 $k$ 輪裡，$d_{ik}$ 和 $d_{kj}$ 不會被改變。 以 $d_{ik}$ 為例，第 5 行要
+改它時，新值是 $\min(d_{ik}, d_{ik} + d_{kk})$，沒有負環時 $d_{kk} = 0$，值不變；$d_{kj}$ 同理。 所以
+第 $k$ 輪用到的都是正確的值，覆蓋和另存一份結果相同。
+
+(B) $\Theta(n^3)$ 是時間（三層迴圈），或者把 $D^{(0)}, \ldots, D^{(n)}$ 全部存下來時的空間，不是這個
+程序的空間。 (C) $\Theta(n)$ 太小，連答案都放不下。 (D) 不對。
+\end{pastsoln}

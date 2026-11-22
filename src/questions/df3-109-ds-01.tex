@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:df3-109-ds-01}]{地方三等資訊處理 109 年 第一題}
+（申論；10 分）
+
+請設計演算法複製一棵二元樹（copy a binary tree）。（10分）
+\end{pastexam}
+
+\begin{pastsoln}
+節點有 $\mathit{key}$、$\mathit{left}$、$\mathit{right}$ 三個欄位（資結書第~7.2~節的鏈結表示法）。 複製要建出
+\textbf{一組全新的節點}，形狀和每個節點的資料都和原樹相同；只複製根指標（兩個指標指到同一棵樹）不算複製，
+之後改其中一棵另一棵也會跟著變。
+
+想法：一棵二元樹是「空的」或「根＋左子樹＋右子樹」，複製也照這個定義遞迴：空樹的複本是空樹；否則先配置一個
+新節點放根的資料，再分別複製左、右子樹接上去。 這相當於後序（先做好兩個子樹，再把它們接到新的根上）；
+先配置根再遞迴的寫法則是前序，兩種都對。
+\begin{pseudo}[unbreakable]{複製二元樹}
+\Function{Copy-Tree}{$t$} \Comment{回傳 $t$ 這棵樹的複本的根}
+    \If{$t = \NIL$}
+        \State \Return \NIL
+    \EndIf
+    \State $p \gets$ 配置一個新節點
+    \State $p.\mathit{key} \gets t.\mathit{key}$
+    \State $p.\mathit{left} \gets$ \Call{Copy-Tree}{$t.\mathit{left}$}
+    \State $p.\mathit{right} \gets$ \Call{Copy-Tree}{$t.\mathit{right}$}
+    \State \Return $p$
+\EndFunction
+\end{pseudo}
+用法：$T' \gets \proc{Copy-Tree}(T.\mathit{root})$。
+
+\textbf{正確性}。 對樹的節點數 $n$ 做歸納。 $n = 0$：回傳 \NIL，空樹的複本是空樹。 $n \ge 1$：左、右子樹的
+節點數都比 $n$ 小，由歸納假設，第 6、7 行得到的是兩棵子樹的正確複本（全是新節點、形狀和資料都相同）；第 4--5
+行的新節點放了根的資料，再把兩個複本分別接成左、右子樹，所以 $p$ 是整棵樹的正確複本。 每個新節點都是第 4 行
+新配置的，和原樹不共用任何節點。
+
+\textbf{複雜度}。 每個節點恰好呼叫一次、做 $O(1)$ 的工作，另有 $n + 1$ 次 $t = \NIL$ 的呼叫，時間 $\Theta(n)$。
+新樹本身用 $\Theta(n)$ 空間；遞迴堆疊的深度等於樹高 $h$，額外空間 $O(h)$，最壞（退化成一條鏈）$O(n)$。
+
+\textbf{例子}。 原樹是根 $A$、左子節點 $B$、右子節點 $C$。 \proc{Copy-Tree}$(A)$ 配置 $A'$，遞迴複製 $B$ 得到
+$B'$（它的兩個子樹都是 \NIL）、複製 $C$ 得到 $C'$，接成 $A'.\mathit{left} = B'$、$A'.\mathit{right} = C'$，
+回傳 $A'$。
+
+不想用遞迴時，也可以用一個堆疊（或佇列）同時存放「原節點、對應的新節點」的配對：取出一對 $(t, p)$，若 $t$ 有
+左子節點就配置新節點接到 $p.\mathit{left}$，並把這一對推入；右子節點同理。 每個節點進出一次，時間同樣
+$\Theta(n)$。
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nchu-115-is-10}]{中興資工所乙組 115 學年度 第 10 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which problem is directly solvable by applying Dijkstra's algorithm in its standard form?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item Finding the shortest path in a graph with negative edge weights.
+\item Finding the minimum spanning tree of a connected, weighted graph.
+\item Finding the single-source shortest paths in a graph with non-negative edge weights.
+\item Determining whether a directed graph contains a cycle.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+Dijkstra 演算法解的是單一起點最短路徑，前提是每條邊的權重都不是負的（資結書第~25.2~節）。
+它每次取出 $d$ 最小的頂點就當作定案，證明（資結書定理~25.6）用到「路徑往後走只會變長」，
+這要邊權非負才成立。
+\begin{itemize}
+\item A 錯：有負邊時，一個已經定案的頂點之後可能被更短的路徑更新，Dijkstra 會算錯
+（資結書第~25.2.5~節）。 要用 Bellman--Ford。
+\item B 錯：最小生成樹用 Prim 或 Kruskal。 Prim 的寫法和 Dijkstra 很像，但比較的是「邊權」
+而不是「起點到這裡的距離」，得到的樹一般不同（資結書第~24.5.4~節）。
+\item C 對。
+\item D 錯：判斷有向圖有沒有環用 DFS 找後向邊，或用 Kahn 演算法看能不能拓樸排序（資結書
+第~21.6、22.1~節）。
+\end{itemize}
+\end{pastsoln}

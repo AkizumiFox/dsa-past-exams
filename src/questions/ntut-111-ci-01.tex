@@ -1,0 +1,99 @@
+\begin{pastexam}[label={px:ntut-111-ci-01}]{北科大資工所 111 學年度 第二題}
+（單選）
+
+(10 pts) For each one of the following questions, please select the right answer (a), (b), (c), or (d).
+\begin{enumerate}[label=(\arabic*)]
+\item For the following statements about red-black trees, please justify the \textbf{CORRECT} statements. (2 pts)
+\begin{enumerate}[label=\roman*.,nosep]
+\item A subtree of a red-black tree is itself a red-black tree.
+\item The sibling of an external node is either external or it is red.
+\item There is a unique (2, 4) tree associated with a given red-black tree.
+\item There is a unique red-black tree associated with a given (2, 4) tree.
+\end{enumerate}
+(a)~i, ii \qquad (b)~ii, iii \qquad (c)~i, iv \qquad (d)~iii, iv
+
+\item Let A and B be two problems. Suppose that we were able to establish the following fact:
+``If we could solve A in time O($T$($n$)), we could solve B in time O($n$ log $n$ + $T$($n$)).''
+Which one of the following statements is \textbf{TRUE}? (2 pts)
+\begin{enumerate}[label=(\alph*),nosep]
+\item If A has an $\Omega$($n$ log $n$) time lower bound then B does too.
+\item If B has an $\Omega$($n$ log $n$) time lower bound then A does too.
+\item If A has an $\Omega$($n^2$) time lower bound then B does too.
+\item If B has an $\Omega$($n^2$) time lower bound then A does too.
+\end{enumerate}
+
+\item Given a set $S$ of characters \{A, B, C, D, E, F, G\} with relative frequencies (13, 7, 27, 18, 8, 22, 5). Let $T$ be an optimal Huffman code tree for $S$. What is the depth of tree $T$? (Note that the root is at depth 0) (2 pts)\\
+(a)~4 \qquad (b)~5 \qquad (c)~6 \qquad (d)~7
+
+\item As the above problem (3), what is the length of the Huffman code for character E? (2 pts)\\
+(a)~5 \qquad (b)~4 \qquad (c)~3 \qquad (d)~2
+
+\item A bipartite graph $G$ = ($V$, $E$) is an undirected graph whose vertices can be partitioned into two disjoint sets $V_1$ and $V_2 = V - V_1$ with the property that no two vertices in $V_1$ are adjacent in $G$ and no two vertices in $V_2$ are adjacent in $G$. Which one of the following statements is \textbf{FALSE}? (2 pts)
+\begin{enumerate}[label=(\alph*),nosep]
+\item A tree is a bipartite graph.
+\item All bipartite graphs are 2-colorable.
+\item A bipartite graph can contain an odd-length cycle.
+\item Given a graph $Q$ of size $n$, one can determine whether $Q$ is bipartite by using BFS in O($n$) time.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) (b)；(2) (d)；(3) (a)；(4) (c)；(5) (c)。
+
+五個小題分屬不同章：(1) 紅黑樹與 (2,4) 樹屬資結書第~10、11~章，(2) 歸約與下界屬第~15、28~章，(3)(4) 霍夫曼編碼屬第~19~章，
+(5) 二分圖屬第~21~章。 本題放在配分最重的第~19~章。
+
+\textbf{(1)} 這題的用語（external node、(2,4) tree）是 Goodrich--Tamassia 的寫法：紅黑樹的葉子是不存資料的外部節點（就是資結書的
+NIL 葉子），性質是根為黑、外部節點為黑、紅色節點的子節點為黑、每個外部節點到根的路徑上黑色節點數相同（資結書第~10.3~節）。
+\begin{itemize}
+\item i.\ 錯。 子樹的根可能是紅色，違反「根是黑色」。 例如根黑、兩個子節點紅的三節點紅黑樹，以紅色子節點為根的子樹就不是紅黑樹
+（其餘性質仍成立，把根改成黑色才是）。
+\item ii.\ 對。 設外部節點 $x$ 的兄弟 $y$ 是內部節點而且是黑色。 從父節點 $p$ 往下：經過 $x$ 的路徑在 $p$ 以下只有 $x$ 一個黑色節點
+（外部節點算黑色）；經過 $y$ 的路徑在 $p$ 以下至少有 $y$ 和 $y$ 下面的某個外部節點兩個黑色節點，黑高度不相等，矛盾。 所以 $y$ 不是
+外部節點就是紅色（而且紅色的 $y$ 兩個子節點都是外部節點）。
+\item iii.\ 對。 紅黑樹對應到 (2,4) 樹的方法是固定的：每個黑色節點和它的紅色子節點合成一個 (2,4) 樹的節點（含 $1$、$2$ 或 $3$ 個鍵），
+結果唯一（資結書第~11.1.6~節）。
+\item iv.\ 錯。 反方向不唯一：含兩個鍵 $\{a, b\}$ 的 3-節點可以表示成「$a$ 黑、$b$ 是它的紅色右子節點」，也可以表示成「$b$ 黑、$a$ 是它的
+紅色左子節點」，兩種都是合法的紅黑樹。
+\end{itemize}
+正確的是 ii、iii，選 (b)。
+
+\textbf{(2)} 已知：有 $O(T(n))$ 的演算法解 A，就有 $O(n \log n + T(n))$ 的演算法解 B，也就是 B 歸約到 A，歸約本身花 $O(n \log n)$
+（資結書第~15.1、28.3~節）。 下界只能沿著「B 難，所以 A 也難」的方向傳。
+\begin{itemize}
+\item (d) 對。 B 有 $\Omega(n^2)$ 下界，若 A 能在 $T(n) = o(n^2)$ 時間解，B 就能在 $O(n \log n + T(n)) = o(n^2)$ 解，矛盾。 所以 A 也是
+$\Omega(n^2)$。
+\item (b) 錯。 B 的 $\Omega(n \log n)$ 下界可能完全由歸約那一項 $n \log n$ 吸收：即使 A 只要 $O(n)$，B 的上界 $O(n \log n + n)$ 仍符合
+B 的下界，推不出 A 的任何下界。 (d) 可以成立，是因為 $n^2$ 比歸約的成本 $n \log n$ 大。
+\item (a)、(c) 錯。 方向反了：A 很難不代表 B 難，B 可能有完全不用 A 的快速解法。
+\end{itemize}
+
+\textbf{(3)(4)} 霍夫曼演算法每次合併權重最小的兩個（資結書第~19.3~節、虛擬碼~19.3）。 頻率：G $5$、B $7$、E $8$、A $13$、D $18$、F $22$、C $27$。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+步驟 & 合併 & 新節點 \\
+\midrule
+1 & G $5$、B $7$ & $12$ \\
+2 & E $8$、$\{G, B\}$ $12$ & $20$ \\
+3 & A $13$、D $18$ & $31$ \\
+4 & $\{E, G, B\}$ $20$、F $22$ & $42$ \\
+5 & C $27$、$\{A, D\}$ $31$ & $58$ \\
+6 & $42$、$58$ & $100$（根） \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步的兩個最小值都沒有平手，樹是唯一的。 各字元的深度（碼長）：C、F 是 $2$；E、A、D 是 $3$；G、B 是 $4$。 樹的深度是最深的葉子
+G、B 的 $4$，(3) 選 (a)；E 的碼長 $3$，(4) 選 (c)。 加權路徑長 $27 \cdot 2 + 22 \cdot 2 + (8 + 13 + 18) \cdot 3 + (5 + 7) \cdot 4 = 263$。
+
+\textbf{(5)} 答案 (c)。
+\begin{itemize}
+\item (a) 對。 樹沒有環，從任一點做 BFS，依深度的奇偶分成兩組，每條邊連接相鄰兩層，所以是二分圖。
+\item (b) 對。 二分就是可以用兩種顏色塗、相鄰的點不同色，兩者是同一件事。
+\item (c) 錯。 環上的點沿著環走必須兩組交替，長度是奇數時走回起點會和自己同組，矛盾。 所以二分圖沒有奇數長的環（反過來也成立，
+資結書定理~21.9）。
+\item (d) 對（把「size $n$」讀成頂點數加邊數）。 BFS 時依層數的奇偶塗色，檢查每條邊兩端是否不同色，時間 $O(|V| + |E|)$（資結書
+虛擬碼~21.5）。 如果 $n$ 只指頂點數，邊可能有 $\Theta(n^2)$ 條，就不是 $O(n)$；但題目要找的是錯的那一個，(c) 錯得最明確。
+\end{itemize}
+\end{pastsoln}

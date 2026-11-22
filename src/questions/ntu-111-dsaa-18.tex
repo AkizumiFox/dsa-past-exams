@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-18}]{臺大資工所 111 學年度 第 18 題}
+（單選）
+
+(5 points) When using Dijkstra's algorithm to solve the single-source shortest problem for a graph
+having $V$ vertices and $E$ edges, which is INCORRECT?
+\begin{enumerate}[label=(\Alph*)]
+\item The search principle is breadth-first.
+\item It is a greedy algorithm.
+\item When using an array to implement the min-priority queue, the time complexity is $O(V^2)$.
+\item For a dense graph where $E=\Theta(V^2)$, the algorithm can run in $O(V^2)$ when using the
+binary min-heap to implement the min-priority queue.
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+Dijkstra 演算法（資結書第~25.2~節）做 $V$ 次 \proc{Extract-Min}、最多 $E$ 次 \proc{Decrease-Key}，
+時間取決於優先佇列怎麼做。
+\begin{itemize}
+\item (A) 可以接受。 Dijkstra 不是用 FIFO 佇列的 BFS，但它取出頂點的順序是依距離由近到遠，像 BFS
+一層一層往外擴的推廣；所有邊的權重都相同時，取出的順序就是 BFS 的順序。 一般課本（例如 CLRS）也說
+它和 BFS 相似。 這是一個描述性的說法，不算錯。
+\item (B) 對。 每一步選目前距離估計最小的頂點，把它的距離定下來不再改，是貪心的選擇；正確性靠
+「權重非負時，這個選擇不會錯」（資結書定理~25.6）。
+\item (C) 對。 用陣列存 $d[v]$：每次 \proc{Extract-Min} 掃一遍 $O(V)$，做 $V$ 次是 $O(V^2)$；
+\proc{Decrease-Key} 直接改陣列 $O(1)$，共 $O(E)$。 總共 $O(V^2 + E) = O(V^2)$。
+\item (D) \textbf{錯}。 二元堆積的 \proc{Extract-Min} 和 \proc{Decrease-Key} 都是 $O(\lg V)$，總共
+$O((V + E)\lg V)$。 $E = \Theta(V^2)$ 時是 $O(V^2 \lg V)$，比陣列版還慢，不是 $O(V^2)$（$E$ 次
+\proc{Decrease-Key} 都可能真的往上調整 $\Theta(\lg V)$ 層）。 要在稠密圖上做到 $O(V^2)$，用陣列；
+費氏堆積的 $O(V \lg V + E)$ 在稠密圖上也是 $O(V^2)$。
+\item (E)：(D) 錯，所以不選。
+\end{itemize}
+\end{pastsoln}

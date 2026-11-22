@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:gk3-103-ds-03}]{高考三級資訊處理 103 年 第三題}
+（申論；15 分）
+
+若只能使用下列 6 種方式排序（Sorting）：(a)Insertion Sort (b)Radix Sort (c)Merge Sort
+(d)Counting Sort (e)Heap Sort (f)Quick Sort。在下列各情形下，應選擇上述何種排序方法為最佳？
+請說明原因。（每小題 5 分，共 15 分）
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 只要將全部資料中的前 20 名最大值排序好，並且主記憶體空間足夠。
+\item[㈡] 只有少數資料在被已排序好的資料修改過，需要重排序，並且主記憶體空間足夠。
+\item[㈢] 資料無明顯特性，需要做第一次的排序，並且主記憶體空間足夠。
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+三小題都說主記憶體夠，所以都是內部排序，差別在資料的狀態和要排出多少。 Radix Sort 和
+Counting Sort（資結書第~15.2~節）要知道鍵值的範圍或位數，題目沒有給這種條件，三小題都不考慮。
+以下 $n$ 是資料筆數。
+
+\textbf{㈠ 選 (e) Heap Sort。} 只要最大的 20 筆排好，不需要整份排序。 Heap Sort 先用
+Build-Max-Heap 在 $\Theta(n)$ 時間建好最大堆積（資結書第~8.2~節），之後每做一次「取出根、
+調整」就得到下一個最大值，各花 $O(\log n)$。 做 20 次就停，前 20 名依序出來，總時間
+$\Theta(n) + 20 \cdot O(\log n) = \Theta(n)$。 其他方法都得把整份排完才知道前 20 名：Merge Sort
+要 $\Theta(n \log n)$；Quick Sort 平均 $\Theta(n \log n)$；Insertion Sort 是 $\Theta(n^2)$。
+
+\textbf{㈡ 選 (a) Insertion Sort。} 資料原本已經排好，只改了少數幾筆，整份資料「幾乎排好」，
+逆序對（inversion）很少。 Insertion Sort 每個元素往前移動的次數就是它參與的逆序對個數，
+總時間 $\Theta(n + I)$，$I$ 是逆序對數（資結書第~14.2~節）。 只改了 $k$ 筆時 $I \le k(n-1)$，
+$k$ 是常數就是 $\Theta(n)$。 Merge Sort、Heap Sort 不管資料長怎樣都要 $\Theta(n \log n)$；
+Quick Sort 若取第一個或最後一個元素當 pivot，幾乎排好的資料反而會落到 $\Theta(n^2)$ 的最差情況。
+
+\textbf{㈢ 選 (f) Quick Sort。} 資料沒有特別的性質，看的是一般情況的表現。 Quick Sort 平均
+$\Theta(n \log n)$，而且內層迴圈只是和 pivot 比較、交換，常數小，對快取友善，實務上通常是
+比較式排序裡最快的（資結書第~14.5、14.7~節）。 為了避開 $\Theta(n^2)$ 的最差情況，pivot
+用隨機選或三數取中。 如果一定要保證最差情況也是 $\Theta(n \log n)$，可以改用 Merge Sort：
+題目說記憶體夠，它需要的 $\Theta(n)$ 額外空間不成問題，代價是常數比 Quick Sort 大。
+\end{pastsoln}

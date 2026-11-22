@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ccu-113-csb-02}]{中正資工所乙組 113 學年度 第 6 題}
+（單選，並說明理由）
+
+(5\%) Which statement is \textbf{false}?
+\begin{enumerate}[label=(\alph*),itemsep=0pt]
+\item The update of a loser tree is faster than that of a winner tree.
+\item Merge sort has a lower worst-case time complexity than selection sort.
+\item In most cases, prime numbers are good divisors for implementing a division-based hash function.
+\item Every binary tree can be uniquely defined by its pre-order and post-order sequences.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d)。
+
+四個敘述分屬不同章：(a) 外部排序的敗者樹（資結書第~15.3.4~節）、(b) 排序（第~14~章）、(c) 雜湊
+（第~12.1~節）、(d) 由走訪序列重建二元樹（第~7.4~節）。 錯的是 (d)，題目放在本章。
+\begin{itemize}
+\item (a) 對。 $k$ 路合併時，輸出最小值後要把同一路的下一個數放進那片葉子，再沿著路徑往上重新比。
+勝者樹的內部節點存的是勝者，往上每一層都要去讀\textbf{兄弟}節點的值來比；敗者樹的內部節點存的是
+那場比賽的敗者，往上每一層只要和路徑上那個節點存的敗者比，不必讀兄弟節點。 兩者都比
+$\lceil \lg k \rceil$ 次，但敗者樹讀寫的節點少、程式也簡單，所以一般說敗者樹的更新比較快。
+\item (b) 對。 合併排序最壞 $\Theta(n \lg n)$，選擇排序不管輸入怎樣都比 $n(n-1)/2$ 次，
+$\Theta(n^2)$。
+\item (c) 對。 $h(k) = k \bmod m$ 取 $m$ 為質數（而且不要太靠近 $2$ 的冪次）時，鍵如果有公因數的
+規律（例如都是 $4$ 的倍數），也會分散到所有格子；$m$ 和那個公因數不互質時只會用到一部分的格子
+（資結書引理~12.1）。
+\item (d) 錯。 前序和後序決定不了「只有一個子節點時，它是左邊還是右邊」。 反例：根 $A$ 只有左子
+節點 $B$，和根 $A$ 只有右子節點 $B$，兩棵樹的前序都是 $AB$、後序都是 $BA$，卻是不同的樹。 前序加
+後序只有在每個節點都有 $0$ 或 $2$ 個子節點時才能唯一決定（資結書定理~7.5）；要唯一決定一般的
+二元樹，兩個序列裡要有一個是中序。
+\end{itemize}
+\end{pastsoln}

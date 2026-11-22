@@ -1,0 +1,79 @@
+\begin{pastexam}[label={px:df3-099-ds-05}]{地方三等資訊處理 99 年 第五題}
+（申論；10 分）
+
+考慮設計中式象棋（如圖）電腦程式系統：（每小題 5 分，共 10 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請設計一資料結構使能隨時表示出棋盤現狀（current state），包含所有棋子的位置、有那些棋子在棋盤上。
+\item[㈡] 寫出一演算法能產生「象」或「相」在任意位置之下一步可前往且合規則的所有位置（next feasible positions），注意，務必考慮其他棋子阻礙的因素。「象」或「相」的移動規則：(1)田字形的對角移動；(2)田字正中央有棋子時，不能移動前往。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[x=0.62cm,y=0.62cm,
+  pc/.style={circle,draw,fill=white,minimum size=5.2mm,inner sep=0pt,font=\scriptsize},
+  bk/.style={pc,line width=1.1pt},rd/.style={pc,fill=black!8}]
+\fill[black!12] (-0.6,-0.6) rectangle (8.6,9.6);
+\draw[line width=1.2pt] (-0.6,-0.6) rectangle (8.6,9.6);
+\foreach \y in {0,...,9} \draw (0,\y)--(8,\y);
+\draw (0,0)--(0,9); \draw (8,0)--(8,9);
+\foreach \x in {1,...,7} {\draw (\x,0)--(\x,4); \draw (\x,5)--(\x,9);}
+\draw (3,0)--(5,2) (5,0)--(3,2) (3,7)--(5,9) (5,7)--(3,9);
+\fill[white] (0.05,4.12) rectangle (7.95,4.88);
+\node[font=\small] at (4,4.5) {楚河漢界};
+\foreach \c [count=\i from 0] in {車,馬,象,士,將,士,象,馬,車} \node[bk] at (\i,9) {\c};
+\node[bk] at (1,7) {砲}; \node[bk] at (7,7) {砲};
+\foreach \i in {0,2,4,6,8} {\node[bk] at (\i,6) {卒}; \node[rd] at (\i,3) {兵};}
+\node[rd] at (1,2) {炮}; \node[rd] at (7,2) {炮};
+\foreach \c [count=\i from 0] in {俥,傌,相,仕,帥,仕,相,傌,俥} \node[rd] at (\i,0) {\c};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這題是「用陣列表示棋盤」的應用（資結書第~4~章）。 原題的移動規則只寫了兩條；真正的象棋規則還有：象、相\textbf{不能過河}
+（只在自己這一側五列內走），目的地有\textbf{自己的棋子}時不能去，有對方棋子時可以吃。 這三點一併處理，否則產生的位置
+不「合規則」。
+
+\textbf{㈠ 資料結構}。 棋子放在格線的交點上，棋盤是 $10$ 列 $\times$ $9$ 行的交點。 用兩個互相對應的結構：
+\begin{itemize}
+\item \textbf{棋盤陣列} $\mathit{board}[0..9][0..8]$：每格存棋子代碼，$0$ 表示空。 代碼用正負號分邊，例如紅方 $+1$ 帥、$+2$ 仕、
+$+3$ 相、$+4$ 傌、$+5$ 俥、$+6$ 炮、$+7$ 兵，黑方用對應的負數（$-1$ 將、$-3$ 象……）。 第 $0$ 列是黑方底線，第 $9$ 列是紅方底線；
+第 $0$–$4$ 列是黑方半邊，第 $5$–$9$ 列是紅方半邊，河在第 $4$、$5$ 列之間。 問「某個位置有沒有棋子、是誰的」是 $O(1)$。
+\item \textbf{棋子表} $\mathit{piece}[0..31]$：$32$ 枚棋子各一筆記錄 $(\mathit{code}, \mathit{row}, \mathit{col}, \mathit{alive})$。 問「棋盤上有哪些
+棋子、各在哪裡」只要掃這 $32$ 筆，不必掃 $90$ 格；被吃掉的 $\mathit{alive}$ 設為假。
+\end{itemize}
+走一步棋 $(r_1, c_1) \to (r_2, c_2)$：若 $\mathit{board}[r_2][c_2]$ 有對方棋子，在棋子表把它標成被吃；把 $\mathit{board}[r_1][c_1]$ 的
+代碼搬到 $\mathit{board}[r_2][c_2]$、原位清成 $0$，並更新棋子表裡那枚棋子的座標。 兩個結構同步更新，都是 $O(1)$。 另外記錄
+輪到哪一方。 例如開局時 $\mathit{board}[9][2] = +3$（紅相）、$\mathit{board}[0][4] = -1$（黑將）、$\mathit{board}[6][0] = +7$（紅兵）。
+（題目圖上第 $0$ 列在最上面。）
+
+\textbf{㈡ 象／相的可走位置}。 位置 $(r, c)$ 的象（相）田字對角有四個目標 $(r \pm 2, c \pm 2)$，對應的田字中央（象眼）是
+$(r \pm 1, c \pm 1)$。
+\begin{pseudo}[unbreakable]{產生 $(r, c)$ 上象或相的所有合法目的地}
+\Function{Elephant-Moves}{$\mathit{board}, r, c$}
+    \State $p \gets \mathit{board}[r][c]$；$L \gets$ 空串列
+    \For{每個 $(\mathit{dr}, \mathit{dc}) \in \{(-1,-1), (-1,1), (1,-1), (1,1)\}$}
+        \State $r' \gets r + 2\,\mathit{dr}$；$c' \gets c + 2\,\mathit{dc}$ \Comment{田字對角}
+        \If{$r' < 0$ \OR $r' > 9$ \OR $c' < 0$ \OR $c' > 8$}
+            \State \textbf{continue} \Comment{出了棋盤}
+        \EndIf
+        \If{($p > 0$ \AND $r' < 5$) \OR ($p < 0$ \AND $r' > 4$)}
+            \State \textbf{continue} \Comment{過河}
+        \EndIf
+        \If{$\mathit{board}[r + \mathit{dr}][c + \mathit{dc}] \ne 0$}
+            \State \textbf{continue} \Comment{象眼有棋子（塞象眼）}
+        \EndIf
+        \If{$\mathit{board}[r'][c'] \cdot p > 0$}
+            \State \textbf{continue} \Comment{目的地是自己的棋子}
+        \EndIf
+        \State 把 $(r', c')$ 加入 $L$ \Comment{空格，或可以吃的對方棋子}
+    \EndFor
+    \State \Return $L$
+\EndFunction
+\end{pseudo}
+第 7 行：紅相（正數）不能到第 $0$–$4$ 列，黑象（負數）不能到第
+$5$–$9$ 列。 第 9 行檢查題目的規則(2)；第 11 行兩個代碼同號表示同一方。 因為每個方向只檢查常數個格子，整個函式是
+$O(1)$（最多 $4$ 個候選）。 象的位置在合法局面中本來就只有己方半邊的 $7$ 個點，所以這幾條檢查就足夠。
+
+\textbf{例}。 開局時紅相在 $(9, 2)$：四個方向中 $(11, \cdot)$ 出界；$(7, 0)$ 的象眼 $(8, 1)$ 是空的、目的地是空格，可走；
+$(7, 4)$ 的象眼 $(8, 3)$ 空、目的地空，可走。 傳回 $\{(7, 0), (7, 4)\}$。 若 $(8, 3)$ 上有任何一方的棋子，
+$(7, 4)$ 就被塞象眼，只剩 $(7, 0)$。 若紅相在 $(5, 2)$（河邊），往上的 $(3, 0)$、$(3, 4)$ 都會過河，只剩往下的兩個方向要檢查。
+\end{pastsoln}

@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntu-113-dsa-06}]{臺大資工所 113 學年度 第 6 題}
+（單選；答錯倒扣 1 分）
+
+(5 points) We want to multiply a sequence of matrices $M_1,\ldots,M_n$ with the minimum number of
+multiplications. Since the matrix multiplication is associative, we can parenthesize the matrix
+multiplication in all possible orders. Let $m_{i,j}$ be the minimum number of multiplications to
+multiply $M_i,\ldots,M_j$. We can derive a recursion of $m_{i,j}$, where $r_i$ and $c_i$ are the
+numbers of rows and columns of the matrix $M_i$ respectively.
+\begin{equation*}
+m_{i,j}=\min_{i\le k<j}(m_{i,k}+m_{k+1,j}+r_ic_kc_j) \tag{1}
+\end{equation*}
+Now consider $m_{s,s+k}$, $1<s<s+k<n$. For given $s$ and $k$, let $x$ be the number of $m_{i,j}$'s
+that have $m_{s,s+k}$ at the right hand side of Equation 1, and let $y$ be the number of different
+$m$'s that are at the right-hand side of Equation 1 when $i=s$ and $j=s+k$. What is the approximate
+value of $x+y$?
+\begin{enumerate}[label=\Alph*.]
+\item $s\binom{n-k}{2}$
+\item $n+k$
+\item $(n-s)(n-s-k)$
+\item $\binom{k}{2}+\binom{n}{2}$
+\item $\binom{n-k-s}{2}+\binom{k}{2}$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+式 (1) 裡，$m_{i,j}$ 的右邊出現的是同一列左邊的 $m_{i,k}$ 和同一欄下面的 $m_{k+1,j}$，$i \le k < j$
+（資結書第~18.2~節）。 注意題目的 $k$ 和式 (1) 裡的分割點 $k$ 是兩回事，下面把分割點改寫成 $t$。
+
+\textbf{算 $x$。} $m_{s,s+k}$ 出現在 $m_{i,j}$ 的右邊，有兩種方式：
+\begin{itemize}
+\item 當左半 $m_{i,t}$：$i = s$、$t = s + k$，而 $t < j$，所以 $j = s + k + 1, \ldots, n$，共 $n - s - k$ 個。
+\item 當右半 $m_{t+1,j}$：$t + 1 = s$、$j = s + k$，而 $i \le t = s - 1$，所以 $i = 1, \ldots, s - 1$，共
+$s - 1$ 個。
+\end{itemize}
+兩種的 $(i, j)$ 不會重複（前者 $i = s$，後者 $i < s$），$x = (n - s - k) + (s - 1) = n - k - 1$。 題目的
+$1 < s$、$s + k < n$ 保證兩種都至少有一個。
+
+\textbf{算 $y$。} $i = s$、$j = s + k$ 時，$t = s, \ldots, s + k - 1$ 共 $k$ 個分割點，右邊出現
+$m_{s,t}$（$k$ 個：$m_{s,s}, \ldots, m_{s,s+k-1}$）和 $m_{t+1,s+k}$（$k$ 個：$m_{s+1,s+k}, \ldots,
+m_{s+k,s+k}$）。 前一組的第一個下標都是 $s$，後一組都大於 $s$，兩組沒有重複，$y = 2k$。
+
+所以 $x + y = n - k - 1 + 2k = n + k - 1 \approx n + k$，選 B。 例如 $n = 10$、$s = 2$、$k = 3$：
+$x = 6$、$y = 6$，$x + y = 12 = n + k - 1$。
+
+其他選項：$x$、$y$ 都只是一次的量（$x < n$、$y = 2k < 2n$），A、C、D、E 卻都含有二次項，參數變大
+時和 $n + k - 1$ 差得越來越遠。 以上面的例子，A $= 2\binom{7}{2} = 42$、C $= 8 \cdot 5 = 40$、
+D $= 3 + 45 = 48$；E $= \binom{5}{2} + 3 = 13$ 剛好接近，但換成 $n = 20$（$s$、$k$ 不變）時
+E $= \binom{15}{2} + 3 = 108$，正確值是 $22$。
+\end{pastsoln}

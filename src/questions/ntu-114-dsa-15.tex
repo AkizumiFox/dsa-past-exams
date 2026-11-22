@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ntu-114-dsa-15}]{臺大資網所 114 學年度 第 15 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) In this problem we use the following notations. For any binary tree $T$, we define $T.x$ to be its root
+node, $T.l$ (resp. $T.r$) to be the left (resp. right) child of $T.r$, and $T.L$ (resp. $T.R$) to be the left
+(resp. right) subtree of $T.x$. For any vertex $x$ on a binary tree, we define $x.l$, $x.L$, $x.r$, and $x.R$
+similarly. These values are defined as $\bot$ (empty) if they do not exist. The set of leaves of $T$ are denoted
+as Leaf($T$). For any statement $P$ we define $[\![P]\!]$ to be 1 if $P$ is true and 0 if $P$ is false.
+
+Let $T$ be a binary tree of $n$ nodes. Each node $v$ on $T$ has a weight $w(v)$ and a color $c(v)$. We want to
+make the tree colorful in the sense that every non-root tree node has a color different from its parent. To do
+so, some re-coloring to the tree nodes are necessary, and we would like to minimize the total weights of the tree
+nodes that are re-colored. Notice that there are infinitely many colors to choose so once a node is re-colored it
+gets a unique color. Let $f(T)$ be the answer. Suppose that both $T.L$ and $T.R$ are non-empty. What is the
+correct recursive formulations for $f(T)$? Select all choice(s) that apply.
+\begin{enumerate}[label=(\Alph*)]
+\item Let $T'\subseteq T$ be the (partial) binary tree consisting of all tree node $v$ who has the same color as
+the tree root $T.x$ and all $v$'s ancestors have the same color $c(T.x)$ too. Then,
+$f(T)=g(T')+\sum_{a\in\mathrm{Leaf}(T')}(f(a.L)+f(a.R))$, here $g(T')$ is the weight of the maximum weighted
+independent set on $T'$.
+\item With the same notion $T'$ defined above, $f(T)=h(T')+\sum_{a\in\mathrm{Leaf}(T')}(f(a.L)+f(a.R))$, here
+$h(T')$ is the weight of the minimum weighted vertex cover on $T'$.
+\item With the same notion $T'$ defined above, $f(T)=h(T')+\sum_{a\in\mathrm{Leaf}(T')}(f(a.L)+f(a.R))$, here
+$h(T')$ is the weight of the minimum weighted dominating set on $T'$.
+\item $f(T)=\min\{f(T.L)+f(T.R)+w(T.x),[\![c(T.l){=}{=}c(T.x)]\!]\cdot(w(T.l)+f(T.L))+[\![c(T.l)\neq
+c(T.x)]\!]\cdot f(T.L)+[\![c(T.r){=}{=}c(T.x)]\!]\cdot(w(T.r)+f(T.R))+[\![c(T.r)\neq c(T.x)]\!]\cdot f(T.R)\}$
+\item None of the above choices apply.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(E)（照題目的定義逐字讀；理由和命題者可能的本意見最後一段）。 原題「$T.l$ … child of $T.r$」的 $T.r$ 是 $T.x$
+的筆誤。 權重假設非負。
+
+\textbf{問題的本質}。 重新上色的節點拿到一個獨一無二的顏色，和誰都不衝突。 所以一組重新上色的節點 $R$ 可行，若且唯若
+每一條「原本父子同色」的邊至少有一端在 $R$ 裡。 把這些同色邊組成的森林記為 $M$，$f(T)$ 就是 $M$ 上的\textbf{最小權重
+頂點覆蓋}。 樹上的頂點覆蓋可以用樹上 DP 求（資結書第~18.8~節，和最大權重獨立集互補：最小頂點覆蓋的權重 $=$
+總權重 $-$ 最大權重獨立集）。
+
+$T'$ 是 $M$ 裡含根的那一棵（根往下、一路同色的部分）。 $T'$ 的每條邊都是同色邊，而從 $T'$ 連出去的邊（$T'$ 的節點和
+不在 $T'$ 的孩子之間）都是異色邊，不需要處理。 所以正確的式子是
+\[
+f(T) = h(T') + \sum_{v \in T'}\ \sum_{u \text{ 是 } v \text{ 的孩子},\ u \notin T'} f(\text{以 } u \text{ 為根的子樹}),
+\]
+$h$ 是最小權重頂點覆蓋。 底下要加的是\textbf{所有}掛在 $T'$ 下面的子樹，不只是 $T'$ 葉子底下的。
+
+\begin{itemize}
+\item[(A)] 錯。 要的是頂點覆蓋，不是獨立集。 反例：根紅色、權重 $1$，兩個孩子分別藍、綠，權重 $1$。 沒有衝突，$f(T) = 0$；
+$T'$ 只有根，最大權重獨立集是 $1$，式子給 $1$。
+\item[(B)] 錯（照字面）。 $h$ 用對了，但只加了 $T'$ \textbf{葉子}底下的子樹。 $T'$ 的內部節點也可能有異色的孩子，那棵
+子樹被漏掉。 反例：根 $r$ 紅、權重 $5$；左孩子 $l$ 紅、權重 $1$（沒有孩子）；右孩子 $b$ 藍、權重 $3$，$b$ 有一個藍色孩子
+$b'$、權重 $1$。 $T' = \{r, l\}$，$\mathrm{Leaf}(T') = \{l\}$，$l$ 沒有子樹，式子給 $h(T') = \min(5, 1) = 1$。 但 $b$--$b'$ 也
+同色，正確答案是 $1 + 1 = 2$。
+\item[(C)] 錯。 支配集不對：支配集只要求每個點自己或鄰居在集合裡，不保證每條邊都被覆蓋。 (A) 的反例中 $T'$ 只有根，
+最小支配集是 $\{r\}$、權重 $1$，式子給 $1$，正確是 $0$。
+\item[(D)] 錯。 第二項的意思是「根不重新上色；和根同色的孩子一定要重新上色」，但接著用 $f(T.L)$ 算左子樹，沒有利用
+「$T.l$ 已經重新上色了」這件事。 $T.l$ 已經換色，它和自己孩子之間的衝突也一併解決，子樹的成本應該是
+$f(T.l.L) + f(T.l.R)$，可能比 $f(T.L)$ 小；用 $w(T.l) + f(T.L)$ 會重複計算。 反例：根 $r$ 紅、權重 $10$；左孩子 $l$ 紅、
+權重 $1$，$l$ 的左孩子 $l'$ 紅、權重 $1$；右孩子 $b$ 藍、權重 $1$。 $f(T.L) = 1$（$l$--$l'$ 換一個），$f(T.R) = 0$。
+(D) 給 $\min(1 + 0 + 10,\ (1 + 1) + 0) = 2$；但只把 $l$ 換色就同時解決 $r$--$l$ 和 $l$--$l'$，正確答案是 $1$。
+\end{itemize}
+四個都錯，選 (E)。
+
+\textbf{命題者的本意}。 (B) 的想法（$T'$ 上做最小頂點覆蓋，其他部分遞迴）是對的，錯在加總的範圍。 如果把
+$\mathrm{Leaf}(T')$ 理解成「$T'$ 的邊界：所有在 $T'$ 裡、但有孩子不在 $T'$ 裡的節點」，並且只加那些不在 $T'$ 裡的子樹，
+(B) 就成立。 照題目給的定義（Leaf 是葉子）逐字讀，(B) 不對。 本書依字面
+給 (E)。
+\end{pastsoln}

@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ncku-111-prog-11}]{成大資訊聯招 111 學年度 第 11 題}
+（單選）
+
+\textbf{[2\%, 2\%, 2\%]} A job priority queue is implemented using a Min-Heap in which a lower key value represents a higher priority. The jobs are entered and stored in the Min-Heap as shown in the following array $Q$.
+\begin{center}
+\begin{tabular}{l*{17}{c}}
+index & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16\\ \hline
+key value & -- & 6 & 8 & 10 & 12 & 24 & 15 & 13 & 20 & 18 & 26 & & & & & &
+\end{tabular}
+\end{center}
+\smallskip
+(i) [Step 1] Next job is extracted from the job queue for execution. What is the value of $Q[4]$ in the remaining job queue?\\
+(A) 15\\
+(B) 18\\
+(C) 20\\
+(D) 26\\
+(E) None of the above
+
+(ii) [Step 2] After Step (1) is executed, next job is extracted from the job queue for execution. What is the value of $Q[5]$ in the remaining job queue?\\
+(A) 13\\
+(B) 15\\
+(C) 18\\
+(D) 24\\
+(E) None of the above
+
+(iii) [Step 3] After step (2) is executed, a new job with priority 11 is inserted in to the job queue. What is the value of $Q[9]$ in the remaining job queue?\\
+(A) 18\\
+(B) 20\\
+(C) 24\\
+(D) 26\\
+(E) None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(i) (B) 18；(ii) (D) 24；(iii) (A) 18。
+
+陣列從索引 $1$ 開始存最小堆積，節點 $i$ 的子節點是 $2i$、$2i + 1$，父節點是 $\lfloor i/2 \rfloor$（資結書
+第~8.1~節）。 取出最小值：把最後一個元素搬到根，往下調整（和較小的子節點比，比它大就交換）；插入：放在
+最後，往上調整（比父節點小就交換）。 初始 $Q[1..10] = 6, 8, 10, 12, 24, 15, 13, 20, 18, 26$。
+
+\textbf{(i) 第一次取出}：取出 $6$，把 $Q[10] = 26$ 搬到根，大小變成 $9$。
+\begin{itemize}
+\item 位置 $1$：$26$ 的子節點 $8$、$10$，和較小的 $8$ 交換，$26$ 到位置 $2$。
+\item 位置 $2$：子節點 $Q[4] = 12$、$Q[5] = 24$，和 $12$ 交換，$26$ 到位置 $4$。
+\item 位置 $4$：子節點 $Q[8] = 20$、$Q[9] = 18$，和 $18$ 交換，$26$ 到位置 $9$，沒有子節點，停。
+\end{itemize}
+$Q[1..9] = 8, 12, 10, 18, 24, 15, 13, 20, 26$，$Q[4] = 18$，選 (B)。
+
+\textbf{(ii) 第二次取出}：取出 $8$，把 $Q[9] = 26$ 搬到根，大小變成 $8$。
+\begin{itemize}
+\item 位置 $1$：子節點 $12$、$10$，和 $10$ 交換，$26$ 到位置 $3$。
+\item 位置 $3$：子節點 $Q[6] = 15$、$Q[7] = 13$，和 $13$ 交換，$26$ 到位置 $7$，沒有子節點（$14 > 8$），停。
+\end{itemize}
+$Q[1..8] = 10, 12, 13, 18, 24, 15, 26, 20$，$Q[5] = 24$（這一步沒有動到位置 $5$），選 (D)。
+
+\textbf{(iii) 插入 $11$}：放在 $Q[9]$。
+\begin{itemize}
+\item 位置 $9$ 的父節點是 $Q[4] = 18 > 11$，交換：$Q[4] = 11$、$Q[9] = 18$。
+\item 位置 $4$ 的父節點是 $Q[2] = 12 > 11$，交換：$Q[2] = 11$、$Q[4] = 12$。
+\item 位置 $2$ 的父節點是 $Q[1] = 10 < 11$，停。
+\end{itemize}
+$Q[1..9] = 10, 11, 13, 12, 24, 15, 26, 20, 18$，$Q[9] = 18$，選 (A)。
+
+三小題的其他選項都是沒有照「和較小的子節點交換」或「一路往上」做才會得到的值，例如 (i) 選 (C) 20 是在
+位置 $4$ 誤和較大的 $20$ 交換；(iii) 選 (E) 是忘了 $11$ 會往上浮。
+\end{pastsoln}

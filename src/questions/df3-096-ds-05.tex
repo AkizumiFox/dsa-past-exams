@@ -1,0 +1,82 @@
+\begin{pastexam}[label={px:df3-096-ds-05}]{地方三等資訊處理 96 年 第五題}
+（申論；20 分）
+
+有一遞迴函數如下：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+int g(int n)
+{
+  if (n < 2)
+     return n;
+  else
+     return g(n-1) + g(n-2) + n;
+}
+\end{minted}
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請寫出 \texttt{g(6)} 的傳回值。（3 分）
+\item[㈡] 請算出此遞迴函數的時間複雜度（time complexity）。（7 分）
+\item[㈢] 請寫一全等於上述遞迴函數之線性時間（linear time）函數。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠} 由小往上算，$g(0) = 0$、$g(1) = 1$，之後 $g(n) = g(n-1) + g(n-2) + n$：
+\[
+\begin{aligned}
+g(2) &= g(1) + g(0) + 2 = 1 + 0 + 2 = 3, & g(3) &= 3 + 1 + 3 = 7, & g(4) &= 7 + 3 + 4 = 14,\\
+g(5) &= 14 + 7 + 5 = 26, & g(6) &= 26 + 14 + 6 = \mathbf{46}.
+\end{aligned}
+\]
+\texttt{g(6)} 傳回 $46$。
+
+\textbf{㈡} 每次呼叫除了遞迴之外只做常數時間的工作，所以時間和「呼叫次數」成正比。 設
+$C(n)$ 是算 \texttt{g(n)} 總共的呼叫次數（含自己）：
+\[
+C(0) = C(1) = 1, \qquad C(n) = C(n-1) + C(n-2) + 1 \quad (n \ge 2).
+\]
+兩邊加 $1$：令 $D(n) = C(n) + 1$，得 $D(n) = D(n-1) + D(n-2)$，$D(0) = D(1) = 2$。 這是費氏
+數列的兩倍：$D(n) = 2F_{n+1}$（$F_1 = F_2 = 1$），所以
+\[
+C(n) = 2F_{n+1} - 1, \qquad C(0..6) = 1, 1, 3, 5, 9, 15, 25 .
+\]
+費氏數的特徵方程式 $x^2 = x + 1$ 的根是 $\varphi = (1 + \sqrt5)/2 \approx 1.618$ 和
+$\hat\varphi = (1 - \sqrt5)/2$，$|\hat\varphi| < 1$，所以 $F_n = (\varphi^n - \hat\varphi^n)/\sqrt5
+= \Theta(\varphi^n)$（資結書第~2.5~節的線性遞迴）。 因此時間
+\[
+T(n) = \Theta(C(n)) = \Theta(\varphi^n) \approx \Theta(1.618^n),
+\]
+是指數時間。 不想解特徵方程式也可以夾出範圍：$C(n-1) \ge C(n-2)$，所以
+$2C(n-2) \le C(n) - 1 \le 2C(n-1)$，得 $C(n) = \Omega(2^{n/2})$ 且 $C(n) = O(2^n)$，一樣是指數。
+慢的原因是同一個 \texttt{g(k)} 被重算很多次：算 \texttt{g(6)} 時 \texttt{g(2)} 被呼叫了
+$F_5 = 5$ 次。
+
+\textbf{㈢} 由小往上算，只記住最近的兩個值（和資結書第~18.1~節「由下而上」的動態規劃
+同一個想法）：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+int g_linear(int n)
+{
+    if (n < 2)              /* 和原函數相同：n < 2 時傳回 n（含負數） */
+        return n;
+    int prev = 0;           /* g(i-2)，一開始是 g(0) */
+    int cur  = 1;           /* g(i-1)，一開始是 g(1) */
+    for (int i = 2; i <= n; i++) {
+        int next = cur + prev + i;   /* g(i) = g(i-1) + g(i-2) + i */
+        prev = cur;
+        cur  = next;
+    }
+    return cur;             /* 迴圈結束時 cur = g(n) */
+}
+\end{minted}
+\textbf{為什麼全等}：迴圈不變量是「第 $i$ 次迴圈開始時 \texttt{prev} $= g(i-2)$、\texttt{cur}
+$= g(i-1)$」。 一開始 $i = 2$，\texttt{prev} $= g(0) = 0$、\texttt{cur} $= g(1) = 1$ 成立；
+迴圈本體算出 $g(i)$ 後左移一格，$i$ 加一，不變量仍然成立。 結束時 $i = n + 1$，\texttt{cur}
+$= g(n)$。 $n < 2$ 的情況直接照原函數傳回 $n$。 所以對每個 $n$ 傳回值都和原函數相同。
+以 $n = 6$ 追蹤：$(\texttt{prev}, \texttt{cur})$ 依序是 $(0,1) \to (1,3) \to (3,7) \to (7,14)
+\to (14,26) \to (26,46)$，傳回 $46$，和㈠一致。
+
+\textbf{時間}：迴圈 $n - 1$ 次，每次常數時間，$\Theta(n)$；空間只用三個變數，$O(1)$。
+
+補充：令 $h(n) = g(n) + n + 3$，代入可得 $h(n) = h(n-1) + h(n-2)$，$h(0) = 3 = F_4$、
+$h(1) = 5 = F_5$，所以 $g(n) = F_{n+4} - n - 3$（$n \ge 0$）。 例如 $g(6) = F_{10} - 9 = 55 - 9
+= 46$。 這也說明 $g(n)$ 本身是指數成長，$n \ge 43$ 時就超出 32 位元 \texttt{int} 的範圍；
+在那之前兩個函數的傳回值完全相同。
+\end{pastsoln}

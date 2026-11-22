@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:nchu-113-dsa-22}]{中興資工所甲組 113 學年度 申論題 PART 1 第 4 題}
+（問答）
+
+(4\%) Consider the flow network shown below, which is a directed graph G=(V, E). Each edge in G has the
+positive flow and an associated capacity, denoted by flow/[capacity], for example, 4/[10]. The feasible
+flow \textit{f} is from the \textbf{source} vertex A to the \textbf{sink} vertex J. What is the value of the
+flow \textit{f}\,?
+\begin{center}
+\begin{tikzpicture}[x=0.95cm, v/.style={circle,draw,minimum size=6.5mm,inner sep=1pt},
+  e/.style={-{Latex[length=2.2mm]}},lab/.style={font=\small,inner sep=2pt}]
+\node[v] (A) at (0,2) {A};
+\node[v] (B) at (3,2) {B};
+\node[v] (C) at (6,2) {C};
+\node[v] (D) at (9,2) {D};
+\node[v] (E) at (12,2) {E};
+\node[v] (F) at (0,0) {F};
+\node[v] (G) at (3,0) {G};
+\node[v] (H) at (6,0) {H};
+\node[v] (I) at (9,0) {I};
+\node[v] (J) at (12,0) {J};
+\draw[e] (A) -- node[lab,above]{9/[9]} (B);
+\draw[e] (B) -- node[lab,above]{4/[10]} (C);
+\draw[e] (C) -- node[lab,above]{7/[7]} (D);
+\draw[e] (D) -- node[lab,above]{5/[6]} (E);
+\draw[e] (A) -- node[lab,left]{7/[7]} (F);
+\draw[e] (A) -- node[lab,above right,pos=0.55]{9/[14]} (G);
+\draw[e] (B) -- node[lab,right]{5/[5]} (G);
+\draw[e] (C) -- node[lab,below right,pos=0.4]{0/[4]} (G);
+\draw[e] (H) -- node[lab,right]{3/[8]} (C);
+\draw[e] (H) -- node[lab,below right,pos=0.55]{5/[5]} (D);
+\draw[e] (I) -- node[lab,right]{4/[6]} (D);
+\draw[e] (D) -- node[lab,above right,pos=0.55]{11/[11]} (J);
+\draw[e] (E) -- node[lab,right]{5/[5]} (J);
+\draw[e] (F) -- node[lab,below]{7/[10]} (G);
+\draw[e] (G) -- node[lab,below]{21/[21]} (H);
+\draw[e] (H) -- node[lab,below]{13/[20]} (I);
+\draw[e] (I) -- node[lab,below]{9/[15]} (J);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $|f| = 25$。
+
+流的值等於從源點流出的淨流量（資結書第~26.1~節）。 $A$ 沒有流進來的邊，流出去的三條是
+\[
+|f| = f(A, B) + f(A, F) + f(A, G) = 9 + 7 + 9 = 25.
+\]
+用匯點檢查：流進 $J$ 的是 $f(D, J) + f(E, J) + f(I, J) = 11 + 5 + 9 = 25$，$J$ 沒有流出的邊，一致。
+
+題目說這是可行流，順手檢查每個中間頂點的流量守恆（流進 $=$ 流出），也確認每條邊的流量不超過容量：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+頂點 & 流進 & 流出 \\
+\midrule
+$B$ & $9$ & $4 + 5 = 9$ \\
+$C$ & $4 + 3 = 7$ & $7 + 0 = 7$ \\
+$D$ & $7 + 5 + 4 = 16$ & $5 + 11 = 16$ \\
+$E$ & $5$ & $5$ \\
+$F$ & $7$ & $7$ \\
+$G$ & $9 + 5 + 0 + 7 = 21$ & $21$ \\
+$H$ & $21$ & $3 + 5 + 13 = 21$ \\
+$I$ & $13$ & $4 + 9 = 13$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+（題目說每條邊的流量都是正的，但 $C \to G$ 是 $0/[4]$；不影響答案。） 題目問的是這個給定的流的值，不是
+最大流。 這個流還能再加大：殘餘網路裡有增廣路徑 $A \to G \to B \to C \to H \to I \to J$（$G \to B$、
+$C \to H$ 是把 $B \to G$、$H \to C$ 的流量退回去），瓶頸 $\min(5, 5, 6, 3, 7, 6) = 3$，網路的最大流是 $28$
+（資結書第~26.2~節）。 不要和 $25$ 混淆。
+\end{pastsoln}

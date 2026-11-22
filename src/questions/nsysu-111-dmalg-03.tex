@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-03}]{中山資工所資安組 111 學年度 第 5 題}
+（計算）
+
+{[10\%]} If a first case of chickenpox is recorded in a country, let $p_n$ denote the probability
+that a least one case is reported during the $n$th week after the first recorded case in case that
+the percentage of the population that has received at least one dose of the chickenpox vaccine
+achieves 85\%. The country records provide evidence that $p_n=p_{n-1}-(0.25)p_{n-2}$, where
+$n\ge 2$. Since $p_0=0$ and $p_1=1$, if the first case (of a new outbreak) is recorded on November 23,
+2020, when did the probability for the occurrence of a new case decrease to less than 0.008 for the
+first time?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$p_n = n \left(\tfrac{1}{2}\right)^{n-1}$，第 $12$ 週第一次小於 $0.008$；也就是 2020 年
+11 月 23 日之後的第 $78$ 到第 $84$ 天，2021 年 2 月 9 日到 2 月 15 日那一週。
+
+\textbf{解遞迴式。} $p_n = p_{n-1} - \frac{1}{4} p_{n-2}$ 是二階常係數齊次線性遞迴。 特徵方程式
+（資結書定理~2.7）
+\[
+x^2 = x - \tfrac{1}{4}, \qquad x^2 - x + \tfrac{1}{4} = \left(x - \tfrac{1}{2}\right)^2 = 0 ,
+\]
+有重根 $r = \frac{1}{2}$，所以 $p_n = (A + Bn)\left(\frac{1}{2}\right)^n$。 代初始值：
+$p_0 = A = 0$；$p_1 = (A + B) \cdot \frac{1}{2} = \frac{B}{2} = 1$，$B = 2$。 因此
+\[
+p_n = 2n \left(\tfrac{1}{2}\right)^n = \frac{n}{2^{n-1}} .
+\]
+檢查：遞迴式算出 $p_2 = 1 - 0 = 1$、$p_3 = 1 - \frac{1}{4} = \frac{3}{4}$、$p_4 = \frac{3}{4} -
+\frac{1}{4} = \frac{1}{2}$；公式給 $\frac{2}{2}$、$\frac{3}{4}$、$\frac{4}{8}$，一致。
+
+\textbf{找第一個小於 $0.008$ 的 $n$。} $n \ge 2$ 時 $\dfrac{p_{n+1}}{p_n} = \dfrac{n+1}{2n} < 1$，
+數列從 $p_2$ 起一路遞減，所以只要找到第一個跌破的 $n$：
+\begin{center}
+\begin{tabular}{c|cccc}
+$n$ & 9 & 10 & 11 & 12 \\ \hline
+$p_n = n/2^{n-1}$ & $9/256$ & $10/512$ & $11/1024$ & $12/2048$ \\
+近似值 & $0.0352$ & $0.0195$ & $0.0107$ & $0.00586$ \\
+\end{tabular}
+\end{center}
+$p_{11} = 11/1024 > 0.008$（因為 $0.008 \times 1024 = 8.192 < 11$），
+$p_{12} = 12/2048 = 3/512 < 0.008$（因為 $0.008 \times 512 = 4.096 > 3$）。 所以是第 $12$ 週。
+
+\textbf{換成日期。} 第 $n$ 週是第一例之後的第 $7(n-1)+1$ 到第 $7n$ 天，第 $12$ 週是第 $78$ 到
+第 $84$ 天。 11 月 23 日往後數：11 月還有 $7$ 天、12 月 $31$ 天、1 月 $31$ 天，到 1 月 31 日是第
+$69$ 天，所以第 $78$ 天是 2021 年 2 月 9 日，第 $84$ 天是 2 月 15 日（剛好滿 $12$ 週）。 原題
+問「什麼時候」，答第 $12$ 週，也就是 2021 年 2 月 9 日到 15 日這一週即可。
+\end{pastsoln}

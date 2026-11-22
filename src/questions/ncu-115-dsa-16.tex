@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ncu-115-dsa-16}]{中央資工所 115 學年度 第 16 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Which of the following statements are correct?
+\begin{enumerate}[label=\Alph*.]
+\item The postfix of (a+b)/(c-d)+e is ab+cd-/+e.
+\item The postfix of infix expression b+a*c/d is bac*d/+.
+\item The infix of the postfix expression ab+c*d/ef-+ is (((a+b)*c)/d)+(e-f).
+\item The prefix of the postfix expression abc+d*/ is /a*+bcd.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、C、D。
+
+中序轉後序用資結書第~6.3.3~節的規則；後序轉回中序或前序，用堆疊由左往右掃：運算元推入，遇到
+運算子就彈出兩個（先彈出的是右運算元），組好再推回去（資結書第~6.3.2、6.3.5~節）。
+
+\textbf{A 錯}。 $(a+b)/(c-d)+e$ 是 $\bigl((a+b)/(c-d)\bigr)+e$：最後做的是 $+$，它的右運算元是 $e$。
+後序是「左運算元的後序、右運算元的後序、運算子」：
+$\underbrace{ab+\,cd-\,/}_{(a+b)/(c-d)}\ e\ +$，即 \texttt{ab+cd-/e+}。 選項把 $+$ 放在 $e$ 前面，
+\texttt{ab+cd-/+e} 根本不是合法的後序式：掃到第二個 $+$ 時堆疊裡只剩一個運算元。
+
+\textbf{B 對}。 $b+a*c/d$：$*$、$/$ 同級且左結合，先算 $a*c$，再除以 $d$，最後才加：
+$b + \bigl((a*c)/d\bigr)$。 後序是 $b$、$(a*c)/d$ 的後序 \texttt{ac*d/}、$+$，即 \texttt{bac*d/+}。
+用堆疊轉換也一樣：輸出 $b$；$+$ 推入；輸出 $a$；$*$ 優先於 $+$，推入；輸出 $c$；讀到 $/$，先彈出
+同級的 $*$，再推入 $/$；輸出 $d$；最後彈出 $/$、$+$。
+
+\textbf{C 對}。 用堆疊掃 \texttt{ab+c*d/ef-+}：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+讀到 & 堆疊（右邊是頂端） \\
+\midrule
+$a$, $b$ & $a$, $b$ \\
+$+$ & $(a+b)$ \\
+$c$, $*$ & $((a+b)*c)$ \\
+$d$, $/$ & $(((a+b)*c)/d)$ \\
+$e$, $f$, $-$ & $(((a+b)*c)/d)$, $(e-f)$ \\
+$+$ & $(((a+b)*c)/d)+(e-f)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+和選項相同。
+
+\textbf{D 對}。 掃 \texttt{abc+d*/}：$a, b, c$ 推入；$+$ 得 $(b+c)$；$d$ 推入，$*$ 得 $((b+c)*d)$；$/$ 得
+$a/((b+c)*d)$。 前序是「運算子、左運算元的前序、右運算元的前序」：$/$、$a$、$*\,{+}\,b\,c\,d$，即
+\texttt{/a*+bcd}，和選項相同。
+\end{pastsoln}

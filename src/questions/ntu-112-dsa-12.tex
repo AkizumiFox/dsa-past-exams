@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-112-dsa-12}]{臺大資工所 112 學年度 第 12 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Properties of shortest path problem:} Which of the following statements is/are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Dijkstra's algorithm can be applied to any directed graph with no negative cycle.
+\item The heap data structure is likely to be used in Dijkstra's algorithm.
+\item Floyd-Warshall algorithm can be applied to any directed graph with negative weights.
+\item Floyd-Warshall algorithm is based on the concept of dynamic programming.
+\item Every shortest path in a weighted directed graph $G$ will not change if an extra weight is
+added on every edge of $G$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(D)。
+
+\begin{itemize}
+\item \textbf{(A) 錯。} Dijkstra 演算法要求權重都 $\ge 0$（資結書定理~25.6）；沒有負環但有負邊時
+就可能算錯（資結書第~25.2.5~節）。 反例：$s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重
+$-2$，沒有環。 Dijkstra 先取出 $s$，得 $d[a] = 2$、$d[b] = 3$；接著取出 $d$ 最小的 $a$，$d[a] = 2$
+就此確定；最後取出 $b$，這時才發現 $s \to b \to a$ 只要 $1$，但 $a$ 已經確定過了。 正確答案
+$\delta(s, a) = 1$，Dijkstra 給 $2$。
+\item \textbf{(B) 對。} Dijkstra 每一步要取出 $d$ 最小的頂點、並降低鄰居的 $d$，正是最小優先佇列的
+\proc{Extract-Min} 和 \proc{Decrease-Key}，最常用二元堆積實作，時間 $O((n + m) \lg n)$（資結書
+第~25.2~節的執行時間表）。 「likely」只是說常用，稠密圖也可以用陣列版，不影響這一項的對錯。
+\item \textbf{(C) 錯。} 「any directed graph with negative weights」包括有負環的圖。 有負環時，經過
+負環的點對最短距離是 $-\infty$，Floyd--Warshall 照樣跑完，算出的 $d_{ij}$ 不是正確答案；它能做的
+是用 $d_{ii} < 0$ \textbf{偵測}負環（資結書第~25.6~節「有負環時」）。 只有負邊、沒有負環時，
+Floyd--Warshall 是對的。
+\item \textbf{(D) 對。} $d_{ij}^{(k)}$ 是「中間點只能用 $1..k$」的子問題，遞迴式
+$d_{ij}^{(k)} = \min(d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)})$ 由小的子問題算大的，是動態規劃
+（資結書第~18.9~節）。
+\item \textbf{(E) 錯。} 每條邊加同一個正數 $c$，$k$ 條邊的路徑多 $kc$，邊數不同的路徑加的量不同。
+反例：$1 \to 2$、$2 \to 3$ 權重都是 $1$，$1 \to 3$ 權重 $3$。 原本 $1$ 到 $3$ 的最短路徑是
+$1 \to 2 \to 3$（$2 < 3$）；每條邊加 $2$ 之後變成 $3, 3, 5$，$1 \to 2 \to 3$ 是 $6$，直接走是 $5$，
+最短路徑變了。
+\end{itemize}
+\end{pastsoln}

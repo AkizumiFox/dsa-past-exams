@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:gw3-115-ds-01}]{關務三等資訊處理 115 年 第一題}
+（申論；20 分）
+
+請以時間複雜度之漸近符號觀念回答下列問題。㈠、㈡題為二個程式片段分別以漸近符號 $\Theta$(Theta)與 n 表示其時間
+複雜度。（時間複雜度之漸近符號分 O、$\Omega$、$\Theta$ 三種，定義不同，㈠、㈡題請以 $\Theta$ 回答）。
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] （5 分）
+\begin{minted}[fontsize=\small]{c}
+sum=0;
+for (i=0; i<n; i=i+2)
+  for (j=0; j<i;j++)
+     sum=sum+1;
+\end{minted}
+\item[㈡] （5 分）
+\begin{minted}[fontsize=\small]{c}
+sum=0; i=0;
+while (i<n) {
+   for (j=i; j<=n; j++)
+      sum=sum+1;
+   i=i+1;
+};
+\end{minted}
+\item[㈢] 若甲、乙二種不同演算法可解決同一問題，甲的時間複雜度為 O(n log n)，乙的時間複雜度為 O(n$^2$)。將此二演算法
+以程式語言實作，請列舉一類型測試資料，並說明其會使甲演算法程式實際執行時間不一定比乙演算法程式實際執行時間快。（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $\Theta(n^2)$；㈡ $\Theta(n^2)$。 數 \texttt{sum=sum+1} 執行的次數即可，其他敘述的次數不超過它的常數倍再加
+$O(n)$（資結書第~1.7~節）。
+
+\textbf{㈠} 外層 $i = 0, 2, 4, \ldots$，小於 $n$ 的偶數，共 $m = \lceil n/2 \rceil$ 個值：$i = 2t$，$t = 0, 1, \ldots, m - 1$。
+內層對每個 $i$ 跑 $i$ 次。 總次數
+\[
+\sum_{t=0}^{m-1} 2t = 2 \cdot \frac{(m-1)m}{2} = m(m - 1) .
+\]
+例如 $n = 10$ 時 $m = 5$，$0 + 2 + 4 + 6 + 8 = 20 = 5 \cdot 4$。 $m(m-1) = \lceil n/2 \rceil (\lceil n/2 \rceil - 1)$，
+$n \ge 4$ 時介於 $\frac{n}{2} \cdot \frac{n}{4}$ 和 $\frac{n+1}{2} \cdot \frac{n}{2}$ 之間，所以是 $\Theta(n^2)$（約
+$n^2/4$）。 外層本身跑 $\Theta(n)$ 次，被 $n^2$ 吸收。 總時間 $\Theta(n^2)$。
+
+\textbf{㈡} 外層 $i = 0, 1, \ldots, n - 1$，共 $n$ 次；內層 $j$ 從 $i$ 到 $n$（含 $n$），跑 $n - i + 1$ 次。 總次數
+\[
+\sum_{i=0}^{n-1} (n - i + 1) = (n + 1) + n + \cdots + 2 = \frac{(n+1)(n+2)}{2} - 1 = \frac{n(n+3)}{2} .
+\]
+例如 $n = 10$ 時是 $65$。 $\frac{n(n+3)}{2}$ 介於 $\frac{n^2}{2}$ 和 $n^2$ 之間（$n \ge 3$），所以是 $\Theta(n^2)$。
+
+\textbf{㈢} 漸近符號只描述 $n$ 夠大時的成長趨勢，而且 $O$ 只是上界，兩者都不保證「每一筆測試資料甲都比較快」。
+可以舉兩類測試資料：
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{資料量小的測試資料}。 $O(\cdot)$ 隱藏了常數和低階項。 例如甲實際花 $100\, n \lg n$ 個步驟、乙花 $n^2$
+個步驟，$n = 100$ 時甲約 $100 \cdot 100 \cdot 6.64 \approx 66400$，乙只要 $10000$，乙快；要到 $n \lg n$ 的係數被追上
+（$n > 100 \lg n$，大約 $n > 1000$）甲才比較快。 實際例子：合併排序（甲）和插入排序（乙）排 $10$ 到 $20$ 筆資料時，
+插入排序通常比較快，所以很多函式庫在小區段改用插入排序。
+\item \textbf{對乙有利的特殊資料}。 乙的 $O(n^2)$ 是最壞情況的上界，有些輸入它跑得遠比 $n^2$ 快。 例如乙是插入排序、甲是
+合併排序，測試資料是\textbf{已經排好序（或幾乎排好序）}的陣列：插入排序每個數只比一次，$\Theta(n)$；合併排序仍是
+$\Theta(n \log n)$。 這時 $n$ 再大，乙都比甲快。
+\end{enumerate}
+另外，實際執行時間還受快取、記憶體配置、遞迴呼叫的額外成本影響，這些也不在漸近符號裡。 所以比較兩個演算法時，
+除了看複雜度，也要用實際的資料規模和分布測試。
+\end{pastsoln}

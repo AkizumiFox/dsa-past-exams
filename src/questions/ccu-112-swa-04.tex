@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:ccu-112-swa-04}]{中正資工所甲組 112 學年度 第 11 題}
+（問答）
+
+(11\%) Yes/No questions about the graph at the right side. Write down your reasoning. A simple yes/no
+answer will not get any point.
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},
+  v/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\sffamily},lab/.style={font=\sffamily\small,inner sep=2pt}]
+\node[v] (a) at (0,2) {a}; \node[v] (c) at (2.4,2) {c};
+\node[v] (b) at (0,0) {b}; \node[v] (d) at (2.4,0) {d};
+\draw[->] (a) -- node[lab,above] {$-1$} (c);
+\draw[->] (a) -- node[lab,left] {4} (b);
+\draw[->] (c) -- node[lab,above left,pos=0.45] {1} (b);
+\draw[->] (d) -- node[lab,right] {2} (c);
+\draw[->] (b) -- node[lab,below] {$-3$} (d);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=(\alph*),itemsep=0pt,topsep=2pt]
+\item (2\%) To find a shortest path from node a to node d, is Dijkstra algorithm applicable?
+\item (2\%) If all the edges have weight 1, is breadth-first search applicable to find a shortest path from node a to node d?
+\item (2\%) If all the edges have weight 1, is topological sort applicable to the graph?
+\item (5\%) Reweight the graph to make all the edges nonnegative.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 否；(b) 是；(c) 否；(d) 取 $h(a) = 0$、$h(b) = 0$、$h(c) = -1$、$h(d) = -3$，新權重
+$\hat w(a, c) = 0$、$\hat w(a, b) = 4$、$\hat w(c, b) = 0$、$\hat w(d, c) = 0$、$\hat w(b, d) = 0$。
+
+圖有五條有向邊：$a \to c$ ($-1$)、$a \to b$ ($4$)、$c \to b$ ($1$)、$d \to c$ ($2$)、$b \to d$ ($-3$)。
+其中 $b \to d \to c \to b$ 是一個環，權重 $-3 + 2 + 1 = 0$，不是負環，所以最短路徑存在：
+$\delta(a, d) = -3$，路徑 $a \to c \to b \to d$（$-1 + 1 - 3$）。
+
+\textbf{(a) 否。} Dijkstra 演算法的正確性要求所有邊的權重 $\ge 0$（資結書定理~25.6）：它取出 $d$
+最小的頂點後就認定那是最終答案，之後不再更新；有負邊時，晚一點才取出的頂點可能經由負邊讓已確定
+的頂點變得更短（資結書第~25.2.5~節）。 這張圖有兩條負邊（$-1$、$-3$），不符合條件，不能保證正確，
+應改用 Bellman--Ford。 （在這張圖上實際跑一次，取出順序是 $a, c, b, d$，碰巧得到正確的 $-3$；但
+這是巧合，不是「適用」。）
+
+\textbf{(b) 是。} 權重都是 $1$ 時，路徑長度等於邊數，BFS 由近到遠一層一層拜訪，第一次到達某點時
+經過的邊數就是最少的（資結書第~21.3~節）。 從 $a$ 出發：第 $1$ 層 $b, c$；第 $2$ 層 $d$（經由
+$b \to d$）。 最短路徑 $a \to b \to d$，長度 $2$。
+
+\textbf{(c) 否。} 拓樸排序只對有向無環圖（DAG）有定義（資結書第~22~章）。 權重改成 $1$ 不會改變邊，
+圖裡仍有環 $b \to d \to c \to b$：$b$ 要排在 $d$ 前、$d$ 在 $c$ 前、$c$ 又要在 $b$ 前，矛盾。 用 Kahn
+演算法：$a$ 的入分支度 $0$ 先輸出，之後 $b, c, d$ 的入分支度都還是 $1$，卡住。
+
+\textbf{(d) 重新加權（Johnson 的做法，資結書第~25.7~節）。} 加一個新點 $q$，連到每個頂點、權重 $0$，
+用 Bellman--Ford 求 $h(v) = \delta(q, v)$：
+\begin{itemize}
+\item $h(a) = 0$（沒有邊進入 $a$，只能直接從 $q$ 來）。
+\item $h(c) = \min(0,\ h(a) - 1) = -1$。
+\item $h(b) = \min(0,\ h(a) + 4,\ h(c) + 1) = 0$。
+\item $h(d) = \min(0,\ h(b) - 3) = -3$；再檢查 $h(c) \le h(d) + 2 = -1$，不變，收斂。
+\end{itemize}
+新權重 $\hat w(u, v) = w(u, v) + h(u) - h(v)$：
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+邊 & $w$ & $h(u) - h(v)$ & $\hat w$ \\
+\midrule
+$a \to c$ & $-1$ & $0 - (-1) = 1$ & $0$ \\
+$a \to b$ & $4$ & $0 - 0 = 0$ & $4$ \\
+$c \to b$ & $1$ & $-1 - 0 = -1$ & $0$ \\
+$d \to c$ & $2$ & $-3 - (-1) = -2$ & $0$ \\
+$b \to d$ & $-3$ & $0 - (-3) = 3$ & $0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+全部 $\ge 0$。 理由：$h$ 是最短距離，滿足三角不等式 $h(v) \le h(u) + w(u, v)$，所以
+$\hat w(u, v) \ge 0$。 任一條 $x$ 到 $y$ 的路徑，新長度等於舊長度加上 $h(x) - h(y)$（中間的 $h$ 都
+抵消），對同一對端點是常數，所以最短路徑不變。 例如 $a \to c \to b \to d$ 的新長度
+$0 + 0 + 0 = 0 = -3 + h(a) - h(d)$。 之後就可以在新權重上用 Dijkstra。
+\end{pastsoln}

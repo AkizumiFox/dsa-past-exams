@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncu-112-dsa-04}]{中央資工所 112 學年度 複選題第 4 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Given the input list L = [28, 203, 16, 30, 123, 521, 63, 528, 210, 216, 941, 45]. Which of the
+following statements is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item LSD radix sort is a non-comparative sorting algorithm.
+\item At the end of the second pass of LSD Radix sort, the sixth element of the resulting chain is 123.
+\item At the end of the third pass of LSD Radix sort, the sixth element of the resulting chain is 123.
+\item At the end of the first pass of LSD Radix sort, the sixth element of the resulting chain is 63.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(C)。
+
+\textbf{(A) 對}。 LSD 基數排序只看每一位的數字把資料分到 $10$ 個桶子，從不拿兩筆資料互相比較大小，是
+非比較式的排序，所以不受 $\Omega(n \log n)$ 比較下界的限制（資結書第~15.2.2~節）。
+
+\textbf{追蹤}。 以 $10$ 為基數，三位數，第一趟看個位、第二趟看十位、第三趟看百位（不足三位的補 $0$）。
+每一趟依原來的順序把數字接到對應桶子的尾端，再從桶子 $0$ 到 $9$ 串起來。
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+趟 & 非空的桶子 & 串起來的結果 \\
+\midrule
+1（個位） & 0: 30, 210；1: 521, 941；3: 203, 123, 63； & 30, 210, 521, 941, 203, \textbf{123}, \\
+ & 5: 45；6: 16, 216；8: 28, 528 & 63, 45, 16, 216, 28, 528 \\
+\midrule
+2（十位） & 0: 203；1: 210, 16, 216；2: 521, 123, 28, 528； & 203, 210, 16, 216, 521, \textbf{123}, \\
+ & 3: 30；4: 941, 45；6: 63 & 28, 528, 30, 941, 45, 63 \\
+\midrule
+3（百位） & 0: 16, 28, 30, 45, 63；1: 123；2: 203, 210, 216； & 16, 28, 30, 45, 63, \textbf{123}, \\
+ & 5: 521, 528；9: 941 & 203, 210, 216, 521, 528, 941 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(B) 對}。 第二趟結束，第六個是 $123$。
+
+\textbf{(C) 對}。 第三趟結束已經排好，比 $123$ 小的有 $16, 28, 30, 45, 63$ 五個，第六個是 $123$。
+
+\textbf{(D) 錯}。 第一趟結束，第六個是 $123$；$63$ 是第七個（個位是 $3$ 的桶子裡，$63$ 排在 $203$、$123$
+後面，因為輸入裡它比較晚出現）。
+\end{pastsoln}

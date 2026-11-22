@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntust-115-ice-01}]{臺科大資工所 115 學年度 第 I-1 題}
+（複選）
+
+(5\%) Select all statements that are true about AVL trees (named after inventors Adelson-Velsky and
+Landis).
+\begin{enumerate}[label=(\alph*)]
+\item The Balance Factor (BF) of a node is typically defined as the difference between the height of its
+left subtree and the height of its right subtree.
+\item If the root node of a tree has a left subtree height of $3$ and a right subtree height of $5$, the tree
+is considered balanced according to AVL rules.
+\item In an AVL tree with $n$ nodes, the search time complexity in the worst-case scenario is $O(logn)$.
+\item If a newly inserted node causes an LL (Left-Left) imbalance, a \underline{single right rotation} is
+required to restore balance.
+\item Assuming the height of a single root node is $1$, an AVL tree with a height of $4$ must contain at
+least $8$ nodes to maintain its height.
+\item After performing a \underline{single rotation} on an AVL tree, the preorder traversal sequence is
+guaranteed to remain identical to the sequence before the rotation.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)、(c)、(d)。
+
+\begin{itemize}
+\item[(a)] 對。 平衡因子通常定義成「左子樹高度減右子樹高度」（資結書定義~10.1），AVL 樹要求每個節點的平衡
+因子是 $-1$、$0$ 或 $1$。 有的書用右減左，只差正負號。
+\item[(b)] 錯。 根的左右子樹高度差 $|3 - 5| = 2 > 1$，根的平衡因子是 $-2$，違反 AVL 條件。
+\item[(c)] 對。 $n$ 個節點的 AVL 樹高度不超過約 $1.44 \lg n$（資結書定理~10.1），搜尋沿一條從根往下的路徑走，
+最壞 $O(\log n)$。
+\item[(d)] 對。 LL 型：新節點插在失衡節點 $A$ 的左孩子 $B$ 的左子樹裡。 對 $A$ 做一次右旋，$B$ 變成這棵子樹的根，
+高度恢復成插入前的樣子（資結書第~10.2.3~節）。
+\item[(e)] 錯。 設 $N(h)$ 是高度 $h$ 的 AVL 樹最少的節點數（單一節點高度 $1$）。 最少的樹是根加上一棵高度 $h - 1$、
+一棵高度 $h - 2$ 的最少 AVL 樹：
+\[
+N(h) = N(h-1) + N(h-2) + 1, \quad N(1) = 1,\ N(2) = 2 .
+\]
+$N(3) = 2 + 1 + 1 = 4$，$N(4) = 4 + 2 + 1 = 7$。 高度 $4$ 的 AVL 樹最少 $7$ 個節點，不是「至少 $8$ 個」。 例如根的
+左子樹是 $4$ 個節點、高度 $3$ 的最少 AVL 樹，右子樹是 $2$ 個節點、高度 $2$ 的樹。
+\item[(f)] 錯。 旋轉保持的是\textbf{中序}走訪（BST 的順序），前序會變。 例：根 $2$、左孩子 $1$，前序是 $2, 1$；
+右旋之後 $1$ 是根、$2$ 是右孩子，前序變成 $1, 2$。 中序兩次都是 $1, 2$。
+\end{itemize}
+\end{pastsoln}

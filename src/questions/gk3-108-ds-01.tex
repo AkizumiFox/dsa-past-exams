@@ -1,0 +1,99 @@
+\begin{pastexam}[label={px:gk3-108-ds-01}]{高考三級資訊處理 108 年 第一題}
+（申論；25 分）
+
+給予如下二元樹節點的宣告，分別寫出 C 的遞迴程式計算二元樹節點個數及計算二元樹葉節點（leaves）個數
+（Count the number of nodes in a binary tree and count the number of leaf nodes in a binary tree,
+respectively）。（25 分）
+\begin{minted}[fontsize=\small,frame=single]{c}
+struct node{
+   int info;
+   struct node *left;
+   struct node *right;
+}
+typedef struct node *NODEPTR;
+
+
+void countTree(NODEPTR tree){
+
+}
+
+void countLeaves(NODEPTR tree){
+
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+題目給的函式外框回傳型態是 \texttt{void}，沒辦法把個數傳回去；\texttt{struct node\{...\}} 的右大括號後面也少了
+分號。 下面先照一般寫法把回傳型態改成 \texttt{int}，這是比較好的答案；如果一定要保留 \texttt{void}，
+後面附上用全域計數器的寫法。
+
+\textbf{想法。} 二元樹的定義本身是遞迴的：一棵二元樹不是空的，就是一個根加上左、右兩棵子二元樹
+（資結書第~7.1~節）。 所以
+\[
+\mathit{count}(T) = \begin{cases} 0, & T \text{ 是空樹}, \\
+1 + \mathit{count}(T_L) + \mathit{count}(T_R), & \text{其他}; \end{cases}
+\]
+\[
+\mathit{leaves}(T) = \begin{cases} 0, & T \text{ 是空樹}, \\
+1, & T \text{ 的左右子樹都空}, \\
+\mathit{leaves}(T_L) + \mathit{leaves}(T_R), & \text{其他}. \end{cases}
+\]
+\begin{minted}[fontsize=\small]{c}
+struct node {
+    int info;
+    struct node *left;
+    struct node *right;
+};
+typedef struct node *NODEPTR;
+
+int countTree(NODEPTR tree)          /* 節點個數 */
+{
+    if (tree == NULL)                 /* 空樹：0 個 */
+        return 0;
+    return 1 + countTree(tree->left) + countTree(tree->right);
+}
+
+int countLeaves(NODEPTR tree)        /* 葉節點個數 */
+{
+    if (tree == NULL)                 /* 空樹沒有葉子 */
+        return 0;
+    if (tree->left == NULL && tree->right == NULL)
+        return 1;                     /* 自己就是葉子 */
+    return countLeaves(tree->left) + countLeaves(tree->right);
+}
+\end{minted}
+
+\textbf{正確性}（對樹的節點數做歸納）。 空樹時兩個函式都傳回 $0$，正確。 非空樹的每個節點不是根就是
+在左子樹或右子樹裡，三者不重疊；由歸納假設兩個遞迴呼叫傳回子樹的正確個數，加上根的 $1$ 就是全部。
+葉子的情形一樣：根本身是葉子時，左右子樹都空，答案是 $1$；根不是葉子時，葉子全在兩棵子樹裡，
+分別算再相加。 注意「左右都空」的判斷必須放在遞迴之前，否則葉子會被當成兩棵空樹，算成 $0$。
+
+\textbf{複雜度。} 每個節點各被呼叫一次，每次常數時間，另外每個空指標也被呼叫一次（$n$ 個節點有
+$n + 1$ 個空指標），所以時間是 $O(n)$；遞迴深度等於樹高 $h$，空間 $O(h)$，最壞（斜樹）$O(n)$。
+
+\textbf{保留 \texttt{void} 的寫法。} 把結果累加在全域變數裡，呼叫前先歸零：
+\begin{minted}[fontsize=\small]{c}
+int nodes = 0, leaves = 0;
+
+void countTree(NODEPTR tree)
+{
+    if (tree == NULL)
+        return;
+    nodes++;                          /* 走到一個節點就加一 */
+    countTree(tree->left);
+    countTree(tree->right);
+}
+
+void countLeaves(NODEPTR tree)
+{
+    if (tree == NULL)
+        return;
+    if (tree->left == NULL && tree->right == NULL)
+        leaves++;                     /* 是葉子才加一 */
+    countLeaves(tree->left);
+    countLeaves(tree->right);
+}
+\end{minted}
+這兩個其實就是前序走訪，「拜訪」的動作是把計數器加一（資結書第~7.3~節）。
+\end{pastsoln}

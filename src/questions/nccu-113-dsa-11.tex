@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nccu-113-dsa-11}]{政大資科所 113 學年度 第 11 題}
+（問答）
+
+(15\%) Find an asymptotically tight solution to the following recurrence WITHOUT the master theorem.
+Explain the logic that you used to solve the problem.
+\[
+T(n)=\begin{cases}\Theta(1) & \text{if } n=1\\ 6T\left(\frac{n}{2}\right)+\Theta(n^2) & \text{if } n>1\end{cases}
+\]
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n^{\lg 6})$，$\lg 6 \approx 2.585$。 題目不准用主定理，用遞迴樹（資結書第~2.3~節）直接算。
+
+設 $n$ 是 $2$ 的次方。 把 $\Theta(n^2)$ 那一項記成 $f(n)$：存在正的常數 $c_1$、$c_2$，使 $n \ge 2$ 時
+$c_1 n^2 \le f(n) \le c_2 n^2$；$T(1) = d > 0$。
+\begin{itemize}
+\item 第 $j$ 層（$j = 0, 1, \ldots, \lg n - 1$）有 $6^j$ 個節點，每個的規模是 $n/2^j \ge 2$，自己的工作是
+$f(n/2^j)$。 這一層的總和夾在 $c_1 \cdot 6^j (n/2^j)^2 = c_1 (3/2)^j n^2$ 和 $c_2 (3/2)^j n^2$ 之間。
+\item 第 $\lg n$ 層是葉子，共 $6^{\lg n} = n^{\lg 6}$ 個，每個 $d$。
+\end{itemize}
+內部節點的總和用等比級數（公比 $3/2$）：
+\[
+\sum_{j=0}^{\lg n - 1} \left(\frac{3}{2}\right)^j
+= 2\left(\left(\frac{3}{2}\right)^{\lg n} - 1\right) = 2\,(n^{\lg 6 - 2} - 1),
+\]
+這裡用了 $(3/2)^{\lg n} = n^{\lg (3/2)} = n^{\lg 6 - 2}$。 乘上 $n^2$，內部節點的總和夾在
+$2c_1 (n^{\lg 6} - n^2)$ 和 $2c_2 (n^{\lg 6} - n^2)$ 之間。 加上葉子：
+\[
+d\, n^{\lg 6} \le T(n) \le (d + 2c_2)\, n^{\lg 6} ,
+\]
+所以 $T(n) = \Theta(n^{\lg 6})$。 每一層是上一層的 $3/2$ 倍，越來越大，答案由葉子的個數決定。 $n$ 不是 $2$ 的次方
+時，$T$ 是遞增的而 $n^{\lg 6}$ 是平滑函數，結論不變（資結書定理~2.1）。
+
+想再用代換法確認上界，直接猜 $T(n) \le a\, n^{\lg 6}$ 會多出 $c_2 n^2$ 過不去，要減去低次項（資結書第~2.2~節）：
+猜 $T(n) \le a\, n^{\lg 6} - b\, n^2$，
+\[
+T(n) \le 6\left(a \left(\frac{n}{2}\right)^{\lg 6} - b\, \frac{n^2}{4}\right) + c_2 n^2
+= a\, n^{\lg 6} - \frac{3b}{2} n^2 + c_2 n^2 \le a\, n^{\lg 6} - b\, n^2 ,
+\]
+只要 $b \ge 2c_2$；基礎情況要 $d \le a - b$。 取 $b = 2c_2$、$a = d + 2c_2$，和遞迴樹得到的常數一樣。
+（$f(n) = n^2$、$T(1) = 1$ 時精確解是 $3n^{\lg 6} - 2n^2$。）
+\end{pastsoln}

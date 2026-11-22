@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntu-113-dsa-01}]{臺大資工所 113 學年度 第 1 題}
+（複選；每個選項單獨計分）
+
+(5 points) Consider the following variation of the Selection Problem: Given a sequence
+$S=\langle a_1,a_2,\ldots,a_n\rangle$ of $n$ distinct integers and two positive integers $x$ and $y$,
+where each number in $S$ falls between 1 and $y$, the goal is to report the smallest $x$ numbers in
+$S$ in ascending order. This scenario assumes the conventional single-processor, random access
+machine (RAM) model, with a machine word size of at least $\lceil\log y\rceil$ bits. To tackle this
+problem, five algorithms have been proposed. Please select the correct description(s) below.
+\begin{enumerate}[label=\Alph*.]
+\item Algorithm A: The algorithm initializes an empty max-heap and sequentially inserts numbers from
+$S$. During insertion, if the size of the max-heap exceeds $x$, it removes the maximum element from
+the heap. Finally, the remaining numbers in the heap are sorted by heapsort and reported. If
+$x\le n/\log n$, Algorithm A runs in $O(n)$ time in the worst case.
+\item Algorithm B: The algorithm initially constructs a min-heap and proceeds to extract the minimum
+element $x$ times. If $x\le n/\log n$, Algorithm B runs in $O(n)$ time in the worst case.
+\item Algorithm C: The algorithm begins by performing a base-$n$ radix sort, followed by reporting
+the smallest $x$ values. If $y\le n^2$, Algorithm C runs in $O(n)$ time in the worst case.
+\item Algorithm D: The algorithm performs a counting sort by allocating an array $C$ of length $y$,
+traversing through $S$ and incrementing $C[a_i]$ for each $a_i$. It finally reports the smallest
+$x$ values by scanning through the counter array. If $y\le n^2$, Algorithm D runs in $O(n)$ time in
+the worst case.
+\item Algorithm E: The algorithm first applies quickselect, i.e., Randomized-Select, to determine
+the $x$-th smallest number in $S$. Subsequently, it traverses $S$ for extracting all numbers smaller
+than or equal to the $x$-th smallest number. Finally, these $x$ numbers are sorted by quicksort and
+reported. The time complexity of Algorithm E is $O(n+x\log x)$ in expectation.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、C、E。 以下 $\log$ 的底數不影響結論。
+\begin{itemize}
+\item A 錯。 堆積最多 $x + 1$ 個數，每次插入、刪除最大值是 $O(\log x)$，總共
+$O(n \log x)$，最後的堆積排序 $O(x \log x)$。 問題在 $O(n \log x)$ 不一定是 $O(n)$。 取
+$x = \lfloor n/\log n \rfloor$、$S$ 由小到大排好：堆積裝滿 $x$ 個之後，每個新來的數都比堆積
+裡全部的數大，插入時要從新的葉節點一路上浮到根，交換 $\lfloor \log(x+1) \rfloor$ 次。 後面
+$n - x \ge n/2$ 個數各花這麼多，共至少 $\frac{n}{2}\lfloor \log(x+1) \rfloor$。 $n \ge 16$ 時
+$x + 1 \ge n/\log n \ge \sqrt{n}$，$\log(x+1) \ge \frac{1}{2}\log n$，所以是 $\Omega(n \log n)$，
+不是 $O(n)$。
+\item B 對。 由下而上建最小堆積 $O(n)$（資結書第~8.2~節），取出最小值 $x$ 次，
+每次 $O(\log n)$，依取出的順序就是由小到大。 合計 $O(n + x \log n) \le
+O(n + \frac{n}{\log n} \cdot \log n) = O(n)$。
+\item C 對。 每個數 $a_i \le y \le n^2$，以 $n$ 為基底最多 $3$ 位（$n^2$ 本身寫成 $100$）。
+LSD 基數排序做 $3$ 趟，每趟是 $n$ 個數、$n$ 種位值的計數排序，$\Theta(n + n)$
+（資結書第~15.2.2~節）。 字組至少 $\lceil \log y \rceil$ 位元，
+$a_i$ 放得進一個字組，取出某一位（除以 $n^t$ 再取餘數）是常數時間。 再輸出前 $x$ 個，
+$O(x)$。 合計 $O(n)$。
+\item D 錯。 光是配置並掃過長度 $y$ 的陣列 $C$ 就要 $\Theta(y)$；條件只說 $y \le n^2$，
+$y = n^2$ 時是 $\Theta(n^2)$，不是 $O(n)$。 $y = O(n)$ 時才是線性（資結書第~15.2.1~節的
+成本分析）。
+\item E 對。 \proc{Randomized-Select} 的期望時間是 $O(n)$（資結書定理~16.3）；
+掃一次 $S$ 取出不大於第 $x$ 小的數是 $O(n)$，數兩兩不同，剛好取出 $x$ 個；（隨機化的）快速
+排序排 $x$ 個數，期望 $O(x \log x)$（資結書定理~14.3）。 由期望值的線性，
+總期望時間 $O(n + x \log x)$。
+\end{itemize}
+\end{pastsoln}

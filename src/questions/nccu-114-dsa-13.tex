@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nccu-114-dsa-13}]{政大資科所 114 學年度 第 13 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following statements concerning reduction is \textbf{false}?
+\begin{enumerate}[label=\Alph*.]
+\item The bipartite graph matching problem can be reduced to the network flow problem.
+\item If a problem X is polynomial reducible to a problem Y, then the lower bound of X can be
+applied to Y.
+\item A problem X is NP-Complete if X is polynomial reducible to some NP-Complete problem Y.
+\item A problem X is an NP-hard problem if every problem in NP is polynomial reducible to X.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+記號：$X \le_p Y$ 表示 $X$ 可以在多項式時間歸約到 $Y$，意思是「會解 $Y$ 就會解 $X$」，$Y$ 至少和
+$X$ 一樣難（資結書第~28.3~節）。
+
+逐項檢查：
+\begin{itemize}
+\item A.~對。 二分圖 $(L, R, E)$ 加一個源點連到 $L$ 的每個點、$R$ 的每個點連到匯點，所有邊容量
+$1$，最大流的值就是最大匹配的大小（資結書第~26.6~節、定理~26.8）。
+\item B.~對。 $X \le_p Y$ 時，解 $X$ 可以「轉換輸入，再呼叫解 $Y$ 的演算法」。 如果 $Y$ 能比 $X$ 的
+下界還快解出來（而且轉換本身也比這個下界快），$X$ 就能比自己的下界快，矛盾。 所以 $X$ 的下界也
+是 $Y$ 的下界。 （前提是歸約的成本不超過那個下界，例如用排序下界 $\Omega(n \log n)$ 證明凸包的下界
+時，轉換只花 $O(n)$。）
+\item C.~錯，這是答案。 方向反了。 $X \le_p Y$ 而 $Y$ 是 NP 完備，只能說明 $X$ 不比 $Y$ 難，
+$X$ 甚至可能在 P 裡（例如任何 P 裡的問題都能歸約到 SAT）。 要證明 $X$ 是 NP 完備，必須
+\begin{enumerate}
+\item $X \in \mathrm{NP}$，而且
+\item 某個已知的 NP 完備問題 $Y$ 滿足 $Y \le_p X$（資結書第~28.4~節的證明步驟）。
+\end{enumerate}
+\item D.~對。 這正是 NP 難的定義：NP 裡的每個問題都能在多項式時間歸約到 $X$。 $X$ 本身不必在 NP 裡。
+\end{itemize}
+\end{pastsoln}

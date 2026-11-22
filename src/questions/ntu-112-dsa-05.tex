@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-112-dsa-05}]{臺大資工所 112 學年度 第 5 題}
+（單選；5 分，答錯倒扣 1 分）
+
+In a traditional merge sort, two sorted sub-arrays are combined to form a single, fully sorted
+array. This is referred to as a \textit{2-way merge}. The problem at hand is to extend this concept
+by merging $N$ sorted arrays of integers, where $N$ and $M$ are given integers representing the
+number of arrays and the number of integers in each array, respectively. Please choose the correct
+\textbf{worst-case time complexity} of this $N$-way merge.
+
+(A)~$O(N\log M)$ \qquad (B)~$O(NM\log M)$ \qquad (C)~$O(N^2\log M)$\\
+(D)~$O(NM\log N)$ \qquad (E)~none of the above is correct.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+一共有 $NM$ 個數要輸出。 用最小堆積做 $N$ 路合併（資結書第~8.3~節「合併 $k$ 個排好的數列」）：
+\begin{enumerate}
+\item 把每個陣列的第一個數（連同它來自第幾個陣列）放進最小堆積，堆積有 $N$ 個元素。 建堆積
+$O(N)$。
+\item 重複 $NM$ 次：取出最小的數輸出，再把它所屬陣列的下一個數放進堆積（那個陣列用完就不放）。
+堆積始終最多 $N$ 個元素，取出和放入各 $O(\lg N)$。
+\end{enumerate}
+總時間 $O(N) + NM \cdot O(\lg N) = O(NM \lg N)$。 最壞情況也是這樣：只要大部分時間每個陣列都還
+有數，堆積就有 $\Theta(N)$ 個元素，每次操作 $\Theta(\lg N)$。 也可以用分治：兩兩合併成 $N/2$
+個長 $2M$ 的陣列，再兩兩合併……，共 $\lceil \lg N \rceil$ 層、每層搬 $NM$ 個數，同樣是
+$O(NM \lg N)$（第~15 題學生 C 的做法）。
+
+逐項看：
+\begin{itemize}
+\item (A) $O(N \log M)$：比要輸出的數量 $NM$ 還少，光是寫出結果就不夠時間，錯。
+\item (B) $O(NM \log M)$：每一步的成本來自在 $N$ 個陣列的開頭之間選最小，和 $M$ 無關。 取
+$M = 2$，第 $i$ 個陣列是 $\langle x_i, \infty_i\rangle$（$x_i$ 任意、$\infty_i$ 比所有 $x$ 都大），合併的
+結果前 $N$ 個就是把 $x_1, \ldots, x_N$ 排好，比較排序至少要 $\Omega(N \lg N)$ 次比較（資結書
+第~15.1~節），但 (B) 說只要 $O(2N \log 2) = O(N)$，錯。
+\item (C) $O(N^2 \log M)$：$M$ 很大、$N$ 固定時，輸出就要 $\Theta(M)$，比 $N^2 \log M$ 大，錯。
+\item (D) $O(NM \log N)$：上面的分析，對。
+\item (E)：(D) 對，所以錯。
+\end{itemize}
+由 (B) 的例子也看得出 $O(NM \lg N)$ 已經是最好的可能。
+\end{pastsoln}

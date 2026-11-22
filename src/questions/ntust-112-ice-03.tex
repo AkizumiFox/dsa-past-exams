@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntust-112-ice-03}]{臺科大資工所 112 學年度 第 3 題}
+（問答）
+
+(5\%) The form of the master method, which is used to calculate the recurrence relations, is:
+\[ T(n)=aT\left(\frac{n}{b}\right)+f(n), \]
+where $n$ denotes the size of a problem, $a\ge 1$ and $b\ge 1$ are constants, and $f(\cdot)$ is a
+non-negative function of $n$. According to the formulation, we have three cases:
+\begin{itemize}
+\item If $f(n)=O(n^{\log_b a-\epsilon})$, for some constant $\epsilon>0$, then
+$T(n)=\Theta(n^{\log_b a})$
+\item If $f(n)=\Theta(n^{\log_b a})$, then $T(n)=\Theta(n^{\log_b a}\log_2 n)$
+\item If $f(n)=\Omega(n^{\log_b a+\epsilon})$ for some constant $\epsilon>0$,
+$af(\frac{n}{b})\le cf(n)$ for some constant $c<1$ and all sufficiently large $n$, then
+$T(n)=\Theta(f(n))$
+\end{itemize}
+For a given problem, its runtime can be expressed as:
+\[ T(n)=3T\left(\frac{1}{4}n\right)+n\log_2 n \]
+Please use the master method to outline its time complexity. All the calculation steps should be
+written down.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n \log n)$（主定理第三種情形）。
+
+題目寫「$b \ge 1$」，主定理要的是 $b > 1$（$b = 1$ 時子問題沒有變小）；本題 $b = 4$，不受影響。
+照資結書定理~2.4 的步驟：
+\begin{enumerate}
+\item \textbf{對照參數。} $a = 3$，$b = 4$，$f(n) = n \log_2 n$。
+\item \textbf{算分水嶺。} $n^{\log_b a} = n^{\log_4 3}$，$\log_4 3 = \dfrac{\lg 3}{\lg 4} \approx \dfrac{1.585}{2}
+\approx 0.793$。
+\item \textbf{比較 $f(n)$ 和 $n^{\log_4 3}$。} 取 $\epsilon = 0.2$，$\log_4 3 + \epsilon \approx 0.993 < 1$，
+所以對 $n \ge 2$，
+\[
+f(n) = n \log_2 n \ge n \ge n^{\log_4 3 + 0.2},
+\]
+也就是 $f(n) = \Omega(n^{\log_4 3 + \epsilon})$。 $f$ 比分水嶺多項式地大，要檢查第三種情形。
+\item \textbf{檢查正則條件。} 對 $n \ge 4$，
+\[
+a f\!\left(\frac{n}{b}\right) = 3 \cdot \frac{n}{4} \log_2 \frac{n}{4}
+= \frac34 n (\log_2 n - 2) \le \frac34\, n \log_2 n = \frac34 f(n),
+\]
+取 $c = 3/4 < 1$ 成立。
+\item \textbf{結論。} 第三種情形，$T(n) = \Theta(f(n)) = \Theta(n \log n)$。
+\end{enumerate}
+
+直觀的理由（遞迴樹，資結書第~2.3~節）：第 $i$ 層有 $3^i$ 個大小 $n/4^i$ 的子問題，這一層的成本約
+$3^i \cdot \frac{n}{4^i} \log_2 \frac{n}{4^i} \le (3/4)^i\, n \log_2 n$，各層成本以 $3/4$ 的比例遞減，
+總和不超過 $\sum_i (3/4)^i \cdot n \log_2 n = 4 n \log_2 n$，由根那一層主導。
+\end{pastsoln}

@@ -1,0 +1,9 @@
+paper: ccu-111-csb
+volume: 2
+school: 中正
+dept: 資工所乙組
+year: 111
+subject: 計算機概論（含程式設計）
+questions:
+  - {id: ccu-111-csb-01, label: 第 1 題（節錄 (a)--(d) 小題）, chapter: 1}
+  - {id: ccu-111-csb-02, label: 第 8 題, chapter: 14}

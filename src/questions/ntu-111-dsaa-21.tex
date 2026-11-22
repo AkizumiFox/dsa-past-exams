@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-21}]{臺大資工所 111 學年度 第 21 題}
+（單選）
+
+(5 points) When using the Edmonds-Karp algorithm to find the maximum flow of a flow network
+$G=(V,E)$, which is CORRECT?
+\begin{enumerate}[label=(\Alph*)]
+\item The time complexity is $O(E|f^*|)$, where $f^*$ denotes a maximum flow in the network.
+\item The algorithm uses the depth-first search principle.
+\item The time complexity is $O(VE^2)$.
+\item The time complexity is $O(VE|f^*|)$.
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+Edmonds--Karp（資結書第~26.4~節）是 Ford--Fulkerson 的一種：每一輪在剩餘網路上用 \textbf{BFS} 找
+邊數最少的增廣路徑。 資結書定理~26.3 證明增廣的次數是 $O(VE)$，每一輪 BFS 加上更新是 $O(E)$，總時間
+$O(VE^2)$，而且這個界和容量的大小無關。
+\begin{itemize}
+\item (A) $O(E|f^*|)$ 是一般 Ford--Fulkerson 在\textbf{容量都是整數}時的界（每次增廣至少加 $1$，最多
+$|f^*|$ 次，資結書第~26.3~節）。 Edmonds--Karp 在整數容量下當然也滿足，但它是依賴容量的界；容量是
+實數時 $|f^*|$ 根本不能限制增廣次數。 Edmonds--Karp 的時間複雜度指的是 (C)。 不選。
+\item (B) 錯：用的是 BFS（找最短增廣路徑），不是 DFS。 用 DFS 隨便找一條，就是一般的 Ford--Fulkerson，
+不保證多項式時間。
+\item (C) 對。
+\item (D) $O(VE|f^*|)$ 比 (A) 還鬆，同樣依賴容量，不是它的時間複雜度。
+\item (E)：(C) 對，不選。
+\end{itemize}
+\end{pastsoln}

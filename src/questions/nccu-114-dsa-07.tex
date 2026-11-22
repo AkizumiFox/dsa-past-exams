@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:nccu-114-dsa-07}]{政大資科所 114 學年度 第 7 題}
+（單選；每題 4 分）
+
+(4\%) Which sorting algorithm will produce the following results of pass 0, 1 and 2 for 33, 7, 63,
+50, 31, 20?
+\begin{center}
+\begin{tabular}{l}
+Pass 0: 7, 33, 63, 50, 31, 20\\
+Pass 1: 7, 20, 63, 50, 31, 33\\
+Pass 2: 7, 20, 31, 50, 63, 33
+\end{tabular}
+\end{center}
+A.~Insertion Sort \qquad B.~Selection Sort \qquad C.~Bubble Sort \qquad D.~Merge Sort \qquad
+E.~Quick Sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+選擇排序（資結書虛擬碼~14.2）第 $i$ 趟在 $A[i..n]$ 找最小的數，和 $A[i]$ 交換。 照這個規則追蹤：
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+趟 & 在哪一段找最小 & 最小值 & 交換後 \\
+\midrule
+0 & $33, 7, 63, 50, 31, 20$ & $7$ & $7, 33, 63, 50, 31, 20$ \\
+1 & $33, 63, 50, 31, 20$ & $20$ & $7, 20, 63, 50, 31, 33$ \\
+2 & $63, 50, 31, 33$ & $31$ & $7, 20, 31, 50, 63, 33$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+三趟都和題目一致。 特徵很明顯：每一趟只有兩個數換位置（第 1 趟 $33$ 和 $20$ 對調，第 2 趟 $63$
+和 $31$ 對調），而且前面逐趟多一個已經就定位的最小值。
+
+其他選項：
+\begin{itemize}
+\item A.~插入排序：第 0 趟插入 $7$ 得 $7, 33, 63, 50, 31, 20$，和題目一樣；但第 1 趟插入 $63$，
+$63$ 比 $33$ 大，不動，應該還是 $7, 33, 63, 50, 31, 20$，題目的 $20$ 卻跑到第二格，錯。
+\item C.~氣泡排序：每一趟把最大的數一路換到最後，第 0 趟後 $63$ 就在最後一格
+（$7, 33, 50, 31, 20, 63$），錯。
+\item D.~合併排序：由下往上的第一趟把相鄰兩個合併，得 $7, 33, 50, 63, 20, 31$，錯。
+\item E.~快速排序：取第一個數 $33$ 當基準，第一次分割之後 $7, 31, 20$ 都要在 $33$ 左邊（例如
+Lomuto 分割得 $20, 7, 31, 33, 63, 50$）；取最後一個數 $20$ 當基準，Lomuto 分割得
+$7, 20, 63, 50, 31, 33$，那是題目的第 1 趟，不是第 0 趟。 常見的選基準方式都對不上，錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-114-dsa-08}]{臺大資網所 114 學年度 第 8 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Select all pairs of functions in the increasing order of growth. That is, select $g_1,g_2$ if $g_2$
+grows faster than $g_1$.
+\[f_1(n)=\binom{n}{5},\ \ f_2(n)=2^{\log^4 n},\ \ f_3(n)=\binom{n}{n-4},\ \ f_4(n)=\sqrt{2^{\sqrt{n}}},\ \
+f_5(n)=n^{5(\log n)^2}.\]
+\begin{enumerate}[label=(\Alph*)]
+\item $f_1(n),f_3(n)$
+\item $f_2(n),f_5(n)$
+\item $f_2(n),f_4(n)$
+\item $f_4(n),f_5(n)$
+\item $f_1(n),f_5(n)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(E)。
+
+把五個函數都寫成 $2^{(\cdot)}$ 比較指數（$\log$ 以 $2$ 為底；換底只改變指數的常數倍，下面的比較不受影響）：
+\begin{itemize}
+\item $f_1(n) = \binom{n}{5} = \frac{n(n-1)\cdots(n-4)}{120} = \Theta(n^5)$，指數 $5\lg n + O(1)$。
+\item $f_3(n) = \binom{n}{n-4} = \binom{n}{4} = \Theta(n^4)$，指數 $4\lg n + O(1)$。
+\item $f_5(n) = n^{5(\lg n)^2} = 2^{5(\lg n)^3}$。
+\item $f_2(n) = 2^{(\lg n)^4}$。
+\item $f_4(n) = (2^{\sqrt{n}})^{1/2} = 2^{\sqrt{n}/2}$。
+\end{itemize}
+指數由小到大是 $4\lg n < 5\lg n \ll 5(\lg n)^3 \ll (\lg n)^4 \ll \sqrt{n}/2$：任何多對數函數都比 $\sqrt{n}$ 長得慢
+（資結書第~1.6~節）。 指數的差趨近無限大時，函數的比值也趨近無限大，所以
+\[
+f_3 \prec f_1 \prec f_5 \prec f_2 \prec f_4 ,
+\]
+每一個都是前一個的 $\omega$。 （$f_1$、$f_3$ 差的是 $n$ 的一次方，比值 $\Theta(n)$。）
+
+逐項：
+\begin{itemize}
+\item[(A)] $f_1, f_3$：要 $f_3$ 比 $f_1$ 快，但 $f_3 = \Theta(n^4)$ 比 $f_1 = \Theta(n^5)$ 慢。 不選。
+\item[(B)] $f_2, f_5$：$f_5$ 的指數 $5(\lg n)^3$ 比 $f_2$ 的 $(\lg n)^4$ 小（$n > 2^5$ 之後），$f_5$ 比較慢。 不選。
+\item[(C)] $f_2, f_4$：$(\lg n)^4 = o(\sqrt{n})$，$f_4$ 比較快。 選。
+\item[(D)] $f_4, f_5$：$f_5$ 比 $f_4$ 慢。 不選。
+\item[(E)] $f_1, f_5$：$f_5$ 是 $n$ 的 $5(\lg n)^2$ 次方，次方會無限變大，比任何多項式都快。 選。
+\end{itemize}
+\end{pastsoln}

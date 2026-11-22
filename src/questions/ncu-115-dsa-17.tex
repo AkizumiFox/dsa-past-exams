@@ -1,0 +1,88 @@
+\begin{pastexam}[label={px:ncu-115-dsa-17}]{中央資工所 115 學年度 第 17 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Consider the code fragment below.
+\begin{center}
+\begin{minipage}{5cm}
+\begin{minted}[fontsize=\small, frame=single]{text}
+container.push('I');
+container.pop();
+container.push('L');
+container.push('O');
+container.push('V');
+container.pop();
+container.push('E');
+container.push('N');
+container.pop();
+container.push('C');
+container.push('U');
+container.pop();
+\end{minted}
+\end{minipage}
+\end{center}
+Which of the following statements is (are) true?
+\begin{enumerate}[label=\Alph*.]
+\item If the ``container'' is an \textbf{empty standard stack.} The sequence of elements inside the ``container'' \textbf{from its top to the bottom} is LOEC.
+\item If the ``container'' is an \textbf{empty standard queue.} The sequence of elements inside the ``container'' \textbf{from its front to its rear} is ENCU.
+\item If the ``container'' is an \textbf{empty min heap,} the level order traversal of the heap is NVOU.
+\item If the ``container'' is an \textbf{empty max heap,} the level order traversal of the heap is NLEC.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、D。
+
+字母照字母順序比大小（$C < E < I < L < N < O < U < V$）。 堆積用陣列存，\texttt{push} 是放到最後
+再往上調，\texttt{pop} 是取走根、把最後一個移到根再往下調（資結書第~8.1~節、虛擬碼~8.2）；陣列的
+順序就是層序。 \texttt{pop} 對堆疊取頂端、對佇列取前端、對堆積取根。
+
+\textbf{A 錯}。 堆疊（右邊是頂端），每個操作之後：I；（空）；L；LO；LOV；\texttt{pop} 取走 V 得 LO；
+LOE；LOEN；\texttt{pop} 取走 N 得 LOE；LOEC；LOECU；\texttt{pop} 取走 U 得 LOEC。
+最後由底到頂是 L、O、E、C，由頂到底是 \textbf{CEOL}。 選項 A 的 LOEC 是由底到頂的順序，題目問的是
+由頂到底，錯。
+
+\textbf{B 對}。 佇列（左邊是前端）：I；（空）；L；LO；LOV；\texttt{pop} 取走 L 得 OV；OVE；OVEN；
+\texttt{pop} 取走 O 得 VEN；VENC；VENCU；\texttt{pop} 取走 V 得 \textbf{ENCU}。 和選項相同。
+
+\textbf{C 錯}。 最小堆積，每一步之後的陣列：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+操作 & 調整 & 陣列（層序） \\
+\midrule
+push I、pop & & （空） \\
+push L, O, V & 都比父節點大，不動 & L O V \\
+pop & 取走 L，V 移到根，和較小的子節點 O 交換 & O V \\
+push E & E $<$ O，往上換 & E V O \\
+push N & N $<$ V，和 V 換；N $>$ E，停 & E N O V \\
+pop & 取走 E，V 移到根，和較小的子節點 N 換 & N V O \\
+push C & C $<$ V 換、C $<$ N 換，到根 & C N O V \\
+push U & U 的父節點是 N，U $>$ N，不動 & C N O V U \\
+pop & 取走 C，U 移到根，和 N 換；U $<$ V，停 & N U O V \\
+\bottomrule
+\end{tabular}
+\end{center}
+層序是 \textbf{NUOV}，不是 NVOU，錯。
+
+\textbf{D 對}。 最大堆積：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+操作 & 調整 & 陣列（層序） \\
+\midrule
+push I、pop & & （空） \\
+push L, O, V & O $>$ L 換；V $>$ O 換 & V L O \\
+pop & 取走 V，O 移到根，O $>$ L，不動 & O L \\
+push E & E $<$ O，不動 & O L E \\
+push N & N $>$ L 換；N $<$ O，停 & O N E L \\
+pop & 取走 O，L 移到根，和較大的子節點 N 換 & N L E \\
+push C & C $<$ L，不動 & N L E C \\
+push U & U $>$ L 換、U $>$ N 換，到根 & U N E C L \\
+pop & 取走 U，L 移到根，和 N 換；L $>$ C，停 & N L E C \\
+\bottomrule
+\end{tabular}
+\end{center}
+層序是 \textbf{NLEC}，和選項相同。
+\end{pastsoln}

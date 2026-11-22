@@ -1,0 +1,182 @@
+\begin{pastexam}[label={px:gw3-105-ds-04}]{關務三等資料處理 105 年 第四題}
+（申論；25 分）
+
+現有一網路公司想要分析某一網站使用者之使用行為，故想設計一資料結構以記錄使用者存取網頁之順序，即，
+如使用者 $U$ 存取 $A$ 網頁後，點選其中之連結存取 $B$ 網頁，再點選其中之連結存取 $C$ 網頁，則其存取
+順序為 $A \to B \to C$。此資料結構應能記錄該存取順序與其相關資料，如網址與存取時間等。
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請分別說明如何使用陣列（array）與鏈結串列（linked list）來記錄上述之網頁存取順序，並分析
+兩者之優劣。（10 分）
+\item[㈡] 請寫一程式（不限程式語言）來分析使用者存取某一網頁後，接下來最有可能存取那一個網頁。假設
+網頁之存取紀錄檔欄位格式如下：
+
+\texttt{Date, Page1, Page2, Page3,...}
+
+代表使用者在 Date 此日期依序存取了 Page1、Page2、Page3 等網頁。範例紀錄如下：
+
+\texttt{2016/03/01, a.htm, b.htm, c.htm}\\
+\texttt{2016/03/02, a.htm, c.htm, e.htm, f.htm}\\
+\texttt{2016/03/03, c.htm, a.htm, b.htm, e.htm}
+
+此程式必須能讀取紀錄檔並使用鏈結串列來記錄網頁存取順序紀錄。當使用者輸入某一網頁（例如
+\texttt{a.htm}）時，此程式應傳回該網頁最有可能之後續網頁。以上述範例紀錄而言，\texttt{a.htm} 之後續
+網頁最有可能者應為 \texttt{b.htm}，因其在 \texttt{a.htm} 後出現之機率最高。（15 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠} 每一次存取是一筆紀錄，內容有網址、存取時間（也可以加使用者代號、停留時間等）。 一位使用者
+一次的瀏覽是一串依時間先後的紀錄 $A \to B \to C$。
+
+\textbf{用陣列}：宣告一個紀錄陣列 \texttt{visit[0..MAX-1]}，每格是一個結構 \{網址, 時間\}，依存取的
+先後放在第 $0, 1, 2, \ldots$ 格，另用 \texttt{count} 記錄目前幾筆；順序就是註標的順序。 多位使用者時，
+每位一個陣列，或用二維陣列 \texttt{visit[使用者][第幾次]}。
+
+\textbf{用鏈結串列}：每次存取是一個節點 \{網址, 時間, \texttt{next}\}，新的存取接在串列尾端（記住尾端
+指標，$O(1)$）；\texttt{head} 指向第一個網頁。 每位使用者（或每次瀏覽）一條串列，這些串列的開頭再用
+另一條串列或陣列串起來。
+
+\textbf{優劣比較}（資結書第~5~章）：
+\begin{center}
+\small
+\begin{tabular}{p{3cm}p{5cm}p{5cm}}
+\toprule
+ & 陣列 & 鏈結串列 \\
+\midrule
+空間 & 要事先決定大小；瀏覽長度差異大時，估大浪費、估小不夠，要重新配置搬移 & 有幾次存取就配置幾個節點，長度不限；每個節點多一個指標的空間 \\
+附加一筆存取 & 尾端放入 $O(1)$（未滿時） & 接在尾端 $O(1)$ \\
+取第 $k$ 次存取 & 直接 \texttt{visit[k]}，$O(1)$ & 從頭走 $k$ 步，$O(k)$ \\
+中間插入／刪除 & 要搬移後面的紀錄，$O(n)$ & 改指標即可，$O(1)$（已找到位置時） \\
+依序分析 & 連續存放，掃描快 & 逐節點走訪，同樣 $O(n)$，但記憶體不連續 \\
+\bottomrule
+\end{tabular}
+\end{center}
+網站的存取紀錄筆數事先無法預估、各次瀏覽長度差很多、主要操作是「附加在尾端」和「從頭依序掃描」，
+用鏈結串列比較合適；若事後要頻繁地依第幾次存取直接查詢，陣列比較方便。
+
+\textbf{㈡ 程式設計。}
+\begin{itemize}[nosep]
+\item 讀紀錄檔：每一行是一筆紀錄（\texttt{Record}），有日期和一條 \texttt{Visit} 鏈結串列，串列中
+網頁的順序就是存取順序；所有紀錄再串成一條紀錄串列。
+\item 查詢網頁 $p$：走過每一筆紀錄的串列，凡是節點 $v$ 的網頁等於 $p$ 而且 $v$ 有下一個節點，就把
+「下一個網頁」的次數加一。 次數用另一條 \texttt{Count} 串列記（網頁、次數）。
+\item 次數最多的就是最有可能的後續網頁（機率 $=$ 次數 $/$ $p$ 後面有網頁的總次數）。 平手時傳回
+其中一個（下面的程式傳回先統計到的）；$p$ 後面從沒出現過網頁時告訴使用者沒有資料。
+\end{itemize}
+以範例為例，\texttt{a.htm} 的後面：第一天是 \texttt{b.htm}、第二天是 \texttt{c.htm}、第三天是
+\texttt{b.htm}，\texttt{b.htm} 出現 $2$ 次（機率 $2/3$）、\texttt{c.htm} 出現 $1$ 次，傳回 \texttt{b.htm}。
+
+程式（C）：
+\begin{minted}[fontsize=\footnotesize, style=perldoc]{c}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Visit {            /* 一次存取：一個網頁 */
+    char page[64];
+    struct Visit *next;           /* 同一天的下一個網頁 */
+} Visit;
+
+typedef struct Record {           /* 一筆紀錄：一天的存取順序 */
+    char date[16];
+    Visit *first;                 /* 這一天的第一個網頁 */
+    struct Record *next;          /* 下一筆紀錄 */
+} Record;
+
+typedef struct Count {            /* 統計「後續網頁」出現幾次 */
+    char page[64];
+    int times;
+    struct Count *next;
+} Count;
+
+/* 把一行 "Date, P1, P2, ..." 變成一筆紀錄，網頁依序串成鏈結串列 */
+Record *parse_line(char *line)
+{
+    Record *r = malloc(sizeof *r);
+    r->first = NULL;
+    r->next = NULL;
+    Visit **tail = &r->first;
+    char *tok = strtok(line, ", \r\n");
+    strncpy(r->date, tok, sizeof r->date - 1);
+    r->date[sizeof r->date - 1] = '\0';
+    while ((tok = strtok(NULL, ", \r\n")) != NULL) {
+        Visit *v = malloc(sizeof *v);
+        strncpy(v->page, tok, sizeof v->page - 1);
+        v->page[sizeof v->page - 1] = '\0';
+        v->next = NULL;
+        *tail = v;                 /* 接在這一天的最後面，保持存取順序 */
+        tail = &v->next;
+    }
+    return r;
+}
+
+/* 讀整個紀錄檔，紀錄依檔案順序串起來 */
+Record *load(FILE *fp)
+{
+    Record *head = NULL, **tail = &head;
+    char line[1024];
+    while (fgets(line, sizeof line, fp) != NULL) {
+        if (strlen(line) < 2) continue;          /* 空行 */
+        *tail = parse_line(line);
+        tail = &(*tail)->next;
+    }
+    return head;
+}
+
+/* 在統計串列裡把 page 的次數加一（沒有就新增一個節點） */
+void add_count(Count **list, const char *page)
+{
+    for (Count *c = *list; c != NULL; c = c->next)
+        if (strcmp(c->page, page) == 0) { c->times++; return; }
+    Count *c = malloc(sizeof *c);
+    strcpy(c->page, page);
+    c->times = 1;
+    c->next = *list;
+    *list = c;
+}
+
+/* 回傳 page 之後最常出現的網頁；沒有出現過就回傳 NULL */
+const char *most_likely_next(Record *records, const char *page, Count **stat)
+{
+    *stat = NULL;
+    for (Record *r = records; r != NULL; r = r->next)
+        for (Visit *v = r->first; v != NULL && v->next != NULL; v = v->next)
+            if (strcmp(v->page, page) == 0)
+                add_count(stat, v->next->page);     /* v 的下一個網頁 */
+    Count *best = NULL;
+    for (Count *c = *stat; c != NULL; c = c->next)
+        if (best == NULL || c->times > best->times) best = c;
+    return best == NULL ? NULL : best->page;
+}
+
+int main(int argc, char *argv[])
+{
+    FILE *fp = fopen(argc > 1 ? argv[1] : "access.log", "r");
+    if (fp == NULL) { perror("fopen"); return 1; }
+    Record *records = load(fp);
+    fclose(fp);
+
+    char page[64];
+    while (scanf("%63s", page) == 1) {
+        Count *stat;
+        const char *ans = most_likely_next(records, page, &stat);
+        if (ans == NULL) printf("%s 後面沒有出現過其他網頁\n", page);
+        else             printf("%s\n", ans);
+        while (stat != NULL) { Count *t = stat; stat = stat->next; free(t); }
+    }
+    while (records != NULL) {                    /* 釋放記憶體 */
+        Record *r = records; records = r->next;
+        while (r->first != NULL) { Visit *v = r->first; r->first = v->next; free(v); }
+        free(r);
+    }
+    return 0;
+}
+\end{minted}
+執行 \texttt{./web access.log} 後輸入 \texttt{a.htm}，輸出 \texttt{b.htm}。 輸入 \texttt{f.htm} 時，因為它都是
+當天最後一個網頁，輸出「後面沒有出現過其他網頁」。 （輸入 \texttt{c.htm} 時，後面的 \texttt{e.htm}、
+\texttt{a.htm} 各出現一次，平手，程式傳回其中一個。）
+
+\textbf{複雜度}：設紀錄檔共有 $N$ 次網頁存取，不同的後續網頁有 $u$ 種。 讀檔 $O(N)$；一次查詢走過所有
+節點 $O(N)$，每次更新次數要在 \texttt{Count} 串列找一遍 $O(u)$，合計 $O(N u)$。 查詢很頻繁時，可以在
+讀檔時就為每個網頁預先統計好「後續網頁次數表」（例如用雜湊表，資結書第~12~章），查詢就只要看那張表。
+\end{pastsoln}

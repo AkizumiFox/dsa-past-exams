@@ -1,0 +1,12 @@
+paper: nsysu-114-osds
+volume: 2
+school: 中山
+dept: 資工所甲組
+year: 114
+subject: 作業系統與資料結構
+instructions: '考試時間：100 分鐘。※本科目依簡章規定「不可以」使用計算機（問答申論題）。INSTRUCTIONS: If any question is unclear or you believe some assumptions need to be made, state your assumptions clearly at the beginning of your answer.'
+questions:
+  - {id: nsysu-114-osds-01, label: 第 1 題, chapter: 4}
+  - {id: nsysu-114-osds-02, label: 第 2 題, chapter: 15}
+  - {id: nsysu-114-osds-03, label: 第 3 題, chapter: 10}
+  - {id: nsysu-114-osds-04, label: 第 4 題, chapter: 7}

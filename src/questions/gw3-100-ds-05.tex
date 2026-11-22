@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:gw3-100-ds-05}]{關務三等資訊處理 100 年 第五題}
+（申論；15 分）
+
+題組：請根據下圖回答第三至五題：
+
+圖中表示有 4 個朋友，名（name）叫張三（Chang San, CS）、李四（Lee Si, LS）、王五（Wang Wu, WW）及趙六（Chao Liu, CL），用兩個字母代表各人，如 CS 代表張三，並標示兩兩住家交通狀況及距離（distance），如張三家有 7 公里的路到李四家。
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={font=\small\bfseries,inner sep=2pt},>={Stealth[length=2.2mm]},w/.style={font=\small\bfseries,inner sep=2pt}]
+\node[v] (CS) at (0,0) {張三};
+\node[v] (LS) at (2.4,1.1) {李四};
+\node[v] (WW) at (5,0) {王五};
+\node[v] (CL) at (2.4,-1.1) {趙六};
+\draw[->,thick] (CS)--node[w,above left]{7}(LS);
+\draw[->,thick] (LS)--node[w,above right]{21}(WW);
+\draw[->,thick] (LS)--node[w,right]{33}(CL);
+\draw[->,thick] (CS)--node[w,below left]{20}(CL);
+\draw[->,thick] (CL)--node[w,below right]{6}(WW);
+\end{tikzpicture}
+\end{center}
+\begin{quote}
+hash function：h(name) = int (1\textsuperscript{st} char of name)*31+int(2\textsuperscript{nd} char of name)\\
+hash table size：11 \quad (index 0 – 10)\\
+index：h(name) mod 11\\
+int( “C” )=67, int( “S” )=83, int( “L” )=76, int( “W” )=87\\
+舉張三為例：\\
+index( “CS” )=(int( “C” )*31+int( “S” )) mod 11 = (67*31+83) mod 11 = 4
+\end{quote}
+
+找出以張三為 root 的 Prim's Minimal Spanning Tree，要畫出 1. tree\quad 2. priority queue 2 個 data structures 的最後結果。（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：生成樹的邊是 張三–李四 7、張三–趙六 20、趙六–王五 6，總權重 $33$；priority queue 最後是空的。
+
+\textbf{解讀}。 最小生成樹是對\textbf{無向圖}定義的；Prim 演算法用在有向圖上沒有意義（有向圖對應的是「最小樹形圖」，要用別的演算法）。
+這裡照題意把每條路看成雙向，邊為 CS–LS 7、CS–CL 20、LS–WW 21、LS–CL 33、CL–WW 6。 Prim 演算法見資結書第~24.3~節：從根開始，
+每次把「一端在樹上、一端不在」的邊中最輕的那條加入。 priority queue 存還不在樹上的點，鍵是它連到樹上的最輕邊的權重。
+
+\textbf{追蹤}（$k/p$ 表示鍵值和連到樹上的哪一點）：
+\begin{center}
+\small
+\begin{tabular}{lcccl}
+\toprule
+步驟 & LS & CL & WW & priority queue（鍵由小到大） \\
+\midrule
+加入 CS（根） & $7/$CS & $20/$CS & $\infty$ & (LS, 7), (CL, 20), (WW, $\infty$) \\
+加入 LS（邊 CS–LS 7） & & $20/$CS & $21/$LS & (CL, 20), (WW, 21) \\
+加入 CL（邊 CS–CL 20） & & & $6/$CL & (WW, 6) \\
+加入 WW（邊 CL–WW 6） & & & & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+加入 LS 後，LS–CL 33 比 CL 目前的鍵 20 大，不更新；LS–WW 21 讓 WW 的鍵從 $\infty$ 降為 21。 加入 CL 後，CL–WW 6 比 21 小，WW 的鍵降為 6、
+改連到 CL。
+
+\textbf{最後結果}：
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={draw,rounded corners=2pt,inner sep=2pt,font=\small},w/.style={font=\small,fill=white,inner sep=1pt}]
+\node[v] (CS) at (0,0) {張三 CS};
+\node[v] (LS) at (-1.5,-1.3) {李四 LS};
+\node[v] (CL) at (1.5,-1.3) {趙六 CL};
+\node[v] (WW) at (1.5,-2.6) {王五 WW};
+\draw (CS)--node[w]{7}(LS); \draw (CS)--node[w]{20}(CL); \draw (CL)--node[w]{6}(WW);
+\end{tikzpicture}
+\qquad\qquad
+\begin{tabular}[b]{l}
+2. priority queue：空 \\[1em]
+\end{tabular}
+\end{center}
+1. tree：以張三為根，李四、趙六是張三的子節點，王五是趙六的子節點；總權重 $7 + 20 + 6 = 33$。 檢查：$4$ 個點、$3$ 條邊、連通；沒選的兩條
+LS–WW 21、LS–CL 33 各自和樹上的邊成環，而且都是環上最重的邊，所以這棵樹是最小生成樹。 （若用不支援降低鍵值的佇列，舊的 (WW, 21) 會在 WW 加入
+後才被取出丟掉，最後佇列同樣是空的。）
+\end{pastsoln}

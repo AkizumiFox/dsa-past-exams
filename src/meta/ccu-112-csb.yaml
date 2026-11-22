@@ -1,0 +1,10 @@
+paper: ccu-112-csb
+volume: 2
+school: 中正
+dept: 資工所乙組
+year: 112
+subject: 計算機概論（含程式設計）
+instructions: 全部答題均須在試卷（答案卷）作答區內完成。
+questions:
+  - {id: ccu-112-csb-01, label: 第 1 題, chapter: 2}
+  - {id: ccu-112-csb-02, label: 第 3 題, chapter: 6}

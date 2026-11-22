@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:gk3-114-ds-05}]{高考三級資訊處理 114 年 第五題}
+（申論；20 分）
+
+下列虛擬碼是利用某演算法對陣列 A 的元素進行處理，請說明該法是進行何種處理並請寫出其名稱和在最壞情況下
+時間複雜度為何？（10 分）\\
+若陣列 A = [29, 10, 14, 37, 13]，請寫出該虛擬碼的處理過程：請列出陣列在每一輪（每次外層迴圈執行完後）的
+內容變化情形。請特別標示出最終結果為何？（10 分）
+
+\begin{quote}
+doingSomething(A)\\
+begin\\
+\hspace*{1.5em}n $\leftarrow$陣列 A 的元素個數\\
+\hspace*{1.5em}for i $\leftarrow$ 0 to n $-$ 2 do\\
+\hspace*{3em}theIndex $\leftarrow$ i\\
+\hspace*{3em}for j $\leftarrow$ i + 1 to n $-$ 1 do\\
+\hspace*{4.5em}if A[j] < A[theIndex] then\\
+\hspace*{6em}theIndex $\leftarrow$ j\\
+\hspace*{3em}end for\\
+\hspace*{5em}if theIndex <> i then\\
+\hspace*{7em}temp = A[i]\\
+\hspace*{6.5em}A[i] = A[theIndex]\\
+\hspace*{6.5em}A[theIndex] = temp\\
+\hspace*{4.5em}end if\\
+\hspace*{3em}end for\\
+end
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：這是\textbf{選擇排序}（selection sort），把 A 由小到大排序，最壞時間 $O(n^2)$；
+最終結果 $[10, 13, 14, 29, 37]$。
+
+\textbf{前半題}。 外層第 $i$ 輪（$i = 0, \ldots, n - 2$）用內層迴圈在 $A[i..n-1]$ 裡找最小值的位置
+\texttt{theIndex}，再把它和 $A[i]$ 交換（位置相同就不換）。 所以第 $i$ 輪結束時，$A[0..i]$ 是整個陣列
+最小的 $i + 1$ 個數、而且由小到大排好；做完 $n - 1$ 輪，剩下的 $A[n-1]$ 自然是最大值，整個陣列由小到大
+排好。 這是\textbf{選擇排序}（資結書第~14.2~節、虛擬碼~14.2，那裡下標從 $1$ 開始，這裡從 $0$）。
+
+時間：比較 \texttt{A[j] < A[theIndex]} 執行的次數和資料無關，第 $i$ 輪 $n - 1 - i$ 次，共
+\[
+\sum_{i=0}^{n-2} (n - 1 - i) = (n - 1) + (n - 2) + \cdots + 1 = \frac{n(n-1)}{2},
+\]
+所以最壞（其實最好、平均也一樣）都是 $\Theta(n^2)$，寫成 $O(n^2)$。 交換最多 $n - 1$ 次，這是選擇排序
+的優點：資料搬動很少。 它不穩定，例如 $[2_a, 2_b, 1]$ 第一輪 $1$ 和 $2_a$ 交換，得到
+$[1, 2_b, 2_a]$。
+
+\textbf{後半題}。 $n = 5$，外層 $i = 0..3$ 共 $4$ 輪。 每一輪找 $A[i..4]$ 的最小值：
+\begin{center}
+\small
+\begin{tabular}{cllc}
+\toprule
+輪 & 這一輪的處理 & 這一輪結束後的 A & 已排好 \\
+\midrule
+開始 & & $[29, 10, 14, 37, 13]$ & \\
+$i = 0$ & $A[0..4]$ 最小是 $10$（位置 $1$），和 $A[0] = 29$ 交換 & $[10, 29, 14, 37, 13]$ & $A[0]$ \\
+$i = 1$ & $A[1..4]$ 最小是 $13$（位置 $4$），和 $A[1] = 29$ 交換 & $[10, 13, 14, 37, 29]$ & $A[0..1]$ \\
+$i = 2$ & $A[2..4]$ 最小是 $14$（位置 $2$），theIndex $= i$，不交換 & $[10, 13, 14, 37, 29]$ & $A[0..2]$ \\
+$i = 3$ & $A[3..4]$ 最小是 $29$（位置 $4$），和 $A[3] = 37$ 交換 & $[10, 13, 14, 29, 37]$ & 全部 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 $i = 2$ 輪內層比較了 $A[3] = 37$、$A[4] = 29$，都不小於 $14$，theIndex 停在 $2$，所以 \texttt{if}
+不成立，陣列不變。 四輪共比較 $4 + 3 + 2 + 1 = 10$ 次、交換 $3$ 次。
+
+最終結果：$\mathbf{[10, 13, 14, 29, 37]}$。
+\end{pastsoln}

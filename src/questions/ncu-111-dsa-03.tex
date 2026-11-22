@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncu-111-dsa-03}]{中央資工所 111 學年度 複選題第 3 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Which of the following statements about n-element AVL trees are false?
+\begin{enumerate}[label=(\Alph*)]
+\item The time complexity of rebalancing rotation after deleting an element is $\theta(\log n)$.
+\item The time complexity of rebalancing rotation after insertion is $\theta(\log n)$.
+\item If the AVL tree has height = h, then n $<=$ $F_{h+2}$-1, where $F_{h+2}$ is the Fibonacci
+number, i.e., $F_{h+2}=F_{h+1}+F_h$.
+\item $h_L$ - $h_R$ should be smaller than 1, where $h_L$ and $h_R$ denote the height of the left
+subtree and the right subtree, respectively.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(C)、(D)（題目問的是\textbf{錯誤}的敘述）。
+
+(A)、(B) 的 $\theta(\log n)$ 指最壞情況下重新平衡所做的旋轉的總成本，這裡照這個意思讀。 高度的算法
+照資結書第~10.2~節：只有一個節點的樹高度是 $1$，空樹是 $0$。
+\begin{itemize}
+\item (A) 正確，不選。 刪除後要從被刪的位置一路往上檢查到根，每一層都可能失衡、需要旋轉；資結書
+第~10.2.6~節用費氏樹說明，刪除的旋轉次數最壞是 $\Theta(\log n)$，每次旋轉 $\Theta(1)$，所以最壞是
+$\Theta(\log n)$。
+\item (B) 錯誤，要選。 插入後最多只要一次單旋轉或一次雙旋轉（資結書定理~10.2）：在最低的失衡節點旋轉後，
+那棵子樹的高度回到插入前的樣子，上面的祖先都不會再失衡。 旋轉的成本是 $O(1)$，不是 $\theta(\log n)$。
+（找插入位置、往上更新高度要 $O(\log n)$，但那不是「旋轉」的成本。）
+\item (C) 錯誤，要選。 高度 $h$ 的 AVL 樹最少有 $N(h) = F_{h+2} - 1$ 個節點（資結書定理~10.1），所以
+正確的是 $n \ge F_{h+2} - 1$，不等號方向反了。 反例：高度 $3$ 的完滿二元樹有 $7$ 個節點，是 AVL 樹，
+但 $F_5 - 1 = 4 < 7$。 （高度 $h$ 的 AVL 樹最多 $2^h - 1$ 個節點。）
+\item (D) 錯誤，要選。 AVL 的條件是 $|h_L - h_R| \le 1$，平衡因子可以是 $-1, 0, 1$。 「$h_L - h_R$ 小於
+$1$」會排除 $h_L - h_R = 1$（左邊高一層），例如根只有左孩子的兩個節點的樹是 AVL 樹，$h_L - h_R = 1$。
+\end{itemize}
+\end{pastsoln}

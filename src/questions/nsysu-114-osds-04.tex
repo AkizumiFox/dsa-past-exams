@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:nsysu-114-osds-04}]{中山資工所甲組 114 學年度 第 4 題}
+（問答）
+
+A simple rule for the valid parenthesis format in a string consisting of left and right parentheses is
+that, for each pair of left parenthesis and right parenthesis, the left should appear first, followed by the
+right, possibly interrupted by zero or more pairs of left and right parentheses. For example, ( )( ), ( ( ) ),
+and ( ( ) ) ( ) are valid. But, ) (, ( ) ) (, and ) ) ( ) ( ( are invalid. Let $p(n)$, $n\ge 0$, denote the
+number of valid parenthesis strings for $n$ pairs of left and right parentheses. It is assumed that
+$p$(0)=1. Additionally, $p$(1)=1; $p$(2)=2, representing ( )( ) and ( ( ) ).
+\begin{enumerate}[label=(\alph*)]
+\item (5\%) What is the value of $p$(3)?
+\item (10\%) Please give the recurrence relation for calculating $p(n)$, for $n\ge 3$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $p(3) = 5$；(b) $p(n) = \sum_{k=0}^{n-1} p(k)\,p(n-1-k)$。 $p(n)$ 就是卡特蘭數（資結書定理~7.6）。
+
+\textbf{(b) 先推遞迴式。} 設 $n \ge 1$，$S$ 是一個合法的 $n$ 對括號字串。 $S$ 的第一個字元一定是左括號（若是右括號，
+它前面沒有左括號可以配）。 令和它配對的右括號在某個位置，把 $S$ 唯一地切成
+\[
+S = (\,A\,)\,B,
+\]
+$A$ 是這對括號中間的部分，$B$ 是後面剩下的部分。
+\begin{itemize}
+\item $A$、$B$ 都是合法字串：$A$ 裡的括號都在第一對的內部配對（題目的規則：一對括號中間只能夾整對的括號），
+$B$ 裡的括號也只能彼此配對。
+\item 若 $A$ 有 $k$ 對，$B$ 就有 $n - 1 - k$ 對，$k = 0, 1, \ldots, n - 1$。
+\item 反過來，任取合法的 $A$（$k$ 對）和 $B$（$n - 1 - k$ 對），$(A)B$ 是合法的 $n$ 對字串，而且從它切回去得到的
+正是同一組 $A$、$B$（第一個左括號的配對位置由 $A$ 決定）。
+\end{itemize}
+所以 $n$ 對的合法字串和「$k$ 加上一組 $(A, B)$」一一對應：
+\[
+p(n) = \sum_{k=0}^{n-1} p(k)\, p(n-1-k),\qquad n \ge 1,\quad p(0) = 1.
+\]
+題目只要 $n \ge 3$ 的遞迴式，這個式子對 $n \ge 1$ 都成立（$p(1) = p(0)p(0) = 1$、$p(2) = p(0)p(1) + p(1)p(0) = 2$，
+和題目給的一樣）。 它的封閉形式是 $p(n) = \dfrac{1}{n+1}\dbinom{2n}{n}$，和 $n$ 個節點的二元樹形狀數、$1..n$ 進出
+堆疊的輸出順序數相同（資結書第~7.6~節、第~6.1.5~節）。
+
+\textbf{(a)} 代入遞迴式：
+\[
+p(3) = p(0)p(2) + p(1)p(1) + p(2)p(0) = 2 + 1 + 2 = 5.
+\]
+逐一列出核對，依 $A$ 的對數 $k$ 分類：
+\begin{itemize}
+\item $k = 0$（$A$ 空，$B$ 有 $2$ 對）：\texttt{()()()}、\texttt{()(())}；
+\item $k = 1$（$A = $ \texttt{()}，$B$ 有 $1$ 對）：\texttt{(())()}；
+\item $k = 2$（$A$ 有 $2$ 對，$B$ 空）：\texttt{(()())}、\texttt{((()))}。
+\end{itemize}
+共 $5$ 個。 再往下 $p(4) = 14$、$p(5) = 42$。
+\end{pastsoln}

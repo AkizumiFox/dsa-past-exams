@@ -1,0 +1,98 @@
+\begin{pastexam}[label={px:ncku-115-prog-15}]{成大資訊聯招 115 學年度 演算法問答第 2 題}
+（問答）
+
+[10\%] You are a process engineer managing a critical Lithography Machine. The machine has a strict
+\textbf{Thermal Constraint}:
+
+\hspace*{2em}\textbf{Constraint:} You cannot schedule production for two consecutive shifts. If Shift
+$i$ is active, Shift $i-1$ and Shift $i+1$ must be idle (cooling).
+
+\textbf{Data}: The estimated Production Yield Value for the upcoming 13 shifts is listed below.
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Shift ID} & S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10 & S11 & S12 & S13\\\hline
+\textbf{Value} & 45 & 95 & 45 & 35 & 85 & 45 & 40 & 85 & 65 & 65 & 40 & 35 & 90\\\hline
+\end{tabular}
+\end{center}
+
+\underline{\textbf{Questions}}:
+\begin{enumerate}[label=(\arabic*)]
+\item {[4\%]} Identify the set of shifts that results in the maximum possible total value while
+satisfying the thermal constraint.
+\begin{itemize}
+\item Selected Shifts: \underline{\hspace{4.5cm}} (e.g., S1, S2, \dots)
+\item Total Value: \underline{\hspace{4.5cm}}
+\end{itemize}
+\item {[4\%]} A very important client demands that \textbf{Shift 7 (Value: 40) MUST} be included in
+the schedule. Under this mandatory condition, what is the maximum total value you can achieve for the
+13 shifts?
+\begin{itemize}
+\item Selected Shifts with S7: \underline{\hspace{4.5cm}}
+\item Total Value with S7: \underline{\hspace{4.5cm}}
+\end{itemize}
+\item {[2\%]} \textbf{Process Upgrade}: The High-Temperature Machine Imagine the factory installs a
+new, high-performance machine. This machine generates significantly more heat, so the safety
+constraint is updated:
+
+\hspace*{1em}\textbf{New Constraint}: After any active shift, the machine must cool down for
+\textbf{TWO} consecutive shifts
+
+Let $f[i]$ be the maximum value achievable considering shifts up to $i$, and let $v_i$ be the value of
+Shift $i$. Please write down the complete Recurrence Relation (Mathematical Equation) for
+\begin{itemize}\item $f[i]$: \underline{\hspace{8cm}}\end{itemize}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) S2, S5, S8, S10, S13，總值 $420$；(2) S2, S5, S7, S9, S11, S13，總值 $415$；
+(3) $f[i] = \max\{f[i-1],\; v_i + f[i-3]\}$（$i \ge 1$），$f[i] = 0$（$i \le 0$）。
+
+\textbf{(1)} 這是「路徑上的最大權重獨立集」，也就是不能選相鄰兩個的最大和（資結書第~18.1.5~節的步驟）。
+令 $f[i]$ 是只看 S1 到 S$i$ 時的最大總值。 S$i$ 不選，最好是 $f[i-1]$；S$i$ 選，S$(i-1)$ 就不能選，前面
+最好是 $f[i-2]$。 所以
+\[
+f[i] = \max\{f[i-1],\; v_i + f[i-2]\}, \qquad f[0] = 0,\; f[-1] = 0 .
+\]
+由左往右填表：
+\begin{center}
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{c|cccccccccccccc}
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 \\ \hline
+$v_i$ & & 45 & 95 & 45 & 35 & 85 & 45 & 40 & 85 & 65 & 65 & 40 & 35 & 90 \\
+$f[i]$ & 0 & 45 & 95 & 95 & 130 & 180 & 180 & 220 & 265 & 285 & 330 & 330 & 365 & \textbf{420} \\
+\end{tabular}
+\end{center}
+例如 $f[8] = \max\{f[7], 85 + f[6]\} = \max\{220, 265\} = 265$；$f[11] = \max\{330, 40 + 285\} = 330$。
+還原：從 $i = 13$ 往回，$f[i] \ne f[i-1]$ 表示 S$i$ 有選，跳到 $i - 2$；相等就表示不選，看 $i - 1$。
+\begin{itemize}
+\item $f[13] = 420 \ne 365$：選 S13，到 $i = 11$。 $f[11] = f[10]$：不選，到 $i = 10$。
+\item $f[10] = 330 \ne 285$：選 S10，到 $i = 8$。 $f[8] = 265 \ne 220$：選 S8，到 $i = 6$。
+\item $f[6] = f[5]$：不選，到 $i = 5$。 $f[5] = 180 \ne 130$：選 S5，到 $i = 3$。
+\item $f[3] = f[2]$：不選，到 $i = 2$。 $f[2] = 95 \ne 45$：選 S2，到 $i = 0$，結束。
+\end{itemize}
+選 S2, S5, S8, S10, S13，$95 + 85 + 85 + 65 + 90 = 420$，兩兩不相鄰。 這也是唯一的最佳解。
+
+\textbf{(2)} 一定要選 S7，S6 和 S8 就一定閒置，問題拆成互不影響的兩段：S1--S5 和 S9--S13，各自求
+不相鄰的最大和，再加上 $v_7 = 40$。
+\begin{itemize}
+\item S1--S5（$45, 95, 45, 35, 85$）：同樣的遞迴式得 $0, 45, 95, 95, 130, 180$，最大 $180$，選 S2、S5。
+\item S9--S13（$65, 65, 40, 35, 90$）：得 $0, 65, 65, 105, 105, 195$，最大 $195$，選 S9、S11、S13。
+\end{itemize}
+總值 $180 + 40 + 195 = 415$，選 S2, S5, S7, S9, S11, S13。 比 (1) 少 $5$：強迫選 S7 讓 S8（$85$）不能用。
+
+\textbf{(3)} 新規定是一個生產班次之後要連續冷卻兩班，所以兩個選中的班次至少相隔 $3$（S$i$ 選了，
+S$(i-1)$、S$(i-2)$ 都不能選）。 S$i$ 不選時最好是 $f[i-1]$；選時前一個能選的最晚是 S$(i-3)$：
+\[
+f[i] =
+\begin{cases}
+0, & i \le 0, \\
+\max\{f[i-1],\; v_i + f[i-3]\}, & i \ge 1 .
+\end{cases}
+\]
+等價的寫法是 $f[1] = v_1$、$f[2] = \max\{v_1, v_2\}$、$f[3] = \max\{v_1, v_2, v_3\}$，$i \ge 4$ 時用上面
+的式子。 套到這組資料，$f[13] = 355$（選 S2, S5, S8, S13）。 時間都是 $\Theta(n)$。
+\end{pastsoln}

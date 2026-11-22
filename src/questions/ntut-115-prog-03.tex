@@ -1,0 +1,115 @@
+\begin{pastexam}[label={px:ntut-115-prog-03}]{北科大資工所 115 學年度 第 3 題}
+（程式填空）
+
+\textbf{Problem 3 [18\%] [3-1 $\sim$ 3-5 each 3\%, 3-6$\sim$3-8 each 1\%]}
+
+Please trace the following C program and fill in the blanks for problems [3-1$\sim$3-8] with correct statements, so that the output is:
+\begin{minted}[fontsize=\small]{text}
+7 8 6 5 4 1 3 2
+Count: 25
+1 2 3 4 5 6 7 8
+\end{minted}
+\begin{minted}[fontsize=\small, linenos, numbersep=1.5mm, xleftmargin=2em]{c}
+#include <stdio.h>
+void swap(int* a, int* b){
+    *a = *a ^ *b;
+    *b = _________; // Use XOR to do swap.          /* Problem 3-1 */
+    *a = *a ^ *b;
+}
+int variant_selection_sort(int* array, int size){
+    int count = 0;
+    for(int i = 0; i < size; i++){
+        for(int j = i; j < size; j++){
+            if(array[i] _________){                 /* Problem 3-2 */
+                swap(&array[i], &array[______]);    /* Problem 3-3 */
+                count += 1;
+            }
+        }
+    }
+    return _________;                               /* Problem 3-4 */
+}
+void reverse_array(int* array, int size){
+    for(int i = 0; i < size/ ____; i++){            /* Problem 3-5 */
+        swap(&array[i], &array[____________]);      /* Problem 3-6 */
+    }
+}
+int main(){
+    int array[] = {2, 3, 1, 4, 5, 6, 8, _______};   /* Problem 3-7 */
+    // use sizeof to get the array size.
+    int size = sizeof(_______)/sizeof(int);         /* Problem 3-8 */
+    reverse_array(array, size);
+    for(int i = 0; i < 8; i++){
+        printf("%d ", array[i]);
+    }
+    int count = variant_selection_sort(array, size);
+    printf("\nCount: %d\n", count);
+    for(int i = 0; i < 8; i++){
+        printf("%d ", array[i]);
+    }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\small
+\begin{tabular}{cl|cl}
+\toprule
+格 & 填入 & 格 & 填入 \\
+\midrule
+3-1 & \texttt{*a \^{} *b} & 3-5 & \texttt{2} \\
+3-2 & \texttt{> array[j]} & 3-6 & \texttt{size - 1 - i} \\
+3-3 & \texttt{j} & 3-7 & \texttt{7} \\
+3-4 & \texttt{count} & 3-8 & \texttt{array} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{3-1}。 XOR 交換：設原值 $*a = x$、$*b = y$。 第 3 行後 $*a = x \oplus y$；第 4 行
+$*b = *a \oplus *b = (x \oplus y) \oplus y = x$；第 5 行 $*a = *a \oplus *b = (x \oplus y) \oplus x = y$，
+交換完成。 注意 $a$、$b$ 指向同一格時，第 3 行就把它變成 $0$，資料會不見，所以呼叫端不能拿同一格和
+自己交換。
+
+\textbf{3-7}。 輸出第一行是反轉後的陣列 \texttt{7 8 6 5 4 1 3 2}，倒回來原陣列是 $2, 3, 1, 4, 5, 6, 8, 7$，
+最後一個是 \texttt{7}。
+
+\textbf{3-8}。 \texttt{array} 在 \texttt{main} 裡是真正的陣列，\texttt{sizeof(array)} 是整個陣列的位元組數
+$8 \cdot \texttt{sizeof(int)}$，除以 \texttt{sizeof(int)} 得 $8$。 （傳進函式後 \texttt{array} 只是指標，在那裡
+用 \texttt{sizeof} 就只得到指標的大小，這是 C 常見的錯誤。）
+
+\textbf{3-5、3-6}。 反轉是第 $i$ 個和倒數第 $i$ 個（索引 \texttt{size - 1 - i}）對調，只做前一半：
+\texttt{i < size/2}。 如果做到 \texttt{size}，每一對會被換兩次，又換回原狀；而且 \texttt{size} 是奇數時，
+迴圈不會走到正中間那一格（那時 \texttt{i == size - 1 - i}），正好避開 XOR 交換和自己交換的問題。
+
+\textbf{3-2、3-3、3-4}。 內層迴圈讓 $j$ 從 $i$ 掃到最後，每次遇到比 \texttt{array[i]} 小的就換進第 $i$
+格，所以掃完時第 $i$ 格是 \texttt{array[i..size-1]} 的最小值，這是選擇排序的變形（資結書第~14.2~節）：
+標準的選擇排序先記住最小值的位置、最後只換一次，這裡每找到一個更小的就換一次。 3-2 填
+\texttt{> array[j]}，3-3 填 \texttt{j}，3-4 回傳交換次數 \texttt{count}。 3-2 必須是嚴格的 \texttt{>}：
+寫成 \texttt{>=} 時，$j = i$ 那一次條件成立，\texttt{swap(\&array[i], \&array[i])} 會把這一格變成 $0$。
+
+\textbf{核對 Count: 25}。 從 \texttt{7 8 6 5 4 1 3 2} 開始，每一輪的交換次數就是由左往右掃時，
+「比目前第 $i$ 格還小」的新最小值出現了幾次：
+\begin{center}
+\small
+\begin{tabular}{ccll}
+\toprule
+$i$ & 交換次數 & 依序換進第 $i$ 格的數 & 這一輪結束後的陣列 \\
+\midrule
+0 & 4 & 6, 5, 4, 1 & 1 8 7 6 5 4 3 2 \\
+1 & 6 & 7, 6, 5, 4, 3, 2 & 1 2 8 7 6 5 4 3 \\
+2 & 5 & 7, 6, 5, 4, 3 & 1 2 3 8 7 6 5 4 \\
+3 & 4 & 7, 6, 5, 4 & 1 2 3 4 8 7 6 5 \\
+4 & 3 & 7, 6, 5 & 1 2 3 4 5 8 7 6 \\
+5 & 2 & 7, 6 & 1 2 3 4 5 6 8 7 \\
+6 & 1 & 7 & 1 2 3 4 5 6 7 8 \\
+7 & 0 & & 1 2 3 4 5 6 7 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+以 $i = 0$ 為例：第 $0$ 格是 $7$；$j = 2$ 遇到 $6 < 7$，換進來（被換出去的 $7$ 到第 $2$ 格）；接著
+$5 < 6$、$4 < 5$、$1 < 4$ 各換一次；$3$、$2$ 都不比 $1$ 小。 共 $4 + 6 + 5 + 4 + 3 + 2 + 1 + 0 = 25$ 次，
+最後印出 \texttt{1 2 3 4 5 6 7 8}，和題目的輸出相符。 比較次數和選擇排序一樣是 $n(n+1)/2$
+（$j$ 從 $i$ 開始，多比了自己一次），時間 $\Theta(n^2)$；交換次數最壞也是 $\Theta(n^2)$，比標準選擇
+排序的 $n - 1$ 次多。
+\end{pastsoln}

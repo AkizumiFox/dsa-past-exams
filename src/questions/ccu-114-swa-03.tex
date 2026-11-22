@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ccu-114-swa-03}]{中正資工所甲組 114 學年度 第 3 題}
+（單選）
+
+(5\%) (Choose \underline{one} best answer) Consider the integer array \{52, 21, 40, 33, 88, 57, 46, 71\}.
+What will the array look like after heapifying it to a Max Heap? Note that we use the bottom-up method
+that runs in $O(n)$ time.
+\begin{enumerate}[label=(\alph*)]
+\item \{88, 71, 57, 52, 21, 40, 46, 33\}
+\item \{88, 71, 57, 52, 46, 40, 33, 21\}
+\item \{21, 33, 40, 46, 52, 57, 71, 88\}
+\item \{88, 71, 57, 52, 33, 40, 46, 21\}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)。
+
+由下而上建堆積照資結書虛擬碼~8.3：$n = 8$，$i$ 從 $\lfloor 8/2 \rfloor = 4$ 做到 $1$，每次對位置 $i$
+做 \proc{Sift-Down}（資結書第~8.2~節）。
+
+\begin{center}
+\begin{tabular}{lc*{8}{c}}
+\toprule
+& 交換 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+開始 & & 52 & 21 & 40 & 33 & 88 & 57 & 46 & 71 \\
+$i = 4$ & 1 & 52 & 21 & 40 & 71 & 88 & 57 & 46 & 33 \\
+$i = 3$ & 1 & 52 & 21 & 57 & 71 & 88 & 40 & 46 & 33 \\
+$i = 2$ & 1 & 52 & 88 & 57 & 71 & 21 & 40 & 46 & 33 \\
+$i = 1$ & 2 & 88 & 71 & 57 & 52 & 21 & 40 & 46 & 33 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$i = 4$：$33$ 只有左子節點 $A[8] = 71$，交換。 $i = 3$：$40$ 和較大的子節點 $57$ 交換。 $i = 2$：$21$ 和
+較大的子節點 $88$ 交換，到了位置 $5$，沒有子節點。 $i = 1$：$52$ 先和 $88$ 交換，到了位置 $2$，子節點
+$71, 21$ 中 $71$ 比它大，再交換，到了位置 $4$，子節點 $33$ 比它小，停。 結果
+$\{88, 71, 57, 52, 21, 40, 46, 33\}$，就是 (a)。
+
+其他選項：(b) 是由大到小排好的陣列，它也是最大堆積，但不是這個方法的結果。 (c) 是由小到大排好，根是
+最小值，不是最大堆積。 (d) 也是合法的最大堆積（逐層檢查父子都成立），但位置 $5$ 和 $8$ 的 $33$、$21$
+和由下而上的結果對調了。 (a) 正確，所以 (e) 不對。 題目問的是特定方法的結果，「是不是合法的最大堆積」
+不夠，要真的做一次。
+\end{pastsoln}

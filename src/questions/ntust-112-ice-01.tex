@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntust-112-ice-01}]{臺科大資工所 112 學年度 第 1 題}
+（問答）
+
+(15\%) \textbf{A} is a two dimensional array, where the element \textbf{A}(3,2) is located at
+address 1110, and \textbf{A}(2,3) is located at 1115. Assume that each element is identified by one
+unique address, and A is declared as \textbf{A}($m$,$n$). Is this array stored in row-major order or
+in column-major order? What is the value of $m$? What is the location of \textbf{A}(5,4)?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：行優先（column-major），$m = 6$，$\mathbf{A}(5,4)$ 的位址是 $1124$。
+
+題目說每個元素占一個位址，所以每個元素的大小 $w = 1$。 $\mathbf{A}(m, n)$ 是下標從 $1$ 開始的寫法；
+下標從 $0$ 開始，下面的答案也一樣，因為只用到兩個位址的差。 做法是資結書第~4.1~節的位址公式：
+兩個位址相減，消掉起始位址 $\alpha$。
+
+\begin{itemize}
+\item 假設列優先：$\mathrm{loc}(i, j) = \alpha + (i - 1)\,n + (j - 1)$。
+$\mathrm{loc}(2,3) - \mathrm{loc}(3,2) = -n + 1 = 1115 - 1110 = 5$，得 $n = -4$，不可能。
+\item 假設行優先：$\mathrm{loc}(i, j) = \alpha + (j - 1)\,m + (i - 1)$。
+$\mathrm{loc}(2,3) - \mathrm{loc}(3,2) = m - 1 = 5$，得 $m = 6$。
+\end{itemize}
+所以是行優先，$m = 6$。 代回：$1110 = \alpha + (2 - 1) \times 6 + (3 - 1)$，$\alpha = 1102$。
+\[
+\mathrm{loc}(5,4) = 1102 + (4 - 1) \times 6 + (5 - 1) = 1124 .
+\]
+驗證 $\mathbf{A}(2,3)$：$1102 + 2 \times 6 + 1 = 1115$，相符。 行數 $n$ 從題目的條件算不出來，只知道
+$n \ge 4$（否則沒有 $\mathbf{A}(5,4)$）。
+\end{pastsoln}

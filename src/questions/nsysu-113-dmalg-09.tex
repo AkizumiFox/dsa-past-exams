@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-09}]{中山資工所資安組 113 學年度 第 9 題}
+（證明）
+
+(Algorithm points) {[10\%]} Let $T$ be a complete $n$-ary tree of height $h$ with $m$ leaves. Prove that
+$m\le n^h$ and $h\ge\lceil\log_n m\rceil$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定。} 這題的用語來自離散數學課本：$n$-ary tree 是每個內部節點最多 $n$ 個子
+節點的有根樹；complete $n$-ary tree 是每個內部節點恰好 $n$ 個子節點、而且所有葉節點
+深度都相同的樹（也有書的 complete 是像完整二元樹那樣「最後一層靠左」，下面的證明兩
+種都適用）；高度是從根到最深的葉節點經過的\textbf{邊數}（只有根時高度 $0$）。 這
+和資結書第~7.1~節數節點的定義差 $1$，下面照題目的定義。 另外假設
+$n \ge 2$，$\log_n$ 才有意義。
+
+下面證明一個更一般的敘述，「complete」的條件用不到。
+
+\textbf{引理。} 每個節點最多 $n$ 個子節點、高度（邊數）為 $h$ 的有根樹，葉節點最多
+$n^h$ 個。
+
+\textbf{證明}（對 $h$ 做強歸納）。 $h = 0$：樹只有根，根就是唯一的葉節點，
+$1 = n^0$，成立。 $h \ge 1$：根至少有一個子節點，所以根不是葉節點；設根有 $c$ 個子
+節點，$1 \le c \le n$。 每個子節點各是一棵子樹的根，子樹的高度最多 $h - 1$（子樹裡
+每條往下的路徑，加上根到它的那條邊，都是原樹的路徑），由歸納假設每棵子樹最多
+$n^{h-1}$ 個葉節點。 原樹的葉節點就是各子樹葉節點的聯集，所以
+\[
+m \le c \cdot n^{h-1} \le n \cdot n^{h-1} = n^h .
+\]
+歸納完成。
+
+\textbf{第二個不等式。} 由 $m \le n^h$，兩邊取 $\log_n$（$n \ge 2$ 時 $\log_n$ 遞增）
+得 $\log_n m \le h$。 $h$ 是整數，而 $\lceil \log_n m \rceil$ 是不小於 $\log_n m$ 的
+最小整數，所以 $h \ge \lceil \log_n m \rceil$。
+
+\textbf{補充。} 照第一種定義，樹是 complete 的時候，兩個不等式都會取等號：每層節點數是上一層
+的 $n$ 倍，第 $h$ 層（深度 $h$）恰好 $n^h$ 個，全是葉節點，所以 $m = n^h$、$h =
+\log_n m$。 如果照資結書的定義（高度數節點），同一棵樹的高度是 $h + 1$，敘述要改成
+$m \le n^{h-1}$、$h \ge \lceil \log_n m \rceil + 1$；直接把題目的結論套到資結書的高度
+上，不等式雖然還是成立，但不再是緊的。 $n = 2$ 時，這就是資結書定理~7.1 換成
+數邊、只看葉節點的版本。
+\end{pastsoln}

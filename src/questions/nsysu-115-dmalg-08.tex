@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-08}]{中山資工所資安組 115 學年度 第 9 題}
+（設計、分析）
+
+(Algorithm points) {[}10\%{]} Please describe the algorithm of Tower of Hanoi and analyze its time complexity in detail with mathematical derivation.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{問題}。 有三根柱子 $a$、$b$、$c$，$a$ 上由大到小疊著 $n$ 個盤子。 每次只能搬一個盤子（某根柱子最上面那個），而且大盤子不能
+放在小盤子上面。 要把全部盤子搬到 $c$。
+
+\textbf{演算法}（資結書第~6.4~節、虛擬碼~6.11）。 要把 $n$ 個盤子從 $a$ 搬到 $c$：最大的盤子要能搬到 $c$，上面的 $n - 1$ 個必須先全部
+移開，而且不能留在 $c$，只能放在 $b$。 所以：
+\begin{enumerate}
+\item 把上面 $n - 1$ 個從 $a$ 搬到 $b$（以 $c$ 暫放）；
+\item 把最大的盤子從 $a$ 搬到 $c$；
+\item 把那 $n - 1$ 個從 $b$ 搬到 $c$（以 $a$ 暫放）。
+\end{enumerate}
+\begin{pseudo}{河內塔}
+\Procedure{Hanoi}{$n, a, c, b$} \Comment{$n$ 個盤子從 $a$ 搬到 $c$，$b$ 暫放}
+    \If{$n = 0$}
+        \State \Return
+    \EndIf
+    \State \Call{Hanoi}{$n - 1, a, b, c$}
+    \State 印出「把一個盤子從 $a$ 搬到 $c$」
+    \State \Call{Hanoi}{$n - 1, b, c, a$}
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}（對 $n$ 歸納）。 $n = 0$ 不用搬。 假設 \proc{Hanoi} 對 $n - 1$ 個盤子正確。 第 4 行搬 $n - 1$ 個小盤子時，$a$ 最底下是
+最大的盤子、$b$ 和 $c$ 上沒有比它們小的盤子（只有更大的或空的），所以這 $n - 1$ 個盤子的搬法和沒有最大盤子時一樣合法；第 5 行
+搬最大盤子時 $c$ 是空的；第 6 行同理。 例如 $n = 2$：$a \to b$、$a \to c$、$b \to c$，三步。
+
+\textbf{時間複雜度}。 令 $T(n)$ 是搬動的次數（每次呼叫除了遞迴只做 $O(1)$ 的事，總時間和搬動次數同階）。
+\[
+T(0) = 0, \qquad T(n) = 2T(n - 1) + 1 \quad (n \ge 1).
+\]
+展開（資結書第~2.1~節）：
+\[
+T(n) = 2T(n - 1) + 1 = 4T(n - 2) + 2 + 1 = \cdots = 2^k T(n - k) + (2^{k-1} + \cdots + 2 + 1).
+\]
+取 $k = n$：$T(n) = 2^n \cdot 0 + (2^n - 1) = 2^n - 1$。 用歸納法驗證：$T(0) = 2^0 - 1 = 0$；若 $T(n - 1) = 2^{n-1} - 1$，則
+$T(n) = 2(2^{n-1} - 1) + 1 = 2^n - 1$。 所以搬動次數是 $2^n - 1$，時間 $\Theta(2^n)$。 遞迴深度 $n$，空間 $\Theta(n)$。
+例如 $n = 3$ 要 $7$ 步，$n = 64$ 要 $2^{64} - 1 \approx 1.8 \times 10^{19}$ 步。
+
+\textbf{這已經是最少的}。 令 $M(n)$ 是任何合法搬法所需的最少步數。 最大的盤子至少要搬一次。 它第一次被搬動之前，其他 $n - 1$
+個盤子必須全部在第三根柱子上（不在它上面、也不在它要去的柱子上），把它們搬到那裡至少要 $M(n - 1)$ 步；它最後一次被搬動之後，
+那 $n - 1$ 個盤子還要從第三根柱子搬回到它上面，又至少 $M(n - 1)$ 步。 所以 $M(n) \ge 2M(n - 1) + 1$，$M(0) = 0$，同樣解得
+$M(n) \ge 2^n - 1$。 上面的演算法剛好用 $2^n - 1$ 步，是最佳的；任何河內塔演算法都需要 $\Omega(2^n)$ 時間。
+\end{pastsoln}

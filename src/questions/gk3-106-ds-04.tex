@@ -1,0 +1,93 @@
+\begin{pastexam}[label={px:gk3-106-ds-04}]{高考三級資訊處理 106 年 第四題}
+（申論；20 分）
+
+矩陣相乘是問題解決中常見的計算，但相乘順序對於計算效能有極大的影響。給定 $n$ 個矩陣，
+$\mathrm{A}_1, \mathrm{A}_2, \ldots, \mathrm{A}_n$，且任一矩陣 $\mathrm{A}_i$ 大小為 $p_{i-1} \times p_i$，
+$p_0, \ldots, p_n$ 皆為正整數。$\mathrm{A}_1 \times \mathrm{A}_2 \times \cdots \times \mathrm{A}_n$ 實際
+計算過程可以是
+$(\ldots((\mathrm{A}_1 \times \mathrm{A}_2) \times \mathrm{A}_3) \times \cdots \times \mathrm{A}_n)$、
+$(\mathrm{A}_1 \times (\mathrm{A}_2 \times (\ldots \times (\mathrm{A}_{n-2} \times (\mathrm{A}_{n-1}
+\times \mathrm{A}_n))\ldots)))$、或其他合理的順序，而因矩陣相乘順序不同，所需要的乘法運算次數可能也會
+不同。透過動態規劃（dynamic programming）、二維陣列的應用及遞迴程式，可以找到最少乘法運算次數的計算
+順序。方法如下：令 $m[i, j]$ 為計算 $\mathrm{A}_i \times \mathrm{A}_{i+1} \times \cdots \times
+\mathrm{A}_j$ 時所需最少乘法運算次數，$m[i, j]$ 可以下列遞迴公式表示之：
+\[
+m[i, j] = \begin{cases}
+\displaystyle\min_{i \le k < j} \{m[i, k] + m[k+1, j] + p_{i-1} p_k p_j\}, & \text{if } i < j \\[4pt]
+\qquad\qquad 0, & \text{if } i \ge j
+\end{cases}
+\]
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請說明 $\mathrm{A}_1 \times \mathrm{A}_2 \times \cdots \times \mathrm{A}_n$ 相乘過後的矩陣大小為何？
+（3 分）
+\item[㈡] 透過上述方法所找到的最少乘法運算次數，應為二維陣列 $m[i, j]$ 中的那個元素，亦即 $i, j$ 應分別
+為何？（3 分）
+\item[㈢] 若 $n = 4$ 且 $p_0, p_1, p_2, p_3, p_4$ 分別為 3, 4, 5, 4, 2，請計算並填寫出二維陣列 $m[i, j]$。
+（11 分）
+\item[㈣] 承上小題㈢，請說明該四矩陣相乘，$\mathrm{A}_1 \times \mathrm{A}_2 \times \mathrm{A}_3 \times
+\mathrm{A}_4$，最少共需有幾次乘法運算。（3 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $p_0 \times p_n$；㈡ $m[1, n]$，$i = 1$、$j = n$；㈢ 見下表；㈣ $104$ 次，順序是
+$\mathrm{A}_1 \times (\mathrm{A}_2 \times (\mathrm{A}_3 \times \mathrm{A}_4))$。
+
+這是資結書第~18.2~節的矩陣鏈乘問題，題目的遞迴式就是那一節的式子。
+
+\textbf{㈠} 相鄰兩個矩陣 $\mathrm{A}_i$（$p_{i-1} \times p_i$）和 $\mathrm{A}_{i+1}$（$p_i \times p_{i+1}$）
+可以相乘，結果是 $p_{i-1} \times p_{i+1}$：列數來自左邊、行數來自右邊，中間的 $p_i$ 消掉。 一路乘下去，
+中間的 $p_1, \ldots, p_{n-1}$ 都消掉，結果是 $\mathbf{p_0 \times p_n}$。 不論用哪種順序加括號，結果的大小
+（和值）都一樣，只有乘法次數不同。
+
+\textbf{㈡} $m[i, j]$ 是乘 $\mathrm{A}_i$ 到 $\mathrm{A}_j$ 的最少次數，整串是 $\mathrm{A}_1$ 到
+$\mathrm{A}_n$，所以答案在 $\mathbf{m[1, n]}$，$i = 1$、$j = n$。 計算時要依鏈長 $j - i$ 由小到大填表，
+最後才填到右上角的 $m[1, n]$。
+
+\textbf{㈢} $p = \langle 3, 4, 5, 4, 2\rangle$，$\mathrm{A}_1$：$3 \times 4$，$\mathrm{A}_2$：$4 \times 5$，
+$\mathrm{A}_3$：$5 \times 4$，$\mathrm{A}_4$：$4 \times 2$。 對角線 $m[i, i] = 0$，依鏈長填：
+
+鏈長 2：
+\begin{align*}
+m[1, 2] &= p_0 p_1 p_2 = 3 \cdot 4 \cdot 5 = 60, \\
+m[2, 3] &= p_1 p_2 p_3 = 4 \cdot 5 \cdot 4 = 80, \\
+m[3, 4] &= p_2 p_3 p_4 = 5 \cdot 4 \cdot 2 = 40.
+\end{align*}
+鏈長 3：
+\begin{align*}
+m[1, 3] &= \min\{\, m[1,1] + m[2,3] + p_0 p_1 p_3,\; m[1,2] + m[3,3] + p_0 p_2 p_3 \,\} \\
+        &= \min\{\, 0 + 80 + 3 \cdot 4 \cdot 4,\; 60 + 0 + 3 \cdot 5 \cdot 4 \,\}
+         = \min\{128, 120\} = 120 \quad (k = 2), \\
+m[2, 4] &= \min\{\, m[2,2] + m[3,4] + p_1 p_2 p_4,\; m[2,3] + m[4,4] + p_1 p_3 p_4 \,\} \\
+        &= \min\{\, 0 + 40 + 4 \cdot 5 \cdot 2,\; 80 + 0 + 4 \cdot 4 \cdot 2 \,\}
+         = \min\{80, 112\} = 80 \quad (k = 2).
+\end{align*}
+鏈長 4：
+\begin{align*}
+m[1, 4] &= \min\left\{\begin{array}{l} m[1,1] + m[2,4] + p_0 p_1 p_4 \\ m[1,2] + m[3,4] + p_0 p_2 p_4 \\
+                    m[1,3] + m[4,4] + p_0 p_3 p_4 \end{array}\right\}
+         = \min\left\{\begin{array}{l} 0 + 80 + 3 \cdot 4 \cdot 2 \\ 60 + 40 + 3 \cdot 5 \cdot 2 \\
+                    120 + 0 + 3 \cdot 4 \cdot 2 \end{array}\right\} \\
+        &= \min\{104, 130, 144\} = 104 \quad (k = 1).
+\end{align*}
+填好的表（$i > j$ 的格子用不到，依遞迴式是 $0$，表中留空；括號裡是取到最小值的 $k$）：
+\begin{center}
+\small
+\begin{tabular}{c|cccc}
+$m[i, j]$ & $j = 1$ & $j = 2$ & $j = 3$ & $j = 4$ \\
+\hline
+$i = 1$ & 0 & 60 $(1)$ & 120 $(2)$ & \textbf{104} $(1)$ \\
+$i = 2$ &   & 0 & 80 $(2)$ & 80 $(2)$ \\
+$i = 3$ &   &   & 0 & 40 $(3)$ \\
+$i = 4$ &   &   &   & 0 \\
+\end{tabular}
+\end{center}
+
+\textbf{㈣} 最少 $m[1, 4] = \mathbf{104}$ 次乘法。 從記下的 $k$ 還原順序：$m[1, 4]$ 取 $k = 1$，切成
+$\mathrm{A}_1$ 和 $\mathrm{A}_2\mathrm{A}_3\mathrm{A}_4$；$m[2, 4]$ 取 $k = 2$，切成 $\mathrm{A}_2$ 和
+$\mathrm{A}_3\mathrm{A}_4$。 所以是 $\mathrm{A}_1 \times (\mathrm{A}_2 \times (\mathrm{A}_3 \times
+\mathrm{A}_4))$。 驗算：$\mathrm{A}_3\mathrm{A}_4$ 用 $5 \cdot 4 \cdot 2 = 40$ 次得 $5 \times 2$；
+$\mathrm{A}_2$ 乘它用 $4 \cdot 5 \cdot 2 = 40$ 次得 $4 \times 2$；$\mathrm{A}_1$ 乘它用
+$3 \cdot 4 \cdot 2 = 24$ 次得 $3 \times 2$，合計 $40 + 40 + 24 = 104$。 對照題目舉的另一種順序
+$((\mathrm{A}_1\mathrm{A}_2)\mathrm{A}_3)\mathrm{A}_4$ 要 $60 + 60 + 24 = 144$ 次，差了將近一半。
+\end{pastsoln}

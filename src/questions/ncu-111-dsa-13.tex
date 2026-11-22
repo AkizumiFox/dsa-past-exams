@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ncu-111-dsa-13}]{中央資工所 111 學年度 問答題第 1 題}
+（問答）
+
+Given a weighted connected undirected graph $G$=($V$, $E$) with node set $V$ and edge set $E$, a
+subgraph $M$ of $G$ is called a spanning tree of $G$ if $M$ = ($V$, $T$), $T\subseteq E$, and
+$|T|$=$|V|$$-$1. $M$ is called a minimal spanning tree (MST) of $G$ if $M$ is a spanning tree of $G$
+with the minimal total weight. Below is the Prim's MST algorithm to output the MST of a given graph
+$G$.
+
+\textbf{Algorithm}: Prim's MST algorithm\\
+\textbf{Input}: A weighted connected undirected graph $G$=($V$, $E$), where $|V|$=$n$\\
+\textbf{Output}: The MST $M$=($V$, $T$) with the minimal total weight, where $|T|$=$n$$-$1\\
+1: $T\leftarrow\phi$\\
+2: $X\leftarrow\{w\}$, where $w$ is an arbitrary node in $V$\\
+3: \textbf{while} $|T| < n-1$ \textbf{do}\\
+4: \quad select an edge $(u, v)\in E$ with the minimal weight such that $u\in X$ and
+$v\in(V-X)$\\
+5: \quad $T\leftarrow T\cup\{(u, v)\}$\\
+6: \quad $X\leftarrow X\cup\{v\}$\\
+7: \textbf{return} $M$=($V$, $T$)
+
+Please follow the form of the Prim's MST algorithm to\\
+(1) write the well-known Kruskal's MST algorithm (9\%) and\\
+(2) analyze the worst-case time complexity of the Kruskal's MST algorithm (6\%).\\
+Note that you should strictly follow the form of the Prim's MST algorithm to write the Kruskal's
+MST algorithm; otherwise, you will lose some points.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(1)} 照題目的格式（Algorithm／Input／Output，加上編號的步驟）寫 Kruskal（資結書第~24.2~節）。
+Prim 用集合 $X$ 記「已經在樹裡的點」；Kruskal 要記的是「目前的森林裡，每個點在哪一棵樹」，用互斥集合
+（資結書第~13~章）。
+
+\textbf{Algorithm}: Kruskal's MST algorithm\\
+\textbf{Input}: A weighted connected undirected graph $G = (V, E)$, where $|V| = n$\\
+\textbf{Output}: The MST $M = (V, T)$ with the minimal total weight, where $|T| = n - 1$\\
+1: $T \leftarrow \phi$\\
+2: \textbf{for} each node $x \in V$ \textbf{do} \textsc{Make-Set}$(x)$ \quad （每個點自成一棵樹）\\
+3: sort the edges of $E$ into nondecreasing order of weight\\
+4: \textbf{while} $|T| < n - 1$ \textbf{do}\\
+5: \quad select the edge $(u, v) \in E$ with the minimal weight, and remove it from $E$\\
+6: \quad \textbf{if} \textsc{Find-Set}$(u) \ne$ \textsc{Find-Set}$(v)$ \textbf{then}
+\quad （$u$、$v$ 在不同的樹，加了不會成環）\\
+7: \quad\quad $T \leftarrow T \cup \{(u, v)\}$\\
+8: \quad\quad \textsc{Union}$(u, v)$\\
+9: \textbf{return} $M = (V, T)$
+
+第 5 行因為第 3 行已經排序，就是依序拿下一條邊。 和 Prim 的差別：Prim 第 4 行只在「一端在 $X$、一端
+不在」的邊裡挑最輕的，樹始終是一棵；Kruskal 在全部邊裡挑最輕的，只要求兩端不在同一棵樹，過程中是
+森林，最後才連成一棵。
+
+正確性：第 7 行加入 $(u, v)$ 時，取切割 $(S, V - S)$，$S$ 是 $u$ 所在的那棵樹。 比 $(u, v)$ 輕的邊都已經
+看過，不是加進了 $T$ 就是兩端在同一棵樹，所以都不跨過這個切割，$(u, v)$ 是跨過它最輕的邊；由切割性質
+（資結書定理~24.1），加入後 $T$ 仍包含在某棵最小生成樹裡。 $G$ 連通，所以一定湊得到 $n - 1$ 條邊，
+迴圈會結束，這時 $T$ 就是最小生成樹（資結書定理~24.6）。
+
+\textbf{(2)} 記 $|V| = n$、$|E| = m$。
+\begin{itemize}
+\item 第 1--2 行：$n$ 次 \textsc{Make-Set}，$O(n)$。
+\item 第 3 行：排序 $m$ 條邊，$O(m \log m)$。
+\item 第 4--8 行：最壞情況是最後一條必要的邊就是最重的邊（例如某個點只有一條最重的邊連出去），要把
+$m$ 條邊全部看過，共 $2m$ 次 \textsc{Find-Set}、$n - 1$ 次 \textsc{Union}。 用依秩合併加路徑壓縮的
+互斥集合森林，總共 $O((m + n)\,\alpha(n))$（資結書定理~13.4）；只用依大小合併也有 $O(m \log n)$。
+\end{itemize}
+排序最慢，總時間
+\[
+O(m \log m) = O(m \log n) = O(|E| \log |V|),
+\]
+因為 $m \le n^2$，$\log m \le 2 \log n$。 若邊的權重已經排好（或是小整數，可以用計數排序），時間降為
+$O(m\,\alpha(n))$。 第 3 行也可以改成先把邊建成最小堆積（$O(m)$），第 5 行每次取出最小的（$O(\log m)$），
+最壞同樣是 $O(m \log m)$，但常常不必取完所有邊就結束。
+\end{pastsoln}

@@ -1,0 +1,87 @@
+\begin{pastexam}[label={px:gk3-097-ds-01}]{高考三級資訊處理 97 年 第一題}
+（申論）
+
+現有變數宣告如下：（每小題 5 分，共 25 分）
+\begin{minted}[fontsize=\small]{c}
+int intArray[3][2] = {{10, 20}, {15, 25}, {50, 40}};
+int ** intPtr1 = intArray;
+int * intPtr2 = &intArray[1][1];
+int * intPtr3[2] = &intArray[2];
+\end{minted}
+intArray 的記憶體位址是 0x0008600，int 為 sizeof(int) = 4；
+試回答下列問題（如果是正確的敘述請寫出左邊變數的數值，錯誤請說明原因，但每題題目是有關連性的）：
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] \texttt{*intPtr2 = intArray[1][1];}
+\item[㈡] \texttt{intPtr1 + 1 = intArray[0];}
+\item[㈢] \texttt{++intPtr = \&intArray[1];}
+\item[㈣] \texttt{*(*intPtr + 1) = intArray[1][0];}
+\item[㈤] \texttt{*(*intPtr3 + 1) = intArray[2][1];}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案一覽（位址都以 \texttt{intArray} 在 \texttt{0x0008600} 計算）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+小題 & 依 C 語言的規定 & 照出題者的本意（見下）\\
+\midrule
+㈠ & 正確，\texttt{*intPtr2} 為 $25$ & 同左，\texttt{intPtr2} 為 \texttt{0x000860C} \\
+㈡ & 錯，左邊不是左值 & 錯 \\
+㈢ & 錯，\texttt{intPtr} 沒有宣告 & \texttt{intPtr} 變成 \texttt{0x0008608} \\
+㈣ & 錯，\texttt{intPtr} 沒有宣告 & \texttt{intArray[1][1]} 變成 $15$ \\
+㈤ & 錯，\texttt{intPtr3} 的宣告不合法 & 正確，值為 $40$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{原題的問題。} 這題的宣告和敘述有好幾處照 C 的規定是編譯不過的：第 2 行把 \texttt{intArray}
+（型別會轉成 \texttt{int (*)[2]}）指定給 \texttt{int **}，型別不合；第 4 行用一個指標去初始化
+「兩個指標的陣列」，不合法；㈢㈣用的 \texttt{intPtr} 根本沒有宣告。 從㈢㈣的寫法看，出題者心裡的
+\texttt{intPtr} 是「指向一列（兩個 \texttt{int}）的指標」，也就是 \texttt{int (*intPtr)[2] = intArray;}；
+\texttt{intPtr3} 則應該是 \texttt{int (*intPtr3)[2] = \&intArray[2];}。 下面每一小題先照 C 的規定判斷
+對錯（題目要求「錯誤請說明原因」），再照這個本意算出數值，兩種都寫在答案卷上最保險。
+
+\textbf{記憶體配置。} 二維陣列以列為主（row-major）連續存放（資結書第~4.1~節），每個 \texttt{int}
+佔 $4$ 位元組，\texttt{intArray[i][j]} 的位址是 $\texttt{0x0008600} + (2i + j) \times 4$：
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+元素 & \texttt{[0][0]} & \texttt{[0][1]} & \texttt{[1][0]} & \texttt{[1][1]} & \texttt{[2][0]} & \texttt{[2][1]} \\
+位址 & \texttt{0x8600} & \texttt{0x8604} & \texttt{0x8608} & \texttt{0x860C} & \texttt{0x8610} & \texttt{0x8614} \\
+值 & 10 & 20 & 15 & 25 & 50 & 40 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{intArray[i]} 是第 $i$ 列，用在運算式裡會轉成指向該列第一個元素的指標，值是
+$\texttt{0x8600} + 8i$；\texttt{\&intArray[i]} 是指向整列的指標，值相同，但加 $1$ 會跳過一整列
+（$8$ 位元組）。
+
+\textbf{㈠ 正確。} \texttt{intPtr2} 的值是 \texttt{0x000860C}，指向 \texttt{intArray[1][1]}，
+所以 \texttt{*intPtr2} 就是 \texttt{intArray[1][1]} 本身。 這行把 $25$ 指定給自己，執行後
+\texttt{*intPtr2} $= 25$，陣列不變。
+
+\textbf{㈡ 錯誤。} \texttt{intPtr1 + 1} 是一個運算結果，不是變數，不能放在指定的左邊（不是左值，
+編譯器回報 lvalue required）。 另外 \texttt{intPtr1} 的初始化本身就型別不合：\texttt{int **} 指向
+「指標」，\texttt{intArray} 卻是「指向兩個 \texttt{int} 的列」；就算強行轉型，\texttt{intPtr1 + 1}
+也是往後跳一個指標的大小（$4$ 或 $8$ 位元組），不會是任何一列的開頭，和 \texttt{intArray[0]}
+（\texttt{0x8600}）不相等。
+
+\textbf{㈢ 錯誤（依 C）。} \texttt{intPtr} 沒有宣告。 就算把它當成 \texttt{intPtr1}，C 的前置
+\texttt{++} 的結果也不是左值，不能再被指定。 照本意（\texttt{intPtr} 是 \texttt{int (*)[2]}，原本
+指向第 $0$ 列）：\texttt{++intPtr} 讓它往後跳一整列，$\texttt{0x8600} + 8 = \texttt{0x8608}$，正好
+等於 \texttt{\&intArray[1]}，所以指定前後一樣，\texttt{intPtr} 的值是 \texttt{0x0008608}，指向第
+$1$ 列。
+
+\textbf{㈣ 錯誤（依 C，\texttt{intPtr} 沒有宣告）。} 照本意接著㈢：\texttt{*intPtr} 是第 $1$ 列
+\texttt{intArray[1]}，轉成 \texttt{\&intArray[1][0]}（\texttt{0x8608}）；加 $1$ 跳一個 \texttt{int}，
+得 \texttt{\&intArray[1][1]}（\texttt{0x860C}）。 所以這行就是
+\texttt{intArray[1][1] = intArray[1][0];}，左邊的值變成 $15$。 「有關連性」就在這裡：
+\texttt{intPtr2} 也指向 \texttt{0x860C}，此後 \texttt{*intPtr2} 也是 $15$。
+
+\textbf{㈤ 錯誤（依 C，\texttt{intPtr3} 的宣告不合法）。} \texttt{int * intPtr3[2]} 是兩個
+\texttt{int *} 的陣列，陣列要用大括號初始化，不能用一個指標值 \texttt{\&intArray[2]}。 照本意
+\texttt{int (*intPtr3)[2] = \&intArray[2];}：\texttt{*intPtr3} 是第 $2$ 列，轉成
+\texttt{\&intArray[2][0]}（\texttt{0x8610}），加 $1$ 得 \texttt{\&intArray[2][1]}（\texttt{0x8614}），
+這行把 $40$ 指定給自己，值為 $40$。
+\end{pastsoln}

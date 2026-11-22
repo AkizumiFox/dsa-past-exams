@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nsysu-112-dmalg-06}]{中山資工所資安組 112 學年度 第 6 題}
+（證明）
+
+{[10\%]} Prove that the number of primes is infinite.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{證明。}（歐幾里得）用反證法。 假設質數只有有限多個，全部列出來是 $p_1, p_2, \ldots, p_k$。 令
+\[
+N = p_1 p_2 \cdots p_k + 1.
+\]
+$N \ge 2 + 1 > 1$，所以 $N$ 至少有一個質因數 $p$（大於 $1$ 的整數，最小的大於 $1$ 的因數一定是質數）。 $p$ 是
+質數，必定是 $p_1, \ldots, p_k$ 之一，設 $p = p_j$。 $p_j$ 整除 $p_1 p_2 \cdots p_k$，也整除 $N$，所以整除兩者
+的差 $N - p_1 \cdots p_k = 1$。 但質數 $p_j \ge 2$，不可能整除 $1$，矛盾。 所以質數有無限多個。
+\hfill$\blacksquare$
+
+補充兩點，常見的錯誤寫法：
+\begin{itemize}
+\item $N$ 本身不一定是質數。 例如 $2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 + 1 = 30031 = 59 \times 509$。 證明
+只用到「$N$ 的質因數不在清單裡」，不要寫成「$N$ 是新的質數」。
+\item 「最小的大於 $1$ 的因數是質數」要說明：若它不是質數，它就有更小的大於 $1$ 的因數，那也是 $N$ 的因數，
+和「最小」矛盾。
+\end{itemize}
+\end{pastsoln}

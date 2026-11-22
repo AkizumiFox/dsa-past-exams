@@ -1,0 +1,152 @@
+\begin{pastexam}[label={px:ntut-114-prog-01}]{北科大資工所 114 學年度 第 3 題}
+（程式填空）
+
+\textbf{Problem 3 [20\%] [3-1 $\sim$ 3-2 each 3\%, 3-3 $\sim$ 3-9 each 2\%]}
+
+The following C program can calculate the addition of two polynomials. Please trace the program
+and fill the blanks problems 3-1 $\sim$ 3-9 with correct statements.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\footnotesize, breaklines]{c}
+#include <stdio.h>
+#include <stdlib.h>
+typedef ______ node_s {                                 /* Problem 3-1 */
+    int coef;
+    int exp;
+    struct node_s * next;
+} node_t;
+typedef node_t * nodep_t;
+int count(int num) {
+    int sum = 0;
+    while (num>0) {
+        sum += num______;                               /* Problem 3-2 */
+        num = num/10;
+    }
+    return sum;
+}
+nodep_t makeNode(int coef, int exp) {
+    nodep_t newNode = (nodep_t) malloc(__________);     /* Problem 3-3 */
+    newNode->next = NULL;
+    newNode->coef = coef;
+    newNode->exp = exp;
+}
+void print(nodep_t x) {
+    while (x!=NULL) {
+        if (x->coef>0) printf("+");
+        if (x->exp ==0) printf(" %d ", x->coef);
+        else if (x->exp==1) printf("%d x ", x->coef);
+        else    printf("%d x^%d ", x->coef, x->exp);
+        x = x->next;
+    }
+    printf("\n");
+}
+nodep_t addNode(nodep_t root, nodep_t newNode) {
+    nodep_t current = root;
+    if (current == NULL) return newNode;
+    while (current->next != NULL)
+        current = current->next;
+    current->next = ____________;                       /* Problem 3-4 */
+    return root;
+}
+nodep_t add(nodep_t x, nodep_t y) {
+    nodep_t root = NULL, newNode = NULL, current = NULL;
+    while ((x!= NULL) && (y!=NULL)) {
+        if (x->exp == y->exp) {
+            newNode = makeNode( __________, x->exp);    /* Problem 3-5 */
+            x=x->next; y = y->next;
+        }
+        else if (x->exp > y->exp) {
+            newNode = makeNode(x->coef, x->exp);
+            x= __________;                              /* Problem 3-6 */
+        }
+        else {
+            newNode = makeNode( __________, y->exp);    /* Problem 3-7 */
+            y = y->next;
+        }
+        root = addNode( _______, newNode);              /* Problem 3-8 */
+    }
+}
+nodep_t make_polynomial(nodep_t root, int data[], int n) {
+    for (int i=0; i<=n; i++)
+        if (data[i]____0) root=addNode(root, makeNode(data[i],n-i)); /* Problem 3-9 */
+    return root;
+}
+int main() {
+    nodep_t x = NULL, y=NULL, root=NULL, z=NULL;
+    int data_x[] =  {2, 0, 3, -4, 5};   //      2x^4 + 0x^3 + 3x^2 - 4x + 5
+    int data_y[] = {1, 0, 0, 2, 0, 1};  //1x^5 + 0x^4 + 0x^3 + 2x^2 + 0x + 1
+    x = make_polynomial(x, data_x, 4);
+    y = make_polynomial(y, data_y, 5);
+    print(x);                           //Output: +2 x^4 +3 x^2 -4 x + 5
+    print(y);                           //Output: +1 x^5 +2 x^2 + 1
+    z = add(x, y);
+    print(z);                           //Output: +1 x^5 +2 x^4 +5 x^2 -4 x + 6
+    printf("%d, %d", count(98765), count(1357)); //Output: 35, 16
+    return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：3-1 \texttt{struct}；3-2 \texttt{\%10}；3-3 \texttt{sizeof(node\_t)}；3-4 \texttt{newNode}；
+3-5 \texttt{x->coef + y->coef}；3-6 \texttt{x->next}；3-7 \texttt{y->coef}；3-8 \texttt{root}；
+3-9 \texttt{!=}。
+
+\textbf{原程式少了兩個 \texttt{return}}。 \texttt{makeNode}（第 17--22 行）最後沒有
+\texttt{return newNode;}，\texttt{add}（第 41--58 行）最後沒有 \texttt{return root;}。 C 語言裡
+非 \texttt{void} 函式沒有回傳值、而呼叫端又用了它，是未定義行為；題目的註解顯然假設這兩個函式有
+回傳，下面照這個意思作答，作答時可以註明「第 21 行後應補 \texttt{return newNode;}、第 57 行後應補
+\texttt{return root;}」。 另外 \texttt{add} 的迴圈只在兩個串列都還有項時才做，其中一個先走完時，
+另一個剩下的項不會被接上去；本題的資料兩個串列恰好同時走完，所以輸出不受影響（見最後的追蹤）。
+
+\textbf{資料結構}。 這是用單向鏈結串列存多項式（資結書第~5.3~節）：每個節點存一項的係數
+\texttt{coef}、指數 \texttt{exp}，串列依指數由大到小排列。 \texttt{make\_polynomial} 的
+\texttt{data[i]} 是 $x^{n-i}$ 的係數，所以從最高次往下建，串列自然是遞減排列。
+
+\textbf{各空格}：
+\begin{itemize}
+\item \textbf{3-1}：\texttt{typedef struct node\_s \{ \ldots \} node\_t;} 同時定義結構
+\texttt{struct node\_s} 和別名 \texttt{node\_t}。 結構裡用的是 \texttt{struct node\_s * next}，所以
+這裡必須有結構標籤 \texttt{node\_s}，填 \texttt{struct}。
+\item \textbf{3-2}：\texttt{count} 每圈把 \texttt{num} 除以 $10$ 去掉個位數，所以每圈要加的是個位數
+\texttt{num \% 10}。 檢查：$9 + 8 + 7 + 6 + 5 = 35$、$1 + 3 + 5 + 7 = 16$，和註解的
+\texttt{35, 16} 相符。
+\item \textbf{3-3}：配置一個節點，填 \texttt{sizeof(node\_t)}（寫 \texttt{sizeof(struct node\_s)}
+或 \texttt{sizeof(*newNode)} 也對）。 不能寫 \texttt{sizeof(nodep\_t)}：那是指標的大小，不是節點的
+大小。
+\item \textbf{3-4}：\texttt{addNode} 先走到最後一個節點（\texttt{current->next == NULL}），再把新節點
+接上去：\texttt{current->next = newNode}。 串列空的時候第 35 行直接回傳新節點當串列頭。
+\item \textbf{3-5}：兩個多項式的目前項指數相同，合成一項，係數相加：
+\texttt{x->coef + y->coef}，兩邊都往後走（第 46 行已經寫好）。
+\item \textbf{3-6}：$x$ 的指數比較大，這一項只出現在 $x$，照抄係數後 $x$ 往後走：
+\texttt{x->next}。
+\item \textbf{3-7}：對稱的情況，$y$ 的指數比較大，係數照抄 \texttt{y->coef}，指數第 53 行已經寫了
+\texttt{y->exp}。
+\item \textbf{3-8}：把新節點接到結果串列的尾端，結果串列的頭是 \texttt{root}，所以是
+\texttt{addNode(root, newNode)}。 \texttt{addNode} 回傳的是串列頭（第一次呼叫時 \texttt{root} 是
+\texttt{NULL}，回傳 \texttt{newNode}），再存回 \texttt{root}。
+\item \textbf{3-9}：註解的輸出 \texttt{+2 x\^{}4 +3 x\^{}2 -4 x + 5} 沒有 $0x^3$ 這一項，而 $-4$ 這種
+負係數要保留，所以條件是 \texttt{data[i] != 0}。 填 \texttt{>} 會漏掉 $-4x$。
+\end{itemize}
+
+\textbf{追蹤 \texttt{add}}。 $x$：$(2,4) \to (3,2) \to (-4,1) \to (5,0)$；
+$y$：$(1,5) \to (2,2) \to (1,0)$（括號是 (係數, 指數)）。
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+$x$ 目前項 & $y$ 目前項 & 比較 & 產生的節點 \\
+\midrule
+$(2,4)$ & $(1,5)$ & $4 < 5$ & $(1,5)$，$y$ 前進 \\
+$(2,4)$ & $(2,2)$ & $4 > 2$ & $(2,4)$，$x$ 前進 \\
+$(3,2)$ & $(2,2)$ & 相等 & $(5,2)$，兩邊前進 \\
+$(-4,1)$ & $(1,0)$ & $1 > 0$ & $(-4,1)$，$x$ 前進 \\
+$(5,0)$ & $(1,0)$ & 相等 & $(6,0)$，兩邊前進 \\
+\bottomrule
+\end{tabular}
+\end{center}
+兩個串列同時走完，結果是 $x^5 + 2x^4 + 5x^2 - 4x + 6$，\texttt{print} 印出
+\texttt{+1 x\^{}5 +2 x\^{}4 +5 x\^{}2 -4 x + 6}，和註解相符。 \texttt{print} 在係數為正時先印
+\texttt{+}，常數項的格式是 \texttt{" \%d "}，所以常數項印成 \texttt{+ 6}（加號和數字間有空白）。
+
+要讓 \texttt{add} 在一般情況也正確，迴圈後應該把沒走完的那一個串列剩下的項依序接上（或者直接把
+剩下的部分接到結果串列尾端），最後 \texttt{return root;}；兩個係數相加為 $0$ 時也應該不建節點。
+資結書虛擬碼~5.8 的多項式相加就有處理這兩件事。
+\end{pastsoln}

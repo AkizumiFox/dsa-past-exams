@@ -1,0 +1,109 @@
+\begin{pastexam}[label={px:ntut-115-prog-02}]{北科大資工所 115 學年度 第 2 題}
+（程式填空）
+
+\textbf{Problem 2 [16\%] [2-1 $\sim$ 2-8 each 2\%]}
+
+The following C program can implement "put(), get(), and printMap\_keys()" functions of "\textbf{map}" about Python. Please trace the program and fill in the blanks for problems 2-1 $\sim$ 2-8 with correct statements, so that the output is: "NCKU, NCU, NTHU, NCTU, NTU, NTUT, NCKU, NCU, NTHU, NCTU, NTU, =>124, =>-1".
+\begin{minted}[fontsize=\small, linenos, numbersep=1.5mm, xleftmargin=2em]{c}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct Node {
+    char *key;
+    int value;
+    struct Node *next;
+} Node;
+Node* make_node(const char* key, int value) {
+    Node* node = malloc(sizeof(Node));
+    node->key = strdup(key);
+    node->value = value;
+    node->next = __________;                        /* Problem 2-1 */
+    return node;
+}
+void put(Node **headp, const char* key, int value) {
+    Node *cur = _________;                          /* Problem 2-2 */
+    while (cur != NULL) {
+        if (strcmp(cur->key, key) == 0) {
+            cur->value = value;
+            _______;                                /* Problem 2-3 */
+        }
+        cur = cur->next;
+    }
+    Node *node = make_node(________);               /* Problem 2-4 */
+    node->next = *headp;
+    *headp = node;
+}
+int get(Node *head, const char* _____, int default_value) {   /* Problem 2-5 */
+    Node *cur = head;
+    while (cur != NULL) {
+        if (strcmp(cur->key, key) == 0)
+            return _________;                       /* Problem 2-6 */
+        cur = cur->next;
+    }
+    return _________;                               /* Problem 2-7 */
+}
+void printMap_keys(Node* head) {
+    Node* cur = head;
+    while (cur != NULL) {
+        printf("%s, ", ________);                   /* Problem 2-8 */
+        cur = cur->next;
+    }
+}
+int main() {
+    Node* map = NULL;
+    char* keys[] = {"NTU", "NCTU", "NTHU", "NCU", "NCKU"};
+    int values[] = {112, 113, 114, 115, 116};
+    for (int i=0; i<5; i++) put(&map, keys[i], values[i]);
+    printMap_keys(map);
+    put(&map, "NTUT", 124);
+    printMap_keys(map);
+    printf("=>%d, ", get(map, "NTUT", -1));
+    printf("=>%d\n", get(map, "Apple", -1));
+    return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\small
+\begin{tabular}{cl|cl}
+\toprule
+格 & 填入 & 格 & 填入 \\
+\midrule
+2-1 & \texttt{NULL} & 2-5 & \texttt{key} \\
+2-2 & \texttt{*headp} & 2-6 & \texttt{cur->value} \\
+2-3 & \texttt{return} & 2-7 & \texttt{default\_value} \\
+2-4 & \texttt{key, value} & 2-8 & \texttt{cur->key} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+這是用單向鏈結串列做的對應表（map）：每個節點存一對鍵和值，查詢、更新都從頭循序找（資結書第~5.1~節）。
+
+\textbf{2-1}。 新節點還沒接到串列上，\texttt{next} 先設成 \texttt{NULL}；第 26 行接上時才改。
+
+\textbf{2-2、2-3}。 \texttt{put} 先找這個鍵是否已經存在。 \texttt{headp} 是「指向頭指標的指標」，串列的
+第一個節點是 \texttt{*headp}。 找到就更新值，然後\textbf{直接結束函式}：2-3 必須是 \texttt{return}。
+如果寫 \texttt{break}，跳出迴圈後還會執行第 25 到 27 行，同一個鍵會再插入一個新節點。
+
+\textbf{2-4}。 找不到時建立新節點，參數照 \texttt{make\_node(const char* key, int value)} 的順序傳
+\texttt{key, value}。 第 26、27 行把新節點接在\textbf{最前面}（資結書虛擬碼~5.2 在串列頭插入），並經由
+\texttt{headp} 改掉呼叫端的 \texttt{map}，所以 \texttt{main} 要傳 \texttt{\&map}。
+
+\textbf{2-5、2-6、2-7}。 第 32 行用的是 \texttt{key}，所以參數名稱是 \texttt{key}。 找到就回傳節點的值
+\texttt{cur->value}，走完都沒找到就回傳呼叫端給的預設值 \texttt{default\_value}，和 Python
+\texttt{dict.get(key, default)} 一樣。
+
+\textbf{2-8}。 印出每個節點的鍵 \texttt{cur->key}。
+
+\textbf{核對輸出}。 \texttt{main} 依序插入 NTU、NCTU、NTHU、NCU、NCKU，每次都插在最前面，串列是
+NCKU $\to$ NCU $\to$ NTHU $\to$ NCTU $\to$ NTU，第一次印出 \texttt{NCKU, NCU, NTHU, NCTU, NTU, }。
+插入 NTUT 後它在最前面，第二次印出 \texttt{NTUT, NCKU, NCU, NTHU, NCTU, NTU, }。 \texttt{get} 找到
+NTUT，印 \texttt{=>124, }；找不到 Apple，回傳預設值，印 \texttt{=>-1}。 三段接起來正是題目要的輸出
+（兩次 \texttt{printMap\_keys} 之間沒有換行）。
+
+\texttt{put}、\texttt{get} 最壞都要走過整個串列，$n$ 個鍵時是 $O(n)$；Python 的 \texttt{dict} 用雜湊表，
+平均 $O(1)$（資結書第~12~章）。
+\end{pastsoln}

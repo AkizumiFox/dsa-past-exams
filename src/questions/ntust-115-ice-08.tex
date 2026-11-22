@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntust-115-ice-08}]{臺科大資工所 115 學年度 第 I-8 題}
+（單選）
+
+(5\%) In an array-based implementation of a binary heap (assuming the root index starts from $1$), if a node
+is at index $i$, what is the index of its left child?
+\begin{enumerate}[label=(\alph*)]
+\item $3i+1$
+\item $2i+1$
+\item $i+1$
+\item $i/2$
+\item $3i-1$
+\item $2i$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (f) $2i$。
+
+完整二元樹由上而下、由左而右從 $1$ 開始編號（資結書第~7.2.1~節）：第 $d$ 層（根在第 $0$ 層）的編號是
+$2^d$ 到 $2^{d+1} - 1$。 節點 $i$ 前面同一層有 $i - 2^d$ 個節點，它們的孩子共 $2(i - 2^d)$ 個，排在 $i$ 的孩子前面；
+下一層從 $2^{d+1}$ 開始，所以 $i$ 的左孩子是 $2^{d+1} + 2(i - 2^d) = 2i$，右孩子 $2i + 1$，父節點
+$\lfloor i/2 \rfloor$。 例：根 $1$ 的孩子是 $2$、$3$，節點 $2$ 的孩子是 $4$、$5$。
+
+其他選項：(b) $2i + 1$ 是右孩子（或從 $0$ 開始編號時的左孩子）；(d) $i/2$ 是父節點（要取地板）；(a)(e) 的 $3i \pm 1$
+是三元堆積的樣子；(c) $i + 1$ 是同一層的下一個節點，不是孩子。
+\end{pastsoln}

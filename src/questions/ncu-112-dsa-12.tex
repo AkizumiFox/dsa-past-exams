@@ -1,0 +1,104 @@
+\begin{pastexam}[label={px:ncu-112-dsa-12}]{中央資工所 112 學年度 問答題第 2 題}
+（問答）
+
+A non-deterministic (ND) algorithm has two phases, the choosing phase and the checking phase, for solving
+a given problem. The former is for selecting one from a specific set of choices iteration by iteration.
+The latter is for checking if all selected choices constitute a solution to the problem. If so, the
+algorithm returns SUCCESS; otherwise, FAILURE. It is assumed that an ND algorithm always selects choices
+that lead to the return of SUCCESS unless there are no such choices. A problem is called an NP problem if
+there exists a polynomial time-complexity ND algorithm solving the problem. For example, the famous
+satisfiability (SAT) problem is an NP problem. The SAT problem is to determine if a given Boolean formula
+$f(x_1,\ldots,x_n)$ of $n$ Boolean variables $x_1,\ldots,x_n$ is satisfiable or unsatisfiable. A formula
+$f(x_1,\ldots,x_n)$ is satisfiable (resp., unsatisfiable) if there exists an (resp., no) TRUE-FALSE
+assignment of the $n$ variables to make the formula TRUE. The following polynomial time-complexity ND
+algorithm, called ND-SAT, can solve the SAT problem, which is the evidence that the SAT problem is an NP
+problem.
+
+\begin{quote}
+\textbf{Algorithm:} ND-SAT\\
+\textbf{Input:} a Boolean formula $f(x_1,\ldots,x_n)$ of $n$ variables $x_1,\ldots,x_n$\\
+\textbf{Output: SUCCESS} if $f$ is satisfiable; \textbf{FAILURE}, otherwise.\\
+\textbf{for} $i\leftarrow 1$ to $n$ \textbf{do}\\
+\hspace*{1.5em}$x_i\leftarrow$ choice(\{TRUE, FALSE\}) //Choose TRUE or FALSE to assign to $x_i$\\
+\textbf{if} $f(x_1,\ldots,x_n)$ == TRUE \textbf{then} //Check if $f(x_1,\ldots,x_n)$ is satisfiable or
+unsatisfiable\\
+\hspace*{1.5em}\textbf{return SUCCESS}\\
+\textbf{else}\\
+\hspace*{1.5em}\textbf{return FAILURE}
+\end{quote}
+
+In practice, we can prove a problem to be an NP problem by showing a polynomial time-complexity ND
+algorithm solving the problem. (a) \underline{By this concept,} \underline{please prove that}
+\underline{the exact cover} \underline{decision problem (ECDP)} \underline{is an NP} \underline{problem by
+showing} \underline{a polynomial time-complexity} \underline{ND algorithm solving} \underline{the ECDP
+(18\%).} Note that you should follow the above-mentioned ND algorithm definition and the format of the
+ND-SAT algorithm. That is, the ND algorithm should contain the input description, the output
+description, the choosing phase, the checking phase, and return statements; otherwise, you will lose
+some points. (b) \underline{Furthermore, please analyze} \underline{the time complexity} \underline{of
+your ND} \underline{algorithm in terms} \underline{of the big} \underline{O notation to} \underline{show
+that it} \underline{indeed has a} \underline{polynomial time complexity} \underline{(7\%).} The ECDP is
+defined as follows. Given a universal set $U=\{u_1,\ldots,u_m\}$ of $m$ elements, and a collection
+$S=\{S_1,\ldots,S_n\}$ of $n$ sets, where $S_i$ is a non-empty subset of $U$, $1\le i\le n$, the ECDP is
+to determine if there exists a collection $S^*$ of sets that is an exact cover of $U$, where
+$S^*\subseteq S$. A collection $S^*$ of sets is an exact cover of $U$ if every element $u$ in $U$ appears
+exactly once in only one set of $S^*$. For example, suppose $U=\{1,2,3,4,5,6,7\}$ is a universal set of
+seven elements, and $S=\{A,B,C,D,E\}$ is a collection of five sets, where $A=\{1,2,7\}$, $B=\{1,4\}$,
+$C=\{4,5\}$, $D=\{3,5,6\}$, and $E=\{4\}$. Then, $S^*=\{A,D,E\}\subseteq S$ is an exact cover of $U$. In
+summary, the ECDP with the input of $U=\{1,2,3,4,5,6,7\}$ and $S=\{A=\{1,2,7\},\ B=\{1,4\},\
+C=\{4,5\},\ D=\{3,5,6\},\ E=\{4\}\}$ will return SUCCESS, since $S^*=\{A,D,E\}\subseteq S$ is an exact
+cover of $U$.
+\end{pastexam}
+
+\begin{pastsoln}
+想法和 ND-SAT 一樣：選擇階段替每個集合 $S_i$ 猜「放進 $S^*$」或「不放」，檢查階段數每個元素被選中的
+集合蓋到幾次，全部恰好一次才成功。 這就是資結書第~28.2~節「猜一個證書、再用多項式時間驗證」的寫法。
+
+\textbf{(a)} 假設 $U$ 的元素編號為 $1..m$（$u_j$ 的編號是 $j$），每個 $S_i$ 以它的元素編號串列給定。
+\begin{quote}
+\textbf{Algorithm:} ND-ECDP\\
+\textbf{Input:} a universal set $U = \{u_1, \ldots, u_m\}$ and a collection $S = \{S_1, \ldots, S_n\}$,
+where each $S_i$ is a non-empty subset of $U$\\
+\textbf{Output: SUCCESS} if some $S^* \subseteq S$ is an exact cover of $U$; \textbf{FAILURE},
+otherwise.\\
+// 選擇階段（choosing phase）\\
+\textbf{for} $i \leftarrow 1$ to $n$ \textbf{do}\\
+\hspace*{1.5em}$x_i \leftarrow$ choice(\{TRUE, FALSE\}) // $x_i$ = TRUE 表示把 $S_i$ 放進 $S^*$\\
+// 檢查階段（checking phase）\\
+\textbf{for} $j \leftarrow 1$ to $m$ \textbf{do}\\
+\hspace*{1.5em}$\mathit{count}[j] \leftarrow 0$\\
+\textbf{for} $i \leftarrow 1$ to $n$ \textbf{do}\\
+\hspace*{1.5em}\textbf{if} $x_i$ == TRUE \textbf{then}\\
+\hspace*{3em}\textbf{for} each $u_j \in S_i$ \textbf{do}\\
+\hspace*{4.5em}$\mathit{count}[j] \leftarrow \mathit{count}[j] + 1$ // $u_j$ 又被一個選中的集合蓋到\\
+\textbf{for} $j \leftarrow 1$ to $m$ \textbf{do}\\
+\hspace*{1.5em}\textbf{if} $\mathit{count}[j] \ne 1$ \textbf{then} // $u_j$ 沒被蓋到，或被蓋到兩次以上\\
+\hspace*{3em}\textbf{return FAILURE}\\
+\textbf{return SUCCESS}
+\end{quote}
+
+\textbf{正確性。} 固定一組選擇 $x_1, \ldots, x_n$，令 $S^* = \{S_i : x_i = \text{TRUE}\}$。 檢查階段結束時
+$\mathit{count}[j]$ 正是 $S^*$ 裡含 $u_j$ 的集合個數，所以檢查階段回傳 SUCCESS，若且唯若每個元素恰好在
+$S^*$ 的一個集合裡出現，也就是 $S^*$ 是 $U$ 的 exact cover。
+\begin{itemize}
+\item 若 $U$ 有 exact cover $S^*$，取 $x_i = \text{TRUE} \iff S_i \in S^*$，這組選擇會走到 SUCCESS。 依
+ND 演算法的假設，它一定選到會成功的選擇，所以回傳 SUCCESS。
+\item 若沒有 exact cover，任何一組選擇得到的 $S^*$ 都不是 exact cover，檢查都失敗，回傳 FAILURE。
+\end{itemize}
+所以 ND-ECDP 解的正是 ECDP。 以題目的例子來說，選 $x = (\text{T}, \text{F}, \text{F}, \text{T}, \text{T})$
+（$A$、$D$、$E$）時，$A$ 蓋到 $1, 2, 7$，$D$ 蓋到 $3, 5, 6$，$E$ 蓋到 $4$，$\mathit{count}[1..7]$ 全是 $1$，
+回傳 SUCCESS。
+
+\textbf{(b)} 逐段算：
+\begin{itemize}
+\item 選擇階段：迴圈 $n$ 次，每次一個 choice，$O(n)$。
+\item $\mathit{count}$ 歸零：$O(m)$。
+\item 計數：對每個選中的 $S_i$ 掃過它的元素，最多 $\sum_{i=1}^{n} |S_i| \le nm$ 次加一（每個 $S_i \subseteq U$，
+$|S_i| \le m$），$O(nm)$。
+\item 最後的檢查：$O(m)$。
+\end{itemize}
+總共 $O(n + m + nm) = O(nm)$，是輸入大小的多項式（其實輸入本身就要寫出 $n + m + \sum |S_i|$ 個符號，
+上面的步數和輸入大小成正比）。 所以 ECDP 有多項式時間的 ND 演算法，依題目的定義，ECDP 是 NP 問題。
+
+如果 $U$ 的元素不是 $1..m$ 的編號而是任意的值，可以先把 $U$ 排序，再對每個 $S_i$ 的元素做二分搜尋換成
+編號，多花 $O(m \log m + nm \log m)$，仍然是多項式。
+\end{pastsoln}

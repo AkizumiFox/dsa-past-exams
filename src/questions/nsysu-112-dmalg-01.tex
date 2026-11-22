@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:nsysu-112-dmalg-01}]{中山資工所資安組 112 學年度 第 1 題}
+（計算）
+
+Two $n$-digital integers (leading zeros allowed) are considered equivalent if one is a rearrangement of
+the other. (E.g., 305697, 079563, and 567930 are considered equivalent six-digital integers.)
+\begin{enumerate}[label=(\alph*)]
+\item {[10\%]} How many six digital integers are not equivalent?
+\item {[10\%]} If the digitals 3, 5, and 7 can appear at most once, how many nonequivalent six-digital
+integers are there?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $\binom{15}{6} = 5005$；(b) $3024$。
+
+兩個數等價若且唯若它們用到的數字（含重複次數）一樣，所以一個等價類就對應一個「從 $0$ 到 $9$ 這 $10$ 種
+數字裡可重複地取 $6$ 個」的多重集合，順序不管。 要數的是多重集合的個數。
+
+\textbf{重複組合}。 從 $k$ 種東西可重複地取 $r$ 個，個數等於方程式 $x_1 + \cdots + x_k = r$（$x_i \ge 0$，
+$x_i$ 是第 $i$ 種取的個數）的非負整數解數。 把 $r$ 個球和 $k - 1$ 根隔板排成一列，隔板把球分成 $k$ 段，
+每一種排法對應一組解，所以有 $\binom{r + k - 1}{r}$ 種。
+
+\textbf{(a)} $k = 10$、$r = 6$：
+\[
+\binom{6 + 10 - 1}{6} = \binom{15}{6} = \frac{15 \cdot 14 \cdot 13 \cdot 12 \cdot 11 \cdot 10}{6!} = 5005.
+\]
+
+\textbf{(b)} 依 $3, 5, 7$ 三個數字中用了幾個分類。 用了其中 $j$ 個（各一次），有 $\binom{3}{j}$ 種選法，剩下
+$6 - j$ 位從其餘 $7$ 種數字（$0, 1, 2, 4, 6, 8, 9$）可重複地取，有 $\binom{(6-j) + 7 - 1}{6-j}$ 種：
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$j$ & $\binom{3}{j}$ & 其餘 $6 - j$ 位 & 小計 \\
+\midrule
+$0$ & $1$ & $\binom{12}{6} = 924$ & $924$ \\
+$1$ & $3$ & $\binom{11}{5} = 462$ & $1386$ \\
+$2$ & $3$ & $\binom{10}{4} = 210$ & $630$ \\
+$3$ & $1$ & $\binom{9}{3} = 84$ & $84$ \\
+\midrule
+合計 & & & $3024$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以有 $924 + 1386 + 630 + 84 = 3024$ 個不等價的六位數。
+\end{pastsoln}

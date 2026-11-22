@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-06}]{中山資工所資安組 113 學年度 第 6 題}
+（計算）
+
+{[10\%]} An alphabet $\Sigma$ consists of the five numeric characters 1, 2, 3, 4, 5, and the six alphabetic
+characters a, b, c, d, e, f. Find and solve a recurrence relation for the number of words of length $n$ (in
+$\Sigma^*$), where there is no consecutive (identical or distinct) alphabetic characters.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{列出遞迴式}。 令 $a_n$ 是長度 $n$、沒有兩個字母相鄰的字數。 $a_0 = 1$（空字串），$a_1 = 11$。 $n \ge 2$ 時看
+最後一個字元：
+\begin{itemize}
+\item 最後是數字（$5$ 種）：前面 $n - 1$ 個字元只要本身合法，接上數字不會產生相鄰的字母，有 $5 a_{n-1}$ 個。
+\item 最後是字母（$6$ 種）：倒數第二個必須是數字（$5$ 種），再前面的 $n - 2$ 個字元合法即可，有 $30 a_{n-2}$ 個。
+\end{itemize}
+兩類不重疊、涵蓋所有情形，所以
+\[
+a_n = 5 a_{n-1} + 30 a_{n-2} \quad (n \ge 2), \qquad a_0 = 1,\ a_1 = 11 .
+\]
+檢查 $n = 2$：$a_2 = 55 + 30 = 85$；直接算是 $11^2 - 6^2 = 85$（扣掉兩個都是字母的），相符。
+
+\textbf{解遞迴式}（常係數線性齊次，資結書第~2.5~節的特徵方程式）。 特徵方程式 $r^2 - 5r - 30 = 0$，
+\[
+r_{1,2} = \frac{5 \pm \sqrt{25 + 120}}{2} = \frac{5 \pm \sqrt{145}}{2} .
+\]
+兩根相異，$a_n = A r_1^n + B r_2^n$。 由初始條件：$A + B = 1$；
+$A r_1 + B r_2 = \frac{5}{2}(A + B) + \frac{\sqrt{145}}{2}(A - B) = 11$，得 $A - B = \frac{17}{\sqrt{145}}$。 所以
+\[
+a_n = \Bigl(\frac{1}{2} + \frac{17}{2\sqrt{145}}\Bigr)\Bigl(\frac{5 + \sqrt{145}}{2}\Bigr)^n
++ \Bigl(\frac{1}{2} - \frac{17}{2\sqrt{145}}\Bigr)\Bigl(\frac{5 - \sqrt{145}}{2}\Bigr)^n ,
+\qquad n \ge 0 .
+\]
+檢查：$n = 0, 1, 2, 3$ 代入得 $1, 11, 85, 755$，和遞迴式一致（$a_3 = 5 \cdot 85 + 30 \cdot 11 = 755$）。
+
+如果不想把空字串算進來，從 $a_1 = 11$、$a_2 = 85$ 開始，解出來的是同一個式子。
+\end{pastsoln}

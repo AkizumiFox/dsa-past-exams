@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nchu-115-is-20}]{中興資工所乙組 115 學年度 第 20 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You want to determine whether two large files (gigabytes in size) are identical without reading
+the entire files unless absolutely necessary. What approach is best?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item Compute and compare cryptographic hash values (e.g., SHA-256) of both files.
+\item Load both files fully into memory and compare them byte by byte.
+\item Randomly guess whether the files are identical and confirm only if the guess seems wrong.
+\item Run insertion sort on the bytes of each file and compare the sorted results.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（出題者的本意）。
+
+先說題目的問題：算 SHA-256 一樣要把兩個檔案從頭讀到尾，做不到題目說的「除非必要，不讀完
+整個檔案」。 真正少讀的做法是先比檔案大小（不同就一定不同），再一段一段讀進來比，遇到第一個
+不同的位元組就停；這不在選項裡。 雜湊的好處在別的情況：檔案在兩台機器上時只要傳 $32$ 位元組
+的雜湊值，或同一個檔案要和很多檔案比時，雜湊值算一次存起來就能重複用。 四個選項裡只有 A
+合理，照出題者的意思選 A。
+\begin{itemize}
+\item A：兩個檔案相同，雜湊值一定相同；雜湊值不同，檔案一定不同。 雜湊值相同而檔案不同是碰撞，
+雜湊值有 $2^{256}$ 種，密碼學雜湊函數又設計成很難找到碰撞，實務上可以當成相同。 和資結書
+第~12.1~節的雜湊函數相比，這裡的雜湊值不拿來當陣列索引，而是當成檔案的「指紋」。
+\item B 錯：GB 等級的檔案整個讀進記憶體可能放不下；而且逐位元組比也不需要全部載入，邊讀邊比
+就好。 這個選項做的事比必要的還多。
+\item C 錯：用猜的沒有任何保證。
+\item D 錯：排序後相同只表示兩個檔案的位元組「組成」相同，順序不同的兩個檔案也會一樣，判斷是
+錯的；而且對幾十億個位元組做插入排序是 $\Theta(n^2)$。
+\end{itemize}
+\end{pastsoln}

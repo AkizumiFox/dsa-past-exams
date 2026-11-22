@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-09}]{中山資工所資安組 114 學年度 第 10 題}
+（問答）
+
+(Algorithm Points) {[10\%]} Please describe the algorithm of minimum spanning tree and analyze its
+time complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：以 Kruskal 演算法為主：邊依權重排序，由小到大檢查，兩端不在同一個連通塊就加入，用互斥
+集合判斷和合併；時間 $O(|E| \log |E|) = O(|E| \log |V|)$。 另外附上 Prim 演算法：二元堆積版
+$O(|E| \log |V|)$，費氏堆積版 $O(|E| + |V| \log |V|)$。
+
+題目說「the algorithm」，但最小生成樹有好幾個演算法。 下面詳細寫 Kruskal，再簡要寫 Prim；作答時
+寫清楚一個就夠，兩個都會更完整。 設 $G = (V, E)$ 是連通無向圖，邊有權重 $w$，$n = |V|$，
+$m = |E|$。 最小生成樹是 $n - 1$ 條邊、連通所有頂點、總權重最小的子圖。
+
+\textbf{共同的依據：切割性質}（資結書定理~24.1）。 把頂點分成兩邊 $(S, V - S)$，如果目前選的
+邊集合 $T$ 沒有任何一條跨越這個切割，那麼跨越切割的邊裡最輕的那一條可以安全加入 $T$，$T$ 仍
+包含在某棵最小生成樹裡。 兩個演算法都是不斷找這樣的「安全邊」。
+
+\textbf{Kruskal}（資結書第~24.2~節）。
+\begin{pseudo}{Kruskal}
+\Function{Kruskal}{$G, w$}
+    \State $T \gets \emptyset$
+    \For{每個頂點 $v \in V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \State 把 $E$ 依 $w$ 由小到大排序
+    \For{每條邊 $(u, v)$，依排序後的順序}
+        \If{\Call{Find}{$u$} $\ne$ \Call{Find}{$v$}} \Comment{$u, v$ 在不同的樹}
+            \State $T \gets T \cup \{(u, v)\}$
+            \State \Call{Union}{$u, v$}
+        \EndIf
+    \EndFor
+    \State \Return $T$
+\EndFunction
+\end{pseudo}
+正確性：檢查邊 $(u, v)$ 時，若 $u$、$v$ 在不同的集合，取 $S$ 為 $u$ 所在的集合，$(u, v)$ 跨越
+$(S, V - S)$；比它輕的邊都已經檢查過，不是加進 $T$ 就是兩端在同一個集合（不跨越 $S$），所以
+$(u, v)$ 是跨越這個切割的最輕邊，由切割性質是安全的。 若 $u$、$v$ 已經在同一集合，加入會形成環，
+略過。 全部檢查完，$T$ 是一棵生成樹（圖連通），而且是最小的。
+
+時間：
+\begin{itemize}
+\item 排序 $m$ 條邊：$O(m \log m)$。 簡單圖 $m \le n^2$，$\log m \le 2 \log n$，所以也是
+$O(m \log n)$。
+\item $n$ 次 \proc{Make-Set}、$2m$ 次 \proc{Find}、$n - 1$ 次 \proc{Union}：用依秩合併加路徑壓縮
+（資結書第~13.2~節），共 $O((m + n)\,\alpha(n))$，$\alpha$ 是反阿克曼函數，實際上不超過 $4$。
+\item 總計 $O(m \log m) + O((m + n)\alpha(n)) = O(m \log n)$，排序是瓶頸。 如果邊已經排好，或權重
+是小整數可以用線性時間排序，就接近 $O(m\, \alpha(n))$。
+\end{itemize}
+
+\textbf{Prim}（資結書第~24.3~節）。 從任一頂點 $r$ 開始長一棵樹。 每個不在樹裡的頂點 $v$ 記
+$\mathit{key}[v]$ = 連到樹的最輕邊權重（沒有就是 $\infty$），放進以 $\mathit{key}$ 為鍵的最小
+優先佇列。 重複 $n$ 次：取出 $\mathit{key}$ 最小的 $u$ 加入樹（經由記下的那條邊），再對 $u$ 的每個
+不在樹裡的鄰居 $v$，若 $w(u, v) < \mathit{key}[v]$ 就把 $\mathit{key}[v]$ 降成 $w(u, v)$（decrease-key）
+並記下 $u$ 是 $v$ 的父節點。 每次取出的邊是跨越「樹／非樹」切割的最輕邊，由切割性質是安全的。
+
+時間：$n$ 次 extract-min、最多 $m$ 次 decrease-key（每條邊從兩端各檢查一次，最多降一次鍵）。
+\begin{itemize}
+\item 二元堆積：兩種操作都是 $O(\log n)$，共 $O((n + m)\log n) = O(m \log n)$（連通圖 $m \ge n - 1$）。
+\item 費氏堆積：extract-min 平攤 $O(\log n)$、decrease-key 平攤 $O(1)$，共 $O(m + n \log n)$。
+\item 鄰接矩陣加陣列（每次掃一遍找最小）：$O(n^2)$，稠密圖（$m = \Theta(n^2)$）時最好。
+\end{itemize}
+
+\textbf{怎麼選}：稀疏圖用 Kruskal 或二元堆積的 Prim，都是 $O(m \log n)$；稠密圖用陣列版 Prim
+$O(n^2)$ 或費氏堆積版。
+\end{pastsoln}

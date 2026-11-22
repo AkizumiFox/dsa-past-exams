@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ncu-115-dsa-01}]{中央資工所 115 學年度 第 1 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Which of the following statements about Quicksort are true?
+\begin{enumerate}[label=\Alph*.]
+\item In the worst case, Quicksort runs in $O(n^2)$ time.
+\item Choosing the median as the pivot guarantees that Quicksort will run in $O(n\log n)$ time.
+\item Standard in-place Quicksort is a stable sorting algorithm.
+\item The expected running time of randomized Quicksort is $O(n\log n)$.
+\item Quicksort can be implemented using only $O(\log n)$ extra space on average.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、D、E。
+
+B 的「中位數」要能快速找到，也要能把資料切成兩半；這裡照一般的意思，假設鍵都相異，中位數用
+線性時間的選擇演算法求。
+
+\textbf{A 對}。 每次分割都切成 $0$ 和 $m - 1$ 個時（例如 Lomuto 分割遇到已經排好的輸入），遞迴式
+是 $T(n) = T(n - 1) + \Theta(n)$，$T(n) = \Theta(n^2)$（資結書第~14.5~節）。 最壞情況是
+$\Theta(n^2)$，說它是 $O(n^2)$ 當然對。
+
+\textbf{B 對}。 用資結書第~16.3~節的中位數的中位數選擇法，$\Theta(n)$ 時間找到中位數當基準，分割後
+兩邊都不超過 $\lfloor n/2 \rfloor$ 個，
+\[
+T(n) \le 2T(n/2) + \Theta(n) \quad\Longrightarrow\quad T(n) = O(n \lg n)
+\]
+（主定理第二種情形）。 這個做法常數很大，實務上不這樣做，但「保證」$O(n \log n)$ 是成立的。 要注意
+鍵有大量重複時：例如 $n$ 個鍵全部相同，中位數就是那個值，Lomuto 分割會切成 $n - 1$ 和 $0$，又回到
+$\Theta(n^2)$；這時要改用三路分割（把等於基準的放中間）才保得住。
+
+\textbf{C 錯}。 原地分割會把元素跨過一大段交換，相同的鍵可能被換了順序。 用資結書虛擬碼~14.8 的
+Lomuto 分割排 $\langle 2_a, 2_b, 1\rangle$（下標只是用來分辨兩個 $2$）：基準 $x = 1$，$2_a$、$2_b$
+都不 $\le 1$，最後把基準和第一格交換，得 $\langle 1, 2_b, 2_a\rangle$；之後排 $\langle 2_b, 2_a\rangle$
+不會再交換。 結果 $2_b$ 在 $2_a$ 前面，順序反了，不穩定。
+
+\textbf{D 對}。 隨機選基準時，鍵互不相同的任何輸入，期望比較次數都是
+$2(n+1)H_n - 4n \le 2n \ln n$，期望時間 $O(n \lg n)$（資結書定理~14.3）。
+
+\textbf{E 對}。 快速排序額外用的空間就是遞迴堆疊，每層 $O(1)$。 隨機化或平均情況下遞迴深度是
+$O(\log n)$，所以平均是 $O(\log n)$。 更進一步，每次只遞迴「比較小的那一段」，比較大的那段用迴圈
+接著做（尾遞迴消除），每往下一層，段的長度至少減半，連最壞情況的堆疊深度也只有 $O(\log n)$。
+\end{pastsoln}

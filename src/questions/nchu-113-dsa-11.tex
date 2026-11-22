@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nchu-113-dsa-11}]{中興資工所甲組 113 學年度 選擇題第 11 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+Which of the following data structures requires more than \textbf{constant average time} for insertions?
+
+(A)~hash table \qquad (B)~queue \qquad (C)~search tree\\
+(D)~stack \qquad (E)~all of the above have constant time insertion algorithms
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+\begin{itemize}
+\item (A) hash table：負載因子 $\alpha$ 維持在常數以下（必要時再雜湊擴表），插入的平均時間是 $O(1)$（資結書
+第~12~章）。
+\item (B) queue：在尾端加入，陣列（環狀佇列）或串列都是 $O(1)$（資結書第~6~章）。
+\item (C) search tree：插入要先從根往下找到放的位置，走過的節點數是樹的高度。 隨機插入的二元搜尋樹平均高度是
+$\Theta(\log n)$（資結書第~9.3~節），平衡樹（AVL、紅黑樹、B 樹）也是 $\Theta(\log n)$；沒有平衡的樹最壞是
+$\Theta(n)$。 都不是常數。 而且比較式的搜尋樹若能在 $O(1)$ 插入，插入 $n$ 個再中序走訪就能在 $O(n)$ 時間
+排序，違反比較排序的 $\Omega(n \log n)$ 下界。
+\item (D) stack：在頂端推入，$O(1)$。
+\item (E)：(C) 不是常數時間，所以 (E) 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:df3-114-ds-02}]{地方三等資訊處理 114 年 第二題}
+（申論；25 分）
+
+Priority Queue（優先佇列）是一種「每次取出的元素都是優先權最高的」資料結構。
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 如果用「排序好的陣列」來實作優先佇列，插入與取最大值的時間複雜度為何？（5 分）
+\item[㈡] 如果用「未排序陣列」，來實作優先佇列，插入與取最大值的時間複雜度為何？（5 分）
+\item[㈢] 如果用最大堆積（max-heap）來實作優先佇列，插入與取最大值的時間複雜度為何？（5 分）
+\item[㈣] 請以最大堆積來實作優先佇列，並顯示以下動作過程的最大堆積樹：\\
+加入 10, 30, 50, 40，取出最大數，加入 50, 60，取出最大數。（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+「取最大值」指取出（刪除）優先權最高的元素，$n$ 是佇列裡的元素個數（資結書第~8.3~節）。
+
+\textbf{㈠ 排序好的陣列：插入 $O(n)$，取最大值 $O(1)$。} 由小到大排好，最大值在最後一格，取出只要把
+長度減 1。 插入要維持排序：可以用二分搜尋在 $O(\log n)$ 找到位置，但要把後面的元素一格一格往後搬，
+最差搬 $n$ 個，所以插入是 $O(n)$。 （若由大到小排，最大值在第一格，取出後要把全部往前搬，就變成取出
+$O(n)$；所以要選由小到大。）
+
+\textbf{㈡ 未排序陣列：插入 $O(1)$，取最大值 $O(n)$。} 插入直接放在最後面。 取最大值要掃過全部 $n$ 個
+找出最大的；找到後用最後一個元素填它的位置，長度減 1（不必搬移），這部分 $O(1)$，合計 $O(n)$。
+
+\textbf{㈢ 最大堆積：插入、取最大值都是 $O(\log n)$。} 堆積是完整二元樹，高度 $\lfloor \lg n \rfloor$
+（邊數）。 插入放在最後、往上比較交換（sift-up），最多走樹高那麼多步；取最大值拿走根，把最後一個
+元素搬到根、往下調整（sift-down），也最多走樹高那麼多步（資結書第~8.1~節）。 只「看」最大值不取出是
+$O(1)$。
+
+\textbf{㈣ 追蹤。} 每一步寫出陣列（從 1 開始，A[$i$] 的子節點是 A[$2i$]、A[$2i+1$]）和調整過程，
+下面畫出每個動作完成後的堆積樹。
+\begin{enumerate}
+\item 加入 10：[10]。
+\item 加入 30：放在 A[2]，比父節點 10 大，交換：[30, 10]。
+\item 加入 50：放在 A[3]，比父節點 30 大，交換：[50, 10, 30]。
+\item 加入 40：放在 A[4]，比父節點 10 大，交換到 A[2]；比父節點 50 小，停：[50, 40, 30, 10]。
+\item 取出最大數 \textbf{50}：最後一個 10 搬到根，[10, 40, 30]；10 比較大的子節點 40 小，交換：
+[40, 10, 30]；10 已經是葉節點，停。
+\item 加入 50：放在 A[4]，比父節點 10 大，交換到 A[2]；比父節點 40 大，交換到根：[50, 40, 30, 10]。
+\item 加入 60：放在 A[5]，比父節點 40 大，交換到 A[2]；比父節點 50 大，交換到根：[60, 50, 30, 10, 40]。
+\item 取出最大數 \textbf{60}：最後一個 40 搬到根，[40, 50, 30, 10]；兩個子節點 50、30 中較大的是 50，
+40 比它小，交換：[50, 40, 30, 10]；40 的子節點只有 10，不用再換，停。
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[
+    every node/.style={circle, draw, minimum size=6.5mm, inner sep=0pt, font=\scriptsize},
+    lab/.style={draw=none, rectangle, font=\scriptsize},
+    level distance=9mm,
+    level 1/.style={sibling distance=16mm},
+    level 2/.style={sibling distance=8.5mm}]
+\node at (0,0) {10};
+\node[lab] at (0,-2.6) {(1) 加入 10};
+\begin{scope}[xshift=2.4cm]
+\node {30} child {node {10}};
+\node[lab] at (0,-2.6) {(2) 加入 30};
+\end{scope}
+\begin{scope}[xshift=5.2cm]
+\node {50} child {node {10}} child {node {30}};
+\node[lab] at (0,-2.6) {(3) 加入 50};
+\end{scope}
+\begin{scope}[xshift=8.4cm]
+\node {50} child {node {40} child {node {10}} child[missing]} child {node {30}};
+\node[lab] at (0,-2.6) {(4) 加入 40};
+\end{scope}
+\begin{scope}[xshift=11.6cm]
+\node {40} child {node {10}} child {node {30}};
+\node[lab] at (0,-2.6) {(5) 取出 50};
+\end{scope}
+\begin{scope}[xshift=1.2cm, yshift=-3.6cm]
+\node {50} child {node {40} child {node {10}} child[missing]} child {node {30}};
+\node[lab] at (0,-2.6) {(6) 加入 50};
+\end{scope}
+\begin{scope}[xshift=5.8cm, yshift=-3.6cm]
+\node {60} child {node {50} child {node {10}} child {node {40}}} child {node {30}};
+\node[lab] at (0,-2.6) {(7) 加入 60};
+\end{scope}
+\begin{scope}[xshift=10.4cm, yshift=-3.6cm]
+\node {50} child {node {40} child {node {10}} child[missing]} child {node {30}};
+\node[lab] at (0,-2.6) {(8) 取出 60};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+兩次取出的最大數依序是 50、60，最後的堆積是 [50, 40, 30, 10]。
+\end{pastsoln}

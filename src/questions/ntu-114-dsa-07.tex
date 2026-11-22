@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ntu-114-dsa-07}]{臺大資網所 114 學年度 第 7 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Max-flow algorithms can be applied to determine the elimination of sports teams in a group. Consider
+the following record for a group of five teams. Note that the number of remaining games for a team does not
+necessarily equal the number of remaining games against the group's rivals, as teams may play opponents outside
+their own group. Only the team with the highest number of wins will advance to the next round. Our goal is to
+determine whether team E has already been eliminated.
+
+The intuition behind constructing the graph is to assume that team E wins all of its remaining 28 ($r_E$) games,
+and then attempt to ensure that the number of wins for each competing team does not exceed the total possible
+wins of team E ($w_E+r_E=76$). The constructed graph consists of 12 nodes: in addition to the source ($s$) and
+sink ($t$) nodes, there are six nodes representing the head-to-head games between teams A-D and four nodes
+representing teams A-D. What is the maximum flow value of the constructed graph?
+\begin{center}
+\small
+\begin{tabular}{c|ccc|ccccc}
+\hline
+ & & & & \multicolumn{5}{c}{Games against each other} \\
+Team & Wins ($w_i$) & Losses ($l_i$) & To play ($r_i$) & team A & team B & team C & team D & team E \\ \hline
+team A & 75 & 59 & 28 & - & 5 & 7 & 4 & 3 \\
+team B & 71 & 63 & 28 & 5 & - & 2 & 4 & 4 \\
+team C & 69 & 65 & 28 & 7 & 2 & - & 4 & 0 \\
+team D & 63 & 71 & 28 & 4 & 4 & 4 & - & 0 \\
+team E & 48 & 86 & 28 & 3 & 4 & 0 & 0 & - \\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item 22
+\item 23
+\item 24
+\item 25
+\item 26
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) $25$。
+
+\textbf{建網路}（資結書第~26.1.2~節的轉換）。 E 剩下的比賽全贏，最多 $76$ 勝。 A--D 之間還沒打的比賽，每一場的勝利要
+分給兩隊之一；問題是能不能分得讓每隊的總勝場都不超過 $76$。
+\begin{itemize}
+\item $s$ 到每個比賽節點 $\{i, j\}$：容量是 $i, j$ 之間剩下的場數。 A--B $5$、A--C $7$、A--D $4$、B--C $2$、B--D $4$、
+C--D $4$，共 $26$ 場。
+\item 比賽節點 $\{i, j\}$ 到隊伍節點 $i$、$j$：容量無限大（或 $\ge$ 場數），一場勝利只能給這兩隊之一。
+\item 隊伍節點 $i$ 到 $t$：容量 $76 - w_i$，也就是 $i$ 還能再贏幾場而不超過 E。 A：$76 - 75 = 1$，B：$5$，C：$7$，
+D：$13$。
+\end{itemize}
+A--D 和組外對手（以及和 E）的比賽不進網路：對 E 最有利的假設是那些比賽 A--D 全輸，E 全贏。 最大流等於 $26$（每場都分配
+得出去）時 E 還有機會，小於 $26$ 時 E 已被淘汰。
+
+\textbf{最大流 $= 25$}。
+\begin{itemize}
+\item 上界（找一個容量 $25$ 的割）：取 $S = \{s,\ \text{A--B},\ \text{A--C},\ \text{B--C},\ \text{A},\ \text{B},\ \text{C}\}$。
+跨出 $S$ 的邊是 $s \to$ A--D、B--D、C--D（$4 + 4 + 4 = 12$）和 A、B、C $\to t$（$1 + 5 + 7 = 13$），共 $25$。 比賽節點到隊伍
+的無限容量邊都留在 $S$ 裡（A--B、A--C、B--C 只連到 A、B、C），沒有跨出去。 由最大流最小割定理（資結書定理~26.6），
+最大流 $\le 25$。
+\item 下界（找一個 $25$ 的流）：A--D、B--D、C--D 的 $12$ 場全給 D（D 收到 $12 \le 13$）；A--B 的 $5$ 場給 B（B 到 $5$）；
+B--C 的 $2$ 場給 C；A--C 的 $7$ 場給 A $1$ 場、給 C $5$ 場（C 到 $2 + 5 = 7$）。 從 $s$ 流出 $12 + 5 + 2 + 6 = 25$，每條
+邊都不超過容量。
+\end{itemize}
+所以最大流是 $25$。 它小於 $26$，代表 E 已經被淘汰；最小割也指出原因：A、B、C 三隊已經有 $75 + 71 + 69 = 215$ 勝，
+彼此之間還要打 $5 + 7 + 2 = 14$ 場，三隊至少共 $229$ 勝，平均超過 $76$，至少有一隊會超過 E 的上限。
+\end{pastsoln}

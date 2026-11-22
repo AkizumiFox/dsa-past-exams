@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:nccu-115-dsa-03}]{政大資科所 115 學年度 第 3 題}
+（單選）
+
+(5\%) In a binary search tree, if an element is searched for, and the search path visits nodes with
+keys 50, 75, 60, 68. What is the relationship between the key 65 and the node with key 68?
+\begin{enumerate}[label=(\Alph*)]
+\item 65 must be in the left subtree of 68.
+\item 65 must be in the right subtree of 68.
+\item 65 could be either in the left or right subtree of 68.
+\item 65 must be a child of 68.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+題目的意思是：$65$ 也在這棵樹裡，問它的位置。
+
+\textbf{從搜尋路徑讀出每一步往哪走}。 二元搜尋樹的搜尋（資結書虛擬碼~9.1）在每個節點比較一次：
+要找的鍵比節點小就往左，比節點大就往右。
+\begin{itemize}
+\item $50 \to 75$：$75 > 50$，所以 $75$ 是 $50$ 的右兒子，往右走。
+\item $75 \to 60$：$60 < 75$，$60$ 是 $75$ 的左兒子。
+\item $60 \to 68$：$68 > 60$，$68$ 是 $60$ 的右兒子。
+\end{itemize}
+由二元搜尋樹的性質，$68$ 這棵子樹裡的鍵都比 $50$ 大（在 $50$ 的右子樹裡）、比 $75$ 小（在 $75$
+的左子樹裡）、比 $60$ 大（在 $60$ 的右子樹裡），也就是都在開區間 $(60, 75)$ 裡。
+
+\textbf{65 在哪裡}。 在這棵樹裡搜尋 $65$：$65 > 50$ 往右到 $75$；$65 < 75$ 往左到 $60$；
+$65 > 60$ 往右到 $68$；$65 < 68$，往左。 搜尋一定會找到它，所以 $65$ 在 $68$ 的左子樹裡。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對，理由如上。
+\item (B) 錯。 $68$ 的右子樹裡的鍵都大於 $68$，$65$ 不可能在那裡。
+\item (C) 錯。 只可能在左子樹。
+\item (D) 錯。 不一定是兒子。 例如 $68$ 的左兒子是 $62$，$65$ 掛在 $62$ 的右邊，搜尋 $65$ 的路徑是
+$50, 75, 60, 68, 62, 65$，$65$ 是 $68$ 的孫子。
+\end{itemize}
+\end{pastsoln}

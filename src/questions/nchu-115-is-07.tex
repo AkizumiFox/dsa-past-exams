@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-07}]{中興資工所乙組 115 學年度 第 7 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Branch and Bound differs from backtracking by
+
+A.~Using bounds to prune search space \qquad B.~Random selection\\
+C.~Depth-only search \qquad D.~Greedy choices
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+嚴格說，回溯也會用界限函數剪枝（資結書第~20.1~節），所以 A 要理解成分支限界的特色：它通常
+用來解最佳化問題，對每個節點算出目標值的上界或下界，和目前找到的最好解比較，不可能更好的
+子樹整棵丟掉（資結書第~20.2~節）；而且展開一個節點時一次產生它全部的子節點，放進活節點的
+集合，再依 FIFO、LIFO 或最小成本挑下一個要展開的節點。 四個選項裡只有 A 說的是分支限界。
+\begin{itemize}
+\item B 錯：分支限界挑下一個節點的規則是固定的（佇列、堆疊或估計成本最小），不是隨機。
+\item C 錯：只往深處走是回溯的走法；分支限界可以一層一層走（FIFO），也可以照界限跳來跳去
+（最佳優先）。
+\item D 錯：貪心一旦做了選擇就不再回頭；分支限界把其他活節點都留著，之後還可能回去展開。
+例如資結書第~20.2.3~節的 TSP，展開了較深的節點以後，又跳回第 1 層展開另一個節點。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-115-is-04}]{中興資工所乙組 115 學年度 第 4 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which operation is most difficult in a singly linked list?
+
+A.~Insertion at head \qquad B.~Insertion after given node\\
+C.~Deletion of tail node \qquad D.~Traversal
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+設串列有 $n$ 個節點，有 $\mathit{head}$ 指標（也可以有 $\mathit{tail}$ 指標）。
+\begin{itemize}
+\item A：新節點的 $\mathit{next}$ 指向原來的頭，再把 $\mathit{head}$ 改成新節點，$O(1)$。
+\item B：已經拿到節點 $x$ 的指標，新節點的 $\mathit{next}$ 設成 $x.\mathit{next}$，再把
+$x.\mathit{next}$ 指向新節點，$O(1)$（資結書第~5.1~節）。
+\item C：刪尾端要把「倒數第二個節點」的 $\mathit{next}$ 改成 \NIL。 單向串列只能往後走，就算有
+$\mathit{tail}$ 指標，也不知道它前一個是誰，只能從頭走 $n - 1$ 步找到倒數第二個，$O(n)$。 這是
+四個操作裡唯一一個「本來可以很快、卻因為單向而變慢」的，所以是最難的。 雙向串列有
+$\mathit{prev}$ 指標，刪尾端就是 $O(1)$（資結書第~5.2~節）。
+\item D：走訪本來就要看每個節點一次，$\Theta(n)$ 是它的本分，單向串列做起來和陣列一樣直接，
+沒有額外的困難。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-113-dsa-04}]{中興資工所甲組 113 學年度 選擇題第 4 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+Insertion of a node into a \textbf{doubly linked list} requires how many changes to various Next and Prev
+pointers?
+
+(A)~1 Next, 1 Prev \qquad (B)~1 Next, 2 Prev \qquad (C)~2 Next, 1 Prev \qquad (D)~2 Next, 2 Prev\\
+(E)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+一般情形是把新節點 $x$ 插在兩個相鄰節點 $p$、$q = p.\mathit{next}$ 之間（帶頭節點的環狀雙向串列裡每次插入
+都是這種情形，資結書第~5.2~節）。 要改的指標：
+\begin{enumerate}
+\item $x.\mathit{prev} \gets p$ \hfill（Prev）
+\item $x.\mathit{next} \gets q$ \hfill（Next）
+\item $p.\mathit{next} \gets x$ \hfill（Next）
+\item $q.\mathit{prev} \gets x$ \hfill（Prev）
+\end{enumerate}
+共 2 個 Next、2 個 Prev，選 (D)。 新節點自己的兩個指標也要設，題目問的是插入「需要」改的指標，四個缺一不
+可：少了 3 或 4，從 $p$ 往後走或從 $q$ 往前走都會跳過 $x$。
+
+（沒有頭節點的串列在最前面或最後面插入時，少了一邊的鄰居，次數會比較少；那是邊界情形，一般說「插入」指的
+是中間的情形。）
+\end{pastsoln}

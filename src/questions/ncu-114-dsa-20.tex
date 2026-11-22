@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ncu-114-dsa-20}]{中央資工所 114 學年度 第 20 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Choose correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item Breadth-First Search (BFS) and Depth-First Search (DFS) are non-uninformed search strategies.
+\item A* algorithm combines the actual cost from the start node ($g(n)$) and the heuristic estimate to
+the goal ($h(n)$). If the heuristic is admissible (never overestimates the true cost) and consistent
+(satisfies the triangle inequality), A* always guarantees finding the optimal solution.
+\item Hill Climbing can escape from a local optimum due to its greedy nature.
+\item Branch and Bound uses both upper and lower bounds to prune the search space for saving
+computation.
+\item Dijkstra's algorithm guarantees the shortest path even if the graph contains cycles.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(d)(e)。
+
+本題是搜尋策略的觀念。 BFS、DFS 在資結書第~21~章，分支限界在第~20.2~節，Dijkstra 在第~25.2~節；A* 和
+爬山法（hill climbing）是人工智慧課的搜尋法，資結書沒有，這裡補充需要的部分。
+
+\begin{itemize}
+\item (a) 錯。 BFS、DFS 只照圖的結構展開，不用任何「離目標還多遠」的估計，是\textbf{無資訊}（uninformed，
+又叫 blind）搜尋。 「non-uninformed」（有資訊）指的是 A*、最佳優先搜尋這類用啟發函數的方法。
+\item (b) 對。 A* 每次展開 $f(n) = g(n) + h(n)$ 最小的節點。 $h$ 可容許（admissible，不高估）時，目標
+第一次被展開時找到的就是最佳解；$h$ 再滿足一致性（consistent，$h(u) \le w(u, v) + h(v)$）時，沿任何
+路徑 $f$ 不會變小，每個節點第一次被展開時 $g$ 就已經最小，用圖搜尋（不重複展開）也保證最佳。 （前提是
+邊的成本為正、每個節點的分支數有限，這是 A* 的標準假設。） $h \equiv 0$ 時 A* 就是 Dijkstra。
+\item (c) 錯。 爬山法每一步只移到比目前更好的鄰居，正因為這種貪心的性質，到了局部最佳（所有鄰居都
+不比它好）就停住，\textbf{逃不出}局部最佳。 要逃出來得靠隨機重新開始、模擬退火這類額外的手段。
+\item (d) 對。 分支限界（資結書第~20.2~節）以最小化問題為例：目前找到的最好解提供上界，每個節點算出
+子樹裡所有解的下界；下界已經不比上界好的節點整棵剪掉。 兩種界一起用才能剪枝。
+\item (e) 對。 Dijkstra 的正確性只要求邊的權重非負（資結書第~25.2~節），圖有沒有環無關；權重非負時
+環不會讓路徑變短，最短路徑一定是簡單路徑。 （題目沒說權重，這裡照 Dijkstra 的前提，權重非負。）
+\end{itemize}
+\end{pastsoln}

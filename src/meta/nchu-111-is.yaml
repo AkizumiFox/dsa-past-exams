@@ -1,0 +1,19 @@
+paper: nchu-111-is
+volume: 2
+school: 中興
+dept: 資工所乙組
+year: 111
+subject: 資訊系統
+instructions: 本科目不得使用計算機。本科目試題共 4 頁。請按照題目順序作答，否則不計分！試卷分 Part I（50\%）和 Part II（50\%）。
+questions:
+  - {id: nchu-111-is-01, label: 第 1 題, chapter: 4}
+  - {id: nchu-111-is-02, label: 第 2 題, chapter: 5}
+  - {id: nchu-111-is-03, label: 第 3 題, chapter: 5}
+  - {id: nchu-111-is-04, label: 第 4 題, chapter: 6}
+  - {id: nchu-111-is-05, label: 第 5 題, chapter: 9}
+  - {id: nchu-111-is-06, label: 第 6 題, chapter: 1}
+  - {id: nchu-111-is-07, label: 第 7 題, chapter: 12}
+  - {id: nchu-111-is-08, label: 第 19 題, chapter: 1}
+  - {id: nchu-111-is-09, label: 第 20 題, chapter: 19}
+  - {id: nchu-111-is-10, label: 第 21 題, chapter: 28}
+  - {id: nchu-111-is-11, label: 第 22 題, chapter: 18}

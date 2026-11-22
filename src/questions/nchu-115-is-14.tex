@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nchu-115-is-14}]{中興資工所乙組 115 學年度 第 14 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You are given a graph with possibly negative edge weights but no negative cycles. Which
+algorithm is appropriate for computing single-source shortest paths from a given vertex?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item Dijkstra's algorithm with a min-priority queue.
+\item Prim's algorithm using a greedy edge selection.
+\item Bellman--Ford algorithm, which relaxes all edges repeatedly.
+\item Kruskal's algorithm using a disjoint set data structure.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+Bellman--Ford 把所有邊鬆弛 $|V| - 1$ 輪（資結書虛擬碼~25.4）。 沒有負環時，每個頂點都有一條最多
+$|V| - 1$ 條邊的最短路徑，第 $i$ 輪結束時，路徑上前 $i$ 條邊的終點都已經算對，所以 $|V| - 1$
+輪後全部正確（資結書定理~25.7）。 這個論證不需要邊權非負，時間 $O(|V||E|)$。
+\begin{itemize}
+\item A 錯：Dijkstra 要求邊權非負，有負邊時可能把還會被改小的頂點提早定案（資結書
+第~25.2.5~節）。
+\item B 錯：Prim 求最小生成樹，不是最短路徑。
+\item C 對。
+\item D 錯：Kruskal 也是求最小生成樹。
+\end{itemize}
+題目說「沒有負環」是必要的前提：有從起點走得到的負環時，最短路徑沒有定義（可以一直繞環變得
+更短），Bellman--Ford 第 $|V|$ 輪還能鬆弛就是在偵測這件事。
+\end{pastsoln}

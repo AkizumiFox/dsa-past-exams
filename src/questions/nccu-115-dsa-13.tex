@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:nccu-115-dsa-13}]{政大資科所 115 學年度 第 13 題}
+（問答）
+
+Consider a hash table of size $M=20$ (slots indexed from 0 to 19). The primary hash function is defined as:
+$h_1(k)=k \mathit{\ mod\ } 20$. The secondary hash function is defined as: $h_2(k)=(k \mathit{\ mod\ } 7)+1$.
+Assume the hash table is initially empty before each part of the question. We will insert the following
+sequence of keys S in the order given:
+\[ S=[8,38,3,5,28,18,65,83,25] \]
+(a) (5\%) Assuming we use double hashing for collision resolution, determine the final structure of the hash
+table after all keys in S have been inserted. Note: The probe sequence is given by:
+\[ h(k,i)=\big(h_1(k)+i\cdot h_2(k)\big) \mathit{\ mod\ } M \]
+where $i$ is the probe number.
+
+(b) (5\%) If we search for 48, what is the total number of probes made during the search?
+
+(c) (10\%) Suppose we are given $n$ keys, $m$ hash table slots, and two uniform hash functions $h_a$ and
+$h_b$. Further suppose hashing scheme uses $h_a$ for the odd keys and $h_b$ for the even keys. What is the
+expected number of keys in a slot?
+\end{pastexam}
+
+\begin{pastsoln}
+題目說「每一小題開始時表都是空的」，(b) 的搜尋顯然是在 (a) 建好的表上做，下面照這個意思解。
+
+\textbf{(a)} 每個鍵算出 $h_1(k) = k \bmod 20$、$h_2(k) = (k \bmod 7) + 1$，再依序試
+$h_1, h_1 + h_2, h_1 + 2h_2, \ldots$（都取 $\bmod 20$），$i$ 從 $0$ 開始（資結書第~12.3~節）。
+\begin{center}
+\small
+\begin{tabular}{rcccl}
+\toprule
+鍵 $k$ & $h_1(k)$ & $k \bmod 7$ & $h_2(k)$ & 依序試過的格子（最後一個是放進去的位置） \\
+\midrule
+8 & 8 & 1 & 2 & 8 \\
+38 & 18 & 3 & 4 & 18 \\
+3 & 3 & 3 & 4 & 3 \\
+5 & 5 & 5 & 6 & 5 \\
+28 & 8 & 0 & 1 & 8（有 8），9 \\
+18 & 18 & 4 & 5 & 18（有 38），3（有 3），8（有 8），13 \\
+65 & 5 & 2 & 3 & 5（有 5），8（有 8），11 \\
+83 & 3 & 6 & 7 & 3（有 3），10 \\
+25 & 5 & 4 & 5 & 5（有 5），10（有 83），15 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的表（沒列出的格子是空的）：
+\begin{center}
+\small
+\begin{tabular}{*{10}{c}}
+\toprule
+格子 & 3 & 5 & 8 & 9 & 10 & 11 & 13 & 15 & 18 \\
+\midrule
+鍵 & 3 & 5 & 8 & 28 & 83 & 65 & 18 & 25 & 38 \\
+\bottomrule
+\end{tabular}
+\end{center}
+附帶一提，$M = 20$ 不是質數，而 $h_2(k)$ 可能是 $2, 4, 5, 6$，和 $20$ 不互質；例如 $18$ 的步長 $5$，
+探測序列只會經過 $18, 3, 8, 13$ 四格。 由資結書定理~12.4，這種鍵的探測序列走不遍整張表，表還有空格也
+可能插不進去。 這一題剛好沒有發生。
+
+\textbf{(b)} $48 \bmod 20 = 8$，$48 \bmod 7 = 6$，$h_2(48) = 7$。 依序看第 $8$ 格（是 $8$，不是 $48$）、
+第 $15$ 格（是 $25$）、第 $22 \bmod 20 = 2$ 格（空格），停下來，$48$ 不在表裡。 共 $3$ 次探測（照資結書
+第~12.3~節的數法，包括最後看到空格的那一次；如果只數「和鍵比較」的次數，是 $2$ 次）。
+
+\textbf{(c)} 答案是 $n/m$。 這裡把「uniform hash function」解讀成：每個鍵的雜湊值等可能是 $m$ 格中的
+任何一格（資結書第~12.2.2~節的簡單均勻雜湊）。 設 $n$ 個鍵裡有 $n_o$ 個奇數、$n_e$ 個偶數，
+$n_o + n_e = n$。 固定第 $j$ 格，落在這一格的鍵數是
+\[
+X_j = \sum_{\text{奇數鍵 } x} I\{h_a(x) = j\} + \sum_{\text{偶數鍵 } x} I\{h_b(x) = j\}.
+\]
+每個奇數鍵用 $h_a$，落在第 $j$ 格的機率是 $1/m$；每個偶數鍵用 $h_b$，機率也是 $1/m$。 由期望值的線性，
+\[
+\mathrm{E}[X_j] = \frac{n_o}{m} + \frac{n_e}{m} = \frac{n}{m} = \alpha .
+\]
+期望值的線性不需要獨立，所以 $h_a$、$h_b$ 之間有沒有關係都不影響答案；奇偶各用哪個函數也不影響，只要
+每個函數本身是均勻的。
+\end{pastsoln}

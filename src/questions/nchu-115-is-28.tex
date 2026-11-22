@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-28}]{中興資工所乙組 115 學年度 第 28 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which traversal method is most suitable for detecting whether an undirected graph is connected?
+
+A.~Topological sort \qquad B.~Depth-first search (DFS)\\
+C.~Dijkstra's algorithm \qquad D.~Kruskal's algorithm
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+從任一個頂點做一次 DFS，拜訪到的正是它所在的連通元件（資結書第~21.6~節）。 拜訪到的頂點數
+等於 $|V|$ 就是連通，否則不連通。 時間 $O(|V| + |E|)$（鄰接串列）。 BFS 也一樣可以，選項裡只有
+DFS。
+\begin{itemize}
+\item A 錯：拓樸排序只對有向無環圖有意義，無向圖沒有方向，談不上拓樸順序。
+\item B 對。
+\item C：Dijkstra 從起點出發，最後 $d = \infty$ 的頂點就是走不到的，也能判斷連通；但它要優先佇列，
+時間 $O((|V| + |E|)\log |V|)$，還用到不需要的權重，不是最適合的。
+\item D：Kruskal 做完時，如果互斥集合只剩一個（加入了 $|V| - 1$ 條邊）就是連通，也判斷得出來；
+但它要先把邊排序，$O(|E| \log |E|)$，同樣多做了事。 而且 C、D 都不是「走訪」的方法。
+\end{itemize}
+\end{pastsoln}

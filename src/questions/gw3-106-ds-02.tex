@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:gw3-106-ds-02}]{關務三等資訊處理 106 年 第二題}
+（申論；25 分）
+
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請使用 C 或 Java 語言寫一副程式 void FindMinMax（int [] A, int n, int Min, int Max），對一個未排序的（unsorted）
+且長度為 n 的陣列 A[0：n$-$1]，尋找陣列中的最小值及最大值，並分別存入 Min 及 Max，此副程式在最佳情況（best case）
+下，只花費 n$-$1 次的數值比較運算（comparison）。（17 分）
+\item[㈡] 請舉例說明此副程式最差情況（worst case）所花費的數值比較運算（comparison）次數。（8 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目的函式原型有兩個問題：\texttt{int [] A} 是 Java 的寫法，而 \texttt{int Min, int Max} 是傳值參數，在 C 和 Java 裡
+副程式改了它們，呼叫的人都看不到。 以下用 C，把 Min、Max 改成指標 \texttt{int *Min, int *Max}，結果經由指標存回
+（用 Java 時可改成傳入長度 $2$ 的陣列或回傳一個物件）。 只計算陣列元素之間的比較，迴圈控制的 \texttt{i < n} 不算。
+
+\textbf{㈠} 想法：一個數如果比目前的最大值大，它就不可能比目前的最小值小，不必再比第二次。 所以每個數先和最大值比，
+不比最大值大的才再和最小值比。
+\begin{minted}[fontsize=\small]{c}
+/* 找出 A[0..n-1] 的最小值與最大值（n >= 1），存入 *Min 與 *Max */
+void FindMinMax(int A[], int n, int *Min, int *Max) {
+    int min = A[0], max = A[0];      /* 先以第一個數當目前的最小、最大 */
+    for (int i = 1; i < n; i++) {
+        if (A[i] > max)              /* 第 1 次比較：比目前最大還大 */
+            max = A[i];              /* 那它一定不比最小值小，省下第 2 次比較 */
+        else if (A[i] < min)         /* 第 2 次比較：只有不比最大值大時才做 */
+            min = A[i];
+    }
+    *Min = min;                      /* 經由指標把結果交給呼叫者 */
+    *Max = max;
+}
+\end{minted}
+正確性：迴圈不變量是「第 $i$ 輪開始時，\texttt{min}、\texttt{max} 是 $A[0..i-1]$ 的最小、最大值」。 進迴圈前
+（$i = 1$）成立。 第 $i$ 輪：若 $A[i] > \mathit{max}$，新的最大值是 $A[i]$，而 $A[i] > \mathit{max} \ge \mathit{min}$，
+最小值不變；否則最大值不變，再看 $A[i]$ 是否比最小值小。 兩種情況都維持不變量。 迴圈結束時 $i = n$，得到整個陣列的
+最小、最大值。
+
+比較次數：$A[1], \ldots, A[n-1]$ 每個數比較 $1$ 次或 $2$ 次，所以總共在 $n - 1$ 到 $2(n - 1)$ 之間。 \textbf{最佳情況}：
+每個 $A[i]$ 都比之前的最大值大，例如由小到大排好的 $\langle 1, 2, 3, 4, 5, 6\rangle$，每輪第一個比較就成立，共 $n - 1$ 次，
+符合題目要求。
+
+\textbf{㈡ 最差情況}：每個 $A[i]$（$i \ge 1$）都不大於目前的最大值，每輪都要做兩次比較，共 $2(n - 1) = 2n - 2$ 次。
+只要 $A[0]$ 就是最大值，就會發生，例如由大到小排好的 $\langle 6, 5, 4, 3, 2, 1\rangle$：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$i$ & $A[i]$ & 比較 & 結果 \\
+\midrule
+1 & 5 & $5 > 6$？否；$5 < 6$？是 & min $= 5$ \\
+2 & 4 & $4 > 6$？否；$4 < 5$？是 & min $= 4$ \\
+3 & 3 & $3 > 6$？否；$3 < 4$？是 & min $= 3$ \\
+4 & 2 & $2 > 6$？否；$2 < 3$？是 & min $= 2$ \\
+5 & 1 & $1 > 6$？否；$1 < 2$？是 & min $= 1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$n = 6$，共 $10 = 2(6 - 1)$ 次比較。 所有元素都相等時也一樣是 $2(n-1)$ 次（$A[i] > \mathit{max}$ 不成立）。
+
+補充：同時找最小和最大值，最差情況可以做到 $\lceil 3n/2 \rceil - 2$ 次：兩個兩個一組，先組內比一次，大的和最大值比、
+小的和最小值比，每兩個數 $3$ 次比較（資結書虛擬碼~16.1、定理~16.1）。 但那種做法的最佳情況也是
+$\lceil 3n/2 \rceil - 2$，達不到題目要求的 $n - 1$。
+\end{pastsoln}

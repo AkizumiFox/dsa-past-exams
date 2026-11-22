@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-113-dsa-13}]{中央資工所 113 學年度 第 13 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Let $f(n)$ and $g(n)$ be asymptotically positive functions, and $\lg x=\log_2(x)$. Which of the following
+statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item If $f(n)=O(g(n))$ then $\lg f(n)=O(\lg g(n))$, where $g(n)\ge 2$ and $f(n)\ge 1$ for $n\ge 1$.
+\item If $f(n)=O(n)$ then $f(n)\times f(n)=O(n^2)$.
+\item If $f(n)=O(n)$ then $2^{f(n)}=O(2^n)$.
+\item $f(n)+o(f(n))=\theta(f(n))$.
+\item $f(n)=\theta(f(n/2))$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(D)。
+
+定義見資結書第~1.5~節。
+\begin{itemize}
+\item (A) 對。 由 $f = O(g)$，有常數 $c > 0$、$n_0$ 使 $n \ge n_0$ 時 $f(n) \le c\,g(n)$；把 $c$ 換成
+$\max(c, 2)$ 也成立，所以可設 $c \ge 2$。 兩邊取 $\lg$（$\lg$ 遞增，$f \ge 1$ 保證 $\lg f \ge 0$）：
+\[
+\lg f(n) \le \lg c + \lg g(n) \le \lg c \cdot \lg g(n) + \lg g(n) = (\lg c + 1)\lg g(n),
+\]
+第二個不等號用到 $g(n) \ge 2$，即 $\lg g(n) \ge 1$。 所以 $\lg f = O(\lg g)$。 條件 $g \ge 2$ 是必要的：
+若 $g(n) \to 1$，$\lg g \to 0$，結論可能不成立。
+\item (B) 對。 $0 < f(n) \le cn$（$n \ge n_0$），兩邊平方 $f(n)^2 \le c^2 n^2$。
+\item (C) 錯。 取 $f(n) = 2n = O(n)$，$2^{f(n)} = 4^n$，$4^n / 2^n = 2^n \to \infty$，不是 $O(2^n)$。 指數
+裡的常數倍不能丟掉。
+\item (D) 對。 令 $h(n) = o(f(n))$ 是那一項，則 $n$ 夠大時 $|h(n)| \le f(n)/2$，所以
+$\tfrac12 f(n) \le f(n) + h(n) \le \tfrac32 f(n)$，即 $f + h = \Theta(f)$。
+\item (E) 錯。 取 $f(n) = 2^n$，$f(n/2) = 2^{n/2}$，$f(n)/f(n/2) = 2^{n/2} \to \infty$，不是同階。
+（對多項式 $f$ 是成立的，但題目沒有這個限制。）
+\end{itemize}
+\end{pastsoln}

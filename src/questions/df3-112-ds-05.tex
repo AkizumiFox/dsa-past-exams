@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:df3-112-ds-05}]{地方三等資訊處理 112 年 第五題}
+（申論；30 分）
+
+請完成下列表格有關排序演算法的 time complexity（假設排序資料有 n 個，資料位數有 d 個）、是否為
+In$-$Space 演算法、是否為 Stable 演算法及範例數列 50, 46, 37, 28, 19 進行降冪排列時所需的比較
+次數。（30 分）
+\begin{center}
+\small
+\begin{tabular}{|p{2.6cm}|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{排序演算法} & \multicolumn{2}{c|}{Time Complexity} & In$-$Space & Stable & 降冪比較次數 \\ \cline{2-3}\cline{6-6}
+ & Best & Worst & （Yes/No） & （Yes/No） & 50, 46, 37, 28, 19 \\ \hline
+Bubble & & & & & \\ \hline
+Insertion & & & & & \\ \hline
+Merge（奇數時，後半段多 1） & & & & & \\ \hline
+Quick（第一個當 pivot） & & & & & \\ \hline
+Radix（base 10） & & & & & \\ \hline
+Selection & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{先看清楚輸入}：$50, 46, 37, 28, 19$ 本來就是由大到小，要排成降冪，等於輸入\textbf{已經排好}。
+所以比較次數是各演算法在「已排好」輸入上的次數。 比較次數和實作細節有關，下面採用資結書
+第~14~章的寫法（把「$>$」換成「$<$」改成降冪），各列寫出採用的版本，$n = 5$。
+
+\textbf{答案表}：
+\begin{center}
+\small
+\begin{tabular}{|p{2.6cm}|c|c|c|c|c|}
+\hline
+排序演算法 & Best & Worst & In$-$Space & Stable & 比較次數 \\ \hline
+Bubble & $O(n)$ & $O(n^2)$ & Yes & Yes & 4 \\ \hline
+Insertion & $O(n)$ & $O(n^2)$ & Yes & Yes & 4 \\ \hline
+Merge（奇數時，後半段多 1） & $O(n \lg n)$ & $O(n \lg n)$ & No & Yes & 5 \\ \hline
+Quick（第一個當 pivot） & $O(n \lg n)$ & $O(n^2)$ & Yes & No & 10 \\ \hline
+Radix（base 10） & $O(d(n + 10))$ & $O(d(n + 10))$ & No & Yes & 0 \\ \hline
+Selection & $O(n^2)$ & $O(n^2)$ & Yes & No & 10 \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{逐列說明。}
+
+\textbf{Bubble}（資結書虛擬碼~14.1，有「一趟沒有交換就提早結束」）：第一趟比較相鄰 $4$ 對
+（$50$/$46$、$46$/$37$、$37$/$28$、$28$/$19$），都不用交換，結束，共 $\mathbf{4}$ 次，這也是最好
+情況 $O(n)$ 的來源。 沒有提早結束的版本不論輸入都比 $n(n-1)/2 = 10$ 次，最好情況就變成 $O(n^2)$。
+只交換相鄰且嚴格逆序的兩個數，相等的不會換位置，穩定；只用常數額外空間，in-place。
+
+\textbf{Insertion}：第 $i$ 個數往前插入，和前一個比一次就發現不用移（例如 $46$ 和 $50$ 比，
+$46 < 50$，已在正確位置），$4$ 個數各比 $1$ 次，共 $\mathbf{4}$ 次。 最壞（反序）$n(n-1)/2$ 次，
+$O(n^2)$。 遇到相等就停，不會越過相等的數，穩定；in-place。
+
+\textbf{Merge}（題目規定奇數時後半段多一個）：$\langle 50, 46 \rangle \mid \langle 37, 28, 19
+\rangle$，後者再切成 $\langle 37 \rangle \mid \langle 28, 19 \rangle$。
+\begin{itemize}[nosep]
+\item 合併 $\langle 50 \rangle$、$\langle 46 \rangle$：$1$ 次；合併 $\langle 28 \rangle$、
+$\langle 19 \rangle$：$1$ 次。
+\item 合併 $\langle 37 \rangle$、$\langle 28, 19 \rangle$：$37$ 比 $28$，$37$ 先放，左邊用完，剩下
+照抄：$1$ 次。
+\item 合併 $\langle 50, 46 \rangle$、$\langle 37, 28, 19 \rangle$：$50$ 比 $37$、$46$ 比 $37$，左邊
+用完：$2$ 次。
+\end{itemize}
+共 $1 + 1 + 1 + 2 = \mathbf{5}$ 次。 時間不論輸入都是 $\Theta(n \lg n)$；合併要 $O(n)$ 的輔助
+陣列，不是 in-place；相等時取左邊的，穩定（資結書第~14.4~節）。
+
+\textbf{Quick}（取第一個當 pivot，分割時 pivot 和其餘每個數各比一次）：降冪時「比 pivot 大」的
+放左邊。 $50$ 是最大的，其餘 $4$ 個都放右邊，比 $4$ 次；接著 $\langle 46, 37, 28, 19 \rangle$
+的 pivot $46$ 又是最大的，比 $3$ 次；依此類推，共 $4 + 3 + 2 + 1 = \mathbf{10}$ 次。 這正是
+「已排好的輸入 $+$ 取第一個當 pivot」的最壞情況，$O(n^2)$；平均和最好 $O(n \lg n)$。 分割在原
+陣列內交換，視為 in-place（遞迴堆疊另需 $O(\lg n)$ 到 $O(n)$）；長距離交換會打亂相等鍵的順序，
+不穩定（資結書第~14.5~節）。 （若用資結書虛擬碼~14.10 的 Hoare 分割，$i$、$j$ 兩邊掃描時會多比
+幾次，次數會略有不同；題目沒有指定分割法，這裡用最常見的「每個數和 pivot 比一次」的算法。）
+
+\textbf{Radix}（base 10，LSD）：每一位用計數排序分到 $10$ 個桶子，共 $d$ 趟，每趟 $O(n + 10)$，
+所以最好、最壞都是 $O(d(n + 10)) = O(dn)$。 它不比較兩個鍵的大小，\textbf{比較次數是 $0$}（本例
+$d = 2$，做 $2$ 趟分配：先依個位 $0, 6, 7, 8, 9$，再依十位）。 需要桶子或輸出陣列，$O(n + 10)$
+額外空間，不是 in-place；每一趟必須穩定，整體才正確，所以是穩定的（資結書第~15.2.2~節）。
+
+\textbf{Selection}：第 $i$ 趟在剩下的 $n - i + 1$ 個裡找最大值，比 $n - i$ 次，不論輸入都是
+$4 + 3 + 2 + 1 = \mathbf{10}$ 次，最好、最壞都 $O(n^2)$。 in-place；把最大值和第 $i$ 格交換時，
+可能把相等的鍵換到後面，不穩定，例如 $\langle 2_a, 2_b, 3 \rangle$ 排降冪，第一趟 $3$ 和 $2_a$
+交換得 $\langle 3, 2_b, 2_a \rangle$。
+\end{pastsoln}

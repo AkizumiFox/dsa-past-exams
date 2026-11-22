@@ -1,0 +1,82 @@
+\begin{pastexam}[label={px:ccu-111-swa-12}]{中正資工所甲組 111 學年度 第 20 題}
+（問答）
+
+(4\%) Derive the optimal ternary Huffman code for the following symbols with probabilities
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Symbols & $\alpha$ & $\beta$ & $\gamma$ & $\delta$ & $\varepsilon$ & $\theta$ & $\eta$\\ \hline
+Probabilities & 0.25 & 0.2 & 0.15 & 0.14 & 0.13 & 0.08 & 0.05\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+三元（ternary）碼用 $0, 1, 2$ 三個符號，碼樹的每個內部節點有 $3$ 個子節點。 做法是
+資結書第~19.3.7~節的 $k$ 路合併，$k = 3$：先補虛擬符號，再每次合併機率最小的三個。
+
+\textbf{要不要補虛擬符號。} $r = 7$ 個符號，$(r - 1) \bmod (k - 1) = 6 \bmod 2 = 0$，
+$d = 0$，不用補。 每次合併讓節點少 $2$ 個，$7 \to 5 \to 3 \to 1$，三次合併剛好剩一個。
+
+\textbf{合併過程。}
+\begin{enumerate}
+\item 最小的三個：$\eta$ $0.05$、$\theta$ $0.08$、$\varepsilon$ $0.13$，合成 $0.26$。 剩下
+$0.14, 0.15, 0.2, 0.25, 0.26$。
+\item 最小的三個：$\delta$ $0.14$、$\gamma$ $0.15$、$\beta$ $0.2$，合成 $0.49$。 剩下
+$0.25, 0.26, 0.49$。
+\item 合併 $\alpha$ $0.25$、$0.26$、$0.49$，得到根 $1.00$。
+\end{enumerate}
+
+每個內部節點的三個子節點，依機率由小到大標 $0, 1, 2$（這是本解答的約定；換一種標法碼不
+同，碼長和平均碼長都一樣）：
+
+\begin{center}
+\begin{tikzpicture}[x=1.2cm,y=1.15cm,
+  gr-leaf/.style={rectangle, draw=black!65, fill=coreFill, align=center, font=\scriptsize, inner sep=1.6pt, minimum width=0.55cm},
+  gr-inner/.style={circle, draw=black!65, fill=white, minimum size=0.6cm, inner sep=0pt, font=\scriptsize},
+  gr-edge/.style={draw=black!60},
+  gr-bit/.style={font=\tiny, text=black!60, inner sep=1pt}]
+\node[gr-inner] (r) at (1.0,0) {1.00};
+\node[gr-leaf] (a) at (-2.0,-1.2) {$\alpha$\\.25};
+\node[gr-inner] (m1) at (0.6,-1.2) {.26};
+\node[gr-inner] (m2) at (3.6,-1.2) {.49};
+\node[gr-leaf] (h) at (-0.4,-2.4) {$\eta$\\.05};
+\node[gr-leaf] (t) at (0.6,-2.4) {$\theta$\\.08};
+\node[gr-leaf] (e) at (1.6,-2.4) {$\varepsilon$\\.13};
+\node[gr-leaf] (d) at (2.6,-2.4) {$\delta$\\.14};
+\node[gr-leaf] (g) at (3.6,-2.4) {$\gamma$\\.15};
+\node[gr-leaf] (b) at (4.6,-2.4) {$\beta$\\.20};
+\draw[gr-edge] (r) -- node[gr-bit, above left] {0} (a);
+\draw[gr-edge] (r) -- node[gr-bit, left] {1} (m1);
+\draw[gr-edge] (r) -- node[gr-bit, above right] {2} (m2);
+\draw[gr-edge] (m1) -- node[gr-bit, left] {0} (h);
+\draw[gr-edge] (m1) -- node[gr-bit, left] {1} (t);
+\draw[gr-edge] (m1) -- node[gr-bit, right] {2} (e);
+\draw[gr-edge] (m2) -- node[gr-bit, left] {0} (d);
+\draw[gr-edge] (m2) -- node[gr-bit, left] {1} (g);
+\draw[gr-edge] (m2) -- node[gr-bit, right] {2} (b);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c*{7}{c}}
+\toprule
+符號 & $\alpha$ & $\beta$ & $\gamma$ & $\delta$ & $\varepsilon$ & $\theta$ & $\eta$ \\
+\midrule
+碼 & \texttt{0} & \texttt{22} & \texttt{21} & \texttt{20} & \texttt{12} & \texttt{11} & \texttt{10} \\
+碼長 & 1 & 2 & 2 & 2 & 2 & 2 & 2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+平均碼長 $0.25 \cdot 1 + (0.2 + 0.15 + 0.14 + 0.13 + 0.08 + 0.05) \cdot 2 = 0.25 + 1.5 =
+1.75$ 個三元符號，也等於三個內部節點的機率和 $1 + 0.26 + 0.49 = 1.75$（和
+資結書引理~19.6 同樣的數法）。
+
+也可以直接驗證沒有更好的碼。 碼長 $1$ 的碼最多兩個（三個就把 $0, 1, 2$ 用完，其他符號沒有
+碼可用）。 用了兩個時，其他五個符號共用剩下的一個開頭；那個開頭底下，碼長 $2$ 的碼佔
+$1/9$、碼長 $3$ 的佔 $1/27$，合起來不能超過 $1/3$，所以碼長 $2$ 的最多兩個，至少三個符號碼
+長 $\ge 3$，平均至少 $(0.25 + 0.2) \cdot 1 + (0.15 + 0.14) \cdot 2 + (0.13 + 0.08 + 0.05) \cdot 3 =
+1.81$。 碼長 $1$ 的碼不超過一個時，平均至少 $0.25 \cdot 1 + 0.75 \cdot 2 = 1.75$。 所以
+$1.75$ 是最小值。
+\end{pastsoln}

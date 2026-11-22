@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-113-dsa-19}]{中興資工所甲組 113 學年度 選擇題第 19 題}
+（單選；答錯不倒扣）
+
+Which of the following sorting algorithms has the best time complexity for sorting a randomly ordered list
+of integers? (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item Bubble Sort
+\item Quick Sort
+\item Insertion Sort
+\item Selection Sort
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+「隨機順序」的輸入看的是平均情況（資結書第~14.7~節的比較表）：
+\begin{itemize}
+\item (A) 氣泡排序：平均 $\Theta(n^2)$。 隨機排列的逆序數期望值是 $n(n-1)/4$，每次相鄰交換只消掉一個逆序。
+\item (B) 快速排序：平均 $\Theta(n \log n)$（資結書第~14.5~節）。
+\item (C) 插入排序：時間是 $\Theta(n + \text{逆序數})$，平均也是 $\Theta(n^2)$。
+\item (D) 選擇排序：不管輸入都比較 $n(n-1)/2$ 次，$\Theta(n^2)$。
+\end{itemize}
+只有快速排序是 $\Theta(n \log n)$，選 (B)。 它的最壞情況是 $\Theta(n^2)$，但題目問的是隨機輸入。
+\end{pastsoln}

@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-111-dsa-14}]{中央資工所 111 學年度 問答題第 2 題}
+（問答）
+
+(13\%) You are going on a long hiking trip. You start on the road at kilometer post 0. Along the way
+there are $n$ hotels, at kilometer posts $a_1 < a_2 < \cdots < a_n$, where each $a_i$ is measured
+from the starting point. The only places you are allowed to stop are at these hotels, but you can
+choose which of the hotels you stop at. You must stop at the final hotel (at distance $a_n$), which
+is your destination. You'd ideally like to travel 20 kilometers a day, but this may not be
+possible. If you travel $x$ kilometers during a day, the penalty for that day is $(20-x)^2$. You
+want to plan your trip so as to minimize the total penalty. Give an algorithm that determines the
+optimal sequence of hotels at which to stop. (Note: This problem can be solved by a dynamic
+programming algorithm. If you use a dynamic programming algorithm to solve this problem, please
+write down the recursive formula of the algorithm, describe the meaning of the notations you used
+in the formula, give the initial value settings, and analyze the time complexity of the algorithm.)
+\end{pastexam}
+
+\begin{pastsoln}
+照資結書第~18.1.5~節的步驟：定義子問題、寫遞迴式、給初值、決定填表順序、記錄選擇以便還原答案。
+
+\textbf{記號。} 令 $a_0 = 0$（起點）。 $P[j]$（$0 \le j \le n$）表示「從起點出發、這一天結束時停在旅館
+$j$」的所有走法裡，到目前為止的總懲罰的最小值。 $\mathit{prev}[j]$ 記錄達到 $P[j]$ 時，前一晚停在哪裡。
+
+\textbf{遞迴式。} 最後一天是從某個 $i < j$ 走到 $j$，走 $a_j - a_i$ 公里，懲罰 $(20 - (a_j - a_i))^2$；
+在那之前是一個停在 $i$ 的走法，它本身也必須是最佳的（否則換成停在 $i$ 的最佳走法，總懲罰會更小）。 所以
+\[
+P[j] = \min_{0 \le i < j} \Bigl( P[i] + \bigl(20 - (a_j - a_i)\bigr)^2 \Bigr), \qquad 1 \le j \le n,
+\]
+$\mathit{prev}[j]$ 是取到最小值的 $i$。
+
+\textbf{初值。} $P[0] = 0$：還沒出發，沒有懲罰。 答案是 $P[n]$（一定要停在最後一家）。
+
+\begin{pseudo}{旅館停靠的最小懲罰}
+\Function{Hotel-Stops}{$a, n$} \Comment{$a[1..n]$ 遞增}
+    \State $a[0] \gets 0$;\ $P[0] \gets 0$
+    \For{$j \gets 1$ \To $n$}
+        \State $P[j] \gets \infty$
+        \For{$i \gets 0$ \To $j - 1$}
+            \State $c \gets P[i] + (20 - (a[j] - a[i]))^2$
+            \If{$c < P[j]$}
+                \State $P[j] \gets c$;\ $\mathit{prev}[j] \gets i$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $S \gets$ 空串列;\ $j \gets n$
+    \While{$j > 0$}
+        \State 把 $j$ 加到 $S$ 的最前面;\ $j \gets \mathit{prev}[j]$
+    \EndWhile
+    \State \Return $P[n]$ 和停靠的旅館序列 $S$
+\EndFunction
+\end{pseudo}
+
+$P[j]$ 只用到 $P[0..j-1]$，所以 $j$ 由小到大填。 還原時從 $n$ 沿 $\mathit{prev}$ 往回走到 $0$，倒過來就是
+要停的旅館。
+
+\textbf{例子。} 旅館在 $12, 21, 33, 40$ 公里：$P[1] = 8^2 = 64$；$P[2] = \min(0 + 1^2,\; 64 + 11^2) = 1$；
+$P[3] = \min(0 + 13^2,\; 64 + 1^2,\; 1 + 8^2) = 65$；$P[4] = \min(0 + 20^2,\; 64 + 8^2,\; 1 + 1^2,\;
+65 + 13^2) = 2$。 最佳是停 $21$、$40$ 兩家，總懲罰 $2$。
+
+\textbf{時間。} 外層 $n$ 輪，第 $j$ 輪的內層做 $j$ 次 $O(1)$ 的計算，共
+$\sum_{j=1}^{n} j = n(n+1)/2 = \Theta(n^2)$；還原 $O(n)$。 總時間 $\Theta(n^2)$，空間 $\Theta(n)$。
+\end{pastsoln}

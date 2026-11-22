@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-111-dsa-04}]{中央資工所 111 學年度 複選題第 4 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Consider a height-biased leftist tree (HBLT). Let \textbf{w}(x) be the number of internal nodes in
+the subtree with root x. Which of the following statements are false?
+\begin{enumerate}[label=(\Alph*)]
+\item The length of the lefttmost path from internal node x to an external node must be no greater
+than $\log_2$(\textbf{w}(x)+1).
+\item The height of the subtree with root x must be no greater than $\log_2$(\textbf{w}(x)+1).
+\item Removing minimum of an n-element min HBLT is done in time O($\log$ n).
+\item Melding two n-element min HBLTs is done in time $\theta(\log$ n).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)（題目問的是\textbf{錯誤}的敘述）。 原卷 lefttmost 是 leftmost 的錯字。
+
+高度左傾樹（資結書第~8.5~節）：$s(x)$ 是從 $x$ 到最近的外部節點的距離，每個內部節點都滿足
+$s(\text{左孩子}) \ge s(\text{右孩子})$。 資結書定理~8.2：以 $x$ 為根的子樹至少有 $2^{s(x)} - 1$ 個
+內部節點，而且一路往\textbf{右}走到外部節點恰好是 $s(x)$ 步，所以\textbf{最右}路徑的長度
+$\le \log_2(w(x) + 1)$。 左邊沒有這種限制。
+
+反例都用同一棵樹：$4$ 個節點一路往左接成一條鏈（每個節點只有左孩子）。 每個節點的右孩子是外部節點，
+$s = 1$，左孩子的 $s$ 都 $\ge 1$，所以它是高度左傾樹。 根的 $w = 4$，$\log_2 5 \approx 2.32$。
+\begin{itemize}
+\item (A) 錯誤，要選。 從根沿最左路徑走到外部節點要 $4$ 步，$4 > 2.32$。 正確的敘述是「最右」路徑。
+\item (B) 錯誤，要選。 這棵樹的高度是 $4$（算節點數；算邊數也有 $3$），都大於 $2.32$。 左傾樹可以
+很不平衡，高度沒有對數上界。
+\item (C) 正確。 刪除最小值就是拿掉根，再合併它的左右子樹，合併是 $O(\log n)$（見 (D)）。
+\item (D) 正確，不選。 合併只沿著兩棵樹的最右路徑往下走，每一步 $O(1)$，步數不超過兩條最右路徑長度
+之和，每條 $\le \log_2(n + 1)$，所以 $O(\log n)$。 最壞情況確實要這麼多步（例如兩棵都是完滿二元樹，
+最右路徑長 $\Theta(\log n)$，而且鍵值交錯，兩條路徑每一層都要走到），所以最壞情況是
+$\theta(\log n)$。 （像上面那條左鏈，最右路徑只有一個節點，合併很快就結束；$\theta$ 指最壞情況。）
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:df3-105-ds-04}]{地方三等資訊處理 105 年 第四題}
+（申論；25 分）
+
+有一浮點數三維陣列（three dimensional array）float A [6] [7] [10]；假設 sizeof(float)＝4：
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請問此陣列共佔多少位元組？（10 分）
+\item[㈡] 若 A[0][0][0] 在記憶體中的位址為 03C4$_{16}$，則元素 A[5] [2] [9] 的位址為何？（15 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $1680$ 位元組；㈡ $09\mathrm{B}0_{16}$。
+
+\textbf{㈠} 元素個數 $6 \times 7 \times 10 = 420$，每個 $4$ 位元組，共 $420 \times 4 = 1680$ 位元組。
+
+\textbf{㈡} 宣告寫成 C 的 \texttt{float A[6][7][10]}，C 的多維陣列是\textbf{以列為主}（row-major）存放：
+最右邊的下標變化最快（資結書第~4.1~節）。 $A[i][j][k]$ 前面有：
+\begin{itemize}
+\item $i$ 個完整的「$7 \times 10$ 平面」，每個 $70$ 個元素；
+\item 同一平面裡 $j$ 個完整的列，每列 $10$ 個元素；
+\item 同一列裡 $k$ 個元素。
+\end{itemize}
+所以位址
+\[
+\mathrm{loc}(A[i][j][k]) = \mathrm{loc}(A[0][0][0]) + (70 i + 10 j + k) \times 4 .
+\]
+代入 $i = 5$、$j = 2$、$k = 9$：
+\[
+70 \cdot 5 + 10 \cdot 2 + 9 = 350 + 20 + 9 = 379, \qquad 379 \times 4 = 1516 .
+\]
+把位移換成十六進位：$1516 = 5 \cdot 256 + 236 = 5 \cdot 256 + 14 \cdot 16 + 12$，即 $5\mathrm{EC}_{16}$。
+相加（逐位、由右往左，滿 $16$ 進位）：
+\[
+\begin{array}{r@{\;}c@{\;}c@{\;}c}
+ & 3 & \mathrm{C} & 4 \\
++ & 5 & \mathrm{E} & \mathrm{C} \\
+\hline
+ & 9 & \mathrm{B} & 0
+\end{array}
+\]
+個位 $4 + 12 = 16$，寫 $0$ 進 $1$；十六位 $12 + 14 + 1 = 27 = 16 + 11$，寫 B 進 $1$；第三位 $3 + 5 + 1 = 9$。
+$A[5][2][9]$ 的位址是 $9\mathrm{B}0_{16}$（$= 2480$；$03\mathrm{C}4_{16} = 964$，$964 + 1516 = 2480$）。
+
+檢查：$A[5][2][9]$ 不是最後一個元素（最後一個是 $A[5][6][9]$，位移 $419 \times 4 = 1676$），位址落在陣列
+範圍 $964$ 到 $964 + 1680 - 1$ 之內。
+
+補充：若改用以行為主（column-major，最左邊的下標變化最快，例如 Fortran），位移是
+$(i + 6j + 42k) \times 4 = (5 + 12 + 378) \times 4 = 1580$，位址 $09\mathrm{F}0_{16}$。 題目用 C 的宣告方式，
+答案以列為主的 $09\mathrm{B}0_{16}$ 為準。
+\end{pastsoln}

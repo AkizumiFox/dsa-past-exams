@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:gw3-111-ds-01}]{關務三等資訊處理 111 年 第一題}
+（申論；30 分）
+
+請分別以 big O notation 表示下列各個小題的時間複雜度（time complexity）：（每小題 10 分，共 30 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 2022 n ln n+111 n$^{1.001}$
+\item[㈡] 2022 n$^3$2$^\text{n}$+111 n$^2$3$^\text{n}$
+\item[㈢] 2022 n!+2$^\text{n}$
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $O(n^{1.001})$；㈡ $O(n^2 3^n)$；㈢ $O(n!)$。
+
+做法（資結書第~1.5、1.6~節）：多項相加時，$O$ 由成長最快的那一項決定，常數係數去掉。 判斷兩項 $f$、$g$ 誰快，看
+$\lim_{n\to\infty} f(n)/g(n)$：極限是 $0$ 表示 $g$ 比較快。 若 $f = O(g)$，則 $af + bg \le (a + b)\,g$（$n$ 夠大），
+所以和是 $O(g)$；又和 $\ge b\,g$，其實是 $\Theta(g)$。
+
+\textbf{㈠} 比較 $n \ln n$ 和 $n^{1.001}$：
+\[
+\frac{n \ln n}{n^{1.001}} = \frac{\ln n}{n^{0.001}} \to 0,
+\]
+因為對任何 $\epsilon > 0$，$\ln n = o(n^{\epsilon})$（用羅必達：$\frac{1/n}{\epsilon n^{\epsilon - 1}} = \frac{1}{\epsilon n^{\epsilon}}
+\to 0$）。 所以 $n^{1.001}$ 是主項，答案 $\mathbf{O(n^{1.001})}$。 這裡容易答錯成 $O(n \log n)$：$n^{0.001}$ 成長得極慢，要
+$n$ 非常大（約 $e^{9118}$ 以上）才會超過 $\ln n$，實際數值上 $2022\,n \ln n$ 一直比較大；但漸近符號只看 $n \to \infty$，
+指數 $1.001 > 1$ 的多項式終究勝過 $n \log n$。
+
+\textbf{㈡} 比較 $n^3 2^n$ 和 $n^2 3^n$：
+\[
+\frac{n^3 2^n}{n^2 3^n} = n \Bigl(\frac{2}{3}\Bigr)^n \to 0,
+\]
+因為底數小於 $1$ 的指數函數趨近 $0$ 的速度比任何多項式成長都快。 所以 $n^2 3^n$ 是主項，答案 $\mathbf{O(n^2 3^n)}$。
+（不能再化簡成 $O(3^n)$：$n^2 3^n / 3^n = n^2 \to \infty$。）
+
+\textbf{㈢} 比較 $n!$ 和 $2^n$：$n \ge 4$ 時
+\[
+\frac{2^n}{n!} = \frac{2}{1} \cdot \frac{2}{2} \cdot \frac{2}{3} \cdots \frac{2}{n} \le 2 \cdot \Bigl(\frac{2}{3}\Bigr)^{n-2} \to 0,
+\]
+所以 $n!$ 是主項，答案 $\mathbf{O(n!)}$。 （若要寫成更「基本」的函數，可以用 Stirling 公式
+$n! = \Theta\bigl(\sqrt{n}\,(n/e)^n\bigr)$，或寫 $O(n^n)$，但 $O(n^n)$ 不是緊的界，作答寫 $O(n!)$ 最好。）
+\end{pastsoln}

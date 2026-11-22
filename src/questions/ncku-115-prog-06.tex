@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ncku-115-prog-06}]{成大資訊聯招 115 學年度 資料結構複選第 9 題}
+（複選；答對得 4 分）
+
+[4\%] You need operations: \texttt{insert}$(x)$, \texttt{delete}$(x)$, \texttt{find}$(x)$, and also
+``\texttt{find predecessor/successor of} $x$''. Please select all that are correct for the
+predecessor/successor queries.
+\begin{enumerate}[label=(\Alph*),nosep]
+\item A red-black tree supports the queries in O($\log n$) worst case when the input is a key $x$.
+\item A binary heap supports the queries in O($\log n$) worst case when the input is a key $x$.
+\item A B+ tree supports the queries in O(1) average time when the input is a key $x$.
+\item An AVL tree supports the queries in O($\log n$) worst case when the input is a key $x$.
+\item Hashing supports the queries in O(1) average time when the input is a key $x$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。
+
+前驅、後繼問的是「依大小排序後，$x$ 的前一個、後一個」，資料結構必須保留鍵的大小順序。
+\begin{itemize}
+\item (A) 對。 紅黑樹是二元搜尋樹，從根往下找 $x$，沿路記下最後一次往右轉（找前驅）或往左轉（找後繼）
+的節點，走到底就知道答案（資結書第~9.1~節）。 一趟從根到葉，高度最壞 $O(\lg n)$（資結書定理~10.4）。
+\item (B) 錯。 二元堆積只保證父節點不大於子節點，兄弟之間、不同子樹之間沒有順序。 給 $x$ 找前驅，
+只能把 $n$ 個元素都看一遍，$\Theta(n)$。 連 \texttt{find}$(x)$ 本身都要 $\Theta(n)$。
+\item (C) 錯。 B$^+$ 樹的葉子串成串列，\textbf{已經站在 $x$ 的葉子上}時，往旁邊走一格是 $O(1)$；但題目
+的輸入是鍵 $x$，得先從根走到葉子，要 $\Theta(\log_t n)$ 層（$t$ 是最小分支數），仍是對數時間，不是
+$O(1)$。
+\item (D) 對。 理由同 (A)；AVL 樹高度 $< 1.4405 \lg(n+1)$（資結書定理~10.1）。
+\item (E) 錯。 雜湊把鍵打散到各格，和大小順序無關。 \texttt{find}$(x)$ 平均 $O(1)$，但要找比 $x$ 小的
+最大鍵，只能掃過整張表，$\Theta(n + m)$。
+\end{itemize}
+資結書第~10.5~節的比較表也列了這一點：要有序操作（前驅、後繼、範圍查詢、第 $k$ 小）就用平衡搜尋樹，
+只要查詢、插入、刪除就用雜湊。
+\end{pastsoln}

@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ncku-112-prog-10}]{成大資訊聯招 112 學年度 第 10 題}
+（複選）
+
+{[5\%]} Please identify which of the following statement(s) is (are) true.
+\begin{enumerate}[label=(\Alph*)]
+\item Tries outperform digital search trees in terms of the number of comparison operations performed.
+\item Compared with tries, compressed tries take less storage overheads.
+\item Patricia outperforms compressed tries in terms of storage overheads.
+\item Both Patricia and digital search trees take the identical complexity of storage overheads.
+\item Patricia outperforms digital search trees in terms of the number of comparison operations
+performed.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)(D)(E)，全對。
+
+「comparison operations」指的是整個鍵的比較（一次比較要比完 $b$ 個位元，是貴的操作）；看單一位元決定往左
+往右不算。 資結書第~11.5.4~節的比較表（$n$ 個 $b$ 位元的鍵）：
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+& 節點數 & 搜尋時比幾次整個鍵 & 搜尋時看幾個位元 \\
+\midrule
+數位搜尋樹 & $n$ & 最多 $b + 1$ & 最多 $b$ \\
+二元 trie & 分支節點最多 $nb$，加 $n$ 個元素節點 & $1$ & 最多 $b$ \\
+壓縮二元 trie & $2n - 1$ & $1$ & 最多 $\min(b, n - 1)$ \\
+Patricia & $n$（含標頭） & $1$ & 最多 $\min(b, n - 1)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item (A) 對。 數位搜尋樹每經過一個節點都要把整個鍵和 $k$ 比一次，最多 $b + 1$ 次；trie 一路只看位元，走到
+元素節點才比\textbf{一次}整個鍵。
+\item (B) 對。 壓縮 trie 把只有一個子節點的分支節點拿掉，節點數從最多約 $nb$ 降到 $2n - 1$，儲存的額外負擔
+較少。
+\item (C) 對。 Patricia 再把元素節點也拿掉、鍵放進分支節點，只要 $n$ 個節點，比壓縮二元 trie 的 $2n - 1$ 少。
+\item (D) 對。 兩者都是 $n$ 個節點，每個節點一個鍵、兩個指標（Patricia 多一個 $\mathit{bit}$ 欄位），空間都是
+$\Theta(n)$ 個節點。
+\item (E) 對。 Patricia 和 trie 一樣只在最後比一次整個鍵，數位搜尋樹最多比 $b + 1$ 次。
+\end{itemize}
+\end{pastsoln}

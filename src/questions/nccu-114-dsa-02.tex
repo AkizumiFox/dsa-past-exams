@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:nccu-114-dsa-02}]{政大資科所 114 學年度 第 2 題}
+（單選；每題 4 分。 「the above question」是第 1 題：兩個集合大小是 $n$、$m$，$n<m$，求交集的
+時間）
+
+(4\%) Consider again the above question, what if the sets are implemented using AVL trees,
+instead of sorted lists?
+
+A.~O($n$+$m$) \qquad B.~O($n\times m$) \qquad C.~O($n$log$m$) \qquad D.~O($m$log$n$) \qquad
+E.~O(log$n\times$log$m$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+改用 AVL 樹以後，大的集合可以在 $O(\log m)$ 時間內搜尋一個鍵：AVL 樹的高度
+$h < 1.4405 \lg(m + 1)$（資結書定理~10.1），搜尋沿一條路徑往下走，$O(h) = O(\log m)$。 所以
+\begin{enumerate}
+\item 中序走訪小的那棵樹（$n$ 個節點，$O(n)$），
+\item 每拿到一個鍵，就到大的那棵樹裡搜尋，找到就放進交集，
+\end{enumerate}
+共 $n$ 次搜尋，$O(n \log m)$。 這正是 AVL 樹比串列多出來的能力：串列不能跳著找。
+
+另一種做法是把兩棵樹都中序走訪成排好序的序列，再照第 1 題合併掃描，是 $O(n + m)$。 兩種都對，
+實際該用哪一種看 $n$ 和 $m$ 差多少：$n$ 遠小於 $m$（例如 $n \log m < m$）時 C 的做法比較快。
+題目特別問「改用 AVL 樹」有什麼不同，要的是利用平衡樹搜尋 $O(\log m)$ 的 C。 作答時可以把
+$O(\min(n + m,\ n \log m))$ 的說明一起寫上。
+
+逐項檢查：
+\begin{itemize}
+\item A.~$O(n + m)$：做得到，但沒有用到 AVL 樹能快速搜尋的特性，就是第 1 題的答案；不是本題要的
+答案。
+\item B.~$O(n \times m)$：不必逐一比對，錯。
+\item C.~$O(n \log m)$：小集合的每個元素在大樹裡搜尋一次，對。
+\item D.~$O(m \log n)$：拿大集合的每個元素到小樹裡搜尋，要搜尋 $m$ 次。 $x / \log x$ 在 $x \ge 3$
+時遞增，$3 \le n < m$ 時 $n / \log n < m / \log m$，也就是 $n \log m < m \log n$，D 一定不比 C 好，錯。
+\item E.~$O(\log n \times \log m)$：交集可能有 $n$ 個元素，輸出就要 $\Omega(n)$，錯。
+\end{itemize}
+\end{pastsoln}

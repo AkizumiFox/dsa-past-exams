@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ccu-113-swa-18}]{中正資工所甲組 113 學年度 第 23 題}
+（問答）
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\small,>={Stealth[length=2mm]}]
+\node[draw,circle,minimum size=5.5mm,inner sep=0pt] (a) at (2.70,-0.57) {a};
+\node[draw,circle,minimum size=5.5mm,inner sep=0pt] (b) at (0.80,-2.12) {b};
+\node[draw,circle,minimum size=5.5mm,inner sep=0pt] (e) at (4.55,-2.12) {e};
+\node[draw,circle,minimum size=5.5mm,inner sep=0pt] (c) at (1.60,-4.41) {c};
+\node[draw,circle,minimum size=5.5mm,inner sep=0pt] (d) at (3.80,-4.41) {d};
+\draw[->] (b)--node[above left,inner sep=1pt]{3}(a);
+\draw[->] (a)--node[pos=0.25,left,inner sep=2pt]{7}(c);
+\draw[->] (a)--node[pos=0.68,right,inner sep=3pt]{1}(d);
+\draw[->] (e)--node[above right,inner sep=1pt]{4}(a);
+\draw[->] (b)--node[pos=0.2,above,inner sep=2pt]{8}(e);
+\draw[->] (b)--node[left,inner sep=4pt]{-4}(c);
+\draw[->] (d)--node[pos=0.3,above right,inner sep=1pt]{2}(b);
+\draw[->] (c)--node[below]{6}(d);
+\draw[->] (d)--node[right,inner sep=4pt]{-5}(e);
+\end{tikzpicture}
+\end{center}
+
+(8\%) Given the above graph (graph on right-hand side with 5 vertices), determine if each of the following algorithm options (a-h) can be used to find the shortest paths of user-specified pair/pairs of vertices: (a) Kruskal's algorithm; (b) Dijkstra's algorithm; (c) Ford-Fulkerson Algorithm; (d) Johnson's algorithm; (e) Bellman-Ford algorithm; (f) Jarvis's march algorithm; (g) Floyd-Warshall algorithm; (h) Huffman algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(d) Johnson、(e) Bellman--Ford、(g) Floyd--Warshall 可以；(a) Kruskal、(b) Dijkstra、(c) Ford--Fulkerson、
+(f) Jarvis's march、(h) Huffman 不可以（(b) 是「不保證正確」）。
+
+\textbf{先看圖。} 有向邊：$b \to a$：$3$、$a \to c$：$7$、$a \to d$：$1$、$e \to a$：$4$、$b \to e$：$8$、$b \to c$：$-4$、
+$d \to b$：$2$、$c \to d$：$6$、$d \to e$：$-5$。 有兩條負邊。 檢查有沒有負環：這張圖的簡單環一共七個，權重如下
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+環 & 權重 \\
+\midrule
+$a \to d \to b \to a$ & $1 + 2 + 3 = 6$ \\
+$a \to d \to e \to a$ & $1 - 5 + 4 = 0$ \\
+$b \to c \to d \to b$ & $-4 + 6 + 2 = 4$ \\
+$a \to c \to d \to b \to a$ & $7 + 6 + 2 + 3 = 18$ \\
+$a \to c \to d \to e \to a$ & $7 + 6 - 5 + 4 = 12$ \\
+$b \to e \to a \to d \to b$ & $8 + 4 + 1 + 2 = 15$ \\
+$b \to e \to a \to c \to d \to b$ & $8 + 4 + 7 + 6 + 2 = 27$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+都 $\ge 0$，沒有負環，所以每一對頂點的最短距離都有定義。 這是「有負邊、無負環的有向圖」，要選能處理負邊的最短路徑演算法。
+
+逐項：
+\begin{itemize}
+\item (a) Kruskal：求無向圖的最小生成樹（資結書第~24.2~節），不是最短路徑，也不處理有向邊。 不可以。
+\item (b) Dijkstra：要求邊權非負（資結書第~25.2.5~節）。 它取出頂點就認定距離確定，負邊可能讓之後的路徑更短而它不會回頭改，
+所以\textbf{不保證}正確，不能拿來用。 （這張圖實際從每個起點跑一次，結果剛好都對，但那是巧合，不是演算法的保證。）
+\item (c) Ford--Fulkerson：求最大流（資結書第~26.3~節），問題不同。 不可以。
+\item (d) Johnson：用一次 Bellman--Ford 算出 $h$ 重新賦權，使所有邊權非負，再對每個起點跑 Dijkstra（資結書第~25.7~節）。
+允許負邊，只要沒有負環。 可以，適合求所有點對。
+\item (e) Bellman--Ford：單一起點最短路徑，允許負邊，還能偵測負環（資結書第~25.3~節）。 指定的點對 $(u, v)$ 從 $u$ 跑一次即可；
+要所有點對就每個起點跑一次。 可以。
+\item (f) Jarvis's march：求平面點集的凸包（gift wrapping），和圖無關。 不可以。
+\item (g) Floyd--Warshall：所有點對最短路徑，允許負邊、無負環即可（資結書第~25.6~節）。 可以。
+\item (h) Huffman：建最佳前綴碼（資結書第~19.3~節）。 不可以。
+\end{itemize}
+
+供對照，所有點對的最短距離（列是起點，行是終點，依 $a, b, c, d, e$）：
+\[
+\begin{pmatrix}
+0 & 3 & -1 & 1 & -4 \\
+1 & 0 & -4 & 2 & -3 \\
+5 & 8 & 0 & 6 & 1 \\
+-1 & 2 & -2 & 0 & -5 \\
+4 & 7 & 3 & 5 & 0
+\end{pmatrix}
+\]
+例如 $a$ 到 $e$：$a \to d \to e$，$1 - 5 = -4$；$a$ 到 $c$：$a \to d \to b \to c$，$1 + 2 - 4 = -1$，比直接的 $7$ 短很多。
+\end{pastsoln}

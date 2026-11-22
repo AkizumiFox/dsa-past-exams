@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-01}]{中山資工所資安組 114 學年度 第 1 題}
+（計算）
+
+{[10\%]} There are how many different ways we can write the number of 13 as a sum of positive
+integers, where the order of the summands is considered relevant.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$2^{12} = 4096$ 種。
+
+順序有關的寫法叫做 $13$ 的\textbf{合成}（composition），例如 $13 = 1 + 12$ 和 $13 = 12 + 1$ 算兩種，
+只有一項的 $13 = 13$ 也算一種。
+
+\textbf{對應到「切或不切」}。 把 $13$ 寫成 $13$ 個 $1$ 排成一列：
+\[
+1 \,\square\, 1 \,\square\, 1 \,\square\, \cdots \,\square\, 1,
+\]
+相鄰兩個 $1$ 之間有 $12$ 個空隙。 每個空隙選擇「切」或「不切」，切開後每一段裡 $1$ 的個數就是
+一個加數，由左到右依序寫下來就是一種合成。 反過來，給一種合成 $13 = s_1 + s_2 + \cdots + s_k$
+（每個 $s_i \ge 1$），在第 $s_1$、$s_1 + s_2$、$\ldots$、$s_1 + \cdots + s_{k-1}$ 個 $1$ 後面切，
+就得到唯一的切法。 兩邊一一對應，所以合成的個數等於 $12$ 個空隙各選切或不切的方法數
+$2^{12} = 4096$。
+
+\textbf{另一種算法}：分成 $k$ 項的合成，等於從 $12$ 個空隙裡選 $k - 1$ 個切，有
+$\binom{12}{k-1}$ 種（資結書第~A.3~節）。 $k$ 從 $1$ 到 $13$ 加起來：
+\[
+\sum_{k=1}^{13} \binom{12}{k-1} = \sum_{j=0}^{12} \binom{12}{j} = 2^{12} = 4096 .
+\]
+一般地，正整數 $n$ 的合成有 $2^{n-1}$ 種。 小例子核對：$n = 3$ 有 $3$、$2+1$、$1+2$、$1+1+1$
+四種，正是 $2^{2} = 4$。
+\end{pastsoln}

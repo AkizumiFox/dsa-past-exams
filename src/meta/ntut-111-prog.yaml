@@ -1,0 +1,10 @@
+paper: ntut-111-prog
+volume: 2
+school: 北科大
+dept: 資工所
+year: 111
+subject: 程式設計
+instructions: 1. 本試題共 6 題，共 100 分。 2. 不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。 3. 全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-111-prog-01, label: 第 1 題 1-1-I, chapter: 20}
+  - {id: ntut-111-prog-02, label: 第 3 題 3-3、3-4, chapter: 14}

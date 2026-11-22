@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:nccu-114-dsa-09}]{政大資科所 114 學年度 第 9 題}
+（單選；每題 4 分）
+
+(4\%) Given an undirected connected graph $G$ of $n$ vertices and $m$ edges, which of the following
+statement concerning spanning trees is \textbf{false}?
+\begin{enumerate}[label=\Alph*.]
+\item The minimum spanning tree should not include the heaviest edge in any cycle of $G$.
+\item The maximum spanning tree can be found by modifying Kruskal's algorithm to sort edges in
+descending order by weight.
+\item Each spanning tree contains exactly $n$-1 edges.
+\item Both Prim's and Kruskal's algorithms are greedy algorithms.
+\item Heap is commonly used to implement Kruskal's Algorithm for finding minimum spanning tree
+efficiently.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E。 這題要注意 A 在權重有相同時說得不夠嚴謹，見下面 A 的說明；整體來看，題目要考的錯誤
+敘述是 E。
+
+逐項檢查：
+\begin{itemize}
+\item A.~這是環性質（資結書定理~24.3）：環上\textbf{唯一}最重的邊不在任何一棵最小生成樹裡。 如果
+環上有好幾條邊一樣重，例如三角形三條邊都是 $1$，任何一棵最小生成樹都含其中兩條「最重的邊」，這時
+A 字面上不成立；定理在這種情形只保證「有一棵」最小生成樹不含它。 在一般出題時「權重互不相同」的
+默認下，A 是對的。
+\item B.~對。 Kruskal 演算法的正確性只靠「依序考慮、不形成環就加入」這個貪心選擇；把邊由大到小
+排序，同樣的證明（把權重全部取負號）給出最大生成樹。
+\item C.~對。 $n$ 個頂點的樹恰好有 $n - 1$ 條邊，生成樹是包含全部頂點的樹。
+\item D.~對。 兩者每一步都選目前最便宜、而且不破壞條件的邊，選了就不再反悔，正確性都由切割性質
+（資結書定理~24.1）保證，是貪心法。
+\item E.~錯，這是答案。 Kruskal 演算法（資結書虛擬碼~24.2）的兩個關鍵是\textbf{把邊排序}和
+用\textbf{互斥集合}（union--find）判斷兩端是否已經連通；瓶頸是排序 $O(m \log m)$，判斷環用互斥集合
+幾乎是常數時間（資結書第~24.2~節的分析）。 堆積才是 Prim 演算法的核心資料結構（資結書虛擬碼~24.3，
+用最小堆積取出 $\mathit{key}$ 最小的頂點）。 用最小堆積代替排序、一條一條取出最小的邊也可以，
+但那只是排序的一種做法，不是讓 Kruskal 有效率的關鍵，說它「常用堆積實作」是把 Kruskal 和 Prim
+混在一起了。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,88 @@
+\begin{pastexam}[label={px:gw3-104-ds-03}]{關務三等資訊處理 104 年 第三題}
+（申論；20 分）
+
+佇列（Queue）結構的插入（Insert）和刪除（Delete）演算法如下：
+
+{\small
+\noindent const int N=10; int Rear=0, Front=0;\\[2pt]
+\begin{minipage}[t]{0.47\linewidth}
+\begin{tabbing}
+\hspace*{1.2em}\=\hspace*{1.5em}\=\hspace*{1.5em}\=\kill
+void Insert(char item, char Queue[])\\
+\{ \> if (Rear==N-1)\\
+\>\> cout$<<$``Queue Is Full'';\\
+\> else\\
+\> \{ \> Rear=Rear+1;\\
+\>\> Queue[Rear]=item;\\
+\> \}\\
+\}
+\end{tabbing}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.47\linewidth}
+\begin{tabbing}
+\hspace*{1.2em}\=\hspace*{1.5em}\=\hspace*{1.5em}\=\kill
+void Delete(char item, char Queue[])\\
+\{ \> if (Front==Rear)\\
+\>\> cout$<<$``Queue Is Empty'';\\
+\> else\\
+\> \{ \> Front =Front + 1;\\
+\>\> item = Queue[Front];\\
+\> \}\\
+\}
+\end{tabbing}
+\end{minipage}
+}
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 請問上述演算法的佇列結構，會有什麼問題存在？（5 分）
+\item[㈡] 可用什麼資料結構解決？（5 分）
+\item[㈢] 承上之資料結構，請寫出插入（Insert）和刪除（Delete）演算法。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 線性佇列的空間不會回收：Rear 到了 N-1 就說滿了，即使前面已經刪掉很多、空出位置（假溢位）。 ㈡ 環狀佇列
+（circular queue）。 ㈢ 程式在下面。
+
+\textbf{㈠ 問題。} 這是線性佇列：Front 指向第一個元素的前一格，Rear 指向最後一個元素，兩者都只會往後移。
+\begin{itemize}
+\item \textbf{假溢位}：Insert 只看 Rear 是否到了 N-1。 例如連續插入 $9$ 個（Rear $= 9$）再刪除 $9$ 個（Front $= 9$），
+佇列是空的，Insert 卻仍然說「Queue Is Full」。 刪除後空出的 Queue[0..Front] 永遠用不到。
+\item \textbf{位置 0 永遠不用}：Rear 先加一再存，第一個元素放在 Queue[1]，Queue[0] 浪費掉，最多只能同時存 N-1 $= 9$ 個。
+\item 要避免假溢位，只能在 Rear 到底時把所有元素往前搬，每次 $O(n)$，很慢。
+\item （另外，Delete 的 \texttt{item} 是傳值參數，取到的值傳不回呼叫端，應改成傳參考 \texttt{char \&item} 或用回傳值；
+下面的寫法一併修正。）
+\end{itemize}
+
+\textbf{㈡} 用\textbf{環狀佇列}：把陣列想成頭尾相接的環，索引用 $\bmod N$ 前進，Rear 到了 N-1 之後繞回 0，前面空出的位置
+可以重複使用（資結書第~6.2~節）。
+
+\textbf{㈢} 沿用題目的約定（Front 指向第一個元素的前一格、Rear 指向最後一個元素，開始時都是 $0$）。 Front $=$ Rear
+表示空；為了和空分開，滿的條件是「Rear 再前進一格就碰到 Front」，所以留一格不用，最多存 N-1 個（要用滿 N 格可以另加
+計數器或旗標）。
+\begin{minted}[fontsize=\small]{cpp}
+const int N = 10;
+int Rear = 0, Front = 0;
+
+void Insert(char item, char Queue[])
+{
+    if ((Rear + 1) % N == Front)          // 再放就和 Front 重疊：滿
+        cout << "Queue Is Full";
+    else {
+        Rear = (Rear + 1) % N;            // 到 N-1 之後繞回 0
+        Queue[Rear] = item;
+    }
+}
+
+void Delete(char &item, char Queue[])
+{
+    if (Front == Rear)                    // 空
+        cout << "Queue Is Empty";
+    else {
+        Front = (Front + 1) % N;
+        item = Queue[Front];
+    }
+}
+\end{minted}
+兩個操作都是 $O(1)$。 例如 $N = 10$ 時插入 $9$ 個、刪除 $9$ 個之後 Front $=$ Rear $= 9$，再插入時 Rear 變成 $0$，
+Queue[0] 也被用上，不會再有假溢位。 元素個數隨時是 $(\text{Rear} - \text{Front} + N) \bmod N$。
+\end{pastsoln}

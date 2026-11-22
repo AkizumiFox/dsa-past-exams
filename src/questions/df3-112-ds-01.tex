@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:df3-112-ds-01}]{地方三等資訊處理 112 年 第一題}
+（申論；12 分）
+
+請以 C, C++, C\#, Java 或 Python 撰寫 2 個方法，一個以迴圈方式，一個以遞迴方式，對存在
+singular linked list 的資料進行 linearly search。假設 Node 的結構如下：（12 分）
+\begin{minted}[fontsize=\small, style=perldoc]{java}
+class Node {
+    int data=0;
+    Node next=null;
+    Node(int dd, Node nn) { data=dd; next=nn; }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 singular linked list 指單向鏈結串列（singly linked list）。 給的 \texttt{Node} 是 Java
+（或 C\#）的寫法，下面用 Java。 兩個方法的規格相同：傳入串列第一個節點 \texttt{head} 和要找的
+值 \texttt{key}，傳回第一個 \texttt{data == key} 的節點，找不到傳回 \texttt{null}（也可以改成
+傳回位置或 \texttt{boolean}，寫法一樣）。
+
+\textbf{迴圈版}：從頭一個一個往後看，看到相等的就停（資結書虛擬碼~5.1）。
+\begin{minted}[fontsize=\small, style=perldoc]{java}
+static Node searchIter(Node head, int key) {
+    Node p = head;
+    while (p != null && p.data != key)   // 還有節點、而且不是要找的
+        p = p.next;                       // 往下一個
+    return p;     // 找到時 p 是那個節點；走到串列尾端時 p 是 null
+}
+\end{minted}
+\texttt{while} 條件裡先檢查 \texttt{p != null} 再讀 \texttt{p.data}，空串列或走到尾端時不會
+對 \texttt{null} 取欄位（\texttt{\&\&} 是短路求值）。
+
+\textbf{遞迴版}：把串列看成「第一個節點，加上後面那一條比較短的串列」。
+\begin{minted}[fontsize=\small, style=perldoc]{java}
+static Node searchRec(Node p, int key) {
+    if (p == null)          // 空串列：找不到
+        return null;
+    if (p.data == key)      // 第一個節點就是
+        return p;
+    return searchRec(p.next, key);   // 否則到後面那一條找
+}
+\end{minted}
+\textbf{正確性}：對串列長度 $n$ 歸納。 $n = 0$ 時傳回 \texttt{null}，正確。 $n \ge 1$ 時，若第一個
+節點的值等於 \texttt{key} 就傳回它，它正是第一個符合的；否則第一個符合的節點（若有）一定在後面
+長度 $n - 1$ 的串列裡，由歸納假設遞迴呼叫會傳回它或 \texttt{null}。 迴圈版的不變量是「\texttt{p}
+之前的節點都不等於 \texttt{key}」，道理相同。
+
+例：串列 $7 \to 3 \to 9$，找 $3$：兩個方法都看 $7$、$3$，傳回存 $3$ 的節點；找 $5$：看完 $7$、$3$、
+$9$ 後走到 \texttt{null}，傳回 \texttt{null}。
+
+\textbf{複雜度}：兩者最壞都要看完 $n$ 個節點，時間 $O(n)$（找到第 $k$ 個就停，比較 $k$ 次）。
+空間不同：迴圈版 $O(1)$；遞迴版每往後一個節點就多一層呼叫，最壞 $O(n)$ 的呼叫堆疊，串列很長時
+可能堆疊溢位。 遞迴版的遞迴呼叫是最後一個動作（尾遞迴），可以直接改寫成迴圈版（資結書
+第~6.4~節）。
+\end{pastsoln}

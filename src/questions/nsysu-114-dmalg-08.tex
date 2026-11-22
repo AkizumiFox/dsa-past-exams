@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-08}]{中山資工所資安組 114 學年度 第 9 題}
+（設計）
+
+(Algorithm Points) {[10\%]} Given a knapsack with maximum capacity $Q$ and a set $L$ consisting of
+$n$ items, where each item $i$ has weight $w_i$ and benefit value $a_i$. Please describe an
+algorithm in detail based on dynamic programming for packing the items in a knapsack to achieve a
+maximum total benefit value and analyze the time complexity of the algorithm. ($w_i$, $a_i$, $n$,
+and $Q$ are integer values.)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：0/1 背包。 令 $B[i, c]$ 是「只用前 $i$ 件物品、容量 $c$」的最大總價值，
+$B[i, c] = \max\bigl(B[i-1, c],\ B[i-1, c - w_i] + a_i\bigr)$（第二項只在 $w_i \le c$ 時有），
+答案是 $B[n, Q]$。 時間 $\Theta(nQ)$，空間 $\Theta(nQ)$（只要最大值可以降到 $\Theta(Q)$）。
+
+題目沒說每件物品能不能拿多件或切開；「packing the items」照一般的讀法，每件物品拿或不拿
+（0/1 背包，資結書第~18.5~節）。 假設 $w_i \ge 1$、$a_i \ge 0$，$Q \ge 0$。
+
+\textbf{子問題和遞迴式}。 考慮最佳解裡第 $i$ 件物品：
+\begin{itemize}
+\item 沒拿：剩下的就是「前 $i - 1$ 件、容量 $c$」的最佳解，價值 $B[i-1, c]$。
+\item 拿了（需要 $w_i \le c$）：其餘物品是「前 $i - 1$ 件、容量 $c - w_i$」的一組可行解，而且必須
+是最佳的，否則換成更好的那組，總價值會更大（最佳子結構）。 價值 $B[i-1, c - w_i] + a_i$。
+\end{itemize}
+所以
+\[
+B[i, c] =
+\begin{cases}
+0, & i = 0, \\
+B[i-1, c], & i \ge 1,\ w_i > c, \\
+\max\bigl(B[i-1, c],\ B[i-1, c - w_i] + a_i\bigr), & i \ge 1,\ w_i \le c .
+\end{cases}
+\]
+$B[i, \cdot]$ 只用到 $B[i-1, \cdot]$，所以 $i$ 由小到大填表即可。
+
+\begin{pseudo}{0/1 背包}
+\Function{Knapsack}{$w, a, n, Q$}
+    \For{$c \gets 0$ \To $Q$}
+        \State $B[0, c] \gets 0$
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \For{$c \gets 0$ \To $Q$}
+            \State $B[i, c] \gets B[i - 1, c]$ \Comment{不拿第 $i$ 件}
+            \If{$w_i \le c$ \AND $B[i - 1, c - w_i] + a_i > B[i, c]$}
+                \State $B[i, c] \gets B[i - 1, c - w_i] + a_i$ \Comment{拿第 $i$ 件}
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $S \gets \emptyset$；$c \gets Q$ \Comment{回溯找出拿了哪些}
+    \For{$i \gets n$ \DownTo $1$}
+        \If{$B[i, c] \ne B[i - 1, c]$}
+            \State $S \gets S \cup \{i\}$；$c \gets c - w_i$
+        \EndIf
+    \EndFor
+    \State \Return $(B[n, Q], S)$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 對 $i$ 歸納：$B[0, c] = 0$ 正確（沒有物品可拿）；假設第 $i - 1$ 列都正確，第 $i$
+列照上面的兩種情況取較大者，涵蓋了所有可能（拿或不拿第 $i$ 件），所以也正確。 回溯時
+$B[i, c] \ne B[i-1, c]$ 表示不拿第 $i$ 件達不到 $B[i, c]$，一定拿了，容量扣掉 $w_i$ 往上一列找；
+相等時不拿也能達到最佳值，就不拿。
+
+\textbf{時間複雜度}。 表格有 $(n + 1)(Q + 1)$ 格，每格 $O(1)$，填表 $\Theta(nQ)$；回溯 $O(n)$。
+總時間 $\Theta(nQ)$，空間 $\Theta(nQ)$。 只要最大值時，每一列只用到上一列，可以用一維陣列、
+$c$ 由大到小更新，空間降到 $\Theta(Q)$（資結書第~18.5.4~節）。
+
+注意 $\Theta(nQ)$ 是\textbf{擬多項式時間}：輸入裡 $Q$ 只佔 $\lg Q$ 個位元，$Q$ 對輸入長度而言是
+指數大小。 0/1 背包的判定版本是 NP 完備的，這個演算法並不是多項式時間演算法；只有 $Q$ 不大時才
+有效率。
+\end{pastsoln}

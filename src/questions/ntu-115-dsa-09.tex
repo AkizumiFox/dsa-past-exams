@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-115-dsa-09}]{臺大資工所 115 學年度 第 9 題}
+（單選）
+
+(4 points) Which property of the root of unity $W_n=e^{2\pi i/n}$, where $n$ is a power of 2, allows the Cooley-Tukey fast-fourier transform algorithm to achieve its speedup in time complexity?
+\begin{enumerate}[label=(\Alph*)]
+\item \textbf{The Magnitude Property:} $|W_n^k|=1$ for all $k$.
+\item \textbf{The Symmetry Property:} $W_n^{k+n/2}=-W_n^k$, allowing dividing the problem into even/odd subproblems.
+\item \textbf{The Orthogonality Property:} The sum of all roots $\sum_{k=0}^{N-1}W_n^k=0$.
+\item \textbf{The Conjugate Property:} $W_n^{n-k}=\overline{W_n^k}$.
+\item \textbf{The Count Property:} There are exactly $n$ unique roots $W_n^k$ across all $k$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+快速傅立葉轉換不在資結書的範圍，以下把需要的部分講清楚。 要算 $n$ 次多項式
+$A(x) = \sum_{j=0}^{n-1} a_j x^j$ 在 $W_n^0, W_n^1, \ldots, W_n^{n-1}$ 這 $n$ 個點的值。 把係數依奇偶分開：
+\[
+A(x) = A_{\text{even}}(x^2) + x \cdot A_{\text{odd}}(x^2),
+\]
+$A_{\text{even}}$、$A_{\text{odd}}$ 各有 $n/2$ 個係數。 關鍵是 $W_n^{k + n/2} = -W_n^k$（因為 $W_n^{n/2} = e^{\pi i} = -1$），
+於是 $(W_n^{k + n/2})^2 = (W_n^k)^2 = W_{n/2}^k$：$n$ 個點平方以後只剩 $n/2$ 個不同的值，正好是 $n/2$ 次單位根。
+所以兩個子問題的規模都是 $n/2$，而且
+\[
+A(W_n^k) = E_k + W_n^k O_k, \qquad A(W_n^{k + n/2}) = E_k - W_n^k O_k \qquad (0 \le k < n/2),
+\]
+$E_k$、$O_k$ 是兩個子問題在 $W_{n/2}^k$ 的值。 合併只要 $\Theta(n)$，$T(n) = 2T(n/2) + \Theta(n) = \Theta(n \log n)$
+（資結書定理~2.4 情況 2）。 這一步靠的就是 (B) 的對稱性質；$n$ 是 $2$ 的次方，才能一路對半分下去。
+
+其他選項：
+\begin{itemize}
+\item (A) $|W_n^k| = 1$：說的是所有點都在單位圓上，和能不能把問題對半分無關。
+\item (C) 所有根的和是 $0$：這是反轉換（由點值求回係數）時用到的性質，不是加速的來源。 （題目把上限寫成
+$N - 1$，應是 $n - 1$。）
+\item (D) $W_n^{n-k} = \overline{W_n^k}$：輸入是實數時可以省一半計算，但不改變 $\Theta(n \log n)$ 這個量級，也不是
+分治的依據。
+\item (E) 恰有 $n$ 個不同的根：任何 $n$ 個不同的點都滿足，用一般的 $n$ 個點求值要 $\Theta(n^2)$，沒有加速。
+\end{itemize}
+\end{pastsoln}

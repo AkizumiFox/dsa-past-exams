@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncku-112-prog-06}]{成大資訊聯招 112 學年度 第 6 題}
+（複選）
+
+{[5\%]} Which of the following statements is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The maximum number of data items stored in an m-way search tree is $m^h$-1, where h is the height
+of the tree.
+\item An 2-3-4 tree is a B-tree of order 5.
+\item Any internal node (excluding the root) has at a least ceil(m/2) children in an B-tree of order m.
+\item The external nodes on the same level in an B-tree.
+\item An Red-Black tree is a binary tree form of an 2-3 tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)(D)。
+
+(B)(C)(D)(E) 四句和中正資工所甲組 114 學年度第 2 題的 (a)(b)(c)(d) 幾乎一樣（歷屆試題~\ref{px:ccu-114-swa-02}）。
+\begin{itemize}
+\item (A) 對。 高度數節點（根在第 $1$ 層）。 $m$ 路搜尋樹每個節點最多 $m - 1$ 個鍵、$m$ 個子節點，第 $i$ 層
+最多 $m^{i-1}$ 個節點。 高度 $h$ 最多 $1 + m + \cdots + m^{h-1} = \frac{m^h - 1}{m - 1}$ 個節點，鍵數最多
+$(m - 1) \cdot \frac{m^h - 1}{m - 1} = m^h - 1$（資結書第~11.2.2~節）。
+\item (B) 錯。 2-3-4 樹的節點最多 $4$ 個子節點，是 $4$ 階 B 樹（資結書第~11.2~節）。 $5$ 階 B 樹的非根節點至少
+$2$ 個鍵、最多 $4$ 個鍵，和 2-3-4 樹（$1$ 到 $3$ 個鍵）不同。
+\item (C) 對。 這是 $m$ 階 B 樹定義的一條（資結書定義~11.2）：根以外的內部節點至少 $\lceil m/2 \rceil$ 個子節點。
+\item (D) 對。 句子少了動詞，意思是「B 樹的外部節點都在同一層」。 B 樹所有葉節點在同一層，外部節點（代表搜尋
+失敗的位置）都是葉節點的子節點，所以都在下一層。
+\item (E) 錯。 紅黑樹對應的是 2-3-4 樹（資結書第~11.1.6~節）：一個黑節點和它的紅色子節點合起來是 2-3-4 樹的
+一個節點，黑節點有兩個紅子時就是 4-節點，2-3 樹沒有這種節點。
+\end{itemize}
+\end{pastsoln}

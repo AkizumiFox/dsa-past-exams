@@ -1,0 +1,96 @@
+\begin{pastexam}[label={px:df3-102-ds-04}]{地方三等資訊處理 102 年 第四題}
+（申論；15 分）
+
+請參考圖 2。每一條線段上的數字代表兩節點間的距離。請找出 a 節點到 k 節點的最短路徑的長度。並請說明你的方法
+如何應用在非常大型的圖裡。（15 分）
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small},
+  w/.style={font=\small,inner sep=1.5pt}]
+\node[v] (a) at (0.6,-2.6) {a};
+\node[v] (b) at (3.95,-0.8) {b};
+\node[v] (c) at (5.5,-0.67) {c};
+\node[v] (d) at (2.25,-2.15) {d};
+\node[v] (e) at (5.55,-2.95) {e};
+\node[v] (k) at (7.5,-2.85) {k};
+\node[v] (f) at (3.5,-3.7) {f};
+\node[v] (h) at (5.75,-4.1) {h};
+\node[v] (g) at (1.5,-4.35) {g};
+\draw (a) -- node[w,above left,pos=0.55] {16} (b);
+\draw (a) -- node[w,below,pos=0.45] {4} (d);
+\draw (a) -- node[w,left] {5} (g);
+\draw (b) -- node[w,above] {14} (c);
+\draw (b) -- node[w,above left,pos=0.45] {11} (d);
+\draw (b) -- node[w,above right,pos=0.35] {10} (e);
+\draw (c) -- node[w,right,pos=0.35] {27} (e);
+\draw (c) -- node[w,above right] {41} (k);
+\draw (d) -- node[w,above,pos=0.45] {49} (e);
+\draw (d) -- node[w,right,pos=0.45] {23} (f);
+\draw (d) -- node[w,right,pos=0.45] {3} (g);
+\draw (e) -- node[w,above] {21} (k);
+\draw (e) -- node[w,above left,pos=0.55] {7} (f);
+\draw (e) -- node[w,right] {12} (h);
+\draw (f) -- node[w,above left,pos=0.5] {17} (g);
+\draw (f) -- node[w,above,pos=0.55] {26} (h);
+\draw (g) -- node[w,below,pos=0.55] {13} (h);
+\draw (h) -- node[w,above left,pos=0.6] {35} (k);
+\node[font=\small] at (4.1,-5.0) {圖 2\quad 最短路徑};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a 到 k 的最短距離是 $46$，路徑 a--d--b--e--k（$4 + 11 + 10 + 21$）。 大型圖用相鄰串列加最小堆積的 Dijkstra，
+$O((|V| + |E|)\log |V|)$，並在 k 被選定時立即停止。
+
+\textbf{方法}：邊的長度都是正數，用 Dijkstra 演算法（資結書第~25.2~節，虛擬碼~25.3）。 $d[v]$ 是目前已知 a 到 $v$
+的最短距離，每輪選出未選定頂點中 $d$ 最小的 $u$，再對 $u$ 的每個鄰居 $v$ 做鬆弛 $d[v] \gets \min(d[v], d[u] + w(u,v))$。
+\begin{center}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lccccccccc}
+\toprule
+選定 & a & b & c & d & e & f & g & h & k \\
+\midrule
+初始 & 0 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+a (0) & \fbox{0} & 16 & $\infty$ & 4 & $\infty$ & $\infty$ & 5 & $\infty$ & $\infty$ \\
+d (4) & & \textbf{15} & $\infty$ & \fbox{4} & \textbf{53} & \textbf{27} & 5 & $\infty$ & $\infty$ \\
+g (5) & & 15 & $\infty$ & & 53 & \textbf{22} & \fbox{5} & \textbf{18} & $\infty$ \\
+b (15) & & \fbox{15} & \textbf{29} & & \textbf{25} & 22 & & 18 & $\infty$ \\
+h (18) & & & 29 & & 25 & 22 & & \fbox{18} & \textbf{53} \\
+f (22) & & & 29 & & 25 & \fbox{22} & & & 53 \\
+e (25) & & & 29 & & \fbox{25} & & & & \textbf{46} \\
+c (29) & & & \fbox{29} & & & & & & 46 \\
+k (46) & & & & & & & & & \fbox{46} \\
+\bottomrule
+\end{tabular}
+\end{center}
+各輪的更新：
+\begin{itemize}
+\item 選 a：b $= 16$，d $= 4$，g $= 5$。
+\item 選 d（$4$）：b $= \min(16, 4 + 11) = 15$；e $= 4 + 49 = 53$；f $= 4 + 23 = 27$；g $= \min(5, 4 + 3) = 5$ 不變。
+\item 選 g（$5$）：f $= \min(27, 5 + 17) = 22$；h $= 5 + 13 = 18$。
+\item 選 b（$15$）：c $= 15 + 14 = 29$；e $= \min(53, 15 + 10) = 25$。
+\item 選 h（$18$）：e $= \min(25, 18 + 12) = 25$ 不變；f $= \min(22, 18 + 26)$ 不變；k $= 18 + 35 = 53$。
+\item 選 f（$22$）：e $= \min(25, 22 + 7) = 25$ 不變。
+\item 選 e（$25$）：c $= \min(29, 25 + 27) = 29$ 不變；k $= \min(53, 25 + 21) = 46$。
+\item 選 c（$29$）：k $= \min(46, 29 + 41) = 46$ 不變。
+\item 選 k（$46$），結束。
+\end{itemize}
+最短距離 $d[\mathrm{k}] = \mathbf{46}$。 沿著「最後一次更新來自誰」往回追：k $\leftarrow$ e $\leftarrow$ b
+$\leftarrow$ d $\leftarrow$ a，路徑 a $\to$ d $\to$ b $\to$ e $\to$ k，$4 + 11 + 10 + 21 = 46$。 對照幾條看起來也
+可以的路：a--b--e--k 是 $16 + 10 + 21 = 47$；a--g--h--e--k 是 $5 + 13 + 12 + 21 = 51$；a--g--h--k 是 $53$。
+
+\textbf{應用在非常大型的圖。}
+\begin{itemize}
+\item \textbf{存法}：用相鄰串列（或壓縮成兩個陣列的 CSR 格式），空間 $O(|V| + |E|)$；相鄰矩陣要 $O(|V|^2)$，大圖放
+不下。
+\item \textbf{選最小值用最小堆積}：每輪線性掃描是 $O(|V|^2)$；用二元堆積（或配對堆積）維護未選定頂點的 $d$，
+總時間 $O((|V| + |E|)\log |V|)$（資結書第~25.2~節）。 只需要 a 到 k 時，\textbf{k 一被選定就停}，不必算完整張圖。
+\item \textbf{只展開需要的部分}：$d$ 用雜湊表存「已碰到的頂點」，沒碰到的視為 $\infty$，不必先配置 $|V|$ 格。
+\item \textbf{進一步加速}：雙向 Dijkstra（從 a、k 兩端同時搜尋，相遇即可停止）；有座標等估計值時用 A* 搜尋，用
+「到終點的直線距離」這類不會高估的下界引導方向，只展開靠近目標的頂點。 道路網這類實際應用還會事先建立分層
+（例如收縮階層），查詢時只走少數重要的頂點。
+\item \textbf{圖放不進記憶體}：把圖依區域分割存在磁碟，堆積只放邊界上的頂點；或用分散式運算（例如以平行的
+「逐輪鬆弛」做 Bellman--Ford 式的同步更新）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,10 @@
+paper: ntust-111-ice
+volume: 2
+school: 臺科大
+dept: 資工所
+year: 111
+subject: 資訊工程概論
+instructions: 總分為 100 分；所有試題務必於答案卷內頁依序作答，否則不予計分。
+questions:
+  - {id: ntust-111-ice-07, label: 第 7 題, chapter: 9}
+  - {id: ntust-111-ice-08, label: 第 8 題, chapter: 21}

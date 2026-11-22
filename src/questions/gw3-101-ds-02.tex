@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:gw3-101-ds-02}]{關務三等資訊處理 101 年 第二題}
+（申論）
+
+一個多人參與的電腦遊戲，在每一回合，將錢最多的人其三分之一的錢分給錢最少的人。試設計一個有效率的資料結構，
+並請說明所需儲存的資料、相關運算及時間複雜度。（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：每一回合要同時找最大值和最小值，而且兩個人的錢都會改變，適合用\textbf{雙端優先佇列}，例如最小最大堆積
+（min-max heap，資結書第~8.5~節）。 建立 $O(n)$，每一回合 $O(\log n)$（$n$ 是玩家人數）。
+
+\textbf{需求分析。} 每回合要做：找出錢最多的人 $p$、錢最少的人 $q$，$p$ 的錢減少 $\lfloor p.\mathit{money}/3 \rfloor$，
+$q$ 的錢增加同樣的數目。 兩人的錢改變之後，下一回合的最大、最小可能換人。 若每回合掃描全部玩家要 $O(n)$；
+只用最大堆積可以 $O(1)$ 找最大，但找最小要 $O(n)$。 所以需要兩端都能快速取出的結構。
+
+\textbf{儲存的資料。}
+\begin{itemize}
+\item 每個玩家一筆紀錄：玩家編號 $\mathit{id}$、目前的錢 $\mathit{money}$。
+\item 一個最小最大堆積 $H$，以 $\mathit{money}$ 為鍵，存放所有玩家的紀錄（放在陣列裡的完整二元樹；偶數層（根在
+第 $0$ 層）是最小層，節點不大於子孫；奇數層是最大層，節點不小於子孫，資結書定義~8.2）。 最小值在根，最大值是根
+的兩個子節點中較大的那一個。
+\end{itemize}
+
+\textbf{相關運算。}
+\begin{pseudo}{每一回合}
+\Procedure{Play-Round}{$H$}
+    \If{$H$ 的元素少於 $2$}
+        \State \Return
+    \EndIf
+    \State $p \gets$ \Call{Delete-Max}{$H$} \Comment{錢最多的人}
+    \State $q \gets$ \Call{Delete-Min}{$H$} \Comment{錢最少的人}
+    \State $t \gets \lfloor p.\mathit{money} / 3 \rfloor$
+    \State $p.\mathit{money} \gets p.\mathit{money} - t$
+    \State $q.\mathit{money} \gets q.\mathit{money} + t$
+    \State \Call{Insert}{$H, p$}；\Call{Insert}{$H, q$}
+\EndProcedure
+\end{pseudo}
+\begin{itemize}
+\item 建立：把 $n$ 個玩家放進陣列，用由下而上的方法建堆，$O(n)$。
+\item \proc{Delete-Min}、\proc{Delete-Max}、\proc{Insert}：最小最大堆積的高度 $O(\log n)$，每個都是 $O(\log n)$
+（資結書虛擬碼~8.5、8.6；取出最大值和取出最小值對稱）。
+\item 查最多、最少的人（不取出）：$O(1)$。
+\item 玩家加入、離開：加入是 \proc{Insert}，$O(\log n)$；離開要另外記錄每個玩家在陣列中的位置（帶索引的堆積，資結書
+第~8.3~節），從該位置刪除再調整，也是 $O(\log n)$。
+\end{itemize}
+所以每一回合是常數次 $O(\log n)$ 的操作，共 $O(\log n)$；跑 $r$ 回合共 $O(n + r \log n)$。
+
+\textbf{其他可行的設計。} 用平衡搜尋樹（例如紅黑樹，以 $(\mathit{money}, \mathit{id})$ 為鍵，資結書第~10.3~節）：最左、
+最右節點就是最少、最多，刪除再插入都是 $O(\log n)$，效果相同。 或用一個最大堆積加一個最小堆積，兩邊互存對方的
+位置（雙堆積），也是每回合 $O(\log n)$，但要同步兩份資料，較繁瑣。
+\end{pastsoln}

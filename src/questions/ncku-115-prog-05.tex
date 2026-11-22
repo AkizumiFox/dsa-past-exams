@@ -1,0 +1,233 @@
+\begin{pastexam}[label={px:ncku-115-prog-05}]{成大資訊聯招 115 學年度 資料結構單選題組 B（第 5--8 題）}
+（單選；每小題 3 分，答錯倒扣 1 分）
+
+B. A university plans to connect all campus buildings by fiber links. Each building is a vertex
+(ID = 0, 1, \dots, n-1), and each possible fiber link is an undirected edge \texttt{(a,b)} with
+installation cost w. Assume the cost w is an integer and satisfies $0 \le \mathrm{w} \le 10^9$. The
+following C program is designed to find the minimum cost of installing connections from the given links.
+When two edges have the same cost, the program orders them by \texttt{(a,b)} in increasing order (smaller
+\texttt{a} first; if \texttt{a} is the same, smaller \texttt{b} first). You must answer
+\textbf{Questions 5--8} based on the C program below.
+\begin{minted}[fontsize=\small]{c}
+typedef struct { int a, b, w; } E;
+static int *P, *S;
+static void f0(int n){
+    P = (int*)malloc(n * sizeof(int));
+    S = (int*)malloc(n * sizeof(int));
+    for(int i=0;i<n;i++){ P[i]=i; S[i]=1; }
+}
+static int f1(int x){
+    while(P[x]!=x){ P[x]=P[P[x]]; x=P[x]; }
+    return x;
+}
+static int f2(int x, int y){
+    x=f1(x); y=f1(y);
+    if(x==y) return 0;
+    if(S[x]<S[y]){ int t=x; x=y; y=t; }
+    P[y]=x; S[x]+=S[y];
+    return 1;
+}
+static int c0(const void *px, const void *py){
+    const E *x=(const E*)px, *y=(const E*)py;
+    if(x->w != y->w) return x->w - y->w;
+    if(x->a != y->a) return x->a - y->a;
+    return x->b - y->b;
+}
+int main(void){
+    int n, m;
+    if(scanf("%d %d", &n, &m)!=2) return 0;
+
+    E *e = (E*)malloc(m * sizeof(E));
+    for(int i=0;i<m;i++){
+        scanf("%d %d %d", &e[i].a, &e[i].b, &e[i].w);
+        if(e[i].a > e[i].b){
+            int t=e[i].a; e[i].a=e[i].b; e[i].b=t;
+        }
+    }
+    qsort(e, m, sizeof(E), c0);
+    f0(n);
+    int *U = (int*)malloc((n-1) * sizeof(int));
+    int *V = (int*)malloc((n-1) * sizeof(int));
+    int k=0;
+    long long total=0;
+    for(int i=0;i<m && k<n-1;i++){
+        if(f2(e[i].a, e[i].b)){
+            U[k]=e[i].a;
+            V[k]=e[i].b;
+            total += e[i].w;
+            k++;
+        }
+    }
+    printf("%lld %d\n", total, k);
+    free(e); free(U); free(V); free(P); free(S);
+    return 0;
+}
+\end{minted}
+\begin{enumerate}
+\item[5.] [3\%] Which description best matches what the program does to build the backbone?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item It starts from one vertex and repeatedly adds the cheapest edge that leaves the visited vertices.
+\item It sorts all edges by cost, scans them in that order, and adds an edge only if it connects two
+different groups.
+\item It visits vertices level by level using a queue and records a tree of visits.
+\item It repeatedly selects the closest vertex based on a distance array and updates distances.
+\item It computes shortest paths between every pair of vertices, then selects edges from those paths.
+\end{enumerate}
+
+\item[6.] [3\%] What is the program output for the following input?
+\begin{minted}[fontsize=\small]{text}
+Input:
+6 11
+0 1 4
+0 2 3
+0 3 6
+1 2 5
+1 4 2
+2 3 7
+2 5 8
+3 5 1
+4 5 9
+1 3 10
+0 4 11
+\end{minted}
+
+(A)~\texttt{16 5} \qquad (B)~\texttt{16 4} \qquad (C)~\texttt{15 5} \qquad (D)~\texttt{15 4}
+\qquad (E)~\texttt{14 4}
+
+\item[7.] [3\%] The backbone is the graph formed by the \texttt{k} chosen edges. A vertex is an
+articulation point if removing it (and its incident backbone edges) disconnects the backbone. For the
+dataset in Question 6, which set of vertices are articulation points in the backbone?
+
+(A)~$\{0, 1, 4\}$ \qquad (B)~$\{0, 2, 3\}$ \qquad (C)~$\{1, 3, 5\}$ \qquad (D)~$\{0, 1, 3\}$
+\qquad (E)~No articulation point
+
+\item[8.] [3\%] The operator wants one more feature: besides the current output, also print the number
+of connected components in the input graph (using all m edges). Print three integers in one line:
+\begin{center}\texttt{total \ k \ c}\end{center}
+where \texttt{c} is the number of connected components. Which modification is correct?
+
+\begin{enumerate}[label=(\Alph*)]
+\item Add the following code right before \texttt{printf(...)}, and change the printf format:
+\begin{minted}[fontsize=\small]{c}
+int c = 0;
+for(int i=0;i<n;i++){
+    if(f1(i) == i) c++;
+}
+printf("%lld %d %d\n", total, k, c);
+\end{minted}
+\item Add the following code right before \texttt{printf(...)}, and change the printf format:
+\begin{minted}[fontsize=\small]{c}
+int c = 0;
+for(int i=0;i<n;i++){
+    if(P[i] == -1) c++;
+}
+printf("%lld %d %d\n", total, k, c);
+\end{minted}
+\item Add the following code right before \texttt{printf(...)}, and change the printf format:
+\begin{minted}[fontsize=\small]{c}
+int c = 0;
+for(int i=0;i<n;i++){
+    if(S[i] == 1) c++;
+}
+printf("%lld %d %d\n", total, k, c);
+\end{minted}
+\item Add the following code right before \texttt{printf(...)}, and change the printf format:
+\begin{minted}[fontsize=\small]{c}
+int c = 0;
+for(int i=0;i<n;i++){
+    c += (P[i] == i);
+}
+printf("%lld %d %d\n", total, k, c);
+\end{minted}
+\item None of the above.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：5. (B)；6. (A)；7. (D)；8. (A) 和 (D) 都對（原卷是單選，見下面的說明）。
+
+四小題分屬：第 5、6 題 Kruskal 最小生成樹（資結書第~24.2~節），第 7 題割點（第~23.5~節），第 8 題
+互斥集合（第~13~章）。 整組放在本章。
+
+\textbf{讀程式。} \texttt{P}、\texttt{S} 是互斥集合森林（資結書第~13.2~節）：\texttt{P[x]} 是 $x$ 的
+父節點，根滿足 \texttt{P[x] == x}；\texttt{S[x]} 只在 $x$ 是根時有意義，是那棵樹的大小。
+\begin{itemize}
+\item \texttt{f0}：每個頂點自成一組。
+\item \texttt{f1}：find，往上走到根；\texttt{P[x]=P[P[x]]} 讓每個經過的節點改指向祖父，是路徑減半
+（路徑壓縮的一種，資結書第~13.2.3~節）。
+\item \texttt{f2}：union by size（資結書第~13.2.1~節）。 兩端已在同一組就回傳 $0$；否則把小的樹接到大的
+樹的根下，回傳 $1$。
+\item \texttt{c0}：先比成本，相同再比 \texttt{a}、再比 \texttt{b}；讀入時已經讓 \texttt{a < b}。
+\item 主迴圈：依成本由小到大看每條邊，兩端在不同組才選，選滿 $n - 1$ 條就停。
+\end{itemize}
+
+\textbf{5. 答案 (B)。} 這正是 Kruskal 演算法（資結書虛擬碼~24.2）。 (A) 是 Prim；(C) 是 BFS；(D) 是
+Dijkstra（或陣列版的 Prim）；(E) 像是 Floyd--Warshall 之類的所有點對最短路徑。 程式裡沒有佇列、
+距離陣列，只有排序加互斥集合。
+
+\textbf{6. 答案 (A)。} 排序後依序處理（$\{\cdot\}$ 是當時的分組）：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+邊 $(a, b)$ & 成本 & 動作 & 之後的分組 \\
+\midrule
+$(3, 5)$ & 1 & 選，$k = 1$ & $\{0\}\{1\}\{2\}\{3,5\}\{4\}$ \\
+$(1, 4)$ & 2 & 選，$k = 2$ & $\{0\}\{1,4\}\{2\}\{3,5\}$ \\
+$(0, 2)$ & 3 & 選，$k = 3$ & $\{0,2\}\{1,4\}\{3,5\}$ \\
+$(0, 1)$ & 4 & 選，$k = 4$ & $\{0,1,2,4\}\{3,5\}$ \\
+$(1, 2)$ & 5 & 跳過（同一組） & \\
+$(0, 3)$ & 6 & 選，$k = 5$ & $\{0,1,2,3,4,5\}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$k = 5 = n - 1$，迴圈停止，後面的 $(2,3,7)$、$(2,5,8)$、$(4,5,9)$、$(1,3,10)$、$(0,4,11)$ 都沒看。
+$\mathit{total} = 1 + 2 + 3 + 4 + 6 = 16$，輸出 \texttt{16 5}。 (B)(D)(E) 的 $k = 4$ 不可能：
+圖是連通的，生成樹一定有 $5$ 條邊。 (C) 的 $15$ 是把 $(1,2,5)$ 也算進去、漏掉 $(0,3,6)$ 的結果，但
+$(1,2)$ 會形成環。
+
+\textbf{7. 答案 (D)。} 骨幹是上面選的五條邊，它是一棵樹：
+\begin{center}
+\begin{tikzpicture}[x=1.5cm,y=1.3cm, v/.style={circle,draw=black!65,minimum size=6mm,inner sep=0pt,font=\small},
+  w/.style={font=\footnotesize,inner sep=1.5pt}]
+\node[v,fill=coreFill] (0) at (2,2) {0};
+\node[v,fill=coreFill] (1) at (0.6,1) {1};
+\node[v] (2) at (2,1) {2};
+\node[v,fill=coreFill] (3) at (3.4,1) {3};
+\node[v] (4) at (0.6,0) {4};
+\node[v] (5) at (3.4,0) {5};
+\draw (0) -- node[w,above left]{4} (1);
+\draw (0) -- node[w,left]{3} (2);
+\draw (0) -- node[w,above right]{6} (3);
+\draw (1) -- node[w,left]{2} (4);
+\draw (3) -- node[w,right]{1} (5);
+\end{tikzpicture}
+\end{center}
+樹裡拿掉一個\textbf{非葉}節點，它的各個鄰居就分到不同的連通塊（樹裡兩點之間只有一條路）；拿掉葉
+節點，剩下的仍是一棵樹。 所以樹的割點就是度數 $\ge 2$ 的頂點。 度數：$0$ 是 $3$，$1$ 和 $3$ 是 $2$，
+$2$、$4$、$5$ 是 $1$。 割點是 $\{0, 1, 3\}$（上圖藍底）。 檢查：拿掉 $0$ 剩 $\{1,4\}$、$\{2\}$、
+$\{3,5\}$；拿掉 $1$ 時 $4$ 被隔開；拿掉 $3$ 時 $5$ 被隔開。 其他選項都含有葉節點（$4$、$2$、$5$）或漏了
+割點。
+
+\textbf{8. (A)、(D) 都對。} 先確認迴圈提早停止不影響答案：
+\begin{itemize}
+\item 圖連通時，選滿 $n - 1$ 條邊就停，此時所有頂點已經在同一組，沒看的邊也不會再合併什麼，組數 $1$
+正確。
+\item 圖不連通時，選不滿 $n - 1$ 條，迴圈會把 $m$ 條邊全部看完，每條邊的兩端都被合併過，組數就是連通
+元件數。
+\end{itemize}
+所以迴圈結束後，\textbf{根的個數}就是連通元件數。
+\begin{itemize}
+\item (A) 對：\texttt{f1(i) == i} 表示 $i$ 自己是根。 呼叫 \texttt{f1} 會做路徑減半，但只改非根節點的
+\texttt{P}，不會改變誰是根。
+\item (B) 錯：\texttt{P} 裡存的都是 $0$ 到 $n-1$ 的頂點編號，從來不會是 $-1$（那是另一種寫法「根存
+負的大小」的慣例），$c$ 永遠是 $0$。
+\item (C) 錯：\texttt{S} 只有根的值有意義；被接到別人下面的節點，\texttt{S} 停在接上去時的值。 第 6 題的
+資料裡 $2$、$4$、$5$ 的 \texttt{S} 都還是 $1$（它們是被當成小樹接上去的單點），會數出 $3$，正確答案是 $1$。
+\item (D) 對：\texttt{P[i] == i} 正是「$i$ 是根」的定義，和 (A) 數的是同一件事，只是沒有順便壓縮路徑。
+\item (E) 錯：(A)、(D) 都正確。
+\end{itemize}
+原卷是單選題，但 (A) 和 (D) 對每一組輸入都印出相同的 $c$，兩個都正確，這一題有瑕疵；作答時選 (A) 或 (D)
+都應該給分。
+\end{pastsoln}

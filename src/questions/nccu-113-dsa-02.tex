@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nccu-113-dsa-02}]{政大資科所 113 學年度 第 2 題}
+（單選；不必說明理由）
+
+(4\%) Which of the following sorting algorithms has a best-case time complexity of $O(n)$?
+\begin{enumerate}[label=\Alph*.]
+\item Merge sort
+\item Insertion sort
+\item Quick sort
+\item Heap sort
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+\begin{itemize}
+\item[A.] 合併排序不看資料長什麼樣子，每次都切兩半、合併，遞迴式永遠是 $T(n) = 2T(n/2) + \Theta(n)$，最好也是
+$\Theta(n \lg n)$（資結書第~14.4~節）。 合併時就算一邊先用完，另一邊直接接上，比較次數至少也有 $n/2$ 量級，
+加總起來還是 $\Theta(n \lg n)$。
+\item[B.] 插入排序在輸入已經排好時，每個數只和前一個比一次就停，共 $n - 1$ 次比較，$\Theta(n)$
+（資結書第~1.3、1.8~節）。 對。
+\item[C.] 快速排序每一層分割都要把整段掃過一次；最好的情況是每次切成兩半，$\Theta(n \lg n)$
+（資結書第~14.5~節）。
+\item[D.] 堆積排序要做 $n - 1$ 次取出最大值，鍵互不相同時，最好情況也是 $\Theta(n \lg n)$
+（資結書第~14.6~節）。
+\end{itemize}
+補充：C、D 在「所有鍵都相同」這種特殊輸入下，用三路分割的快速排序或堆積排序可以是 $O(n)$；題目問的是一般
+課本上的最好情況，指鍵互不相同的輸入，答案只有插入排序。
+\end{pastsoln}

@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntust-113-ice-02}]{臺科大資工所 113 學年度 第 I-2 題}
+（複選）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) Select all the incorrect statements for minimum spanning trees.
+\begin{enumerate}[label=(\alph*)]
+\item Every spanning tree of an unweighted graph is a minimum spanning tree.
+\item If Kruskal's algorithm is performed on a graph that is not connected, then it finds a minimum
+spanning forest.
+\item If Prim's algorithm is performed on a graph that is not connected, then it finds a minimum
+spanning forest.
+\item To perform Kruskal's algorithm, the graph must be a connected graph.
+\item To perform Prim's algorithm, the graph must be a connected graph.
+\item Prim's algorithm is a greedy algorithm.
+\item Kruskal's algorithm is a greedy algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案：錯誤的是 (c)、(d)。
+
+注意題目要選的是\textbf{錯誤}的敘述。
+\begin{itemize}
+\item \textbf{(a) 正確。} 沒有權重等於每條邊權重相同（例如都是 $1$）。 $n$ 個頂點的連通圖，每棵
+生成樹都恰好 $n - 1$ 條邊，總權重都是 $n - 1$，所以每一棵都是最小生成樹。
+\item \textbf{(b) 正確。} Kruskal（資結書第~24.2~節）只看邊的權重和「兩端是否已在同一集合」，
+不需要圖連通。 不連通時，它對每個連通元件各自做了一次 Kruskal，最後得到 $n - c$ 條邊（$c$ 是連通
+元件數），就是最小生成森林。
+\item \textbf{(c) 錯誤。} Prim（資結書第~24.3~節）從一個起點長出一棵樹，每次加一條「一端在樹裡、
+一端不在」的最輕邊。 圖不連通時，長到起點所在的連通元件全部加入後，就再也沒有跨出去的邊，
+其他連通元件的頂點的 $\mathit{key}$ 一直是 $\infty$。 它只找到起點那個元件的最小生成樹，不是整個圖
+的最小生成森林（除非另外對每個沒走到的元件重新啟動，那已經不是原本的 Prim）。
+\item \textbf{(d) 錯誤。} 理由同 (b)：Kruskal 不需要圖連通。
+\item \textbf{(e) 正確。} 由 (c)，要用 Prim 得到整個圖的生成樹，圖必須連通。
+\item \textbf{(f)(g) 正確。} 兩者每一步都選「目前看起來最好」的邊（Prim 選跨越切割的最輕邊，
+Kruskal 選不成環的最輕邊），而且永不反悔，都是貪心演算法；正確性來自切割性質。
+\end{itemize}
+(c) 和 (e) 是一體的兩面：本書把「perform Prim's algorithm」讀成「用 Prim 求出生成樹」，所以 (e)
+正確、(c) 錯誤。
+\end{pastsoln}

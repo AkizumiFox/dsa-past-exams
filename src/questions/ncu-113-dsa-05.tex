@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncu-113-dsa-05}]{中央資工所 113 學年度 第 5 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Let LASTPOST, LASTIN and LASTPRE denote the last vertex visited in a postorder, inorder and preorder
+traversal, respectively. Which of the following are true?
+\begin{enumerate}[label=(\Alph*)]
+\item LASTIN = LASTPOST of a complete binary tree.
+\item LASTIN = LASTPRE of a full binary tree
+\item LASTPRE = LASTPOST of a full binary tree
+\item LASTIN = LASTPRE of a complete binary tree
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+這兩個英文名詞各書用法不同（資結書第~7.1~節的對照表）。 complete binary tree 照最常見的用法，指
+\textbf{完整二元樹}：除了最後一層都填滿，最後一層的節點靠左。 full binary tree 有人指\textbf{嚴格二元樹}
+（每個節點有 $0$ 個或 $2$ 個兒子），有人指\textbf{滿二元樹}（每一層都填滿）；滿二元樹也是嚴格二元樹，
+下面對嚴格二元樹證明的 (B) 兩種讀法都成立，(C) 的反例（$3$ 個節點）兩種讀法也都適用，答案不受影響。
+「成立」是指對所有這種樹都成立。
+
+先找出三種走訪最後拜訪的是誰（資結書第~7.3~節）：
+\begin{itemize}
+\item LASTPOST：後序最後印根，所以 LASTPOST 永遠是根。
+\item LASTIN：中序是左、根、右，最後一個是從根一路往右兒子走、走到沒有右兒子的那個節點 $r$。
+\item LASTPRE：前序是根、左、右，最後一個是從根出發，「有右兒子就往右，沒有右兒子就往左」，走到葉子為止。
+\end{itemize}
+
+\begin{itemize}
+\item (A) 錯。 只要根有右兒子，LASTIN 就不是根。 例如 $3$ 個節點的完整二元樹，中序是左、根、右，
+LASTIN 是右兒子，LASTPOST 是根。
+\item (B) 對。 在嚴格二元樹裡，$r$ 沒有右兒子，而每個節點不是 $0$ 個就是 $2$ 個兒子，所以 $r$ 也沒有
+左兒子，是葉子。 前序的走法在每個內部節點都有右兒子可走，走的正是同一條「一路往右」的路，停在同一片
+葉子 $r$。 所以 LASTIN = LASTPRE = $r$。
+\item (C) 錯。 LASTPOST 是根，LASTPRE 是葉子，只有一個節點的樹才會相同。 $3$ 個節點的滿二元樹就是反例。
+\item (D) 錯。 完整二元樹可能有「只有左兒子」的節點。 反例：根和它的左兒子，共 $2$ 個節點（是完整二元樹）。
+中序是左兒子、根，LASTIN 是根；前序是根、左兒子，LASTPRE 是左兒子。
+\end{itemize}
+\end{pastsoln}

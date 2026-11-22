@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nchu-114-dsa-15}]{中興資工所甲組 114 學年度 單選題第 15 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Consider a hash table implemented with open addressing (linear probing). If the load factor is close to 1, which of the following is most likely to occur?
+
+(A)~Decreased collision frequency\\
+(B)~Improved average search time\\
+(C)~Increased average number of probes per search\\
+(D)~No significant impact on performance
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+負載因子 $\alpha = n/m$（$n$ 筆資料、$m$ 格）。 線性探測的期望探測次數（Knuth 的近似式，資結書第~12.4~節）：
+\[
+\text{成功：} \frac{1}{2}\left(1 + \frac{1}{1 - \alpha}\right), \qquad
+\text{失敗：} \frac{1}{2}\left(1 + \frac{1}{(1 - \alpha)^2}\right).
+\]
+$\alpha \to 1$ 時兩個式子都趨近無限大。 例如 $\alpha = 0.5$ 時失敗搜尋約 $2.5$ 次，$\alpha = 0.9$ 時約
+$50.5$ 次，$\alpha = 0.99$ 時約 $5000.5$ 次。 原因是空格越來越少，而且線性探測會把資料擠成一長串
+（primary clustering），新的鍵值落在串裡就要一路走到串尾。
+\begin{itemize}
+\item (A) 表越滿，新鍵值落在已占用格子的機率越高，碰撞更多。 錯。
+\item (B) 平均搜尋時間變長，不是變短。 錯。
+\item (C) 對，見上。
+\item (D) 影響非常大。 實務上 $\alpha$ 超過某個門檻（例如 $0.5$ 到 $0.75$）就擴大表格重新雜湊。 錯。
+\end{itemize}
+\end{pastsoln}

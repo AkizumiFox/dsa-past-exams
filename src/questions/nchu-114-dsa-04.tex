@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-114-dsa-04}]{中興資工所甲組 114 學年度 單選題第 4 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Given a weighted directed graph with potential negative edge weights, which of the following algorithms would you use to compute the shortest path from a single source to all other vertices?
+
+(A)~Bellman-Ford Algorithm\\
+(B)~Kruskal's Algorithm\\
+(C)~Dijkstra's Algorithm\\
+(D)~Prim's Algorithm
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+\begin{itemize}
+\item (A) Bellman-Ford：把每條邊鬆弛 $n - 1$ 輪，邊權可以是負的，時間 $\Theta(nm)$；再多做一輪還能偵測
+從起點走得到的負環（資結書第~25.3~節）。 對。
+\item (B) Kruskal：求無向圖的最小生成樹，不是最短路徑。 錯。
+\item (C) Dijkstra：每次把目前距離最小的頂點定下來，之後不再更新，這個做法要求邊權不是負的。 反例：
+邊 $s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重 $-2$、$a \to c$ 權重 $1$。 Dijkstra 先定下
+$a$（距離 $2$），由 $a$ 算出 $c$ 的距離 $3$；之後才處理 $b$，發現 $s \to b \to a$ 只要 $1$，但 $a$
+已經定下來、它的出邊不會再鬆弛，$c$ 留在 $3$，正確答案是 $2$。 錯。
+\item (D) Prim：也是最小生成樹的演算法。 錯。
+\end{itemize}
+\end{pastsoln}

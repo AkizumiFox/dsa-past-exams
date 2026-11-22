@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ccu-112-csb-01}]{中正資工所乙組 112 學年度 第 1 題}
+（單選並說明理由）
+
+(6 points) How many function calls does \texttt{a(15)} produce if we use this recursive function
+written in C? Please choose the correct answer and explain why.
+\begin{minted}[fontsize=\small]{c}
+int a(int n){
+    if(n == 0)
+        return 1;
+    else
+        return n * a(n-1);
+}
+\end{minted}
+A.~14 \qquad B.~15 \qquad C.~16 \qquad D.~17
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C，共 $16$ 次呼叫（把一開始的 \texttt{a(15)} 也算進去）。
+
+\texttt{a(n)} 在 $n \ne 0$ 時呼叫一次 \texttt{a(n-1)}，$n = 0$ 時直接回傳，不再呼叫。 令 $C(n)$ 是
+執行 \texttt{a(n)} 總共發生的呼叫次數（含它自己），照程式寫出遞迴式（資結書第~2.1~節）：
+\[
+C(0) = 1, \qquad C(n) = 1 + C(n - 1) \quad (n \ge 1).
+\]
+展開得 $C(n) = n + C(0) = n + 1$，所以 $C(15) = 16$。 直接列出來也一樣：
+\[
+\texttt{a(15)} \to \texttt{a(14)} \to \cdots \to \texttt{a(1)} \to \texttt{a(0)},
+\]
+參數從 $15$ 到 $0$，共 $16$ 個。 這 $16$ 層同時疊在呼叫堆疊上，\texttt{a(0)} 回傳 $1$ 之後才一層
+一層往回乘（資結書第~6.4~節），最後得到 $15!$。
+
+逐項檢查：
+\begin{itemize}
+\item A.~14：少算了 \texttt{a(15)} 本身和 \texttt{a(0)}，錯。
+\item B.~15：只算了「遞迴呼叫」\texttt{a(14)} 到 \texttt{a(0)}，沒算最外層的 \texttt{a(15)}。 如果題目
+的意思是「\texttt{a(15)} 又引發了幾次呼叫」，答案會是 15；但一般說「\texttt{a(15)} 產生幾次函數呼叫」
+包含這一次，作答時寫出自己的算法即可。 依一般讀法，錯。
+\item C.~16：$n = 15, 14, \ldots, 0$ 各一次，對。
+\item D.~17：多算一次，\texttt{a(0)} 不會再呼叫 \texttt{a(-1)}，錯。
+\end{itemize}
+\end{pastsoln}

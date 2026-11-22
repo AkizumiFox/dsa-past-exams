@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ncku-114-prog-14}]{成大資訊聯招 114 學年度 第 14 題}
+（計算）
+
+(10\%) Given a set $S$ of size $n=2^{2^m}$, where $m\in Z^+$, we use the following algorithm to perform clustering and labeling:
+\begin{center}
+\begin{tabular}{|l|p{0.7\textwidth}|}
+\hline
+\multicolumn{2}{|l|}{F($S$)} \\
+1 & If $|S|==2$ then \textbf{return}; \\
+2 & Apply a clustering algorithm with a time complexity of $\Theta(\lg n)$ to divide the set $S$ into three clusters, $S_1$, $S_2$, and $S_3$, and label them where $|S|=n$, $|S_1|=|S_2|=\sqrt{n}$, and $|S_3|=n-2\sqrt{n}$. \\
+3 & Call F($S_1$) \\
+4 & Call F($S_2$) \\
+\hline
+\end{tabular}
+\end{center}
+\smallskip
+Let $T(n)$ represent the time required to use this algorithm to cluster and label a set of size $n$. Provide an asymptotic tight bound ($\Theta$) for $T(n)$, assuming that $T(n)$ is a constant for sufficiently small $n$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(\lg n \cdot \lg\lg n)$。
+
+\textbf{遞迴式}。 $|S| = n > 2$ 時，第 2 行花 $\Theta(\lg n)$，第 3、4 行各遞迴一次，大小 $\sqrt{n}$；$S_3$ 不再處理。 所以
+\[
+T(n) = 2T(\sqrt{n}) + \Theta(\lg n), \qquad T(2) = \Theta(1).
+\]
+$n = 2^{2^m}$ 保證每次開根號都還是整數，而且一路開下去會停在 $2^{2^0} = 2$。
+
+\textbf{變數代換}（資結書第~2.5~節）。 令 $n = 2^k$（$k = 2^m$），$S(k) = T(2^k)$。 $\sqrt{n} = 2^{k/2}$，$\lg n = k$，得
+\[
+S(k) = 2S(k/2) + \Theta(k), \qquad S(1) = \Theta(1).
+\]
+這是合併排序的遞迴式，$a = 2$、$b = 2$、$f(k) = \Theta(k) = \Theta(k^{\log_2 2})$，主定理情況 2（資結書定理~2.4）：
+$S(k) = \Theta(k \lg k)$。 換回 $n$：$k = \lg n$，
+\[
+T(n) = S(\lg n) = \Theta(\lg n \cdot \lg\lg n).
+\]
+
+\textbf{直接展開核對}。 設第 2 行的成本恰為 $c\lg n$。 第 $i$ 層（$i = 0, 1, \ldots, m - 1$）有 $2^i$ 個子問題，大小
+$n^{1/2^i}$，每個成本 $c \lg n / 2^i$，所以每一層的總成本都是 $c\lg n$。 遞迴有 $m = \lg\lg n$ 層，底部有 $2^m = \lg n$ 個大小
+$2$ 的子問題，各 $\Theta(1)$。 合計 $c \lg n \lg\lg n + \Theta(\lg n) = \Theta(\lg n \lg\lg n)$。
+\end{pastsoln}

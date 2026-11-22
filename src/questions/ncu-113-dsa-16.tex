@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-113-dsa-16}]{中央資工所 113 學年度 第 16 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Which of the following statements about sorting algorithms are incorrect?
+\begin{enumerate}[label=(\Alph*)]
+\item The merge sort and quick sort are designed based on the similar algorithm design principle.
+\item If most of the numbers are in the correct order, quick sort is the best algorithm.
+\item The worst-case time complexity of quick sort, merge sort, and heap sort is $O(n\log n)$.
+\item The worst-case time complexity and the expected time complexity of both merge sort and heap sort are in
+the same order.
+\item No sorting algorithm has time complexity lower than $O(n\log n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目問的是\textbf{錯誤}的敘述。 答案：(B)(C)(E)。
+\begin{itemize}
+\item (A) 正確，不選。 合併排序和快速排序都是分治法：切成小問題、遞迴解、再組合起來。 差別只在主要的
+工作放在哪裡：合併排序在遞迴之後合併，快速排序在遞迴之前分割（資結書第~14.5~節開頭）。
+\item (B) 錯誤，要選。 數字大部分已經在正確位置時，逆序對個數 $I$ 很小，插入排序的時間是
+$\Theta(n + I)$，接近線性（資結書第~14.1~節）。 快速排序若固定取第一個或最後一個當基準，排好的輸入正是
+它的最壞情況：資結書第~14.5~節實際數過，$2000$ 個排好的數比了 $1{,}999{,}000$ 次。 改成隨機基準也還是
+$\Theta(n\lg n)$，比不上插入排序。
+\item (C) 錯誤，要選。 合併排序、堆積排序最壞是 $O(n\lg n)$，快速排序最壞是 $\Theta(n^2)$（每次都切成
+$0$ 和 $m - 1$ 個）。
+\item (D) 正確，不選。 合併排序不管輸入如何都是 $\Theta(n\lg n)$；堆積排序最壞 $O(n\lg n)$，鍵互不相同時
+平均也是 $\Theta(n\lg n)$。 兩者的最壞和平均同一級（資結書第~14.7~節的比較表）。
+\item (E) 錯誤，要選。 這句用 $O$ 寫，意思是「沒有任何排序比 $n\log n$ 快」。 $\Omega(n\lg n)$ 的下界只管
+比較排序（資結書第~15.1~節）；鍵是 $0$ 到 $k$ 的整數、$k = O(n)$ 時，計數排序是 $\Theta(n)$。 就算只看
+比較排序，插入排序在排好的輸入上也只要 $\Theta(n)$。
+\end{itemize}
+\end{pastsoln}

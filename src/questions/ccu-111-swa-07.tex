@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ccu-111-swa-07}]{中正資工所甲組 111 學年度 第 15 題}
+（單選）
+
+(3\%) (\quad) What is the prefix form of the following expression?
+\begin{center}B $-$ E / (F / A $-$ A * D / F) + E * C * D $-$ (A + B) * E\end{center}
+\begin{enumerate}[label=\alph*.,itemsep=0pt,topsep=2pt]
+\item \texttt{- + - B / E - / F A / * A D F * * E C D * + A B E}
+\item \texttt{+ / - B E / - F A / * A D F - * * E C D * + A B E}
+\item \texttt{- B / E + - / F A / * A D F * E C - * D * + A B E}
+\item \texttt{- / B E / - * / F A A D F + E - * * C D + * A B E}
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a。
+
+先照優先順序加括號：\texttt{*}、\texttt{/} 比 \texttt{+}、\texttt{-} 先算，同級的由左往右結合
+（資結書第~6.3.3~節）。 括號裡 $F/A - A*D/F$ 是 $(F/A) - ((A*D)/F)$；整個式子的頂層有三個同級的運算
+$B - [\ldots] + [\ldots] - [\ldots]$，由左往右是
+\[
+\Bigl( \bigl( B - E/(\ldots) \bigr) + (E*C)*D \Bigr) - (A + B)*E .
+\]
+轉前序式（資結書第~6.3.5~節）就是把每個運算子移到它的兩個運算元前面，由外往內：
+\begin{itemize}
+\item 最外層是最後一個 \texttt{-}：\texttt{-}\ [左邊]\ [$(A+B)*E$]，右邊是 \texttt{* + A B E}。
+\item 左邊是 \texttt{+}：\texttt{+}\ [$B - E/(\ldots)$]\ [$(E*C)*D$]，後者是 \texttt{* * E C D}。
+\item $B - E/(\ldots)$ 是 \texttt{- B / E}\ [括號]，括號是 \texttt{- / F A / * A D F}。
+\end{itemize}
+接起來：
+\[
+\texttt{- + - B / E - / F A / * A D F * * E C D * + A B E},
+\]
+和 a 相同。
+
+逐項檢查：
+\begin{itemize}
+\item a：上面的結果。 對。
+\item b：開頭是 \texttt{+ / - B E}，表示 $(B - E) / (\ldots)$，把 $B - E$ 先算了，但原式 \texttt{/} 比
+\texttt{-} 優先，$E$ 先和括號相除。 頂層也變成 $(\ldots) + (E*C*D - (A+B)*E)$，把最後的減法先做了，
+違反由左往右。 錯。
+\item c：這串根本不是合法的前序式。 前序式要從右往左掃、遇到運算元推入堆疊、遇到運算子取兩個：
+掃到 \texttt{E B A + *} 得 $(A+B)*E$，再 \texttt{D *} 得 $D*((A+B)*E)$，接著遇到 \texttt{-} 時堆疊裡
+只剩一個運算元。 錯。
+\item d：同樣從右往左掃：\texttt{E B A *} 得 $A*B$，\texttt{+} 得 $(A*B)+E$，\texttt{D C *} 得 $C*D$，
+\texttt{*} 得 $(C*D)*((A*B)+E)$，接著的 \texttt{-} 只剩一個運算元可拿，不合法。 錯。
+\item e：a 是對的。 錯。
+\end{itemize}
+\end{pastsoln}

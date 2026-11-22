@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntut-112-ci-01}]{北科大資工所 112 學年度 第 1 題}
+（是非）
+
+Mark by T(=True) or F(=False) each of following statements. You don't need to prove it. (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item For an arbitrary tree with $n$ nodes, there are exactly $n-1$ edges in that tree. (2 pts)
+\item Heapsort is one of the optimal sorting algorithms. (2 pts)
+\item $7n^34^n+n^62^n=O(n^62^n)$. (2 pts)
+\item If edge weights of a connected weighted graph are not all distinct, the graph must have more than one minimum spanning tree. (2 pts)
+\item The possible degrees of internal nodes (except the root) in a B -tree of order 7 are 4, 5, 6, and 7. (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) T；(2) T；(3) F；(4) F；(5) T。
+
+這題五個小題分屬第~1、7、11、15、24~章，放在第~1~章。 題目不用寫理由，下面的說明是讓讀者確定
+每一題為什麼對或錯。
+
+\textbf{(1) T}。 樹是連通、沒有環的圖。 除了根，每個節點恰有一條連到父節點的邊，而每條邊恰好是一個
+節點連到父節點的那條，所以邊數 $= n - 1$（資結書第~7.1~節）。 從圖的角度看也一樣：每加一條邊連進
+一個新頂點，$n$ 個頂點連通需要 $n - 1$ 條，再多一條就會形成環。
+
+\textbf{(2) T}。 「最佳的排序演算法」指比較排序裡，最壞情況的時間達到下界的那些。 任何比較排序最壞
+都要 $\Omega(n \lg n)$ 次比較（資結書定理~15.1），堆積排序最壞是 $O(n \lg n)$（資結書第~14.6~節），
+兩者相符，是漸近最佳的；合併排序也是。 快速排序最壞 $\Theta(n^2)$，就不算。
+
+\textbf{(3) F}。 左邊的 $7n^3 4^n$ 比右邊的 $n^6 2^n$ 大得多：
+\[
+\frac{7n^3 4^n}{n^6 2^n} = \frac{7 \cdot 2^n}{n^3} \to \infty,
+\]
+找不到常數 $c$ 讓 $7n^34^n + n^62^n \le c\, n^6 2^n$。 正確的是 $\Theta(n^3 4^n)$。
+
+\textbf{(4) F}。 權重有相同的，最小生成樹可能有好幾棵，但不是一定。 反例：圖本身就是一棵樹（例如
+三個頂點排成一條路徑，兩條邊權重都是 $1$），生成樹只有它自己一棵。 再如三角形，權重 $1, 1, 2$：
+最小生成樹一定是兩條權重 $1$ 的邊，也只有一棵。 權重都不同是最小生成樹唯一的\textbf{充分}條件
+（資結書定理~24.4），不是必要條件。
+
+\textbf{(5) T}。 照資結書第~11.2~節 $m$ 階 B 樹的定義，每個節點最多 $m$ 個子節點；根以外的內部節點
+至少 $\lceil m/2 \rceil$ 個子節點。 $m = 7$ 時是 $\lceil 7/2 \rceil = 4$ 到 $7$，也就是 $4, 5, 6, 7$。
+這裡的「degree」是樹的用語，指子節點數。
+\end{pastsoln}

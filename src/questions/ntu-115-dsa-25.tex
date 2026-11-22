@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-115-dsa-25}]{臺大資工所 115 學年度 第 25 題}
+（單選）
+
+(4 points) Let $G=(V,E)$ be a connected, undirected, weighted graph with distinct and positive edge weights. Let $A\subseteq E$ be a subset of edges that is contained in some minimum spanning tree of $G$. Which of the following statements is always true?
+\begin{enumerate}[label=(\Alph*)]
+\item Any minimum-weight edge in the graph is safe for $A$.
+\item For any cut $(S,V\backslash S)$, the lightest edge crossing the cut is safe for $A$, regardless of whether the cut respects $A$.
+\item If an edge $e$ is the lightest edge on some cycle in $G$, then $e$ must belong to every minimum spanning tree (MST).
+\item If a cut $(S,V\backslash S)$ respects $A$, then the lightest edge crossing this cut is safe for $A$.
+\item Any edge chosen by Prim's algorithm from an arbitrary start vertex is safe for every subset $A\subseteq E$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+照資結書第~24.1~節的說法：$A$ 包含在某棵最小生成樹裡，\textbf{再加一條邊} $e$ 後 $A \cup \{e\}$ 仍包含在某棵最小
+生成樹裡，就說 $e$ 對 $A$ 是安全的。 「加一條邊」指 $e \notin A$。 （如果把 $A$ 裡已有的邊也算成安全，由於權重
+相異時最小生成樹唯一（資結書定理~24.4），A、B 兩句也會成立，題目就不只一個答案；所以照 $e \notin A$ 來讀。）
+\begin{itemize}
+\item (A) 錯。 取 $A = \{e_{\min}\}$（權重最小的邊）：$e_{\min}$ 在唯一的最小生成樹裡，所以這個 $A$ 合乎題目的條件，
+但 $e_{\min}$ 已經在 $A$ 裡，不是可以「再加」的邊。
+\item (B) 錯。 切割不尊重 $A$ 時，最輕的跨越邊可能就是 $A$ 裡的邊。 例如三角形 $ab = 1$、$bc = 2$、$ac = 3$，
+$A = \{ab\}$，切割 $(\{a\}, \{b, c\})$ 的跨越邊是 $ab$、$ac$，最輕的是 $ab \in A$。 「尊重 $A$」（沒有 $A$ 的邊跨越）
+正是用來排除這種情形的條件。
+\item (C) 錯。 環上最\textbf{重}的邊（權重相異時）一定不在最小生成樹裡（環性質，資結書定理~24.3）；最輕的邊沒有
+這種保證。 反例：$ab = 1$、$bc = 2$、$ac = 10$、$cd = 11$、$da = 12$。 $ac$ 是環 $a, c, d$（$10, 11, 12$）上最輕的邊；
+但它也是環 $a, b, c$（$1, 2, 10$）上最重的邊，所以不在最小生成樹裡（最小生成樹是 $ab, bc, cd$，權重 $14$）。
+\item (D) 對。 這就是切割性質（資結書定理~24.1）。 切割尊重 $A$，最輕的跨越邊 $e$ 不在 $A$ 裡。 證明：設 $T \supseteq A$
+是一棵最小生成樹；若 $e \notin T$，$T + e$ 形成一個環，環上還有另一條跨越切割的邊 $e'$，$e' \notin A$（切割尊重 $A$），
+$w(e) \le w(e')$。 $T' = T - e' + e$ 是生成樹，權重不大於 $T$，也是最小生成樹，而且包含 $A \cup \{e\}$。
+\item (E) 錯。 「對每一個 $A \subseteq E$」包括不在任何最小生成樹裡的 $A$。 例如在 (C) 的圖取 $A = \{ac\}$：$ac$ 不在唯一
+的最小生成樹裡，$A$ 加上什麼邊都不會被某棵最小生成樹包含，Prim 選的邊對它都不安全。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-114-dsa-19}]{中央資工所 114 學年度 第 19 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Choose correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item Dynamic programming is used to solve problems that can be broken down into overlapping
+subproblems.
+\item The Longest Common Subsequence (LCS) problem can be solved by dynamic programming with a time
+complexity of O($m$+$n$), where $m$ and $n$ are the lengths of the two sequences.
+\item Dynamic programming always uses a 2D table for storing intermediate results.
+\item In dynamic programming, memoization stores solutions to subproblems to avoid redundant
+computations.
+\item Dynamic programming can only be applied to problems with a greedy choice property.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(d)。
+
+\begin{itemize}
+\item (a) 對。 動態規劃適用的兩個條件是最佳子結構和子問題重疊（資結書第~18.1~節）；子問題重疊時，
+把每個子問題的答案存起來只算一次，才省得到時間。
+\item (b) 錯。 LCS 的表有 $(m+1)(n+1)$ 格，每格 $O(1)$，時間 $\Theta(mn)$（資結書第~18.3~節），不是
+$O(m + n)$。 光是填表就要碰到 $mn$ 格。
+\item (c) 錯。 表的維數看子問題用幾個參數描述：費氏數、硬幣找零、最長遞增子序列用一維陣列；LCS、
+矩陣鏈乘用二維；也有三維的（例如 Floyd--Warshall 的 $D^{(k)}[i, j]$ 寫成 $k, i, j$ 三個參數）。
+\item (d) 對。 備忘錄（memoization）是由上而下的寫法：遞迴，但第一次算出子問題的答案就存起來，之後
+再遇到直接查表（資結書第~18.1.2~節）。
+\item (e) 錯。 反過來才對：有貪心選擇性質的問題可以用更簡單的貪心法；動態規劃正是用在\textbf{沒有}
+貪心選擇性質、必須比較所有選擇的問題上，例如 0/1 背包（資結書第~18.5~節）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:gk3-103-ds-06}]{高考三級資訊處理 103 年 第六題}
+（申論；15 分）
+
+若 G=(U,E)為一權重圖（weighted graph），每條邊的權重均不為負數，則單源最短路徑問題（Single
+Source Shortest Path Problem）可以用著名的 Dijkstra 演算法求得，回答下列問題：（每小題 5 分，
+共 15 分）
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 說明 Dijkstra 演算法的主要觀念。
+\item[㈡] Dijkstra 演算法在最差情況下（Worst Case Analysis），下列三個功能 Insert、Delete、
+Decrease\_Key 各自需要執行的次數，可用 Big-Oh 符號表示。
+\item[㈢] 若是要在 O(|E|+|V|log|V|)最差情況分析下的時間內執行 Dijkstra 演算法，請問該選擇使用那種
+資料結構，並說明其原因。
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目的頂點集合寫成 $U$，後面又寫 $|V|$，兩者指同一個集合，下面都寫 $V$。 起點記為 $s$。
+
+\textbf{㈠ 主要觀念。} 每個頂點 $v$ 記一個估計值 $d[v]$，表示目前找到的 $s$ 到 $v$ 的最短距離，
+一開始 $d[s] = 0$、其他是 $\infty$。 演算法維護一個「已確定」的頂點集合 $S$，每一輪：
+\begin{enumerate}
+\item 從還沒確定的頂點裡取出 $d$ 最小的 $u$，把它放進 $S$；
+\item 對 $u$ 的每條出邊 $(u, v)$ 做\textbf{放鬆}（relax）：若 $d[u] + w(u,v) < d[v]$，就把
+$d[v]$ 改成 $d[u] + w(u,v)$，並記 $v$ 的前一個頂點是 $u$。
+\end{enumerate}
+這是一種貪心法。 它對的關鍵是邊權不為負：$u$ 被取出時，任何還沒走過的路徑都得先經過某個 $d$
+值不小於 $d[u]$ 的頂點，之後再加上非負的邊，不可能比 $d[u]$ 更短，所以取出時 $d[u]$ 就是最短
+距離（資結書第~25.2~節、定理~25.6）。 有負邊時這個論證不成立（資結書第~25.2.5~節）。
+
+\textbf{㈡ 三個操作的次數。} 把還沒確定的頂點放在優先佇列裡，鍵值是 $d$：
+\begin{itemize}
+\item \textbf{Insert}：每個頂點放進佇列一次（一開始全部放進去，或第一次被放鬆時才放），共
+$O(|V|)$ 次。
+\item \textbf{Delete}（取出最小值，Extract-Min）：每個頂點取出一次就確定了，不會再進佇列，共
+$O(|V|)$ 次。
+\item \textbf{Decrease\_Key}：只在放鬆成功時做。 每個頂點取出時，它的每條出邊各放鬆一次，
+全部加起來每條邊最多被放鬆一次（無向圖每條邊兩個方向各一次），所以最多 $O(|E|)$ 次。
+\end{itemize}
+
+\textbf{㈢ 用 Fibonacci 堆積。} 總時間是
+\[
+O(|V|) \cdot T_{\text{insert}} + O(|V|) \cdot T_{\text{extract-min}} + O(|E|) \cdot T_{\text{decrease-key}}.
+\]
+\begin{itemize}
+\item 二元堆積：三個操作都是 $O(\log|V|)$，總共 $O((|V| + |E|)\log|V|)$，邊多時 $|E|\log|V|$ 這項太大。
+\item Fibonacci 堆積（資結書第~8.6~節）：Insert、Decrease\_Key 的平攤時間是 $O(1)$，Extract-Min
+平攤 $O(\log|V|)$。 總共
+\[
+O(|V|) \cdot O(1) + O(|V|) \cdot O(\log|V|) + O(|E|) \cdot O(1) = O(|E| + |V| \log |V|).
+\]
+\end{itemize}
+關鍵就是 Decrease\_Key 做的次數最多（$O(|E|)$），Fibonacci 堆積把它降到 $O(1)$。 嚴格說這是平攤
+分析的界，但平攤的總和就是整個演算法實際花的總時間的上界，所以 Dijkstra 整體在最差情況下是
+$O(|E| + |V|\log|V|)$。
+\end{pastsoln}

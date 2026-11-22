@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:nsysu-113-osds-01}]{中山資工所甲組 113 學年度 第 1 題（節錄 (b) 小題）}
+（問答）
+
+What is printed by each of the following C program?
+
+(b) (10\%)
+\begin{minted}[fontsize=\small]{c++}
+int x[ ]={ 8, 5, 3, 9, 7, 4, 6, 2};
+int max(int left, int right) {
+   int mid=(int) (left+right)/2;       // e.g. 7/2=3, 6/2=3
+   int b;
+   if (left==right)
+      b=x[mid];
+   else {
+      int c=max(left, mid);
+      if (c > max(mid+1, right))
+         b=c;
+      else
+         b=max(mid+1, right);
+   }
+   cout << b << endl;
+   return b;
+}
+int main( ) {
+   max(1,5);
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案（每個數一行）：
+\begin{center}
+\texttt{5 \quad 3 \quad 5 \quad 9 \quad 9 \quad 9 \quad 7 \quad 4 \quad 7 \quad 9}
+\end{center}
+
+約定：程式照題目給的片段補上 \texttt{\#include <iostream>} 和
+\texttt{using namespace std;} 就能編譯，輸出就是 \texttt{cout} 印的十行。 陣列從
+$0$ 開始，\texttt{max(1,5)} 只看 $x[1..5] = 5, 3, 9, 7, 4$，$x[0] = 8$ 不在範圍內，
+所以最後的答案是 $9$ 而不是 $8$。
+
+先看函式的結構：一段 $[\mathit{left}, \mathit{right}]$ 只有一個元素時直接回傳；否則
+切成 $[\mathit{left}, \mathit{mid}]$ 和 $[\mathit{mid} + 1, \mathit{right}]$，先算左半
+的最大值 $c$，再呼叫右半比較。 要注意 \texttt{if} 的條件和 \texttt{else} 底下\textbf{各呼叫一次}
+\texttt{max(mid+1, right)}：$c$ 比右半大時只呼叫一次，否則右半會被整段再算一次、
+再印一次。 每次呼叫都在返回前印出自己的 $b$，所以印的順序是「呼叫結束」的順序，也
+就是呼叫樹的後序（資結書第~6.4~節：最後呼叫的最先返回）。
+
+呼叫樹（縮排表示被誰呼叫，最後一欄是印出的值和它是輸出的第幾行）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+呼叫 & 做的事 & 印出 \\
+\midrule
+\texttt{max(1,5)}，$\mathit{mid} = 3$ & 先算 \texttt{max(1,3)} & \\
+\quad \texttt{max(1,3)}，$\mathit{mid} = 2$ & 先算 \texttt{max(1,2)} & \\
+\qquad \texttt{max(1,2)}，$\mathit{mid} = 1$ & 先算 \texttt{max(1,1)} & \\
+\qquad\quad \texttt{max(1,1)} & $x[1]$ & 第 1 行：$5$ \\
+\qquad\quad \texttt{max(2,2)}（比較用）& $x[2]$ & 第 2 行：$3$ \\
+\qquad \texttt{max(1,2)} 返回 & $5 > 3$，$b = 5$ & 第 3 行：$5$ \\
+\quad\quad \texttt{max(3,3)}（比較用）& $x[3]$ & 第 4 行：$9$ \\
+\quad\quad \texttt{max(3,3)}（$5 > 9$ 不成立，再呼叫一次）& $x[3]$ & 第 5 行：$9$ \\
+\quad \texttt{max(1,3)} 返回 & $b = 9$ & 第 6 行：$9$ \\
+\quad \texttt{max(4,5)}（比較用），$\mathit{mid} = 4$ & 先算 \texttt{max(4,4)} & \\
+\qquad \texttt{max(4,4)} & $x[4]$ & 第 7 行：$7$ \\
+\qquad \texttt{max(5,5)}（比較用）& $x[5]$ & 第 8 行：$4$ \\
+\quad \texttt{max(4,5)} 返回 & $7 > 4$，$b = 7$ & 第 9 行：$7$ \\
+\texttt{max(1,5)} 返回 & $9 > 7$，$b = 9$，不再呼叫 & 第 10 行：$9$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+一共呼叫 $10$ 次、印 $10$ 行。 呼叫堆疊最深時有 $4$ 層（例如
+\texttt{max(1,5)}、\texttt{max(1,3)}、\texttt{max(1,2)}、\texttt{max(1,1)}）。 如果先把 \texttt{max(mid+1, right)} 的結果存進變數再比較，右半
+就不會重算，輸出的第 5 行也不會出現。
+\end{pastsoln}

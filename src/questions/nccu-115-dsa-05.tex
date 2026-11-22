@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nccu-115-dsa-05}]{政大資科所 115 學年度 第 5 題}
+（單選）
+
+(5\%) What is the recurrence relation for the time complexity of the merge sort algorithm, assuming $n$
+is a power of 2?
+
+(A)~$T(n)=T(n-1)+O(1)$ \qquad (B)~$T(n)=2T(n/2)+O(1)$\\
+(C)~$T(n)=2T(n/2)+O(n)$ \qquad (D)~$T(n)=T(n/2)+O(n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+合併排序（資結書第~14.4~節，虛擬碼~14.5）做三件事：把陣列從中間切成兩半，$O(1)$；遞迴排序兩半，
+每半 $n/2$ 個，各花 $T(n/2)$；把兩個排好的半段合併，每比較一次就輸出一個數，$\Theta(n)$。 所以
+\[
+T(n) = 2T(n/2) + O(n),
+\]
+$n$ 是 $2$ 的次方時每次都剛好對半切，不用寫上下取整。 由主定理（資結書第~2.4~節）
+$a = 2$、$b = 2$、$n^{\log_2 2} = n$ 和 $f(n)$ 同階，$T(n) = \Theta(n\lg n)$。
+
+其他選項對應的是別的演算法：
+\begin{itemize}
+\item (A) $T(n-1) + O(1)$：每次只少一個元素、額外 $O(1)$，例如遞迴找陣列最大值，解是 $\Theta(n)$。
+\item (B) $2T(n/2) + O(1)$：切兩半但合起來只要常數時間，例如分治找最大值，解是 $\Theta(n)$。 合併排序
+的合併不是常數時間。
+\item (D) $T(n/2) + O(n)$：只遞迴一半，解是 $\Theta(n)$。 合併排序兩半都要排。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,131 @@
+\begin{pastexam}[label={px:df3-108-ds-02}]{地方三等資訊處理 108 年 第二題}
+（申論；20 分）
+
+有下列資料元素（data elements），其數值越小則優先權（priority）越高，請分別依序將各元素加入（add）優先佇列
+（priority queue）中，且分別以下列三種資料結構實作之。
+\begin{center}
+90, 10, 80, 20, 70, 50, 40, 30
+\end{center}
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 用雙向鏈接串列（doubly-linked list）來實作此優先佇列，請畫出其資料結構圖。（6 分）
+\item[㈡] 用紅黑樹（red-black tree）來實作此優先佇列，請畫出其資料結構圖。注意: 紅節點請標示 R，例如 20R
+表示其值為 20 的紅（Red）節點；黑節點則請標示 \textbf{B}，例如 50B 表示其值為 50 的黑（Black）節點。（7 分）
+\item[㈢] 用最小堆積（min heap）來實作此優先佇列，請畫出其資料儲存的陣列（array）圖。注意: 陣列索引
+（array index）由左向右遞增。（7 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+本題三種實作分屬資結書第~5、10、8~章，題目問的是優先佇列，放在第~8~章。
+
+\textbf{㈠ 雙向鏈結串列。} 用\textbf{排好序}的串列：由前往後優先權由高到低（數值由小到大），前端就是下一個
+要取出的元素，取出 $O(1)$；加入時從前往後找到第一個比它大的節點，插在它前面，$O(n)$（資結書第~5.2~節、
+虛擬碼~5.6）。 依序加入：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+加入 & 串列（前端在左） \\
+\midrule
+$90$ & $90$ \\
+$10$ & $10, 90$ \\
+$80$ & $10, 80, 90$ \\
+$20$ & $10, 20, 80, 90$ \\
+$70$ & $10, 20, 70, 80, 90$ \\
+$50$ & $10, 20, 50, 70, 80, 90$ \\
+$40$ & $10, 20, 40, 50, 70, 80, 90$ \\
+$30$ & $10, 20, 30, 40, 50, 70, 80, 90$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[nd/.style={draw,minimum width=7mm,minimum height=5.5mm,inner sep=0pt,font=\small},
+  ar/.style={-{Stealth[length=1.6mm]}}]
+\node[font=\small] (h) at (-0.3,0.9) {front};
+\foreach \v [count=\i] in {10,20,30,40,50,70,80,90} {
+  \node[nd] (n\i) at (1.35*\i,0) {\v};
+}
+\foreach \i [evaluate=\i as \j using int(\i+1)] in {1,...,7} {
+  \draw[ar] ([yshift=1mm]n\i.east) -- ([yshift=1mm]n\j.west);
+  \draw[ar] ([yshift=-1mm]n\j.west) -- ([yshift=-1mm]n\i.east);
+}
+\draw[ar] (h) -| (n1.north);
+\node[font=\small] (t) at (12.1,0.9) {rear};
+\draw[ar] (t) -| (n8.north);
+\node[font=\scriptsize] at (1.35,-0.6) {prev $=$ \NIL};
+\node[font=\scriptsize] at (10.8,-0.6) {next $=$ \NIL};
+\end{tikzpicture}
+\end{center}
+每個節點有 \textit{prev}、\textit{next} 兩個指標，上面的箭頭是 \textit{next}，下面的是 \textit{prev}。 （若
+改用不排序的串列，就是依加入順序 $90, 10, 80, 20, 70, 50, 40, 30$ 串起來，加入 $O(1)$、取出要掃整條找最小值
+$O(n)$；題目沒有限定，但通常畫排好序的版本。）
+
+\textbf{㈡ 紅黑樹。} 依資結書第~10.3~節的插入（虛擬碼~10.6）：新節點塗紅；父節點紅時，叔叔紅用情況 1（改色、
+往上），叔叔黑則內側先旋轉（情況 2）、外側改色加旋轉（情況 3）；最後根塗黑。 空指標算黑。
+\begin{itemize}
+\item $90$：根，$90$B。 $10$：$90$ 的左子，父黑，不修正。
+\item $80$：$10$ 的右子。 父 $10$ 紅、叔叔空（黑），在內側：情況 2 對 $10$ 左旋，再情況 3：$80$ 改黑、$90$ 改紅、
+對 $90$ 右旋。 得 $80$B（$10$R，$90$R）。
+\item $20$：$10$ 的右子。 父 $10$ 紅、叔叔 $90$ 紅，情況 1：$10$、$90$ 改黑，$80$ 改紅，$80$ 是根，塗回黑。
+\item $70$：$20$ 的右子。 父 $20$ 紅、叔叔（$10$ 的左子）空，外側，情況 3：$20$ 改黑、$10$ 改紅，對 $10$ 左旋。
+得 $80$B（$20$B（$10$R，$70$R），$90$B）。
+\item $50$：$70$ 的左子。 父 $70$ 紅、叔叔 $10$ 紅，情況 1：$70$、$10$ 改黑，$20$ 改紅；$20$ 的父 $80$ 黑，停。
+\item $40$：$50$ 的左子。 父 $50$ 紅、叔叔（$70$ 的右子）空，外側，情況 3：$50$ 改黑、$70$ 改紅，對 $70$ 右旋。
+得 $80$B（$20$R（$10$B，$50$B（$40$R，$70$R）），$90$B）。 圖 (a)。
+\item $30$：$40$ 的左子。 父 $40$ 紅、叔叔 $70$ 紅，情況 1：$40$、$70$ 改黑，$50$ 改紅，$z$ 移到 $50$。 $50$ 的父
+$20$ 紅、叔叔 $90$ 黑，$50$ 是 $20$ 的右子、$20$ 是 $80$ 的左子，在內側：情況 2 對 $20$ 左旋，$50$ 上來；
+情況 3：$50$ 改黑、$80$ 改紅，對 $80$ 右旋。 圖 (b) 是最後結果。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[every node/.style={ellipse,draw,minimum height=6mm,minimum width=9mm,inner sep=1pt,font=\small},
+  bk/.style={fill=black,text=white}, rd/.style={draw=red!70!black,very thick,fill=red!12},
+  lab/.style={draw=none,fill=none,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=26mm}, level 2/.style={sibling distance=14mm},
+  level 3/.style={sibling distance=10mm}]
+\node[bk] {80B}
+  child {node[rd] {20R} child {node[bk] {10B}} child {node[bk] {50B} child {node[rd] {40R}} child {node[rd] {70R}}}}
+  child {node[bk] {90B}};
+\node[lab] at (0,-3.8) {(a) 加入 $90 \sim 40$ 之後};
+\begin{scope}[xshift=68mm]
+\node[bk] {50B}
+  child {node[rd] {20R} child {node[bk] {10B}} child {node[bk] {40B} child {node[rd] {30R}} child[missing]}}
+  child {node[rd] {80R} child {node[bk] {70B}} child {node[bk] {90B}}};
+\node[lab] at (0,-3.8) {(b) 加入 $30$，最後結果};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+檢查：根黑；紅節點 $20, 80, 30$ 的子節點都黑；根到每個空指標都經過 $2$ 個黑節點（含根），例如
+$50 \to 20 \to 10$、$50 \to 20 \to 40 \to 30$、$50 \to 80 \to 90$。 當優先佇列用時，最高優先權（最小值）是
+最左邊的節點 $10$，取出和加入都是 $O(\lg n)$。
+
+\textbf{㈢ 最小堆積。} 新元素放在陣列最後，比父節點小就往上換（資結書第~8.1~節）。 索引從 $1$ 起，$A[i]$ 的父
+節點是 $A[\lfloor i/2 \rfloor]$：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+加入 & 上浮 & 陣列 \\
+\midrule
+$90$ & & $90$ \\
+$10$ & $A[2]$，$10 < 90$ 換 & $10, 90$ \\
+$80$ & $A[3]$，父 $10$，不動 & $10, 90, 80$ \\
+$20$ & $A[4]$，父 $90$ 換；父 $10$ 停 & $10, 20, 80, 90$ \\
+$70$ & $A[5]$，父 $20$，不動 & $10, 20, 80, 90, 70$ \\
+$50$ & $A[6]$，父 $80$ 換；父 $10$ 停 & $10, 20, 50, 90, 70, 80$ \\
+$40$ & $A[7]$，父 $50$ 換；父 $10$ 停 & $10, 20, 40, 90, 70, 80, 50$ \\
+$30$ & $A[8]$，父 $90$ 換；父 $20$ 停 & $10, 20, 40, 30, 70, 80, 50, 90$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的陣列（索引由左向右遞增）：
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\multicolumn{1}{c}{\scriptsize 1} & \multicolumn{1}{c}{\scriptsize 2} & \multicolumn{1}{c}{\scriptsize 3} &
+\multicolumn{1}{c}{\scriptsize 4} & \multicolumn{1}{c}{\scriptsize 5} & \multicolumn{1}{c}{\scriptsize 6} &
+\multicolumn{1}{c}{\scriptsize 7} & \multicolumn{1}{c}{\scriptsize 8} \\
+\hline
+10 & 20 & 40 & 30 & 70 & 80 & 50 & 90 \\
+\hline
+\end{tabular}
+\end{center}
+（索引從 $0$ 開始的話，同樣的內容放在 $0 \sim 7$。） 檢查堆積性質：$A[1] = 10$ 不大於 $20, 40$；$A[2] = 20$
+不大於 $30, 70$；$A[3] = 40$ 不大於 $80, 50$；$A[4] = 30$ 不大於 $90$。
+\end{pastsoln}

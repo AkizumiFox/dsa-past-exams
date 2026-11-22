@@ -1,0 +1,17 @@
+paper: ccu-114-csb
+volume: 2
+school: 中正
+dept: 資工所乙組
+year: 114
+subject: 計算機概論（含程式設計）
+questions:
+  - {id: ccu-114-csb-01, label: 第 1 題, chapter: 7}
+  - {id: ccu-114-csb-02, label: 第 2 題, chapter: 5}
+  - {id: ccu-114-csb-03, label: 第 3 題, chapter: 8}
+  - {id: ccu-114-csb-04, label: 第 4 題, chapter: 14}
+  - {id: ccu-114-csb-05, label: 第 5 題, chapter: 21}
+  - {id: ccu-114-csb-06, label: 第 6 題, chapter: 7}
+  - {id: ccu-114-csb-07, label: 第 7 題, chapter: 23}
+  - {id: ccu-114-csb-08, label: 第 8 題, chapter: 23}
+  - {id: ccu-114-csb-09, label: 第 9 題, chapter: 25}
+  - {id: ccu-114-csb-10, label: 第 10 題, chapter: 24}

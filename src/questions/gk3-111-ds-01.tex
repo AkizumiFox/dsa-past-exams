@@ -1,0 +1,101 @@
+\begin{pastexam}[label={px:gk3-111-ds-01}]{高考三級資訊處理 111 年 第一題}
+（申論；25 分）
+
+以下是一中序運算式（Infix expression）轉換（Convert）成後序運算式（Postfix expression）的演算法
+\begin{minted}[fontsize=\small, frame=single]{text}
+operstk = the empty stack;
+while(not end of input){
+  symb = next input character;
+  if(symb is an operand)
+       add symb to the postfix string;
+  else{
+    while(!empty(operstk) && precedence(stacktop(operstk),symb)){
+      topsymb = pop(operstk);
+      add topsymb to the postfix string;
+       } /*end while*/
+       if (empty(operstk) || symb != ')')
+           push(operstk, symb);
+        else
+           topsymb = pop(operstk);
+       } /*end else*/
+   } /*end while*/
+while(!empty(operstk)){
+  topsymb = pop(operstk);
+  add topsymb to the postfix string;
+} /*end while*/
+\end{minted}
+其中資料結構：\\
+“\texttt{operstk}”：用來儲存運算子的堆疊（Stack）；\\
+“\texttt{stacktop(operstk)}”：表示 top 指標所指堆疊 \texttt{operstk} 的運算子；\\
+程序（Procedures）或函數（Functions）：\\
+“\texttt{empty(operstk)}”：檢查堆疊 \texttt{operstk} 是否為空的布林函數；\\
+“\texttt{pop(operstk)}”：從堆疊 \texttt{operstk} 中取出一運算子；\\
+“\texttt{push(operstk, symb)}”：將運算子 \texttt{symb} 存入堆疊 \texttt{operstk}；\\
+“\texttt{precedence(op$_1$,op$_2$)}”：布林函數，定義在一沒有左右括弧的中序運算式中，op$_1$ 運算子
+出現在 op$_2$ 運算子的左邊時，當 op$_1$ 運算子優先順序不低於 op$_2$ 運算子，則設定成 TRUE，否則為
+FALSE。例如，我們給定 \texttt{precedence(\textquotesingle{}*\textquotesingle{}, \textquotesingle{}+\textquotesingle{})=TRUE}，\texttt{precedence(\textquotesingle{}+\textquotesingle{}, \textquotesingle{}+\textquotesingle{})=TRUE}，
+\texttt{precedence(\textquotesingle{}+\textquotesingle{}, \textquotesingle{}*\textquotesingle{})=FALSE}，為了處理運算式左右括弧，設定下列的 precedence:
+\begin{minted}[fontsize=\small]{text}
+precedence('(', op) = FALSE /*op 為任一運算子*/
+precedence(op, '(') = FALSE /*op 為除')'外的任一運算子*/
+precedence(op, ')') = TRUE  /*op 為除'('外的任一運算子*/
+precedence(')', op) = undefined   /*op 為任一運算子*/
+\end{minted}
+以中序運算式(2+3)*4 為例，執行上述演算法，依處理每一個運算子或運算元時，輸出 postfix string 及
+operstk 內容為何（“eos”表示 end of string）？（25 分）
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+symbol & \qquad postfix string \qquad & \qquad operstk \qquad \\
+\midrule
+( & & \\
+2 & & \\
++ & & \\
+3 & & \\
+) & & \\
+* & & \\
+4 & & \\
+eos & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+原卷的程式和 precedence 定義用彎引號把字元括起來，這裡改成 C 語言的直引號，意思一樣。
+
+\textbf{規則整理。} 這個演算法就是資結書虛擬碼~6.8 的中序轉後序，只是把「什麼時候 pop」寫成
+\texttt{precedence(stacktop, symb)}：
+\begin{itemize}
+\item 運算元直接接到輸出。
+\item 讀到運算子或括號 \texttt{symb} 時，只要堆疊頂端的運算子「優先順序不低於」\texttt{symb}，
+就 pop 出來接到輸出。 左括號在堆疊裡時 \texttt{precedence(\textquotesingle{}(\textquotesingle{}, op)} 是 FALSE，所以左括號像一道牆，
+不會被一般運算子 pop 掉；讀到 \texttt{\textquotesingle{})\textquotesingle{}} 時 \texttt{precedence(op, \textquotesingle{})\textquotesingle{})} 對 \texttt{\textquotesingle{}(\textquotesingle{}} 以外的
+運算子都是 TRUE，會一路 pop 到遇到 \texttt{\textquotesingle{}(\textquotesingle{}} 為止。
+\item 接著若堆疊是空的或 \texttt{symb} 不是 \texttt{\textquotesingle{})\textquotesingle{}}，就把 \texttt{symb} push 進去；否則
+（\texttt{symb} 是 \texttt{\textquotesingle{})\textquotesingle{}}，頂端一定是對應的 \texttt{\textquotesingle{}(\textquotesingle{}}）把 \texttt{\textquotesingle{}(\textquotesingle{}} pop 掉丟棄，
+括號不會出現在輸出裡。
+\item 讀完輸入（eos），把堆疊剩下的運算子依序 pop 到輸出。
+\end{itemize}
+
+\textbf{追蹤。} operstk 由底寫到頂（最右邊是頂端）。
+\begin{center}
+\begin{tabular}{cll>{\raggedright\arraybackslash}p{6.2cm}}
+\toprule
+symbol & postfix string & operstk & 說明 \\
+\midrule
+( & （空） & ( & 堆疊空，直接 push \\
+2 & 2 & ( & 運算元，輸出 \\
++ & 2 & ( + & \texttt{precedence(\textquotesingle{}(\textquotesingle{}, \textquotesingle{}+\textquotesingle{})} 為 FALSE，不 pop；push \texttt{+} \\
+3 & 23 & ( + & 運算元，輸出 \\
+) & 23+ & （空） & \texttt{precedence(\textquotesingle{}+\textquotesingle{}, \textquotesingle{})\textquotesingle{})} 為 TRUE，pop 出 \texttt{+}；頂端是 \texttt{\textquotesingle{}(\textquotesingle{}}，
+\texttt{precedence(\textquotesingle{}(\textquotesingle{}, \textquotesingle{})\textquotesingle{})} 為 FALSE，停；\texttt{symb} 是 \texttt{\textquotesingle{})\textquotesingle{}}，pop 掉 \texttt{\textquotesingle{}(\textquotesingle{}} 丟棄 \\
+* & 23+ & * & 堆疊空，push \\
+4 & 23+4 & * & 運算元，輸出 \\
+eos & 23+4* & （空） & 輸入結束，pop 出 \texttt{*} \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的後序運算式是 \texttt{23+4*}，也就是 $(2+3)\times 4 = 20$。 檢查：後序求值時先算
+$2\ 3\ +$ 得 5，再算 $5\ 4\ *$ 得 20，和原式一致。
+\end{pastsoln}

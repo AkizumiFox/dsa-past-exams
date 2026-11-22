@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:nccu-112-dsa-03}]{政大資科所 112 學年度 第 3 題}
+（設計、分析）
+
+［本題沿用第 2 題的問題敘述，節錄如下。］
+In the knapsack problem, the input contains $n$ items $1,2,3,\dots,n$, where item $i$ has weight
+$w[i]$ and value $v[i]$. The input also contains a number $W$. All the weights, values, and $W$ are
+positive integers. The output is a set $S\subseteq\{1,2,3,\dots,n\}$ such that the total weight of
+$S$ is at most $W$ (i.e., $\sum_{i\in S}w[i]\le W$) and the total value of $S$ (i.e.,
+$\sum_{i\in S}v[i]$) is maximized.
+
+\medskip
+(20\%) Consider again the knapsack problem.
+\begin{enumerate}[label=\arabic*),itemsep=2pt,topsep=2pt]
+\item (10\%) Design a greedy heuristic (in pseudocode) for the knapsack problem.\\
+Please explain why your heuristic can be considered to be greedy.
+\item (5\%) Please analyze the time complexity of your heuristic.
+\item (5\%) Does your heuristic always output the optimal solution? If so, please give a proof.\\
+If not, please give a toy example to show that your heuristic may not obtain the optimal solution.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{1) 演算法。} 照單位重量價值由大到小，放得下就放：
+
+\begin{pseudo}[unbreakable]{背包的貪心啟發式}
+\Function{Greedy-Knapsack}{$w, v, n, W$}
+    \State 把物品依 $v[i] / w[i]$ 由大到小排序，以下的 $1, \ldots, n$ 是排好的順序
+    \State $S \gets \emptyset$；$\mathit{room} \gets W$
+    \For{$i \gets 1$ \To $n$}
+        \If{$w[i] \le \mathit{room}$}
+            \State $S \gets S \cup \{i\}$；$\mathit{room} \gets \mathit{room} - w[i]$
+        \EndIf
+    \EndFor
+    \State \Return $S$
+\EndFunction
+\end{pseudo}
+
+放不下的物品跳過，但迴圈繼續往下看，後面比較輕的物品可能還放得進去。 它是貪心的，因為
+每一步只看眼前：在還沒看過的物品裡挑每單位重量價值最高的一個，放得下就放，放了就不再拿
+出來，也不考慮這個選擇會不會讓後面的物品放不下（資結書第~19.1.6~節）。
+
+\textbf{2) 時間。} 第 2 行排序 $\Theta(n \lg n)$（比較 $v[i] / w[i]$ 和 $v[j] / w[j]$ 時改比
+$v[i] \cdot w[j]$ 和 $v[j] \cdot w[i]$，不必用浮點數）；第 4--6 行的迴圈跑 $n$ 次，每次
+$O(1)$。 總共 $\Theta(n \lg n)$。
+
+\textbf{3) 不一定最佳。} 反例：$W = 8$，三個物品
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+物品 & 1 & 2 & 3 \\
+\midrule
+$w$ & 5 & 4 & 4 \\
+$v$ & 60 & 44 & 44 \\
+$v / w$ & 12 & 11 & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+貪心先放物品 1，剩下容量 $3$，物品 2、3 都放不下，總價值 $60$。 不放物品 1、放物品 2 和
+3，總重 $8$，總價值 $88$。 這是資結書第~19.2~節的例子：同樣的貪心對分數背包是最
+佳的（資結書定理~19.2），對 0/1 背包就不是，因為物品不能切開，放了物品 1 之後剩下的
+$3$ 單位容量浪費掉了。 這個貪心甚至可以差到任意多倍：$W = 10$，物品（$w = 1$，$v = 2$）和
+（$w = 10$，$v = 10$），貪心先放前者，只得到 $2$，最佳是 $10$。 把貪心的結果和「價值最大的
+單一物品」取比較大的那個，就能保證至少是最佳值的一半（資結書第~29~章觀念題第~10~題）。
+要得到最佳解，用第 2 題的動態規劃（第~\pageref{px:nccu-112-dsa-02}~頁）。
+\end{pastsoln}

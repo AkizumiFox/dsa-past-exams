@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nchu-113-dsa-16}]{中興資工所甲組 113 學年度 選擇題第 16 題}
+（單選；答錯不倒扣）
+
+Given an array of integers, which of the following sorting algorithms would be the most efficient in terms
+of time complexity for sorting an almost sorted array where only two elements are swapped? (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item Bubble Sort
+\item Quick Sort
+\item Merge Sort
+\item Heap Sort
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書採用的答案是 (A)。
+
+出題的意思是：「幾乎排好」的輸入，有提早結束檢查的氣泡排序（某一趟完全沒有交換就停，資結書第~14.2~節）
+只要很少幾趟。 例如對調的是相鄰兩個元素，第一趟把它們換回來，第二趟沒有交換就停，總共 $\Theta(n)$，
+比其他三個都快：
+\begin{itemize}
+\item (B) 快速排序取第一個或最後一個當基準時，幾乎排好的輸入正是最壞情況，$\Theta(n^2)$（資結書第~14.5~節）；
+隨機基準也還是期望 $\Theta(n \log n)$。
+\item (C) 合併排序不管輸入，都是 $\Theta(n \log n)$。
+\item (D) 堆積排序先建堆積就把順序打亂，仍是 $\Theta(n \log n)$。
+\end{itemize}
+
+要注意，「只有兩個元素對調」若兩者相距很遠，氣泡排序不一定快。 設位置 $i < j$ 的兩個數對調：大的數在
+第 $i$ 格，一趟就往右換到第 $j$ 格；小的數在第 $j$ 格，每一趟只往左移一格，要 $j - i$ 趟才到位，總共
+$\Theta(n(j - i))$。 例如 $1$ 和 $n$ 對調，要 $\Theta(n^2)$，反而比合併排序慢。 真正對這種輸入都好的是
+插入排序：它的時間是 $\Theta(n + \text{逆序數})$，兩個數對調只產生 $2(j - i) - 1$ 個逆序，總共 $\Theta(n)$；
+但插入排序不在選項裡。 照題目的意思（對調的兩個數離得不遠），選 (A)。
+\end{pastsoln}

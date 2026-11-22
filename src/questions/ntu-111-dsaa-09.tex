@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-09}]{臺大資工所 111 學年度 第 9 題}
+（單選）
+
+(5 points) Consider an array of 8 elements being sorted using quicksort. It has just finished the
+first pass of partitioning and pivot swapping, thus changing the original array into the
+following array:
+\[[7,11,16,10,17,1,18,30]\]
+How many elements could have been the pivot?
+\begin{enumerate}[label=(\Alph*)]
+\item 1
+\item 2
+\item 3
+\item 4
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) 2。
+
+第一次分割、把基準換到定位以後（資結書第~14.5~節），基準左邊的數都不比它大，右邊的數都不比它
+小。 所以一個數「可能是基準」的條件是：左邊每個數都比它小，右邊每個數都比它大。 逐個檢查
+（八個數都不同）：
+\begin{center}
+\begin{tabular}{cllc}
+\toprule
+數 & 左邊有比它大的？ & 右邊有比它小的？ & 可能是基準 \\
+\midrule
+7 & 無 & 有（1） & 否 \\
+11 & 無 & 有（10、1） & 否 \\
+16 & 無 & 有（10、1） & 否 \\
+10 & 有（11、16） & 有（1） & 否 \\
+17 & 無 & 有（1） & 否 \\
+1 & 有（全部） & 無 & 否 \\
+18 & 無 & 無 & 是 \\
+30 & 無 & 無（右邊沒有數） & 是 \\
+\bottomrule
+\end{tabular}
+\end{center}
+快一點的做法：從左往右算「到目前為止的最大值」，從右往左算「到目前為止的最小值」，一個數同時
+等於左邊的前綴最大值、右邊的後綴最小值，就可能是基準。 前綴最大值是 $7, 11, 16, 16, 17, 17,
+18, 30$，後綴最小值是 $1, 1, 1, 1, 1, 1, 18, 30$，只有 $18$ 和 $30$ 兩個位置都相等。
+
+只有 $18$、$30$ 兩個數可能是基準，選 (B)。 (A) 漏了一個；(C)、(D) 把不符合條件的數也算進去。
+\end{pastsoln}

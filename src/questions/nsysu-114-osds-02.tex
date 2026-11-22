@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:nsysu-114-osds-02}]{中山資工所甲組 114 學年度 第 2 題}
+（追蹤）
+
+The input elements for radix sort are 642, 374, 73, 29, 284, 252. Assume the radix base is 10.
+\begin{enumerate}[label=(\alph*)]
+\item (5\%) What is the sequence after the first pass finishes?
+\item (5\%) What is the sequence after the second pass finishes?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $642, 252, 73, 374, 284, 29$；(b) $29, 642, 252, 73, 374, 284$。
+
+約定：LSD 基數排序（資結書第~15.2.2~節），第一趟依個位，第二趟依十位；每一趟把數依那一位分到 $0$--$9$ 十個
+桶子，同一個桶子裡保持上一趟的先後（穩定），再依桶子的順序串起來。 $73$、$29$ 的百位看成 $0$。
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & 依據的位 & 非空的桶子（依桶號） \\
+\midrule
+第 1 趟 & 個位：$2, 4, 3, 9, 4, 2$ & 2：$642, 252$；3：$73$；4：$374, 284$；9：$29$ \\
+第 2 趟 & 十位：$4, 5, 7, 7, 8, 2$ & 2：$29$；4：$642$；5：$252$；7：$73, 374$；8：$284$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+第 1 趟的「依據的位」照輸入的順序 $642, 374, 73, 29, 284, 252$ 列出；第 2 趟照第 1 趟的結果
+$642, 252, 73, 374, 284, 29$ 列出。
+
+(a) $642, 252, 73, 374, 284, 29$。
+
+(b) $29, 642, 252, 73, 374, 284$。
+
+檢查：第 2 趟之後末兩位是 $29, 42, 52, 73, 74, 84$，已經依末兩位排好。 $73$ 和 $374$ 的十位都是 $7$，第 2 趟保持
+第 1 趟「$73$ 在前」的順序，這就是穩定的作用。 再做第 3 趟（百位）就得到 $29, 73, 252, 284, 374, 642$。
+\end{pastsoln}

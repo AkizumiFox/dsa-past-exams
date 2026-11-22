@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nchu-115-is-21}]{中興資工所乙組 115 學年度 第 21 題}
+（單選；每題 2 分，答錯不倒扣）
+
+A database engine must maintain rows sorted by a key (e.g., timestamp). Rows are frequently
+inserted, and fast ordered iteration is required, but random access by index is not essential.
+What structure fits best?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item A balanced BST such as a red-black tree.
+\item A hash map with open addressing.
+\item A stack of rows in reverse insertion order.
+\item A min-heap that always returns the smallest timestamp.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+需求有兩個：頻繁插入，還要能依鍵的順序走訪。 平衡二元搜尋樹兩者都做得好：紅黑樹的高度不超過
+$2\lg(n + 1)$（資結書定理~10.4），插入 $O(\log n)$；中序走訪就是依鍵由小到大，$O(n)$ 走完
+（資結書定理~9.1）。 不需要「第 $i$ 筆」這種依索引存取，正好避開樹的弱點。 （實際的資料庫多用
+B$^{+}$ 樹，道理相同，只是一個節點放很多鍵以配合磁碟，資結書第~11.3~節。）
+\begin{itemize}
+\item A 對。
+\item B 錯：雜湊表把鍵打散，完全沒有順序；要依序走訪得先取出全部再排序，$O(n \log n)$。
+\item C 錯：堆疊只依插入順序，和鍵的大小無關。 就算時間戳記通常遞增，題目要的是「依鍵排序」，
+不能靠插入順序剛好一致。
+\item D 錯：最小堆積只能快速拿到最小的那一筆；要依序走訪全部，得一筆一筆取出，每次
+$O(\log n)$，而且取出就把堆積拆掉了。 堆積內部的陣列順序也不是排好的。
+\end{itemize}
+\end{pastsoln}

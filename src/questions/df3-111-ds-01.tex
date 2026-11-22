@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:df3-111-ds-01}]{地方三等資訊處理 111 年 第一題}
+（申論；15 分）
+
+請用 Big-O 符號來表示下列函式的成長速率，並說明之：
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] $\mathrm{T}(n) = 3n^{3} + 7n^{3}\sqrt{n} + n^{3}\log n$（5 分）
+\item[㈡] $\mathrm{T}(n) = 2\mathrm{T}(n/2) + n^{2}$（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $O(n^{3.5})$。 ㈡ $O(n^{2})$（其實是 $\Theta(n^{2})$）。
+
+（㈠ 屬資結書第~1~章，㈡ 是遞迴式，屬第~2~章。）
+
+\textbf{㈠} 三項分別是 $n^{3}$、$n^{3.5}$、$n^{3}\log n$。 比較成長速率（資結書第~1.6~節）：
+\[
+\frac{n^{3}\log n}{n^{3.5}} = \frac{\log n}{n^{0.5}} \to 0,\qquad \frac{n^{3}}{n^{3.5}} \to 0,
+\]
+所以 $7n^{3}\sqrt{n}$ 是最大項，其他兩項都是它的低階項。 具體地說，以 $2$ 為底時 $n \ge 16$ 起 $\lg n \le \sqrt{n}$（對數取其他底數只差常數倍，
+結論不變），所以 $n \ge 16$ 時
+\[
+\mathrm{T}(n) \le 3n^{3.5} + 7n^{3.5} + n^{3.5} = 11 n^{3.5},
+\]
+取 $c = 11$、$n_0 = 16$，得 $\mathrm{T}(n) = O(n^{3.5})$；又 $\mathrm{T}(n) \ge 7n^{3.5}$，所以這也是緊的界，
+$\mathrm{T}(n) = \Theta(n^{3.5})$。
+
+\textbf{㈡ 用主定理}（資結書第~2.4~節、定理~2.4）：$a = 2$、$b = 2$、$f(n) = n^{2}$。
+$n^{\log_b a} = n^{\log_2 2} = n$。 $f(n) = n^{2} = \Omega(n^{1 + \varepsilon})$（取 $\varepsilon = 1$），
+$f$ 比 $n^{\log_b a}$ 多項式地大，是情況 3；再檢查正則條件：
+\[
+a f(n/b) = 2 \left(\frac{n}{2}\right)^{2} = \frac{n^{2}}{2} \le c\, f(n),\quad c = \frac12 < 1.
+\]
+所以 $\mathrm{T}(n) = \Theta(f(n)) = \Theta(n^{2})$。
+
+\textbf{用遞迴樹看}（資結書第~2.3~節）：第 $k$ 層有 $2^{k}$ 個子問題，每個大小 $n/2^{k}$，這一層的成本是
+$2^{k}(n/2^{k})^{2} = n^{2}/2^{k}$。 各層加起來是遞減的等比級數：
+\[
+n^{2}\left(1 + \frac12 + \frac14 + \cdots\right) < 2n^{2},
+\]
+根那一層就佔了一半以上，所以總成本 $\Theta(n^{2})$。 例如取 $\mathrm{T}(1) = 1$、$n = 2^{k}$，展開得
+$\mathrm{T}(n) = 2n^{2} - n$（$\mathrm{T}(2) = 6$、$\mathrm{T}(4) = 28$，和公式一致）。
+\end{pastsoln}

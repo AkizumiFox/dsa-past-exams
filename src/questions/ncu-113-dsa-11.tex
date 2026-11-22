@@ -1,0 +1,87 @@
+\begin{pastexam}[label={px:ncu-113-dsa-11}]{中央資工所 113 學年度 第 11 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Consider the problem of solving single-source shortest-paths on the following weighted directed graph:
+\begin{center}
+\begin{tikzpicture}[x=0.72cm,y=0.72cm,>={Stealth[length=2.4mm]},thick,
+  v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\bfseries},lab/.style={font=\bfseries\small,inner sep=2pt}]
+\node[v] (1) at (2.1,-1.7) {1}; \node[v] (2) at (5.6,-1.2) {2}; \node[v] (7) at (9.5,-1.35) {7};
+\node[v] (9) at (12.1,-2.75) {9}; \node[v] (0) at (5.85,-3.2) {0}; \node[v] (3) at (1.55,-3.9) {3};
+\node[v] (8) at (10.1,-4.45) {8}; \node[v] (4) at (2.5,-6.05) {4}; \node[v] (6) at (5.0,-5.7) {6};
+\node[v] (5) at (8.2,-6.1) {5};
+\draw[->] (1) -- node[lab,above] {4} (2);
+\draw[->] (2) -- node[lab,above] {$-2$} (7);
+\draw[->] (7) -- node[lab,above right] {$-1$} (9);
+\draw[->] (9) -- node[lab,below right] {1} (8);
+\draw[->] (8) -- node[lab,right] {1} (7);
+\draw[->] (2) -- node[lab,below left,pos=0.5] {$-3$} (8);
+\draw[->] (0) -- node[lab,above right,pos=0.4] {7} (1);
+\draw[->] (1) -- node[lab,left] {$-2$} (3);
+\draw[->] (0) -- node[lab,above] {6} (3);
+\draw[->] (0) -- node[lab,right,pos=0.6] {5} (6);
+\draw[->] (0) -- node[lab,right,pos=0.4] {6} (5);
+\draw[->] (3) -- node[lab,left,pos=0.6] {2} (4);
+\draw[->] (3) -- node[lab,above,pos=0.5] {1} (6);
+\draw[->] (6) -- node[lab,below,pos=0.5] {3} (4);
+\draw[->] (5) -- node[lab,below,pos=0.5] {$-2$} (6);
+\draw[->] (5) -- node[lab,below right,pos=0.5] {3} (8);
+\end{tikzpicture}
+\end{center}
+Let $d[i,j]$ denote the length of shortest path from node $i$ to node $j$. For the following items, choose the
+correct one(s):
+
+(A)~$d[0,1]=7$ \quad (B)~$d[0,2]=11$ \quad (C)~$d[0,3]=6$ \quad (D)~$d[0,4]=8$ \quad (E)~$d[0,5]=6$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(E)。
+
+\textbf{先看圖}。 有負權重的邊，不能用 Dijkstra（資結書第~25.2.5~節）。 圖上唯一的有向環是
+$7 \to 9 \to 8 \to 7$，權重 $-1 + 1 + 1 = 1 > 0$，沒有負環，所以每個點的最短距離都有定義，而且最短路徑
+不會繞這個環（繞一圈只會變長）。 其他部分沒有環，可以照「前驅都算好了」的順序一個一個點算：
+$d[0,v]$ 是所有進入 $v$ 的邊 $u \to v$ 上 $d[0,u] + w(u,v)$ 的最小值（資結書引理~25.2，最短路徑的
+子路徑也是最短路徑）。 下面簡寫 $d(v) = d[0,v]$。
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+點 & 進入的邊與候選值 & $d$ \\
+\midrule
+1 & $0 \to 1$：$0 + 7$ & 7 \\
+2 & $1 \to 2$：$7 + 4$ & 11 \\
+3 & $0 \to 3$：$6$；$1 \to 3$：$7 - 2 = 5$ & 5 \\
+5 & $0 \to 5$：$6$ & 6 \\
+6 & $0 \to 6$：$5$；$3 \to 6$：$5 + 1 = 6$；$5 \to 6$：$6 - 2 = 4$ & 4 \\
+4 & $3 \to 4$：$5 + 2 = 7$；$6 \to 4$：$4 + 3 = 7$ & 7 \\
+8 & $2 \to 8$：$11 - 3 = 8$；$5 \to 8$：$6 + 3 = 9$；$9 \to 8$：$d(9) + 1$ & 8 \\
+7 & $2 \to 7$：$11 - 2 = 9$；$8 \to 7$：$8 + 1 = 9$ & 9 \\
+9 & $7 \to 9$：$9 - 1 = 8$ & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+點 $8$ 的候選裡有 $d(9) + 1$，而 $d(9) = d(7) - 1$、$d(7) \ge 8 + 1$ 不會比 $9$ 小（進入 $\{7, 8, 9\}$
+這個環的路只有 $2 \to 7$、$2 \to 8$、$5 \to 8$ 三條），所以 $d(9) + 1 \ge 9 > 8$，不影響結果。 用
+Bellman--Ford（資結書虛擬碼~25.4）照邊的起點編號順序鬆弛，第一輪就得到同樣的距離，第二輪沒有任何改變。
+
+最後的距離：
+\begin{center}
+\small
+\begin{tabular}{c*{10}{c}}
+\toprule
+$v$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+$d[0,v]$ & 0 & 7 & 11 & 5 & 7 & 6 & 4 & 9 & 8 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+逐項檢查：
+\begin{itemize}
+\item (A) $d[0,1] = 7$：對，進入 $1$ 的邊只有 $0 \to 1$。
+\item (B) $d[0,2] = 11$：對，進入 $2$ 的邊只有 $1 \to 2$。
+\item (C) $d[0,3] = 6$：錯。 直接走 $0 \to 3$ 是 $6$，但 $0 \to 1 \to 3$ 是 $7 - 2 = 5$ 更短。
+\item (D) $d[0,4] = 8$：錯，是 $7$（$0 \to 1 \to 3 \to 4$ 或 $0 \to 5 \to 6 \to 4$）。 $8$ 是直接走
+$0 \to 3 \to 4$ 的長度。
+\item (E) $d[0,5] = 6$：對，進入 $5$ 的邊只有 $0 \to 5$。
+\end{itemize}
+\end{pastsoln}

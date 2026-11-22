@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:df3-108-ds-04}]{地方三等資訊處理 108 年 第四題}
+（申論；20 分）
+
+下面的無向圖（undirected graph）表示四個人的關係，如張三與李四有關係，這二人之間有邊（edge）相連，則可走訪。
+括弧內為人名縮寫，如張三（Chang San）的縮寫為 CS。若同時有兩個以上的人可處理，則先處理人名縮寫的字母順序
+較小者。
+\begin{center}
+\begin{tikzpicture}[v/.style={font=\small,align=center}]
+\node[v] (LS) at (0,1.1) {李四(LS)};
+\node[v] (CS) at (-3,0) {張三\\(CS)};
+\node[v] (WW) at (3,0) {王五\\(WW)};
+\node[v] (CL) at (0,-1.1) {趙六(CL)};
+\draw (CS) -- (LS) (LS) -- (WW) (LS) -- (CL) (CS) -- (CL) (CL) -- (WW);
+\end{tikzpicture}
+\end{center}
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 由張三（CS）出發，用佇列（queue）做廣度優先搜尋（breadth-first search）走訪所有人，請寫出走訪順序的
+中文人名。（10 分）
+\item[㈡] 由張三（CS）出發，用堆疊（stack）做深度優先搜尋（depth-first search）走訪所有人，請寫出走訪順序的
+中文人名。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 張三、趙六、李四、王五；㈡ 張三、趙六、李四、王五。
+
+縮寫的字母順序是 $\mathrm{CL} < \mathrm{CS} < \mathrm{LS} < \mathrm{WW}$。 鄰接串列（依字母排序）：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+人 & 相鄰的人 \\
+\midrule
+張三 CS & CL、LS \\
+趙六 CL & CS、LS、WW \\
+李四 LS & CL、CS、WW \\
+王五 WW & CL、LS \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{㈠ 廣度優先}（資結書第~21.3~節）。 放入佇列時就標記，每次取出佇列前端的人，把還沒標記的鄰居依字母順序
+放進佇列：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+取出走訪 & 放入 & 佇列（左端是前端） \\
+\midrule
+& CS & CS \\
+CS（張三） & CL、LS & CL, LS \\
+CL（趙六） & WW（CS、LS 已標記） & LS, WW \\
+LS（李四） & 無 & WW \\
+WW（王五） & 無 & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+走訪順序：張三、趙六、李四、王五。
+
+\textbf{㈡ 深度優先}（資結書第~21.4~節、虛擬碼~21.4）。 每次 pop 一個人，沒走過就走訪，再把他還沒走過的鄰居
+\textbf{反著字母順序} push，讓字母小的在頂端、先被處理（這樣才符合「先處理字母順序較小者」）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+pop & 走訪 & push 之後的堆疊（右端是頂端） \\
+\midrule
+& & CS \\
+CS & 張三 & LS, CL \\
+CL & 趙六 & LS, WW, LS \\
+LS & 李四 & LS, WW, WW \\
+WW & 王五 & LS, WW \\
+WW、LS & （都走過了，丟掉） & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+走訪順序：張三、趙六、李四、王五。 用遞迴的想法驗證：從張三出發，往字母最小的鄰居趙六走；趙六還沒走過的鄰居
+是李四、王五，先走李四；李四還沒走過的只剩王五，走到王五，四人走完。
+
+這張圖兩種走法的順序剛好相同，但過程不同：BFS 是「先把張三的鄰居趙六、李四都排進來」，李四是因為和張三相鄰
+才排第三；DFS 是沿著 張三 $\to$ 趙六 $\to$ 李四 $\to$ 王五 一路走下去，李四是從趙六走過去的。 兩者的走訪樹不同：
+BFS 樹的邊是 CS–CL、CS–LS、CL–WW；DFS 樹的邊是 CS–CL、CL–LS、LS–WW。
+\end{pastsoln}

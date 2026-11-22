@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-114-dsa-10}]{臺大資網所 114 學年度 第 10 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Select all the correct statement(s) from the following statements regarding binary trees and binary
+search trees.
+\begin{enumerate}[label=(\Alph*)]
+\item Every binary tree is a binary search tree.
+\item Every binary search tree on $n$ nodes has height $O(\log n)$.
+\item In a binary search tree, we can find the next smallest element to a given element in $O(1)$ time.
+\item Let $A_1$, $A_2$, and $A_3$ be three sorted arrays of $n$ distinct real numbers. Constructing a balanced
+binary search tree of the set $A_1\cup A_2\cup A_3$ requires $O(n)$ time.
+\item Let $T$ be a complete binary tree with $n$ nodes. Finding a path from the root of $T$ to a given vertex
+$v\in T$ using breadth-first search takes $\Omega(n\lg n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)。
+
+\begin{itemize}
+\item[(A)] 錯。 二元搜尋樹要求每個節點左子樹的鍵都比它小、右子樹的都比它大（資結書第~9.1~節）；一般的二元樹沒有這個
+限制。 例：根 $1$、左孩子 $2$ 是二元樹，但不是二元搜尋樹。
+\item[(B)] 錯。 依序插入 $1, 2, \ldots, n$ 得到一條往右的鏈，高度 $n$（資結書第~9.3~節）。 $O(\log n)$ 是平衡樹或隨機
+插入時的高度。
+\item[(C)] 錯。 找後繼（或前驅）要 $O(h)$（資結書虛擬碼~9.4）：有右子樹時往右一步再一路往左，沒有時一路往上找。
+依序插入 $1, n, n - 1, \ldots, 2$：$1$ 是根，$n$ 是它的右孩子，之後每個數都是前一個的左孩子。 $1$ 的後繼 $2$ 在最深
+的地方，要走 $n - 1$ 步。 不是 $O(1)$（除非另外存引線或後繼指標，題目沒有）。
+\item[(D)] 對。 先把三個排好的陣列合併：兩兩合併兩次（資結書虛擬碼~14.4），每次線性，共 $O(n)$；合併時遇到相同的數
+只留一個（集合的聯集）。 再從排好的陣列 $B[1..k]$（$k \le 3n$）建平衡樹：取中間的 $B[\lceil k/2 \rceil]$ 當根，左半、
+右半遞迴建左、右子樹。 每個元素做一次根，$T(k) = 2T(k/2) + O(1) = O(k)$；左右兩半大小最多差 $1$，樹高
+$\lceil \lg(k+1) \rceil$，是平衡的。 中序走訪就是 $B$，滿足 BST 的條件。 總共 $O(n)$。
+\item[(E)] 錯。 BFS 的時間是 $O(|V| + |E|)$（資結書第~21.3~節），樹有 $n$ 個點、$n - 1$ 條邊，最多 $O(n)$ 就走完整棵樹，
+同時記下每個點的父節點，從 $v$ 往回走就得到路徑。 不需要 $\Omega(n \lg n)$。
+\end{itemize}
+\end{pastsoln}

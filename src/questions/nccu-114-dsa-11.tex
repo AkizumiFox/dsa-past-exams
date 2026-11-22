@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:nccu-114-dsa-11}]{政大資科所 114 學年度 第 11 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following statements concerning topological ordering is \textbf{true}?
+\begin{enumerate}[label=\Alph*.]
+\item It is impossible to give the topological ordering for a direct cyclic graph.
+\item The shortest paths from a single source in a weighted DAG can be found using an
+O($V$+$E$)-time greedy algorithm based on topological ordering, where $V$ is the number of
+vertices and $E$ is the number of edges.
+\item In a DAG, if there is a path from vertex $u$ to vertex $v$, then $v$ appears after $u$ in
+topological ordering.
+\item The longest paths from a single source in a weighted DAG can be found using an
+O($V$+$E$)-time greedy algorithm based on topological ordering, where $V$ is the number of
+vertices and $E$ is the number of edges.
+\item All of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E。 A 的「direct cyclic graph」指有向的有環圖（directed cyclic graph）。
+
+逐項檢查：
+\begin{itemize}
+\item A.~對。 有向圖有拓樸排序若且唯若它沒有環（資結書定理~22.2）。 如果有環
+$v_1 \to v_2 \to \cdots \to v_k \to v_1$，拓樸排序要 $v_1$ 在 $v_2$ 前、……、$v_k$ 在 $v_1$ 前，
+推出 $v_1$ 在自己前面，矛盾。
+\item B.~對。 資結書虛擬碼~25.6（第~25.5~節）：先求拓樸排序，再依這個順序對每個頂點的出邊做一次
+鬆弛。 依拓樸順序處理到 $u$ 時，所有能走到 $u$ 的頂點都已經處理過，$u.d$ 已經是最短距離
+（資結書定理~25.10），之後不會再變。 拓樸排序 $O(V + E)$，每條邊鬆弛一次，共 $O(V + E)$。 權重
+是負的也可以。 （這個演算法比較像動態規劃，題目稱它為 greedy；說法不嚴謹，但時間和正確性沒問題。）
+\item C.~對。 路徑 $u = w_0 \to w_1 \to \cdots \to w_k = v$ 上每條邊 $(w_{i}, w_{i+1})$ 都要求
+$w_i$ 排在 $w_{i+1}$ 前面，串起來 $u$ 就排在 $v$ 前面。
+\item D.~對。 DAG 沒有環，把每條邊的權重取負號，最長路徑就變成最短路徑，用 B 的演算法求，
+$O(V + E)$；或者直接把鬆弛的 $>$ 改成 $<$（取最大）。 一般圖的最長簡單路徑是 NP 難的，但 DAG
+上沒有環，不會有這個問題。
+\end{itemize}
+A 到 D 都對，所以選 E。
+\end{pastsoln}

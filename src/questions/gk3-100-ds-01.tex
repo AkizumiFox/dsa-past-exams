@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:gk3-100-ds-01}]{高考三級資訊處理 100 年 第一題}
+（申論；10 分）
+
+N 為問題大小，K 為大於 $1$ 的常數。請以 Big-O 方式比較以下時間複雜度（Time complexity）的大小：
+㈠~$\log(N)^{K}$\quad ㈡~$K^{\log(N)}$\quad ㈢~$\log(N)*\log(\log(N)^{K})$\quad ㈣~$N^{\log(N)}$\quad
+㈤~$\log(N^{N})$\quad ㈥~$\log(N)^{N}$（10 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$1 < K \le 2$ 時，㈢ $<$ ㈠ $<$ ㈡ $<$ ㈤ $<$ ㈣ $<$ ㈥；$K > 2$ 時，㈡ 和 ㈤ 對調：
+㈢ $<$ ㈠ $<$ ㈤ $<$ ㈡ $<$ ㈣ $<$ ㈥。
+
+題目沒有寫 $\log$ 的底數，也沒有說 $K$ 多大。 只有 ㈡ 會受影響：$K^{\log N}$ 的成長率跟底數有關
+（底數只讓其他各項差常數倍，不影響階）。 以下 $\log$ 取以 $2$ 為底（記成 $\lg$），並依 $K$ 分兩種情況。
+「$f < g$」指 $f = o(g)$，也就是 $f = O(g)$ 但 $g \ne O(f)$。 令 $L = \lg N$。
+
+\textbf{先化簡}（資結書第~1.6~節的對數、指數公式）：
+\begin{itemize}
+\item ㈠ $= L^{K}$，對數的多項式（polylog）。
+\item ㈡ $= K^{\lg N} = 2^{\lg K \cdot \lg N} = N^{\lg K}$，$N$ 的多項式，次方 $\lg K > 0$。
+\item ㈢ $= \lg N \cdot K \lg\lg N = \Theta(L \lg L)$。
+\item ㈣ $= N^{\lg N} = 2^{(\lg N)^{2}} = 2^{L^{2}}$。
+\item ㈤ $= N \lg N$。
+\item ㈥ $= L^{N} = 2^{N \lg L}$。
+\end{itemize}
+
+\textbf{逐對比較。}
+\begin{itemize}
+\item ㈢ $<$ ㈠：$\dfrac{L^{K}}{K L \lg L} = \dfrac{L^{K-1}}{K\lg L} \to \infty$，因為 $K - 1 > 0$，$L$ 的任何正次方都
+比 $\lg L$ 長得快。
+\item ㈠ $<$ ㈡、㈠ $<$ ㈤：$N$ 的任何正次方都比 $\lg N$ 的任何次方長得快，$L^{K} = o(N^{\lg K})$，
+也 $= o(N)$。
+\item ㈡ 和 ㈤：$\dfrac{N^{\lg K}}{N \lg N} = \dfrac{N^{\lg K - 1}}{\lg N}$。 $K \le 2$ 時 $\lg K - 1 \le 0$，
+分子不會變大，比值 $\to 0$，㈡ $<$ ㈤（例如 $K = 2$ 時 ㈡ $= N$）；$K > 2$ 時 $\lg K - 1 > 0$，比值
+$\to \infty$，㈤ $<$ ㈡。
+\item ㈡、㈤ $<$ ㈣：$N^{\lg N}$ 的次方 $\lg N$ 會無限變大，終究超過任何固定的 $\lg K$，也超過 $2$；
+而 ㈤ $\le N^{2}$。
+\item ㈣ $<$ ㈥：比較指數，$\dfrac{L^{2}}{N \lg L} \to 0$，所以 $N\lg L - L^{2} \to \infty$，
+$\dfrac{L^{N}}{N^{\lg N}} = 2^{N\lg L - L^{2}} \to \infty$。
+\end{itemize}
+
+把這些串起來就是上面的兩種順序。 如果對數取其他底數 $b$，㈡ $= N^{\log_b K}$，分界改成
+$K \le b$ 和 $K > b$。
+\end{pastsoln}

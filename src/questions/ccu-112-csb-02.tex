@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ccu-112-csb-02}]{中正資工所乙組 112 學年度 第 3 題}
+（單選並說明理由）
+
+(6 points) There is a large enough array A with indices p and q, which are initialized by 0. Array
+A and indices p and q can only be accessed in the functions $f(x)$ and $g()$. If functions $f(x)$
+and $g()$ are defined as follows. Which data structure is operated by those functions? Please
+choose the correct answer and explain why.
+
+$f(x)$
+\begin{itemize}
+\item $p \leftarrow p+1$
+\item $A[p] \leftarrow x$
+\end{itemize}
+
+$g()$
+\begin{itemize}
+\item $x \leftarrow A[p]$
+\item $p \leftarrow p-1$
+\item return $x$
+\end{itemize}
+A.~Hash \qquad B.~Heap \qquad C.~Stack \qquad D.~Queue
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+只有一個索引 $p$ 在動（$q$ 從頭到尾沒有用到，是干擾）。 $p$ 永遠指著最後放進去的那一格：
+$f(x)$ 先把 $p$ 加一、再把 $x$ 放在 $A[p]$；$g()$ 取出 $A[p]$、再把 $p$ 減一。 所以 $g()$ 取出的
+一定是\textbf{最後}放進去、還沒被取出的元素，這是後進先出（LIFO），$f$ 是 push、$g$ 是 pop，
+$p$ 是堆疊頂端的索引。 這就是資結書虛擬碼~6.1 的陣列堆疊（$A[1..p]$ 是堆疊的內容，$p = 0$ 表示空）。
+
+例如 $f(1), f(2), f(3)$ 之後 $A[1..3] = \langle 1, 2, 3\rangle$、$p = 3$；接著 $g()$ 回傳 $3$，
+再 $g()$ 回傳 $2$，順序和放進去相反。
+
+逐項檢查：
+\begin{itemize}
+\item A.~Hash：雜湊表依鍵算出位置，這裡的位置只由 $p$ 決定，和 $x$ 的值無關，錯。
+\item B.~Heap：堆積取出的是最大（或最小）的元素，而且插入、取出時要上浮或下沉調整；這裡沒有任何
+比較，取出的是最後放的那個，錯。
+\item C.~Stack：後進先出，對。
+\item D.~Queue：佇列先進先出，要兩個索引（一個在前端取出、一個在後端放入）。 題目雖然給了 $q$，
+但 $f$、$g$ 都沒有用它；上例裡先取出的是 $3$ 不是 $1$，錯。
+\end{itemize}
+另外注意，$g()$ 沒有檢查 $p = 0$（空堆疊）、$f(x)$ 也沒有檢查陣列滿了，題目用「large enough」排除
+了後者；實作時 pop 前要先檢查是否為空。
+\end{pastsoln}

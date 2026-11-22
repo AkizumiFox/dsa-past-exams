@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:nccu-114-dsa-05}]{政大資科所 114 學年度 第 5 題}
+（單選；每題 4 分）
+
+(4\%) Given a logical expression represented as an expression tree, along with the Boolean values
+assigned to the operands, which algorithm is best suited to evaluate the logical expression?
+\begin{enumerate}[label=\Alph*.]
+\item Pre-order Traversal
+\item In-order Traversal
+\item Post-order Traversal
+\item Breadth-First Search
+\item Depth-First Search
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+運算式樹（資結書第~7.7~節）的葉節點是運算元，內部節點是運算子（$\wedge$、$\vee$、$\neg$）。 一個
+運算子節點要算出值，必須先知道它的子樹（運算元）的值，所以要\textbf{先處理子節點、最後處理自己}，
+這正是後序走訪（資結書第~7.3~節）：
+\begin{pseudo}[unbreakable]{運算式樹求值（後序）}
+\Function{Eval}{$x$}
+    \If{$x$ 是葉節點}
+        \State \Return $x$ 的布林值
+    \EndIf
+    \State $a \gets \proc{Eval}(x.\mathit{left})$ \Comment{$\neg$ 只有一個子節點時只算這一個}
+    \State $b \gets \proc{Eval}(x.\mathit{right})$
+    \State \Return $a \mathbin{x.\mathit{op}} b$
+\EndFunction
+\end{pseudo}
+每個節點處理一次，時間 $O(n)$。
+
+逐項檢查：
+\begin{itemize}
+\item A.~前序先處理運算子，這時兩邊的值都還不知道，不能直接算（印出前序得到的是前序式，要另外
+用堆疊才能求值），錯。
+\item B.~中序得到的是中序式（而且要補括號），本身不能算出值，錯。
+\item C.~後序：子樹算完才處理運算子，對。
+\item D.~BFS 一層一層由上往下，處理根的時候子樹都還沒算，錯。
+\item E.~DFS 是一大類走訪，前序、中序、後序都是 DFS；題目要的是「最適合」的那一種，就是後序，
+E 不夠精確，不選。
+\end{itemize}
+\end{pastsoln}

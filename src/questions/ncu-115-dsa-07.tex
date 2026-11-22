@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-115-dsa-07}]{中央資工所 115 學年度 第 7 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Consider lower bounds for algorithmic problems in the comparison-based model. Select one or more correct statements.
+\begin{enumerate}[label=\Alph*.]
+\item Any comparison-based algorithm for sorting $n$ distinct elements has a worst-case lower bound of $\Omega(n\log n)$.
+\item The $\Omega(n\log n)$ lower bound for sorting applies to all sorting algorithms, including counting sort and radix sort.
+\item The decision-tree model is commonly used to prove lower bounds for comparison-based sorting.
+\item The information-theoretic argument for comparison-based sorting relies on the fact that there are $n!$ possible input permutations.
+\item A lower bound of $\Omega(n)$ for a problem implies that no algorithm can solve the problem faster than linear time in the worst case, regardless of the computational model.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、C、D。
+
+\textbf{A 對}。 這就是資結書定理~15.1：任何比較排序在最壞情況下至少比 $\lceil \lg(n!) \rceil$ 次，
+而 $\lg(n!) = \Theta(n \lg n)$。
+
+\textbf{B 錯}。 下界只管「只靠比較兩個鍵得知鍵的資訊」的演算法（資結書第~15.1~節最後一小節）。
+計數排序拿鍵當陣列的索引，一次就知道「這個鍵是幾」，不是兩種結果的比較，決策樹的論證不適用；
+它的時間是 $\Theta(n + k)$，$k = O(n)$ 時是 $\Theta(n)$，比 $n \lg n$ 小。 基數排序每一趟用計數排序，
+同樣不受這個下界限制。
+
+\textbf{C 對}。 資結書第~15.1~節就是把比較排序的所有執行過程畫成決策樹來證明下界。
+
+\textbf{D 對}。 證明的第一步是：$n$ 個相異的鍵有 $n!$ 種大小順序，不同的順序必須走到不同的葉節點，
+所以葉節點至少 $n!$ 個，最壞的深度至少 $\lg(n!)$。 這個「答案有 $L$ 種可能，就至少要
+$\lceil \lg L \rceil$ 次比較」就是資訊理論下界。
+
+\textbf{E 錯}。 下界都是在某個計算模型裡證明的，換了模型可能就不成立。 資結書第~15~章觀念題第~9~題
+是現成的例子：判斷 $n$ 個數有沒有重複，在只能問「$a_i = a_j$ 嗎？」的模型裡最壞要問
+$\binom{n}{2}$ 次，是 $\Omega(n^2)$；能比大小時先排序再比相鄰的，只要 $O(n \lg n)$；鍵是範圍不大的
+整數時查表，是線性時間。 同一個問題，在第一個模型證出的 $\Omega(n^2)$ 到了另外兩個模型都不成立。
+$\Omega(n)$ 的下界也一樣，要先說是哪一個模型。
+\end{pastsoln}

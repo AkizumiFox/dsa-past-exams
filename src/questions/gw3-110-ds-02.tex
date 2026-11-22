@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:gw3-110-ds-02}]{關務三等資訊處理 110 年 第二題}
+（申論；20 分）
+
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 求下列遞迴函數值 $f(3) = ?$（10 分）
+
+int \textit{f}(int n)\{if(n == 0)return 0；else return \textit{f}(n-1)+n*n;\}
+\item[㈡] 求遞迴函數 $f(n) = ?$, $\forall n \in N$（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $f(3) = 14$；㈡ $f(n) = \dfrac{n(n+1)(2n+1)}{6}$。
+
+這題是解遞迴式並用數學歸納法證明，屬於資結書附錄~A 的內容。 程式裡全形的「；」是原卷的排版，照 C 的意思
+讀作分號。
+
+\textbf{㈠} 照程式展開：
+\begin{align*}
+f(3) &= f(2) + 3 \cdot 3 \\
+f(2) &= f(1) + 2 \cdot 2 \\
+f(1) &= f(0) + 1 \cdot 1 \\
+f(0) &= 0
+\end{align*}
+往回代：$f(1) = 0 + 1 = 1$，$f(2) = 1 + 4 = 5$，$f(3) = 5 + 9 = 14$。
+
+\textbf{㈡} 程式定義的是遞迴式
+\[
+f(0) = 0,\qquad f(n) = f(n-1) + n^2 \quad (n \ge 1),
+\]
+展開得 $f(n) = 1^2 + 2^2 + \cdots + n^2 = \sum_{i=1}^{n} i^2$。 所求的封閉形式是
+\[
+f(n) = \frac{n(n+1)(2n+1)}{6}.
+\]
+檢查：$n = 0, 1, 2, 3$ 時分別是 $0, 1, 5, 14$，和㈠一致。
+
+\textbf{證明（對 $n$ 做數學歸納法）。}
+\begin{itemize}
+\item 基底 $n = 0$：$f(0) = 0 = \frac{0 \cdot 1 \cdot 1}{6}$，成立。（若題目的 $N$ 從 $1$ 開始，$f(1) = 1 = \frac{1 \cdot 2 \cdot 3}{6}$，也成立。）
+\item 歸納步驟：假設 $f(n-1) = \frac{(n-1)n(2n-1)}{6}$，則
+\begin{align*}
+f(n) &= f(n-1) + n^2 = \frac{(n-1)n(2n-1) + 6n^2}{6} = \frac{n\bigl(2n^2 - 3n + 1 + 6n\bigr)}{6} \\
+     &= \frac{n(2n^2 + 3n + 1)}{6} = \frac{n(n+1)(2n+1)}{6}.
+\end{align*}
+\end{itemize}
+所以對所有 $n \ge 0$ 都成立。
+\hfill$\blacksquare$
+
+\textbf{公式怎麼想出來。} 不知道答案時，可以用 $(i+1)^3 - i^3 = 3i^2 + 3i + 1$，對 $i = 1 \sim n$ 加總，左邊相消成
+$(n+1)^3 - 1$：
+\[
+(n+1)^3 - 1 = 3\sum_{i=1}^{n} i^2 + 3 \cdot \frac{n(n+1)}{2} + n,
+\]
+移項整理就得到 $\sum i^2 = \frac{n(n+1)(2n+1)}{6}$。 順帶一提，這個函式的遞迴深度是 $n$，時間 $\Theta(n)$；用封閉形式
+只要 $O(1)$。
+\end{pastsoln}

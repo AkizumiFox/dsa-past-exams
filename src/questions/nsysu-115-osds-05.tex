@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nsysu-115-osds-05}]{中山資工所甲組 115 學年度 第 9 題}
+（問答；10 分）
+
+For each of the following sorting algorithms, state its worst-case time complexity using Big-O
+notation (e.g., $O(n)$).
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) Bubble sort
+\item (2\%) Insertion sort
+\item (2\%) Quick sort
+\item (2\%) Merge sort
+\item (2\%) Heap sort
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $O(n^2)$；(b) $O(n^2)$；(c) $O(n^2)$；(d) $O(n \log n)$；(e) $O(n \log n)$。
+
+（資結書第~14.7~節的比較表。）每一項的理由和最壞的輸入：
+\begin{itemize}
+\item \textbf{(a) 氣泡排序 $O(n^2)$}。 輸入由大到小時，每一趟都要把最小的一路換到最前面：第 $i$ 趟
+比較 $n - i$ 次，共 $n(n-1)/2$ 次比較、同樣多次交換。
+\item \textbf{(b) 插入排序 $O(n^2)$}。 輸入由大到小時，第 $j$ 個元素要和前面 $j - 1$ 個全部比過、全部
+往後挪，共 $1 + 2 + \cdots + (n - 1) = n(n-1)/2$。
+\item \textbf{(c) 快速排序 $O(n^2)$}。 每次基準都是最大或最小（例如取第一個當基準而輸入已經排好），
+每次只切掉一個，$T(n) = T(n - 1) + \Theta(n) = \Theta(n^2)$。 平均是 $O(n \log n)$，但題目問最壞。
+\item \textbf{(d) 合併排序 $O(n \log n)$}。 不管輸入是什麼都對半切，$T(n) = 2T(n/2) + \Theta(n)$，
+最好、平均、最壞都是 $\Theta(n \log n)$。
+\item \textbf{(e) 堆積排序 $O(n \log n)$}。 建堆 $O(n)$，之後 $n - 1$ 次把根換到最後、往下調整，每次
+$O(\log n)$。
+\end{itemize}
+寫最壞情況時，最好寫成緊的界（$\Theta$ 的那個級數）；$O(n^2)$ 對合併排序也「成立」，但不是題目要的
+答案。
+\end{pastsoln}

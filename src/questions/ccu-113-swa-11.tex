@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ccu-113-swa-11}]{中正資工所甲組 113 學年度 第 16 題}
+（單選）
+
+(2\%) The solution of the recurrence $\mathrm{T}(n)=4\mathrm{T}\left(\frac{n}{4}\right)+nlogn$ is \quad (a)~$n^2$; (b)~$nlogn$; (c)~$nlog^2n$; (d)~$nlog^{(2)}n$; (e)~$nlogn^2$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)，$T(n) = \Theta(n \log^2 n)$。
+
+$a = 4$、$b = 4$，$n^{\log_b a} = n^{\log_4 4} = n$，$f(n) = n \log n$。 $f(n)$ 比 $n$ 大，但只大一個 $\log n$ 因子，
+\textbf{不是}多項式地大：對任何 $\varepsilon > 0$，$n \log n = o(n^{1 + \varepsilon})$，所以基本主定理的情況 3 不適用，情況 2
+也不適用（$f(n) \ne \Theta(n)$）。 這時用推廣的情況 2（資結書定理~2.5）：$f(n) = \Theta(n^{\log_b a} \lg^k n)$，$k = 1$，
+得 $T(n) = \Theta(n \lg^{2} n)$。
+
+用遞迴樹驗算（$n = 4^m$）：第 $i$ 層有 $4^i$ 個子問題、每個大小 $n/4^i$，工作合計
+$4^i \cdot \frac{n}{4^i} \lg \frac{n}{4^i} = n(\lg n - 2i)$。 共 $m = \log_4 n$ 層：
+\[
+\sum_{i=0}^{m-1} n(\lg n - 2i) = n\bigl(m \lg n - m(m - 1)\bigr), \qquad m = \tfrac{1}{2}\lg n,
+\]
+$= n\bigl(\tfrac{1}{2}\lg^2 n - \tfrac{1}{4}\lg^2 n + \tfrac{1}{2}\lg n\bigr) = \tfrac{1}{4} n \lg^2 n + \tfrac{1}{2} n \lg n$，再加上葉子的
+$\Theta(n)$，是 $\Theta(n \lg^2 n)$。
+
+選項的寫法：(c) $n\,log^2 n$ 指 $n (\log n)^2$，就是答案。 (d) $n \log^{(2)} n$ 通常表示 $n \log\log n$（$\log$ 疊兩次），太小；
+(e) $n \log n^2 = 2n\log n$，只是 $\Theta(n \log n)$，和 (b) 同級，少了一個 $\log n$；(a) $n^2$ 太大。
+\end{pastsoln}

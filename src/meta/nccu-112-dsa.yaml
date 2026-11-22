@@ -1,0 +1,11 @@
+paper: nccu-112-dsa
+volume: 2
+school: 政大
+dept: 資科所
+year: 112
+subject: 資料結構及演算法
+instructions: 選擇題請在答案卡上作答，否則不予計分。 備註：一、作答於試題上者，不予計分。二、試題請隨卷繳交。
+questions:
+  - {id: nccu-112-dsa-01, label: 第 1 題, chapter: 14}
+  - {id: nccu-112-dsa-02, label: 第 2 題, chapter: 18}
+  - {id: nccu-112-dsa-03, label: 第 3 題, chapter: 19}

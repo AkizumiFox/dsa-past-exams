@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-07}]{中山資工所資安組 111 學年度 第 10 題}
+（設計、分析）
+
+(Algorithm points) {[10\%]} Given a knapsack with maximum capacity $W$ and a set $S$ consisting of $n$
+items, where each item $i$ has weight $w_i$ and benefit value $b_i$. Please describe an algorithm based
+on dynamic programming for packing the knapsack to achieve a maximum total benefit value of the picked
+items and analyze the time complexity of the algorithm. ($w_i$, $b_i$, and $W$ are integer values.)
+\end{pastexam}
+
+\begin{pastsoln}
+這是 0/1 背包問題（每件物品拿或不拿），做法照資結書第~18.5~節。 以下假設 $w_i \ge 1$、$W \ge 0$；
+重量為 $0$ 的物品價值非負就直接拿，可以先處理掉。
+
+\textbf{子問題。} $B[i, c]$：只能從物品 $1, \ldots, i$ 裡挑、總重不超過 $c$ 時，能得到的最大價值
+（$0 \le i \le n$、$0 \le c \le W$）。 答案是 $B[n, W]$。
+
+\textbf{遞迴式。}
+\[
+B[i, c] =
+\begin{cases}
+0, & i = 0, \\
+B[i-1, c], & i \ge 1 \text{ 且 } w_i > c, \\
+\max\bigl\{B[i-1, c],\; B[i-1, c - w_i] + b_i\bigr\}, & i \ge 1 \text{ 且 } w_i \le c.
+\end{cases}
+\]
+理由：$\{1..i\}$、容量 $c$ 的最佳解如果不拿物品 $i$，它就是 $\{1..i-1\}$、容量 $c$ 的最佳解；如果拿，
+扣掉物品 $i$ 後剩下的部分必須是 $\{1..i-1\}$、容量 $c - w_i$ 的最佳解，否則換掉它能得到更大的總價值
+（最佳子結構）。 兩種情形取大的。
+
+\textbf{演算法。} 第 $i$ 列只用到第 $i-1$ 列，由 $i = 0$ 往下逐列填表：
+\begin{pseudo}[unbreakable]{0/1 背包}
+\Function{Knapsack}{$w, b, n, W$}
+    \For{$c \gets 0$ \To $W$}
+        \State $B[0, c] \gets 0$
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \For{$c \gets 0$ \To $W$}
+            \State $B[i, c] \gets B[i - 1, c]$
+            \If{$w_i \le c$ \AND $B[i - 1, c - w_i] + b_i > B[i, c]$}
+                \State $B[i, c] \gets B[i - 1, c - w_i] + b_i$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $c \gets W$ \Comment{還原挑了哪些物品}
+    \For{$i \gets n$ \DownTo $1$}
+        \If{$B[i, c] \ne B[i - 1, c]$}
+            \State 輸出物品 $i$；$c \gets c - w_i$
+        \EndIf
+    \EndFor
+    \State \Return $B[n, W]$
+\EndFunction
+\end{pseudo}
+還原時，$B[i, c] \ne B[i-1, c]$ 表示不拿物品 $i$ 就達不到這個值，所以物品 $i$ 一定在解裡。 手算的
+小例子見政大資科所 112 學年度第 2 題（第~\pageref{px:nccu-112-dsa-02}~頁）。
+
+\textbf{時間複雜度。} 表有 $(n+1)(W+1)$ 格，每格 $O(1)$；還原 $O(n)$。 總時間 $\Theta(nW)$，
+空間 $\Theta(nW)$；只要最佳值時可以只留一列（$c$ 由大往小更新），空間降成 $\Theta(W)$。
+
+$\Theta(nW)$ 看起來是多項式，其實不是：$W$ 只要 $\lceil \lg (W+1) \rceil$ 個位元就能寫下，$nW$ 對
+輸入的位元數是指數的，這叫擬多項式時間（資結書第~18.5.5~節）。 $W$ 很大（例如 $2^{40}$）時這個方法
+就不實用；0/1 背包的決策版本是 NP 完備的，目前沒有對位元數是多項式的演算法。
+\end{pastsoln}

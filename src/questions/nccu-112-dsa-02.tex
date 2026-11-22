@@ -1,0 +1,93 @@
+\begin{pastexam}[label={px:nccu-112-dsa-02}]{政大資科所 112 學年度 第 2 題}
+（設計、分析）
+
+(20\%) In the knapsack problem, the input contains $n$ items $1,2,3,\dots,n$, where item $i$ has
+weight $w[i]$ and value $v[i]$. The input also contains a number $W$. All the weights, values, and
+$W$ are positive integers. The output is a set $S\subseteq\{1,2,3,\dots,n\}$ such that the total
+weight of $S$ is at most $W$ (i.e., $\sum_{i\in S}w[i]\le W$) and the total value of $S$ (i.e.,
+$\sum_{i\in S}v[i]$) is maximized.
+
+Consider the following subproblem:\\
+$K(j,W')$: return the maximum achievable total value under the constraints that only items
+$1,2,3,\dots,j$ can be chosen and the total weight of the chosen items is at most $W'$.\\
+Thus, $K(n,W)$ returns the total value of the optimal solution of the original knapsack problem.
+\begin{enumerate}[label=\arabic*),itemsep=2pt,topsep=2pt]
+\item (10\%) Design a dynamic programming algorithm (in pseudocode) for the knapsack problem based
+on the above subproblem. In your answer, please state the recursive formula for $K(j,W')$ clearly.
+\item (5\%) Please analyze the time complexity of your algorithm.
+\item (5\%) Is your algorithm a polynomial time algorithm? Please explain your answer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{1) 遞迴式。} 對 $0 \le j \le n$、$0 \le W' \le W$：
+\[
+K(j, W') =
+\begin{cases}
+0, & j = 0, \\
+K(j-1, W'), & j \ge 1 \text{ 且 } w[j] > W', \\
+\max\bigl\{K(j-1, W'),\; K(j-1, W' - w[j]) + v[j]\bigr\}, & j \ge 1 \text{ 且 } w[j] \le W'.
+\end{cases}
+\]
+理由（最佳子結構，資結書第~18.5~節）：看「只能用物品 $1..j$、容量 $W'$」的一個最佳解。
+\begin{itemize}
+\item 它不拿物品 $j$：那它就是「只能用 $1..j-1$、容量 $W'$」的一個解，價值不超過 $K(j-1, W')$；
+反過來那個問題的最佳解也是這裡的可行解。 所以這一類最好是 $K(j-1, W')$。
+\item 它拿物品 $j$（必須 $w[j] \le W'$）：拿掉物品 $j$ 之後，剩下的是「只能用 $1..j-1$、容量
+$W' - w[j]$」的可行解。 剩下這部分如果不是那個子問題的最佳解，換成最佳解總價值會更大，矛盾。
+所以這一類最好是 $K(j-1, W' - w[j]) + v[j]$。
+\end{itemize}
+兩類取大的就是 $K(j, W')$。 沒有物品可拿時價值是 $0$。
+
+\textbf{演算法。} 由 $j = 0$ 往上一列一列填表，第 $j$ 列只用到第 $j-1$ 列（資結書虛擬碼~18.10）；
+題目要輸出集合 $S$，所以填完之後再從 $K[n, W]$ 往回推。
+\begin{pseudo}[unbreakable]{0/1 背包：填表並還原 $S$}
+\Function{Knapsack}{$w, v, n, W$}
+    \For{$c \gets 0$ \To $W$}
+        \State $K[0, c] \gets 0$
+    \EndFor
+    \For{$j \gets 1$ \To $n$}
+        \For{$c \gets 0$ \To $W$}
+            \State $K[j, c] \gets K[j - 1, c]$ \Comment{不拿物品 $j$}
+            \If{$w[j] \le c$ \AND $K[j - 1, c - w[j]] + v[j] > K[j, c]$}
+                \State $K[j, c] \gets K[j - 1, c - w[j]] + v[j]$ \Comment{拿物品 $j$}
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $S \gets \emptyset$；$c \gets W$
+    \For{$j \gets n$ \DownTo $1$}
+        \If{$K[j, c] \ne K[j - 1, c]$} \Comment{不拿 $j$ 就達不到，$j$ 一定要拿}
+            \State $S \gets S \cup \{j\}$；$c \gets c - w[j]$
+        \EndIf
+    \EndFor
+    \State \Return $S$ \Comment{總價值是 $K[n, W]$}
+\EndFunction
+\end{pseudo}
+還原時 $K[j, c] = K[j-1, c]$ 表示不拿物品 $j$ 也能達到同樣的值，就當作不拿，往上一列看同一個 $c$；
+不相等時表示第 8 行選了「拿」，容量扣掉 $w[j]$ 再往上看。 每一步都保持「$S$ 加上用 $1..j-1$、
+容量 $c$ 的某個最佳解，總價值是 $K[n, W]$」，推到 $j = 0$ 就得到一個最佳解。
+
+小例子：$W = 5$，三件物品 $(w, v) = (2, 3), (3, 4), (4, 5)$。
+\begin{center}
+\begin{tabular}{c|cccccc}
+$j \backslash c$ & 0 & 1 & 2 & 3 & 4 & 5 \\ \hline
+0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 0 & 3 & 3 & 3 & 3 \\
+2 & 0 & 0 & 3 & 4 & 4 & \textbf{7} \\
+3 & 0 & 0 & 3 & 4 & 5 & \textbf{7} \\
+\end{tabular}
+\end{center}
+例如 $K[2, 5] = \max\{K[1, 5], K[1, 2] + 4\} = \max\{3, 7\} = 7$。 還原：$K[3, 5] = K[2, 5]$，不拿
+物品 3；$K[2, 5] \ne K[1, 5]$，拿物品 2，$c = 2$；$K[1, 2] \ne K[0, 2]$，拿物品 1。 $S = \{1, 2\}$，
+總重 $5$、總價值 $7$。
+
+\textbf{2) 時間。} 表有 $(n+1)(W+1)$ 格，每格 $O(1)$；還原只走 $n$ 步。 總時間 $\Theta(nW)$，
+空間 $\Theta(nW)$（只要最佳值、不要 $S$ 的話，可以只留一列，空間 $\Theta(W)$，資結書第~18.5.4~節）。
+
+\textbf{3) 不是多項式時間。} 演算法的時間要用\textbf{輸入的長度}（位元數）來量。 輸入是 $2n + 1$
+個整數，$W$ 只要 $\lceil \lg(W+1) \rceil$ 個位元就寫得下；令 $b = \lg W$，$\Theta(nW) =
+\Theta(n \cdot 2^b)$，對 $W$ 的位元數是指數的。 例如 $W = 2^{60}$：輸入只多了大約 $60$ 個位元，表卻
+要 $2^{60}$ 行。 $\Theta(nW)$ 只是對「$W$ 的數值」是多項式，這叫擬多項式時間（資結書第~18.5.5~節）。
+只有在 $W$ 不超過 $n$ 的某個多項式時（例如 $W \le n^2$），它才是多項式時間。 背包問題的決策版本是
+NP 完備的，所以不能期待有對位元數是多項式的演算法，除非 P $=$ NP（資結書第~28.6~節）。
+\end{pastsoln}

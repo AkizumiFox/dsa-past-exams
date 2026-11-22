@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:nchu-114-dsa-26}]{中興資工所甲組 114 學年度 計算題第 6 題}
+（問答）
+
+Design and describe the implementation of a dynamic array-like container that can grow as elements are added, without requiring a fixed size to be declared at initialization. Your explanation should include (10 \%):
+\begin{itemize}
+\item \textbf{Memory Management:}\\
+How do you allocate and deallocate memory for the underlying storage? What functions or mechanisms would you use to manage this memory dynamically?
+\item \textbf{Capacity Expansion Strategy:}\\
+When the container runs out of capacity as new elements are inserted, how do you decide to increase its size? Discuss the growth factor and the trade-offs it involves in terms of memory usage and performance.
+\item \textbf{Indexing Operations:}\\
+How can you ensure O(1) random access to elements by index? What data structure or access method do you use to guarantee this?
+\item \textbf{Insertion and Deletion Complexity:}\\
+What is the expected time complexity for inserting and deleting elements at arbitrary positions, and how does this scale as the size of the container grows? Address the concept of amortized complexity and explain why it might differ from the worst-case scenario.
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+這是一題設計說明題，照題目的四個項目回答。 資結書範例~3.3 是一份完整的 C 實作。
+
+\textbf{記憶體管理}。 用一個結構記住三件事：指向資料的指標 \texttt{data}、目前的個數 $\mathit{num}$、
+容量 $\mathit{cap}$。 一開始用 \texttt{malloc} 配置一小塊（或 $\mathit{cap} = 0$、\texttt{data} 是
+\texttt{NULL}）。 要換容量時用 \texttt{realloc}；它失敗會回傳 \texttt{NULL} 而舊的那塊仍然有效，所以先用
+暫存指標接，確定成功才換掉 \texttt{data}。 容器不用了，或容量變成 $0$ 時，用 \texttt{free} 還回去。
+
+\textbf{擴充策略}。 放滿時把容量乘上一個固定的倍數 $r > 1$，常用 $r = 2$（資結書虛擬碼~3.3）。 取捨是：
+\begin{itemize}
+\item 時間：容量是等比級數，$n$ 次加入的搬動總數小於 $\frac{r}{r - 1}\, n$，每次加入的平攤成本是 $O(1)$。
+$r = 2$ 時搬動小於 $2n$，總成本小於 $3n$（資結書第~3.4~節）。
+\item 空間：剛擴充完只用了大約 $1/r$，最多浪費大約 $1 - 1/r$ 的空間。 $r$ 越大搬得越少、浪費越多；$r$ 越接近
+$1$ 越省空間、搬得越多。
+\item 不能每次只加固定的 $d$ 格：搬動總數是等差級數，$\Theta(n^2/d)$，平攤 $\Theta(n)$（資結書第~3~章觀念題
+第~4~題）。
+\item 會刪除的話，縮小的門檻要比擴充後的使用率低，例如少於四分之一才減半（資結書虛擬碼~3.4），否則會在
+門檻上來回換容量。
+\end{itemize}
+
+\textbf{索引}。 元素放在一塊連續的記憶體裡，第 $i$ 個元素的位址是起始位址加上 $i \times$ 元素大小（資結書
+第~4.1~節），一次乘法加一次加法，$O(1)$。 擴充時整塊搬到新位置，所以外面只能記下標，不能長期保存指向
+元素的指標。 存取前檢查 $0 \le i < \mathit{num}$。
+
+\textbf{插入和刪除的時間}。 在任意位置插入要把後面的元素往後挪一格：
+\begin{pseudo}[unbreakable]{在第 $p$ 個位置插入（$1 \le p \le T.\mathit{num} + 1$）}
+\Procedure{Table-Insert-At}{$T, p, x$}
+    \If{$T.\mathit{num} = T.\mathit{cap}$}
+        \State 把容量加倍（容量是 $0$ 時變成 $1$），搬到新的一塊
+    \EndIf
+    \For{$i \gets T.\mathit{num}$ \DownTo $p$}
+        \State $T.\mathit{data}[i + 1] \gets T.\mathit{data}[i]$ \Comment{往後挪一格}
+    \EndFor
+    \State $T.\mathit{data}[p] \gets x$
+    \State $T.\mathit{num} \gets T.\mathit{num} + 1$
+\EndProcedure
+\end{pseudo}
+第 4、5 行把 $\mathit{data}[p..\mathit{num}]$ 依序往後挪，從後面開始挪才不會蓋掉還沒挪的元素；挪完
+$\mathit{data}[p]$ 空出來放 $x$，原本的順序不變。 挪動 $\mathit{num} - p + 1$ 次，最壞（$p = 1$）是 $\Theta(n)$；
+插入位置均勻隨機時平均挪 $n/2$ 次左右，期望仍是 $\Theta(n)$。 刪除第 $p$ 個要把後面的往前挪，同樣是
+$\Theta(\mathit{num} - p)$。 所以任意位置的插入、刪除隨容器大小線性成長。 只有在尾端加入、刪除時不用挪：
+單一次最壞是擴充或縮小那一次，$\Theta(n)$；但任意一串 $n$ 次操作的總成本不超過 $3n$（資結書定理~3.3），
+平攤 $O(1)$。
+
+\textbf{平攤和最壞情況的差別}。 最壞情況看的是單一次操作最多花多少，擴充那一次要搬全部元素。 平攤看的是
+任意一串操作的總和除以次數（資結書定義~3.1）：貴的擴充之前一定有一長串便宜的加入，總和被攤平。 平攤不是
+機率上的平均，對最壞的操作順序也成立；但它不保證每一次都快，需要每次回應都快的程式不能只靠平攤上界。
+\end{pastsoln}

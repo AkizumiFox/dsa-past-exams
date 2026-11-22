@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncu-114-dsa-17}]{中央資工所 114 學年度 第 17 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Choose correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item If a problem X can polynomially reduce to an NP-hard problem, then X is NP-hard.
+\item If we can prove that an existing NP-complete problem can polynomially reduce to a problem X, then
+X is NP-hard.
+\item An NP-hard problem can polynomially reduce to any NP-hard problem.
+\item All NP problems can polynomially reduce to any NP-complete problem.
+\item All NP problems can polynomially reduce to any NP-hard problem.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(d)(e)。
+
+\begin{itemize}
+\item (a) 錯。 $X \le_{\mathrm{p}} Y$ 只說明 $X$ 不比 $Y$ 難，推不出 $X$ 很難。 反例：$X$ 是「給一個整數，
+它是不是偶數」，它在 P 裡；歸約可以先在多項式時間內判斷答案，是就輸出一個固定能滿足的公式，否就輸出
+一個固定不能滿足的公式，所以 $X \le_{\mathrm{p}} \textsf{SAT}$，而 \textsf{SAT} 是 NP 難的。 如果 $X$ 是
+NP 難的，由資結書引理~28.2，NP 裡每個問題都在 P 裡，$\mathrm{P} = \mathrm{NP}$；所以除非
+$\mathrm{P} = \mathrm{NP}$，$X$ 不是 NP 難的。
+\item (b) 對。 這是資結書引理~28.6 證明的前半：設 $A$ 是 NP 完備的、$A \le_{\mathrm{p}} X$。 任取
+$C \in \mathrm{NP}$，$A$ 是 NP 難的，所以 $C \le_{\mathrm{p}} A$；由遞移性（資結書引理~28.3），
+$C \le_{\mathrm{p}} X$。 所以 $X$ 是 NP 難的。 （要說 $X$ 是 NP 完備，還要另外證 $X \in \mathrm{NP}$。）
+\item (c) 錯。 資結書第~28.4~節說明了停機問題是 NP 難的，\textsf{SAT} 也是 NP 難的。 如果停機問題能
+歸約到 \textsf{SAT}，先做歸約，再把 $2^n$ 組指派全部試一遍，就得到一個一定會停、而且答對停機問題的
+演算法；但停機問題沒有演算法能解，矛盾。 所以停機問題不能歸約到 \textsf{SAT}。
+\item (d) 對。 NP 完備的問題是 NP 難的，照定義（資結書定義~28.4），NP 裡每個問題都能歸約到它。
+\item (e) 對。 這就是 NP 難的定義。
+\end{itemize}
+\end{pastsoln}

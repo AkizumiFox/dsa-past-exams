@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncu-113-dsa-06}]{中央資工所 113 學年度 第 6 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Consider a complete graph G with vertex set \{0, 1, 2, 3, 4\}. Let W be the matrix of edge weights of G,
+e.g., entry Wij in matrix W is the weight of edge \{i, j\}. What are the minimum possible cost of a spanning
+tree T of G?
+\[
+W=\begin{bmatrix}
+0 & 1 & 8 & 1 & 5\\
+1 & 0 & 5 & 5 & 9\\
+8 & 5 & 0 & 7 & 3\\
+1 & 4 & 7 & 0 & 2\\
+4 & 9 & 3 & 2 & 0
+\end{bmatrix}
+\]
+\begin{enumerate}[label=(\Alph*)]
+\item 7 when vertex 0 is the root of T
+\item 8 when vertex 0 is not the root in T
+\item 9 when vertex 0 is a leaf node in T
+\item 10 when vertex 0 is a leaf node in T
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。
+
+\textbf{原卷的矩陣不對稱}。 邊 $\{i, j\}$ 的權重應該滿足 $W_{ij} = W_{ji}$，但原卷 $W_{13} = 5$、
+$W_{31} = 4$，$W_{04} = 5$、$W_{40} = 4$。 邊 $\{0, 4\}$ 不管是 $4$ 還是 $5$，下面兩種情形都用不到它；
+邊 $\{1, 3\}$ 會影響 (C)(D)。 這題改編自一道常見的考題，原題的 $W_{13} = W_{31} = 4$，這裡照下三角取
+$\{1, 3\} = 4$。 如果取上三角的 $5$，(D) 的最小值會變成 $11$，答案只剩 (A)。
+
+邊的權重整理如下（由小到大）：
+\[
+\begin{gathered}
+\{0,1\} = 1,\ \{0,3\} = 1,\ \{3,4\} = 2,\ \{2,4\} = 3,\ \{1,3\} = 4, \\
+\{0,4\} = 4\text{ 或 }5,\ \{1,2\} = 5,\ \{2,3\} = 7,\ \{0,2\} = 8,\ \{1,4\} = 9 .
+\end{gathered}
+\]
+
+\textbf{沒有限制的最小生成樹}。 用 Kruskal（資結書第~24.2~節）：選 $\{0,1\}$、$\{0,3\}$、$\{3,4\}$、
+$\{2,4\}$，四條邊都不成環，五個點已經連通，總成本 $1 + 1 + 2 + 3 = 7$。 生成樹是無向的，「以 $0$ 為根」
+只是把同一棵樹從 $0$ 拎起來看，成本不變；從任何一點當根都一樣。
+
+\textbf{限制 $0$ 是葉子}。 $0$ 只能有一條邊。 把 $0$ 拿掉，剩下的是 $\{1, 2, 3, 4\}$ 的一棵生成樹；
+反過來，$\{1, 2, 3, 4\}$ 的任一棵生成樹再用一條邊接上 $0$，就是一棵 $0$ 是葉子的生成樹。 所以最小成本是
+\[
+\text{MST}(\{1,2,3,4\}) + \min_{j \ne 0} W_{0j} .
+\]
+$\{1, 2, 3, 4\}$ 上用 Kruskal：$\{3,4\} = 2$、$\{2,4\} = 3$、$\{1,3\} = 4$，成本 $9$。 $0$ 連出去最便宜的是
+$\{0,1\}$ 或 $\{0,3\}$，都是 $1$。 總共 $9 + 1 = 10$，例如邊 $\{0,1\}, \{1,3\}, \{3,4\}, \{2,4\}$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。 最小成本是 $7$，$0$ 當根也一樣。
+\item (B) 錯。 $0$ 不當根時，同一棵成本 $7$ 的樹換一個根就好，最小值還是 $7$，不是 $8$。
+\item (C) 錯。 $0$ 是葉子時最少要 $10$，做不到 $9$。
+\item (D) 對，上面算出的 $10$。
+\end{itemize}
+\end{pastsoln}

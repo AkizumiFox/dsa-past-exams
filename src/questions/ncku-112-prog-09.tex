@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ncku-112-prog-09}]{成大資訊聯招 112 學年度 第 9 題}
+（選擇）
+
+{[5\%]} Suppose we have a Patricia trie as shown below. Let us insert 0110 into and then delete 1100 from
+the trie. What does node 1101 point to?
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=1.8mm]},
+  k/.style={ellipse,draw,inner sep=0pt,minimum width=11.5mm,minimum height=7mm,font=\sffamily\small},
+  w/.style={font=\sffamily\footnotesize,inner sep=1pt}]
+\node[k] (h) at (0,0) {0001};
+\node[k] (a) at (-1.3,-1.12) {1101};
+\node[k] (b) at (-3.0,-2.4) {0011};
+\node[k] (c) at (0.1,-2.57) {1001};
+\node[k] (d) at (-1.47,-4.28) {1000};
+\node[k] (e) at (1.22,-4.44) {1100};
+\node[w] at (0.72,0.5) {0};
+\draw[->] (h)--node[w,below right,pos=0.75]{1}(a);
+\draw[->] (a)--node[w,below right,pos=0.78]{3}(b);
+\draw[->] (a)--(c);
+\node[w] at (0.83,-2.06) {2};
+\draw[->] (c)--node[w,below right,pos=0.6]{4}(d);
+\draw[->] (c)--(e);
+\node[w] at (1.97,-3.92) {4};
+
+\draw[->] (b.south) .. controls +(0.2,-0.35) and +(0.1,-0.5) .. (-1.9,-2.7) .. controls +(-0.05,0.25) and +(0.4,0) .. (b.east);
+\draw[->] (b.south west) .. controls +(-0.7,-0.1) and +(-0.1,-1.2) .. (-3.95,-1.3) .. controls +(0.1,0.9) and +(-1.6,0) .. (h.west);
+
+\draw[->] (d.south west) .. controls +(-0.5,-0.2) and +(0,-0.35) .. (-2.6,-4.55) .. controls +(0,0.3) and +(-0.4,0) .. (d.west);
+\draw[->] (d.east) .. controls +(0.7,0) and +(0,-0.9) .. (c.south);
+
+\draw[->] (e.south west) .. controls +(-0.5,-0.2) and +(0,-0.35) .. (0.1,-4.7) .. controls +(0,0.3) and +(-0.4,0) .. (e.west);
+\draw[->] (e.east) .. controls +(0.15,1.9) and +(1.9,0) .. (a.east);
+\end{tikzpicture}
+\end{center}
+(A)~0001 \qquad (B)~0110 \qquad (C)~0011 \qquad (D)~1001 \qquad (E)~1000
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)(D)。 $1101$ 的左指標指向 $0110$，右指標指向 $1001$。
+
+\textbf{讀圖}。 照資結書第~11.5.3~節的 Patricia（Horowitz 的版本）：位元從左邊第 $1$ 位數起，標頭 $0001$ 的
+$\mathit{bit} = 0$、只用左指標；邊上的數字是指到的那個節點的 $\mathit{bit}$。 第 $\mathit{bit}$ 位是 $0$ 往左、
+$1$ 往右；指到 $\mathit{bit}$ 不比自己大的節點的是往回的指標。 由圖讀出每個節點的兩個指標，並用「往回的指標
+一定指向第 $\mathit{bit}$ 位相符的鍵」核對左右：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+節點（鍵） & $\mathit{bit}$ & 左指標 & 右指標 \\
+\midrule
+$0001$（標頭） & $0$ & $1101$ & — \\
+$1101$ & $1$ & $0011$ & $1001$ \\
+$0011$ & $3$ & $0001$（往回） & $0011$（自己） \\
+$1001$ & $2$ & $1000$ & $1100$ \\
+$1000$ & $4$ & $1000$（自己） & $1001$（往回） \\
+$1100$ & $4$ & $1100$（自己） & $1101$（往回） \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $0011$ 看第 $3$ 位：$0011$ 自己第 $3$ 位是 $1$，所以指向自己的是右指標；$0001$ 第 $3$ 位是 $0$，在左邊。
+
+\textbf{插入 $0110$}（資結書虛擬碼~11.12）。
+\begin{enumerate}
+\item 搜尋：標頭 $\to 1101$（$\mathit{bit}$ 1，$0110$ 第 $1$ 位 $0$，往左）$\to 0011$（$\mathit{bit}$ 3，第 $3$ 位
+$1$，往右）$\to$ 指回 $0011$ 自己，停。 $y = 0011$。
+\item $0110$ 和 $0011$：第 $1$ 位都是 $0$，第 $2$ 位 $1 \ne 0$，$j = 2$。
+\item 從標頭重新往下：$1101$ 的 $\mathit{bit} = 1 < 2$，繼續往左；左指標指向 $0011$，$\mathit{bit} = 3 \ge 2$，停。
+新節點 $z$（鍵 $0110$，$\mathit{bit} = 2$）插在 $1101$ 的左指標上。 $0110$ 第 $2$ 位是 $1$，所以 $z$ 的右指標
+指向自己，左指標接原本的 $0011$ 子樹。 $1101$ 的左指標改成 $z$。
+\end{enumerate}
+檢查：搜尋 $0011$ 走 $1101 \to 0110$（第 $2$ 位 $0$，往左）$\to 0011 \to$ 自己，仍找得到。
+
+\textbf{刪除 $1100$}。 搜尋 $1100$：標頭 $\to 1101$（第 $1$ 位 $1$，往右）$\to 1001$（第 $2$ 位 $1$，往右）
+$\to 1100$（第 $4$ 位 $0$，往左）$\to$ 指回自己。 最後一個往回的指標是 $1100$ 自己的，屬於「$q = p$」的情形：
+$1100$ 的另一個指標（右指標）指回 $1101$，把父節點 $1001$ 原本指向 $1100$ 的右指標改成這個往回的指標，
+指向 $1101$，再釋放 $1100$。 $1101$ 本身的兩個指標沒有變。 檢查：搜尋 $1101$ 走 $1101 \to 1001$（第 $2$ 位 $1$，
+往右）$\to$ 指回 $1101$，找得到。
+
+\textbf{結果}。 $1101$ 的左指標指向 $0110$（插入時改的），右指標指向 $1001$（沒變）。 題目問 $1101$ 指向
+哪些節點，選 (B)(D)。 (A) $0001$ 是標頭，指向 $1101$ 的是它；(C) $0011$ 原本是 $1101$ 的左子，插入後被 $0110$
+隔開；(E) $1000$ 是 $1001$ 的左子。
+\end{pastsoln}

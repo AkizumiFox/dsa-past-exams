@@ -1,0 +1,117 @@
+\begin{pastexam}[label={px:nsysu-111-osds-01}]{中山資工所甲組 111 學年度 第 1 題}
+（問答）
+
+What are printed by each of the following C program?
+\begin{enumerate}[label=(\alph*)]
+\item (5\%)
+\begin{minted}[fontsize=\small]{c}
+void f(int v[ ], int *w, int *x, int y[ ], int z[ ])
+{
+    w[2] += 4;
+    printf("%d  %d  %d  %d %d \n", v[0], w[2],x[5],*(y+3),z[2]);
+}
+int main( )
+{
+    int e[ ]={10,11,12,13,14,15,16,17,18,19,20};
+    f(&e[2]+4, &e[2+4], e, e+4, &e[2]);
+}
+\end{minted}
+\item (10\%)
+\begin{minted}[fontsize=\small]{cpp}
+void g(char a[ ], int k, int m)
+{
+    if (k == m) {
+        for (int i = 0; i <= m; i++) cout << a[i] << " ";
+            cout << endl;
+    }
+    else
+        for (int i = k; i <= m; i++) {
+           swap(a[k], a[i]); // exchange
+           g(a, k+1, m);
+           swap(a[k], a[i]);
+        }
+}
+int main( )
+{
+    char a[ ]="abcde";
+    g(a,0,2);
+}
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 依序印出 $16$、$22$、$15$、$17$、$14$（間隔照格式字串，見下）。 (b) 印出六行：
+\texttt{a b c}、\texttt{a c b}、\texttt{b a c}、\texttt{b c a}、\texttt{c b a}、\texttt{c a b}。
+
+兩個小題考的東西不同：(a) 是陣列和指標的位址計算（資結書第~4.1~節），(b) 是用交換產生所有
+排列的回溯（資結書第~20.1~節）。 (b) 配分較重，整題放在本章。
+
+\textbf{(a)} 陣列名稱當參數傳進函式時，傳的是位址；在函式裡 \texttt{p[i]} 就是
+\texttt{*(p + i)}，所以只要算出每個參數指向 \texttt{e} 的第幾格，就知道每個運算式是
+\texttt{e} 的哪一格。 下面用 $e[t]$ 表示 \texttt{e} 的第 $t$ 格，初值 $e[t] = 10 + t$。
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+參數 & 實際引數 & 指向 & 用到的運算式 \\
+\midrule
+\texttt{v} & \texttt{\&e[2]+4} & $e[6]$ & \texttt{v[0]} $= e[6]$ \\
+\texttt{w} & \texttt{\&e[2+4]} & $e[6]$ & \texttt{w[2]} $= e[8]$ \\
+\texttt{x} & \texttt{e} & $e[0]$ & \texttt{x[5]} $= e[5]$ \\
+\texttt{y} & \texttt{e+4} & $e[4]$ & \texttt{*(y+3)} $= e[7]$ \\
+\texttt{z} & \texttt{\&e[2]} & $e[2]$ & \texttt{z[2]} $= e[4]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\texttt{\&e[2]+4} 是「第 $2$ 格的位址再往後 $4$ 個 \texttt{int}」，和 \texttt{\&e[2+4]} 一樣都
+指向 $e[6]$。 函式先執行 \texttt{w[2] += 4}，把 $e[8]$ 從 $18$ 改成 $22$，然後才印。 五個值依序
+是 $e[6] = 16$、$e[8] = 22$、$e[5] = 15$、$e[7] = 17$、$e[4] = 14$。 格式字串裡前三個
+\texttt{\%d} 後面各有兩個空白，第四個後面一個空白，第五個後面一個空白再換行，輸出
+\begin{verbatim}
+16  22  15  17 14
+\end{verbatim}
+注意 \texttt{v}、\texttt{w} 指向同一格，所以 \texttt{w[2]} 的修改也看得到（\texttt{v[2]} 也會是
+$22$），只是這一題沒有印 \texttt{v[2]}。
+
+\textbf{(b)} \texttt{g(a, k, m)} 負責決定 \texttt{a[k]}：依序把 \texttt{a[k..m]} 的每一個字元
+換到第 \texttt{k} 格，遞迴決定後面的格子，回來後再換回去（撤銷）。 這是資結書第~20.1~節狀態
+空間樹的寫法，深度 $k$ 決定 \texttt{a[k]}。 \texttt{m = 2}，所以只排列前三個字元
+\texttt{a}、\texttt{b}、\texttt{c}；\texttt{d}、\texttt{e} 不會被動到，印的時候迴圈也只到
+\texttt{i <= m}，不會印出。 另外注意縮排：\texttt{cout << endl;} 不在 \texttt{for} 裡面（那個
+\texttt{for} 只有一個敘述），所以每個排列印完才換一次行。
+
+遞迴的過程（陣列只寫前三格）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+呼叫 & 這一層的交換 & 結果 \\
+\midrule
+\texttt{g(0)}，陣列 \texttt{abc} & $i = 0$：不變，\texttt{abc} & 進入 \texttt{g(1)} \\
+\quad \texttt{g(1)}，\texttt{abc} & $i = 1$：不變 & \texttt{g(2)} 印 \texttt{a b c} \\
+ & $i = 2$：交換 \texttt{a[1]}、\texttt{a[2]}，\texttt{acb} & \texttt{g(2)} 印 \texttt{a c b}，換回 \texttt{abc} \\
+\texttt{g(0)} & $i = 1$：交換 \texttt{a[0]}、\texttt{a[1]}，\texttt{bac} & 進入 \texttt{g(1)} \\
+\quad \texttt{g(1)}，\texttt{bac} & $i = 1$：不變 & 印 \texttt{b a c} \\
+ & $i = 2$：\texttt{bca} & 印 \texttt{b c a}，換回 \texttt{bac} \\
+\texttt{g(0)} & 換回 \texttt{abc}；$i = 2$：交換 \texttt{a[0]}、\texttt{a[2]}，\texttt{cba} & 進入 \texttt{g(1)} \\
+\quad \texttt{g(1)}，\texttt{cba} & $i = 1$：不變 & 印 \texttt{c b a} \\
+ & $i = 2$：\texttt{cab} & 印 \texttt{c a b}，換回 \texttt{cba} \\
+\texttt{g(0)} & 換回 \texttt{abc} & 結束 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+輸出六行（每個字元後面都有一個空白）：
+
+\begin{verbatim}
+a b c
+a c b
+b a c
+b c a
+c b a
+c a b
+\end{verbatim}
+\noindent 最後兩行是 \texttt{c b a} 在 \texttt{c a b} 前面，不是字典序：第三輪把 \texttt{a[0]} 和
+\texttt{a[2]} 交換，得到的是 \texttt{cba}，第 1、2 格的順序也跟著變了。 一共呼叫 \texttt{g}
+$1 + 3 + 6 = 10$ 次，正是 $3$ 個元素的排列樹的節點數。
+\end{pastsoln}

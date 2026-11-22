@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nchu-114-dsa-12}]{中興資工所甲組 114 學年度 單選題第 12 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+In a linked list, what is the main advantage of using a doubly linked list over a singly linked list?
+
+(A)~It requires less memory per node\\
+(B)~It allows traversal in both forward and backward directions\\
+(C)~It makes searching for elements faster in the average case\\
+(D)~It eliminates the need for a tail pointer
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+雙向串列的每個節點多了一個指向前一個節點的 $\mathit{prev}$（資結書第~5.2~節）。
+\begin{itemize}
+\item (A) 多一個指標，每個節點反而用更多記憶體。 錯。
+\item (B) 有 $\mathit{prev}$ 就能往回走；附帶的好處是手上有某個節點時，可以 $O(1)$ 刪掉它自己或在它前面插入，
+不必從頭找前一個節點。 對。
+\item (C) 搜尋還是從一端逐一往下走，平均、最壞都是 $\Theta(n)$，沒有變快。 錯。
+\item (D) 尾指標和串列是單向還是雙向無關；想要 $O(1)$ 存取尾端，雙向串列一樣要記尾指標（或做成環狀）。 錯。
+\end{itemize}
+\end{pastsoln}

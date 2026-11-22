@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:ntu-112-dsa-06}]{臺大資工所 112 學年度 第 6 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+The following is a binary tree and the alphabet on the node is simply the ``name'' (instead of
+value) of the node. Please select the correct statements from the following:
+\begin{enumerate}[label=(\Alph*)]
+\item The successor of node B is E.
+\item The successor of node A is C.
+\item The tree is not a AVL tree.
+\item If we remove node J, the result is an AVL tree.
+\item If we remove node H, the result is an AVL tree.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\bfseries\footnotesize,n/.style={circle,draw,thick,inner sep=0pt,minimum size=5mm},>={Stealth[length=1.6mm]}]
+\node[n] (A) at (0.00,0.00) {A};
+\node[n] (B) at (-2.34,-1.18) {B};
+\node[n] (C) at (2.34,-1.18) {C};
+\node[n] (D) at (-3.50,-2.32) {D};
+\node[n] (E) at (-1.16,-2.32) {E};
+\node[n] (F) at (1.16,-2.32) {F};
+\node[n] (G) at (3.50,-2.32) {G};
+\node[n] (H) at (-2.89,-3.53) {H};
+\node[n] (I) at (-0.55,-3.53) {I};
+\node[n] (J) at (0.29,-3.53) {J};
+\node[n] (K) at (2.63,-3.53) {K};
+\node[n] (L) at (4.39,-3.53) {L};
+\node[n] (M) at (5.29,-4.68) {M};
+\draw[->,thick] (A)--(B);
+\draw[->,thick] (A)--(C);
+\draw[->,thick] (B)--(D);
+\draw[->,thick] (B)--(E);
+\draw[->,thick] (C)--(F);
+\draw[->,thick] (C)--(G);
+\draw[->,thick] (D)--(H);
+\draw[->,thick] (E)--(I);
+\draw[->,thick] (F)--(J);
+\draw[->,thick] (G)--(K);
+\draw[->,thick] (G)--(L);
+\draw[->,thick] (L)--(M);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(E)。
+
+題目問 successor 和 AVL 樹，所以把它當成二元搜尋樹來看：節點的名字不是鍵值，但節點之間的大小
+順序就是中序走訪的順序（資結書定理~9.1），successor 是中序的下一個節點（資結書第~9.1~節）。 中序
+走訪：
+\[
+\text{D, H, B, E, I, A, J, F, C, K, G, L, M}.
+\]
+（D 沒有左子節點、H 是 D 的右子節點；E 的 I 在右邊；F 的 J 在左邊；L 的 M 在右邊。）
+
+再算高度（葉節點高度 $0$，空樹 $-1$）和平衡因子（左子樹高度減右子樹高度）：
+\begin{center}
+\small
+\begin{tabular}{lcccccccccccccc}
+\toprule
+節點 & H & I & J & K & M & D & E & F & L & B & G & C & A \\
+\midrule
+高度 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 2 & 2 & 3 & 4 \\
+平衡因子 & 0 & 0 & 0 & 0 & 0 & $-1$ & $-1$ & $+1$ & $-1$ & 0 & $-1$ & $-1$ & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 G 的左子樹 K 高 $0$、右子樹 L 高 $1$，平衡因子 $-1$；C 的左子樹 F 高 $1$、右子樹 G 高 $2$，
+平衡因子 $-1$；A 的左子樹 B 高 $2$、右子樹 C 高 $3$，平衡因子 $-1$。 每個節點的平衡因子都在
+$\{-1, 0, +1\}$ 裡，所以這棵樹\textbf{是} AVL 樹（資結書第~10.2~節）。
+
+逐項看：
+\begin{itemize}
+\item \textbf{(A) 對。} 中序裡 B 的下一個是 E。 也可以照資結書虛擬碼~9.4 的規則：B 有右子樹，
+successor 是右子樹的最小（最左）節點；右子樹的根 E 沒有左子節點，所以就是 E。
+\item \textbf{(B) 錯。} A 的右子樹是以 C 為根的子樹，successor 是其中最左的節點：從 C 往左到 F、
+再往左到 J，J 沒有左子節點，所以 successor 是 J，不是 C。
+\item \textbf{(C) 錯。} 上表每個節點都平衡，它是 AVL 樹。
+\item \textbf{(D) 錯。} 拿掉 J 後 F 變成葉節點，高度 $0$；C 的左子樹高 $0$、右子樹 G 高 $2$，平衡
+因子 $-2$，不是 AVL 樹（要做旋轉才會恢復，題目問的是直接拿掉的結果）。
+\item \textbf{(E) 對。} 拿掉 H 後 D 變成葉節點，高度 $0$；B 的左子樹高 $0$、右子樹 E 高 $1$，平衡
+因子 $-1$，B 的高度仍是 $2$，A 和其他節點都不變，仍是 AVL 樹。
+\end{itemize}
+\end{pastsoln}

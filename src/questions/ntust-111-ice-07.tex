@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:ntust-111-ice-07}]{臺科大資工所 111 學年度 第 7 題}
+（問答）
+
+For the tree structure, we define the height of the root node as 1. (20\%)
+\begin{enumerate}[label=(\arabic*)]
+\item The minimum number of nodes in a minimum binary heap of height $n$ is $2^i+j$. What is the value
+of $i+j=$? (5\%)
+\item What is the maximum number of keys in a B-tree of order 6 and height 4? (5\%)
+\item Suppose we want to search for the element 2022 in a binary search tree, and
+$\{5566,3344,1314,k,1500,1800,2022\}$ is the sequence of nodes we examined. Which of the following
+are the possible values of $k$? (5\%)
+
+A.~2505 \qquad B.~3388 \qquad C.~1450 \qquad D.~2987 \qquad E.~6891 \qquad F.~2468
+\item Suppose we construct a Splay tree from scratch by using the following eight steps. What is the
+inorder traversal of the Splay tree? (5\%)
+
+Step1: insert 40\\
+Step2: insert 80\\
+Step3: insert 70\\
+Step4: insert 50\\
+Step5: insert 90\\
+Step6: delete 70\\
+Step7: insert 70\\
+Step8: delete 80
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $n - 1$；(2) $1295$；(3) A、C、D、F；(4) $40, 50, 70, 90$。
+
+四個小題分屬資結書第~8、11、9、10~章，放在本章是因為 (3)(4) 都靠二元搜尋樹的性質。 題目規定根的高度是
+$1$，和資結書相同。
+
+\textbf{(1)} 二元堆積是完整二元樹（資結書第~8.1~節）。 高度 $n$ 的完整二元樹，前 $n - 1$ 層一定是滿的，共
+$2^{n-1} - 1$ 個節點；第 $n$ 層至少要有一個節點，高度才會是 $n$。 所以最少
+$2^{n-1} - 1 + 1 = 2^{n-1}$ 個節點，寫成 $2^i + j$ 是 $i = n - 1$、$j = 0$，$i + j = n - 1$。 （$2^i + j$ 的寫法本
+身不唯一，例如 $2^{n-2} + 2^{n-2}$；這裡取 $j$ 是常數的那種寫法。）
+
+\textbf{(2)} $6$ 階 B 樹每個節點最多 $6$ 個子節點、$5$ 個鍵（資結書定義~11.2）。 高度 $4$ 時節點最多的情形是
+每個內部節點都有 $6$ 個子節點，第 $1$--$4$ 層各有 $1, 6, 36, 216$ 個節點，共 $259$ 個，每個 $5$ 個鍵：
+\[
+5 \times (1 + 6 + 6^2 + 6^3) = 5 \times \frac{6^4 - 1}{6 - 1} = 6^4 - 1 = 1295.
+\]
+
+\textbf{(3)} 搜尋 $2022$ 時，每經過一個節點就決定往左或往右，之後經過的節點都要落在對應的範圍裡
+（資結書第~9.1~節）：
+\begin{itemize}
+\item $5566$：$2022 < 5566$，往左，之後的節點都 $< 5566$。
+\item $3344$：往左，之後都 $< 3344$。
+\item $1314$：$2022 > 1314$，往右，之後都 $> 1314$。 所以 $1314 < k < 3344$。
+\item $k$：下一個是 $1500$。 若 $2022 < k$ 往左，之後的 $1500, 1800, 2022$ 都要 $< k$，即 $k > 2022$；若
+$2022 > k$ 往右，之後都要 $> k$，即 $k < 1500$。
+\item $1500$、$1800$ 之後都往右，和 $k$ 無關。
+\end{itemize}
+合起來 $1314 < k < 1500$ 或 $2022 < k < 3344$。 A $2505$、C $1450$、D $2987$、F $2468$ 符合；B $3388 > 3344$、
+E $6891 > 5566$ 不符合（它們應該在 $3344$ 或 $5566$ 的右子樹裡）。
+
+\textbf{(4)} 不管伸展樹怎麼旋轉，它始終是二元搜尋樹，中序走訪一定由小到大（資結書第~9~章）。 八步之後樹裡的
+鍵是 $\{40, 80, 70, 50, 90\} - \{70\} + \{70\} - \{80\} = \{40, 50, 70, 90\}$，中序走訪是 $40, 50, 70, 90$。
+
+答案和伸展的細節無關，不過寫出過程比較保險。 照資結書第~10.6.2~節的做法（插入後伸展新節點；刪除時先伸展要刪
+的節點到根，拿掉根之後把左子樹最大的節點伸展上來，再接上右子樹），每一步之後的樹（寫成「鍵(左,右)」，$-$ 表示空）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+步驟 & 伸展的情形 & 樹 \\
+\midrule
+insert 40 & & $40$ \\
+insert 80 & zig & $80(40,-)$ \\
+insert 70 & zig-zag & $70(40, 80)$ \\
+insert 50 & zig-zag & $50(40, 70(-, 80))$ \\
+insert 90 & zig-zig，再 zig & $90(50(40, 80(70,-)), -)$ \\
+delete 70 & 伸展 70：zig-zag，再 zig；左子樹最大是 50 & $50(40, 90(80, -))$ \\
+insert 70 & zig-zig，再 zig & $70(50(40,-), 80(-, 90))$ \\
+delete 80 & 伸展 80：zig；左子樹最大是 70 & $70(50(40,-), 90)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的樹中序走訪是 $40, 50, 70, 90$。
+\end{pastsoln}

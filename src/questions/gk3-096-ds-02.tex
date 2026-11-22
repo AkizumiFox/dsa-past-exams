@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:gk3-096-ds-02}]{高考三級資訊處理 96 年 第二題}
+（申論；25 分）
+
+霍夫曼碼（Huffman code）是一種依照字母出現的頻率決定編碼的不定長二進位編碼法（variable-length binary code）。
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 說明霍夫曼碼的編碼與解碼原理。（10 分）
+\item[㈡] 假設字母集為 $\{$甲、乙、丙、丁、戊、己$\}$，個別字母出現頻率如下表。請填寫每個字母的霍夫曼碼。（15 分）
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|c|*{6}{p{2.2em}<{\centering}|}}
+\hline
+字母 & 甲 & 乙 & 丙 & 丁 & 戊 & 己 \\ \hline
+出現頻率 & 45 & 13 & 12 & 16 & 9 & 5 \\ \hline
+霍夫曼碼 & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+霍夫曼演算法見資結書第~19.3~節（虛擬碼~19.3）。
+
+\textbf{㈠ 原理}。
+\begin{itemize}
+\item \textbf{前置碼}：霍夫曼碼是前置碼（prefix code），任何一個字母的碼都不是另一個字母的碼的
+開頭。 把每個字母放在一棵二元樹的葉節點上，往左走記 $0$、往右走記 $1$，從根走到葉的 $0/1$ 串就是那個
+字母的碼；字母都在葉上，所以不會有一個碼是另一個碼的開頭。
+\item \textbf{編碼（建樹）}：每個字母先是一棵只有一個節點的樹，權重是出現頻率。 重複「取出權重最小的
+兩棵樹，接在一個新根的左右，新根的權重是兩者之和，放回去」，做 $n - 1$ 次剩一棵樹，就是霍夫曼樹。
+接著把每個字母換成它的碼、依序接起來，就是編碼結果。 頻率高的字母離根近、碼短，頻率低的碼長。
+這樣得到的碼讓總長 $\sum_c f(c)\cdot d(c)$（$f$ 是頻率、$d$ 是碼長）最小（資結書定理~19.5）。
+用最小堆積存這些樹，建樹是 $O(n \log n)$。
+\item \textbf{解碼}：從根出發，讀到 $0$ 往左、讀到 $1$ 往右，走到葉節點就輸出那個字母，再回到根讀下
+一個位元。 因為是前置碼，走到葉的那一刻就確定是哪個字母，不需要分隔符號，也不會有歧義。
+解碼時間和位元數成正比。
+\end{itemize}
+
+\textbf{㈡}。 每一步取最小的兩個合併（較小的放左邊、記 $0$；較大的放右邊、記 $1$）：
+\begin{center}
+\begin{tabular}{clc}
+\toprule
+步驟 & 取出的兩棵（權重） & 新樹權重 \\
+\midrule
+1 & 己 5、戊 9 & 14 \\
+2 & 丙 12、乙 13 & 25 \\
+3 & $\{$己戊$\}$ 14、丁 16 & 30 \\
+4 & $\{$丙乙$\}$ 25、$\{$己戊丁$\}$ 30 & 55 \\
+5 & 甲 45、$\{$其他五個$\}$ 55 & 100 \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步候選裡都沒有權重相同的情形，所以合併的順序是唯一的（只有左右可以對調）。 得到的樹：
+\begin{center}
+\begin{tikzpicture}[level distance=11mm,
+  level 1/.style={sibling distance=40mm},level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=12mm},level 4/.style={sibling distance=11mm},
+  every node/.style={font=\small},
+  iv/.style={circle,draw,inner sep=1pt,minimum size=7mm},
+  lf/.style={rectangle,draw,inner sep=2pt,minimum height=6mm},
+  e/.style={font=\scriptsize,fill=white,inner sep=1pt}]
+\node[iv] {100}
+  child {node[lf] {甲 45} edge from parent node[e] {0}}
+  child {node[iv] {55}
+    child {node[iv] {25}
+      child {node[lf] {丙 12} edge from parent node[e] {0}}
+      child {node[lf] {乙 13} edge from parent node[e] {1}}
+      edge from parent node[e] {0}}
+    child {node[iv] {30}
+      child {node[iv] {14}
+        child {node[lf] {己 5} edge from parent node[e] {0}}
+        child {node[lf] {戊 9} edge from parent node[e] {1}}
+        edge from parent node[e] {0}}
+      child {node[lf] {丁 16} edge from parent node[e] {1}}
+      edge from parent node[e] {1}}
+    edge from parent node[e] {1}};
+\end{tikzpicture}
+\end{center}
+從根走到各葉，得到答案：
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|*{6}{c|}}
+\hline
+字母 & 甲 & 乙 & 丙 & 丁 & 戊 & 己 \\ \hline
+出現頻率 & 45 & 13 & 12 & 16 & 9 & 5 \\ \hline
+霍夫曼碼 & 0 & 101 & 100 & 111 & 1101 & 1100 \\ \hline
+\end{tabular}
+\end{center}
+加權總長 $45 \cdot 1 + 13 \cdot 3 + 12 \cdot 3 + 16 \cdot 3 + 9 \cdot 4 + 5 \cdot 4 = 224$ 位元；同樣
+$100$ 個字母用定長碼（$6$ 個字母要 $3$ 位元）是 $300$ 位元。 左右子樹對調（$0$、$1$ 交換）得到的碼也
+對，閱卷看的是碼長 $1, 3, 3, 3, 4, 4$ 和前置性質；寫答案時要說明採用「小的在左、記 $0$」的規則。
+\end{pastsoln}

@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncku-111-prog-09}]{成大資訊聯招 111 學年度 第 9 題}
+（程式填空）
+
+\textbf{[1\%, 1\%, 1\%, 1\%]} The following C program implements Quick sort. Please fill the four missing parts of the program.
+\begin{minted}[fontsize=\small]{c}
+int Partition(int *arr, int front, int end){
+    int pivot = arr[end];
+    int i = front -1;
+    for (int j = front; j < end; j++) {
+        if (arr[j] < pivot) {
+            _(A)_;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    i++;
+    swap(&arr[i], &arr[end]);
+    _(B)_;
+}
+void QuickSort(int *arr, int front, int end){
+    if (front < end) {
+        int pivot = Partition(arr, front, end);
+        QuickSort(___C___);
+        QuickSort(___D___);
+    }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) \texttt{i++}；(B) \texttt{return i}；(C) \texttt{arr, front, pivot - 1}；
+(D) \texttt{arr, pivot + 1, end}。
+
+這是 Lomuto 分割（資結書虛擬碼~14.8）：取最後一個元素 \texttt{arr[end]} 當基準，\texttt{i} 指向「小於基準
+那一區」的最後一格，一開始是 \texttt{front - 1}（這一區是空的）。
+\begin{itemize}
+\item \textbf{(A)}：掃到 \texttt{arr[j] < pivot} 時，這個數要加入「小於區」：先把區的邊界往右擴一格
+（\texttt{i++}），再把 \texttt{arr[j]} 換到 \texttt{arr[i]}。 順序是先加再換，因為 \texttt{i} 指的是區的
+最後一格，新的位置是 \texttt{i + 1}。
+\item \textbf{(B)}：迴圈結束後 \texttt{i++}，\texttt{i} 是第一個不小於基準的位置，把基準換到這裡，它就在
+排序後的最終位置：左邊都比它小，右邊都不比它小。 \texttt{Partition} 宣告回傳 \texttt{int}，\texttt{QuickSort}
+用回傳值當基準的位置，所以填 \texttt{return i}。
+\item \textbf{(C)(D)}：基準已經在正確位置 \texttt{pivot}，不必再參與排序，遞迴排左右兩段：
+\texttt{QuickSort(arr, front, pivot - 1)}、\texttt{QuickSort(arr, pivot + 1, end)}。 如果把 \texttt{pivot}
+包含進某一段（例如 \texttt{front, pivot}），在基準是最大值時那一段大小不變，會無窮遞迴。
+\end{itemize}
+
+\textbf{追蹤一次分割}：\texttt{arr} $= \langle 5, 2, 8, 1, 9, 3\rangle$，\texttt{front} $= 0$、
+\texttt{end} $= 5$，基準 $3$，\texttt{i} $= -1$。
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+\texttt{j} & \texttt{arr[j]} & 動作 & 陣列 \\
+\midrule
+0 & 5 & 不小於 $3$，略過 & $5, 2, 8, 1, 9, 3$ \\
+1 & 2 & \texttt{i} $= 0$，交換 \texttt{arr[0]}、\texttt{arr[1]} & $2, 5, 8, 1, 9, 3$ \\
+2 & 8 & 略過 & $2, 5, 8, 1, 9, 3$ \\
+3 & 1 & \texttt{i} $= 1$，交換 \texttt{arr[1]}、\texttt{arr[3]} & $2, 1, 8, 5, 9, 3$ \\
+4 & 9 & 略過 & $2, 1, 8, 5, 9, 3$ \\
+\midrule
+ & & \texttt{i} $= 2$，交換 \texttt{arr[2]}、\texttt{arr[5]} & $2, 1, 3, 5, 9, 8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $2$：基準 $3$ 在第 $2$ 格，左邊 $\{2, 1\}$ 都比它小，右邊 $\{5, 9, 8\}$ 都比它大，接著遞迴排
+\texttt{arr[0..1]} 和 \texttt{arr[3..5]}。
+
+另外，程式用到的 \texttt{swap(int *, int *)} 題目沒有給，假設是交換兩個整數的一般函式。
+\end{pastsoln}

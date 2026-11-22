@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntust-115-ice-05}]{臺科大資工所 115 學年度 第 I-5 題}
+（單選）
+
+(5\%) When performing DFS or BFS traversal on a cyclic graph, what could happen if you forget to use a
+visited array (or equivalent) to mark visited vertices?
+\begin{enumerate}[label=(\alph*)]
+\item The traversal may fall into an infinite loop, continuing until a stack overflow (for DFS) or memory
+exhaustion occurs.
+\item The program crashes immediately.
+\item The algorithm will stop automatically, but the result will be inaccurate.
+\item The program can still perform correctly.
+\item There is no effect.
+\item The traversal will still terminate because DFS/BFS never visits the same vertex more than once by
+design.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)。
+
+DFS、BFS 不重複走同一個頂點，靠的就是 visited 標記（資結書虛擬碼~21.1、21.3 的顏色）。 拿掉之後，沿著環可以回到
+走過的頂點，又從它出發再走一遍。 例：三角形 $u$--$v$--$w$--$u$，從 $u$ 做遞迴 DFS：$u \to v \to w \to u \to v \to
+\cdots$，遞迴永遠不會結束，直到呼叫堆疊用完（stack overflow）。 BFS 也一樣：每取出一個頂點就把所有鄰居放進佇列，
+走過的頂點一再被放回去，佇列越來越長，直到記憶體用完。
+
+\begin{itemize}
+\item[(b)] 不會「立刻」當掉，要跑到堆疊或記憶體耗盡才出事。
+\item[(c)] 不會自己停下來，見上面的例子。
+\item[(d)]、(e) 程式無法結束，不能算正確執行，也不是沒有影響。
+\item[(f)] 「每個頂點只走一次」正是靠 visited 標記做到的，不是演算法天生的性質。
+\end{itemize}
+\end{pastsoln}

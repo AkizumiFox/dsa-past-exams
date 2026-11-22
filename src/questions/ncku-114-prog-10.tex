@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ncku-114-prog-10}]{成大資訊聯招 114 學年度 第 10 題}
+（複選；至少有二個正確答案）
+
+{[4\%]} Considering the following red-black tree, where the node colored as white indicates a red node and the node colored as black indicates a black node.
+
+\begin{center}%
+\begin{tikzpicture}[ every node/.style={font=\sffamily}, v/.style={ellipse,draw,minimum width=9mm,minimum height=6.5mm,inner sep=0pt}]
+\node[v,fill=black,text=white] (12) at (4.98,0.00) {\textbf{12}};
+\node[v,fill=black,text=white] (7) at (2.26,-0.87) {\textbf{7}};
+\node[v,fill=black,text=white] (42) at (7.39,-0.85) {\textbf{42}};
+\node[v,fill=black,text=white] (3) at (0.89,-2.10) {\textbf{3}};
+\node[v,fill=black,text=white] (9) at (3.73,-2.03) {\textbf{9}};
+\node[v,fill=white] (29) at (6.02,-2.08) {29};
+\node[v,fill=black,text=white] (57) at (8.87,-2.00) {\textbf{57}};
+\node[v,fill=white] (2) at (0.00,-3.29) {2};
+\node[v,fill=white] (5) at (1.53,-3.32) {5};
+\node[v,fill=white] (8) at (2.90,-3.27) {8};
+\node[v,fill=black,text=white] (18) at (4.97,-3.35) {\textbf{18}};
+\node[v,fill=black,text=white] (38) at (6.68,-3.27) {\textbf{38}};
+\node[v,fill=white] (45) at (8.06,-3.19) {45};
+\node[v,fill=white] (22) at (5.81,-4.40) {22};
+\draw[] (12) -- (7);
+\draw[] (12) -- (42);
+\draw[] (7) -- (3);
+\draw[] (7) -- (9);
+\draw[] (3) -- (2);
+\draw[] (3) -- (5);
+\draw[] (9) -- (8);
+\draw[] (42) -- (29);
+\draw[] (42) -- (57);
+\draw[] (29) -- (18);
+\draw[] (29) -- (38);
+\draw[] (18) -- (22);
+\draw[] (57) -- (45);
+\end{tikzpicture}%
+\end{center}
+\smallskip
+
+Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item After inserting 1 into the tree, the number of black nodes becomes 9.
+\item After successively inserting 100 and 58 into the tree, the number of red nodes becomes 7.
+\item The deletion of 42 from the tree may reduce the height of the tree.
+\item After successively deleting 45 and 57 from the tree, the rank of the root is 3.
+\item The deletion of 12 can be done via moving 9 to the root.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)、(E) 都對。 (C) 要用「以中序前驅取代」的刪除法才成立，見下面的說明。
+
+原樹（圖中白色是紅、黑色是黑）：黑節點 $12, 7, 42, 3, 9, 57, 18, 38$ 共 $8$ 個，紅節點 $29, 2, 5, 8, 22, 45$ 共 $6$ 個。 每條根到
+外部節點的路徑都經過 $3$ 個黑色指標（例如 $12 \to 7 \to 3 \to 2 \to$ NIL：$7$、$3$、NIL），根的 rank（黑高度）是 $3$；樹高（邊數）
+是 $4$（$12 \to 42 \to 29 \to 18 \to 22$）。 插入、刪除照資結書第~10.3.4~節、第~10.3.7~節（虛擬碼~10.6、10.8）。
+
+\begin{itemize}
+\item (A) 對。 插入 $1$：$12 \to 7 \to 3 \to 2$，成為 $2$ 的左子節點，紅色。 父 $2$ 紅、叔叔 $5$ 紅：$2$、$5$ 改黑，祖父 $3$ 改紅；
+$3$ 的父節點 $7$ 是黑的，結束。 黑節點少了 $3$、多了 $2$、$5$，共 $8 - 1 + 2 = 9$ 個。
+\item (B) 對。 插入 $100$：$12 \to 42 \to 57$，成為 $57$ 的右子節點，父節點黑，直接塗紅，紅節點變 $7$ 個。 插入 $58$：
+$12 \to 42 \to 57 \to 100$，成為 $100$ 的左子節點；父 $100$ 紅、叔叔 $45$ 紅：$100$、$45$ 改黑，$57$ 改紅；$57$ 的父節點 $42$ 黑，
+結束。 紅節點是 $29, 2, 5, 8, 22, 57, 58$，共 $7$ 個。
+\item (C) 對（「may」）。 $42$ 有兩個子節點，要用中序後繼（$45$）或中序前驅（$38$）取代它，再刪掉那個節點。
+\begin{itemize}
+\item 用後繼 $45$：$45$ 是紅色葉子，直接刪除，不用修正。 $12 \to 45 \to 29 \to 18 \to 22$ 還在，樹高仍是 $4$。
+\item 用前驅 $38$：$38$ 是黑色葉子，刪掉後 $29$ 的右邊少一個黑，要修正。 兄弟 $18$ 是黑的，遠姪子（$18$ 的左子）是 NIL、近姪子
+$22$ 是紅的：先把 $22$ 改黑、$18$ 改紅，在 $18$ 左旋；再讓 $22$ 取 $29$ 的顏色（紅），$29$、$18$ 改黑，在 $29$ 右旋。 結果
+$38$（原 $42$ 的位置）的左子樹是 $22$（紅），子節點 $18$、$29$（黑）。 最深的路徑變成 $3$ 條邊，樹高從 $4$ 降為 $3$。
+\end{itemize}
+所以刪除 $42$ 有可能讓樹變矮。 (E) 本身就用中序前驅來刪除，出題者接受這種做法；只用後繼的話，(C) 不成立。
+\item (D) 對。 先刪紅色葉子 $45$，不用修正。 再刪黑色葉子 $57$：$42$ 的右邊少一個黑，兄弟 $29$ 是紅的：$29$ 改黑、$42$ 改紅，
+在 $42$ 右旋，$29$ 接到 $12$ 的右邊，$42$ 成為 $29$ 的右子節點，$38$ 改接到 $42$ 的左邊。 新的兄弟 $38$ 是黑的、兩個子節點都是
+NIL：$38$ 改紅，問題移到 $42$；$42$ 是紅的，改黑結束。 結果右子樹是 $29$（黑），子節點 $18$（黑，右子 $22$ 紅）、$42$（黑，左子
+$38$ 紅）。 每條路徑仍是 $3$ 個黑色指標（例如 $12 \to 29 \to 18 \to$ NIL），根的 rank 是 $3$。
+\item (E) 對。 $12$ 的中序前驅是左子樹最大的鍵：$7 \to 9$，$9$ 沒有右子節點，就是 $9$。 把 $9$ 搬到根（根維持黑色），再刪掉
+$9$ 原本的節點：它是黑的、只有一個紅色子節點 $8$，讓 $8$ 接上來並改黑即可。 結果
+$9(7(3(2, 5), 8), 42(\ldots))$，每條路徑仍是 $3$ 個黑色指標，是合法的紅黑樹。
+\end{itemize}
+\end{pastsoln}

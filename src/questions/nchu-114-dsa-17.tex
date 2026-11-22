@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:nchu-114-dsa-17}]{中興資工所甲組 114 學年度 單選題第 17 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+What is the time complexity for insertion in a Red-Black Tree?
+
+(A)~O(log n) \qquad (B)~O(n) \qquad (C)~O(1) \qquad (D)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+$n$ 個內部節點的紅黑樹高度不超過 $2\lg(n + 1)$（資結書定理~10.4）。 插入分兩段：
+\begin{enumerate}
+\item 像一般 BST 一樣從根往下找位置，走過 $O(\log n)$ 個節點，把新節點塗紅放上去。
+\item 修補（資結書第~10.3.4~節、虛擬碼~10.6）：叔叔是紅色時只改顏色，問題往上移兩層，最多 $O(\log n)$ 次；
+叔叔是黑色時做一或兩次旋轉就結束。 所以修補是 $O(\log n)$，旋轉最多 $2$ 次。
+\end{enumerate}
+合計 $O(\log n)$。 (B) $O(n)$ 是不平衡的 BST 最壞情況；(C) $O(1)$ 只有在已經知道位置時旋轉的次數才是
+常數，找位置本身就要 $\Theta(\log n)$；(D) $O(n \log n)$ 是插入 $n$ 個鍵的總時間。
+\end{pastsoln}

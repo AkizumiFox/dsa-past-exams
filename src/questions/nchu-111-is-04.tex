@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:nchu-111-is-04}]{中興資工所乙組 111 學年度 第 4 題}
+（單選）
+
+(3 pts) Consider the following pseudo code. Assume that IntQueue is an integer queue. What does the function
+fun do?
+\begin{minted}[fontsize=\small]{text}
+void fun(int n)
+{
+   IntQueue q = new IntQueue();
+   q.enqueue(0);
+   q.enqueue(1);
+   for (int i = 0; i < n; i++)
+   {
+      int a = q.dequeue();
+      int b = q.dequeue();
+      q.enqueue(b);
+      q.enqueue(a + b);
+      print(a);
+   }
+}
+\end{minted}
+\begin{enumerate}[label=(\alph*).]
+\item Prints numbers from 0 to n-1
+\item Prints numbers from n-1 to 0
+\item Prints first n Fibonacci numbers
+\item Prints first n Fibonacci numbers in reverse order
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)。
+
+每一輪開始時佇列裡恰好有兩個數。 設它們是 $(F_i, F_{i+1})$（前端在左）。 這一輪取出 $a = F_i$、
+$b = F_{i+1}$，放回 $b$ 和 $a + b = F_{i+2}$，佇列變成 $(F_{i+1}, F_{i+2})$，並印出 $F_i$。 一開始佇列是
+$(0, 1) = (F_0, F_1)$，所以第 $i$ 輪（$i = 0, 1, \ldots, n - 1$）印出 $F_i$。
+
+前幾輪：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+$i$ & 取出 $a, b$ & 放回後的佇列 & 印出 \\
+\midrule
+0 & 0, 1 & 1, 1 & 0 \\
+1 & 1, 1 & 1, 2 & 1 \\
+2 & 1, 2 & 2, 3 & 1 \\
+3 & 2, 3 & 3, 5 & 2 \\
+4 & 3, 5 & 5, 8 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+印出 $0, 1, 1, 2, 3, 5, \ldots$，是前 $n$ 個費氏數，由小到大。 (a)(b) 是連續整數，第三個印出的數就是
+$1$ 而不是 $2$，不對；(d) 順序反了，佇列是先進先出，先算出的先印。
+\end{pastsoln}

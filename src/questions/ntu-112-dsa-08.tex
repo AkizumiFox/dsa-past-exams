@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-112-dsa-08}]{臺大資工所 112 學年度 第 8 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Postfix advantages:} What is/are the advantage(s) of using postfix notation for math
+expressions?
+\begin{enumerate}[label=(\Alph*)]
+\item No need to use parentheses
+\item No need to consider precedence of operators
+\item Easier for human to read
+\item Easier for computers to evaluate
+\item More concise when compared with prefix notation
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(D)。
+
+後序式（postfix）把運算子寫在兩個運算元後面（資結書第~6.3~節）。 例子：中序
+$(a + b) \times c$ 和 $a + b \times c$，後序分別是 \texttt{a b + c *} 和 \texttt{a b c * +}。
+\begin{itemize}
+\item \textbf{(A) 對。} 上面兩個中序式要靠括號區分，後序式不用括號就已經不同。 每個運算子作用在
+它前面最近的兩個「完整的值」上，計算順序完全由寫的位置決定。
+\item \textbf{(B) 對。} 計算後序式時，由左到右遇到運算子就立刻算，從來不必比較兩個運算子誰先
+（資結書虛擬碼~6.7）。 優先順序只在\textbf{把中序轉成後序}時用到（資結書虛擬碼~6.8），轉好之後
+就已經寫進順序裡了。
+\item \textbf{(C) 錯。} 人習慣讀中序式；\texttt{a b c * + d e / -} 這種寫法人要在腦中模擬堆疊才
+看得懂，不是比較好讀。
+\item \textbf{(D) 對。} 用一個堆疊，由左到右掃一遍：運算元推入，運算子彈出兩個、算完推回，
+$O(n)$ 時間，不需要回頭看或處理括號（資結書第~6.3.2~節）。
+\item \textbf{(E) 錯。} 前序和後序都不用括號，符號（運算元和運算子）一模一樣、只是順序不同，
+長度相同，沒有誰比較精簡。
+\end{itemize}
+\end{pastsoln}

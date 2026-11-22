@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ncku-111-prog-17}]{成大資訊聯招 111 學年度 第 17 題}
+（計算）
+
+(10\%) Given a finite set $X$ and a family $F$ of subsets of $X$ such that every element of $X$ belongs to at least one subset in $F$, the set-covering problem is to find a minimum-size subset $\zeta\subseteq F$ whose members cover all of $X$: $X=\bigcup_{S\in\zeta}S$. The following algorithm is a $\delta$-approximation algorithm to find a set cover $\zeta$ satisfying $|\zeta|\le\delta|\zeta^*|$ where $\zeta^*$ is an optimal solution. Please compute the minimum value of $\delta$.
+\begin{center}
+\begin{tabular}{|l|}
+\hline
+GREEDY-SET-COVER($X$, $F$)\\
+1\quad $U=X$\\
+2\quad $\zeta=\emptyset$\\
+3\quad \textbf{while} $U\ne\emptyset$\\
+4\quad\quad select an $S\in F$ that maximizes $|S\cap U|$\\
+5\quad\quad $U=U-S$\\
+6\quad\quad $\zeta=\zeta\cup\{S\}$\\
+7\quad \textbf{return} $\zeta$\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\delta = H(d) = 1 + \frac12 + \cdots + \frac1d$，其中 $d = \max_{S \in F} |S|$；因為
+$H(d) \le \ln d + 1$，也可以寫成 $\delta = \ln |X| + 1$（比較鬆）。
+
+題目沒有給具體的 $X$ 和 $F$，「$\delta$ 的最小值」只能理解成：對所有輸入都成立的保證，最小可以寫到多少。
+這就是資結書第~29.4~節、定理~29.5 取所有成本 $c(S) = 1$ 的情形。
+
+\textbf{推導}。 把每一輪的成本 $1$ 平均分給這一輪新涵蓋的元素：若這一輪選了 $S$，新涵蓋 $|S \cap U|$ 個
+元素，每個元素 $e$ 的價格是 $\mathit{price}[e] = 1/|S \cap U|$。 每輪恰好分掉 $1$，所以
+$|\zeta| = \sum_{e \in X} \mathit{price}[e]$。
+
+對任何 $T \in F$，把 $T$ 的元素依被涵蓋的先後排成 $t_1, \ldots, t_s$（$s = |T| \le d$）。 $t_j$ 被涵蓋的那一輪
+開始時，$t_j, \ldots, t_s$ 都還沒被涵蓋，所以選 $T$ 至少能涵蓋 $s - j + 1$ 個新元素；演算法選的集合涵蓋得
+不比 $T$ 少，因此 $\mathit{price}[t_j] \le 1/(s - j + 1)$。 加起來
+\[
+\sum_{e \in T} \mathit{price}[e] \le \frac{1}{s} + \frac{1}{s-1} + \cdots + 1 = H(s) \le H(d).
+\]
+$\zeta^*$ 蓋住 $X$，每個元素至少在 $\zeta^*$ 的一個集合裡，所以
+\[
+|\zeta| = \sum_{e \in X} \mathit{price}[e] \le \sum_{T \in \zeta^*} \sum_{e \in T} \mathit{price}[e]
+\le |\zeta^*| \cdot H(d).
+\]
+$\delta = H(d)$ 成立；又 $H(d) \le \ln d + 1 \le \ln |X| + 1$。
+
+\textbf{不能換成常數}。 例子：元素排成 $2$ 列、$2^{k+1} - 2$ 行。 $R_1$、$R_2$ 各是一整列（各 $2^{k+1} - 2$ 個
+元素）；把行從右到左切成寬 $2^k, 2^{k-1}, \ldots, 2$ 的 $k$ 段，$B_j$ 是寬 $2^j$ 那一段的兩列，共 $2^{j+1}$ 個
+元素。 最佳解是 $\{R_1, R_2\}$，$2$ 個集合。 貪心第一步看到 $|B_k| = 2^{k+1} > 2^{k+1} - 2 = |R_i|$，選 $B_k$；
+之後剩下的部分結構一樣，每一步 $B_j$ 都比任一列剩下的元素多 $2$ 個，於是依序選 $B_k, B_{k-1}, \ldots, B_1$，
+共 $k$ 個。 比值 $k/2$，而 $|X| = 2(2^{k+1} - 2)$，$k = \Theta(\log |X|)$，所以貪心的近似比確實會隨輸入變大，
+$\Theta(\log)$ 的 $\delta$ 只差常數倍，不能再改成常數。
+\end{pastsoln}

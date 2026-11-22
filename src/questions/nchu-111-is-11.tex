@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:nchu-111-is-11}]{中興資工所乙組 111 學年度 第 22 題}
+（問答）
+
+{[8\%]} Please try to solve the 0/1 knapsack problem using dynamic programming.
+\end{pastexam}
+
+\begin{pastsoln}
+題目只要求用動態規劃解 0/1 背包，下面寫出問題、遞迴式、虛擬碼、正確性和複雜度，最後用一個小例子示範
+（照資結書第~18.5~節）。
+
+\textbf{問題}。 有 $n$ 件物品，第 $i$ 件重 $w_i$、價值 $v_i$（都是正整數），背包容量 $W$。 每件物品拿或
+不拿，總重量不超過 $W$，求總價值最大。
+
+\textbf{子問題與遞迴式}。 令 $K[i, c]$ 為只用前 $i$ 件物品、容量 $c$ 時的最大價值，$0 \le i \le n$，
+$0 \le c \le W$。 看第 $i$ 件：最佳解不是不拿它，就是拿它。
+\[
+K[i, c] = \begin{cases}
+0, & i = 0, \\
+K[i - 1, c], & i \ge 1 \text{ 且 } w_i > c, \\
+\max\bigl(K[i - 1, c],\ K[i - 1, c - w_i] + v_i\bigr), & i \ge 1 \text{ 且 } w_i \le c .
+\end{cases}
+\]
+答案是 $K[n, W]$。
+
+\begin{pseudo}{0/1 背包的填表與還原}
+\Function{Knapsack}{$w, v, n, W$}
+    \For{$c \gets 0$ \To $W$}
+        \State $K[0, c] \gets 0$
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \For{$c \gets 0$ \To $W$}
+            \State $K[i, c] \gets K[i - 1, c]$ \Comment{不拿第 $i$ 件}
+            \If{$w_i \le c$ \AND $K[i - 1, c - w_i] + v_i > K[i, c]$}
+                \State $K[i, c] \gets K[i - 1, c - w_i] + v_i$ \Comment{拿第 $i$ 件}
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $c \gets W$ \Comment{從 $K[n, W]$ 往回找拿了哪些}
+    \For{$i \gets n$ \DownTo $1$}
+        \If{$K[i, c] \ne K[i - 1, c]$}
+            \State 第 $i$ 件有拿；$c \gets c - w_i$
+        \EndIf
+    \EndFor
+    \State \Return $K[n, W]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 對 $i$ 歸納證明 $K[i, c]$ 是「前 $i$ 件、容量 $c$」的最大價值。 $i = 0$ 時沒有物品，
+價值 $0$。 $i \ge 1$ 時，任何一組可行的選法若不含第 $i$ 件，就是前 $i - 1$ 件、容量 $c$ 的可行選法，價值
+$\le K[i-1, c]$；若含第 $i$ 件（必須 $w_i \le c$），其餘的物品是前 $i - 1$ 件、容量 $c - w_i$ 的可行選法，
+價值 $\le K[i-1, c-w_i] + v_i$。 所以最大價值不超過遞迴式的值。 反過來，遞迴式的兩項各自對應一組真的可行
+選法（由歸納假設，子問題的值是達得到的），所以達得到。 這就是最佳子結構的剪下貼上論證。
+
+\textbf{複雜度}。 表有 $(n + 1)(W + 1)$ 格，每格 $O(1)$，時間和空間都是 $\Theta(nW)$；還原 $O(n)$。 只要
+最大值不要還原時，第 $i$ 列只用到第 $i - 1$ 列，可以用一維陣列、$c$ 由大到小更新，空間降到 $\Theta(W)$
+（資結書第~18.5.4~節）。 注意 $\Theta(nW)$ 是\textbf{擬多項式}時間：$W$ 用 $\lg W$ 個位元表示，
+$nW$ 對輸入長度是指數的（資結書第~18.5.5~節）；0/1 背包的判定版本是 NP 完備問題。
+
+\textbf{例子}。 $W = 5$，四件物品 $(w, v) = (2, 3), (3, 4), (4, 5), (5, 6)$。
+\begin{center}
+\small
+\begin{tabular}{c|cccccc}
+$K[i, c]$ & $c = 0$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+$i = 0$ & 0 & 0 & 0 & 0 & 0 & 0 \\
+$1$：$(2, 3)$ & 0 & 0 & 3 & 3 & 3 & 3 \\
+$2$：$(3, 4)$ & 0 & 0 & 3 & 4 & 4 & 7 \\
+$3$：$(4, 5)$ & 0 & 0 & 3 & 4 & 5 & 7 \\
+$4$：$(5, 6)$ & 0 & 0 & 3 & 4 & 5 & 7 \\
+\end{tabular}
+\end{center}
+例如 $K[2, 5] = \max(K[1, 5],\ K[1, 2] + 4) = \max(3, 7) = 7$。 最大價值 $K[4, 5] = 7$。 還原：
+$K[4,5] = K[3,5]$、$K[3,5] = K[2,5]$，第 $4$、$3$ 件不拿；$K[2,5] = 7 \ne K[1,5] = 3$，拿第 $2$ 件，
+$c = 2$；$K[1,2] = 3 \ne K[0,2] = 0$，拿第 $1$ 件。 拿第 $1$、$2$ 件，重 $5$、價值 $7$。
+\end{pastsoln}

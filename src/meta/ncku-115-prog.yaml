@@ -1,0 +1,25 @@
+paper: ncku-115-prog
+volume: 2
+school: 成大
+dept: 資訊聯招
+year: 115
+subject: 程式設計
+instructions: 不可使用計算機。 請於答案卷(卡)作答，於試題上作答，不予計分。 Part I. 資料結構 (50\%)，共 15 題：一、問答題 (14 分)，答案依題號 (1, 2, 3, 4) 依序作答於答案卷；二、單選題 (24 分，每題 3 分)，劃記於答案卡，共有題組 A 和題組 B，每題組包含 4 小題，每小題答對得 3 分，答錯倒扣 1 分；三、複選題 (12 分，每題 4 分)，劃記於答案卡，每題答對得 4 分。 Part II. 演算法 (50\%)，共 9 題：一、是非題 (10 分，每題 2 分，答錯倒扣 1 分)，劃記於答案卡；二、問答題 (40 分)，作答於答案卷，並請註明該答案所對應之題號 (例：1-1、1-3.2)。
+questions:
+  - {id: ncku-115-prog-01, label: 資料結構問答第 1、2 題, chapter: 11}
+  - {id: ncku-115-prog-02, label: 資料結構問答第 3 題, chapter: 7}
+  - {id: ncku-115-prog-03, label: 資料結構問答第 4 題, chapter: 10}
+  - {id: ncku-115-prog-04, label: 資料結構單選題組 A（第 1--4 題）, chapter: 12}
+  - {id: ncku-115-prog-05, label: 資料結構單選題組 B（第 5--8 題）, chapter: 24}
+  - {id: ncku-115-prog-06, label: 資料結構複選第 9 題, chapter: 10}
+  - {id: ncku-115-prog-07, label: 資料結構複選第 10 題, chapter: 8}
+  - {id: ncku-115-prog-08, label: 資料結構複選第 11 題, chapter: 11}
+  - {id: ncku-115-prog-09, label: 演算法是非第 12 題, chapter: 1}
+  - {id: ncku-115-prog-10, label: 演算法是非第 13 題, chapter: 28}
+  - {id: ncku-115-prog-11, label: 演算法是非第 14 題, chapter: 28}
+  - {id: ncku-115-prog-12, label: 演算法是非第 15 題, chapter: 19}
+  - {id: ncku-115-prog-13, label: 演算法是非第 16 題, chapter: 28}
+  - {id: ncku-115-prog-14, label: 演算法問答第 1 題, chapter: 2}
+  - {id: ncku-115-prog-15, label: 演算法問答第 2 題, chapter: 18}
+  - {id: ncku-115-prog-16, label: 演算法問答第 3 題, chapter: 25}
+  - {id: ncku-115-prog-17, label: 演算法問答第 4 題, chapter: 25}

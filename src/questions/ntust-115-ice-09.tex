@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntust-115-ice-09}]{臺科大資工所 115 學年度 第 II-1 題}
+（填充）
+
+(5\%) Consider an undirected simple graph consisting of 7 nodes. The degrees of these nodes are given by the
+set $\{\,2,2,3,4,4,5,x\,\}$. Based on the Handshaking Lemma, what is the minimum positive integer value that x
+can take? \blank{A}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) $= 2$。
+
+\textbf{握手定理}（資結書定理~21.1）：所有頂點度數的和等於邊數的兩倍，一定是偶數。 已知的六個度數加起來
+$2 + 2 + 3 + 4 + 4 + 5 = 20$，所以 $20 + x$ 是偶數，$x$ 是偶數。 最小的正偶數是 $2$。 $x = 1$ 讓總和是 $21$，
+不可能。
+
+握手定理只是必要條件，還要確認 $x = 2$ 真的做得出來。 度數 $5, 4, 4, 3, 2, 2, 2$ 的簡單圖：頂點記成
+$a$（5）、$b$（4）、$c$（4）、$d$（3）、$e$（2）、$f$（2）、$g$（2），邊
+\[
+ab,\ ac,\ ad,\ ae,\ af,\quad bc,\ bd,\ bg,\quad cd,\ cg,\quad ef .
+\]
+逐點數度數：$a$ 連 $b, c, d, e, f$ 是 $5$；$b$ 連 $a, c, d, g$ 是 $4$；$c$ 連 $a, b, d, g$ 是 $4$；$d$ 連 $a, b, c$ 是
+$3$；$e$ 連 $a, f$、$f$ 連 $a, e$、$g$ 連 $b, c$ 都是 $2$。 共 $11$ 條邊，$2 \times 11 = 22 = 20 + 2$，沒有重邊或自迴圈。
+所以 $x$ 的最小值是 $2$。
+\end{pastsoln}

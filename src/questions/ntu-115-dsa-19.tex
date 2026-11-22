@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-115-dsa-19}]{臺大資工所 115 學年度 第 19 題}
+（單選）
+
+(4 points) Consider a dynamic table that: (1) starts empty with capacity 1; (2) doubles its capacity when full; (3) shrinks its capacity by a factor of $1/2$ when the capacity $\ge 4$ and the number of stored elements falls below one quarter of the capacity. Assume that inserting or deleting an element costs 1, and resizing a table of size $k$ costs $\Theta(k)$. Which statement is true when considering $n$ insertion and removal operations?
+\begin{enumerate}[label=(\Alph*)]
+\item The worst-case cost of any single operation is $O(1)$, so amortized analysis is unnecessary.
+\item Using aggregate analysis, the amortized cost per operation is $\Theta(\log n)$.
+\item If shrinking were performed when the table becomes half full instead of one quarter full, the amortized cost would still remain $O(1)$.
+\item With the one-quarter shrinking rule, the amortized cost per operation is $O(1)$, but shrinking more aggressively to half capacity when the table is half-full can destroy this bound.
+\item The amortized cost depends on the order of operations and cannot be bounded independently of the operation sequence.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)。
+
+(A) 錯。 表滿了再插入時要先加倍，容量 $m$ 的表要搬 $m$ 個，那一次是 $\Theta(m)$。
+
+(B) 錯。 下面 (D) 說明平攤成本是 $O(1)$，不是 $\Theta(\log n)$。
+
+(C) 錯。 「剛好半滿就減半」會來回換容量（資結書第~3.4~節）。 設容量 $m$
+（$m \ge 4$）已經放滿 $m$ 個：插入，表滿了，加倍成 $2m$、搬 $m$ 個，現在 $m + 1$ 個；
+刪除，剩 $m$ 個，剛好半滿，減半成 $m$、搬 $m$ 個，又回到放滿的狀態。 之後每做一對
+「插入、刪除」就花 $\Theta(m)$。 先插入 $n/2$ 個讓 $m$ 和 $n$ 同一級，剩下的操作全部
+這樣交替，總成本 $\Theta(n^2)$，平攤 $\Theta(n)$。 （如果把條件讀成「少於一半」，
+改用資結書第~3.4~節「插入、刪除、刪除、插入」的循環，結論一樣。）
+
+(D) 對。 前半句是資結書定理~3.3；這題的規則和資結書只差兩點：容量從 $1$
+開始，而且容量小於 $4$ 時不縮小（資結書刪到空時縮成 $0$）。 證明照搬：用
+$\Phi = |2 \cdot \mathit{num} - \mathit{cap}|$，一開始 $\Phi = 1$；加入、不縮小的刪
+除，平攤成本的計算和定理裡一樣，都 $\le 3$。 刪除而縮小時，原本容量 $m \ge 4$、剩
+$r$ 個（$4r < m$）：$r \ge 1$ 和定理裡的算法相同；$r = 0$ 時實際成本 $1$，$\Phi$ 從
+$m - 2$ 變成 $m/2$，平攤 $3 - m/2 \le 1$。 所以 $n$ 次操作的總成本不超過 $3n + 1$。
+題目說換容量的成本是 $\Theta(k)$；縮小時 $k$ 和搬動的個數只差常數倍（縮小前
+$\mathit{cap} \le 4 \cdot \mathit{num}$），把位能乘上適當的常數，結論不變。 後半句就
+是 (C) 的反例。
+
+(E) 錯。 $3n + 1$ 這個上界對任何操作順序都成立，平攤分析保證的正是這件事
+（資結書定義~3.1）。
+\end{pastsoln}

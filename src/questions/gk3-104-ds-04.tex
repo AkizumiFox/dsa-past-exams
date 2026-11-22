@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:gk3-104-ds-04}]{高考三級資訊處理 104 年 第四題}
+（申論；20 分）
+
+有個矩陣 $A[1..n]$，$n$ 的值很大。在矩陣 $A$ 中存有 $n$ 個正整數，且從小到大排列。給定某個整數 $x$，二分搜尋法（binary search）可以在 $O(\log n)$ 的時間內找出 $x$ 在矩陣 $A[1..n]$ 的位置，或宣告在 $A[1..n]$ 中沒有 $x$。在某個應用中，已知絕大部分的 $x$ 都會出現在矩陣 $a[1..n]$ 的前面 $m$ 個元素，且 $m$ 的值遠小於 $n$，但是無法預知 $m$ 的範圍。設計一個演算法，可以在 $O(\log m)$ 的時間內完成搜尋。（20 分）
+\end{pastexam}
+
+\begin{pastsoln}
+題目的「矩陣」是一維陣列；$a[1..n]$ 就是 $A[1..n]$（原卷大小寫不一致）。 這裡把「$x$ 在前 $m$ 個元素」理解成
+$x = A[p]$、$p \le m$，要做到 $O(\log p) \subseteq O(\log m)$；找不到時（$x$ 不在陣列裡）最多 $O(\log n)$。
+
+\textbf{想法：倍增搜尋}（exponential search，也叫 galloping search）。 $m$ 不知道，就用倍增去猜：依序看
+$A[1], A[2], A[4], A[8], \ldots$，直到第一個 $A[2^j] \ge x$（或超出 $n$）。 這時 $x$ 如果存在，一定在
+$A[2^{j-1} + 1..2^j]$ 這一段（前一個位置 $A[2^{j-1}] < x$），再在這一段做一般的二分搜尋（資結書第~17.1~節）。
+\begin{pseudo}[unbreakable]{倍增搜尋：在排好序的 $A[1..n]$ 找 $x$，找不到傳回 $0$}
+\Function{Exp-Search}{$A, n, x$}
+    \State $\mathit{hi} \gets 1$
+    \While{$\mathit{hi} < n$ \AND $A[\mathit{hi}] < x$}
+        \State $\mathit{hi} \gets 2 \cdot \mathit{hi}$ \Comment{$1, 2, 4, 8, \ldots$}
+    \EndWhile
+    \State $\mathit{lo} \gets \lfloor \mathit{hi} / 2 \rfloor + 1$；$\mathit{hi} \gets \min(\mathit{hi}, n)$
+    \While{$\mathit{lo} \le \mathit{hi}$} \Comment{一般的二分搜尋}
+        \State $\mathit{mid} \gets \lfloor (\mathit{lo} + \mathit{hi}) / 2 \rfloor$
+        \If{$A[\mathit{mid}] = x$}
+            \State \Return $\mathit{mid}$
+        \ElsIf{$A[\mathit{mid}] < x$}
+            \State $\mathit{lo} \gets \mathit{mid} + 1$
+        \Else
+            \State $\mathit{hi} \gets \mathit{mid} - 1$
+        \EndIf
+    \EndWhile
+    \State \Return $0$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 第 3 行的迴圈結束時有兩種情況：$A[\mathit{hi}] \ge x$，或 $\mathit{hi} \ge n$。 迴圈每次繼續都是
+因為 $A[\mathit{hi}] < x$，所以最後一次加倍之前的位置 $\lfloor \mathit{hi}/2 \rfloor$ 滿足
+$A[\lfloor \mathit{hi}/2 \rfloor] < x$（第一輪就停時 $\lfloor \mathit{hi}/2 \rfloor = 0$，看成 $A[0] = -\infty$）。
+陣列遞增，位置 $\le \lfloor \mathit{hi}/2 \rfloor$ 的元素都 $< x$；第一種情況位置 $\ge \mathit{hi}$ 的元素都
+$\ge A[\mathit{hi}] \ge x$，$x$ 若存在必在 $A[\lfloor\mathit{hi}/2\rfloor+1..\mathit{hi}]$；第二種情況範圍截到 $n$。
+第 5 行起在這一段做二分搜尋，正確性同一般二分搜尋。
+
+\textbf{時間}。 設 $x = A[p]$。 倍增的迴圈在 $\mathit{hi} \ge p$ 時一定停（那時 $A[\mathit{hi}] \ge A[p] = x$），
+所以最多做 $\lceil \log_2 p \rceil$ 次加倍，最後 $\mathit{hi} < 2p$。 二分搜尋的範圍長度是
+$\mathit{hi} - \lfloor \mathit{hi}/2 \rfloor \le \mathit{hi}/2 + 1 \le p$，要 $O(\log p)$ 次比較。 合計
+$O(\log p) = O(\log m)$，和 $n$ 無關。 $x$ 不在陣列時，倍增最多走到 $n$，也只是 $O(\log n)$，和直接二分搜尋
+一樣，不會更差。
+
+例：$A = 2, 5, 8, 13, 21, 34, 55, 89, \ldots$（$n$ 很大），找 $x = 21$。 看 $A[1] = 2$、$A[2] = 5$、$A[4] = 13$
+都 $< 21$，$A[8] = 89 \ge 21$，停在 $\mathit{hi} = 8$。 在 $A[5..8]$ 二分搜尋：$\mathit{mid} = 6$，$A[6] = 34 > 21$，
+$\mathit{hi} = 5$；$\mathit{mid} = 5$，$A[5] = 21$，找到，傳回 $5$。 總共只看了 $4 + 2 = 6$ 個元素，不管 $n$ 有多大。
+\end{pastsoln}

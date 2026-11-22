@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:nccu-115-dsa-09}]{政大資科所 115 學年度 第 9 題}
+（單選）
+
+(5\%) Suppose we have a queue Q containing the sequence 1, 2, 3, 4, 5. We also have an empty stack S.
+The only allowable operations are:
+\begin{itemize}
+\item Dequeue an element from Q and print it.
+\item Dequeue an element from Q and push it onto S.
+\item Pop an element from S and print it.
+\end{itemize}
+Which of the following permutations is impossible to generate as an output sequence?
+
+(A)~1, 5, 4, 3, 2 \qquad (B)~3, 4, 5, 2, 1 \qquad (C)~1, 3, 2, 5, 4 \qquad (D)~4, 3, 1, 2, 5
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+\textbf{化成堆疊排列}。 「從 Q 取出直接印」和「從 Q 取出推入 S、馬上彈出印出」的效果一樣，所以這三種
+操作能產生的輸出，正好是 $1, 2, 3, 4, 5$ 依序進堆疊時的所有出堆疊順序（資結書第~6.1.5~節）。
+由資結書定理~6.1，一個排列做得到，若且唯若裡面找不到位置 $i < j < k$ 使
+$p_j < p_k < p_i$（「大、小、中」的樣式，也就是 $3, 1, 2$ 型）。
+
+\textbf{(D) 做不到}。 4, 3, 1, 2, 5 裡的 $3, 1, 2$ 就是這個樣式。 直接說明：要第一個印出 $4$，$1, 2, 3$
+必須都已經離開 Q 而且還沒印，只能依序推在 S 裡，頂端是 $3$。 印 $4$、彈出 $3$ 之後，下一個要印 $1$，
+但 S 的頂端是 $2$，$1$ 壓在下面拿不出來，Q 裡也已經沒有 $1$ 了。
+
+其他三個都做得到（「印」表示從 Q 取出直接印，「推」表示推入 S，「彈」表示從 S 彈出印出）：
+\begin{itemize}
+\item (A) 1, 5, 4, 3, 2：印 $1$；推 $2, 3, 4$；印 $5$；彈 $4$、彈 $3$、彈 $2$。
+\item (B) 3, 4, 5, 2, 1：推 $1, 2$；印 $3$、印 $4$、印 $5$；彈 $2$、彈 $1$。
+\item (C) 1, 3, 2, 5, 4：印 $1$；推 $2$；印 $3$；彈 $2$；推 $4$；印 $5$；彈 $4$。
+\end{itemize}
+\end{pastsoln}

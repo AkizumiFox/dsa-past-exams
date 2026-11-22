@@ -1,0 +1,23 @@
+paper: nccu-113-dsa
+volume: 2
+school: 政大
+dept: 資科所
+year: 113
+subject: 資料結構及演算法
+instructions: 'For the first 10 questions, there is no need to explain your answer. 備註：一、作答於試題上者，不予計分。二、試題請隨卷繳交。'
+questions:
+  - {id: nccu-113-dsa-01, label: 第 1 題, chapter: 1}
+  - {id: nccu-113-dsa-02, label: 第 2 題, chapter: 14}
+  - {id: nccu-113-dsa-03, label: 第 3 題, chapter: 5}
+  - {id: nccu-113-dsa-04, label: 第 4 題, chapter: 8}
+  - {id: nccu-113-dsa-05, label: 第 5 題, chapter: 21}
+  - {id: nccu-113-dsa-06, label: 第 6 題, chapter: 9}
+  - {id: nccu-113-dsa-07, label: 第 7 題, chapter: 12}
+  - {id: nccu-113-dsa-08, label: 第 8 題, chapter: 28}
+  - {id: nccu-113-dsa-09, label: 第 9 題, chapter: 24}
+  - {id: nccu-113-dsa-10, label: 第 10 題, chapter: 28}
+  - {id: nccu-113-dsa-11, label: 第 11 題, chapter: 2}
+  - {id: nccu-113-dsa-12, label: 第 12 題, chapter: 9}
+  - {id: nccu-113-dsa-13, label: 第 13 題, chapter: 5}
+  - {id: nccu-113-dsa-14, label: 第 14 題, chapter: 1}
+  - {id: nccu-113-dsa-15, label: 第 15 題, chapter: 11}

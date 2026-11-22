@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-23}]{中興資工所乙組 115 學年度 第 23 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You want to validate expressions like ``(a + b) * (c -- d)''. Which structure helps?
+
+A.~Queue \qquad B.~Stack \qquad C.~Hash Table \qquad D.~Heap
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+檢查括號是否配對（資結書第~6.1.4~節，虛擬碼~6.3）：由左往右掃，遇到左括號就 push；遇到右括號
+就 pop 一個出來看是不是同一種的左括號，堆疊是空的或種類不合就不合法；掃完時堆疊必須是空的。
+最後打開的括號要最先關上，這正是堆疊的後進先出。 以 \texttt{(a + b) * (c - d)} 為例：第一個
+\texttt{(} push、遇到 \texttt{)} pop，堆疊空了；第二個 \texttt{(} push、\texttt{)} pop，掃完時
+堆疊是空的，合法。 運算式要進一步求值時，中序轉後序、後序求值也都用堆疊（資結書第~6.3~節）。
+\begin{itemize}
+\item A 錯：佇列先進先出，會拿到最早打開的括號，配對方向反了，例如 \texttt{(()}\texttt{)}
+就判斷不出巢狀關係。
+\item B 對。
+\item C 錯：雜湊表沒有順序，無法表達巢狀。
+\item D 錯：堆積依大小取出，和括號出現的先後無關。
+\end{itemize}
+\end{pastsoln}

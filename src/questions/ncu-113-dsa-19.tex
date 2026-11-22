@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ncu-113-dsa-19}]{中央資工所 113 學年度 第 19 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Let X = \{a/25, b/20, c/10, d/20, e/50\} be the alphabet and its frequency distribution. Which of the following
+statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item This is a greedy algorithm question.
+\item The code length of `e' is 1.
+\item `a' and `c' have the same code length.
+\item The code length for the string ``cad'' is 9.
+\item There is more than one way to achieve optimum prefix code.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)(D)(E)。
+
+題目沒說，這裡把「code length」理解成霍夫曼碼（最佳前綴碼）的碼長。
+
+\textbf{霍夫曼樹}（資結書第~19.3~節）。 每次合併頻率最小的兩個：
+\begin{enumerate}
+\item 最小的是 c/10，第二小有 b/20、d/20 平手，任取一個，例如 b：合成 $30$。 剩 a/25、d/20、$30$、e/50。
+\item 合併 d/20、a/25 成 $45$。 剩 $30$、$45$、e/50。
+\item 合併 $30$、$45$ 成 $75$。 剩 $75$、e/50。
+\item 合併成根 $125$。
+\end{enumerate}
+e 直接掛在根下，碼長 $1$；$75$ 那棵下面是 $30$（c、b）和 $45$（d、a），四個字母碼長都是 $3$。 例如
+e = 0、c = 100、b = 101、d = 110、a = 111。 總成本（加權路徑長）是
+$50 \cdot 1 + (25 + 20 + 10 + 20) \cdot 3 = 275$，也等於每次合併的和 $30 + 45 + 75 + 125 = 275$。
+
+\textbf{平手不影響碼長}。 第 1 步改選 d 和 c 合併，只是 b、d 互換位置，五個字母的碼長仍然是
+e 為 $1$、其他四個為 $3$。 所以不管怎麼處理平手，霍夫曼碼的碼長都一樣。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。 霍夫曼演算法是貪心法，每一步選頻率最小的兩個合併，正確性見資結書定理~19.5。
+\item (B) 對，e 的碼長是 $1$。
+\item (C) 對，a、c 都是 $3$。
+\item (D) 對，c、a、d 各 $3$ 位，共 $9$。
+\item (E) 對。 b、d 平手可以任選；每個內部節點的左右兒子也可以對調（0、1 互換），得到不同的碼，成本都是
+$275$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:nccu-111-dsa-05}]{政大資科所 111 學年度 第 5 題}
+（設計）
+
+(10\%) Design \textit{insert sort} which sorts the following playing cards according to its number while the suit of card does not matter (不管花色). [HINT: insert sort here is not \textit{stable}.]
+\begin{itemize}
+\item Input: club11, spade 10, club10, heart 7
+\item Output: heart 7, club10, spade 10, club11
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{先看提示在說什麼}。 輸入裡 spade~10 在 club10 前面，輸出卻是 club10 在 spade~10 前面：
+兩張點數相同的牌，相對順序被對調了，所以題目要的排序「不穩定」（穩定的定義見資結書第~14.1~節）。
+資結書虛擬碼~1.3 的插入排序用 $A[j] > \mathit{key}$ 決定要不要往右移，遇到相等的就停，是穩定的，
+會輸出 heart~7, spade~10, club10, club11。 要得到題目的輸出，把條件改成 $\ge$：遇到點數相等的牌也
+往右移，新插入的牌就會跑到相等的牌前面。
+
+\textbf{約定}。 牌存在陣列 $A[1..n]$，每張牌有 $\mathit{suit}$（花色）和 $\mathit{num}$（點數）；只比較
+$\mathit{num}$。
+
+\begin{pseudo}{只比點數的插入排序（不穩定）}
+\Procedure{Card-Insertion-Sort}{$A, n$}
+    \For{$i \gets 2$ \To $n$}
+        \State $\mathit{key} \gets A[i]$ \Comment{整張牌，花色一起搬}
+        \State $j \gets i - 1$
+        \While{$j \ge 1$ \AND $A[j].\mathit{num} \ge \mathit{key}.\mathit{num}$}
+            \State $A[j + 1] \gets A[j]$
+            \State $j \gets j - 1$
+        \EndWhile
+        \State $A[j + 1] \gets \mathit{key}$
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{追蹤}。 每一列是第 $i$ 輪做完後的陣列，粗體是這一輪插入的牌：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+$i$ & 這一輪往右移的牌 & 陣列 \\
+\midrule
+開始 & & club11, spade~10, club10, heart~7 \\
+2 & club11（$11 \ge 10$） & \textbf{spade~10}, club11, club10, heart~7 \\
+3 & club11、spade~10（$10 \ge 10$） & \textbf{club10}, spade~10, club11, heart~7 \\
+4 & 三張都移（都 $\ge 7$） & \textbf{heart~7}, club10, spade~10, club11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 $3$ 輪是關鍵：插入 club10 時，因為條件是 $\ge$，點數同為 $10$ 的 spade~10 也被往右移，club10
+跑到它前面。 最後得到 heart~7, club10, spade~10, club11，和題目的輸出相同。
+
+\textbf{正確性}。 迴圈不變量：第 $i$ 輪開始時，$A[1..i-1]$ 是原本前 $i - 1$ 張牌依點數由小到大排好的
+結果。 \textbf{while} 把點數 $\ge \mathit{key}.\mathit{num}$ 的牌都往右移一格，停下來時 $A[j]$（若存在）
+的點數 $< \mathit{key}.\mathit{num}$，而 $A[j+2..i]$ 的點數都 $\ge \mathit{key}.\mathit{num}$，把
+$\mathit{key}$ 放進 $A[j + 1]$ 後 $A[1..i]$ 仍然依點數排好。 $i = n$ 做完就全部排好。 花色從頭到尾沒有
+被比較，符合「不管花色」。
+
+\textbf{複雜度}。 和一般的插入排序一樣：最壞（由大到小）比較 $n(n-1)/2$ 次，$\Theta(n^2)$；最好
+（由小到大且點數都不同）$\Theta(n)$。 改成 $\ge$ 以後，點數全部相同的輸入也變成最壞情況（每一張都要
+移到最前面），而原本的 $>$ 版本在這種輸入上是 $\Theta(n)$。 這也是一般都用 $>$ 的原因：穩定，而且
+不做多餘的搬動；題目是特意要考「改一個比較符號就會不穩定」。
+\end{pastsoln}
