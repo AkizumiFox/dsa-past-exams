@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-29}]{臺大電信所 110 學年度（B）第 29 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In this exam,
+\begin{itemize}
+\item The height of a leaf (in either a tree or heap) is defined as 0.
+\item The depth of the root (in either a tree or heap) is defined as 0.
+\item The degree of a node (in either a tree or heap) is defined as the number of its children.
+\item The size of a tree/heap is defined as the total number of keys (items) it stores.
+\item All heaps, unless otherwise specified, are min heaps.
+\end{itemize}
+
+For a binary heap of height 2021, let x be the minimum possible size, y be the maximum possible size, then (3x+y) mod 5 is
+
+A.~0 \qquad B.~1 \qquad C.~2 \qquad D.~3 \qquad E.~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E（4）。
+
+二元堆積是完整二元樹：深度 $0$ 到 $h - 1$ 各層全滿，最底層（深度 $h$）從左邊連續放（資結書第~8.1~節）。
+高度 $h = 2021$。
+\begin{itemize}
+\item \textbf{最少}：最底層只有 $1$ 個，$x = (2^{h} - 1) + 1 = 2^{2021}$。
+\item \textbf{最多}：最底層全滿，$y = 2^{h+1} - 1 = 2^{2022} - 1$。
+\end{itemize}
+\[
+3x + y = 3 \cdot 2^{2021} + 2 \cdot 2^{2021} - 1 = 5 \cdot 2^{2021} - 1 \equiv -1 \equiv 4 \pmod 5,
+\]
+選 E。
+\end{pastsoln}

@@ -1,0 +1,81 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-10}]{成大電通所 108 學年度 問答題第 7 題}
+（問答；15 分）
+
+The distance between two vectors x=[x$_1$,x$_2$,\ldots,x$_N$] and y=[y$_1$,y$_2$,\ldots,y$_M$] can be
+computed by the dynamic time warping (DTW for short). DTW is to find the best mapping path with the
+minimum distance.
+
+An (N,M)-warping path is a sequence p = (p$_1$,\ldots,p$_L$) with p$_k$ = (n$_k$, m$_k$) $\in$ [1 : N]
+$\times$ [1 : M] for k $\in$ [1 : L] satisfying the following three conditions.
+\begin{enumerate}[label=(\roman*)]
+\item Boundary condition: p$_1$ = (1, 1) and p$_L$ = (N,M).
+\item Monotonicity condition: n$_1 \le$ n$_2 \le \ldots \le$ n$_L$ and m$_1 \le$ m$_2 \le \ldots \le$
+m$_L$.
+\item Step size condition: p$_{k+1}$ -- p$_k$ $\in$ \{(1, 0),(0, 1),(1, 1)\} for k $\in$ [1 : L -- 1].
+\end{enumerate}
+The total cost c$_p$(X, Y) of a warping path p between X and Y with respect to the local cost measure c
+is defined as:
+\[ \mathrm{c_p(X, Y)} := \textstyle\sum_{k=1}^{L} c(x_{n_k}, y_{m_k}) \]
+An optimal warping path between X and Y is a warping path p$*$ having minimal total cost among all
+possible warping paths. The DTW distance DTW(X, Y) between X and Y is then defined as the total cost of
+p$*$:
+\[ \mathrm{DTW(X, Y) := c_{p*}\,(X, Y) = min\{\, c_p(X, Y) \mid p \text{ is an (N,M)-warping path}\}} \]
+
+Please compute the DTW distance of x=[1,2,4,1] and y=[1,5,4,2] using dynamic programming techniques with
+cost measure c defined as:
+\[ c(x_i, y_j) = \sqrt{(x_i - y_j)^2} \]
+Please show your answer step by step with descriptions. (15 points)
+\end{pastexam}
+
+\begin{pastsoln}
+DTW 距離是 \textbf{3}。
+
+\textbf{子問題。} 令 $D(i, j)$ 是 $x_1..x_i$ 和 $y_1..y_j$ 的 DTW 距離，也就是從 $(1, 1)$ 走到 $(i, j)$
+的最便宜路徑成本。 路徑走到 $(i, j)$ 之前的最後一步只能來自 $(i-1, j)$、$(i, j-1)$ 或 $(i-1, j-1)$
+（步長條件），而前面那一段本身也必須是最便宜的（最佳子結構，資結書第~18.1.4~節），所以
+\[
+D(i, j) = c(x_i, y_j) + \min\{D(i-1, j),\ D(i, j-1),\ D(i-1, j-1)\},
+\]
+邊界 $D(1, 1) = c(x_1, y_1)$；第一列、第一行只能從一個方向來：$D(1, j) = c(x_1, y_j) + D(1, j-1)$，
+$D(i, 1) = c(x_i, y_1) + D(i-1, 1)$。 答案是 $D(4, 4)$。 和編輯距離（資結書第~18.6.1~節）是同一種
+二維表格，由左上往右下填。
+
+\textbf{局部成本} $c(x_i, y_j) = \sqrt{(x_i - y_j)^2} = |x_i - y_j|$：
+\begin{center}
+\begin{tabular}{c|cccc}
+ & $y_1 = 1$ & $y_2 = 5$ & $y_3 = 4$ & $y_4 = 2$ \\ \hline
+$x_1 = 1$ & 0 & 4 & 3 & 1 \\
+$x_2 = 2$ & 1 & 3 & 2 & 0 \\
+$x_3 = 4$ & 3 & 1 & 0 & 2 \\
+$x_4 = 1$ & 0 & 4 & 3 & 1 \\
+\end{tabular}
+\end{center}
+
+\textbf{填表}（逐列由左到右）：
+\begin{itemize}
+\item 第 1 列：$D(1,1) = 0$；$D(1,2) = 4 + 0 = 4$；$D(1,3) = 3 + 4 = 7$；$D(1,4) = 1 + 7 = 8$。
+\item 第 2 列：$D(2,1) = 1 + 0 = 1$；$D(2,2) = 3 + \min(4, 1, 0) = 3$；
+$D(2,3) = 2 + \min(7, 3, 4) = 5$；$D(2,4) = 0 + \min(8, 5, 7) = 5$。
+\item 第 3 列：$D(3,1) = 3 + 1 = 4$；$D(3,2) = 1 + \min(3, 4, 1) = 2$；
+$D(3,3) = 0 + \min(5, 2, 3) = 2$；$D(3,4) = 2 + \min(5, 2, 5) = 4$。
+\item 第 4 列：$D(4,1) = 0 + 4 = 4$；$D(4,2) = 4 + \min(2, 4, 4) = 6$；
+$D(4,3) = 3 + \min(2, 6, 2) = 5$；$D(4,4) = 1 + \min(4, 5, 2) = 3$。
+\end{itemize}
+（$\min$ 裡依序是上方 $D(i-1, j)$、左方 $D(i, j-1)$、左上 $D(i-1, j-1)$。）
+\begin{center}
+\begin{tabular}{c|cccc}
+$D(i, j)$ & $j = 1$ & $j = 2$ & $j = 3$ & $j = 4$ \\ \hline
+$i = 1$ & \textbf{0} & 4 & 7 & 8 \\
+$i = 2$ & \textbf{1} & 3 & 5 & 5 \\
+$i = 3$ & 4 & \textbf{2} & \textbf{2} & 4 \\
+$i = 4$ & 4 & 6 & 5 & \textbf{3} \\
+\end{tabular}
+\end{center}
+
+\textbf{最佳路徑}：從 $(4, 4)$ 往回，每次走到三個前驅中 $D$ 最小的那一個：$(4,4) \leftarrow (3,3)
+\leftarrow (3,2) \leftarrow (2,1) \leftarrow (1,1)$（上表粗體）。 所以
+$p^* = ((1,1), (2,1), (3,2), (3,3), (4,4))$，成本 $0 + 1 + 1 + 0 + 1 = 3$：$x_1, x_2$ 都對到 $y_1$，
+$x_3$ 對到 $y_2, y_3$，$x_4$ 對到 $y_4$。 $\mathrm{DTW}(x, y) = 3$，這條最佳路徑是唯一的。
+
+時間和空間都是 $\Theta(NM)$；只要距離不要路徑時，只留兩列可以把空間降到 $\Theta(M)$。
+\end{pastsoln}

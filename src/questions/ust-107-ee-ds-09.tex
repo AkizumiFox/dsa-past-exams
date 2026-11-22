@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-09}]{臺聯大電機類 107 學年度 第九題}
+（問答；10 分）
+
+(10\%) Answer the following question.
+\begin{enumerate}
+\item[(一)] (4\%) Why do binary search trees have to be balanced?
+\item[(二)] (6\%) Make a comparison of the \textsf{findMax}, \textsf{find}, and \textsf{insert} operations between binary search trees and max-heaps.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+（一）BST 的搜尋、插入、刪除、找最大最小值，都是從根往下走一條路徑，時間是 $O(h)$，$h$ 是樹高
+（資結書第~9.1、9.2~節）。 $h$ 由插入的順序決定：$n$ 個鍵的 BST，最好 $h = \lfloor \lg n \rfloor$，最壞 $h = n - 1$。
+例如依序插入已經排好的 $1, 2, \ldots, n$，每個新鍵都接在最右邊，樹退化成一條串列，每個操作都變成 $\Theta(n)$，
+和直接用串列一樣慢。 平衡的 BST（AVL 樹、紅黑樹等）在插入、刪除時用旋轉維持 $h = O(\log n)$
+（資結書定理~10.1、10.4），不論輸入順序都保證 $O(\log n)$，所以要平衡。
+
+（二）以下 BST 分成一般（可能不平衡）和平衡兩種，$n$ 是元素個數。
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+操作 & BST（一般） & 平衡 BST & 最大堆積 \\
+\midrule
+\textsf{findMax} & $O(h)$，最壞 $\Theta(n)$ & $O(\log n)$ & $O(1)$ \\
+\textsf{find}（任意鍵） & $O(h)$，最壞 $\Theta(n)$ & $O(\log n)$ & $O(n)$ \\
+\textsf{insert} & $O(h)$，最壞 $\Theta(n)$ & $O(\log n)$ & $O(\log n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item \textsf{findMax}：BST 從根一路往右走到底（資結書虛擬碼~9.3），走 $O(h)$ 步。 最大堆積的最大值就在根
+（陣列的第一格），$O(1)$。
+\item \textsf{find}：BST 每比一次就能決定往左或往右，$O(h)$。 堆積只保證「父節點不小於子節點」，同一層、不同子樹
+之間沒有大小關係，找任意鍵沒有方向可以走，最壞要看全部 $n$ 個，$O(n)$。
+\item \textsf{insert}：BST 找到該接的空位再接上去，$O(h)$（平衡樹再加 $O(1)$ 次旋轉和沿路更新）。 最大堆積把新元素放在
+陣列最後一格再往上浮，堆積一定是完整二元樹，高度 $\lfloor \lg n \rfloor$，$O(\log n)$（資結書第~8.1~節）。
+\end{itemize}
+結論：只需要反覆取最大值（優先佇列）時，堆積比較簡單、\textsf{findMax} 只要常數時間，而且一定平衡；需要搜尋任意鍵、
+依序走訪或範圍查詢時，要用（平衡的）BST。
+\end{pastsoln}

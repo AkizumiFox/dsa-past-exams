@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-13}]{臺大電機所 112 學年度 第 13 題}
+（複選；每題 15 分，題內每個選項單獨計分，答對得 3 分，答錯倒扣 3 分，倒扣至複選題總分 0 分為止；未作答得 0 分，不倒扣）
+
+Which of the following statement(s) about the \textit{graph} data structure is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Two \textit{graphs} are \textit{isomorphic} if and only if both \textit{graphs} contain the same number of vertices and the same number of edges.
+\item All non-empty \textit{graphs} must contain at least a \textit{clique}.
+\item Depth-first traversal of an arbitrary graph has the time complexity \texttt{O(n)}, where \texttt{n} is the number of vertices in the \textit{graph}.
+\item The longest simple path of an arbitrary \textit{graph} has the length \texttt{$\Theta$(n$^2$)}, where \texttt{n} is the number of vertices in the \textit{graph}.
+\item A complete graph has the number of edges \texttt{$\Theta$(2$^{\texttt{n}}$)}, where \texttt{n} is the number of vertices in the \textit{graph}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+$n$ 是頂點數，$m$ 是邊數。
+\begin{itemize}
+\item (A) \textbf{錯}。 頂點數、邊數相同只是同構的必要條件。 反例：$4$ 個頂點的路徑 $P_4$（$1-2-3-4$）和星形
+$K_{1,3}$（一個中心連三個點），都是 $4$ 個頂點、$3$ 條邊，但星形有一個度數 $3$ 的頂點，路徑沒有，同構會保留度數，
+所以不同構。
+\item (B) \textbf{對}。 團（clique）是一組兩兩相鄰的頂點（資結書第~28.3.2~節）。 只有一個頂點的集合沒有需要檢查的
+點對，本身就是一個團（$K_1$）；圖只要不是空的，就至少有一個團。 （若把團限定為至少三個頂點，沒有三角形的圖
+就是反例；但一般的定義不限大小。）
+\item (C) \textbf{錯}。 DFS 每個頂點拜訪一次，但要看過每個頂點的所有鄰居，用相鄰串列是 $\Theta(n + m)$，用相鄰
+矩陣是 $\Theta(n^2)$（資結書第~21.4~節）。 $m$ 可以到 $n(n-1)/2$，所以不是 $O(n)$。
+\item (D) \textbf{錯}。 簡單路徑不重複頂點，最多 $n$ 個頂點、$n - 1$ 條邊，長度是 $O(n)$，不可能是 $\Theta(n^2)$。
+\item (E) \textbf{錯}。 完全圖每對頂點之間一條邊，共 $\binom{n}{2} = n(n-1)/2 = \Theta(n^2)$ 條，不是 $\Theta(2^n)$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-10}]{臺聯大電機類 112 學年度 第 10 題}
+（單選；3 分）
+
+Given the following code, what will happen during the execution?
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, xleftmargin=6em, xrightmargin=6em]
+1  void do_job()
+2  {
+3      do_job();
+4  }
+5  int main()
+6  {
+7      do_job;
+8      return 0;
+9  }
+\end{lstlisting}
+(A)~The code cannot be compiled\\
+(B)~The code will be executed successfully and ``0'' will be printed out\\
+(C)~The code will be executed successfully and random output will be exported\\
+(D)~The code will be executed successfully, but an overflow will occur
+\end{pastexam}
+
+\begin{pastsoln}
+答案：照出題意圖是 (D)；照字面，四個選項都不完全對。
+
+先說字面。 第 7 行寫的是 \texttt{do\_job;}，沒有括號。 在 C 裡，函式名稱單獨出現是一個運算式
+（值是函式的位址），\texttt{do\_job;} 是一個「算完就丟掉」的運算式敘述，合法，編譯器最多給
+「statement with no effect」的警告。 它\textbf{不會呼叫} \texttt{do\_job}。 所以照字面：
+\begin{itemize}
+\item (A)：錯，可以編譯。
+\item (B)：錯。 \texttt{return 0} 是把 $0$ 當成程式的結束狀態交給作業系統，不是印出來；程式
+沒有任何輸出敘述。
+\item (C)：錯，沒有任何輸出。
+\item (D)：錯，\texttt{do\_job} 根本沒被呼叫，不會溢位。
+\end{itemize}
+照字面，程式正常結束、什麼也不印，沒有對應的選項。
+
+題目的考點顯然是第 1--4 行：\texttt{do\_job} 無條件呼叫自己，沒有終止條件。 把第 7 行讀成
+\texttt{do\_job();}（漏打括號），執行時每呼叫一次就在呼叫堆疊上多一個活動紀錄（返回位址等），
+永遠不會返回，堆疊空間很快用完，發生 stack overflow，程式被作業系統終止（Linux 上通常是
+segmentation fault）（資結書第~6.4~節）。 這和 (D) 說的「overflow will occur」一致，所以這樣讀時
+答案是 (D)。 (D) 前半句「executed successfully」的意思只能理解成「可以編譯、開始執行」，程式
+實際上是異常結束的。
+
+另外，有些編譯器在最佳化時會把這種尾端的自我呼叫改成迴圈，那時程式會變成無窮迴圈而不是
+溢位；題目的意思是一般（不最佳化）的情形。
+\end{pastsoln}

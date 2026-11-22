@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-17}]{臺大電信所 109 學年度（B）第 17 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of one decrease-key operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+decrease-key 在元素所在的那棵二項樹裡，像二元堆積一樣往上和父節點交換，直到不比父節點小
+（資結書第~8.5~節）。 二項樹 $B_k$ 的高度（以邊數計）是 $k$，而 $k \le \lfloor \lg n \rfloor$，
+所以最多換 $\lfloor \lg n \rfloor$ 次，$O(\log n)$。 元素在最大那棵樹的最深處、鍵減成全堆積
+最小時，真的要換 $\Theta(\log n)$ 次。
+
+和費氏堆積不同：費氏堆積是把節點剪下來放進根串列，平攤 $O(1)$；二項堆積必須維持每棵都是
+完整的二項樹，不能剪，只能往上換。
+\end{pastsoln}

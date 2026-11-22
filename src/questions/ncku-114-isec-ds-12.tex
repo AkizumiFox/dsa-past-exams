@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-12}]{成大智慧資安學程 114 學年度 單選題第 12 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+（本題接續第 11 題：Given a hash table with 11 buckets; labeled from 0 to 10. The hash function
+h(key)= key \% 11 allocates data into a hash table. \ldots{} store the numbers ``3, 41, 15, 36, 74, 58, 91,
+45, 48, 64''.）
+
+Continue from the problem 11, instead of chaining, we adopt open addressing to handle overflow, where
+each bucket has one slot. The resulting position of data is determined by h(key)= \{initial position +
+$i$* h$_2$(key) \}\%11, where h$_2$(key) = key \% 7 and $i$ denotes the iteration of the overflow. Please
+show the position of 58 in the table.
+
+a)~7 \qquad b)~5 \qquad c)~10 \qquad d)~3 \qquad e)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a) 7。
+
+這是雙重雜湊（資結書第~12.3~節）：起點 $h_1 = \mathit{key} \bmod 11$，第 $i$ 次溢位探測
+$(h_1 + i \cdot h_2) \bmod 11$，$h_2 = \mathit{key} \bmod 7$。 依序插入，直到 $58$：
+\begin{center}
+\small
+\begin{tabular}{rccl}
+\toprule
+key & $h_1$ & $h_2$ & 探測 \\
+\midrule
+3 & 3 & -- & 第 3 格空，放 3 \\
+41 & 8 & -- & 第 8 格空，放 8 \\
+15 & 4 & -- & 第 4 格空，放 4 \\
+36 & 3 & 1 & 3 有人；$i = 1$：4 有人；$i = 2$：5，放 5 \\
+74 & 8 & 4 & 8 有人；$i = 1$：$12 \bmod 11 = 1$，放 1 \\
+58 & 3 & 2 & 3 有人；$i = 1$：5 有人（36）；$i = 2$：$3 + 4 = 7$，放 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$58$ 在第 $7$ 格，答案 a)。 後面的數不會再動到它（開放定址法放好就不搬）。
+
+附帶一提，這個 $h_2$ 設計有問題：$91 \bmod 7 = 0$，$91$ 的起點 $91 \bmod 11 = 3$ 已經有人，之後每次探測
+都還是第 $3$ 格，永遠放不進去。 雙重雜湊的第二個雜湊函數不能是 $0$，通常寫成
+$h_2 = 1 + (\mathit{key} \bmod 7)$ 這類形式。 這不影響本題，因為 $58$ 比 $91$ 先插入。
+\end{pastsoln}

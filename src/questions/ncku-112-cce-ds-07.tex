@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-07}]{成大電通所 112 學年度 第 7 題}
+（問答）
+
+(15\%) A word-chain automaton is a directed graph with a finite number of vertices V, satisfying the
+following properties. (i) There is a specified initial node $v_0\in \boldsymbol{V}$. (ii) There is
+subset \textbf{F} of set $V$ which contains terminal nodes. (iii) Each edge is labeled with a symbol
+from a finite set \textbf{W}. A string \textbf{w$_1$w$_2$\ldots w$_k$} of symbols in \textbf{W} is
+recognized by the automaton if there is a directed path starting at the initial node $v_0$ and
+ending at a terminal node w $\in \boldsymbol{F}$ such that the sequence of edges in this directed
+path is \textbf{w$_1$w$_2$\ldots w$_k$}. The set \textbf{L} of all strings recognized by the
+automaton is called the language recognized by the automaton. A word-chain automaton is a special
+type of finite-state automaton, which in turn, is a type of finite-sate machine.
+
+(a) Draw a word-chain automaton such that the following five sentences can be recognized: 1. I like
+his rabbit. 2. They hate his cat. 3. I think that his hamster is cute. 4. I know that his rabbit
+is soft. 5. They hate to have a hamster.
+
+(b) Explain how the above automaton is used to check whether a sentence is recognized or not.
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~7~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-07}，這裡只列答案。
+
+答案：(a) 以單字為邊的標籤，把五個句子建成一棵共用前綴的 trie（1、3、4 句共用 I，2、5 句共用 They hate），再把句尾合併成
+一個終點。 (b) 從 $v_0$ 開始，句子的每個單字沿著標同一個單字的邊走一步；某一步沒有這樣的邊就不接受，讀完時停在終點才接受。
+每個單字只走一步，判斷長度 $k$ 的句子花 $O(k)$。
+\end{pastsoln}

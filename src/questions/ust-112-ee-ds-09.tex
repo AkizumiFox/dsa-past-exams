@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-09}]{臺聯大電機類 112 學年度 第 9 題}
+（單選；3 分）
+
+Let G be a complete graph with 4 vertices. How many spanning trees does graph G have?
+
+(A)~12 \qquad (B)~8 \qquad (C)~16 \qquad (D)~25
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) 16。
+
+$K_4$ 有 $\binom{4}{2} = 6$ 條邊。 $4$ 個頂點的生成樹恰好有 $3$ 條邊（資結書第~21.1~節：$n$ 個
+頂點的樹有 $n - 1$ 條邊），所以從 $6$ 條邊挑 $3$ 條，共 $\binom{6}{3} = 20$ 種選法，扣掉不是樹的。
+
+$3$ 條邊、$4$ 個頂點，不是樹就是有環。 $3$ 條邊能成的環只有三角形，$K_4$ 的三角形由 $3$ 個頂點
+決定，共 $\binom{4}{3} = 4$ 個。 其餘 $3$ 條邊的選法沒有環；$n - 1$ 條邊又沒有環的圖一定連通，
+是生成樹。 所以生成樹有 $20 - 4 = 16$ 棵。
+
+這也符合 Cayley 公式：完全圖 $K_n$ 有 $n^{n-2}$ 棵生成樹，$4^{2} = 16$。
+
+\begin{itemize}
+\item (A) 12：只數了路徑形狀的生成樹（$4!/2 = 12$），漏掉以一個頂點為中心的星形（$4$ 棵）。
+\item (B) 8、(D) 25：和上面數出來的 $16$ 不符。
+\end{itemize}
+\end{pastsoln}

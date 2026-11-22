@@ -1,0 +1,98 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-02}]{臺大工科海洋所 107 學年度 第 2 題}
+（設計；15 分）
+
+\textbf{(15 \%)} A next-to-minimum spanning tree of a graph is a spanning tree whose total weight is
+as small as possible but greater than the weight of a minimum spanning tree of the graph. For a
+weighted graph G, develop an algorithm to construct the next-to-minimum spanning tree of G.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的定義是「總權重\textbf{嚴格大於}最小生成樹的生成樹裡最輕的」，不是「和最小生成樹不同的
+生成樹裡最輕的」（資結書第~24.5.2~節的提醒講過這兩種定義）。 權重可以重複，所以換邊時要
+小心相同權重。 假設 $G = (V, E)$ 連通，$n = |V|$、$m = |E|$。 記號照資結書第~24~章：$T$ 是
+一棵最小生成樹，$P_T(x, y)$ 是 $T$ 上 $x$ 到 $y$ 的路徑。
+
+\textbf{想法。} 從 $T$ 出發「換一條邊」：放進一條非樹邊 $e = (x, y)$，會和 $P_T(x, y)$ 形成
+一個環，再拿掉環上一條樹邊 $f$，得到的 $T - \{f\} \cup \{e\}$ 還是生成樹，權重是
+$w(T) + w(e) - w(f)$。 要它嚴格大於 $w(T)$，$f$ 必須比 $e$ 輕；要它盡量小，$f$ 就選路徑上
+「比 $w(e)$ 輕的邊裡最重的」。 下面先證明答案一定在這些換一條邊的樹裡，再說怎麼有效率地算。
+
+\textbf{引理（換邊）。} $T$、$T'$ 是兩棵生成樹，$f \in T \setminus T'$，則存在
+$e \in T' \setminus T$，使 $T - \{f\} \cup \{e\}$ 和 $T' - \{e\} \cup \{f\}$ 都是生成樹。
+
+\textbf{證明。} 從 $T$ 拿掉 $f = (a, b)$，$T$ 分成兩塊，頂點分成 $S$（含 $a$）和 $V - S$（含 $b$），
+$T - \{f\}$ 沒有任何邊跨過這個切割。 $T' \cup \{f\}$ 恰好有一個環 $C$，$C$ 經過 $f$。 一個環
+跨過一個切割的次數是偶數，$C$ 已經用 $f$ 跨過一次，所以 $C$ 上還有另一條跨過切割的邊
+$e \ne f$。 $e$ 在 $C$ 上而且不是 $f$，所以 $e \in T'$；$e$ 跨過切割，所以
+$e \notin T - \{f\}$，又 $e \ne f$，所以 $e \notin T$。 $T - \{f\} \cup \{e\}$ 用 $e$ 把兩塊接
+起來，是 $n - 1$ 條邊的連通圖，是生成樹；$T' \cup \{f\}$ 拿掉環 $C$ 上的 $e$，也是生成樹。
+\hfill$\blacksquare$
+
+\textbf{定理。} 設 $W^{*}$ 是所有權重大於 $w(T)$ 的生成樹裡最小的權重（假設這種樹存在）。
+那麼有一條非樹邊 $e$ 和 $P_T(e)$ 上的一條樹邊 $f$，$w(f) < w(e)$，使
+$w(T - \{f\} \cup \{e\}) = W^{*}$。
+
+\textbf{證明。} 權重是 $W^{*}$ 的生成樹裡，取和 $T$ 共同邊最多的一棵 $T'$。 $w(T') > w(T)$，
+所以 $T' \ne T$，取 $f \in T \setminus T'$，由引理得到 $e \in T' \setminus T$，令
+$T_1 = T - \{f\} \cup \{e\}$、$T_2 = T' - \{e\} \cup \{f\}$，令 $d = w(e) - w(f)$。
+\begin{itemize}
+\item $T$ 是最小生成樹，$w(T_1) = w(T) + d \ge w(T)$，所以 $d \ge 0$。
+\item 如果 $d = 0$：$w(T_2) = W^{*}$，而 $T_2$ 比 $T'$ 多了 $T$ 的邊 $f$、少了不是 $T$ 的邊 $e$，
+和 $T$ 的共同邊比 $T'$ 多一條，和 $T'$ 的取法矛盾。
+\item 所以 $d > 0$，$w(T_1) > w(T)$。 又 $w(T_2) = W^{*} - d \ge w(T)$，得 $d \le W^{*} - w(T)$，
+$w(T_1) = w(T) + d \le W^{*}$。 $W^{*}$ 是大於 $w(T)$ 的最小權重，所以 $w(T_1) = W^{*}$。
+\end{itemize}
+$T - \{f\} \cup \{e\}$ 是生成樹，表示 $f$ 在 $e$ 和 $T$ 形成的環上，也就是 $f \in P_T(e)$；
+$d > 0$ 就是 $w(f) < w(e)$。 \hfill$\blacksquare$
+
+另外，$T$ 是最小生成樹，$P_T(x, y)$ 上每一條邊都 $\le w(x, y)$（否則換掉會更輕，這是資結書
+定理~24.3 環的性質）。 所以對每條非樹邊 $e = (x, y)$：路徑上最重的邊如果比 $w(e)$ 輕，就拿掉
+它；如果和 $w(e)$ 一樣重，改拿「比它輕的邊裡最重的」。 兩個都要事先算好：
+\begin{itemize}
+\item $M_1[u, v]$：$P_T(u, v)$ 上最大的權重；
+\item $M_2[u, v]$：$P_T(u, v)$ 上嚴格小於 $M_1[u, v]$ 的最大權重（沒有就是 $-\infty$），
+\end{itemize}
+連同達到它的那條邊 $E_1[u, v]$、$E_2[u, v]$ 一起記。
+
+\begin{pseudo}{次小生成樹（總權重嚴格大於最小生成樹）}
+\Function{Next-To-Minimum-ST}{$G, w$}
+    \State $T \gets$ \Call{MST-Kruskal}{$G, w$} \Comment{資結書虛擬碼~24.2}
+    \For{每個頂點 $u$} \Comment{從 $u$ 在 $T$ 上做一次 DFS}
+        \State $M_1[u, u] \gets -\infty$；$M_2[u, u] \gets -\infty$
+        \For{DFS 經過的每條樹邊 $(a, b)$（$a$ 先被拜訪）}
+            \State 由 $M_1[u, a]$、$M_2[u, a]$ 和 $w(a, b)$ 算 $M_1[u, b]$、$M_2[u, b]$ \Comment{見下}
+        \EndFor
+    \EndFor
+    \State $\mathit{best} \gets \infty$
+    \For{每條非樹邊 $e = (x, y)$}
+        \If{$M_1[x, y] < w(e)$}
+            \State $f \gets E_1[x, y]$
+        \Else
+            \State $f \gets E_2[x, y]$ \Comment{$M_1[x, y] = w(e)$}
+        \EndIf
+        \If{$f$ 存在 \AND $w(T) + w(e) - w(f) < \mathit{best}$}
+            \State $\mathit{best} \gets w(T) + w(e) - w(f)$；$(e^{*}, f^{*}) \gets (e, f)$
+        \EndIf
+    \EndFor
+    \If{$\mathit{best} = \infty$}
+        \State \Return 不存在 \Comment{所有生成樹都一樣重，或 $G$ 本身就是樹}
+    \EndIf
+    \State \Return $T - \{f^{*}\} \cup \{e^{*}\}$
+\EndFunction
+\end{pseudo}
+
+第 6 行的更新：令 $c = w(a, b)$、$(m_1, m_2) = (M_1[u, a], M_2[u, a])$。 若 $c > m_1$，新的一對是
+$(c, m_1)$；若 $m_1 > c > m_2$，是 $(m_1, c)$；其他情形（$c = m_1$ 或 $c \le m_2$）不變。
+$E_1$、$E_2$ 跟著同樣更新。 因為 $P_T(u, b)$ 就是 $P_T(u, a)$ 再接上 $(a, b)$，這樣算出來的
+就是整條路徑上「最大」和「嚴格第二大」的權重。
+
+\textbf{正確性。} 每一條 $T - \{f\} \cup \{e\}$（$f \in P_T(e)$、$w(f) < w(e)$）的權重都大於
+$w(T)$；對固定的 $e$，第 9--12 行選的 $f$ 是其中 $w(f)$ 最大的，權重最小。 由定理，最小的
+那一個就等於 $W^{*}$，所以回傳的樹就是所求。 第 16 行回傳「不存在」時，表示沒有任何一條
+這樣的換邊；由定理，也就沒有權重大於 $w(T)$ 的生成樹。
+
+\textbf{複雜度。} Kruskal $O(m \lg n)$；$n$ 次 DFS 各走 $T$ 的 $n - 1$ 條邊，每條 $O(1)$，共
+$\Theta(n^2)$；掃非樹邊 $O(m)$。 總共 $O(m \lg n + n^2) = O(n^2)$（$m < n^2$），空間
+$\Theta(n^2)$ 存 $M_1$、$M_2$。 稀疏圖可以改用倍增法（binary lifting）求 $P_T(x, y)$ 上的最大
+和嚴格第二大，降到 $O(m \lg n)$，但考試寫上面的版本就夠了。
+\end{pastsoln}

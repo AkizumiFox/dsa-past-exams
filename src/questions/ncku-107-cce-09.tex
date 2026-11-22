@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncku-107-cce-09}]{成大電通所 107 學年度 問答題第 5 題}
+（問答；14 分）
+
+\textbf{5. (14 pts) Spanning Tree:}
+
+Find the minimal cost spanning tree according to (a) Kruskal's algorithm and (b) the Sollin's Algorithm, respectively. Please show the result in each iteration of the algorithm.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small\sffamily},w/.style={font=\small\sffamily,inner sep=1.5pt},>={Stealth[length=2mm]}]
+\node[v] (0) at (9.38,-19.71) {0};
+\node[v] (5) at (7.47,-20.82) {5};
+\node[v] (1) at (11.34,-20.77) {1};
+\node[v] (6) at (9.43,-21.78) {6};
+\node[v] (4) at (7.52,-22.84) {4};
+\node[v] (2) at (11.43,-22.65) {2};
+\node[v] (3) at (9.50,-23.69) {3};
+\draw[] (0) to node[w,above left] {58} (5);
+\draw[] (0) to node[w,above right] {20} (1);
+\draw[] (5) to node[w,above right] {10} (6);
+\draw[] (1) to node[w,above left] {32} (6);
+\draw[] (1) to node[w,right] {44} (2);
+\draw[] (5) to node[w,left] {25} (4);
+\draw[] (4) to node[w,above left] {24} (6);
+\draw[] (6) to node[w,right] {35} (3);
+\draw[] (2) to node[w,below right] {35} (3);
+\draw[] (4) to node[w,below left] {33} (3);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電機所 107 學年度的「資料結構」是同一份（兩系所共用），完整詳解見歷屆試題~\ref{px:ncku-107-ee-ds-09}。
+
+答案：Kruskal 和 Sollin 得到同一棵樹，邊是 $5$--$6$ (10)、$0$--$1$ (20)、$4$--$6$ (24)、$1$--$6$ (32)、$3$--$4$ (33)、
+$2$--$3$ (35)，總成本 $154$。 Sollin 第 1 輪加入 $0$--$1$、$2$--$3$、$3$--$4$、$4$--$6$、$5$--$6$，第 2 輪加入 $1$--$6$。
+\end{pastsoln}

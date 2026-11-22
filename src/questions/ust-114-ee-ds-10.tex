@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-10}]{臺聯大電機類 114 學年度 第 10 題}
+（單選；2 分，答錯不倒扣）
+
+Which of the following arrays is NOT a max binary heap?
+
+(A)~\{16, 14, 9, 4, 8, 12, 5, 3, 2\} \qquad (B)~\{16, 14, 9, 4, 12, 8, 5, 3, 2\}\\
+(C)~\{16, 8, 14, 5, 2, 9, 12, 4, 3\} \qquad (D)~\{16, 9, 14, 8, 5, 12, 2, 4, 3\}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+陣列從第 $1$ 格起，節點 $i$ 的子節點是 $2i$、$2i+1$。 $9$ 個元素時有子節點的是第 $1$ 到第 $4$ 格，
+逐一檢查「父 $\ge$ 子」：
+\begin{center}
+\small
+\begin{tabular}{ccccc}
+\toprule
+ & 第 1 格與 2、3 & 第 2 格與 4、5 & 第 3 格與 6、7 & 第 4 格與 8、9 \\
+\midrule
+(A) & 16：14, 9 & 14：4, 8 & \textbf{9：12}, 5 & 4：3, 2 \\
+(B) & 16：14, 9 & 14：4, 12 & 9：8, 5 & 4：3, 2 \\
+(C) & 16：8, 14 & 8：5, 2 & 14：9, 12 & 5：4, 3 \\
+(D) & 16：9, 14 & 9：8, 5 & 14：12, 2 & 8：4, 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item (A)：第 3 格的 $9$ 有子節點 $12$（第 6 格），$9 < 12$，違反最大堆積性質，不是堆積。 選。
+\item (B)(C)(D)：每一組父節點都不小於子節點，都是最大堆積。 不選。
+\end{itemize}
+\end{pastsoln}

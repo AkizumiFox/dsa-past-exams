@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-05}]{臺大工工所 106 學年度 第 5 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+A splay tree is a specially designed balanced binary search tree so that it takes amortized O(1) time
+to insert new data to the tree.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) 錯。
+
+伸展樹（資結書第~10.6~節）每次操作後用旋轉把用到的節點轉到根。 它的保證是：任意 $m$ 次操作總共
+$O(m \log n)$，也就是每次操作（含插入）\textbf{平攤 $O(\log n)$}（資結書定理~10.6），不是 $O(1)$。
+它也不是一般說的平衡樹：不存高度或顏色，樹高可以到 $\Theta(n)$。 例如依序插入 $1, 2, \ldots, n$，每個新節點
+伸展到根，舊的根變成它的左子節點，整棵樹是一條鏈；只是平攤下來每次操作的成本是對數。
+
+平攤 $O(1)$ 的插入其實不可能，任何靠比較的二元搜尋樹都一樣：如果插入 $n$ 個數總共只花 $O(n)$，再做一次中序走訪
+（$O(n)$）就排好序了，等於用 $O(n)$ 次比較完成排序，和比較排序的下界 $\Omega(n \log n)$（資結書第~15.1~節）矛盾。
+\end{pastsoln}

@@ -1,0 +1,15 @@
+paper: ntu-106-esoe-ds
+volume: 3
+school: 臺大
+dept: 工科海洋所
+year: 106
+subject: 資料結構（A）
+instructions: Please use either C++ or Java languages for all programming questions.
+questions:
+  - {id: ntu-106-esoe-ds-01, label: 第 1 題, chapter: 5}
+  - {id: ntu-106-esoe-ds-02, label: 第 2 題, chapter: 1}
+  - {id: ntu-106-esoe-ds-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-106-esoe-ds-04, label: 第 4 題, chapter: 12}
+  - {id: ntu-106-esoe-ds-05, label: 第 5 題, chapter: 24}
+  - {id: ntu-106-esoe-ds-06, label: 第 6 題, chapter: 15}
+  - {id: ntu-106-esoe-ds-07, label: 第 7 題, chapter: 6}

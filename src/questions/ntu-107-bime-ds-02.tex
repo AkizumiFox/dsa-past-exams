@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ntu-107-bime-ds-02}]{臺大生機所 107 學年度 第 2 題}
+（設計、證明）
+
+(20\%) Given an undirected graph containing $N$ nodes (vertices), of which the edges connecting
+two nodes can be added from time to time, please (a) design a data structure that can be used to
+dynamically answer whether two nodes are connected (directly or indirectly) \textbf{in logarithmic
+time}; (b) prove the correctness of your solution.
+\end{pastexam}
+
+\begin{pastsoln}
+邊只會加、不會刪，問的是「兩點是否連通」，這正是互斥集合（union-find）的用途：每個連通元件是
+一個集合，加邊就是合併兩個集合，問連通就是問兩點是不是在同一個集合（資結書第~13~章）。
+
+\textbf{(a) 資料結構}。 頂點編號 $1..N$，用資結書第~13.2~節的森林表示：陣列 $p[1..N]$ 存每個
+頂點的父節點，根的父節點是自己；根 $r$ 另外記 $\mathit{size}[r]$，是它那棵樹的節點數。 合併時用
+\textbf{依大小合併}，小的樹接到大的樹底下（資結書虛擬碼~13.3）。
+
+\begin{pseudo}{動態加邊的連通查詢}
+\Procedure{Init}{$N$}
+    \For{$v \gets 1$ \To $N$}
+        \State $p[v] \gets v$; $\mathit{size}[v] \gets 1$ \Comment{一開始沒有邊，每點自成一組}
+    \EndFor
+\EndProcedure
+\Statex
+\Function{Find}{$x$}
+    \While{$p[x] \ne x$}
+        \State $x \gets p[x]$
+    \EndWhile
+    \State \Return $x$
+\EndFunction
+\Statex
+\Procedure{Add-Edge}{$u, v$}
+    \State $r_u \gets \Call{Find}{u}$; $r_v \gets \Call{Find}{v}$
+    \If{$r_u = r_v$}
+        \State \Return \Comment{本來就連通，不用合併}
+    \EndIf
+    \If{$\mathit{size}[r_u] < \mathit{size}[r_v]$}
+        \State 交換 $r_u$ 和 $r_v$ \Comment{讓 $r_u$ 是節點比較多的根}
+    \EndIf
+    \State $p[r_v] \gets r_u$
+    \State $\mathit{size}[r_u] \gets \mathit{size}[r_u] + \mathit{size}[r_v]$
+\EndProcedure
+\Statex
+\Function{Connected}{$u, v$}
+    \State \Return $\Call{Find}{u} = \Call{Find}{v}$
+\EndFunction
+\end{pseudo}
+
+\textbf{時間}。 \proc{Add-Edge} 和 \proc{Connected} 除了兩次 \proc{Find} 只做常數的工作，
+\proc{Find} 的時間和樹高成正比。 依大小合併的樹，$s$ 個節點的樹高度不超過
+$\lfloor \lg s \rfloor + 1$（資結書定理~13.2）：一個節點的深度只在它所在的樹被接到另一棵
+\textbf{至少一樣大}的樹底下時加一，這時它所在的樹的節點數至少變成兩倍；深度到 $d$ 時樹至少有
+$2^d$ 個節點，而 $2^d \le s \le N$，所以 $d \le \lg N$。 因此兩種操作最壞都是 $O(\lg N)$，符合題目
+要的對數時間。 初始化 $\Theta(N)$，空間 $\Theta(N)$。 \proc{Find} 再加上路徑壓縮（資結書
+虛擬碼~13.5），一連串操作的平攤時間更降到每次 $O(\alpha(N))$，但題目只要對數時間，上面的版本就夠。
+
+\textbf{(b) 正確性}。 令 $G_t$ 是做完前 $t$ 次 \proc{Add-Edge} 之後的圖。 證明下面的不變量：
+
+\begin{quote}
+對任意兩點 $u$、$v$：$u$、$v$ 在 $G_t$ 中連通 $\iff$ $u$、$v$ 在森林的同一棵樹裡（也就是
+\proc{Find}$(u) = $ \proc{Find}$(v)$）。
+\end{quote}
+
+\textbf{$t = 0$}：沒有邊，每點只和自己連通；森林裡每點自成一棵樹。 成立。
+
+\textbf{$t - 1 \to t$}：設第 $t$ 次加的邊是 $(a, b)$，$A$、$B$ 是加邊前 $a$、$b$ 所在的連通元件，
+由歸納假設，它們也正是加邊前 $a$、$b$ 所在的兩棵樹的節點集合。
+\begin{itemize}
+\item 若 $A = B$（$r_a = r_b$）：$a$、$b$ 本來就連通，加這條邊不改變任何兩點的連通關係
+（新的路徑若用到 $(a, b)$，可以把這條邊換成原本 $a$ 到 $b$ 的路徑）。 程序直接返回，森林也沒變。
+不變量仍成立。
+\item 若 $A \ne B$：加邊後，$A \cup B$ 裡任兩點都連通（$A$ 內的點走到 $a$，經過新邊到 $b$，再走到
+$B$ 內的點）；其他連通元件不受影響，因為新邊兩端都在 $A \cup B$ 裡，任何用到新邊的路徑，起點和終點
+所在的元件都已經併入 $A \cup B$。 所以 $G_t$ 的連通元件就是：$A \cup B$，加上其餘不變的元件。
+程序把其中一棵樹的根接到另一棵的根底下，兩棵樹變成一棵，節點集合是 $A \cup B$；其他樹沒有動。
+森林的分組和 $G_t$ 的連通元件又一一相同。
+\end{itemize}
+由歸納法，任何時候不變量都成立，所以 \proc{Connected}$(u, v)$ 回傳 \TRUE 恰好在 $u$、$v$ 連通時。
+
+另外兩點細節：(1) \proc{Find}$(x)$ 一定會停而且回傳 $x$ 所在的樹的根：合併只把\textbf{根}接到另一個根
+底下，森林裡不會出現環，沿 $p$ 一路往上一定走到 $p[r] = r$ 的根。 (2) 第 10--11 行不能省：兩點已經
+同一組時若照樣合併，會把根接到自己底下，$\mathit{size}$ 也被重複累加，時間的證明就不成立。
+\end{pastsoln}

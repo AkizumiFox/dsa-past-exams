@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-05}]{臺聯大電機類 114 學年度 第 5 題}
+（單選；2 分，答錯不倒扣）
+
+Which of the following sorting algorithms is NOT in-place?
+
+(A)~Quick sort \qquad (B)~Merge sort \qquad (C)~Heap sort \qquad (D)~All of the above are in-place
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+原地（in-place）排序指除了輸入陣列，只用 $O(1)$ 個元素大小的額外空間；遞迴的呼叫堆疊另外算，
+許多課本把快速排序 $O(\log n)$ 的堆疊也算在原地裡（資結書第~14.1~節）。
+\begin{itemize}
+\item (A) 快速排序：分割時只在陣列裡交換，是原地的。 不選。
+\item (B) 合併排序（陣列版）：合併兩個排好的半段時要一個 $\Theta(n)$ 的暫存陣列，不是原地的。 選。
+\item (C) 堆積排序：堆積就建在原陣列裡，每次把最大值換到尾端，額外空間 $O(1)$，是原地的。 不選。
+\item (D)：合併排序不是原地的，所以錯。
+\end{itemize}
+\end{pastsoln}

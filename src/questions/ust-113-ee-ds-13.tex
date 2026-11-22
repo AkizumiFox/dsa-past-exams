@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-13}]{臺聯大電機類 113 學年度 第 13 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+Which of the following statements are true about Merge Sort? (Select all that apply.)
+\begin{enumerate}[label=(\Alph*)]
+\item It has a worst-case time complexity of O(n log n).
+\item It is not a stable sorting algorithm.
+\item It is more efficient than Quick Sort in the worst-case scenario.
+\item It requires additional space proportional to the size of the input array.
+\item It uses O(n log n) extra space for its operations.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(C)、(D)。
+
+以一般的陣列版合併排序（資結書第~14.4~節）來看：
+\begin{itemize}
+\item (A) $T(n) = 2T(n/2) + \Theta(n)$，不論輸入如何都是 $\Theta(n\log n)$。 對。
+\item (B) 合併時兩邊的鍵相等先取左半邊的（比較寫成 $L[i] \le R[j]$），左半邊原本就在前面，所以是穩定的
+（資結書第~14.1~節）。 「不穩定」錯。
+\item (C) 最壞情況合併排序 $\Theta(n\log n)$，快速排序 $\Theta(n^2)$（資結書第~14.5~節），合併排序比較快。 對。
+\item (D) 合併要用暫存陣列，額外空間 $\Theta(n)$，和輸入大小成正比。 對。
+\item (E) 每一層合併用完的暫存陣列可以釋放（或整個排序共用一個長度 $n$ 的暫存陣列），任何時刻額外空間
+只有 $\Theta(n)$ 加上 $O(\log n)$ 的遞迴堆疊，不是 $O(n\log n)$。 （$O$ 只是上界，嚴格說
+$\Theta(n) = O(n\log n)$ 也成立；但這個選項顯然是要說「用了 $n\log n$ 這麼多」，和 (D) 對照，判為錯。）
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-16}]{臺大電信所 109 學年度（B）第 16 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+The worst case time complexity of one union operation upon two binomial heaps of total size n is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+兩個堆積的大小 $n_1 + n_2 = n$，根串列各有最多 $\lfloor \lg n_1 \rfloor + 1$、
+$\lfloor \lg n_2 \rfloor + 1$ 棵樹。 合併從階數 $0$ 往上做，就像把 $n_1$、$n_2$ 的二進位相加：
+每個階數最多有三棵樹（兩邊各一棵加上進位），做常數次連結（資結書第~8.5~節）。 階數最多到
+$\lfloor \lg n \rfloor$，所以共 $O(\log n)$。 兩邊都有 $\Theta(\log n)$ 棵樹時，光是走過兩條
+根串列就要 $\Theta(\log n)$，界是緊的。 二元堆積的合併要 $\Theta(n)$，二項堆積的設計就是為了把
+合併降到 $O(\log n)$。
+\end{pastsoln}

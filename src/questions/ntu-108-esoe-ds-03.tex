@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-108-esoe-ds-03}]{臺大工科海洋所 108 學年度 第 3 題}
+（證明）
+
+\textbf{(10 \%)} Examine the following statements. If it is correct, prove it. If it is incorrect,
+show the contradiction.\\
+(a) (5 \%) $1/(n-50) \in \mathrm{O}(n)$\\
+(b) (5 \%) $n^2/(n+\log n) \in \Theta(n^2)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 正確；(b) 錯誤（它是 $\Theta(n)$）。
+
+用資結書第~1.5~節的定義：$f(n) \in O(g(n))$ 表示存在正的常數 $c$、$n_0$，使得所有 $n \ge n_0$ 都有
+$0 \le f(n) \le c\,g(n)$；$f(n) \in \Theta(g(n))$ 表示存在正的常數 $c_1$、$c_2$、$n_0$，使得所有
+$n \ge n_0$ 都有 $0 \le c_1 g(n) \le f(n) \le c_2 g(n)$。 漸近符號只管 $n$ 夠大的時候，所以 (a) 在
+$n \le 50$ 沒有定義或是負數都沒關係，$n_0$ 取大一點就避開了。
+
+\textbf{(a) 正確}。 取 $c = 1$、$n_0 = 51$。 $n \ge 51$ 時 $n - 50 \ge 1$，所以
+\[
+  0 < \frac{1}{n - 50} \le 1 \le n = c \cdot n .
+\]
+依定義 $1/(n - 50) \in O(n)$。 （其實它趨近 $0$，是 $O(1)$，更是 $O(n)$；$O$ 只是上界，不必緊。）
+
+\textbf{(b) 錯誤}。 先看它的大小：$n \ge 1$ 時 $0 \le \log n \le n$，所以 $n \le n + \log n \le 2n$，
+\[
+  \frac{n}{2} = \frac{n^2}{2n} \le \frac{n^2}{n + \log n} \le \frac{n^2}{n} = n ,
+\]
+它是 $\Theta(n)$，比 $n^2$ 低一階。 用反證法說明它不是 $\Theta(n^2)$：假設存在 $c_1 > 0$、$n_0$，使
+所有 $n \ge n_0$ 都有 $c_1 n^2 \le n^2/(n + \log n)$。 由上面的不等式，右邊不超過 $n$，所以
+\[
+  c_1 n^2 \le n \quad\Longrightarrow\quad n \le \frac{1}{c_1}
+\]
+對所有 $n \ge n_0$ 成立。 取 $n = \max(n_0, \lceil 1/c_1 \rceil + 1)$，這個 $n \ge n_0$ 卻大於 $1/c_1$，矛盾。
+所以下界 $\Omega(n^2)$ 不成立，$n^2/(n + \log n) \notin \Theta(n^2)$。 （上界那一半是對的：
+$n^2/(n + \log n) \le n \le n^2$，它屬於 $O(n^2)$，只是不緊。）
+
+用極限看也一樣：$\displaystyle\lim_{n \to \infty} \frac{n^2/(n + \log n)}{n^2} =
+\lim_{n \to \infty} \frac{1}{n + \log n} = 0$，比值趨近 $0$ 表示它是 $o(n^2)$，不可能是 $\Theta(n^2)$。
+\end{pastsoln}

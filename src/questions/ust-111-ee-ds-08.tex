@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-08}]{臺聯大電機類 111 學年度 第 8 題}
+（問答）
+
+(10\%) There are two algorithms for minimum spanning trees (MSTs) for undirected graphs: Kruskal and
+Prim. If there exists more than one MSTs for a given graph, will these two algorithms find the same
+MST? If not, please give examples and explain why.
+\end{pastexam}
+
+\begin{pastsoln}
+答：不一定。 兩個演算法找到的都是最小生成樹，總權重一樣，但有好幾棵時，可能找到不同的那一棵。
+
+\textbf{為什麼。} 最小生成樹不唯一，一定是因為有權重相同的邊（權重都不同時只有一棵，資結書
+定理~24.4）。 兩個演算法遇到同權重的邊時，選哪一條的依據不一樣：
+\begin{itemize}
+\item Kruskal 把所有邊排序後依序檢查（資結書第~24.2~節），同權重的邊誰先，由排序的結果決定。
+\item Prim 從一個起點長出一棵樹，每次選「跨過樹和樹外的最輕的邊」（資結書第~24.3~節），同權重時
+選哪一條由起點和優先佇列的平手處理決定。
+\end{itemize}
+兩者的平手規則沒有關係，所以可能選了不同的邊。 （反過來，如果兩邊用同一個全序來打破平手，例如
+先比權重、權重相同再比邊的編號，那等於所有權重都不同，最小生成樹唯一，兩者就一定相同。）
+
+\textbf{例子}：三角形，三個頂點 $a, b, c$（編號 $a < b < c$），三條邊 $(a, b)$、$(b, c)$、$(a, c)$ 的權重
+都是 $1$。 任兩條邊都構成最小生成樹，總權重 $2$，共有三棵。 兩個演算法都照資結書的平手規則：
+\begin{itemize}
+\item Kruskal（資結書第~24.1.7~節）：權重相同時先比小的端點、再比大的端點，順序是 $(a, b)$、
+$(a, c)$、$(b, c)$。 取 $(a, b)$；取 $(a, c)$；$(b, c)$ 的兩端已經相連，跳過。 得到
+$\{(a, b), (a, c)\}$。
+\item Prim 從 $c$ 開始（資結書虛擬碼~24.3：$\mathit{key}$ 只在\textbf{嚴格變小}時更新，$\mathit{key}$
+相同時先取編號小的）：取出 $c$ 後 $\mathit{key}[a] = \mathit{key}[b] = 1$，父節點都是 $c$。 取出 $a$，
+邊 $(c, a)$；$(a, b)$ 的權重 $1$ 沒有比 $\mathit{key}[b] = 1$ 小，不更新。 再取出 $b$，用的是它的
+父節點 $c$，邊 $(c, b)$。 得到 $\{(a, c), (b, c)\}$。
+\end{itemize}
+兩棵不同，總權重都是 $2$。 結論：最小生成樹的\textbf{總權重}一定相同，\textbf{邊的集合}只有在
+最小生成樹唯一（例如權重都不同）時才保證相同。
+\end{pastsoln}

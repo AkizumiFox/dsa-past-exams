@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-06}]{臺大生機所 114 學年度 第 6 題}
+（問答；10 分）
+
+\textbf{(10\%)} Consider a sorted circular doubly-linked list where the head element points to the
+smallest element in the list.\\
+\textbf{a.} What is the complexity of determining whether a given element exists in the list?\\
+\textbf{b.} What is the complexity of deleting a given element e in the list (not including the
+cost of finding it)?
+\end{pastexam}
+
+\begin{pastsoln}
+設串列有 $n$ 個元素，節點有 $\mathit{prev}$、$\mathit{next}$，$\mathit{head}$ 指向最小的元素；
+環狀，所以 $\mathit{head}.\mathit{prev}$ 是最大的元素（資結書第~5.2~節）。
+
+\textbf{a.} $O(n)$（最壞 $\Theta(n)$）。 串列沒有隨機存取，要找到第 $i$ 個節點只能從
+$\mathit{head}$ 一步步走過去，所以排好序也不能二分搜尋（光是走到中間就要 $n/2$ 步）。 排序和環狀
+可以幫一點忙：先看 $\mathit{head}$（最小）和 $\mathit{head}.\mathit{prev}$（最大），超出範圍就直接
+回答不在，$O(1)$；從頭往後走時，碰到比目標大的鍵值就可以停，不必走完。 雙向也讓我們能從比較近的一
+端走：目標靠近最大值時從 $\mathit{head}.\mathit{prev}$ 往回走。 但這些都只省常數倍；目標在中間
+時，不論從哪一端都要走大約 $n/2$ 個節點，最壞仍是 $\Theta(n)$。
+
+\textbf{b.} $O(1)$。 已經拿到 $e$ 的指標，雙向串列可以直接從 $e$ 找到前一個和後一個節點，不必像
+單向串列那樣從頭找前一個節點：
+\begin{pseudo}{刪除環狀雙向串列裡的節點 $e$}
+\Procedure{Delete}{$L, e$}
+    \If{$e.\mathit{next} = e$}
+        \State $L.\mathit{head} \gets \NIL$ \Comment{只有 $e$ 一個節點}
+    \Else
+        \State $e.\mathit{prev}.\mathit{next} \gets e.\mathit{next}$
+        \State $e.\mathit{next}.\mathit{prev} \gets e.\mathit{prev}$
+        \If{$L.\mathit{head} = e$}
+            \State $L.\mathit{head} \gets e.\mathit{next}$ \Comment{新的最小值}
+        \EndIf
+    \EndIf
+\EndProcedure
+\end{pseudo}
+固定幾個指標操作，和 $n$ 無關，所以是 $O(1)$。 刪掉一個元素不會破壞排序；刪掉的若是最小值，
+$\mathit{head}$ 改指向下一個，它就是新的最小值。
+\end{pastsoln}

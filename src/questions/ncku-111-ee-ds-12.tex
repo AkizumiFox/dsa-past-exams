@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-12}]{成大電機所 111 學年度 單選題第 12 題}
+（單選；每題 4 分）
+
+A variable P is called a pointer if
+
+A.~P contains the address of an element in DATA
+
+B.~P points to the address of the first element in DATA
+
+C.~P can store only memory addresses
+
+D.~P contain the DATA and the address of DATA
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+這題的說法來自 Lipschutz 的教科書：DATA 是一個陣列，變數 P 若存放 DATA 中某個元素的位址（P 指向那個元素），就稱 P 為指標。 指標就是存放某個元素位址的變數。
+\begin{itemize}
+\item A.~存的是 DATA 中某個元素的位址：正是定義。 對。
+\item B.~只說指向「第一個元素」：指標可以指向任何一個元素，不限第一個（陣列名稱才固定代表第一個元素的位址）。 錯。
+\item C.~「只能存位址」是指標變數的性質之一，但不是「稱為指標」的條件：題目問的是 P 和 DATA 的關係，C 沒有說它指向
+DATA 的元素。 錯。
+\item D.~同時存資料本身和位址：指標只存位址，不存資料。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-22}]{臺大電信所 110 學年度（B）第 22 題}
+（單選；每題 2 分，答錯不倒扣）
+
+(22-25) Consider the following six items with their weights and values. Suppose you have a knapsack with a maximum weight capacity of 10. Please answer the following questions.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Item} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6}\\ \hline
+\textbf{Weight} ($w$) & 2 & 1 & 4 & 5 & 2 & 10\\ \hline
+\textbf{Value} ($v$) & 10 & 6 & 28 & 50 & 10 & 80\\ \hline
+\end{tabular}
+\end{center}
+
+Suppose you can take any arbitrary portion of each item. What is the highest total value you can get by filling your knapsack?
+
+A.~184 \qquad B.~100 \qquad C.~90 \qquad D.~84
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C（90）。
+
+可以拿一部分的是分數背包，貪心法最佳：依「每單位重量的價值」$v_i / w_i$ 由大到小拿，拿到裝滿為止
+（資結書第~19.2~節）。
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+物品 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+$v/w$ & 5 & 6 & 7 & 10 & 5 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+順序是 4（10）、6（8）、3（7）、2（6）、1、5（5）。
+\begin{itemize}
+\item 拿整個物品 4：重 $5$，價值 $50$，剩容量 $10 - 5 = 5$。
+\item 物品 6 重 $10$ 放不下，拿 $5/10$：價值 $80 \times \tfrac12 = 40$，裝滿。
+\end{itemize}
+總價值 $50 + 40 = 90$，選 C。
+
+為什麼不能更多：容量 $10$ 的每一單位重量至多帶來 $10$（物品 4，只有 $5$ 單位）或 $8$（物品 6）的價值，
+$5 \times 10 + 5 \times 8 = 90$ 是上界。 A 184 是全部物品的總價值，重量 $24$ 遠超過容量；B 100 不可能；
+D 84 是不能分割時的答案（第~24~題）。
+\end{pastsoln}

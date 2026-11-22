@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-05}]{成大電通所 112 學年度 第 5 題}
+（問答）
+
+(10\%) Landscapes in films are often computer generated. Ever wondered how they do it? Here is an
+algorithmic drawing example. Draw enough repeating patterns until you can tell what it is. Start by
+drawing a single straight vertical line as below
+
+\begin{center}
+\begin{tikzpicture}
+\draw[thick] (0,0)--(0,1.6);
+\end{tikzpicture}
+\end{center}
+
+Then execute Draw( ) from this vertical line until you can show how the algorithmic drawing works.
+
+\begin{center}
+\fbox{\begin{minipage}{0.9\textwidth}\sffamily
+Draw( )\\
+\{\\[2pt]
+{\footnotesize
+\hspace*{1.5em}Draw 3 shorter lines at an angle in the top two-thirds of the line on its left side.\\[2pt]
+\hspace*{1.5em}Draw 3 shorter lines at an angle in the top two-thirds of the line on its right side.\\[2pt]
+\hspace*{1.5em}Choose a new existing line and Draw( ) from that line again\\[2pt]}
+\}
+\end{minipage}}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~5~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-05}，這裡只列答案。
+
+答案：畫出來的是一棵樹（像松樹、杉樹那樣一層一層分叉的針葉樹）。 每次 \textsc{Draw} 在一條線的上方三分之二、左右兩側各長出
+三條較短的斜線，再對其中一條線重複同樣的動作；同一個圖樣在越來越小的尺度上重複出現，是碎形（fractal）的畫法。
+\end{pastsoln}

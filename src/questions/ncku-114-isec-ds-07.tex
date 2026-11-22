@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-07}]{成大智慧資安學程 114 學年度 單選題第 7 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+The quick sort algorithm uses the divide and conquer technique. In each recursion, it will place a pivot
+of an array at the correct location and divide the array into two parts. Please identify the correct
+position of a pivot in the following array after the first recursion. To optimize performance, we apply
+the strategy of Median-of-3: median(key[left], key[middle], key[right]) to select pivot, where the index
+of middle $=\frac{left+right}{2}$. Then, the pivot is then swapped with the key[left].
+
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\cline{1-10}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{75} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{95} & \multicolumn{1}{c|}{3}\\
+\cline{1-10}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] & [9]
+\end{tabular}
+\qquad left =1, right =9
+\end{center}
+
+a)~key[2] \qquad b)~key[4] \qquad c)~key[6] \qquad d)~key[8] \qquad e)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 e)：基準最後在 key[5]，不在選項裡。
+
+\textbf{選基準。} middle $= (1 + 9)/2 = 5$。 key[1] $= 75$、key[5] $= 55$、key[9] $= 3$，三數的中位數是
+$55$。 把 $55$ 和 key[left] $=$ key[1] 交換：
+\[
+\text{key}[1..9] = 55, 58, 67, 42, 75, 30, 29, 95, 3 .
+\]
+
+\textbf{基準的位置只看名次。} 分割結束時，比基準小的都在它左邊、比基準大的都在右邊，所以基準落在
+「它是第幾小」的那一格，和分割的細節無關。 比 $55$ 小的有 $42, 30, 29, 3$ 四個，$55$ 是第 $5$ 小，
+最後在 key[5]。
+
+\textbf{實際分割一次確認}（題目說基準換到最左邊，用資結書第~14.5~節提到的兩端往中間找的寫法：$i$ 從
+左往右找 $\ge 55$ 的，$j$ 從右往左找 $\le 55$ 的，交換；交錯後把基準和 key[$j$] 交換）：
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+開始 & 55 & 58 & 67 & 42 & 75 & 30 & 29 & 95 & 3 \\
+$i = 2$、$j = 9$ 交換 & 55 & \textbf{3} & 67 & 42 & 75 & 30 & 29 & 95 & \textbf{58} \\
+$i = 3$、$j = 7$ 交換 & 55 & 3 & \textbf{29} & 42 & 75 & 30 & \textbf{67} & 95 & 58 \\
+$i = 5$、$j = 6$ 交換 & 55 & 3 & 29 & 42 & \textbf{30} & \textbf{75} & 67 & 95 & 58 \\
+$i = 6$、$j = 5$ 交錯，基準換到 5 & \textbf{30} & 3 & 29 & 42 & \textbf{55} & 75 & 67 & 95 & 58 \\
+\bottomrule
+\end{tabular}
+\end{center}
+基準 $55$ 在 key[5]，左邊 $30, 3, 29, 42$ 都比它小，右邊 $75, 67, 95, 58$ 都比它大。 選項只有 key[2]、
+key[4]、key[6]、key[8]，都不對，答案 e)。
+\end{pastsoln}

@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-08}]{臺大電信所 109 學年度（B）第 8 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+In a weighted directed graph $G=(V,E,w)$ containing no zero- or positive-weight cycles,
+Bellman-Ford can find a longest (maximum-weight) path from vertex $s$ to vertex $t$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：T（對）。
+
+題目的意思是拿 Bellman--Ford 當工具。 做法：把每條邊的權重變號，$w'(e) = -w(e)$，在
+$G' = (V, E, w')$ 上從 $s$ 執行 Bellman--Ford。
+
+\textbf{為什麼可以。} $G$ 的每個環權重都是負的，變號之後 $G'$ 的每個環權重都是正的，$G'$
+沒有負環，Bellman--Ford 在 $G'$ 上算出正確的 $\delta'(s, t)$ 和一條最短路徑 $p$（資結書
+定理~25.7）。 任一條路徑 $q$ 都有 $w'(q) = -w(q)$，所以 $w'(p)$ 最小等價於 $w(p)$ 最大，$p$
+就是 $G$ 中 $s$ 到 $t$ 的最長路徑，長度 $-\delta'(s, t)$。 時間 $O(VE)$。
+
+條件不能少：$G$ 有正環的話，繞著它走可以讓權重要多大有多大，最長路徑沒有定義；變號後
+那個環在 $G'$ 是負環，Bellman--Ford 只會回報負環。 題目排除了零和正權重的環，$G'$ 的每個
+環都是正的，最短路徑一定是簡單路徑。 對照資結書第~25.5~節：DAG 上的
+最長路徑也是用變號來做。
+\end{pastsoln}

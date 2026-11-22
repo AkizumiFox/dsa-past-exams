@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-12}]{北科大電機所（戊組）115 學年度 選擇題第 2 題}
+（單選）
+
+Which data structure is most suitable for implementing a browser's back button functionality?
+\textbf{(3\%)}\\
+a) Queue \qquad b) Stack \qquad c) Binary Tree \qquad d) Hash Table
+\end{pastexam}
+
+\begin{pastsoln}
+答案：b) Stack。
+
+按「上一頁」要回到\textbf{最近}看過的那一頁，再按一次回到更早的一頁，順序和瀏覽的順序相反，是後進先出。 每開一個
+新頁面就把目前的頁面 push 進堆疊；按上一頁就 pop 出頂端的頁面顯示。 例如依序瀏覽 $P_1, P_2, P_3$，在 $P_3$ 時堆疊
+由底到頂是 $P_1, P_2$，按上一頁 pop 出 $P_2$，再按一次 pop 出 $P_1$。 （瀏覽器通常再用第二個堆疊做「下一頁」：按上一頁
+時把目前的頁面 push 進去。）
+\begin{itemize}
+\item a) Queue 是先進先出，按上一頁會跳回最早看的頁面，不對。
+\item c) Binary Tree、d) Hash Table 沒有「最近的先出來」的次序，用來做這件事不自然；雜湊表適合用網址查資料（例如快取），
+不是記錄先後順序。
+\end{itemize}
+\end{pastsoln}

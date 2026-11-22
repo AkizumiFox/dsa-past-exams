@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-39}]{臺聯大電機類 115 學年度 第 39 題}
+（單選；2 分）
+
+The following piece of code is a version of \textbf{Insertion Sort Algorithm} that works on data
+stored in an array. Please read the following code and find which description given in (A) to (E)
+is \textbf{WRONG or the least accurate statement}?
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+void insertionSort1(int arr[], int n) {
+    for(int i=0; i<n; ++i) {
+        int key=arr[i];
+        int j=i-1;
+        while(j>=0 && arr[j]>key){
+            arr[j+1]=arr[j];
+            j=j-1;
+        }
+        arr[j+1]=key;
+    }
+}
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item It is in-place.
+\item It is stable.
+\item Computation complexity is $O(n^2)$
+\item The number of comparisons can be reduced with binary search.
+\item The sequential search of insertion locations can be improved if a linked list is implemented.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+這是標準的插入排序（資結書第~1.3~節、第~14.2~節）：把 \texttt{arr[i]} 取出當 \texttt{key}，從右往左
+把比它大的元素往右搬一格，再把 \texttt{key} 放進空出來的位置。 （外層從 $i = 0$ 開始，第一輪什麼
+都不做，不影響結果。）
+
+逐項檢查：
+\begin{itemize}
+\item (A) 只用了 \texttt{key}、\texttt{i}、\texttt{j} 幾個變數，額外空間 $O(1)$，是原地排序。 正確。
+\item (B) 第 5 行用嚴格的 \texttt{arr[j]>key}，遇到和 \texttt{key} 相等的元素就停，\texttt{key} 放在
+它後面，相等元素的相對順序不變，是穩定的。 （若寫成 \texttt{>=} 就不穩定了。） 正確。
+\item (C) 最壞（反序）時第 $i$ 輪搬 $i$ 次，共 $n(n-1)/2$ 次，$O(n^2)$。 正確。
+\item (D) 前面 \texttt{arr[0..i-1]} 已經排好，可以用二分搜尋找插入位置，比較次數降到
+$O(\log i)$，總共 $O(n \log n)$；但搬移次數不變，仍是 $O(n^2)$。 敘述只說比較次數，正確。
+\item (E) 改用串列，好處是插入不用搬移（改兩個指標就好），但找插入位置仍然只能從頭（或從尾）
+一個一個走，串列連二分搜尋都做不到。 「循序搜尋插入位置」並沒有被改善，改善的是搬移。
+\textbf{錯誤}，選它。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-02}]{北科大電機所（戊組）113 學年度 第 I.2 題}
+（選擇；4 分）
+
+Which of the following is not an advantage of trees? (4\%)
+\begin{enumerate}[label=\alph*)]
+\item Hierarchical structure
+\item Faster search
+\item Router algorithms
+\item Undo/Redo operations in a notepad
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 d)。
+
+\textbf{a) 是樹的優點}。 樹天生表達階層關係：檔案系統的目錄、公司的組織圖、HTML 的文件結構，
+每個節點有一個上層、多個下層（資結書第~7.1~節）。
+
+\textbf{b) 是樹的優點}。 平衡的二元搜尋樹、B 樹搜尋只要 $O(\log n)$，比串列逐一比對的 $O(n)$ 快
+（資結書第~9、10、11~章）。
+
+\textbf{c) 是樹的應用}。 路由器查轉送表用 trie 做最長前綴比對，路由協定算出的最短路徑也是一棵以
+自己為根的最短路徑樹；生成樹協定（spanning tree）避免迴圈。 這些路由演算法都用到樹。
+
+\textbf{d) 不是}。 文書編輯器的「復原／重做」用的是\textbf{堆疊}：每做一個動作就推入復原堆疊；
+復原時從復原堆疊彈出最近的動作、撤銷它，再推入重做堆疊；重做時反過來。 最近做的動作最先被
+復原，是後進先出，和樹無關。
+\end{pastsoln}

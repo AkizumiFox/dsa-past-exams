@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-01}]{臺大電機所 109 學年度（B）第 1 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Consider a hash table with 13 slots. Suppose we use linear probing as the collision resolution
+strategy, where the i'th probe position (where i = 0, 1, 2, \ldots) for a key k is given by the
+function
+\[ h(k,i) = (k+i) \pmod{13} \]
+Suppose we insert the following 9 keys into the hash table in the exact sequence: 66, 4, 84, 91,
+100, 72, 70, 37, 61. What is the index of the slot storing the key 61?
+
+(A)~2 \qquad (B)~8 \qquad (C)~9 \qquad (D)~10 \qquad (E)~None of above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) 10。
+
+線性探測：第 $i$ 次探測看第 $(k + i) \bmod 13$ 格，從 $i = 0$ 開始，遇到空格就放進去（資結書
+第~12.3~節）。 依序插入：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+鍵 $k$ & $k \bmod 13$ & 計算 & 探測的格子 $\to$ 放在 \\
+\midrule
+66 & 1 & $66 = 5 \cdot 13 + 1$ & $1 \to 1$ \\
+4 & 4 & & $4 \to 4$ \\
+84 & 6 & $84 = 6 \cdot 13 + 6$ & $6 \to 6$ \\
+91 & 0 & $91 = 7 \cdot 13$ & $0 \to 0$ \\
+100 & 9 & $100 = 7 \cdot 13 + 9$ & $9 \to 9$ \\
+72 & 7 & $72 = 5 \cdot 13 + 7$ & $7 \to 7$ \\
+70 & 5 & $70 = 5 \cdot 13 + 5$ & $5 \to 5$ \\
+37 & 11 & $37 = 2 \cdot 13 + 11$ & $11 \to 11$ \\
+61 & 9 & $61 = 4 \cdot 13 + 9$ & $9, 10 \to 10$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+前八個鍵的起始位置 $1, 4, 6, 0, 9, 7, 5, 11$ 互不相同，都直接放進去。 61 的起始位置是第 $9$ 格，
+已經放了 100；下一格第 $10$ 格是空的，放在第 $10$ 格。 最後的表：
+\begin{center}
+\begin{tabular}{*{13}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+91 & 66 & & & 4 & 70 & 84 & 72 & & 100 & 61 & 37 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+(A) 2、(B) 8 是空格，61 的探測序列 $9, 10, \ldots$ 在第 $10$ 格就停了，到不了；(C) 9 是 100 的位置。
+\end{pastsoln}

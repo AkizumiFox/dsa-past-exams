@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-05}]{臺大電信所 108 學年度（B）第 5 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+Given a directed acyclic graph $G=(V,E)$ where the edge weights are of real numbers, Dijkstra's
+algorithm can be applied to solve the single-source shortest-path problem in $G$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯。
+
+權重是實數，可以是負的。 Dijkstra 的正確性靠「取出的點，距離就不會再變小」，這要求邊權重不為
+負（資結書第~25.2.5~節）；圖沒有環也救不了。
+
+反例：頂點 $s, a, b, t$，邊 $s \to a$（$1$）、$a \to t$（$1$）、$s \to b$（$3$）、
+$b \to a$（$-3$）。 沒有環，是 DAG。 真正的最短距離是 $\delta(s, a) = 3 - 3 = 0$、
+$\delta(s, t) = 0 + 1 = 1$。 Dijkstra 的過程：
+\begin{enumerate}
+\item 取出 $s$（$0$）：$d[a] = 1$、$d[b] = 3$。
+\item 取出 $a$（$1$）：$d[t] = 2$。
+\item 取出 $t$（$2$）：沒有出邊。
+\item 取出 $b$（$3$）：鬆弛 $b \to a$，$d[a]$ 改成 $0$；但 $a$ 早就取出了，它的出邊不會再鬆弛，
+$d[t]$ 停在 $2$。
+\end{enumerate}
+結果 $d[t] = 2 \ne 1$，答案錯。
+
+DAG 上（權重可以是負的）正確的做法是依拓樸順序鬆弛每個點的出邊，$O(|V| + |E|)$（資結書
+第~25.5~節）。
+\end{pastsoln}

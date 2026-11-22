@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-04}]{臺聯大電機類 111 學年度 第 4 題}
+（填表）
+
+(10\%)For each of the four types of lists in the following table, what is the asymptotic worst-case
+running time for each dynamic-set operation listed?
+
+\begin{center}
+\begin{tabular}{|l|p{2.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|}\hline
+ & \centering Unsorted, singly linked & \centering Sorted, singly linked & \centering Unsorted, doubly linked & \centering\arraybackslash Sorted, doubly linked\\\hline
+SEARCH($L$,$k$) & & & & \\\hline
+INSERT ($L$,$x$) & & & & \\\hline
+Delete($L$,$x$) & & & & \\\hline
+MINIMUM($L$) & & & & \\\hline
+MAXIMUM($L$) & & & & \\\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}（照 CLRS 這張表的原題）：$n$ 是串列長度。 INSERT$(L, x)$、DELETE$(L, x)$ 的 $x$ 是
+\textbf{指向節點的指標}，不是鍵值。 單向串列只有 $\mathit{head}$；雙向串列是資結書第~5.2~節那種
+帶哨兵的環狀雙向串列，從哨兵往前一步就是最後一個節點。 排序的串列由小到大。
+
+\begin{center}
+\small
+\begin{tabular}{lcccc}
+\toprule
+ & 未排序、單向 & 排序、單向 & 未排序、雙向 & 排序、雙向 \\
+\midrule
+SEARCH$(L, k)$ & $\Theta(n)$ & $\Theta(n)$ & $\Theta(n)$ & $\Theta(n)$ \\
+INSERT$(L, x)$ & $\Theta(1)$ & $\Theta(n)$ & $\Theta(1)$ & $\Theta(n)$ \\
+DELETE$(L, x)$ & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$ & $\Theta(1)$ \\
+MINIMUM$(L)$ & $\Theta(n)$ & $\Theta(1)$ & $\Theta(n)$ & $\Theta(1)$ \\
+MAXIMUM$(L)$ & $\Theta(n)$ & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+逐列說明：
+\begin{itemize}
+\item \textbf{SEARCH}：串列拿不到中間的節點，排好序也不能二分搜尋，最壞要從頭走到尾，四種都是
+$\Theta(n)$。
+\item \textbf{INSERT}：未排序的串列插在最前面就好，改幾個指標，$\Theta(1)$。 排序的串列要先找到
+插入的位置才能保持順序，最壞走到最後，$\Theta(n)$（資結書虛擬碼~5.4）。
+\item \textbf{DELETE}：要改前一個節點的 $\mathit{next}$。 雙向串列的 $x.\mathit{prev}$ 就是前一個，
+$\Theta(1)$（資結書虛擬碼~5.7）；單向串列只能從頭走去找前一個，最壞 $\Theta(n)$。 排序與否沒有
+影響。
+\item \textbf{MINIMUM}：排序的串列最小值在第一個，$\Theta(1)$；未排序的要看過全部，$\Theta(n)$。
+\item \textbf{MAXIMUM}：未排序的一樣是 $\Theta(n)$。 排序的串列最大值在最後一個：單向串列只有
+$\mathit{head}$，要走到尾，$\Theta(n)$；環狀雙向串列的哨兵的 $\mathit{prev}$ 就是它，$\Theta(1)$。
+\end{itemize}
+另外維護 $\mathit{tail}$ 時，排序、單向串列的 MAXIMUM 也是 $\Theta(1)$；DELETE 若給鍵值，四種都要先
+搜尋，都是 $\Theta(n)$。
+\end{pastsoln}

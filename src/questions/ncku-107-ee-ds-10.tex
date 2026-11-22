@@ -1,0 +1,123 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-10}]{成大電機所 107 學年度 問答題第 6 題}
+（問答）
+
+\textbf{6. (9 pts) Set}
+
+There exist two sets which have five members and four members, respectively, which are recorded by the
+tree structure. Let the number in the root as ID of a set.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=5mm,inner sep=0pt},font=\small,>={Stealth[length=2mm]}]
+  \node[v] (1) at (0,0) {1};
+  \node[v] (4) at (-1.1,-1) {4};
+  \node[v] (2) at (-0.4,-1) {2};
+  \node[v] (3) at (0.25,-1) {3};
+  \node[v] (5) at (1.0,-1) {5};
+  \foreach \c in {4,2,3,5} { \draw[->] (\c) -- (1); }
+  \node[v] (6) at (2.6,0.2) {6};
+  \node[v] (7) at (2.15,-1) {7};
+  \node[v] (0) at (3.3,-1) {0};
+  \node[v] (8) at (2.7,-2) {8};
+  \draw[->] (7) -- (6); \draw[->] (0) -- (6); \draw[->] (8) -- (7);
+  \node[font=\small\sffamily] at (-0.1,-2.7) {Set \{1, 4, 2, 3, 5\}};
+  \node[font=\small\sffamily] at (2.9,-2.7) {Set \{6, 7, 0, 8\}};
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(6 pts)} Union is an operation to merge two sets. Please respectively show the resulting
+data structures after the function WeightUnion1(1, 6) is called when you use number of nodes as the
+weight and when you use height as the weight.
+\item \textbf{(3 pts)} Find is an operation to find an ID which contains a member. Please show the
+resulting data structure if the function \textit{CollaspingFind}(8) is called in the second set, where
+collapse aims to reduce the height of a tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+集合用樹表示，每個節點指向父節點，根代表整個集合（資結書第~13.2~節）。 先整理兩棵樹：
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+集合 & 根 & 節點數 & 高度（層數） \\
+\midrule
+$\{1, 4, 2, 3, 5\}$ & $1$ & $5$ & $2$（$1$ 底下直接是 $4, 2, 3, 5$） \\
+$\{6, 7, 0, 8\}$ & $6$ & $4$ & $3$（$8 \to 7 \to 6$） \\
+\bottomrule
+\end{tabular}
+\end{center}
+加權合併的規則是「輕的樹的根接到重的樹的根底下」，只改一個指標。 兩種權重剛好給出相反的結果，這就是這題
+的重點。
+
+\textbf{a.} \textbf{用節點數當權重}（依大小合併，資結書虛擬碼~13.3）：$5 > 4$，所以根 $6$ 接到根 $1$ 底下，$p[6] = 1$。
+新集合的 ID 是 $1$，大小 $9$，高度 $4$（$8 \to 7 \to 6 \to 1$）。
+
+\textbf{用高度當權重}（依高度合併，資結書第~13.2.2~節的秩在不做路徑壓縮時就是高度）：$2 < 3$，所以根 $1$ 接到根 $6$
+底下，$p[1] = 6$。 新集合的 ID 是 $6$，高度仍是 $3$（$1$ 那棵掛在深度 $1$，它的子節點在深度 $2$，和 $8$ 一樣深）。
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=5mm,inner sep=0pt},font=\small,>={Stealth[length=2mm]}]
+\begin{scope}
+  \node[v] (1) at (0,0) {1};
+  \node[v] (4) at (-2.0,-1) {4};
+  \node[v] (2) at (-1.3,-1) {2};
+  \node[v] (3) at (-0.6,-1) {3};
+  \node[v] (5) at (0.1,-1) {5};
+  \node[v] (6) at (1.3,-1) {6};
+  \node[v] (7) at (0.9,-2) {7};
+  \node[v] (0) at (1.7,-2) {0};
+  \node[v] (8) at (0.9,-3) {8};
+  \foreach \c in {4,2,3,5,6} { \draw[->] (\c) -- (1); }
+  \draw[->] (7) -- (6); \draw[->] (0) -- (6); \draw[->] (8) -- (7);
+  \node at (-0.2,-3.8) {依節點數合併};
+\end{scope}
+\begin{scope}[xshift=6cm]
+  \node[v] (6) at (0,0) {6};
+  \node[v] (7) at (-1.2,-1) {7};
+  \node[v] (0) at (-0.3,-1) {0};
+  \node[v] (1) at (1.2,-1) {1};
+  \node[v] (8) at (-1.2,-2) {8};
+  \node[v] (4) at (0.15,-2) {4};
+  \node[v] (2) at (0.85,-2) {2};
+  \node[v] (3) at (1.55,-2) {3};
+  \node[v] (5) at (2.25,-2) {5};
+  \draw[->] (7) -- (6); \draw[->] (0) -- (6); \draw[->] (1) -- (6); \draw[->] (8) -- (7);
+  \foreach \c in {4,2,3,5} { \draw[->] (\c) -- (1); }
+  \node at (0.3,-3.8) {依高度合併};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+用父節點陣列表示（下標 $0$ 到 $8$，根記為 $-1$）：
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+合併前 $p[i]$ & 6 & $-1$ & 1 & 1 & 1 & 1 & $-1$ & 6 & 7 \\
+依節點數 & 6 & $-1$ & 1 & 1 & 1 & 1 & 1 & 6 & 7 \\
+依高度 & 6 & 6 & 1 & 1 & 1 & 1 & $-1$ & 6 & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+（Horowitz 的寫法把根的 $p$ 存成 $-(\text{節點數})$，依節點數合併後是 $p[1] = -9$，其他相同。） 依節點數合併時，
+樹變高了一層；但這個規則保證的是「$n$ 個節點的樹高度不超過 $\lfloor \lg n \rfloor + 1$」（資結書定理~13.2），這裡
+$4 \le \lfloor \lg 9 \rfloor + 1 = 4$，沒有違反。
+
+\textbf{b.} 照題目，在第二個集合（合併前的 $\{6, 7, 0, 8\}$）呼叫 \textit{CollapsingFind}$(8)$（原題拼成 Collasping；就是資結書虛擬碼~13.5 的
+路徑壓縮）：
+\begin{enumerate}
+\item 第一趟從 $8$ 往上找根：$8 \to 7 \to 6$，$6$ 是根，回傳 ID $6$。
+\item 第二趟把路上經過的每個節點直接接到根：$p[8] \gets 6$；$7$ 本來就指向 $6$，不變。
+\end{enumerate}
+結果 $6$ 底下直接是 $7$、$0$、$8$，高度從 $3$ 降成 $2$；之後再找 $8$ 只要一步。
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=5mm,inner sep=0pt},font=\small,>={Stealth[length=2mm]}]
+  \node[v] (6) at (0,0) {6};
+  \node[v] (7) at (-0.9,-1) {7};
+  \node[v] (0) at (0,-1) {0};
+  \node[v] (8) at (0.9,-1) {8};
+  \draw[->] (7) -- (6); \draw[->] (0) -- (6); \draw[->] (8) -- (6);
+\end{tikzpicture}
+\end{center}
+若是在 a 依節點數合併之後才呼叫，路徑是 $8 \to 7 \to 6 \to 1$，壓縮後 $8$、$7$ 都直接指向 $1$（$6$ 本來就是），回傳 $1$。
+\end{pastsoln}

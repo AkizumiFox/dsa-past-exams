@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-02}]{臺大工科海洋所 110 學年度（A）第 2 題}
+（程式設計）
+
+Please use C++ (or Java) for all programming problems.
+
+\textbf{(10 \%)} Write a function called \textsf{removeNegativeNodes} that traverses a singly linked
+list and deletes all nodes whose keys are negative.
+\end{pastexam}
+
+\begin{pastsoln}
+節點的定義題目沒有給，用最常見的寫法：每個節點有鍵 \texttt{key} 和指向下一個節點的
+\texttt{next}，串列用指向第一個節點的指標 \texttt{head} 表示，空串列是 \texttt{nullptr}。
+
+單向串列刪除一個節點，要改的是\textbf{它前一個節點}的 \texttt{next}（資結書第~5.1~節）；第一個
+節點沒有前一個，要改的是 \texttt{head}。 為了不把頭節點當特例，用一個「指向指標的指標」
+\texttt{link}：它永遠指向「指到目前節點的那個指標」，一開始是 \texttt{\&head}，之後是前一個節點的
+\texttt{\&next}。
+\begin{minted}[fontsize=\small]{cpp}
+struct Node {
+    int key;
+    Node* next;
+};
+
+void removeNegativeNodes(Node*& head) {
+    Node** link = &head;               // 指向「指到目前節點的那個指標」
+    while (*link != nullptr) {
+        Node* cur = *link;
+        if (cur->key < 0) {
+            *link = cur->next;         // 讓前一個指標跳過 cur
+            delete cur;                // 歸還記憶體
+        } else {
+            link = &cur->next;         // cur 留下，往後移一格
+        }
+    }
+}
+\end{minted}
+
+\textbf{為什麼對。} 迴圈不變量：從 \texttt{head} 走到 \texttt{*link} 之前的那些節點，就是原串列這一段
+中鍵不是負數的節點，順序不變；\texttt{*link} 之後的部分還沒檢查過。 每一輪看目前節點 \texttt{cur}：
+鍵是負的，就讓指到它的指標改指 \texttt{cur->next}，\texttt{cur} 從串列消失，\texttt{link} 不動
+（下一個節點要接著檢查，連續好幾個負數也會一個一個刪掉）；鍵不是負的，就保留，\texttt{link} 移到
+\texttt{cur->next}。 \texttt{*link} 是 \texttt{nullptr} 時全部檢查完。 頭節點是負數時，\texttt{link}
+就是 \texttt{\&head}，\texttt{head} 被改成下一個，所以參數要用參考 \texttt{Node*\&}，呼叫端的
+\texttt{head} 才會跟著改。
+
+例：$3 \to -1 \to -4 \to 5 \to -9$。 \texttt{link} 先指 \texttt{head}，$3$ 保留；接著 $-1$、$-4$ 依序
+被刪，$3$ 的 \texttt{next} 改指 $5$；$5$ 保留；$-9$ 被刪，$5$ 的 \texttt{next} 改成 \texttt{nullptr}。
+結果 $3 \to 5$。 全部是負數時 \texttt{head} 會變成 \texttt{nullptr}；空串列不進迴圈。
+
+\textbf{複雜度。} 每個節點只看一次，時間 $O(n)$，額外空間 $O(1)$。
+
+不熟指標的指標，也可以寫成先處理頭：\texttt{while (head \&\& head->key < 0)} 一個一個刪掉，再用
+\texttt{prev} 從剩下的頭往後走，檢查 \texttt{prev->next}；兩種寫法等價。
+\end{pastsoln}

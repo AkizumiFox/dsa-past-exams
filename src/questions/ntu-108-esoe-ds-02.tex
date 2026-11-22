@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ntu-108-esoe-ds-02}]{臺大工科海洋所 108 學年度 第 2 題}
+（程式設計；本卷規定程式題用 C++ 或 Java）
+
+\textbf{(15 \%)} Write a method called \textsf{makeList} in a \textsf{SList} class with a tail. The
+\textsf{makeList} function takes an array counts of \textsf{int}, constructs a singly-linked list,
+and associates its head and tail pointers to the corresponding \textsf{SListNode} nodes. In the
+constructed list, the first \textsf{counts[0]} items are the number \textsf{counts[0]}, the next
+\textsf{counts[1]} items are the number \textsf{counts[1]}, etc. For example, if the input array is
+\{1 3 2\}, then the output linked list is: \textsf{head}$\rightarrow$ \fbox{1} $\rightarrow$ \fbox{3}
+$\rightarrow$ \fbox{3} $\rightarrow$ \fbox{3} $\rightarrow$ \fbox{2} $\rightarrow$ \fbox{2}
+$\leftarrow$\textsf{tail}. Define the \textsf{SList} and \textsf{SListNode} classes to complete the
+\textsf{makeList} method. When it is done, the \textsf{size} of nodes in \textsf{SList} should also
+be updated accordingly.
+\end{pastexam}
+
+\begin{pastsoln}
+卷首規定程式題用 C++ 或 Java，下面用 C++。 C++ 的陣列不帶長度，所以 \texttt{makeList} 多收一個
+參數 \texttt{n}（\texttt{counts} 的長度）；用 Java 時就是 \texttt{counts.length}。 題目沒說呼叫時串列
+原本是不是空的，這裡先把舊的節點清掉，再建新的串列。 \texttt{counts[i]} 是 $0$ 時，數字 \texttt{counts[i]}
+不出現（迴圈一次都不跑）。
+
+\begin{minted}[fontsize=\small]{cpp}
+class SListNode {
+public:
+    int item;
+    SListNode* next;
+    SListNode(int i, SListNode* n = nullptr) : item(i), next(n) {}
+};
+
+class SList {
+public:
+    SListNode* head;
+    SListNode* tail;
+    int size;
+
+    SList() : head(nullptr), tail(nullptr), size(0) {}
+    ~SList() { clear(); }
+
+    void clear() {                    // 釋放所有節點，變回空串列
+        while (head != nullptr) {
+            SListNode* p = head;
+            head = head->next;
+            delete p;
+        }
+        tail = nullptr;
+        size = 0;
+    }
+
+    void makeList(const int counts[], int n) {
+        clear();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < counts[i]; j++) {
+                SListNode* node = new SListNode(counts[i]);
+                if (tail == nullptr) {    // 第一個節點
+                    head = node;
+                } else {
+                    tail->next = node;
+                }
+                tail = node;
+                size++;
+            }
+        }
+    }
+};
+\end{minted}
+
+\textbf{正確性}。 有 \texttt{tail} 指標，新節點直接接在尾端（資結書第~5.2~節末的比較表：記了 \texttt{tail} 的單向串列，接在最後是 $O(1)$），不必每次
+從頭走到尾。 內層迴圈的不變量：串列由前到後是 \texttt{counts[0]} 個 \texttt{counts[0]}、……、
+\texttt{counts[i-1]} 個 \texttt{counts[i-1]}，再接 \texttt{j} 個 \texttt{counts[i]}；\texttt{head} 指第一個節點、
+\texttt{tail} 指最後一個節點（串列空時兩者都是 \texttt{nullptr}），\texttt{size} 等於節點數。 接上一個節點時，
+空串列要設 \texttt{head}，不空要讓舊的尾端指向它；兩種情形都把 \texttt{tail} 改成新節點、\texttt{size} 加一，
+不變量保持。 新節點的 \texttt{next} 是 \texttt{nullptr}，所以串列的最後一個節點永遠指向 \texttt{nullptr}。
+兩層迴圈跑完，串列就是題目要的樣子。
+
+以 \texttt{\{1, 3, 2\}} 追蹤：$i = 0$ 時放一個 $1$，\texttt{head}、\texttt{tail} 都指向它；$i = 1$ 時接上三個
+$3$；$i = 2$ 時接上兩個 $2$。 得到 $1 \to 3 \to 3 \to 3 \to 2 \to 2$，\texttt{tail} 指向最後的 $2$，
+\texttt{size} $= 6$。
+
+\textbf{複雜度}。 令 $N = \sum_i \texttt{counts[i]}$（建出來的節點數）。 每個節點 $O(1)$ 時間，外層迴圈
+另外跑 $n$ 次，清掉舊串列和舊的節點數成正比，所以時間是 $\Theta(n + N)$ 加上清掉舊串列的時間；
+額外空間就是 $N$ 個節點。 如果沒有 \texttt{tail}、每次從 \texttt{head} 走到尾端再接，時間會變成
+$\Theta(N^2)$。
+\end{pastsoln}

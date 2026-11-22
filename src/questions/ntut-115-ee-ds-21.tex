@@ -1,0 +1,124 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-21}]{北科大電機所（戊組）115 學年度 問答題第 1 題}
+（問答）
+
+Consider a CPU task scheduler where processes are prioritized based on urgency:\\
+Priority 1: Critical system tasks (highest priority)\\
+Priority 2: Real-time applications\\
+Priority 3: User applications\\
+Priority 4: Background tasks (lowest priority)\\
+Given the following task arrivals:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}\hline
+Task A & Task B & Task C & Task D & Task E & Task F & Task G\\\hline
+3 & 1 & 4 & 2 & 1 & 3 & 2\\\hline
+\end{tabular}
+\end{center}
+(a) Show the min-heap after all tasks have been added (lower priority number = higher urgency).
+\textbf{(5\%)}\\
+(b) If 3 tasks are executed (removed from queue), show the order they are executed and the heap after
+each removal. \textbf{(5\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有說優先序相同時怎麼處理。 下面照資結書第~8.1~節的寫法：上浮時父節點比新元素\textbf{大}才交換（相等不換）；
+下沉時和較小的子節點交換，兩個子節點一樣小時選左邊。 任務依 A 到 G 的順序（到達順序）逐一插入。 節點寫成
+「任務（優先序）」，陣列從位置 $1$ 開始。
+
+\textbf{(a)} 逐一插入，每次放在陣列最後一格再上浮：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+插入 & 上浮過程 & 插入後的陣列 \\
+\midrule
+A(3) & 第一個，放在根 & A3 \\
+B(1) & 位置 2，父 A3 $> 1$，交換 & B1, A3 \\
+C(4) & 位置 3，父 B1 $\le 4$，不動 & B1, A3, C4 \\
+D(2) & 位置 4，父 A3 $> 2$ 交換；到位置 2，父 B1 $\le 2$ 停 & B1, D2, C4, A3 \\
+E(1) & 位置 5，父 D2 $> 1$ 交換；到位置 2，父 B1 $= 1$ 不換 & B1, E1, C4, A3, D2 \\
+F(3) & 位置 6，父 C4 $> 3$ 交換；到位置 3，父 B1 停 & B1, E1, F3, A3, D2, C4 \\
+G(2) & 位置 7，父 F3 $> 2$ 交換；到位置 3，父 B1 停 & B1, E1, G2, A3, D2, C4, F3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+全部加入後的最小堆積：陣列 $\langle$B1, E1, G2, A3, D2, C4, F3$\rangle$，
+\begin{center}
+\begin{tikzpicture}[hn/.style={draw,rounded corners=2pt,minimum width=9mm,minimum height=5.5mm,inner sep=1pt,font=\small}]
+\begin{scope}[xshift=0cm]
+\node[hn] (h0x1) at (0,0) {B(1)};
+\node[hn] (h0x2) at (-2.2,-1.1) {E(1)};
+\node[hn] (h0x3) at (2.2,-1.1) {G(2)};
+\node[hn] (h0x4) at (-3.3,-2.2) {A(3)};
+\node[hn] (h0x5) at (-1.1,-2.2) {D(2)};
+\node[hn] (h0x6) at (1.1,-2.2) {C(4)};
+\node[hn] (h0x7) at (3.3,-2.2) {F(3)};
+\draw (h0x1) -- (h0x2);
+\draw (h0x1) -- (h0x3);
+\draw (h0x2) -- (h0x4);
+\draw (h0x2) -- (h0x5);
+\draw (h0x3) -- (h0x6);
+\draw (h0x3) -- (h0x7);
+\node[font=\small] at (0,-3.0) {(a) 全部加入後};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+每個節點的優先序都不大於它的子節點（B1 $\le$ E1、G2；E1 $\le$ A3、D2；G2 $\le$ C4、F3）。
+
+\textbf{(b)} 每次取出根（最緊急的任務），把最後一個元素搬到根，再下沉。
+\begin{enumerate}
+\item 取出 \textbf{B(1)}。 F3 搬到根，子節點 E1、G2，和較小的 E1 換；F3 到位置 2，子節點 A3、D2，和較小的 D2 換；
+到位置 5，沒有子節點，停。 堆積：$\langle$E1, D2, G2, A3, F3, C4$\rangle$。
+\item 取出 \textbf{E(1)}。 C4 搬到根，子節點 D2、G2 一樣小，選左邊的 D2 換；C4 到位置 2，子節點 A3、F3 一樣小，選左邊
+的 A3 換；到位置 4，停。 堆積：$\langle$D2, A3, G2, C4, F3$\rangle$。
+\item 取出 \textbf{D(2)}。 F3 搬到根，子節點 A3、G2，和較小的 G2 換；到位置 3，沒有子節點（位置 6、7 已不在堆積裡），
+停。 堆積：$\langle$G2, A3, F3, C4$\rangle$。
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[hn/.style={draw,rounded corners=2pt,minimum width=9mm,minimum height=5.5mm,inner sep=1pt,font=\small}]
+\begin{scope}[xshift=0cm]
+\node[hn] (h0x1) at (0,0) {E(1)};
+\node[hn] (h0x2) at (-2.2,-1.1) {D(2)};
+\node[hn] (h0x3) at (2.2,-1.1) {G(2)};
+\node[hn] (h0x4) at (-3.3,-2.2) {A(3)};
+\node[hn] (h0x5) at (-1.1,-2.2) {F(3)};
+\node[hn] (h0x6) at (1.1,-2.2) {C(4)};
+\draw (h0x1) -- (h0x2);
+\draw (h0x1) -- (h0x3);
+\draw (h0x2) -- (h0x4);
+\draw (h0x2) -- (h0x5);
+\draw (h0x3) -- (h0x6);
+\node[font=\small] at (0,-3.0) {取出 B 之後};
+\end{scope}
+\begin{scope}[xshift=7.4cm]
+\node[hn] (h1x1) at (0,0) {D(2)};
+\node[hn] (h1x2) at (-2.2,-1.1) {A(3)};
+\node[hn] (h1x3) at (2.2,-1.1) {G(2)};
+\node[hn] (h1x4) at (-3.3,-2.2) {C(4)};
+\node[hn] (h1x5) at (-1.1,-2.2) {F(3)};
+\draw (h1x1) -- (h1x2);
+\draw (h1x1) -- (h1x3);
+\draw (h1x2) -- (h1x4);
+\draw (h1x2) -- (h1x5);
+\node[font=\small] at (0,-3.0) {取出 E 之後};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[hn/.style={draw,rounded corners=2pt,minimum width=9mm,minimum height=5.5mm,inner sep=1pt,font=\small}]
+\begin{scope}[xshift=0cm]
+\node[hn] (h0x1) at (0,0) {G(2)};
+\node[hn] (h0x2) at (-2.2,-1.1) {A(3)};
+\node[hn] (h0x3) at (2.2,-1.1) {F(3)};
+\node[hn] (h0x4) at (-3.3,-2.2) {C(4)};
+\draw (h0x1) -- (h0x2);
+\draw (h0x1) -- (h0x3);
+\draw (h0x2) -- (h0x4);
+\node[font=\small] at (0,-3.0) {取出 D 之後};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+執行順序是 \textbf{B、E、D}。 B 和 E 都是優先序 $1$，一定最先執行；第三個是優先序 $2$ 的 D 或 G。 這裡因為第 2 次取出
+時兩個子節點相等選了左邊，D 被提到根，第三個執行 D，正好也符合到達順序（D 比 G 早到）。 如果相等時選右邊，第三個會是
+G。 二元堆積不保證相同優先序的先來先做（不穩定），真正的排程器要先來先做，可以把鍵改成（優先序, 到達順序）一起比較。
+\end{pastsoln}

@@ -1,0 +1,77 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-01}]{臺大工科海洋所 107 學年度 第 1 題}
+（程式設計；15 分）
+
+\textbf{(15 \%)} Suppose that there are a singly linked list class called \textsf{SList} and the
+stored node class called \textsf{SListNode}, which contains a pointer \textsf{next} and a string
+called \textsf{item}. In the list class, there are a pointer called \textsf{head} and an integer
+called \textsf{size} for keeping the number of nodes in the list. Write a function called
+\textsf{shorten} in the \textsf{SList} class for concatenating each successive pair of strings
+(nodes) into a single string (node). Upon completion, the number of nodes is reduced by half. For
+example, [ enjoy ntu esoe ms entrance exam ] becomes [ enjoyntu esoems entranceexam ]. If the size
+is odd, the last node in the list is not changed.
+\end{pastexam}
+
+\begin{pastsoln}
+卷首規定程式題用 C++（或 Java），這裡用 C++。 題目沒有給類別的完整宣告，照題意假設：
+\begin{minted}[fontsize=\small]{cpp}
+struct SListNode {
+    std::string item;
+    SListNode *next;
+};
+class SList {
+public:
+    SListNode *head;    // 第一個節點，空串列時是 nullptr
+    int size;           // 節點個數
+    void shorten();
+};
+\end{minted}
+
+\textbf{想法。} 用指標 $p$ 指著「一對」的第一個節點，$q = p.\mathit{next}$ 是這一對的第二個。
+把 $q$ 的字串接到 $p$ 的字串後面，再把 $q$ 從串列拿掉（$p.\mathit{next} \gets q.\mathit{next}$，
+和資結書第~5.1~節虛擬碼~5.3 刪除後繼節點的做法一樣），然後 $p$ 跳到下一對的第一個，也就是
+新的 $p.\mathit{next}$。 $p$ 是空的（節點數是偶數，剛好做完）或 $p$ 沒有下一個（節點數是奇數，
+剩最後一個）就停，最後一個節點自然不會被動到。
+\begin{minted}[fontsize=\small]{cpp}
+void SList::shorten() {
+    SListNode *p = head;
+    while (p != nullptr && p->next != nullptr) {
+        SListNode *q = p->next;     // 這一對的第二個
+        p->item += q->item;         // 字串接在一起
+        p->next = q->next;          // 把 q 從串列拿掉
+        delete q;
+        size--;
+        p = p->next;                // 下一對的第一個
+    }
+}
+\end{minted}
+
+\textbf{追蹤題目的例子。} 一開始 $6$ 個節點：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+第幾輪 & $p$ 指的節點（合併後） & 串列 \\
+\midrule
+開始 & enjoy & enjoy, ntu, esoe, ms, entrance, exam \\
+1 & enjoyntu & enjoyntu, esoe, ms, entrance, exam \\
+2 & esoems & enjoyntu, esoems, entrance, exam \\
+3 & entranceexam & enjoyntu, esoems, entranceexam \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 3 輪做完 $p$ 變成 \texttt{nullptr}，迴圈結束，\texttt{size} 從 $6$ 減成 $3$。 如果再多一個
+節點 x（$7$ 個），第 3 輪後 $p$ 指到 x，\texttt{p->next} 是空的，迴圈結束，x 原封不動，
+\texttt{size} 是 $4$。
+
+\textbf{正確性。} 每一輪開始時，$p$ 前面的節點都已經合併好，$p$ 和它後面的節點都還是原來
+的樣子（迴圈不變量）。 一輪只動 $p$ 和 $q$ 兩個節點，做完後 $p$ 移到原來的第三個節點，不變量
+仍然成立。 \texttt{size} 每拿掉一個節點就減一，所以結束時和實際節點數一致：$n$ 個節點變成
+$\lceil n/2 \rceil$ 個。 空串列（\texttt{head} 是 \texttt{nullptr}）和只有一個節點時，迴圈一次都
+不做，也對。 \texttt{head} 不會改（第一個節點永遠留著），不必特別處理。
+
+\textbf{複雜度。} 每一輪 $p$ 往後走兩個節點，共 $\lfloor n/2 \rfloor$ 輪，時間 $\Theta(n)$
+（字串串接的時間另計，和字串總長度成正比）；只用兩個指標，額外空間 $\Theta(1)$。
+
+常見的錯：先 \texttt{delete q} 再讀 \texttt{q->next}（讀已釋放的記憶體）；或寫成
+\texttt{p = p->next->next}，這時 \texttt{p->next} 已經是下一對，會跳過一對。
+\end{pastsoln}

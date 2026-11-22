@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-46}]{臺大電信所 110 學年度（B）第 46 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+In this exam,
+\begin{itemize}
+\item The height of a leaf (in either a tree or heap) is defined as 0.
+\item The depth of the root (in either a tree or heap) is defined as 0.
+\item The degree of a node (in either a tree or heap) is defined as the number of its children.
+\item The size of a tree/heap is defined as the total number of keys (items) it stores.
+\item All heaps, unless otherwise specified, are min heaps.
+\end{itemize}
+
+Consider a Fibonacci heap that results from successively inserting 929 (distinct) keys into an initially empty heap, followed by deleting the minimum key. Which of the following statements are true?
+\begin{enumerate}[label=\Alph*.]
+\item The Fibonacci heap is of degree 9.
+\item The Fibonacci heap is of height 12.
+\item There are 5 trees in the Fibonacci heap.
+\item With one additional decrease key operation, the Fibonacci heap can have 6 trees.
+\item With two additional decrease key operations, the Fibonacci heap can have 7 trees.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A、E。
+
+費氏堆積的插入只把新節點放進根串列，不做合併。 插入 $929$ 個鍵後，根串列是 $929$ 棵單一節點的樹。
+\proc{Extract-Min} 拿掉最小的根後，做\textbf{合併}（consolidate）：分支度相同的兩棵樹，根較大的接到根較小的
+下面，直到所有根的分支度互不相同（資結書第~8.6~節）。
+
+剩下 $928$ 個節點。 一開始都是分支度 $0$ 的樹，兩棵分支度 $k$ 的樹合併成一棵分支度 $k + 1$ 的樹，形狀就是
+二項樹 $B_{k+1}$，大小 $2^{k+1}$。 合併結束時各棵樹大小是互不相同的 $2$ 的次方，加起來 $928$，只能是
+$928$ 的二進位分解：
+\[
+928 = 512 + 256 + 128 + 32 = (1110100000)_2,
+\]
+所以得到 $B_9, B_8, B_7, B_5$ 四棵樹。 合併時被接到別人下面的節點，標記（mark）都是清除的。
+\begin{itemize}
+\item A 對：最大的分支度是 $B_9$ 的根，$9$。 （題目的「heap 的 degree」取最大分支度。）
+\item B 錯：$B_k$ 的高度是 $k$（葉子高度 $0$），最高的 $B_9$ 高度 $9$，不是 $12$。
+\item C 錯：只有 $4$ 棵樹。
+\item D 錯：一次 \proc{Decrease-Key}：若節點 $x$ 是根，或新的鍵不比父節點小，樹不變；否則把 $x$ 切下來變成新的
+根，樹多 $1$ 棵。 切下 $x$ 時父節點 $y$ 若是第一次失去子節點，只被標記，不會連鎖切下（所有節點都沒有標記）。
+所以至多 $4 + 1 = 5$ 棵，不可能 $6$ 棵。
+\item E 對：取 $B_9$ 裡一個不是根、至少有兩個子節點的節點 $y$（例如根的分支度 $8$ 的子節點，它有 $8$ 個子節點），
+對它的兩個子節點 $x_1$、$x_2$ 各做一次 \proc{Decrease-Key}，把鍵改成比 $y$ 小。 第一次切下 $x_1$（$5$ 棵），
+$y$ 被標記；第二次切下 $x_2$（$6$ 棵），$y$ 已有標記，連鎖切下 $y$（$7$ 棵），$y$ 的父節點是根，不再往上。
+所以可以有 $7$ 棵。
+\end{itemize}
+\end{pastsoln}

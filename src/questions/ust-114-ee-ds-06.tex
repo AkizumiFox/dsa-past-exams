@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-06}]{臺聯大電機類 114 學年度 第 6 題}
+（單選；2 分，答錯不倒扣）
+
+If you want to use a heap structure to keep the top-k numbers by scanning through a list of numbers,
+what is the right choice?
+
+(A)~min-heap \qquad (B)~max-heap \qquad (C)~Both will work equally well \qquad (D)~Trees perform
+better
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+做法（資結書第~8.3~節）：維持一個最多 $k$ 個元素的\textbf{最小}堆積，存「目前看過的數裡最大的
+$k$ 個」。 每讀到一個數 $x$：堆積不到 $k$ 個就直接插入；否則和根（這 $k$ 個裡最小的，也就是目前
+的第 $k$ 大）比，$x$ 比較大就刪掉根、插入 $x$，否則丟掉 $x$。 掃完後堆積裡就是前 $k$ 大。
+
+關鍵是每次要問「目前前 $k$ 大裡最小的是誰」，這正是最小堆積根上的值，$O(1)$ 看得到、$O(\log k)$
+換掉。
+\begin{itemize}
+\item (A) min-heap：見上。 對。
+\item (B) max-heap：大小 $k$ 的最大堆積只能立刻拿到最大值，要淘汰的卻是最小值，找最小值得掃過
+所有葉節點，$O(k)$。 若改成把全部 $n$ 個數都放進最大堆積再刪 $k$ 次，空間是 $O(n)$，也不是
+「大小 $k$」的做法。 錯。
+\item (C)：如上，兩者效率不同。 錯。
+\item (D)：題目問的是用哪種堆積；平衡樹雖然也能做到 $O(\log k)$，但沒有比較好，常數還比較大。 錯。
+\end{itemize}
+\end{pastsoln}

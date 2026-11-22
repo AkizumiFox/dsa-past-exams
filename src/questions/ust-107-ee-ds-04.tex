@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-04}]{臺聯大電機類 107 學年度 第四題}
+（問答；10 分）
+
+(10\%) Provide a design of circular queue based on array implementation with size $N$. Note that the circular queue can contain at most $N$ items.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的重點在最後一句：陣列有 $N$ 格，佇列要能真的放滿 $N$ 個。 常見的「留一格不用」寫法最多只放 $N - 1$ 個，
+不符合要求。
+
+\textbf{為什麼只用 front、rear 不夠。} 固定 $\mathit{front}$ 時，$\mathit{rear}$ 只有 $N$ 種可能的值，但佇列的元素個數
+有 $0, 1, \ldots, N$ 共 $N + 1$ 種，$N$ 個值分不出 $N + 1$ 種狀態；空和滿都會是 $\mathit{front} = \mathit{rear}$
+（資結書第~6.2.2~節）。 所以要多記一點資訊。 下面多記元素個數 $\mathit{count}$。
+
+\textbf{資料結構。} 陣列 $Q.\mathit{item}[0..N-1]$ 看成頭尾相接的一圈；$Q.\mathit{front}$ 是前端元素的位置；
+$Q.\mathit{count}$ 是目前的元素個數。 尾端的下一個空位可以算出來：$(\mathit{front} + \mathit{count}) \bmod N$。
+一開始 $\mathit{front} = \mathit{count} = 0$。
+
+\begin{pseudo}{可以放滿 $N$ 個的環狀佇列}
+\Function{Is-Empty}{$Q$}
+    \State \Return $Q.\mathit{count} = 0$
+\EndFunction
+\Statex
+\Function{Is-Full}{$Q$}
+    \State \Return $Q.\mathit{count} = N$
+\EndFunction
+\Statex
+\Procedure{Enqueue}{$Q, x$}
+    \If{$Q.\mathit{count} = N$}
+        \State \Error{overflow}
+    \EndIf
+    \State $Q.\mathit{item}[(Q.\mathit{front} + Q.\mathit{count}) \bmod N] \gets x$
+    \State $Q.\mathit{count} \gets Q.\mathit{count} + 1$
+\EndProcedure
+\Statex
+\Function{Dequeue}{$Q$}
+    \If{$Q.\mathit{count} = 0$}
+        \State \Error{underflow}
+    \EndIf
+    \State $x \gets Q.\mathit{item}[Q.\mathit{front}]$
+    \State $Q.\mathit{front} \gets (Q.\mathit{front} + 1) \bmod N$
+    \State $Q.\mathit{count} \gets Q.\mathit{count} - 1$
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 維持的不變量是：佇列的元素由前到後依序在
+$\mathit{item}[\mathit{front}], \mathit{item}[(\mathit{front}+1) \bmod N], \ldots,
+\mathit{item}[(\mathit{front}+\mathit{count}-1) \bmod N]$，而且 $0 \le \mathit{count} \le N$。 \proc{Enqueue} 把新元素
+放在最後一個元素的下一格，$\mathit{count}$ 加一，不變量仍成立；$\mathit{count} < N$ 時這一格一定不是佇列裡的元素
+（佇列只佔 $\mathit{count}$ 格），不會蓋掉資料。 \proc{Dequeue} 取出 $\mathit{front}$ 那格，$\mathit{front}$ 往後一格、
+$\mathit{count}$ 減一，不變量也成立。 空和滿分別是 $\mathit{count} = 0$ 和 $\mathit{count} = N$，不會混淆，所以 $N$ 格都
+用得到。
+
+\textbf{複雜度。} 每個操作只做常數次運算，都是 $O(1)$；額外空間只有一個整數。
+
+另一種做法是保留 $\mathit{front}$、$\mathit{rear}$，再加一個旗標 $\mathit{tag}$：最近一次操作是加入就設成 $1$、
+取出就設成 $0$。 $\mathit{front} = \mathit{rear}$ 時，$\mathit{tag} = 1$ 表示滿、$\mathit{tag} = 0$ 表示空
+（資結書第~6.2.2~節的第三種解法）。 兩種寫法都能放滿 $N$ 個。
+\end{pastsoln}

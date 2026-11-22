@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-07}]{臺聯大電機類 113 學年度 第 7 題}
+（單選；每題 3 分，答錯不倒扣）
+
+A sorting algorithm is considered stable if:
+\begin{enumerate}[label=(\Alph*)]
+\item It requires O($n^2$) extra space for sorting.
+\item It employs a divide and conquer strategy for sorting.
+\item It maintains the relative order of equal elements as they appeared in the original array.
+\item It sorts the elements in O(log n) time complexity.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+穩定的定義：鍵相同的兩筆資料，排序後的先後順序和排序前一樣（資結書第~14.1~節）。
+\begin{itemize}
+\item (A) 講的是額外空間，和穩定無關；而且常見的排序沒有一個需要 $O(n^2)$ 額外空間。 錯。
+\item (B) 分治是設計方法。 合併排序是分治而且穩定，快速排序也是分治卻不穩定，兩者無關。 錯。
+\item (C) 正是定義。 對。
+\item (D) 講的是時間；任何排序至少要看過每個元素，不可能 $O(\log n)$。 錯。
+\end{itemize}
+\end{pastsoln}

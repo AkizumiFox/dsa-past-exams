@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-03}]{臺聯大電機類 110 學年度 第 3 題}
+（問答）
+
+(10\%) Given a non-empty queue Q and a stack T, use pseudo-code to describe an algorithm to reverse the
+order of the elements in Q using T. For both Q and T, you can only use their push and pop operations.
+\end{pastexam}
+
+\begin{pastsoln}
+佇列的 push 是從尾端放入（enqueue）、pop 是從前端取出（dequeue）；堆疊的 push、pop 都在頂端。
+假設 $T$ 一開始是空的。 第一個迴圈順便數出 $Q$ 有幾個元素 $n$，第二個迴圈就照這個次數彈出。
+
+\textbf{想法。} 把 $Q$ 的元素依序全部倒進堆疊，最前面的壓在最底下、最後面的在頂端；再全部彈出放回
+$Q$，先出來的是原本最後面的。 堆疊的後進先出剛好把順序倒過來。
+
+\begin{pseudo}[unbreakable]{用堆疊 $T$ 反轉佇列 $Q$}
+\Procedure{Reverse-Queue}{$Q, T$}
+    \State $n \gets 0$
+    \While{$Q$ 不是空的}
+        \State $x \gets$ \Call{Dequeue}{$Q$}；\Call{Push}{$T, x$}
+        \State $n \gets n + 1$
+    \EndWhile
+    \For{$i \gets 1$ \To $n$}
+        \State $x \gets$ \Call{Pop}{$T$}；\Call{Enqueue}{$Q, x$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性。} 設 $Q$ 原本從前到後是 $q_1, q_2, \ldots, q_n$。 第一個迴圈依序取出 $q_1, \ldots, q_n$
+並 push 進 $T$，結束時 $Q$ 是空的，$T$ 從底到頂是 $q_1, \ldots, q_n$。 第二個迴圈每次彈出頂端：第
+$i$ 次彈出的是 $q_{n-i+1}$，放到 $Q$ 的尾端。 做完 $n$ 次，$Q$ 從前到後是 $q_n, q_{n-1}, \ldots, q_1$，
+$T$ 又是空的。 例如 $Q = \langle 1, 2, 3, 4 \rangle$（$1$ 在前），倒進堆疊後頂端是 $4$，彈回去得
+$\langle 4, 3, 2, 1 \rangle$。
+
+如果真的連「是否為空」都不能問，題目說 $Q$ 不是空的，可以先放一個特殊的標記 $\#$ 進 $Q$ 的尾端，
+再一直取出、遇到 $\#$ 就停（同時數出 $n$），效果一樣。
+
+\textbf{複雜度。} 每個元素 dequeue、push、pop、enqueue 各一次，四種操作都是 $\Theta(1)$，總共
+$\Theta(n)$ 時間；堆疊最多放 $n$ 個，額外空間 $\Theta(n)$。
+\end{pastsoln}

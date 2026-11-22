@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ntut-112-ee-ds-05}]{北科大電機所（戊組）112 學年度 第 5 題}
+（追蹤、問答）
+
+Demonstrate the insertion of the keys into a hash table:
+\begin{center}12, 5, 88, 128, 17, 10, 33, 45, 27, 14, 64, 129.\end{center}
+[Note: Each bucket contains only 1 slot.]\\
+(a)Let the table have 13 buckets, and let the hash function be
+\[ h(k)=k\ mod\ 13 \]
+and collision resolved by linear probing. (6\%)\\
+(b)Describe the difference between collision and overflow. (6\%)
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 線性探測：從 $h(k)$ 開始，被佔了就試下一格 $h(k) + 1, h(k) + 2, \ldots$（$\bmod 13$）（資結書第~12.3~節）。
+
+\begin{center}
+\small
+\begin{tabular}{rrll}
+\toprule
+鍵 $k$ & $h(k)$ & 試過的 bucket & 放在 \\
+\midrule
+12 & 12 & 12 & 12 \\
+5 & 5 & 5 & 5 \\
+88 & 10 & 10 & 10 \\
+128 & 11 & 11 & 11 \\
+17 & 4 & 4 & 4 \\
+10 & 10 & 10, 11, 12, 0 & 0 \\
+33 & 7 & 7 & 7 \\
+45 & 6 & 6 & 6 \\
+27 & 1 & 1 & 1 \\
+14 & 1 & 1, 2 & 2 \\
+64 & 12 & 12, 0, 1, 2, 3 & 3 \\
+129 & 12 & 12, 0, 1, 2, 3, 4, 5, 6, 7, 8 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+算式：$88 = 6 \cdot 13 + 10$，$128 = 9 \cdot 13 + 11$，$64 = 4 \cdot 13 + 12$，$129 = 9 \cdot 13 + 12$，其他直接算。 $10$ 從
+bucket 10 開始，10、11、12 都被佔了，繞回 0。 $129$ 從 12 繞回 0，一路經過 $0$--$7$ 這一大段連續被佔的 bucket，
+到 8 才放下，試了 $10$ 次，這就是主要群聚。
+
+最後的表：
+\begin{center}
+\small
+\begin{tabular}{c|*{13}{c}}
+bucket & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\hline
+鍵 & 10 & 27 & 14 & 64 & 17 & 5 & 45 & 33 & 129 & & 88 & 128 & 12 \\
+\end{tabular}
+\end{center}
+
+\textbf{(b)} 用 bucket 的說法（每個 bucket 有 $s$ 個 slot）：
+\begin{itemize}
+\item \textbf{碰撞}（collision）：兩個不同的鍵 $k_1 \ne k_2$ 算出同一個 bucket，$h(k_1) = h(k_2)$。 碰撞本身不一定有問題：
+bucket 還有空的 slot 時，新的鍵直接放進去就好。
+\item \textbf{溢位}（overflow）：新的鍵算到的 bucket 已經滿了（$s$ 個 slot 都被佔），放不進去，必須用線性探測、鏈結
+等方法另外處理。
+\end{itemize}
+溢位一定伴隨碰撞（bucket 滿了表示已經有鍵算到同一個 bucket），碰撞不一定溢位。 本題每個 bucket 只有 $1$ 個 slot，
+所以每次碰撞都同時是溢位：上表裡 $10$、$14$、$64$、$129$ 都是。 雜湊函數只能減少碰撞，不可能完全避免（鍵的
+範圍比表大）；溢位則由 $s$ 和載入因子決定，$s$ 越大越少溢位。
+\end{pastsoln}

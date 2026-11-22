@@ -75,11 +75,11 @@ def main():
         ap.append(f"\\section*{{{m['school']}{m['dept']} {int(m['year'])} {m.get('year_word', '學年度')}　{m['subject']}}}")
         if m.get('instructions'):
             ap.append('\\begin{paperinfo}原卷說明：' + re.sub(r'(?<!\\)%', r'\\%', m['instructions'].strip()) + '\\end{paperinfo}')
-        ap.append('\\begin{tabular}{llr}\\toprule 題號 & 主題（章） & 頁 \\\\ \\midrule')
+        ap.append('\\begin{longtable}{llr}\\toprule 題號 & 主題（章） & 頁 \\\\ \\midrule\\endhead')
         for q in m['questions']:
             where = '附錄~A' if str(q['chapter']) == 'A' else f"第~{q['chapter']}~章"
             ap.append(f"{q['label']} & {where} & \\pageref{{px:{q['id']}}} \\\\")
-        ap.append('\\bottomrule\\end{tabular}\n')
+        ap.append('\\bottomrule\\end{longtable}\n')
     open(os.path.join(gen, f'vol{vol}-papers.tex'), 'w').write('\n'.join(ap) + '\n')
     n = sum(len(m['questions']) for m in papers)
     print(f'vol{vol}: {len(papers)} papers, {n} questions, chapters {sorted(bych, key=str)}')

@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-17}]{臺大電機所 109 學年度（B）第 17 題}
+（單選；每題 4 分，答錯不倒扣）
+
+In this exam: The order of a node in a tree is defined as the number of its children. The order of
+a tree is defined as the maximum order among its nodes.
+
+What is the size of the smallest Fibonacci heap of order 6?
+
+(A)~8 \qquad (B)~16 \qquad (C)~21 \qquad (D)~32 \qquad (E)~64
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) 21。
+
+題目問：堆積裡有一個節點有 $6$ 個子節點，整個堆積最少有幾個節點。 令 $s_k$ 是費氏堆積裡「有 $k$
+個子節點的節點」，它的子樹最少的節點數。
+
+\textbf{下界}。 把 $x$ 的子節點依被連結到 $x$ 的先後排成 $y_1, y_2, \ldots, y_k$。 $y_i$ 被連結上來時，
+$x$ 已經有 $y_1, \ldots, y_{i-1}$，至少 $i - 1$ 個子節點；連結只發生在兩個節點階數相同時，所以那時
+$y_i$ 也至少有 $i - 1$ 個子節點。 之後 $y_i$ 最多再失去一個子節點（失去第二個就會被連鎖剪下），所以
+現在 $y_i$ 至少有 $i - 2$ 個子節點（$i \ge 2$）。 因此
+\[
+s_k \ge 1 + 1 + \sum_{i=2}^{k} s_{i-2} \quad (k \ge 1), \qquad s_0 = 1,
+\]
+第一個 $1$ 是 $x$ 自己，第二個是 $y_1$（至少它自己）。 算出 $s_0 = 1$、$s_1 = 2$、$s_2 = 3$、
+$s_3 = 5$、$s_4 = 8$、$s_5 = 13$、$s_6 = 21$，就是費氏數 $F_{k+2}$（資結書第~8.6~節：$k$ 階節點的
+子樹至少 $F_{k+2}$ 個節點）。 所以 order 6 的費氏堆積至少 $21$ 個節點。
+
+\textbf{下界達得到}。 先插入 $65$ 個鍵再做一次 extract-min，整理後剩一棵二項樹 $B_6$（$64$ 個節點，
+根的子節點是 $B_0, B_1, \ldots, B_5$）。 接著對 $B_6$ 裡\textbf{每一個不是根、而且有子節點的節點}，
+用 decrease-key 剪掉它最大的那個子節點（剪下來的整棵子樹之後刪掉）。 每個節點只失去一個子節點，
+只會被標記，不會引起連鎖剪下；根沒有失去子節點，仍然是 6 階。 一棵 $B_j$（$j \ge 1$）照這樣處理後
+剩下的節點數 $f(j) = 1 + f(0) + f(1) + \cdots + f(j-2)$，$f(0) = 1$，得 $f = 1, 1, 2, 3, 5, 8$
+（$j = 0, \ldots, 5$）。 整棵樹剩 $1 + (1 + 1 + 2 + 3 + 5 + 8) = 21$ 個節點，根有 $6$ 個子節點。 所以
+最小值就是 $21$。
+
+(A) 8 是 $s_4$；(B) 16、(D) 32、(E) 64 是二項樹 $B_4$、$B_5$、$B_6$ 的大小，費氏堆積的樹可以比二項樹
+稀疏。
+\end{pastsoln}

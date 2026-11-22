@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-03}]{臺大電機所 109 學年度（B）第 3 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a binary heap of size n, the worst case time complexity of one delete-min operation is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) O(log n)。
+
+delete-min 把根拿掉，最後一個元素搬到根，再往下沉（資結書第~8.1~節）。 $n$ 個節點的完整二元樹
+高度是 $\lfloor \lg n \rfloor$，下沉每一層比較兩次、交換一次，最多走 $\lfloor \lg n \rfloor$ 層，
+所以是 $O(\log n)$。 這個界在最壞情況是緊的：搬到根的是原本最後一個葉節點，它可能比所有節點都
+大（例如堆積是 $1, 2, \ldots, n$ 依層序排好），會一路沉到最底層，走滿 $\lfloor \lg(n-1) \rfloor$ 層。
+
+(A)、(B) 太小，上面的例子就超過；(D)、(E) 是上界但不緊。
+\end{pastsoln}

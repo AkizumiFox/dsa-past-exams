@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-08}]{臺大電機所 112 學年度 第 8 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+A \textit{stable set}, or \textit{independent set}, of a \textit{graph}, is a subset of vertices with the property that no two vertices in the stable set are adjacent. The \textit{stability number} \texttt{$\alpha$(G)} of a \textit{graph} \texttt{G} is the cardinality of the largest \textit{stable set}. For the classic \textit{coloring problem} where the colors of any pair of the adjacent vertices must be distinct, we can solve it by partitioning the \textit{graph} into \textit{stable sets}. Therefore, the \textit{Chromatic number} \texttt{$\chi$(G)} of a graph \texttt{G}, that is, the minimum number of colors needed to color the \textit{graph}, must be smaller than or equal to the \textit{stability number} \texttt{$\alpha$(G)} of the \textit{graph}.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+前半段對：一種合法著色裡，同一個顏色的頂點彼此不相鄰，是一個穩定集合，所以著色就是把頂點分成幾個穩定
+集合（資結書第~20.1.4~節的圖著色、第~28.3.2~節的獨立集）。 但結論「$\chi(G) \le \alpha(G)$」推不出來，
+也不成立。
+
+反例：完全圖 $K_n$（$n \ge 2$）。 任兩個頂點都相鄰，最大的穩定集合只有一個頂點，$\alpha(K_n) = 1$；每個頂點
+都要不同的顏色，$\chi(K_n) = n$。 $n > 1$，所以 $\chi > \alpha$。
+
+從「分成穩定集合」真正推得出的是另一個方向的關係：$\chi(G)$ 個顏色類，每一類最多 $\alpha(G)$ 個頂點，蓋住
+全部 $n$ 個頂點，所以
+\[
+\chi(G) \cdot \alpha(G) \ge n, \qquad \chi(G) \ge \frac{n}{\alpha(G)} .
+\]
+這是 $\chi$ 的下界，不是 $\chi \le \alpha$。 反過來 $\chi \le \alpha$ 也有成立的圖（例如沒有邊的圖，
+$\chi = 1 \le \alpha = n$），但題目說「must」，一個反例就夠了。
+\end{pastsoln}

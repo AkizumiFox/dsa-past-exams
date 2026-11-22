@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-25}]{臺大電信所 110 學年度（B）第 25 題}
+（單選；每題 2 分，答錯不倒扣）
+
+(22-25) Consider the following six items with their weights and values. Suppose you have a knapsack with a maximum weight capacity of 10. Please answer the following questions.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Item} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6}\\ \hline
+\textbf{Weight} ($w$) & 2 & 1 & 4 & 5 & 2 & 10\\ \hline
+\textbf{Value} ($v$) & 10 & 6 & 28 & 50 & 10 & 80\\ \hline
+\end{tabular}
+\end{center}
+
+The recurrence relation in the previous problem solves the \textit{0-1 knapsack problem} in a dynamic programming manner by filling the table of $V[i][j]$. Which of the following statements is correct about the running time of this algorithm?
+\begin{enumerate}[label=\Alph*.]
+\item It is a linear-time algorithm.
+\item It is a polynomial-time algorithm, but not a linear-time algorithm.
+\item It is an exponential-time algorithm, but not a polynomial-time algorithm.
+\item Nobody knows yet whether or not it is a polynomial-time algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+題目說的 previous problem 是第~23~題的遞迴式。 表有 $(n + 1)(W + 1)$ 格，每格 $O(1)$，時間 $\Theta(nW)$，
+$n$ 是物品數、$W$ 是容量。
+
+「多項式時間」是相對於\textbf{輸入的長度}（位元數）來說的（資結書第~18.5.5~節）。 容量 $W$ 在輸入裡只
+占 $\lceil\lg(W + 1)\rceil$ 個位元，令 $b = \lg W$，則 $W = 2^b$，$\Theta(nW) = \Theta(n \cdot 2^b)$，
+對輸入長度是指數函數。 例如把 $W$ 從 $10$ 位數改成 $20$ 位數，輸入只長了 $10$ 個字元，表格卻大了
+$10^{10}$ 倍。 這種「對數值是多項式、對位元數是指數」的演算法叫\textbf{擬多項式時間}（pseudo-polynomial）。
+
+逐項：
+\begin{itemize}
+\item A、B 錯：只有把 $W$ 當成「大小」時 $nW$ 看起來像多項式，但它不是輸入長度的多項式。
+\item C 對：對輸入長度是指數時間，而且在最壞情況（$W$ 很大）確實需要這麼多格，不是多項式時間。
+\item D 錯：不知道的是「0/1 背包問題有沒有多項式時間演算法」（它是 NP 完備，等同 P 對 NP），但
+\textbf{這個}演算法的時間 $\Theta(nW)$ 是已知的，它不是多項式時間。
+\end{itemize}
+\end{pastsoln}

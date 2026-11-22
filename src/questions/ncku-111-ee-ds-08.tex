@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-08}]{成大電機所 111 學年度 單選題第 8 題}
+（單選；每題 4 分）
+
+The situation when in a linked list START=NULL is
+
+A.~underflow \qquad B.~overflow \qquad C.~saturated \qquad D.~None of above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+這題的用語和 Lipschutz 的教科書相同：\texttt{START} 是串列第一個節點的指標，\texttt{START = NULL} 表示串列是空的。
+空串列時還要刪除節點，沒有東西可以刪，這種狀況叫 \textbf{underflow}（下溢）；反過來，要新增節點但可用空間串列已經
+沒有節點（\texttt{AVAIL = NULL}），叫 \textbf{overflow}（上溢），資結書第~5.4~節的 \proc{Get-Node} 就是在這時報錯。
+\begin{itemize}
+\item A.~underflow：對（嚴格說是「串列為空時再刪除」才發生 underflow，題目指的就是這個狀況）。
+\item B.~overflow：是沒有空間可以新增時。 錯。
+\item C.~saturated（飽和）：不是串列的術語。 錯。
+\item D.~A 就是。 錯。
+\end{itemize}
+\end{pastsoln}

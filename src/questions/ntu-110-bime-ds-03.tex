@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-110-bime-ds-03}]{臺大生機所 110 學年度 第 3 題}
+（問答；20 分）
+
+(20\%) Write a pseudocode function that can re-construct a \textbf{binary tree} by using its preorder
+and inorder traversals. Please return the root of the binary tree as the output.\\
+Note: A node in a \textbf{binary tree} has two pointers, named `left' and `right', respectively, where
+the `left' pointer is used to find the left child of the node and the `right' pointer is used to find
+the right child.
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒說節點的鍵會不會重複。 鍵有重複時，前序加中序不一定能決定唯一的樹（例如三個鍵都是 $a$），
+所以這裡假設 $n$ 個鍵兩兩不同，這也是資結書定理~7.4（前序加中序決定唯一的二元樹）的前提。
+輸入是陣列 $\mathit{pre}[1..n]$、$\mathit{in}[1..n]$。
+
+\textbf{想法}（資結書第~7.4~節）。 前序的第一個是根 $r$。 在中序裡找到 $r$ 的位置 $k$：
+$r$ 左邊的都在左子樹，右邊的都在右子樹。 左子樹有 $\ell = k - (\text{中序起點})$ 個節點，
+所以前序裡緊接在根後面的 $\ell$ 個是左子樹的前序，再後面的是右子樹的前序。 兩邊各自遞迴。
+
+為了不必每次在中序裡從頭找根，先建一張表 $\mathit{pos}$，$\mathit{pos}[\mathit{in}[j]] = j$
+（鍵是小整數時用陣列，否則用雜湊表）。
+
+\begin{pseudo}{由前序和中序重建二元樹}
+\Function{Rebuild}{$\mathit{pre}, \mathit{in}, n$}
+    \For{$j \gets 1$ \To $n$}
+        \State $\mathit{pos}[\mathit{in}[j]] \gets j$
+    \EndFor
+    \State \Return \Call{Build}{$1, 1, n$}
+\EndFunction
+\Statex
+\Function{Build}{$i, j, m$} \Comment{$\mathit{pre}[i..i{+}m{-}1]$ 和 $\mathit{in}[j..j{+}m{-}1]$ 是同一棵子樹}
+    \If{$m = 0$}
+        \State \Return \NIL
+    \EndIf
+    \State 配置新節點 $x$，$x.\mathit{key} \gets \mathit{pre}[i]$
+    \State $k \gets \mathit{pos}[\mathit{pre}[i]]$ \Comment{根在中序的位置}
+    \State $\ell \gets k - j$ \Comment{左子樹的節點數}
+    \State $x.\mathit{left} \gets$ \Call{Build}{$i + 1, j, \ell$}
+    \State $x.\mathit{right} \gets$ \Call{Build}{$i + 1 + \ell, k + 1, m - 1 - \ell$}
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 對 $m$ 做歸納，證明「若 $\mathit{pre}[i..i{+}m{-}1]$ 和
+$\mathit{in}[j..j{+}m{-}1]$ 是同一棵樹 $T$ 的前序和中序，\textsc{Build}$(i, j, m)$ 傳回的就是 $T$」。
+$m = 0$ 時 $T$ 是空樹，傳回 \NIL，對。 $m \ge 1$ 時，前序先訪問根，所以 $T$ 的根是 $\mathit{pre}[i]$；
+中序是「左子樹、根、右子樹」，鍵兩兩不同，根在中序裡只出現在位置 $k$，於是
+$\mathit{in}[j..k{-}1]$ 是左子樹 $T_L$ 的中序，共 $\ell = k - j$ 個，$\mathit{in}[k{+}1..j{+}m{-}1]$
+是右子樹 $T_R$ 的中序，共 $m - 1 - \ell$ 個。 前序是「根、左子樹、右子樹」，所以
+$\mathit{pre}[i{+}1..i{+}\ell]$ 是 $T_L$ 的前序，$\mathit{pre}[i{+}1{+}\ell..i{+}m{-}1]$ 是 $T_R$ 的前序。
+兩次遞迴的 $m$ 都比原來小，由歸納假設分別建出 $T_L$、$T_R$，接在 $x$ 下面就是 $T$。
+
+\textbf{複雜度}。 建 $\mathit{pos}$ 花 $\Theta(n)$。 每次呼叫 \textsc{Build} 且 $m \ge 1$ 時建一個節點，
+共 $n$ 次；$m = 0$ 的呼叫最多 $n + 1$ 次（每個 \NIL 子指標一次）。 每次呼叫本身 $\Theta(1)$，
+所以總時間 $\Theta(n)$。 空間：樹本身 $\Theta(n)$，加上遞迴深度等於樹高 $h$，最壞（歪斜的樹）
+$\Theta(n)$。 如果不建 $\mathit{pos}$、每次在中序裡從頭掃描找根，最壞（例如每個節點都只有左子節點）
+要 $\Theta(n^2)$。
+
+\textbf{小例子}。 前序 $A\,B\,D\,E\,C\,F$、中序 $D\,B\,E\,A\,F\,C$：根 $A$ 在中序第 4 位，左子樹
+中序 $DBE$（3 個）、前序 $BDE$；右子樹中序 $FC$、前序 $CF$。 再往下：$B$ 的左、右是 $D$、$E$；
+$C$ 的左子節點是 $F$。
+\end{pastsoln}

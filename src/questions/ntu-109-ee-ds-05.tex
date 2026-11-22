@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-05}]{臺大電機所 109 學年度（B）第 5 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of n consecutive insert operations is
+
+(A)~O(n) \qquad (B)~O(n log*n) \qquad (C)~O(n log n) \qquad (D)~O(n$^2$) \qquad (E)~O(n$^2$ log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) O(n)。
+
+二項堆積的樹對應 $n$ 的二進位表示：第 $k$ 位是 $1$，就有一棵 $B_k$（資結書第~8.5~節）。 插入一個
+元素等於把一棵 $B_0$ 併進去，像二進位加 $1$：最低位是 $1$ 就把兩棵 $B_0$ 連結成 $B_1$（進位），
+再看 $B_1$ 有沒有重複，……。 每次連結是 $O(1)$（比較兩個根，把大的接到小的底下），所以一次插入
+的成本是 $O(1 + \text{連結次數})$。
+
+\textbf{總共的連結次數}。 每連結一次，樹的棵數少 $1$；每插入一次，棵數多 $1$。 開始時有 $n$ 個元素，
+樹的棵數 $t_0$ 是 $n$ 的二進位裡 $1$ 的個數，$t_0 \le \lfloor \lg n \rfloor + 1$。 插入 $n$ 次之後棵數
+$t_{\text{end}} \ge 1$，所以
+\[
+\text{連結次數} = t_0 + n - t_{\text{end}} \le n + \lfloor \lg n \rfloor.
+\]
+$n$ 次插入的總時間是 $O(n) + O(n + \lg n) = O(n)$。 這就是資結書第~3.1.2~節二進位計數器的聚合分析：
+單次插入可能很貴（見第 6 題（歷屆試題~\ref{px:ntu-109-ee-ds-06}）），但連續很多次平均下來每次 $O(1)$。 至少要 $\Omega(n)$（每次插入都要
+建一個節點），所以最緊的界是 $O(n)$。
+
+(B)、(C)、(D)、(E) 都是正確的上界，但不是最緊的。 常見的錯是拿第 6 題（歷屆試題~\ref{px:ntu-109-ee-ds-06}）的單次最壞 $O(\log n)$ 乘以
+$n$，得到 (C)；那會高估，因為貴的插入（很多次進位）不會連續發生，一次進位很多次之後低位全變成
+$0$，接下來幾次插入都很便宜。
+\end{pastsoln}

@@ -1,0 +1,120 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-34}]{臺大電信所 108 學年度（B）第四大題第 1 題}
+（簡答；10 分）
+
+(a) (3\%) What is the maximum $s-t$ flow in the graph below?
+
+\begin{center}
+\begin{tikzpicture}[x=1.1cm,y=1.1cm,v/.style={circle,draw,inner sep=0pt,minimum size=4.5mm},
+  a/.style={-{Latex[length=2.4mm]}}]
+\node[v] (s) at (0,0) {}; \node[v] (a) at (2.6,0) {}; \node[v] (t) at (5.2,0) {};
+\node[v] (c) at (1.3,-2.2) {}; \node[v] (d) at (3.9,-2.2) {};
+\node[left=1mm] at (s.west) {$s$}; \node[right=1mm] at (t.east) {$t$};
+\draw[a] (s) -- node[above] {3} (a);
+\draw[a] (a) -- node[above] {7} (t);
+\draw[a] (s) -- node[left=1mm] {6} (c);
+\draw[a] (a) -- node[left=1mm,pos=0.4] {2} (c);
+\draw[a] (d) -- node[right=1mm,pos=0.6] {1} (a);
+\draw[a] (d) -- node[right=1mm] {3} (t);
+\draw[a] (c) -- node[below] {6} (d);
+\end{tikzpicture}
+\end{center}
+
+(b) (3\%) Draw a line that slices the graph into two pieces along the minimum $s-t$ cut.
+
+(c) (4\%) Draw the residual graph that results after running the Ford-Fulkerson algorithm to
+completion on the above graph. Label the edges with their residual capacities.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $7$；(b) 割線把 $\{s, c, d\}$ 和 $\{a, t\}$ 分開，容量 $3 + 1 + 3 = 7$；(c) 見下圖。
+
+原圖中間的三個點沒有名字，下面把上排中間的點叫 $a$，下排左、右兩個點叫 $c$、$d$。 邊是
+$s \to a$（3）、$a \to t$（7）、$s \to c$（6）、$a \to c$（2）、$d \to a$（1）、$d \to t$（3）、
+$c \to d$（6）。
+
+\textbf{(a)} 用 Ford--Fulkerson，增廣路徑照 BFS 找（Edmonds--Karp，資結書第~26.4~節），每次取邊數
+最少的那條：
+\begin{center}
+\begin{tabular}{clcc}
+\toprule
+第幾次 & 增廣路徑 & 瓶頸 & 累計流量 \\
+\midrule
+1 & $s \to a \to t$ & $\min(3, 7) = 3$ & 3 \\
+2 & $s \to c \to d \to t$ & $\min(6, 6, 3) = 3$ & 6 \\
+3 & $s \to c \to d \to a \to t$ & $\min(3, 3, 1, 4) = 1$ & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 3 次時 $s \to c$、$c \to d$ 各剩 $3$，$a \to t$ 剩 $4$。 之後從 $s$ 出發，$s \to a$ 已滿，只能到 $c$；
+$c$ 只能到 $d$（剩 $2$）；$d$ 的兩條出邊 $d \to a$、$d \to t$ 都滿了，還可以沿反向邊回到 $c$，但到不了
+$a$、$t$。 沒有增廣路徑，演算法停止，最大流 $7$。 各邊的流量：$s \to a$ 3、$a \to t$ 4、
+$s \to c$ 4、$a \to c$ 0、$c \to d$ 4、$d \to a$ 1、$d \to t$ 3。 每個中間點流入等於流出（$a$：
+$3 + 1 = 4$；$c$：$4 = 4$；$d$：$4 = 1 + 3$）。
+
+\textbf{(b)} 最後一次找不到路徑時，從 $s$ 走得到的點是 $S = \{s, c, d\}$，其餘 $T = \{a, t\}$。 由 $S$
+到 $T$ 的邊是 $s \to a$（3）、$d \to a$（1）、$d \to t$（3），容量和 $7$，等於流量，所以這是最小割，
+$7$ 也確實是最大流（資結書定理~26.6）。 $a \to c$ 是從 $T$ 指回 $S$ 的邊，不算進割的容量。 把 $s$ 所在的
+點集合 $S$ 的 $8$ 種可能都算一遍，容量分別是 $9, 15, 9, 13, 13, 18, 7, 10$，只有 $\{s, c, d\}$ 是
+$7$，最小割是唯一的。 割線（虛線）：
+\begin{center}
+\begin{tikzpicture}[x=1.1cm,y=1.1cm,v/.style={circle,draw,inner sep=0pt,minimum size=4.5mm},
+  a/.style={-{Latex[length=2.4mm]}}]
+\node[v] (s) at (0,0) {}; \node[v] (a) at (2.6,0) {}; \node[v] (t) at (5.2,0) {};
+\node[v] (c) at (1.3,-2.2) {}; \node[v] (d) at (3.9,-2.2) {};
+\node[left=1mm] at (s.west) {$s$}; \node[right=1mm] at (t.east) {$t$};
+\node[above=1mm] at (a.north) {$a$}; \node[below=1mm] at (c.south) {$c$};
+\node[below=1mm] at (d.south) {$d$};
+\draw[a] (s) -- node[above] {3} (a);
+\draw[a] (a) -- node[above] {7} (t);
+\draw[a] (s) -- node[left=1mm] {6} (c);
+\draw[a] (a) -- node[left=1mm,pos=0.4] {2} (c);
+\draw[a] (d) -- node[right=1mm,pos=0.6] {1} (a);
+\draw[a] (d) -- node[right=1mm] {3} (t);
+\draw[a] (c) -- node[below] {6} (d);
+\draw[thick,dashed] (1.75,0.8) .. controls (1.6,-0.5) .. (2.6,-1.3) .. controls (3.6,-1.75) and (5.0,-1.5) .. (6.0,-0.9);
+\node[font=\small] at (1.15,-1.25) {$S$}; \node[font=\small] at (4.4,0.7) {$T$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{(c)} 剩餘圖（資結書第~26.2~節）：每條邊 $(u, v)$ 有正向的剩餘容量 $c(u, v) - f(u, v)$ 和反向的
+$f(u, v)$，只畫大於 $0$ 的。
+\begin{center}
+\small
+\begin{tabular}{lcl}
+\toprule
+原來的邊 & 流量／容量 & 剩餘圖裡的邊 \\
+\midrule
+$s \to a$ & 3/3 & $a \to s$：3 \\
+$a \to t$ & 4/7 & $a \to t$：3，$t \to a$：4 \\
+$s \to c$ & 4/6 & $s \to c$：2，$c \to s$：4 \\
+$a \to c$ & 0/2 & $a \to c$：2 \\
+$c \to d$ & 4/6 & $c \to d$：2，$d \to c$：4 \\
+$d \to a$ & 1/1 & $a \to d$：1 \\
+$d \to t$ & 3/3 & $t \to d$：3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[x=1.3cm,y=1.3cm,v/.style={circle,draw,inner sep=0pt,minimum size=5.5mm,font=\small},
+  a/.style={-{Latex[length=2.2mm]}},w/.style={font=\small,inner sep=1.5pt}]
+\node[v] (s) at (0,0) {$s$}; \node[v] (a) at (2.6,0) {$a$}; \node[v] (t) at (5.2,0) {$t$};
+\node[v] (c) at (1.3,-2.2) {$c$}; \node[v] (d) at (3.9,-2.2) {$d$};
+\draw[a] (a) -- node[w,above] {3} (s);
+\draw[a] (a) to[bend left=18] node[w,above] {3} (t);
+\draw[a] (t) to[bend left=18] node[w,below] {4} (a);
+\draw[a] (s) to[bend left=18] node[w,right] {2} (c);
+\draw[a] (c) to[bend left=18] node[w,left] {4} (s);
+\draw[a] (a) -- node[w,right,pos=0.55] {2} (c);
+\draw[a] (c) to[bend left=18] node[w,above] {2} (d);
+\draw[a] (d) to[bend left=18] node[w,below] {4} (c);
+\draw[a] (a) -- node[w,left,pos=0.55] {1} (d);
+\draw[a] (t) -- node[w,right] {3} (d);
+\end{tikzpicture}
+\end{center}
+從 $s$ 出發只走得到 $c$、$d$，和 (b) 的 $S$ 一致。
+
+注意：最大流不只一個。 流量限制是 $s \to a$、$d \to a$、$d \to t$ 一定滿，$c \to d$ 一定是 $4$，而
+$a \to c$ 可以是 $x = 0, 1, 2$（此時 $s \to c$ 和 $a \to t$ 都是 $4 - x$）。 Ford--Fulkerson 選路徑的
+順序不同（例如先走 $s \to a \to c \to d \to t$），最後的流和剩餘圖就可能不同；上圖是照上面那個順序
+（$x = 0$）得到的。 不管哪一種，從 $s$ 走得到的點都是 $\{s, c, d\}$。
+\end{pastsoln}

@@ -1,0 +1,94 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-03}]{臺聯大電機類 106 學年度 第三題}
+（問答）
+
+(10\%) A bounded buffer is implemented as a circular queue. The algorithms for add and delete on the
+queue are shown as follows:
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+/* Add to a circular queue */
+void add (element item)
+{ if (front == (rear+1) % N)
+      queueFull();
+  queue[rear] = item;
+  rear = (rear +1) % N;
+}
+/* Delete from a circular queue */
+element delete()
+{ element item;
+  if (front == rear)
+     queueEmpty();
+  return queue[front];
+  front = (front+1) % N;
+}
+\end{minted}
+\begin{enumerate}
+\item[(一)] (3\%) What is the capacity (maximum number of items) of the queue?
+\item[(二)] (7\%) Modify both the algorithms such that the capacity of the queue is \texttt{N}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+先說原程式兩個和題意無關的小問題，下面的改寫一併修正：
+\begin{itemize}
+\item \texttt{delete} 先 \texttt{return queue[front];}，下一行 \texttt{front = (front+1) \% N;}
+永遠執行不到，\texttt{front} 不會前進，同一個元素會一直被取出。 應該先存進 \texttt{item}、移動
+\texttt{front}，最後才 \texttt{return item;}（宣告了 \texttt{item} 卻沒用，看得出原意是這樣）。
+\item \texttt{queueFull()}、\texttt{queueEmpty()} 之後程式還會往下做。 若這兩個函式只是印出錯誤
+訊息，滿的時候會蓋掉資料、空的時候會讀到垃圾。 下面假設它們處理完錯誤後就 \texttt{return}。
+\end{itemize}
+這兩點不影響 (一) 的答案，(一) 照「\texttt{front} 有正常前進」的原意回答。
+
+\textbf{(一)} 容量是 $N - 1$。
+
+這裡 \texttt{front} 是前端元素的位置，\texttt{rear} 是下一個要放的位置，佇列的元素是
+\texttt{queue[front]}、\texttt{queue[front+1]}…一直到 \texttt{queue[rear-1]}（索引對 $N$ 取
+餘數）。 空的條件是 \texttt{front == rear}；\texttt{add} 在 \texttt{(rear+1) \% N == front} 時就
+判定滿了，也就是 \texttt{rear} 再往後一格會撞到 \texttt{front} 時就不准再放。 這時佇列裡的個數是
+$(\mathit{rear} - \mathit{front} + N) \bmod N = N - 1$，永遠有一格空著。
+
+為什麼要留一格：只用 \texttt{front}、\texttt{rear} 兩個索引，固定 \texttt{front} 時 \texttt{rear}
+只有 $N$ 種值，佇列的個數卻有 $0, 1, \ldots, N$ 共 $N + 1$ 種，分不出全空和全滿（都會是
+\texttt{front == rear}）。 所以犧牲一格，讓「滿」變成 $N - 1$ 個（資結書第~6.2.2~節）。
+
+例：$N = 4$，從空的開始加入 $a, b, c$ 後 $\mathit{front} = 0$、$\mathit{rear} = 3$，再加入時
+$(3 + 1) \bmod 4 = 0 = \mathit{front}$，判定滿，只放得下 $3 = N - 1$ 個。
+
+\textbf{(二)} 多用一個變數 \texttt{count} 記目前的個數（一開始 \texttt{front = rear = count = 0}）。
+空是 \texttt{count == 0}，滿是 \texttt{count == N}，$N$ 格都能用。
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+int front = 0, rear = 0, count = 0;
+
+/* Add to a circular queue */
+void add (element item)
+{ if (count == N) {
+      queueFull();
+      return;
+  }
+  queue[rear] = item;
+  rear = (rear + 1) % N;
+  count++;
+}
+/* Delete from a circular queue */
+element delete()
+{ element item;
+  if (count == 0) {
+      queueEmpty();
+      return ERROR_ELEMENT;   /* 自訂的錯誤值 */
+  }
+  item = queue[front];
+  front = (front + 1) % N;
+  count--;
+  return item;
+}
+\end{minted}
+
+\textbf{正確性}。 \texttt{count} 在每次成功的 \texttt{add} 加一、成功的 \texttt{delete} 減一，所以
+一直等於佇列裡的個數；元素仍然放在 \texttt{queue[front]} 到 \texttt{queue[(front+count-1) \% N]}，
+\texttt{rear} 恆等於 \texttt{(front+count) \% N}。 只在 \texttt{count == N} 時拒絕加入，所以
+$N$ 格全部可用，容量是 $N$。 \texttt{front == rear} 現在可能是空也可能是滿，改由 \texttt{count}
+分辨。 兩個函式仍然是 $O(1)$。
+
+另一種做法是多記一個旗標 \texttt{tag}：\texttt{add} 後設成 $1$、\texttt{delete} 後設成 $0$；
+\texttt{front == rear} 時 \texttt{tag == 1} 表示滿、\texttt{tag == 0} 表示空。 \texttt{add} 的
+滿的條件改成 \texttt{front == rear \&\& tag == 1}，\texttt{delete} 的空的條件改成
+\texttt{front == rear \&\& tag == 0}，容量一樣是 $N$。
+\end{pastsoln}

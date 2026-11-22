@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-07}]{臺大電機所 108 學年度（B）第 7 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+Using \textit{quatratic probing} to resolve hash collision, we add $i^2$ to the address upon the
+$i$-th collision.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，對。 （「quatratic」是原卷的拼字錯誤，應為 quadratic。）
+
+二次探測的探測序列是
+\[
+h(k, i) = (h(k) + i^2) \bmod m, \qquad i = 0, 1, 2, \ldots
+\]
+（資結書第~12.3~節）。 第 $0$ 次試 $h(k)$ 本身；如果那格被占了，就是第 $1$ 次碰撞，改試
+$h(k) + 1^2$；再被占是第 $2$ 次碰撞，試 $h(k) + 2^2$；第 $i$ 次碰撞之後試
+$h(k) + i^2$（都要 $\bmod m$）。 題目說的「address」指原本的雜湊位址 $h(k)$，敘述正確。
+
+要注意：$i^2$ 是加在\textbf{原本的位址} $h(k)$ 上，不是加在上一次試的位址上。 如果每次都在
+上一個位址上加 $i^2$，偏移量會變成 $1, 1 + 4, 1 + 4 + 9, \ldots$，那就不是二次探測了。 例如
+$h(k) = 3$、$m = 11$：正確的序列是 $3, 4, 7, 12 \bmod 11 = 1, 19 \bmod 11 = 8, \ldots$。
+\end{pastsoln}

@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-04}]{臺大電機所 109 學年度（B）第 4 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+The worst case time complexity of one union operation upon two binary heaps of total size n is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) O(n)。
+
+二元堆積存在陣列裡，形狀固定是完整二元樹，兩個堆積沒辦法像左傾樹或二項堆積那樣只改幾個指標就
+接起來（資結書第~8.5~節）。 合併的做法是把兩個陣列接成一個長度 $n$ 的陣列，再用由下而上的建堆積
+重建一次，$O(n)$（分析見歷屆試題~\ref{px:ntu-109-ee-ds-02}）。
+
+下界：結果要放在同一個陣列裡，至少得把其中一個堆積的元素全部搬進另一個陣列。 兩個堆積各有
+$n/2$ 個元素時，光搬動就是 $\Omega(n)$。 所以最緊的界是 $O(n)$。
+
+另一種做法是把小的那個堆積的元素一個一個插入大的，最壞是 $\Theta(n \log n)$，比重建慢。
+(A) O(1) 是費氏堆積（平攤）的合併時間，(C) O(log n) 是左傾樹和二項堆積的合併時間，都要靠指標結構，
+二元堆積做不到；(B) 比 (C) 還小，同樣做不到；(E) 是上界但不緊。
+\end{pastsoln}

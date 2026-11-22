@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-12}]{臺大電信所 109 學年度（B）第 12 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binary heap of size n, the worst case time complexity of one find-min operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+最小堆積的性質是每個節點都不大於它的子節點，所以最小值一定在根，也就是陣列第一格
+（資結書第~8.1~節）。 find-min 只讀這一格，不改動任何東西，$O(1)$。 其他選項都是對的上界，
+但不是最緊的。
+
+注意 find-min 和 delete-min 不同：delete-min 要把最後一個元素搬到根再往下換，是
+$O(\log n)$。
+\end{pastsoln}

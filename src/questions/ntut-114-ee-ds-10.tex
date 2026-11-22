@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-10}]{北科大電機所（戊組） 114 學年度 第 III-2 題}
+（讀程式；5 分）
+
+What does the following function do for a given Linked List with the first node as head? \textbf{(5\%)}
+\begin{minted}[fontsize=\small]{c}
+void fun1(struct node* head){
+  if(head == NULL || head->next == NULL)
+    return;
+  struct node* temp = head->next;
+  head->next = temp->next;
+  free(temp);
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答：刪除串列的\textbf{第二個節點}；串列是空的或只有一個節點時，什麼都不做。
+
+逐行看：
+\begin{itemize}
+\item 第 2、3 行：\texttt{head} 是 \texttt{NULL}（空串列）或 \texttt{head->next} 是 \texttt{NULL}（只有一個節點）時，
+沒有第二個節點可刪，直接返回。 \texttt{||} 是短路求值，\texttt{head} 為 \texttt{NULL} 時不會去讀
+\texttt{head->next}。
+\item 第 4 行：\texttt{temp} 指向第二個節點。
+\item 第 5 行：第一個節點改指向第三個節點（沒有第三個時是 \texttt{NULL}），第二個節點就脫離了串列。
+這就是資結書虛擬碼~5.3「拿掉 $p$ 後面的節點」，$p$ 是第一個節點。
+\item 第 6 行：釋放第二個節點的記憶體，避免記憶體洩漏。
+\end{itemize}
+例：$1 \to 2 \to 3 \to 4$ 執行後是 $1 \to 3 \to 4$。 時間 $O(1)$。 第一個節點沒有變，所以函式不需要回傳新的
+\texttt{head}。
+\end{pastsoln}

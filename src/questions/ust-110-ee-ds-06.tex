@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-06}]{臺聯大電機類 110 學年度 第 6 題}
+（問答）
+
+(10\%) Briefly describe ``binary search'' and ``searching on a binary search tree'', and make a
+comparison between them in terms of data structure constraints and time complexity.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{二分搜尋}（binary search，資結書第~17.1~節）：資料放在\textbf{已經排好序的陣列} $A[1..n]$。
+每次和目前範圍中間的 $A[m]$ 比：相等就找到；要找的鍵比較小就只留左半，比較大就只留右半。 範圍每次
+減半，最多比 $\lfloor \lg n \rfloor + 1$ 次。
+
+\textbf{二元搜尋樹上的搜尋}（資結書第~9.1~節）：二元搜尋樹的每個節點，左子樹的鍵都比它小、右子樹的
+鍵都比它大。 從根出發，和目前節點比：相等就找到；比較小往左子節點走，比較大往右子節點走，走到 \NIL
+就是不存在。 比較次數最多是樹高 $h$。
+
+兩者的想法一樣：每比一次就丟掉一邊。 差別在資料怎麼存：
+\begin{center}
+\begin{tabular}{p{0.2\linewidth}p{0.34\linewidth}p{0.34\linewidth}}
+\toprule
+& 二分搜尋 & 二元搜尋樹 \\
+\midrule
+資料結構的限制 & 必須是排好序的陣列：要能用索引在 $O(1)$ 取到中間那個（串列不行） & 必須滿足二元搜尋樹性質；用指標串起來，不需要連續空間 \\
+搜尋時間 & 最壞 $\Theta(\lg n)$，一定成立 & $\Theta(h)$：平衡時 $\Theta(\lg n)$，最壞（依序插入排好的鍵，樹退化成鏈）$\Theta(n)$ \\
+插入、刪除 & 要搬動後面的元素保持排序，$\Theta(n)$ & $\Theta(h)$，只改指標 \\
+空間 & 只要 $n$ 格 & 每個節點多兩個指標 \\
+適合 & 資料固定、只查不改 & 資料常常插入刪除 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+結論：資料不變時二分搜尋簡單又保證 $\Theta(\lg n)$；資料會變動時用二元搜尋樹，但普通的二元搜尋樹
+不保證平衡，要保證 $O(\lg n)$ 得用 AVL 樹、紅黑樹這類平衡樹（資結書第~10~章）。 排好序的陣列做二分
+搜尋時走過的中間點，恰好構成一棵完全平衡的二元搜尋樹，所以二分搜尋可以看成「在一棵隱含的平衡樹上
+搜尋」。
+\end{pastsoln}

@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-17}]{臺大電信所 108 學年度（B）第 17 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+Consider a hash table $H$ with 11 slots. Suppose we use quadratic probing as the collision
+resolution strategy, where the $i$-th probe position for a key $k$ is given by the function
+\[h(k,i)=(k+i^2)(\mathrm{mod}\ 11)\]
+Suppose we insert the following 8 keys to the hash table in the exact sequence:
+$82,90,30,89,61,44,28,51$. What is the index of the slot storing the key 51?
+
+A.~0 \qquad B.~5 \qquad C.~7 \qquad D.~9 \qquad E.~10
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E。
+
+依序插入，$i = 0, 1, 2, \ldots$ 試 $h(k, i)$，第一個空格就放（資結書第~12.3~節）：
+\begin{center}
+\begin{tabular}{rll}
+\toprule
+鍵 & 依 $i = 0, 1, 2, \ldots$ 試過的位置 $(k + i^2) \bmod 11$ & 放在 \\
+\midrule
+82 & 5 & 5 \\
+90 & 2 & 2 \\
+30 & 8 & 8 \\
+89 & 1 & 1 \\
+61 & 6 & 6 \\
+44 & 0 & 0 \\
+28 & 6（61 佔了）、7 & 7 \\
+51 & 7（28）、8（30）、0（44）、5（82）、1（89）、10 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$51 \bmod 11 = 7$，之後依序是 $7 + 1 = 8$、$7 + 4 = 11 \equiv 0$、$7 + 9 = 16 \equiv 5$、
+$7 + 16 = 23 \equiv 1$、$7 + 25 = 32 \equiv 10$。 前五個位置都被佔了，第六次（$i = 5$）落在 $10$，
+是空的。 最後的表：
+\begin{center}
+\begin{tabular}{*{11}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+44 & 89 & 90 & & & 82 & 61 & 28 & 30 & & 51 \\
+\bottomrule
+\end{tabular}
+\end{center}
+選 E。 C 的 $7$ 是 $51$ 的起始位置（已被 $28$ 佔走），B 的 $5$ 是第四次試的位置（$82$），A 的 $0$ 是
+第三次（$44$），D 的 $9$ 這串探測根本不會經過。
+\end{pastsoln}

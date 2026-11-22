@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-16}]{臺大工工所 110 學年度 第 16 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Which of the following are balanced search trees?
+\begin{enumerate}[label=(\Alph*)]
+\item Binary search tree
+\item Red-black tree
+\item AVL tree
+\item 2-3-4 tree
+\item Splay tree
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(C)、(D)。
+
+「平衡搜尋樹」指的是結構上有平衡條件、保證 $n$ 個鍵時樹高 $O(\log n)$，因此搜尋、插入、刪除最壞都是 $O(\log n)$ 的搜尋樹。
+\begin{itemize}
+\item (A) 不是。 一般的二元搜尋樹沒有任何平衡條件，依序插入排好的鍵會長成一條鏈，高度 $n - 1$（資結書第~9.3~節）。
+\item (B) 是。 紅黑樹的顏色性質保證高度不超過 $2\lg(n + 1)$（資結書定理~10.4）。
+\item (C) 是。 AVL 樹每個節點左右子樹高度差不超過 $1$，高度小於 $1.4405\lg(n + 1)$（資結書定理~10.1）。
+\item (D) 是。 2-3-4 樹所有葉節點在同一層，高度不超過 $\lg(n + 1)$（資結書第~11.1.5~節）。
+\item (E) 不是。 伸展樹沒有平衡條件，樹可以長成一條鏈（例如依序插入 $1, 2, \ldots, n$：每次新插入的鍵最大，被伸展到根，原來的根成為它的左子節點，最後是一條往左的鏈，高度 $n - 1$），
+單一次操作最壞 $\Theta(n)$。 它保證的是\textbf{平攤} $O(\log n)$（資結書第~10.6.4~節），屬於「自我調整」的搜尋樹，而不是
+平衡搜尋樹。
+\end{itemize}
+如果把「平衡」放寬成「平攤意義下的對數時間」，伸展樹也可以算進去；但題目把它和紅黑樹、AVL 樹並列，考的正是這個區別，
+所以不選。
+\end{pastsoln}

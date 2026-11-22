@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-11}]{臺大工工所 107 學年度 第 11 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+In a balanced BST such as AVL or red-black tree, finding the element with the 2$^{\text{nd}}$ smallest key requires $\Theta(n)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+最小的鍵在從根一路往左走到底的節點 $m$（資結書虛擬碼~9.3）。 第二小就是 $m$ 的中序後繼
+（資結書虛擬碼~9.4）：
+\begin{itemize}
+\item $m$ 有右子樹：第二小是右子樹裡最左邊的節點。 在 AVL 樹或紅黑樹中，$m$ 的左子樹是空的，平
+衡條件讓它的右子樹最多只有一個節點（AVL：高度差 $\le 1$；紅黑樹：右子節點只能是紅色的葉節點），
+所以就是那個右子節點。
+\item $m$ 沒有右子樹：第二小是 $m$ 的父節點。
+\end{itemize}
+不論哪種情況，都只走一條從根往下的路徑再多一兩步，時間 $O(h)$。 AVL 樹和紅黑樹的高度是
+$O(\log n)$（資結書定理~10.1、定理~10.4），所以是 $O(\log n)$，不需要 $\Theta(n)$。
+\end{pastsoln}

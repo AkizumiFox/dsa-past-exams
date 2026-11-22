@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-45}]{臺聯大電機類 115 學年度 第 45 題}
+（單選；2 分）
+
+How many different insertion sequences of the key values using the hash function
+$h(k) = k \bmod 10$ and linear probing will result in the hash table shown below?
+
+\begin{center}
+\begin{tabular}{|p{2.5em}|p{2.5em}|}\hline
+0 & \\\hline
+1 & \\\hline
+2 & 42\\\hline
+3 & 23\\\hline
+4 & 34\\\hline
+5 & 52\\\hline
+6 & 46\\\hline
+7 & 33\\\hline
+8 & \\\hline
+9 & \\\hline
+\end{tabular}
+\end{center}
+
+(A)~10 \qquad (B)~20 \qquad (C)~30 \qquad (D)~40 \qquad (E)~50
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+先算每個鍵值的雜湊值（資結書第~12.3~節的線性探測：從 $h(k)$ 開始往後找第一個空格）：
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+鍵值 & 42 & 23 & 34 & 52 & 46 & 33 \\
+$h(k)$ & 2 & 3 & 4 & 2 & 6 & 3 \\
+實際位置 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+逐一推出插入順序的限制：
+\begin{itemize}
+\item $42$、$23$、$34$、$46$ 都在自己的雜湊位置，只要求插入時那格是空的。
+\item $52$：$h = 2$，最後落在 $5$，表示插入時第 $2, 3, 4$ 格都已被佔、第 $5$ 格是空的。 第 $2, 3, 4$
+格最後放的是 $42, 23, 34$，所以這三個都要在 $52$ 之前插入。
+\item $33$：$h = 3$，落在 $7$，表示插入時第 $3, 4, 5, 6$ 格都被佔，所以 $23, 34, 52, 46$ 都在 $33$
+之前；而 $42$ 又在 $52$ 之前，所以 $33$ 一定是最後一個。
+\item 反過來，$42, 23, 34$ 各自在自己的位置，要求它們插入時那一格還空著：第 $2, 3, 4$ 格只可能
+被 $52$ 或 $33$ 先佔走，而 $52$、$33$ 都在它們後面，所以自動成立。 $46$ 的第 $6$ 格只可能被 $33$
+先佔，也自動成立。
+\end{itemize}
+所以條件就是：$33$ 最後；前五個裡，$52$ 在 $42, 23, 34$ 之後，$46$ 任意。 計數：
+$\{42, 23, 34, 52\}$ 排成 $52$ 最後的順序有 $3! = 6$ 種；再把 $46$ 插進這四個數之間的 $5$ 個空隙之一，
+$5$ 種。 共 $6 \times 5 = 30$ 種。
+
+（另一種算法：前五個的 $5!$ = $120$ 種排列裡，$42, 23, 34, 52$ 這四個的相對順序 $4!$ 種同樣多，其中
+$52$ 排最後的佔 $1/4$，得 $120/4 = 30$。）
+\end{pastsoln}

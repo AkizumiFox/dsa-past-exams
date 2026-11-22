@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-09}]{北科大電機所（戊組） 114 學年度 第 III-1 題}
+（追蹤；5 分）
+
+\textbf{III.\quad Answer the following questions:}
+
+Consider the singly linked list shown in Table I whose head is item X. Assume the item Y is added
+physically to the bottom of the list and inserted logically after Z. Show the link column entry after
+insertion. \textbf{(5\%)}
+
+\begin{center}
+\textbf{Table I.}\\[2pt]
+\begin{tabular}{c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{data} & \multicolumn{1}{c}{link} \\ \cline{2-3}
+1 & Z & 2 \\ \cline{2-3}
+2 & W & 4 \\ \cline{2-3}
+3 & X & 1 \\ \cline{2-3}
+4 & V & Null \\ \cline{2-3}
+5 & & \\ \cline{2-3}
+6 & & \\ \cline{2-3}
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答：link 欄由上到下是 $5, 4, 1, \text{Null}, 2$，第 6 列仍是空的。
+
+這是用陣列模擬的串列（資結書第~5.4~節），link 欄存的是下一個節點的列號。 從 head X（第 3 列）沿 link 走：
+X（3）$\to$ Z（1）$\to$ W（2）$\to$ V（4）$\to$ Null，邏輯順序是 X, Z, W, V。
+
+Y 實體上放在第一個空列，也就是第 5 列；邏輯上接在 Z 後面，和一般的串列插入一樣，先讓 Y 指向 Z 原本的
+下一個，再讓 Z 指向 Y：
+\begin{enumerate}
+\item Y 的 link $\gets$ Z 的 link $= 2$（W）。
+\item Z 的 link $\gets 5$（Y 所在的列）。
+\end{enumerate}
+\begin{center}
+\begin{tabular}{c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{data} & \multicolumn{1}{c}{link} \\ \cline{2-3}
+1 & Z & \textbf{5} \\ \cline{2-3}
+2 & W & 4 \\ \cline{2-3}
+3 & X & 1 \\ \cline{2-3}
+4 & V & Null \\ \cline{2-3}
+5 & Y & \textbf{2} \\ \cline{2-3}
+6 & & \\ \cline{2-3}
+\end{tabular}
+\end{center}
+檢查：X（3）$\to$ Z（1）$\to$ Y（5）$\to$ W（2）$\to$ V（4）$\to$ Null，Y 在 Z 後面，其他順序不變。 只有第 1 列
+和第 5 列的 link 改變。
+\end{pastsoln}

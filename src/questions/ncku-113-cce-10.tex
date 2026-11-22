@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ncku-113-cce-10}]{成大電通所 113 學年度 簡答題第 1 題}
+（簡答）
+
+(8 pts) Please show the locations of the points---\textit{front} and \textit{rear} in the
+following array for a circular queue. Moreover, give the mechanism to check if a queue is
+empty or is full by the data structure?
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{*{16}{|c}|}
+\multicolumn{1}{c}{[0]} & \multicolumn{1}{c}{[1]} & \multicolumn{1}{c}{[2]} &
+\multicolumn{1}{c}{[3]} & \multicolumn{1}{c}{[4]} & \multicolumn{1}{c}{[5]} &
+\multicolumn{1}{c}{[6]} & \multicolumn{1}{c}{[7]} & \multicolumn{1}{c}{[8]} &
+\multicolumn{1}{c}{[9]} & \multicolumn{1}{c}{[10]} & \multicolumn{1}{c}{[11]} &
+\multicolumn{1}{c}{[12]} & \multicolumn{1}{c}{[13]} & \multicolumn{1}{c}{[14]} &
+\multicolumn{1}{c}{[15]} \\ \hline
+$C$ & $D$ & $E$ & $F$ & $G$ & & & & & & & & & & $A$ & $B$ \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 ``points'' 指 pointers（指標，這裡是兩個索引）。 佇列裡由前到後是
+$A, B, C, D, E, F, G$：前端 $A$ 在 $[14]$，接著 $B$ 在 $[15]$，然後繞回 $[0]$ 的 $C$，一路到
+$[4]$ 的 $G$。 陣列大小 $n = 16$。 題目沒有規定 \textit{front}、\textit{rear} 指的是哪一格，
+下面先照資結書第~6.2.2~節的約定回答，再給另一種常見約定的答案。
+
+\textbf{資結書的約定}（\textit{front} 指向前端元素，\textit{rear} 指向下一個要放的位置）：
+\[
+\mathit{front} = 14, \qquad \mathit{rear} = 5 .
+\]
+驗算個數：$(\mathit{rear} - \mathit{front} + n) \bmod n = (5 - 14 + 16) \bmod 16 = 7$，
+正是 $A$ 到 $G$ 七個。
+\begin{itemize}
+\item 加入 $x$：先檢查滿了沒有，再 $Q[\mathit{rear}] \gets x$，
+$\mathit{rear} \gets (\mathit{rear} + 1) \bmod 16$。 取出：先檢查空了沒有，再拿
+$Q[\mathit{front}]$，$\mathit{front} \gets (\mathit{front} + 1) \bmod 16$。
+\item 空：$\mathit{front} = \mathit{rear}$。
+\item 滿：$(\mathit{rear} + 1) \bmod 16 = \mathit{front}$，也就是留一格不用，最多放
+$15$ 個。 這一格不能省：只靠兩個索引，空和滿都會是 $\mathit{front} = \mathit{rear}$，
+分不出來（資結書第~6~章觀念題第~5~題證明了這一點）。
+\end{itemize}
+
+\textbf{另一種約定}（很多中文課本用：\textit{front} 指向前端元素的前一格，\textit{rear}
+指向尾端元素本身）：
+\[
+\mathit{front} = 13, \qquad \mathit{rear} = 4 .
+\]
+加入是先 $\mathit{rear} \gets (\mathit{rear} + 1) \bmod 16$ 再放；取出是先
+$\mathit{front} \gets (\mathit{front} + 1) \bmod 16$ 再拿。 空和滿的條件和上面的式子
+一樣（$\mathit{front} = \mathit{rear}$ 是空；$(\mathit{rear} + 1) \bmod 16 =
+\mathit{front}$ 是滿），個數 $(4 - 13 + 16) \bmod 16 = 7$（資結書第~6~章觀念題第~4~題）。
+
+如果要 $16$ 格都能用，就要多存資訊：多記一個個數 $\mathit{count}$（$0$ 是空、$16$
+是滿），或多記一個旗標，記住最近一次操作是加入還是取出（資結書第~6.2.2~節的三種解法）。
+作答時先寫一句「依本答案的約定，front 指向……」，再給位置和條件。
+\end{pastsoln}

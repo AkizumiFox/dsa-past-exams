@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-27}]{臺大電信所 109 學年度（B）第 27 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In this exam, the order of a node in a tree is defined as the number of its children, and the order
+of a tree is defined as the maximum order among its nodes.
+
+How many items are there in a binomial tree with order 4?
+
+(A)~13 \qquad (B)~14 \qquad (C)~15 \qquad (D)~16 \qquad (E)~17
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+二項樹 $B_k$ 的根有 $k$ 個子節點，比其他節點都多（資結書第~8.5~節），所以依本卷的定義，
+$B_k$ 的 order 是 $k$。 order 4 就是 $B_4$。 $B_k$ 由兩棵 $B_{k-1}$ 連成，節點數
+$|B_k| = 2|B_{k-1}|$、$|B_0| = 1$，所以 $|B_k| = 2^k$，$|B_4| = 16$。
+
+也可以用每層的個數驗：$B_4$ 深度 $d$ 的節點有 $\binom{4}{d}$ 個，
+$1 + 4 + 6 + 4 + 1 = 16$。
+\end{pastsoln}

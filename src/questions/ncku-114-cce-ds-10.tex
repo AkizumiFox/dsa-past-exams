@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-10}]{成大電通所 114 學年度 單選題第 10 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+If Queue is implemented by the circular list, which operation requires linear time in the worst case.
+\begin{enumerate}[label=\alph*),nosep]
+\item Find();
+\item isEmpty();
+\item Push();
+\item Pop();
+\item Noe of above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a) Find()。
+
+用環狀串列做佇列時只記一個指標 $\mathit{last}$ 指向最後一個節點，第一個節點就是 $\mathit{last}.\mathit{next}$
+（資結書第~5.2~節、第~6.2~節）。
+\begin{itemize}
+\item b) isEmpty()：看 $\mathit{last} = \NIL$，$O(1)$。
+\item c) Push()（放到尾端）：新節點 $x$ 接在 $\mathit{last}$ 後面：$x.\mathit{next} \gets \mathit{last}.\mathit{next}$、
+$\mathit{last}.\mathit{next} \gets x$、$\mathit{last} \gets x$（資結書虛擬碼~5.5），$O(1)$。
+\item d) Pop()（拿走前端）：前端是 $f = \mathit{last}.\mathit{next}$，改成 $\mathit{last}.\mathit{next} \gets f.\mathit{next}$
+（只剩一個節點時改成 $\mathit{last} \gets \NIL$），$O(1)$。
+\item a) Find()：要找某個資料在不在佇列裡，只能從前端沿著 $\mathit{next}$ 一個一個比，最壞（不在佇列裡或在最後）要看完 $n$ 個，
+$\Theta(n)$。 選 a)。
+\end{itemize}
+原題 e) 的「Noe」是「None」的筆誤。
+\end{pastsoln}

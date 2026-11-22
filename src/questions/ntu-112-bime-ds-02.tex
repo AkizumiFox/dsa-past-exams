@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-02}]{臺大生機所 112 學年度（A）第 2 題}
+（問答）
+
+(20\%) Please write a pseudocode function to achieve the following task: Given a binary tree
+stored in an array (\textbf{heap}) as the input, check if it is a min-heap or not. Your function
+must return a Boolean value as the output (\textbf{true}: the input is a \textbf{min-heap};
+\textbf{false}: the input is not a min-heap).
+\end{pastexam}
+
+\begin{pastsoln}
+用堆積的陣列存法（資結書第~7.2.1~節、第~8.1~節）：樹存在 $A[1..n]$，位置 $i$ 的左、右子節點在
+$2i$、$2i + 1$，父節點在 $\lfloor i/2 \rfloor$。 最小堆積要滿足兩件事：
+\begin{enumerate}
+\item \textbf{形狀}：是完整二元樹，也就是節點剛好佔滿 $A[1..m]$，中間沒有空位。
+\item \textbf{順序}：每個節點不大於它的子節點；等價的說法是除了根，每個節點都不小於它的父節點。
+\end{enumerate}
+題目說輸入是存在陣列裡的「任意」二元樹，陣列裡可能有空位，所以兩件事都要檢查。 用 \NIL 表示
+那個位置沒有節點。
+
+\begin{pseudo}{檢查陣列存的二元樹是不是最小堆積}
+\Function{Is-Min-Heap}{$A, n$} \Comment{$A[1..n]$，沒有節點的位置是 \NIL}
+    \State $\mathit{hole} \gets \FALSE$ \Comment{前面是否已經出現空位}
+    \For{$i \gets 1$ \To $n$}
+        \If{$A[i] = \NIL$}
+            \State $\mathit{hole} \gets \TRUE$
+        \ElsIf{$\mathit{hole}$}
+            \State \Return \FALSE \Comment{空位後面還有節點，不是完整二元樹}
+        \ElsIf{$i > 1$ \AND $A[\lfloor i/2 \rfloor] > A[i]$}
+            \State \Return \FALSE \Comment{比父節點小，違反堆積順序}
+        \EndIf
+    \EndFor
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+如果題目的意思是陣列一定沒有空位（$A[1..n]$ 都有值，形狀自動是完整二元樹），迴圈裡只要
+留下第 8、9 行的比較：對 $i = 2, \ldots, n$，若 $A[\lfloor i/2 \rfloor] > A[i]$ 就回傳 \FALSE。
+
+\textbf{正確性}。
+\begin{itemize}
+\item 回傳 \FALSE 時一定不是最小堆積：第 7 行表示有節點在空位之後，節點沒有佔滿一段前綴，不是
+完整二元樹；第 9 行找到了一對父子 $A[\lfloor i/2 \rfloor] > A[i]$，違反順序。
+\item 回傳 \TRUE 時一定是最小堆積：迴圈跑完沒有回傳，表示第一個空位之後全是空的，節點剛好佔
+$A[1..m]$，形狀對；而 $A[2..m]$ 每個節點都不小於父節點。 每一條父子邊 $(p, c)$ 都恰好在
+$i = c$ 時檢查過一次，所以每個節點都不大於它的子節點。 由遞移性，每個節點也不大於它子樹裡的
+所有節點，根是最小值。
+\end{itemize}
+注意 $A[\lfloor i/2 \rfloor]$ 不會是 \NIL：父節點的位置比 $i$ 小，如果它是空的，$\mathit{hole}$
+早就是 \TRUE，會先在第 7 行回傳。
+
+\textbf{複雜度}：每個位置看一次，最壞 $\Theta(n)$ 時間，$O(1)$ 額外空間。 這也是最好的可能：
+任何一對父子沒檢查到，那一對就可能違反順序，所以每個節點至少要看一次。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-03}]{臺聯大電機類 115 學年度 第 3 題}
+（單選；2 分）
+
+The time complexity of multiplying two n * n matrices using the standard three-loop algorithm is:
+
+(A)~$O(n)$ \qquad (B)~$O(n^2)$ \qquad (C)~$O(n^3)$ \qquad (D)~$O(2^n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+標準算法照定義 $c_{ij} = \sum_{k=1}^{n} a_{ik} b_{kj}$ 計算：
+\begin{pseudo}{標準矩陣乘法}
+\For{$i \gets 1$ \To $n$}
+    \For{$j \gets 1$ \To $n$}
+        \State $C[i, j] \gets 0$
+        \For{$k \gets 1$ \To $n$}
+            \State $C[i, j] \gets C[i, j] + A[i, k] \cdot B[k, j]$
+        \EndFor
+    \EndFor
+\EndFor
+\end{pseudo}
+三層迴圈各跑 $n$ 次，最內層的乘加做了 $\sum_{i=1}^{n}\sum_{j=1}^{n}\sum_{k=1}^{n} 1 = n^3$ 次，
+每次 $\Theta(1)$，總共 $\Theta(n^3)$（逐層數迴圈的方法見資結書第~1.7~節）。 所以 $O(n^3)$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $O(n)$：光是輸出 $C$ 就有 $n^2$ 個數，不可能 $O(n)$。 錯。
+\item (B) $O(n^2)$：這是輸出的大小；三層迴圈的算法每一格還要做 $n$ 次乘加，達不到。 錯。
+\item (C) $O(n^3)$：對。
+\item (D) $O(2^n)$：雖然 $n^3 = O(2^n)$ 在數學上成立，但這是很鬆的上界，題目問的是這個算法的
+複雜度，答 $O(n^3)$。 錯。
+\end{itemize}
+比 $n^3$ 快的方法要改用分治，例如 Strassen 法是 $\Theta(n^{\lg 7}) \approx \Theta(n^{2.81})$
+（資結書第~17.3~節），但那不是「three-loop」的標準算法。
+\end{pastsoln}

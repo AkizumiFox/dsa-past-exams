@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ncku-113-cce-04}]{成大電通所 113 學年度 是非題第 4 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+The worst case of insertion sort happens when values in an array are arranged in the
+increasing order.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 已經由小到大排好是插入排序的\textbf{最好}情況；最壞情況是由大到小（遞減）排列。
+
+插入排序把 $A[j]$ 往左插入已排好的 $A[1..j-1]$，比它大的數各往右挪一格（資結書第~1.3~節）。
+\begin{itemize}
+\item 遞增排列：每個 $A[j]$ 都不小於左邊的數，比較一次就停，不用挪。 共 $n - 1$ 次比較，
+$\Theta(n)$。
+\item 遞減排列：每個 $A[j]$ 都比左邊 $j - 1$ 個數小，要比較 $j - 1$ 次、挪 $j - 1$ 格，一路
+插到最前面。 共 $\sum_{j=2}^{n}(j - 1) = n(n-1)/2$ 次，$\Theta(n^2)$。
+\end{itemize}
+挪動次數等於逆序對個數（資結書第~1.8~節），遞減排列的逆序對最多，所以是最壞情況。
+\end{pastsoln}

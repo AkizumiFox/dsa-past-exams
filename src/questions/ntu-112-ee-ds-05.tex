@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-05}]{臺大電機所 112 學年度 第 5 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+Assume each data access of a hard drive can fetch a "block" of \texttt{K} data, where \texttt{K} is usually a large number, say, 1024. If we store \texttt{N} (e.g. \texttt{N} = 10 millions) data in this hard drive using a \textit{B tree} of order \texttt{K}, then the time to "find" a specific data from this hard drive is approximately log$_{\texttt{K}}$\texttt{N} * \texttt{t}, where \texttt{t} is the disk access time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確。
+
+B 樹的每個節點存成一個磁碟區塊，找一個鍵是從根走到某個節點，每往下一層讀一個區塊，讀的次數不超過
+樹高 $h$（資結書第~11.3.1~節）。 在記憶體裡比較區塊內的鍵，相對於磁碟存取時間 $t$ 可以忽略，所以時間
+大約是 $h \cdot t$。
+
+$m$ 階 B 樹存 $N$ 個鍵，高度滿足（資結書定理~11.1，$c = \lceil m/2 \rceil$）
+\[
+\log_m(N + 1) \le h \le 1 + \log_c \frac{N + 1}{2}.
+\]
+題目的 $m = K = 1024$、$N = 10^7$：下界 $\log_{1024}(10^7 + 1) \approx 2.33$，上界
+$1 + \log_{512}(5 \times 10^6) \approx 3.47$，所以 $h = 3$，正好是 $\lceil \log_K N \rceil$。 一般地，上下界只差在
+底數 $K$ 和 $K/2$，$\log_{K/2} N = \log_K N / (1 - \log_K 2)$，$K = 1024$ 時只大 $1.11$ 倍。 說「大約是
+$\log_K N \cdot t$」是合理的近似。 （實務上根節點常駐記憶體，讀磁碟的次數還可以再少一次。）
+\end{pastsoln}

@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-07}]{北科大電機所（戊組）113 學年度 第 II.3 題}
+（簡答；4 分）
+
+What is the time complexity of the dynamic programming implementation of the longest common
+subsequence problem where the length of one string is ``m'' and the length of the other string is
+``n'' ? (4\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $\Theta(mn)$。
+
+設兩個字串是 $X = x_1 x_2 \cdots x_m$、$Y = y_1 y_2 \cdots y_n$，$c[i, j]$ 是 $X$ 的前 $i$ 個字元和
+$Y$ 的前 $j$ 個字元的 LCS 長度（資結書第~18.3~節）：
+\[
+c[i, j] = \begin{cases}
+0, & i = 0 \text{ 或 } j = 0, \\
+c[i-1, j-1] + 1, & i, j > 0 \text{ 且 } x_i = y_j, \\
+\max(c[i-1, j],\ c[i, j-1]), & i, j > 0 \text{ 且 } x_i \ne y_j.
+\end{cases}
+\]
+表格有 $(m + 1)(n + 1)$ 格，每一格只看左、上、左上三格，花 $O(1)$。 所以時間是
+$\Theta((m+1)(n+1)) = \Theta(mn)$；表格空間也是 $\Theta(mn)$。 如果只要長度、不必印出 LCS，可以只留
+兩列，空間降到 $\Theta(\min(m, n))$，時間不變。 從 $c[m, n]$ 往回追出一個 LCS 另外花 $O(m + n)$。
+\end{pastsoln}

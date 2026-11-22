@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ncku-110-ee-ds-02}]{成大電機所 110 學年度 第 2 題}
+（單選）
+
+Which of the choices DO NOT contain two equivalent expressions? Note that $A$\textasciicircum$B$ is
+$A^B$. \hfill (15 \%)
+\begin{enumerate}[label=(\alph*)]
+\item \makebox[4.5em][l]{Infix} \makebox[11em][l]{\textit{A+B--C}} Prefix \quad \textit{-+ABC}
+\item \makebox[4.5em][l]{Postfix} \makebox[11em][l]{\textit{AB+CD--*}} Prefix \quad \textit{*+AB--CD}
+\item \makebox[4.5em][l]{Postfix} \makebox[11em][l]{\textit{AB\textasciicircum C*D--EF/GH+/+}} Prefix \quad
+\textit{+--*\textasciicircum ABCD//EF+GH}
+\item \makebox[4.5em][l]{Postfix} \makebox[11em][l]{\textit{AB+C*DE----FG+\textasciicircum}} Prefix \quad
+\textit{\textasciicircum--*+ABC--DE+FG}
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (e)：四組都等價。
+
+把每個式子還原成運算式樹（或加滿括號的中序式）再比較（資結書第~6.3~節）。 後序式由左往右掃，遇到
+運算元就推入堆疊，遇到運算子就彈出兩個（先彈出的是右運算元）；前序式由右往左掃，做法一樣，只是先
+彈出的是左運算元。 \textasciicircum{} 是次方。
+
+\textbf{(a)} 中序 $A + B - C$：$+$、$-$ 同優先、由左往右結合，是 $(A + B) - C$。 前序 \textit{-+ABC}：$-$ 的
+左運算元是 \textit{+AB}，右運算元是 $C$，也是 $(A + B) - C$。 等價。
+
+\textbf{(b)} 後序 \textit{AB+CD--*}：\textit{AB+} $\to (A + B)$，\textit{CD--} $\to (C - D)$，\textit{*} $\to (A + B) * (C - D)$。
+前序 \textit{*+AB--CD}：\textit{*} 的左邊是 \textit{+AB}，右邊是 \textit{--CD}，同一個式子。 等價。
+
+\textbf{(c)} 後序逐步：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+讀到 & 堆疊（底 $\to$ 頂） \\
+\midrule
+$A\ B\ $\textasciicircum & $(A\mathbin{\text{\textasciicircum}}B)$ \\
+$C\ {*}$ & $((A\mathbin{\text{\textasciicircum}}B) * C)$ \\
+$D\ {-}$ & $(((A\mathbin{\text{\textasciicircum}}B) * C) - D)$ \\
+$E\ F\ /$ & $(((A\mathbin{\text{\textasciicircum}}B) * C) - D)$,\ $(E / F)$ \\
+$G\ H\ {+}$ & $(((A\mathbin{\text{\textasciicircum}}B) * C) - D)$,\ $(E / F)$,\ $(G + H)$ \\
+$/$ & $(((A\mathbin{\text{\textasciicircum}}B) * C) - D)$,\ $((E / F) / (G + H))$ \\
+${+}$ & $(((A\mathbin{\text{\textasciicircum}}B) * C) - D) + ((E / F) / (G + H))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+從這棵樹寫前序：根 $+$，左子樹 \textit{--*\textasciicircum ABCD}，右子樹 \textit{//EF+GH}，
+合起來是 \textit{+--*\textasciicircum ABCD//EF+GH}，和題目的前序一樣。 等價。
+
+\textbf{(d)} 後序：$AB{+} \to (A + B)$；$C{*} \to ((A + B) * C)$；$DE{-} \to (D - E)$；再一個 ${-}$ 把
+堆疊頂端兩個相減：$(((A + B) * C) - (D - E))$；$FG{+} \to (F + G)$；最後 \textasciicircum：
+$(((A + B) * C) - (D - E))\mathbin{\text{\textasciicircum}}(F + G)$。 前序：根 \textasciicircum，左子樹 \textit{--*+ABC--DE}，右子樹
+\textit{+FG}，合起來是 \textit{\textasciicircum--*+ABC--DE+FG}，和題目一樣。 等價。
+
+四組都是等價的兩個式子，所以「不等價的是哪一組」答案是 (e) None of the above。
+\end{pastsoln}

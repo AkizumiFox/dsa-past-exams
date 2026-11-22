@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-22}]{成大電機所 111 學年度 短答題第 2 題}
+（短答；每題 5 分）
+
+以下共四個 function, 請簡單回答他們的功能
+
+\textbf{What is the usage of the following function?}
+\begin{minted}[fontsize=\small]{cpp}
+string ans="";      int count=0;
+int ans_number=0;     int first=500;
+string Function X (vector<string>& strs) {
+   if(strs[0]=="")                    return "";
+   if(strs.size()==1) {
+      return strs[0];
+   for(int i=1;i<strs.size();i++){
+         if(strs[0].size()>=strs[i].size()){
+            count=strs[i].size();
+         }
+         else count=strs[0].size();
+       for(int j=0 ;j<count;j++){
+           if(strs[0][j]==strs[i][j]){
+              ans_number++;
+           }
+           else break;
+       }
+       if(ans_number<first){
+           first=ans_number;
+       }
+           ans_number=0;
+   }
+   strs[0].resize(first);
+   return strs[0];
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：求一組字串的\textbf{最長共同前綴}（longest common prefix）。 例如 \texttt{["flower", "flow", "flight"]} 回傳
+\texttt{"fl"}；\texttt{["dog", "racecar", "car"]} 回傳空字串。
+
+\textbf{原題的程式有錯字。} 函數名稱寫成 \texttt{Function X}（中間有空格，不能編譯，應該是一個名字，例如 \texttt{FunctionX}）；
+\texttt{if(strs.size()==1) \{ return strs[0];} 少了右大括號，照字面整個 \texttt{for} 迴圈都會被包在這個 \texttt{if} 裡、而且在
+\texttt{return} 之後，永遠執行不到，大括號也對不起來。 顯然原意是 \texttt{if(strs.size()==1) \{ return strs[0]; \}}，下面照這個
+意思說明。
+
+\textbf{逐段說明。}
+\begin{itemize}
+\item \texttt{strs[0]} 是空字串，共同前綴一定是空字串；只有一個字串時，共同前綴就是它自己。
+\item 對每個 $i \ge 1$：\texttt{count} 是 \texttt{strs[0]} 和 \texttt{strs[i]} 中較短的長度；內層迴圈從頭逐字比較兩個字串，數出
+相同的前幾個字，遇到第一個不同就 \texttt{break}。 所以 \texttt{ans\_number} 是 \texttt{strs[0]} 和 \texttt{strs[i]} 的共同前綴長度。
+\item \texttt{first} 記錄這些長度的最小值（初值 $500$ 當作「很大」）。 每比完一個字串把 \texttt{ans\_number} 歸零。
+\item 最後把 \texttt{strs[0]} 截成長度 \texttt{first} 回傳。
+\end{itemize}
+所有字串的共同前綴，就是 \texttt{strs[0]} 和每一個 \texttt{strs[i]} 的共同前綴中\textbf{最短}的那個（每個都是 \texttt{strs[0]} 的
+前綴，最短的那個同時是全部字串的前綴，而且不能再長），所以回傳的正是最長共同前綴。
+
+\textbf{追蹤。} \texttt{["flower", "flow", "flight"]}：和 \texttt{"flow"} 比，前 $4$ 個字都相同，長度 $4$，\texttt{first = 4}；和
+\texttt{"flight"} 比，\texttt{f}、\texttt{l} 相同，\texttt{o} 和 \texttt{i} 不同，長度 $2$，\texttt{first = 2}。 \texttt{"flower"} 截成
+長度 $2$，回傳 \texttt{"fl"}。
+
+\textbf{複雜度。} 共 $n$ 個字串，每次比較最多 $|\mathtt{strs[0]}|$ 個字，$O(n \cdot |\mathtt{strs[0]}|)$ 時間。
+
+\textbf{還有兩個小問題}（作答時提一下即可）：\texttt{first}、\texttt{ans\_number} 是全域變數，函數不會把 \texttt{first} 重設回
+$500$，同一個程式呼叫第二次時會沿用上一次的最小值，答案可能錯；字串長度超過 $500$ 而共同前綴也超過 $500$ 時，結果會被
+截在 $500$。 另外 \texttt{strs} 是空的時候 \texttt{strs[0]} 會越界。
+\end{pastsoln}

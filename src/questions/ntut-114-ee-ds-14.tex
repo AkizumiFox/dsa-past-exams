@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-14}]{北科大電機所（戊組） 114 學年度 第 III-6 題}
+（設計；8 分）
+
+Write a pseudo-code for finding common elements in two sorted arrays arr1[] and arr2[] of size m and n,
+respectively, where the common elements should be printed in sorted order. The solution should have a
+time complexity of O(m + n). \textbf{(8\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}：和合併排序的合併一樣（資結書第~14.4~節），兩個指標 $i$、$j$ 各從兩個陣列的開頭往後走，每次
+比較 $\mathit{arr1}[i]$ 和 $\mathit{arr2}[j]$：小的那一邊不可能出現在另一個陣列剩下的部分，往後移；相等就是共同
+元素，印出來，兩邊一起往後移。 兩個陣列都由小到大排好，陣列從 $1$ 開始。
+
+\begin{pseudo}{兩個排序陣列的共同元素}
+\Procedure{Print-Common}{$\mathit{arr1}, m, \mathit{arr2}, n$}
+    \State $i \gets 1$；$j \gets 1$
+    \While{$i \le m$ \AND $j \le n$}
+        \If{$\mathit{arr1}[i] < \mathit{arr2}[j]$}
+            \State $i \gets i + 1$
+        \ElsIf{$\mathit{arr1}[i] > \mathit{arr2}[j]$}
+            \State $j \gets j + 1$
+        \Else
+            \State 印出 $\mathit{arr1}[i]$
+            \State $i \gets i + 1$；$j \gets j + 1$
+        \EndIf
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{重複的值。} 上面的寫法把重複的值當成多重集合處理：$\langle 1, 2, 2, 3 \rangle$ 和 $\langle 2, 2, 2, 5 \rangle$
+印出 $2, 2$（兩邊各配一次）。 如果每個共同的值只要印一次，在第 9 行前加一個判斷：和上一次印出的值
+相同就不印。
+
+\textbf{正確性。} 迴圈不變量：比 $\min(\mathit{arr1}[i], \mathit{arr2}[j])$ 小的共同元素都已經印出，而且是由小到大
+印的；$\mathit{arr1}[1..i-1]$ 和 $\mathit{arr2}[1..j-1]$ 裡還沒配對的元素都不會再和任何元素相等。
+\begin{itemize}
+\item $\mathit{arr1}[i] < \mathit{arr2}[j]$：$\mathit{arr2}[j..n]$ 都 $\ge \mathit{arr2}[j] > \mathit{arr1}[i]$，所以 $\mathit{arr1}[i]$ 在
+$\mathit{arr2}$ 剩下的部分找不到相等的，可以跳過。 另一邊對稱。
+\item 相等：這個值是共同元素，印出並各消耗一個。 因為兩邊都排好序，印出的值不會比之前印的小。
+\end{itemize}
+某一邊走完時，另一邊剩下的元素沒有對象可以相等，結束。
+
+\textbf{複雜度。} 每一輪 $i$ 或 $j$ 至少加 $1$，$i$ 最多加到 $m + 1$、$j$ 最多加到 $n + 1$，迴圈最多 $m + n$ 輪，每輪
+$O(1)$，總共 $O(m + n)$；額外空間 $O(1)$。
+
+例：$\mathit{arr1} = \langle 1, 3, 4, 6, 9 \rangle$、$\mathit{arr2} = \langle 2, 3, 6, 7, 9, 10 \rangle$。 依序比較
+$(1,2)$ $i$ 前進、$(3,2)$ $j$ 前進、$(3,3)$ 印 3、$(4,6)$ $i$ 前進、$(6,6)$ 印 6、$(9,7)$ $j$ 前進、$(9,9)$ 印 9，
+$i$ 超出範圍，結束。 印出 $3, 6, 9$。
+\end{pastsoln}

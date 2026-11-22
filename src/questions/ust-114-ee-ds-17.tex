@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-17}]{臺聯大電機類 114 學年度 第 17 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 17-20 according to the following C++-style pseudo-code.
+\begin{minted}[fontsize=\small]{cpp}
+int funcB(string s) {
+    stack<int> st;
+    st.push(-1);
+    int maxLen = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '(') {
+            st.push(i);
+        } else {
+            st.pop();
+            if (st.empty()) {
+                st.push(i);
+            } else {
+                maxLen = max(maxLen, i - st.top());
+            }
+        }
+    }
+    return maxLen;
+}
+\end{minted}
+
+Let s = ``()'', funcB(s) will return
+
+(A)~0 \qquad (B)~2 \qquad (C)~4 \qquad (D)~6
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+堆疊裡放的是索引。 堆疊底下一直墊著「目前這段合法括號開始前的位置」，一開始是 $-1$。
+\begin{center}
+\small
+\begin{tabular}{ccll}
+\toprule
+$i$ & $s[i]$ & 動作 & 堆疊（底 $\to$ 頂）、maxLen \\
+\midrule
+ & & 初始 & $[-1]$，0 \\
+0 & ( & push 0 & $[-1, 0]$，0 \\
+1 & ) & pop 0；不空，$1 - (-1) = 2$ & $[-1]$，2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $2$，就是整個字串 ``()'' 的長度。 (A)(C)(D) 都不對。
+\end{pastsoln}

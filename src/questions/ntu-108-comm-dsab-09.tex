@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-09}]{臺大電信所 108 學年度（B）第 9 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+If any problem in \textit{NP} can be solved in linear time, then all problems in \textit{NPC} can be
+solved in polynomial time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯。
+
+P 包含在 NP 裡（資結書定理~28.1），所以 NP 裡本來就有很多線性時間可解的問題，例如「給一個以
+二進位表示的整數，它是不是偶數」只要看最後一位。 前提「NP 裡有一個問題線性時間可解」已經成立，
+如果敘述是對的，就證明了 NP 完備問題都是多項式時間可解，也就是 $\mathrm{P} = \mathrm{NP}$，但這是
+還沒解決的問題。
+
+正確的方向是反過來：要拿 NP \textbf{完備}的問題（NP 裡最難的）去推。 NP 完備問題有多項式解，才能
+推出所有 NP 問題都有多項式解（資結書定理~28.5，也就是下一題）。 簡單的 NP 問題有快的解法，對難的
+問題沒有任何幫助。
+\end{pastsoln}

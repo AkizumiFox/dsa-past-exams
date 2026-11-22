@@ -1,0 +1,94 @@
+\begin{pastexam}[label={px:ncku-113-ee-19}]{成大電機所 113 學年度 程式題}
+（程式題；20 分）
+
+\begin{enumerate}[label=\alph*.]
+\item (10 \textbf{pts}) Please list two key ingredients that an optimization problem must have so
+that the dynamic programming (\textbf{DP}) can be applied and explain them shortly?
+
+\item (10 \textbf{pts}) In the VLSI Design, monotonic routing is a way to route a net with two
+terminals. The routing net can go directly from its source to its target without backward. Its
+objective is to find a routing path with the minimum cost. Fig (a) shows an example with three
+possible monotonic routing paths from the source S to the target T.
+
+\begin{center}
+\begin{tikzpicture}[x=0.62cm,y=0.62cm,>={Latex[length=4pt,width=4pt]},font=\sffamily]
+  % ---------- (a) ----------
+  \begin{scope}
+    \foreach \i in {0,...,7} \foreach \j in {0,...,7} {
+      \ifnum\i<7 \draw[dashed] (\i,\j)--(\i+1,\j); \draw[->] (\i+0.35,\j)--(\i+0.68,\j); \fi
+      \ifnum\j<7 \draw[dashed] (\i,\j)--(\i,\j+1); \draw[->] (\i,\j+0.35)--(\i,\j+0.68); \fi
+    }
+    \begin{scope}[line width=2pt,line join=miter]
+      \draw (0,0)--(0,5)--(4,5)--(4,6)--(5,6)--(5,7)--(7,7);
+      \draw (0,0)--(1,0)--(1,3)--(3,3)--(3,4)--(7,4)--(7,7);
+      \draw (1,0)--(3,0)--(3,2)--(5,2)--(5,5)--(6,5)--(6,7);
+    \end{scope}
+    \fill[gray!70!black] (0,0) circle (0.2); \fill[gray!70!black] (7,7) circle (0.2);
+    \node[font=\sffamily\bfseries\Large] at (-0.1,-0.8) {S};
+    \node[font=\sffamily\bfseries\Large] at (7.7,7) {T};
+    \node[font=\rmfamily] at (3.5,-1.7) {(a)};
+  \end{scope}
+  % ---------- (b) ----------
+  \begin{scope}[xshift=6.4cm]
+    \foreach \i in {0,...,7} \foreach \j in {0,...,7} {
+      \ifnum\i<7 \draw[dashed] (\i,\j)--(\i+1,\j); \draw[->] (\i+0.38,\j)--(\i+0.72,\j); \fi
+      \ifnum\j<7 \draw[dashed] (\i,\j)--(\i,\j+1); \draw[->] (\i,\j+0.42)--(\i,\j+0.78); \fi
+    }
+    \foreach \i in {1,...,7} \foreach \j in {1,...,7} \fill (\i,\j) circle (0.09);
+    \foreach \i in {1,...,7} \draw[fill=white] (\i,0) circle (0.17);
+    \foreach \j in {1,...,7} \draw[fill=white] (0,\j) circle (0.17);
+    \draw[fill=gray!60] (0,0) circle (0.17); \draw[fill=gray!60] (7,7) circle (0.17);
+    \node[font=\sffamily\bfseries\small] at (0,-0.75) {S};
+    \node[font=\sffamily\bfseries\small] at (7.75,7.1) {T};
+    \node[font=\sffamily\bfseries\scriptsize] at (3,-0.75) {G1};
+    \node[font=\sffamily\bfseries\scriptsize] at (4,-0.75) {G};
+    \node[font=\sffamily\bfseries\scriptsize,fill=white,inner sep=0.5pt] at (4.45,5.33) {g1};
+    \node[font=\sffamily\bfseries\scriptsize,fill=white,inner sep=0.5pt] at (5.4,5.36) {g};
+    \node[font=\sffamily\bfseries\scriptsize,fill=white,inner sep=0.5pt] at (5.45,4.33) {g2};
+    \draw[->] (-0.9,-0.4)--(-0.9,7.9);
+    \node[font=\rmfamily] at (-1.3,7.8) {y}; \node[font=\rmfamily\itshape\large] at (-0.45,7.8) {n};
+    \draw[->] (0.2,-1.2)--(7,-1.2) node[right,font=\rmfamily] {X};
+    \node[font=\rmfamily\itshape\large] at (7.7,0) {m};
+    \node[font=\rmfamily] at (3.5,-1.8) {(b)};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+However, it takes exponential time to find an optimal path if we enumerate all possible paths.
+However, we can greatly reduce runtime if the DP algorithm is applied. Given a graph G($N$, $E$),
+where $n$ denote a node in a node set $N$. Let $d(n)$ denote the minimum cost in a node, n from
+source S. Let cost($n$, $n_1$) denote the penalty of routing through an edge ($n$, $n_1$) in an
+edge set $E$. Let $\pi(n)$ denote the predecessor of a node $n$. Please complete the following
+pseudo code by the dynamic programming according to Fig. (b).
+
+\begin{center}
+\small
+\fbox{\begin{tabular}{rl}
+1. & d(S) = 0 \\
+2. & \textbf{for} x = 1 \textbf{to} m \\
+3. & \hspace{2em} G = (x, 0), G$_1$ = (x-1, 0) \hspace{3em} // See Fig. (b) for nodes G and G$_1$ \\
+4. & \hspace{2em} d(G) = \blank{1} , $\pi$(G) = G$_1$ \\
+5. & \textbf{for} y = 1 \textbf{to} n \\
+6. & \hspace{2em} G = (0, y), G$_1$ = (0, y-1) \\
+7. & \hspace{2em} d(G) = \underline{\makebox[4.5em]{XXX}} , $\pi$(G) = G$_1$ \\
+8. & \textbf{for} x = 1 \textbf{to} m \\
+9. & \hspace{2em} \textbf{for} y = 1 \textbf{to} n \\
+10. & \hspace{4em} g = (x, y) \hspace{6em} // See Fig. (b) for nodes g, g$_1$ and g$_2$ \\
+11. & \hspace{4em} g$_1$ = (x-1, y), g$_2$ = (x, y-1) \\
+12. & \hspace{4em} \textbf{if} = \blank{2} , \\
+13. & \hspace{6em} d(g) = \blank{3} , $\pi$(g) = \blank{4} , \\
+14. & \hspace{4em} \textbf{else} \\
+15. & \hspace{6em} d(g) = \blank{5} , $\pi$(g) = \underline{\makebox[4.5em]{XXX}} , \\
+16. & Trace back from T using $\pi$ to find the least cost monotonic path \\
+\end{tabular}}
+\end{center}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-19}。
+
+答案：a. 最佳子結構、重疊的子問題。 b. $d(g) = \min\bigl(d(g_1) + \mathit{cost}(g_1, g),\ d(g_2) + \mathit{cost}(g_2, g)\bigr)$
+（$g_1$ 是左邊的格點、$g_2$ 是下面的格點）：(1) $d(G_1) + \mathit{cost}(G_1, G)$；(2) $d(g_1) + \mathit{cost}(g_1, g) < d(g_2) + \mathit{cost}(g_2, g)$；
+(3) $d(g_1) + \mathit{cost}(g_1, g)$；(4) $g_1$；(5) $d(g_2) + \mathit{cost}(g_2, g)$。 時間和空間 $\Theta(mn)$。
+\end{pastsoln}

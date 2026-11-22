@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-20}]{成大電機所 111 學年度 單選題第 20 題}
+（單選；每題 4 分）
+
+The reason for using a pointer is ... \quad (Choose the false option from the following sentences)
+
+A.~Accessing arrays or string elements
+
+B.~Dynamic memory allocation
+
+C.~Implementing linked lists, trees, graphs, and many other data structures
+
+D.~All are false
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+題目要選「錯誤的」那一句。
+\begin{itemize}
+\item A.~用指標存取陣列或字串的元素：對。 C 的 \texttt{a[i]} 就是 \texttt{*(a + i)}，走訪字串常用 \texttt{char *p} 一路往後移。
+\item B.~動態配置記憶體：對。 \texttt{malloc} 回傳的就是指標，沒有指標就無法使用動態配置的記憶體。
+\item C.~實作串列、樹、圖等資料結構：對。 節點之間靠指標連起來（資結書第~5、7、21~章）。
+\item D.~「以上都是錯的」：A、B、C 都是使用指標的正當理由，所以 D 這句話是錯的。
+\end{itemize}
+唯一錯誤的敘述是 D，選 D。
+\end{pastsoln}

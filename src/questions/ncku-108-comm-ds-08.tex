@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-08}]{成大電通所 108 學年度 問答題第 5 題}
+（問答；10 分）
+
+You are given an empty hash table of size 7 and bucket capacity 1 that uses open addressing. The
+following sequence of keys is to be inserted: (15, 17, 8, 23, 3, 5). Insert these keys using each of the
+following hash functions and approaches. Show the resulting hash table step by step. If overflow occurs,
+say so, indicate the element that causes the overflow. (10 points)
+\begin{enumerate}[label=(\Alph*)]
+\item h(x) = x \% 7; linear probing.
+\item h(x) = x \% 7; double hashing with h2(x) = x / 7 + 1.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+表有 $7$ 格（編號 $0$ 到 $6$），每格放一個鍵。 \texttt{x / 7} 是整數除法。 兩種方法都沒有發生
+overflow：$6$ 個鍵都放得進去（表沒滿，而且 (B) 的探測序列都能走到空格）。
+
+\textbf{(A) 線性探測}：依序試 $h(x), h(x) + 1, h(x) + 2, \ldots \pmod 7$（資結書第~12.3~節）。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+鍵 & $h(x)$ & 試過的格子 & 放入 \\
+\midrule
+15 & 1 & 1 & [1] \\
+17 & 3 & 3 & [3] \\
+8 & 1 & 1（15）、2 & [2] \\
+23 & 2 & 2（8）、3（17）、4 & [4] \\
+3 & 3 & 3（17）、4（23）、5 & [5] \\
+5 & 5 & 5（3）、6 & [6] \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{|*{7}{c|}}
+\hline
+[0] & [1] & [2] & [3] & [4] & [5] & [6] \\ \hline
+ & 15 & 8 & 17 & 23 & 3 & 5 \\ \hline
+\end{tabular}
+\end{center}
+可以看到 $1$ 到 $6$ 格連成一串（主要群聚），後面插入的 23、3、5 都要多試好幾格。
+
+\textbf{(B) 雙重雜湊}：第 $i$ 次試 $(h(x) + i \cdot h_2(x)) \bmod 7$，$h_2(x) = \lfloor x/7 \rfloor + 1$。
+$7$ 是質數，$h_2$ 的值都在 $1$ 到 $6$ 之間，和 $7$ 互質，探測序列會走遍所有格子（資結書定理~12.4）。
+\begin{center}
+\small
+\begin{tabular}{ccccl}
+\toprule
+鍵 & $h(x)$ & $h_2(x)$ & 試過的格子 & 放入 \\
+\midrule
+15 & 1 & 3 & 1 & [1] \\
+17 & 3 & 3 & 3 & [3] \\
+8 & 1 & 2 & 1（15）、$1 + 2 = 3$（17）、$1 + 4 = 5$ & [5] \\
+23 & 2 & 4 & 2 & [2] \\
+3 & 3 & 1 & 3（17）、4 & [4] \\
+5 & 5 & 1 & 5（8）、6 & [6] \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{|*{7}{c|}}
+\hline
+[0] & [1] & [2] & [3] & [4] & [5] & [6] \\ \hline
+ & 15 & 23 & 17 & 3 & 8 & 5 \\ \hline
+\end{tabular}
+\end{center}
+\end{pastsoln}

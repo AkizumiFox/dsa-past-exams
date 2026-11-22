@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-12}]{臺聯大電機類 115 學年度 第 12 題}
+（單選；2 分）
+
+If we change the rabbit's speed to ``3 steps each time'' and the tortoise's speed to ``1 step each
+time'', can this algorithm still detect the cycle?
+\begin{enumerate}[label=(\Alph*)]
+\item No, the rabbit might jump over the tortoise to reach NULL.
+\item Maybe, check if L is a multiple of B.
+\item Maybe, check if L is a multiple of 2.
+\item Perhaps, we can check if L+A-B and 2 are coprime.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{原題的問題}：照正確的分析，兔子改成一次走 $3$ 步時，演算法\textbf{一定}偵測得到環，
+四個選項都不對（(A) 說不能，(B)(C)(D) 都說要看條件）。 出題者想的應該是「相對速度是 $2$，
+環長 $L$ 是偶數時兔子可能一直跳過烏龜」，對應的是 (C)；下面說明為什麼這個顧慮不成立。 記號
+$A$、$L$、$B$ 沿用歷屆試題~\ref{px:ust-115-ee-ds-11}。
+
+把串列的節點依序記為 $x_0, x_1, \ldots$，環前面的尾巴長 $A$、環長 $L$。 資結書引理~5.3：
+$x_i = x_j$（$i < j$）若且唯若 $i \ge A$ 而且 $L$ 整除 $j - i$。 兔子每次走 $3$ 步（每一步都
+檢查是不是 \NIL），做完 $k$ 輪後烏龜在 $x_k$、兔子在 $x_{3k}$。 兩者相遇的條件是
+\[
+k \ge A \quad\text{而且}\quad L \mid 3k - k = 2k .
+\]
+只要取 $k$ 是 $L$ 的倍數而且 $k \ge A$，$2k$ 一定被 $L$ 整除，所以一定會相遇，而且在
+$k \le A + L$ 之內。 不論 $L$ 是奇是偶都一樣：$L$ 是偶數時，連 $k$ 是 $L/2$ 的倍數就夠了，相遇
+得更早。 沒有環時，兔子沿路會碰到 \NIL，正確回報沒有環。 例如 $A = 3$、$L = 4$：第 $4$ 輪烏龜
+在 $x_4$、兔子在 $x_{12}$，$12 - 4 = 8$ 是 $4$ 的倍數，相遇。
+
+「兔子跳過烏龜」的顧慮來自看兩者的距離：烏龜進環後，兔子每輪把距離縮短 $2$。 如果距離是奇數而
+$L$ 是偶數，距離的奇偶永遠不變，似乎會一直跳過。 但烏龜在第 $A$ 輪進環時，兔子在 $x_{3A}$，
+沿環往前追到烏龜的距離是 $(A - 3A) \bmod L = (-2A) \bmod L$。 $L$ 是偶數時這個數一定是偶數，
+所以不會發生一直跳過的情形。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 有環時串列上沒有 \NIL，兔子不可能走到 \NIL；而且上面證明了一定相遇。 錯。
+\item (B) 相遇與否和 $L$ 是不是 $B$ 的倍數無關（$B$ 本身就是相遇後才有的量）。 錯。
+\item (C) 不必檢查 $L$ 的奇偶，見上。 錯。
+\item (D) 一樣不需要任何條件。 錯。
+\end{itemize}
+本書的結論：能偵測，不需要附加條件。 若考場上一定要選，(C) 是出題者最可能的意圖，但它的推理
+不成立，可以提出釋疑。
+\end{pastsoln}

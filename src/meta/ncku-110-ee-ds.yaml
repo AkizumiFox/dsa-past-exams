@@ -1,0 +1,14 @@
+paper: ncku-110-ee-ds
+volume: 3
+school: 成大
+dept: 電機所
+year: 110
+subject: 資料結構
+instructions: ※ 考生請注意：本試題不可使用計算機。 請於答案卷(卡)作答，於本試題紙上作答者，不予計分。
+questions:
+  - {id: ncku-110-ee-ds-01, label: 第 1 題, chapter: 4}
+  - {id: ncku-110-ee-ds-02, label: 第 2 題, chapter: 6}
+  - {id: ncku-110-ee-ds-03, label: 第 3 題, chapter: 11}
+  - {id: ncku-110-ee-ds-04, label: 第 4 題, chapter: 25}
+  - {id: ncku-110-ee-ds-05, label: 第 5 題, chapter: 14}
+  - {id: ncku-110-ee-ds-06, label: 第 6 題, chapter: 12}

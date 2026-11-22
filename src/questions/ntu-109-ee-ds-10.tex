@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-10}]{臺大電機所 109 學年度（B）第 10 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of n delete-min operations is
+
+(A)~O(n) \qquad (B)~O(n log*n) \qquad (C)~O(n log n) \qquad (D)~O(n$^2$) \qquad (E)~O(n$^2$ log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) O(n log n)。
+
+\textbf{上界}。 用資結書第~8.6~節的位能 $\Phi(H) = t(H) + 2m(H)$（$t$ 是根串列的樹數，$m$ 是有標記
+的節點數），delete-min（extract-min）的平攤成本是 $O(D(n)) = O(\log n)$，$D(n)$ 是最大階數。 平攤
+成本和實際成本的關係是
+\[
+\sum_{i=1}^{n} c_i = \sum_{i=1}^{n} \hat c_i - \Phi(H_n) + \Phi(H_0) \le \sum_{i=1}^{n} \hat c_i + \Phi(H_0).
+\]
+堆積一開始有 $n$ 個節點，$t \le n$、$m \le n$，所以 $\Phi(H_0) \le 3n$。 $n$ 次 delete-min 的實際總時間
+不超過 $n \cdot O(\log n) + 3n = O(n \log n)$。 注意第一次 delete-min 可能就要整理 $n$ 棵樹，單次
+是 $\Theta(n)$，但總和仍是 $O(n \log n)$。
+
+\textbf{下界}。 先連續插入 $n$ 個任意的鍵（每次 $O(1)$），再做 $n$ 次 delete-min，取出的順序就是由小
+到大排好的結果。 費氏堆積只用比較來決定順序，以比較為基礎的排序至少要 $\Omega(n \log n)$ 次比較
+（資結書第~15.1~節），插入只花 $O(n)$，所以這 $n$ 次 delete-min 最壞至少要 $\Omega(n \log n)$。
+
+上下界相同，最緊的界是 $O(n \log n)$。 (A)、(B) 違反排序的下界；(D)、(E) 是上界但不緊，(D) 是把
+單次最壞 $\Theta(n)$ 乘以 $n$ 的結果。
+\end{pastsoln}

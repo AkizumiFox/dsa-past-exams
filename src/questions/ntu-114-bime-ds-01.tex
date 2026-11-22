@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-01}]{臺大生機所 114 學年度 第 1 題}
+（虛擬碼；10 分）
+
+\textbf{(10\%)} Write a function in pseudocode that takes an integer, N, as input and returns its
+binary representation as a string. If N is negative (N < 0), the function should return `NA'. For
+example, if N = 5, the function returns '101'.
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有說 $N = 0$ 要回傳什麼，這裡回傳 \texttt{'0'}。
+
+把 $N$ 一直除以 $2$，每次的餘數就是一個二進位位數，但先得到的是\textbf{最低位}，輸出時要倒過來。
+「先產生、後輸出」正好是堆疊的後進先出：每個餘數推進堆疊，最後一個一個彈出接成字串
+（資結書第~6.1~節）。
+
+\begin{pseudo}{整數轉成二進位字串}
+\Function{To-Binary}{$N$}
+    \If{$N < 0$}
+        \State \Return \texttt{'NA'}
+    \EndIf
+    \If{$N = 0$}
+        \State \Return \texttt{'0'}
+    \EndIf
+    \State $S \gets$ 空堆疊
+    \While{$N > 0$}
+        \State \Call{Push}{$S, N \bmod 2$} \Comment{最低位先進堆疊}
+        \State $N \gets \lfloor N / 2 \rfloor$
+    \EndWhile
+    \State $s \gets$ 空字串
+    \While{$S$ 不是空的}
+        \State 把字元 \Call{Pop}{$S$}（\texttt{'0'} 或 \texttt{'1'}）接在 $s$ 的尾端
+    \EndWhile
+    \State \Return $s$
+\EndFunction
+\end{pseudo}
+
+追蹤 $N = 5$：$5 \bmod 2 = 1$，$N \gets 2$；$2 \bmod 2 = 0$，$N \gets 1$；$1 \bmod 2 = 1$，
+$N \gets 0$。 堆疊由底到頂是 $1, 0, 1$，彈出的順序是 $1, 0, 1$，回傳 \texttt{'101'}。 再看
+$N = 6$：餘數依序 $0, 1, 1$，彈出 $1, 1, 0$，回傳 \texttt{'110'}。
+
+也可以寫成遞迴，讓遞迴呼叫的堆疊代替明確的堆疊（資結書第~6.4~節）：$N \ge 2$ 時，$N$ 的二進位
+是 $\lfloor N/2 \rfloor$ 的二進位後面再接一位 $N \bmod 2$。
+
+\begin{pseudo}{遞迴寫法（$N \ge 0$）}
+\Function{Bin}{$N$}
+    \If{$N < 2$}
+        \State \Return 一個字元的字串 \texttt{'0'} 或 \texttt{'1'}（就是 $N$）
+    \EndIf
+    \State \Return \Call{Bin}{$\lfloor N/2 \rfloor$} 後面接上 $N \bmod 2$ 這個字元
+\EndFunction
+\end{pseudo}
+\proc{To-Binary} 在 $N < 0$ 時回傳 \texttt{'NA'}，否則回傳 \proc{Bin}$(N)$ 即可。
+
+\textbf{正確性。} 寫成 $N = 2q + r$，$q = \lfloor N/2 \rfloor$，$r = N \bmod 2$。 若 $q$ 的二進位
+是 $b_{k} \cdots b_{1}$，則 $N = (b_k \cdots b_1)_2 \times 2 + r$，即二進位是 $b_k \cdots b_1 r$：
+最低位是 $r$，其餘位數是 $q$ 的二進位。 對 $N$ 做歸納就得到遞迴寫法正確；迴圈寫法依序推進的
+是最低位、次低位、…，彈出時順序反過來，最高位先出來，也正確。 $N \ge 1$ 時最高位是最後一次的
+餘數 $1$，所以不會有多餘的前導 $0$。
+
+\textbf{複雜度。} $N \ge 1$ 時二進位有 $\lfloor \lg N \rfloor + 1$ 位，迴圈各執行這麼多次，時間和
+空間都是 $\Theta(\log N)$（假設字串尾端接一個字元是 $O(1)$）。
+\end{pastsoln}

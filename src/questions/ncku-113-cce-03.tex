@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ncku-113-cce-03}]{成大電通所 113 學年度 是非題第 3 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+The time complexity of a function f($n$) is $\Omega$(g($n$)) if and only if there exist
+positive constants $c$ and $n_0$ such that f($n$) > cg($n$) for all $n$, $n\ge n_0$.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 $\Omega$ 的定義用的是「$\ge$」，不是「$>$」：
+
+$f(n) = \Omega(g(n))$ 若且唯若存在正的常數 $c$ 和 $n_0$，使得對所有 $n \ge n_0$，
+$f(n) \ge c\,g(n)$（資結書第~1.5~節）。
+
+題目把 $\ge$ 換成 $>$，「若且唯若」就不成立。 反例：取 $f(n) = g(n) = n \bmod 2$（偶數時是
+$0$，奇數時是 $1$）。 取 $c = 1$，對所有 $n$ 都有 $f(n) \ge 1 \cdot g(n)$，所以
+$f(n) = \Omega(g(n))$；但 $n$ 是偶數時 $f(n) = 0 = c\,g(n)$，不管 $c$、$n_0$ 怎麼取，
+「$f(n) > c\,g(n)$ 對所有 $n \ge n_0$」都不成立。
+
+補充：如果 $g(n)$ 從某個 $n$ 起一直是正的（演算法的執行時間通常如此），兩種寫法其實等價：
+由 $f(n) \ge c\,g(n)$ 可得 $f(n) > \frac{c}{2}\,g(n)$，換一個常數就好。 不過題目要的是定義本身，
+作答時寫出正確的定義（$\ge$）即可。
+\end{pastsoln}

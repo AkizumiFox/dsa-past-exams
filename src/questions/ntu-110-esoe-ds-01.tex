@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-01}]{臺大工科海洋所 110 學年度（A）第 1 題}
+（程式設計）
+
+Please use C++ (or Java) for all programming problems.
+
+\textbf{(10 \%)} Write a recursive function \textsf{isPrime} that will return a Boolean value
+\textsf{true} if the given number is a prime number. Otherwise, it will return false.
+\end{pastexam}
+
+\begin{pastsoln}
+質數是大於 $1$、而且除了 $1$ 和自己以外沒有其他正因數的整數。 判斷 $n$ 是不是質數，只要試 $2, 3,
+\ldots, \lfloor\sqrt{n}\rfloor$ 能不能整除 $n$：如果 $n = ab$ 而且 $2 \le a \le b$，那麼 $a^2 \le ab = n$，
+所以 $n$ 若有因數，一定有一個 $\le \sqrt{n}$。 把「從 $d$ 開始往上試」寫成遞迴：多一個參數 $d$ 表示
+目前要試的除數，給預設值 $2$，呼叫的人只要寫 \texttt{isPrime(n)}。
+\begin{minted}[fontsize=\small]{cpp}
+// 判斷 n 是不是質數；d 是目前要試的除數，外部呼叫時寫 isPrime(n)
+bool isPrime(int n, int d = 2) {
+    if (n < 2) return false;          // 0、1 和負數都不是質數
+    if (d > n / d) return true;       // d * d > n：試到 sqrt(n) 都沒有因數
+    if (n % d == 0) return false;     // 找到因數 d
+    return isPrime(n, d + 1);         // 換下一個除數
+}
+\end{minted}
+
+\textbf{為什麼對。} 對 $\lfloor\sqrt{n}\rfloor - d$ 歸納，證明「當 $n \ge 2$ 而且 $2, \ldots, d - 1$ 都不整除
+$n$ 時，\texttt{isPrime(n, d)} 回傳 $n$ 是不是質數」。 \texttt{d > n / d} 成立，也就是 $d^2 > n$，表示 $2$ 到 $\lfloor\sqrt{n}
+\rfloor$ 都試過、都不整除，由上面的理由 $n$ 是質數。 \texttt{n \% d == 0} 成立時，$2 \le d < n$（因為 $d^2 \le n$）而且
+$d \mid n$，$n$ 有真因數，不是質數。 否則 $2, \ldots, d$ 都不整除 $n$，條件對 $d + 1$ 成立，遞迴呼叫
+離終止更近一步。 一開始 $d = 2$，「$2, \ldots, 1$ 都不整除」是空的條件，自然成立。 條件寫成
+\texttt{d > n / d} 而不寫 \texttt{d * d > n}，是避免 $n$ 接近 \texttt{int} 上限時 \texttt{d * d} 溢位
+（整數除法下 $d > \lfloor n/d \rfloor$ 和 $d^2 > n$ 等價）。
+
+\textbf{複雜度。} 最多遞迴 $\sqrt{n}$ 層，每層 $O(1)$，時間 $O(\sqrt{n})$；遞迴深度 $O(\sqrt{n})$，
+呼叫堆疊要 $O(\sqrt{n})$ 的空間（資結書第~6.4~節：遞迴的每一層都佔一個堆疊框）。 例如
+\texttt{isPrime(1)} 回傳 false，\texttt{isPrime(2)} 第一次呼叫就回傳 true（$2 > 2/2 = 1$），
+\texttt{isPrime(91)} 試到 $d = 7$ 時 $91 = 7 \cdot 13$，回傳 false，\texttt{isPrime(97)} 試到 $d = 10$
+（$10 > 97/10 = 9$）回傳 true。
+
+這是尾遞迴，改成迴圈只要把最後一行換成 \texttt{d++} 並回到開頭，空間就變成 $O(1)$；題目要求遞迴，
+所以照上面寫。
+\end{pastsoln}

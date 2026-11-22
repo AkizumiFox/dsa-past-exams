@@ -1,0 +1,17 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-03}]{臺大工工所 106 學年度 第 3 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+Even though the minimum data of a min-heap is always on the root of the tree and it takes O(1) time to
+find it, the removal of this minimum data may take O(log n) time as we need to arrange the nodes to
+maintain the tree structure.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+最小堆積（資結書第~8.1~節）的根是最小值，找最小值只要看 $A[1]$，$\Theta(1)$。 刪除最小值（資結書虛擬碼~8.2）：
+把最後一個元素搬到根、堆積大小減一，再從根往下調整，每層和較小的子節點比，必要時交換。 調整最多走樹高那麼多層，
+$n$ 個元素的堆積是完全二元樹，高度 $\lfloor \lg n \rfloor + 1$，所以刪除是 $O(\log n)$；搬上去的是最後一個葉子，
+通常很大，常常一路換到底，最壞就是 $\Theta(\log n)$。 題目說「may take $O(\log n)$」，原因是要重新調整節點、
+維持堆積的結構，敘述正確。
+\end{pastsoln}

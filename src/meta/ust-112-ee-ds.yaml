@@ -1,0 +1,32 @@
+paper: ust-112-ee-ds
+volume: 3
+school: 臺聯大
+dept: 電機類
+year: 112
+subject: 資料結構
+instructions: '一、單選題，請於答案卡上作答：Ten multiple choice (single answer) questions (3 points per question)。 二、多選題，請於答案卡上作答：Ten multiple choice questions with one or more answers (3 points per question)（每一選項單獨計分，不倒扣）。 三、Short description question (10 points per question)，請於答案卷上作答。'
+questions:
+  - {id: ust-112-ee-ds-01, label: 第 1 題, chapter: 6}
+  - {id: ust-112-ee-ds-02, label: 第 2 題, chapter: 8}
+  - {id: ust-112-ee-ds-03, label: 第 3 題, chapter: 14}
+  - {id: ust-112-ee-ds-04, label: 第 4 題, chapter: 14}
+  - {id: ust-112-ee-ds-05, label: 第 5 題, chapter: 14}
+  - {id: ust-112-ee-ds-06, label: 第 6 題, chapter: 14}
+  - {id: ust-112-ee-ds-07, label: 第 7 題, chapter: 6}
+  - {id: ust-112-ee-ds-08, label: 第 8 題, chapter: 24}
+  - {id: ust-112-ee-ds-09, label: 第 9 題, chapter: 24}
+  - {id: ust-112-ee-ds-10, label: 第 10 題, chapter: 6}
+  - {id: ust-112-ee-ds-11, label: 第 11 題, chapter: 8}
+  - {id: ust-112-ee-ds-12, label: 第 12 題, chapter: 6}
+  - {id: ust-112-ee-ds-13, label: 第 13 題, chapter: 9}
+  - {id: ust-112-ee-ds-14, label: 第 14 題, chapter: 12}
+  - {id: ust-112-ee-ds-15, label: 第 15 題, chapter: 6}
+  - {id: ust-112-ee-ds-16, label: 第 16 題, chapter: 21}
+  - {id: ust-112-ee-ds-17, label: 第 17 題, chapter: 6}
+  - {id: ust-112-ee-ds-18, label: 第 18 題, chapter: 5}
+  - {id: ust-112-ee-ds-19, label: 第 19 題, chapter: 12}
+  - {id: ust-112-ee-ds-20, label: 第 20 題, chapter: 21}
+  - {id: ust-112-ee-ds-21, label: 第 21 題, chapter: 14}
+  - {id: ust-112-ee-ds-22, label: 第 22 題, chapter: 17}
+  - {id: ust-112-ee-ds-23, label: 第 23 題, chapter: 25}
+  - {id: ust-112-ee-ds-24, label: 第 24 題, chapter: 24}

@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-09}]{成大智慧資安學程 114 學年度 單選題第 9 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please identify the wrong descriptions in the following:
+\begin{enumerate}[label=\alph*)]
+\item Heap is suitable for a priority queue.
+\item Binary search is good for a dictionary.
+\item Binary search is faster than Heap in the insert operation.
+\item Max Heap is faster than binary serach in finding the maximum value.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c)。
+
+「binary search」指的是存在排好序的陣列裡、用二分搜尋查找的資料結構。 以 $n$ 個元素比較：
+\begin{center}
+\small
+\begin{tabular}{lcc}
+\toprule
+操作 & 排序陣列＋二分搜尋 & 二元堆積 \\
+\midrule
+找某個鍵 & $O(\log n)$ & $O(n)$ \\
+插入 & $O(n)$（要搬移元素） & $O(\log n)$ \\
+找最大值 & 依實作而定 & $O(1)$（最大堆積的根） \\
+刪除最大值 & $O(1)$（拿掉最後一格） & $O(\log n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item a) 正確。 優先佇列要的是插入和取出最大（小）值，堆積都是 $O(\log n)$，是標準的做法（資結書
+第~8.3~節）。
+\item b) 正確。 字典（dictionary）主要的操作是查找；資料不常變動時，排序陣列加二分搜尋查找是
+$O(\log n)$，很適合（資結書第~17.1~節）。
+\item c) \textbf{錯誤}。 在排序陣列插入，要先找位置，再把後面的元素全部往後搬一格，最壞 $O(n)$；堆積
+插入只要往上冒，$O(\log n)$。 插入是堆積比較快，敘述說反了。
+\item d) 正確（出題者的意思）。 最大堆積的根就是最大值，$O(1)$；用二分搜尋的方式去「找」一個值要
+$O(\log n)$。 嚴格說，排好序的陣列最大值就在最後一格，也是 $O(1)$，兩者一樣快，但那不是靠二分搜尋
+找到的。 單選題裡 c) 是明確錯誤的，d) 照出題的意思算對。
+\end{itemize}
+答案 c)。
+\end{pastsoln}

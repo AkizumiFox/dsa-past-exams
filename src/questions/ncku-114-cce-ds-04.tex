@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-04}]{成大電通所 114 學年度 單選題第 4 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+T(n) = 3T(n/4) + n log n, Please give the tightly bound of T(n).\\
+a) $\Theta$(n)\quad b) $\Theta$(n log n)\quad c) $\Theta$(n$^2$log n)\quad d) $\Theta$(n$^2$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：b) $\Theta(n \log n)$。
+
+用主定理（資結書定理~2.4）：$a = 3$、$b = 4$、$f(n) = n \lg n$，$n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$。
+\begin{itemize}
+\item $f(n) = n \lg n = \Omega(n^{\log_4 3 + \epsilon})$，取 $\epsilon = 0.2$：$\log_4 3 + 0.2 < 1$，而 $n \lg n \ge n$，成立。
+\item 正則條件：$a f(n/b) = 3 \cdot \frac{n}{4} \lg \frac{n}{4} \le \frac{3}{4} n \lg n = c f(n)$，$c = 3/4 < 1$。
+\end{itemize}
+屬於第三種情形，$T(n) = \Theta(f(n)) = \Theta(n \lg n)$。
+
+直覺：遞迴樹第 $k$ 層有 $3^k$ 個大小 $n/4^k$ 的子問題，這層的成本約 $(3/4)^k n \lg n$，成等比遞減，總和由根那一層
+決定。 a) 太小（光是根就要 $n \lg n$）；c)、d) 太大。
+\end{pastsoln}

@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-07}]{成大電機所 112 學年度 第 7 題}
+（問答）
+
+(15\%) A word-chain automaton is a directed graph with a finite number of vertices V, satisfying the
+following properties. (i) There is a specified initial node $v_0\in \boldsymbol{V}$. (ii) There is
+subset \textbf{F} of set $V$ which contains terminal nodes. (iii) Each edge is labeled with a symbol
+from a finite set \textbf{W}. A string \textbf{w$_1$w$_2$\ldots w$_k$} of symbols in \textbf{W} is
+recognized by the automaton if there is a directed path starting at the initial node $v_0$ and
+ending at a terminal node w $\in \boldsymbol{F}$ such that the sequence of edges in this directed
+path is \textbf{w$_1$w$_2$\ldots w$_k$}. The set \textbf{L} of all strings recognized by the
+automaton is called the language recognized by the automaton. A word-chain automaton is a special
+type of finite-state automaton, which in turn, is a type of finite-sate machine.
+
+(a) Draw a word-chain automaton such that the following five sentences can be recognized: 1. I like
+his rabbit. 2. They hate his cat. 3. I think that his hamster is cute. 4. I know that his rabbit
+is soft. 5. They hate to have a hamster.
+
+(b) Explain how the above automaton is used to check whether a sentence is recognized or not.
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~7~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-07}，這裡只列答案和重點。
+
+答案：
+\begin{itemize}
+\item (a) 把單字當成符號：從起點 $v_0$ 依句子的單字一路連邊，共用相同的開頭（I、They 開頭各一個分支；
+I 之後分出 like、think、know），五個句子的結尾都接到同一個終點（雙圈）。 這樣恰好辨識這五個句子，
+圖見智慧資安學程的那一題。
+\item (b) 從 $v_0$ 出發，依序讀單字，每讀一個就沿著標籤是這個單字的邊走一步；找不到這樣的邊就拒絕；
+讀完時停在終點集合 $F$ 裡就接受，否則拒絕。 每個節點的出邊用雜湊表存時，長度 $k$ 的句子檢查時間
+是期望 $O(k)$，和資結書第~27.4~節用有限自動機比對字串是同一個做法。
+\end{itemize}
+\end{pastsoln}

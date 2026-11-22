@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ncku-110-cce-ds-05}]{成大電通所 110 學年度 第 5 題}
+（證明、追蹤；18 分）
+
+(\textbf{18 pts})
+\begin{enumerate}[label=\alph*.]
+\item (10 \textbf{pts}) Prove the lower bound of the time complexity of the comparison based sorting algorithm for sorting $n$ elements.
+\item (2 \textbf{pts}) Let $n$ denote the number of elements. Let $m$ denote the maximal number of digits for all elements, where the each digit ranges from 0 to $k$.\\
+What is the time complexity of LSD radix sort algorithm?
+\item (4 \textbf{pts}) Show the result to sort 13 , 5, 10, 9, 6 in the non-decreasing order by the LSD radix sort algorithm, where each number is represented by 4 bits binary number. You have to show the results step by step.
+\item (2 \textbf{pts}) Is there exist any conflict on the result in a. and b.? Briefly justify your answer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(a) 是資結書第~15.1~節，(b)--(d) 是第~15.2.2~節。
+
+\textbf{(a)} 要證：任何比較排序在最壞情況下至少做 $\lceil \lg(n!) \rceil = \Omega(n \log n)$ 次比較（資結書定理~15.1）。
+
+\textbf{證明。} 固定 $n$，把演算法畫成\textbf{決策樹}：每個內部節點是一次比較「$a_i \le a_j$？」，依結果往左或往右；每個葉節點
+是演算法結束時對輸入做的重排。 一次執行就是從根走到一個葉節點，比較次數等於那個葉節點的深度，所以最壞情況的比較次數就是
+樹高 $d$。
+
+第一步：輸入是 $n$ 個不同的鍵時，大小順序有 $n!$ 種，它們必須走到不同的葉節點。 若兩種不同的順序 $\pi \ne \sigma$ 走到同一個
+葉節點，演算法在兩者上看到完全相同的比較結果，做完全相同的重排；同一個重排不可能把兩種不同的順序都排好，其中一個會排錯。
+所以正確的演算法至少有 $n!$ 個走得到的葉節點。
+
+第二步：高度 $d$ 的二元樹最多 $2^d$ 個葉節點（對 $d$ 歸納：$d = 0$ 時只有一個葉節點；$d \ge 1$ 時左右子樹高度至多 $d - 1$，
+各至多 $2^{d-1}$ 個葉節點）。
+
+合起來 $2^d \ge n!$，$d \ge \lg(n!)$。 再估計 $\lg(n!)$：
+\[
+\lg(n!) = \sum_{i=1}^{n} \lg i \ge \sum_{i=\lceil n/2 \rceil}^{n} \lg i \ge \frac{n}{2} \lg \frac{n}{2} = \frac{n}{2}(\lg n - 1)
+\ge \frac{n}{4} \lg n \quad (n \ge 4).
+\]
+所以 $d = \Omega(n \log n)$；每次比較至少花常數時間，任何比較排序的最壞時間都是 $\Omega(n \log n)$。
+\hfill$\blacksquare$
+
+\textbf{(b)} $O(m(n + k))$。 LSD 基數排序從最低位做到最高位，共 $m$ 趟；每一趟用穩定的計數排序（或 $k + 1$ 個桶子）依這一位
+分配，數字範圍是 $0$ 到 $k$，一趟要 $\Theta(n + k)$（資結書第~15.2.2~節）。 總時間 $\Theta(m(n + k))$；$m$、$k$ 是常數時就是
+$\Theta(n)$。
+
+\textbf{(c)} 四位二進位，每一位只有 $0$、$1$，每一趟把這一位是 $0$ 的依原來的順序放前面、是 $1$ 的依原來的順序放後面（穩定）。
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+趟 & 依據的位 & 結果（括號內是二進位） \\
+\midrule
+初始 & & 13 (1101),\ 5 (0101),\ 10 (1010),\ 9 (1001),\ 6 (0110) \\
+1 & 第 0 位（最低位） & 10 (1010),\ 6 (0110),\ 13 (1101),\ 5 (0101),\ 9 (1001) \\
+2 & 第 1 位 & 13 (1101),\ 5 (0101),\ 9 (1001),\ 10 (1010),\ 6 (0110) \\
+3 & 第 2 位 & 9 (1001),\ 10 (1010),\ 13 (1101),\ 5 (0101),\ 6 (0110) \\
+4 & 第 3 位（最高位） & 5 (0101),\ 6 (0110),\ 9 (1001),\ 10 (1010),\ 13 (1101) \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如第 1 趟：最低位是 $0$ 的有 $10, 6$，是 $1$ 的有 $13, 5, 9$，各自保持原來的先後。 第 2 趟看第 1 位：$13 = 1101$、$5 = 0101$、
+$9 = 1001$ 的第 1 位是 $0$，$10 = 1010$、$6 = 0110$ 是 $1$。 四趟後得到 $5, 6, 9, 10, 13$，由小到大排好。
+
+\textbf{(d)} 沒有矛盾。 (a) 的下界只適用於\textbf{比較排序}：演算法對鍵的資訊只能透過兩兩比較得到。 LSD 基數排序不比較兩個鍵的
+大小，而是直接用每一位數字的值當陣列（桶子）的索引，一次就把一個元素分到 $k + 1$ 種結果之一，不受二元決策樹的限制，所以
+可以做到 $O(m(n + k))$。 另外它的時間和 $m$、$k$ 有關：要表示 $n$ 個不同的數，至少要 $m \ge \log_{k+1} n$ 位，若 $k$ 是常數，
+$m(n + k) = \Omega(n \log n)$，也沒有真的打破 $n \log n$；只有在位數 $m$ 是常數（數值範圍有限）時才是線性時間。
+\end{pastsoln}

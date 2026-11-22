@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-39}]{臺大電信所 110 學年度（B）第 39 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Which of the following are balanced search trees?
+\begin{enumerate}[label=\Alph*.]
+\item Binary search tree
+\item Red-black tree
+\item AVL tree
+\item 2-3-4 tree
+\item Splay tree
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B、C、D。
+
+「平衡搜尋樹」指透過結構上的限制，保證 $n$ 個鍵時高度一定是 $O(\log n)$，所以搜尋、插入、刪除在最壞情況
+都是 $O(\log n)$（資結書第~10.5~節）。
+\begin{itemize}
+\item A 錯：一般的二元搜尋樹沒有任何平衡機制，依序插入排好的鍵會退化成一條鏈，高度 $n - 1$（資結書第~9.3~節）。
+\item B 對：紅黑樹的著色規則保證高度至多 $2\lg(n + 1)$（資結書定理~10.4）。
+\item C 對：AVL 樹每個節點左右子樹高度差至多 $1$，高度至多約 $1.44\lg n$（資結書定理~10.1）。
+\item D 對：2-3-4 樹所有葉子在同一層，高度 $\Theta(\log n)$（資結書第~10.4~節）。
+\item E 錯：伸展樹沒有維持任何平衡條件，單一棵樹可以是一條鏈（例如依序插入排好的鍵），單次操作最壞 $O(n)$；
+它保證的是\textbf{平攤} $O(\log n)$（資結書第~10.6~節）。 它屬於「自我調整」的搜尋樹，一般不算在平衡樹裡。
+\end{itemize}
+\end{pastsoln}

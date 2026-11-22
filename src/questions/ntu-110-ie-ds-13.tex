@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-13}]{臺大工工所 110 學年度 第 13 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+In this exam, the height of a leaf (in either a tree or heap) is defined as 0; unless otherwise
+specified, n denotes the size of the data structure; all heaps, unless otherwise specified, are min heaps.
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item All binary heaps are leftist heaps.
+\item All leftist heaps are of height $O(\log n)$.
+\item The Insert() operation in a leftist heap takes $O(\log n)$ time.
+\item The Delete() operation in a leftist heap takes $O(\log n)$ time.
+\item The Merge() operation between leftist heaps takes $O(\log n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(C)、(D)、(E)。 Delete() 在優先佇列的脈絡下指刪除最小值（\proc{Delete-Min}），下面照這個解讀。
+
+左傾堆積（資結書第~8.5~節的左傾樹）：令 $s(x)$ 是從 $x$ 往下走到第一個空指標要經過的節點數（空樹 $s = 0$），
+每個節點都要滿足 $s(x.\mathit{left}) \ge s(x.\mathit{right})$，再加上最小堆積的大小順序。 資結書定理~8.2：
+$n$ 個節點的左傾樹，最右邊的路徑最多 $\lg(n + 1)$ 個節點。
+
+\begin{itemize}
+\item (A) 對。 二元堆積本身已有堆積順序，只要檢查形狀。 二元堆積是完全二元樹，它的每棵子樹也是完全二元樹。
+$m$ 個節點的完全二元樹，前 $\lfloor \lg(m + 1) \rfloor$ 層全滿，下一層才開始缺節點，所以從根往下最早在那一層碰到空指標，
+$s = \lfloor \lg(m + 1) \rfloor$，只和節點數有關、隨節點數不減。 完全二元樹由左往右填，任何節點的左子樹節點數都不少於右子樹，
+所以 $s(\text{左}) \ge s(\text{右})$。 每個節點都滿足左傾條件，二元堆積都是左傾堆積。
+\item (B) 錯。 左傾只限制最右邊的路徑短，左邊可以很長。 反例：每個節點只有左子節點的一條鏈，$s(\text{左}) \ge 1 > 0 = s(\text{右})$，
+是左傾堆積，高度 $n - 1$。
+\item (C) 對。 插入就是和只有一個節點的左傾堆積合併，$O(\log n)$。
+\item (D) 對。 刪除最小值：拿掉根，把左右兩棵子樹合併，$O(\log n)$。
+\item (E) 對。 合併只沿著兩棵樹最右邊的路徑往下走，路徑長分別不超過 $\lg(n_1 + 1)$、$\lg(n_2 + 1)$，回來的路上
+交換左右子樹、更新 $s$，總時間 $O(\log n)$（$n = n_1 + n_2$）。 這是 (C)、(D) 的基礎。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-04}]{臺聯大電機類 114 學年度 第 4 題}
+（單選；2 分，答錯不倒扣）
+
+Which of the following sorting algorithms has an average time complexity of O(nlogn)?
+
+(A)~Bubble sort \qquad (B)~Selection sort \qquad (C)~Heap sort \qquad (D)~Insertion sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。 各種排序的時間見資結書第~14.7~節的比較表。
+\begin{itemize}
+\item (A) 氣泡排序：平均要做 $\Theta(n^2)$ 次交換（逆序對平均 $n(n-1)/4$ 個，每次交換只消掉一個），
+$\Theta(n^2)$。 錯。
+\item (B) 選擇排序：不論輸入，比較次數都是 $n(n-1)/2$，$\Theta(n^2)$。 錯。
+\item (C) 堆積排序：建堆積 $O(n)$，再做 $n - 1$ 次刪除最大值、每次 $O(\log n)$，最好、平均、最壞都
+是 $\Theta(n \log n)$。 對。
+\item (D) 插入排序：平均也要消掉 $n(n-1)/4$ 個逆序對，$\Theta(n^2)$；只有幾乎排好時才快。 錯。
+\end{itemize}
+\end{pastsoln}

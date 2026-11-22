@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-15}]{臺聯大電機類 112 學年度 第 15 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Which of the following are legal postfix expressions?
+
+(A)~ABC*+ \qquad (B)~ABC*+D+ \qquad (C)~AB*CD*+ \qquad (D)~ABC+D+E+ \qquad (E)~++A*BCD
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)。
+
+判斷方法和用堆疊計算後序式一樣（資結書第~6.3.2~節）：由左往右掃，遇到運算元把計數加 $1$，遇到
+二元運算子時堆疊裡至少要有 $2$ 個運算元，算完計數減 $1$。 合法的條件是：過程中每個運算子出現時
+計數 $\ge 2$，而且掃完時計數剛好是 $1$。 下面寫出每讀一個符號後的計數。
+
+\begin{itemize}
+\item (A) \texttt{ABC*+}：$1, 2, 3, 2, 1$。 合法，等於 $A + B \times C$。
+\item (B) \texttt{ABC*+D+}：$1, 2, 3, 2, 1, 2, 1$。 合法，等於 $(A + B \times C) + D$。
+\item (C) \texttt{AB*CD*+}：$1, 2, 1, 2, 3, 2, 1$。 合法，等於 $A \times B + C \times D$。
+\item (D) \texttt{ABC+D+E+}：$1, 2, 3, 2, 3, 2, 3, 2$。 掃完剩 $2$ 個運算元，少一個運算子，
+最後的 $A$ 和 $((B + C) + D) + E$ 沒有被合起來。 不合法。
+\item (E) \texttt{++A*BCD}：第一個符號就是 $+$，計數是 $0$，沒有運算元可以算。 不合法。
+（這個字串其實是合法的\textbf{前序}式 $(A + B \times C) + D$。）
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-03}]{臺聯大電機類 113 學年度 第 3 題}
+（單選；每題 3 分，答錯不倒扣）
+
+Which sorting algorithm listed below possesses the highest worst-case time complexity?
+
+(A)~Merge Sort \qquad (B)~Quick Sort \qquad (C)~Heap Sort \qquad (D)~Radix Sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+最壞情況的時間（資結書第~14.7~節的比較表、第~15.2.2~節）：
+\begin{itemize}
+\item (A) 合併排序：不管輸入如何都是 $\Theta(n\log n)$。
+\item (B) 快速排序：每次分割都切成 $0$ 和 $m - 1$ 時（例如取最後一個當基準、輸入已經排好），
+$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$。 四個裡最高。
+\item (C) 堆積排序：建堆 $O(n)$，再做 $n - 1$ 次取出、每次 $O(\log n)$，最壞 $\Theta(n\log n)$。
+\item (D) 基數排序：$d$ 位數、每位 $k$ 種值時是 $\Theta(d(n + k))$，$d$、$k$ 是常數時是線性的。
+\end{itemize}
+所以最壞情況最高的是快速排序。
+\end{pastsoln}

@@ -1,0 +1,87 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-35}]{臺大電信所 108 學年度（B）第四大題第 2 題}
+（簡答；10 分）
+
+Santa Claus is packing his sleigh with gifts. His sleigh can hold no more than $c$ kilograms. He
+has $n$ different gifts, and he wants to choose a subset of them to pack in his sleigh. Gift $i$
+has utility $u_i$ (the amount of happiness gift $i$ induces in some child) and weight $w_i$.
+Define the weight and utility of a \textit{set of gifts} as follows:
+\begin{itemize}
+\item The weight of a set of gifts is the \textbf{\textit{sum}} of their weights.
+\item The utility of a set of gifts is the \textbf{\textit{product}} of their utilities.
+\end{itemize}
+For example, if Santa chooses two gifts such that $w_1=3$, $u_1=4$ and $w_2=2$, $u_2=2$, then the
+total weight of this set of gifts is 5 kilograms and the total utility of this set of gifts is 8.
+All numbers mentioned are positive integers and for each gift $i$, $w_i\le c$. Your job is to devise
+an algorithm that lets Santa maximize the utility of the set of gifts he packs in his sleigh without
+exceeding its capacity $c$.
+\begin{enumerate}[label=(\alph*)]
+\item (3\%) A greedy algorithm for this problem takes the gifts in order of increasing weight until
+the sleigh can hold no more gifts. Give a small example to demonstrate that the greedy algorithm
+does not generate an optimal choice of gifts.
+\item (7\%) Let $H(k,x)$ be the maximal achievable utility if the gifts are drawn from 1 through
+$k$ (where $k\le n$) and weigh at most $x$ kilograms. Give a recurrence of $H(k,x)$ that can be used
+in a dynamic program to compute the maximum utility of a set of gifts that Santa can pack in his
+sleigh. Remember to evaluate the base cases for your recurrence.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本題 (a) 屬資結書第~19.5~節（貪心法失敗的例子），(b) 屬第~18.5~節（0/1 背包），放在第~18~章。
+
+\textbf{(a)} $c = 3$，兩個禮物：禮物 $1$：$w_1 = 1$、$u_1 = 1$；禮物 $2$：$w_2 = 3$、$u_2 = 5$。
+
+貪心法依重量由小到大，先放禮物 $1$（重 $1$），剩 $2$ 公斤，禮物 $2$（重 $3$）放不下，停止，效用 $1$。
+最佳解是只放禮物 $2$，效用 $5$。 $1 < 5$，貪心法不是最佳。 問題出在貪心法只看重量，不看效用：輕的
+禮物佔掉容量，卻可能幾乎沒有效用（$u = 1$ 乘上去等於沒放）。
+
+\textbf{(b)} 和 0/1 背包一樣，看第 $k$ 個禮物放或不放：
+\[
+H(k, x) =
+\begin{cases}
+1, & k = 0, \\
+H(k - 1, x), & k \ge 1,\ w_k > x, \\
+\max\bigl(H(k - 1, x),\ u_k \cdot H(k - 1, x - w_k)\bigr), & k \ge 1,\ w_k \le x,
+\end{cases}
+\qquad 0 \le x \le c.
+\]
+所求是 $H(n, c)$。
+
+\textbf{基底}：$H(0, x) = 1$。 沒有禮物可選時只能選空集合，空集合的乘積是 $1$（乘法的單位元素）。
+不能取 $0$：取 $0$ 的話，之後每個 $u_k \cdot H(k - 1, \cdot)$ 都是 $0$，整張表都變成 $0$。 另外
+$H(k, 0) = 1$ 也會自動成立，因為重量都是正整數，$w_k > 0$ 一定走第二行。 （題目保證每個 $w_i \le c$，
+$n \ge 1$ 時至少放得下一個禮物，而效用都 $\ge 1$，所以最佳解不會因為取空集合的 $1$ 而失真。）
+
+\textbf{正確性}：設 $S$ 是從禮物 $1..k$ 選、總重 $\le x$ 的最佳集合。
+\begin{itemize}
+\item $k \notin S$：$S$ 是從 $1..k-1$ 選、重 $\le x$ 的集合，效用 $\le H(k - 1, x)$；反過來
+$H(k - 1, x)$ 的集合也是合法的候選。
+\item $k \in S$（需要 $w_k \le x$）：$S \setminus \{k\}$ 從 $1..k-1$ 選、重 $\le x - w_k$，效用是
+$U(S)/u_k$。 因為 $u_k > 0$，「乘上 $u_k$」保持大小順序，$S \setminus \{k\}$ 必須是這個子問題的最佳解，
+否則換成更好的、再放回禮物 $k$，得到比 $S$ 更好的集合。 所以這種情形的最大值是
+$u_k \cdot H(k - 1, x - w_k)$。
+\end{itemize}
+兩種情形取大的，就是 $H(k, x)$。 這裡用到的關鍵是效用都是正數：如果允許 $0$ 或負數，乘積的大小順序
+會被打亂，最佳子結構就不成立了。
+
+\textbf{計算}：表的大小 $(n + 1) \times (c + 1)$，$k$ 由小到大填，每格 $O(1)$：
+\begin{pseudo}{乘積效用的背包}
+\Function{Max-Utility}{$w, u, n, c$}
+    \For{$x \gets 0$ \To $c$}
+        \State $H[0][x] \gets 1$
+    \EndFor
+    \For{$k \gets 1$ \To $n$}
+        \For{$x \gets 0$ \To $c$}
+            \State $H[k][x] \gets H[k-1][x]$
+            \If{$w_k \le x$ \AND $u_k \cdot H[k-1][x - w_k] > H[k][x]$}
+                \State $H[k][x] \gets u_k \cdot H[k-1][x - w_k]$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return $H[n][c]$
+\EndFunction
+\end{pseudo}
+時間、空間都是 $O(nc)$，和 0/1 背包一樣是擬多項式時間（資結書第~18.5.5~節）。 也可以把效用取對數，
+$\log U(S) = \sum_{i \in S} \log u_i$，就變成一般的 0/1 背包（價值 $\log u_i \ge 0$），只是要處理實數；
+直接用乘積的遞迴式比較乾淨。 用 (a) 的例子驗算：$H(1, x) = 1$（$x \ge 1$），$H(2, 3) =
+\max(H(1, 3), 5 \cdot H(1, 0)) = \max(1, 5) = 5$。
+\end{pastsoln}

@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:ntu-107-bime-ds-01}]{臺大生機所 107 學年度 第 1 題}
+（程式設計）
+
+(20\%) Write a pseudocode function that takes the head node of a \textbf{double linked list} as
+input and returns the largest item (value) in the double linked list. Before returning, your
+function should remove all the nodes with that value from the double linked list.\\
+Note: A node in a \textbf{double linked list} has two pointers, named `next' and `prev',
+respectively, where the `next' pointer is used to find the next node and the `prev' pointer is
+used to find the previous node.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}。 題目給的是第一個節點 $\mathit{head}$，沒有頭節點（哨兵），所以第一個節點的
+$\mathit{prev}$ 和最後一個節點的 $\mathit{next}$ 都是 \NIL。 每個節點的值放在 $\mathit{item}$。
+最大值可能就在第一個節點，刪掉之後串列的開頭會換人，呼叫的人要拿到新的開頭，所以函式回傳兩樣
+東西：最大值和新的 $\mathit{head}$（用 C 寫時，可以改成傳 \texttt{head} 的位址）。 空串列沒有最大值，
+當成錯誤。
+
+做法分兩趟：第一趟走過整串找出最大值 $m$；第二趟再走一次，把值等於 $m$ 的節點都拆掉。 不能
+只走一趟邊找邊刪，因為走到後面才知道前面看到的是不是最大值。
+
+\begin{pseudo}{找出最大值並刪掉所有值等於它的節點}
+\Function{Remove-Max}{$\mathit{head}$}
+    \If{$\mathit{head} = \NIL$}
+        \State \Error{空串列}
+    \EndIf
+    \State $m \gets \mathit{head}.\mathit{item}$ \Comment{第一趟：找最大值}
+    \State $x \gets \mathit{head}.\mathit{next}$
+    \While{$x \ne \NIL$}
+        \If{$x.\mathit{item} > m$}
+            \State $m \gets x.\mathit{item}$
+        \EndIf
+        \State $x \gets x.\mathit{next}$
+    \EndWhile
+    \State $x \gets \mathit{head}$ \Comment{第二趟：刪掉值等於 $m$ 的節點}
+    \While{$x \ne \NIL$}
+        \State $y \gets x.\mathit{next}$ \Comment{先記住下一個，$x$ 可能被釋放}
+        \If{$x.\mathit{item} = m$}
+            \If{$x.\mathit{prev} \ne \NIL$}
+                \State $x.\mathit{prev}.\mathit{next} \gets x.\mathit{next}$
+            \Else
+                \State $\mathit{head} \gets x.\mathit{next}$ \Comment{$x$ 是第一個節點}
+            \EndIf
+            \If{$x.\mathit{next} \ne \NIL$}
+                \State $x.\mathit{next}.\mathit{prev} \gets x.\mathit{prev}$
+            \EndIf
+            \State 釋放 $x$
+        \EndIf
+        \State $x \gets y$
+    \EndWhile
+    \State \Return $(m, \mathit{head})$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 第一趟的迴圈不變量：進入迴圈時，$m$ 是 $x$ 之前所有節點的最大值。 一開始
+只有第一個節點，成立；每輪看一個節點並在需要時更新 $m$，仍然成立；$x = \NIL$ 時看完全部，$m$
+就是整串的最大值。
+
+第二趟拆一個節點 $x$ 的方法和資結書虛擬碼~5.7（\proc{DList-Remove}）一樣，把它前一個的
+$\mathit{next}$ 和後一個的 $\mathit{prev}$ 互相接起來；差別是這裡沒有哨兵，前一個或後一個可能
+不存在，所以第 14、18 行要先檢查。 $x$ 沒有前一個節點時，它就是目前的第一個節點，拆掉後新的
+開頭是 $x.\mathit{next}$（第 17 行）。 連續好幾個節點都是 $m$ 時也對：前一個被拆掉之後，下一個
+節點的 $\mathit{prev}$ 已經改成更前面那個沒被拆的節點（或 \NIL），輪到它時照樣接得起來。 第 12 行
+先把 $x.\mathit{next}$ 存進 $y$，因為第 20 行釋放 $x$ 之後就不能再讀 $x.\mathit{next}$。 第二趟的
+不變量：$x$ 之前的節點已經沒有值等於 $m$ 的，而且留下來的節點前後指標都正確地連成一串。
+迴圈結束時整串都檢查過了。
+
+例如 $\mathit{head}$ 指向 $\langle 7, 3, 7, 7, 2 \rangle$：第一趟得 $m = 7$。 第二趟拆第一個 $7$
+時它沒有前一個，$\mathit{head}$ 改成 $3$，$3.\mathit{prev} \gets \NIL$；拆第三個節點時接起 $3$ 和
+第四個節點；拆第四個節點時接起 $3$ 和 $2$。 結果回傳 $7$，串列是 $\langle 3, 2 \rangle$。 如果串列
+裡的值全部相同，全部都會被拆掉，回傳的 $\mathit{head}$ 是 \NIL。
+
+\textbf{複雜度}。 $n$ 是節點數。 兩趟各走過每個節點一次，每個節點做常數次比較和指標修改，時間
+$\Theta(n)$；只用了 $m$、$x$、$y$ 幾個變數，額外空間 $\Theta(1)$。 找最大值本來就要看過每個節點，
+所以 $\Theta(n)$ 已經是最好的。
+
+如果串列像資結書第~5.2~節那樣有一個環狀的頭節點 $h$，第一個節點是 $h.\mathit{next}$、走到
+$x = h$ 就停；拆節點時前後一定都有節點，第 14--19 行就簡化成 \proc{DList-Remove}$(x)$ 的兩行，
+也不必回傳新的開頭。
+\end{pastsoln}

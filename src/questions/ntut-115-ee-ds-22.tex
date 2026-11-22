@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-22}]{北科大電機所（戊組）115 學年度 問答題第 2 題}
+（問答）
+
+Consider the following undirected graph:\\
+Vertices: A, B, C, D, E, F\\
+Edges: (A,B), (A,C), (B,D), (C,D), (C,E), (D,E), (D,F), (E,F)\\
+(a) Draw the adjacency matrix representation of this graph. \textbf{(5\%)}\\
+(b) Starting from vertex A, show the order of vertices visited using Breadth-First Search (BFS). Assume
+that when multiple vertices are available, they are visited in alphabetical order. \textbf{(5\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 鄰接矩陣（資結書第~21.2~節）：有邊 $(u, v)$ 時 $M[u][v] = M[v][u] = 1$，否則 $0$。 無向圖的矩陣對稱，
+對角線是 $0$（沒有自迴圈）。
+\begin{center}
+\begin{tabular}{c|cccccc}
+ & A & B & C & D & E & F \\
+\hline
+A & 0 & 1 & 1 & 0 & 0 & 0 \\
+B & 1 & 0 & 0 & 1 & 0 & 0 \\
+C & 1 & 0 & 0 & 1 & 1 & 0 \\
+D & 0 & 1 & 1 & 0 & 1 & 1 \\
+E & 0 & 0 & 1 & 1 & 0 & 1 \\
+F & 0 & 0 & 0 & 1 & 1 & 0 \\
+\end{tabular}
+\end{center}
+檢查：共 $16$ 個 $1$，是邊數 $8$ 的兩倍；每列的和是度數，A 到 F 依序是 $2, 2, 3, 4, 3, 2$，加起來 $16 = 2 \times 8$。
+
+\textbf{(b)} BFS 的拜訪順序：\textbf{A, B, C, D, E, F}。
+
+用佇列（資結書第~21.3~節）：取出一個頂點，把它還沒拜訪過的鄰居依字母順序拜訪並放進佇列。
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+取出 & 鄰居（字母順序） & 新拜訪的 & 佇列（前 $\to$ 後） \\
+\midrule
+（開始） & & A & A \\
+A & B, C & B, C & B, C \\
+B & A, D & D & C, D \\
+C & A, D, E & E & D, E \\
+D & B, C, E, F & F & E, F \\
+E & C, D, F & — & F \\
+F & D, E & — & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+各頂點離 A 的距離：A 是 $0$；B、C 是 $1$；D、E 是 $2$；F 是 $3$。 BFS 依距離一層一層拜訪，同一層內照字母順序，
+所以順序是 A、B、C、D、E、F。 BFS 樹的邊是 (A,B)、(A,C)、(B,D)、(C,E)、(D,F)。
+\end{pastsoln}

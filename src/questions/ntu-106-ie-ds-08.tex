@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-08}]{臺大工工所 106 學年度 第 8 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+For an undirected graph G, the \textit{clique number} $\omega$(G) is the cardinality of its largest
+clique, and the \textit{chromatic number} $\chi$(G) is the minimum number of colors needed to color the
+vertices, such that no edge has end-points with the same color. We have $\omega$(G) $\leqq$ $\chi$(G).
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+團（clique）是兩兩相鄰的頂點集合（資結書第~28.1~節）；色數就是資結書第~20.1~節著色問題裡「能塗的最小顏色數」。
+
+\textbf{證明}。 設 $K$ 是 $G$ 的一個最大團，$|K| = \omega(G)$。 取任意一種合法的塗法（相鄰頂點不同色）。
+$K$ 裡任兩個頂點之間都有邊，所以兩兩不同色，這種塗法至少用了 $\omega(G)$ 種顏色。 對每一種合法塗法都成立，
+包括顏色最少的那一種，所以 $\chi(G) \ge \omega(G)$。 \hfill$\blacksquare$
+
+等號不一定成立，例如五個頂點的環 $C_5$：沒有三角形，$\omega = 2$；但奇數長的環不能兩色塗（塗兩色時沿著環顏色交替，
+繞一圈回到起點要偶數步），$\chi = 3$。
+\end{pastsoln}

@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-04}]{北科大電機所（戊組） 114 學年度 第 I-4 題}
+（單選；4 分）
+
+In a complete binary tree with $n$ internal nodes, how many leaf nodes are there? \textbf{(4\%)}\\
+a)~$n$ \qquad b)~$2n$ \qquad c)~$n+1$ \qquad d)~$2n+1$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c) $n + 1$。
+
+\textbf{題目的用語。} 這裡的 complete binary tree 指的是每個內部節點都恰好有兩個子節點的樹（有些書叫
+full binary tree，也有書把這種樹稱為 complete）。 若照「除了最後一層都填滿、最後一層靠左」的定義，
+內部節點可能有一個只有左子節點，答案就不固定：例如兩個節點、根只有左子節點，這也是完整二元樹，內部節點 $1$ 個、葉子也只有 $1$ 個，等於 $n$ 而不是 $n + 1$。 照這個定義沒有一個選項永遠成立，所以採用前一種讀法。
+
+\textbf{證明。} 設內部節點 $n$ 個、葉子 $\ell$ 個。 每個內部節點有 $2$ 個子節點，所以邊數是 $2n$；
+除了根，每個節點恰好有一條邊連到父節點，邊數也是 $n + \ell - 1$。 $2n = n + \ell - 1$，得
+$\ell = n + 1$。 這也是資結書定理~7.2 的 $n_0 = n_2 + 1$（此時 $n_1 = 0$）。
+
+例：只有根，$n = 0$、葉子 $1$；根加兩個子節點，$n = 1$、葉子 $2$。 答案 c)。
+\end{pastsoln}

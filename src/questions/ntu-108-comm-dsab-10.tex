@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-10}]{臺大電信所 108 學年度（B）第 10 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+If any problem in \textit{NPC} can be solved in linear time, then $P=NP=NPC$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（照出題的意思）。 嚴格來說「$\mathrm{NPC} = \mathrm{P}$」有兩個不重要的例外，見最後一段。
+
+設 $B$ 是 NP 完備問題，而且可以在線性時間解，那麼 $B \in \mathrm{P}$。 由資結書定理~28.5，任取
+$A \in \mathrm{NP}$，$A \le_{\mathrm{p}} B$，先花多項式時間把 $A$ 的輸入轉成 $B$ 的輸入，再用 $B$
+的線性時間演算法解，總共是多項式時間，所以 $A \in \mathrm{P}$。 得到
+$\mathrm{NP} \subseteq \mathrm{P}$，加上 $\mathrm{P} \subseteq \mathrm{NP}$，$\mathrm{P} = \mathrm{NP}$。
+
+再看 NPC：
+\begin{itemize}
+\item $\mathrm{NPC} \subseteq \mathrm{NP} = \mathrm{P}$。
+\item 反過來，任取 $A \in \mathrm{P}$，只要 $A$ 至少有一個答「是」的輸入 $y_1$、一個答「否」的輸入
+$y_0$，$A$ 就是 NP 難的：對任何 $C \in \mathrm{NP} = \mathrm{P}$，歸約先用多項式時間直接解 $C$，答
+「是」就輸出 $y_1$，答「否」就輸出 $y_0$。 所以這樣的 $A$ 是 NP 完備的。
+\end{itemize}
+因此 $\mathrm{P} = \mathrm{NP}$，而且 P 裡的問題除了兩個以外全是 NP 完備的。
+
+那兩個例外是「所有輸入都答否」和「所有輸入都答是」的問題：沒有「是」（或沒有「否」）的輸入可以
+當歸約的目標，別的問題歸約不過去，所以它們不是 NP 完備的。 這兩個問題沒有實際意義，一般課本畫
+「若 $\mathrm{P} = \mathrm{NP}$」的關係圖時就寫成 $\mathrm{P} = \mathrm{NP} = \mathrm{NPC}$，本題也是這個
+意思，答「對」。
+\end{pastsoln}

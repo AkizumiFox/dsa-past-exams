@@ -1,0 +1,107 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-04}]{臺大生機所 114 學年度 第 4 題}
+（設計；20 分）
+
+\textbf{(20\%)} Consider two binary search trees, T1 and T2, which contain the same set of keys,
+\{1, 2, \ldots, n\}. The goal is to transform T1 to T2 using only rotations. Sketch a general method
+for doing this, ensuring that the binary search tree property is maintained. Please first clearly
+define the rotation procedures in your solution.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{旋轉的定義}（資結書第~10.1~節）。 節點有 $\mathit{left}$、$\mathit{right}$、父指標 $p$。
+\begin{itemize}
+\item \textbf{右旋} \proc{Right-Rotate}$(T, y)$：$y$ 的左子節點 $x$ 升上來取代 $y$ 的位置，$y$
+變成 $x$ 的右子節點；$x$ 原本的右子樹 $\beta$（靠內側那棵）改接成 $y$ 的左子樹。
+\item \textbf{左旋} \proc{Left-Rotate}$(T, x)$：左右對調，$x$ 的右子節點 $y$ 升上來，$y$ 原本的
+左子樹改接成 $x$ 的右子樹。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[n/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+  s/.style={isosceles triangle,shape border rotate=90,draw,minimum height=6mm,minimum width=7mm,
+  inner sep=0pt,font=\small}, level distance=10mm, level 1/.style={sibling distance=16mm},
+  level 2/.style={sibling distance=10mm}]
+\node[n] {$y$}
+  child {node[n] {$x$} child {node[s] {$\alpha$}} child {node[s] {$\beta$}}}
+  child {node[s] {$\gamma$}};
+\draw[->,thick] (1.7,-1.0) -- node[above,font=\small] {右旋 $y$} (3.5,-1.0);
+\draw[<-,thick] (1.7,-1.5) -- node[below,font=\small] {左旋 $x$} (3.5,-1.5);
+\begin{scope}[xshift=52mm]
+\node[n] {$x$}
+  child {node[s] {$\alpha$}}
+  child {node[n] {$y$} child {node[s] {$\beta$}} child {node[s] {$\gamma$}}};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{pseudo}{右旋（帶父指標）}
+\Procedure{Right-Rotate}{$T, y$}
+    \State $x \gets y.\mathit{left}$
+    \State $y.\mathit{left} \gets x.\mathit{right}$ \Comment{$\beta$ 改接到 $y$ 底下}
+    \If{$x.\mathit{right} \ne \NIL$}
+        \State $x.\mathit{right}.p \gets y$
+    \EndIf
+    \State $x.p \gets y.p$ \Comment{$x$ 接到 $y$ 原本的位置}
+    \If{$y.p = \NIL$}
+        \State $T.\mathit{root} \gets x$
+    \ElsIf{$y = y.p.\mathit{left}$}
+        \State $y.p.\mathit{left} \gets x$
+    \Else
+        \State $y.p.\mathit{right} \gets x$
+    \EndIf
+    \State $x.\mathit{right} \gets y$
+    \State $y.p \gets x$
+\EndProcedure
+\end{pseudo}
+\proc{Left-Rotate} 把上面的 $\mathit{left}$、$\mathit{right}$ 對調即可（資結書虛擬碼~10.5）。 兩種
+旋轉都是 $O(1)$。
+
+\textbf{旋轉保持二元搜尋樹性質。} 旋轉前的中序是 $\alpha, x, \beta, y, \gamma$，旋轉後還是
+$\alpha, x, \beta, y, \gamma$；這一段以外的部分完全沒動。 二元搜尋樹性質等價於「中序由小到大」，
+所以旋轉後仍是二元搜尋樹。 而且右旋 $y$ 之後再左旋 $x$ 會回到原樣，兩種旋轉互為逆操作。
+
+\textbf{方法：都轉成同一條「右鏈」。} 鍵值 $1..n$ 的二元搜尋樹中，所有節點都沒有左子節點的只有
+一棵：根 $1$，$1$ 的右子節點 $2$，……，一路往右到 $n$。 叫它 $C$。
+\begin{enumerate}
+\item 把 $T_1$ 用右旋變成 $C$，記下這串旋轉。
+\item 把 $T_2$ 也用右旋變成 $C$，記下這串旋轉 $r_1, r_2, \ldots, r_m$；$r_j$ 是「右旋 $y_j$，
+升上來的是 $x_j$」。
+\item 從 $C$ 開始，依\textbf{相反順序}做逆操作：左旋 $x_m$、左旋 $x_{m-1}$、……、左旋 $x_1$。
+每一步都把 $T_2$ 那串旋轉倒退一步，做完就得到 $T_2$。
+\end{enumerate}
+第 1 步接第 3 步，就是只用旋轉把 $T_1$ 變成 $T_2$。
+
+把任意二元搜尋樹轉成右鏈的程序：沿著從根一直往右走的路徑（右脊）往下，遇到有左子節點的節點就
+右旋它，讓左子節點升上來，然後從升上來的節點繼續檢查。
+
+\begin{pseudo}{用右旋把二元搜尋樹變成右鏈}
+\Procedure{To-Right-Chain}{$T$}
+    \State $v \gets T.\mathit{root}$
+    \While{$v \ne \NIL$}
+        \If{$v.\mathit{left} \ne \NIL$}
+            \State \Call{Right-Rotate}{$T, v$} \Comment{$v$ 的左子節點升上來}
+            \State $v \gets v.p$ \Comment{從升上來的節點再檢查}
+        \Else
+            \State $v \gets v.\mathit{right}$ \Comment{$v$ 已經定位，往右脊下一個走}
+        \EndIf
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性。} 迴圈不變量：$v$ 以上的右脊節點都沒有左子節點。 右旋 $v$ 時升上來的節點 $u$
+接在右脊上原本 $v$ 的位置，$v$ 變成 $u$ 的右子節點，仍在右脊上，所以右脊節點數\textbf{恰好多
+一個}；不變量仍成立（$u$ 還沒檢查，所以 $v \gets u$）。 往右走時 $v$ 沒有左子節點，不變量也成立。
+迴圈結束時 $v = \NIL$，右脊上每個節點都沒有左子節點，而不在右脊上的節點只能從某個右脊節點的左子
+樹進去，所以所有節點都在右脊上，樹就是 $C$。 每一步都是旋轉，二元搜尋樹性質一直保持。
+
+\textbf{旋轉次數與時間。} 右脊一開始至少有 $1$ 個節點（根），最後有 $n$ 個，每次右旋多一個，
+所以\textbf{最多 $n - 1$ 次右旋}。 迴圈每一圈不是右旋就是往右脊走一步，往右走最多 $n$ 次，總時間
+$O(n)$。 整個方法：$T_1 \to C$ 最多 $n - 1$ 次，$C \to T_2$ 也最多 $n - 1$ 次，合計
+\textbf{最多 $2n - 2$ 次旋轉}、$O(n)$ 時間。 （逆操作要知道 $x_j$ 是哪個節點：記下它的鍵值，
+到時在 $C$ 轉出來的樹裡找到它；或記下指標，節點本身在旋轉中不會換。）
+
+\textbf{例：} $n = 3$，$T_1$ 是根 $3$、左子節點 $2$、$2$ 的左子節點 $1$（左鏈）；$T_2$ 是根 $2$、
+子節點 $1$、$3$。 $T_1$：右旋 $3$（$2$ 升上來，成為根 $2$、子節點 $1$、$3$），再右旋 $2$
+（$1$ 升上來），得到 $C = 1 \to 2 \to 3$。 $T_2$：右旋 $2$（$1$ 升上來）就是 $C$，記下
+$x_1 = 1$。 所以從 $C$ 左旋 $1$ 就得到 $T_2$。 合起來 $T_1 \to T_2$ 是：右旋 $3$、右旋 $2$、
+左旋 $1$。 （這個例子其實右旋 $3$ 一次就到 $T_2$ 了；這個方法保證的是 $2n - 2$ 次以內，不保證
+最少。）
+\end{pastsoln}

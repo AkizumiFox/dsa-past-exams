@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-07}]{臺大工科海洋所 109 學年度 第 7 題}
+（追蹤）
+
+\textbf{(15 \%)} Trace the in-place, array-based quicksort algorithm as it sorts the following
+letters into alphabetical order:\quad E\quad S\quad O\quad E\quad E\quad X\quad A\quad M\\
+Always choose the last element of any subarray to be the pivot. Show the array after each swap.
+\end{pastexam}
+
+\begin{pastsoln}
+題目規定取最後一個當基準，沒有規定分割的寫法。 這裡用資結書虛擬碼~14.8 的 Lomuto 分割（基準
+$x = A[r]$，$j$ 由左往右掃，$A[j] \le x$ 就和 $A[i]$ 交換、$i$ 加一，最後把基準換到 $A[i]$），遞迴
+範圍是 $[p..q-1]$ 和 $[q+1..r]$（資結書虛擬碼~14.9）。 字母依字母順序比較，相同的字母
+$\mathrm{E} \le \mathrm{E}$ 成立。 Lomuto 會有「自己和自己交換」的情形（$i = j$），陣列不變，表上也
+列出來，標「不變」。
+
+位置編號 $1$--$8$，粗體是這次交換的兩格。
+
+\begin{center}
+\small
+\begin{tabular}{lll*{8}{c}}
+\toprule
+範圍 & 基準 & 交換 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+開始 & & & E & S & O & E & E & X & A & M \\
+\midrule
+$[1..8]$ & M & $A[1] \leftrightarrow A[1]$（不變） & \textbf{E} & S & O & E & E & X & A & M \\
+ & & $A[2] \leftrightarrow A[4]$ & E & \textbf{E} & O & \textbf{S} & E & X & A & M \\
+ & & $A[3] \leftrightarrow A[5]$ & E & E & \textbf{E} & S & \textbf{O} & X & A & M \\
+ & & $A[4] \leftrightarrow A[7]$ & E & E & E & \textbf{A} & O & X & \textbf{S} & M \\
+ & & 基準 $A[5] \leftrightarrow A[8]$ & E & E & E & A & \textbf{M} & X & S & \textbf{O} \\
+\midrule
+$[1..4]$ & A & 基準 $A[1] \leftrightarrow A[4]$ & \textbf{A} & E & E & \textbf{E} & M & X & S & O \\
+\midrule
+$[2..4]$ & E & $A[2] \leftrightarrow A[2]$（不變） & A & E & E & E & M & X & S & O \\
+ & & $A[3] \leftrightarrow A[3]$（不變） & A & E & E & E & M & X & S & O \\
+ & & 基準 $A[4] \leftrightarrow A[4]$（不變） & A & E & E & E & M & X & S & O \\
+\midrule
+$[2..3]$ & E & $A[2] \leftrightarrow A[2]$（不變） & A & E & E & E & M & X & S & O \\
+ & & 基準 $A[3] \leftrightarrow A[3]$（不變） & A & E & E & E & M & X & S & O \\
+\midrule
+$[6..8]$ & O & 基準 $A[6] \leftrightarrow A[8]$ & A & E & E & E & M & \textbf{O} & S & \textbf{X} \\
+\midrule
+$[7..8]$ & X & $A[7] \leftrightarrow A[7]$（不變） & A & E & E & E & M & O & S & X \\
+ & & 基準 $A[8] \leftrightarrow A[8]$（不變） & A & E & E & E & M & O & S & X \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+第一次分割的細節（$x = \mathrm{M}$，$i$ 從 $1$ 開始）：$j = 1$，$\mathrm{E} \le \mathrm{M}$，自己交換，
+$i = 2$；$j = 2$，$\mathrm{S}$ 不是；$j = 3$，$\mathrm{O}$ 不是；$j = 4$，$\mathrm{E}$ 是，和 $A[2]$ 交換，
+$i = 3$；$j = 5$，$\mathrm{E}$ 是，和 $A[3]$ 交換，$i = 4$；$j = 6$，$\mathrm{X}$ 不是；$j = 7$，$\mathrm{A}$
+是，和 $A[4]$ 交換，$i = 5$。 最後基準 $\mathrm{M}$ 換到 $A[5]$，回傳 $q = 5$。
+
+之後：$[1..4] = \mathrm{E\,E\,E\,A}$ 的基準 $\mathrm{A}$ 最小，三個 $\mathrm{E}$ 都不 $\le \mathrm{A}$，直接把
+基準換到 $A[1]$，$q = 1$。 $[2..4] = \mathrm{E\,E\,E}$ 全部 $\le$ 基準，每次都是自己交換，$q = 4$；
+$[2..3]$ 同理，$q = 3$。 $[6..8] = \mathrm{X\,S\,O}$ 的基準 $\mathrm{O}$ 最小，換到 $A[6]$；$[7..8] =
+\mathrm{S\,X}$ 已排好。 只有一個字母或空的範圍直接返回。 結果：
+\[
+\mathrm{A\;E\;E\;E\;M\;O\;S\;X}.
+\]
+真正改變陣列的交換有 $6$ 次。 這個例子也看得到 Lomuto 遇到大量相同鍵時的缺點：三個 $\mathrm{E}$
+每次都切成 $m - 1$ 和 $0$（資結書第~14.5~節）。
+
+若改用「兩個指標從兩端往中間找、最後把基準換到 $i$」的分割（有些課本的 in-place quicksort 是這樣
+寫的），交換的過程不同：$[1..8]$ 先交換 $A[2] \leftrightarrow A[7]$ 得 $\mathrm{E\,A\,O\,E\,E\,X\,S\,M}$，再
+$A[3] \leftrightarrow A[5]$ 得 $\mathrm{E\,A\,E\,E\,O\,X\,S\,M}$，基準換到 $A[5]$ 得
+$\mathrm{E\,A\,E\,E\,M\,X\,S\,O}$，之後依同樣方式遞迴，最後結果一樣。 作答時先寫出用的是哪一種分割。
+\end{pastsoln}

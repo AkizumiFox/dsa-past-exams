@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-113-cce-11}]{成大電通所 113 學年度 簡答題第 2 題}
+（簡答）
+
+(5 pts) Show the postfix expression for the equation (A\% B)* (C-D) / (E +F) .
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\[
+\texttt{A B \% C D - * E F + /}
+\]
+
+\texttt{\%}（取餘數）和 \texttt{*}、\texttt{/} 同一個優先順序，都是由左到右結合；\texttt{+}、
+\texttt{-} 較低。 照資結書虛擬碼~6.8 的中序轉後序：運算元直接輸出；左括號推入堆疊；右括號
+一直彈出到左括號；運算子進來前，先把堆疊頂端應該比它先算的運算子彈出（優先順序較高，或同級而在左邊）。 逐個符號追蹤：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+符號 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+\texttt{(} & \texttt{(} & \\
+\texttt{A} & \texttt{(} & \texttt{A} \\
+\texttt{\%} & \texttt{( \%} & \texttt{A} \\
+\texttt{B} & \texttt{( \%} & \texttt{A B} \\
+\texttt{)} & （空） & \texttt{A B \%} \\
+\texttt{*} & \texttt{*} & \texttt{A B \%} \\
+\texttt{(} & \texttt{* (} & \texttt{A B \%} \\
+\texttt{C} & \texttt{* (} & \texttt{A B \% C} \\
+\texttt{-} & \texttt{* ( -} & \texttt{A B \% C} \\
+\texttt{D} & \texttt{* ( -} & \texttt{A B \% C D} \\
+\texttt{)} & \texttt{*} & \texttt{A B \% C D -} \\
+\texttt{/} & \texttt{/} & \texttt{A B \% C D - *} \\
+\texttt{(} & \texttt{/ (} & \texttt{A B \% C D - *} \\
+\texttt{E} & \texttt{/ (} & \texttt{A B \% C D - * E} \\
+\texttt{+} & \texttt{/ ( +} & \texttt{A B \% C D - * E} \\
+\texttt{F} & \texttt{/ ( +} & \texttt{A B \% C D - * E F} \\
+\texttt{)} & \texttt{/} & \texttt{A B \% C D - * E F +} \\
+結束 & （空） & \texttt{A B \% C D - * E F + /} \\
+\bottomrule
+\end{tabular}
+\end{center}
+遇到 \texttt{/} 時，堆疊頂端的 \texttt{*} 和它同級，由左到右結合要先算 \texttt{*}，所以先把
+\texttt{*} 彈出再推入 \texttt{/}。 這對應原式 $\bigl((A \% B) * (C - D)\bigr) / (E + F)$。
+\end{pastsoln}

@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-24}]{北科大電機所（戊組）115 學年度 問答題第 4 題}
+（問答）
+
+Given the following C++ function, what will this function return for \textbf{abc\#\#d}. Explain your
+reasoning. \textbf{(5\%)}
+\begin{minted}[fontsize=\small]{cpp}
+string processString(string input) {
+    stack<char> S;
+    string result = "";
+    for(char c : input) {
+        if(c == '#') { if(!S.empty()) S.pop(); }
+        else { S.push(c); }
+    }
+    while(!S.empty()) { result = S.top() + result; S.pop(); }
+    return result;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：回傳 \texttt{"ad"}。
+
+這個函式模擬「\texttt{\#} 是退格鍵」：一般字元 push 進堆疊，碰到 \texttt{\#} 就 pop 掉最近打的那個字元（堆疊是空的就
+不做事，像在行首按退格）。 逐字追蹤（堆疊由底到頂寫）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+字元 & 動作 & 堆疊 \\
+\midrule
+a & push & a \\
+b & push & a b \\
+c & push & a b c \\
+\# & pop（刪掉 c） & a b \\
+\# & pop（刪掉 b） & a \\
+d & push & a d \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的 \texttt{while} 從頂端一個一個 pop，每次把頂端字元接在 \texttt{result} 的\textbf{前面}（\texttt{S.top() + result}）：
+先 pop 出 \texttt{d}，\texttt{result} 是 \texttt{"d"}；再 pop 出 \texttt{a}，接在前面變成 \texttt{"ad"}。 因為 pop 的順序和放進去
+的順序相反，接在前面剛好把順序轉回來。 如果寫成 \texttt{result + S.top()}，就會得到反過來的 \texttt{"da"}。
+
+時間：每個字元最多 push 一次、pop 一次，迴圈是 $O(n)$；不過 \texttt{S.top() + result} 每次會產生新字串、複製 \texttt{result}，
+最後那個迴圈實際上是 $O(n^2)$ 的字元複製，要省時間可以改成往後接再整個反轉。
+\end{pastsoln}

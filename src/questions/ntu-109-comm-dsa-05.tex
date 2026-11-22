@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-05}]{臺大電信所 109 學年度（B）第 5 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+In a weighted undirected \textbf{tree} $G=(V,E,w)$, \textbf{depth}-first search from a vertex $s$
+finds single-source shortest paths from $s$ (via parent pointers) in $O(V+E)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：T（對）。
+
+理由和第~4~題一樣，和走訪順序無關。 從 $s$ 做 DFS，每個頂點被發現時記下從哪個鄰居過來，
+父指標同樣構成一棵以 $s$ 為根、有 $|V| - 1$ 條邊的生成樹；$G$ 是樹，它唯一的生成樹就是 $G$
+自己。 所以沿著 $\pi$ 走回 $s$ 的路徑，就是 $G$ 中 $s$ 到 $v$ 唯一的簡單路徑（資結書
+定理~21.3），當然也是最短路徑。 DFS 的時間 $O(V + E)$。
+
+一般的圖上 DFS 找的路徑可能繞很遠，連不帶權重的最短路徑都不保證；能這樣用，完全是因為
+樹上路徑唯一。
+\end{pastsoln}

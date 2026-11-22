@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-08}]{北科大電機所（戊組） 114 學年度 第 II-4 題}
+（簡答；4 分）
+
+Order the following functions by their growth rate \textbf{from slowest to fastest}: $O(n!)$,
+$O(\sqrt{n})$, $n^2$, $O(n\log n)$, $O(\log\log n)$, $O(1)$, $O(\log n)$, $O(2^n)$. \textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答：$O(1) < O(\log \log n) < O(\log n) < O(\sqrt{n}) < O(n \log n) < n^2 < O(2^n) < O(n!)$。
+
+相鄰兩個的比較（資結書第~1.6~節）：
+\begin{itemize}
+\item $1$ 和 $\log \log n$：後者趨於無限大。
+\item $\log \log n$ 和 $\log n$：令 $m = \log n$，就是 $\log m$ 和 $m$，$\log m = o(m)$。
+\item $\log n$ 和 $\sqrt{n}$：任何對數都比任何正次方的多項式慢，$\log n = o(n^{\varepsilon})$。
+\item $\sqrt{n}$ 和 $n \log n$：$n \log n / \sqrt{n} = \sqrt{n} \log n \to \infty$。
+\item $n \log n$ 和 $n^2$：$n^2 / (n \log n) = n / \log n \to \infty$。
+\item $n^2$ 和 $2^n$：指數比任何多項式快，$n^2 / 2^n \to 0$。
+\item $2^n$ 和 $n!$：$n! / 2^n = \frac{1}{2} \cdot \frac{2}{2} \cdot \frac{3}{2} \cdots \frac{n}{2} \ge \frac{1}{2}\bigl(\frac{3}{2}\bigr)^{n-2} \to \infty$。
+\end{itemize}
+（原題 $n^2$ 沒有寫 $O(\cdot)$，照錄；不影響順序。）
+\end{pastsoln}

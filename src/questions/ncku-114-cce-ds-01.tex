@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-01}]{成大電通所 114 學年度 單選題第 1 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+A is a two dimension array, the locations of A(3, 2) and A(2, 3) are 1115 and 1207, respectively. Assume
+that each element occupies two addresses. Please give the location of A(5, 10).
+\begin{enumerate}[label=\alph*),nosep]
+\item 1841
+\item 1851
+\item 1861
+\item 1871
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：d) 1871。
+
+題目沒說是以列為主（row-major）還是以行為主（column-major），也沒給索引的下界。 下界不必知道，只要用位址的差；
+存放方式用兩個已知位址判斷（資結書第~4.1~節）。 每個元素佔 2 個位址。
+
+\textbf{以列為主}：設每列有 $C$ 個元素，$\mathrm{loc}(i, j) = \alpha + 2\bigl[(i - l_1)C + (j - l_2)\bigr]$，所以
+\[
+\mathrm{loc}(3, 2) - \mathrm{loc}(2, 3) = 2\bigl[(3 - 2)C + (2 - 3)\bigr] = 2(C - 1) = 1115 - 1207 = -92,
+\]
+得 $C = -45$，不可能。 所以不是以列為主。
+
+\textbf{以行為主}：設每行有 $R$ 個元素，$\mathrm{loc}(i, j) = \alpha + 2\bigl[(j - l_2)R + (i - l_1)\bigr]$，
+\[
+\mathrm{loc}(2, 3) - \mathrm{loc}(3, 2) = 2\bigl[(3 - 2)R + (2 - 3)\bigr] = 2(R - 1) = 1207 - 1115 = 92,
+\]
+得 $R = 47$。 於是
+\[
+\mathrm{loc}(5, 10) = \mathrm{loc}(3, 2) + 2\bigl[(10 - 2) \cdot 47 + (5 - 3)\bigr] = 1115 + 2 \times 378 = 1115 + 756 = 1871.
+\]
+選 d)。 （可以再檢查：$\mathrm{loc}(2, 3) + 2[(10 - 3) \cdot 47 + (5 - 2)] = 1207 + 2 \times 332 = 1871$，一致。）
+\end{pastsoln}

@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-16}]{臺聯大電機類 115 學年度 第 16 題}
+（單選；2 分）
+
+What problems can arise from linear probing?
+
+(A)~Primary Clustering \qquad (B)~Memory leak \qquad (C)~Unable to delete data \qquad
+(D)~Need to perform recursive function call
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+線性探測的探測序列是 $h(k), h(k) + 1, h(k) + 2, \ldots \pmod m$（資結書第~12.3~節）。 只要
+新鍵值落在一段連續被佔用的格子裡的任何一格，最後都會被放到這一段的尾端，讓這一段又長一格。 段越
+長，落進來的機率越大，長得越快，這就是\textbf{主叢集}（primary clustering）。 叢集讓探測次數變多，
+載入因子 $\alpha$ 接近 $1$ 時特別嚴重。 改用二次探測或雙重雜湊可以減輕。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。
+\item (B) 雜湊表是一個陣列，探測不會配置記憶體，和記憶體洩漏無關。 錯。
+\item (C) 刪除不能直接把格子清空（會截斷別的鍵值的探測序列），但用「刪除標記」就能刪
+（資結書第~12.3.4~節）。 不是不能刪。 錯。
+\item (D) 探測就是一個迴圈，不需要遞迴。 錯。
+\end{itemize}
+\end{pastsoln}

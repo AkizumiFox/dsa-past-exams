@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-04}]{臺聯大電機類 109 學年度 第 4 題}
+（程式設計；10 分）
+
+(10\%) Given a list of unsorted numbers, \textit{int list}[$n$]. Write a program to sort the
+\textit{list} into non-decreasing order by QuickSort. Assume that we always use the leftmost element
+in a (sub-)list as the pivot.
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒指定語言，用 C。 題目只規定取最左邊當基準，分割的細節用資結書第~14.5~節作答提醒說的
+那種寫法（台灣的課本多半用它）：$i$ 從左往右找 $\ge$ 基準的數，$j$ 從右往左找 $\le$ 基準的數，
+兩個都找到而且還沒交錯就交換；交錯之後把基準換到 $j$，基準就定位，左右兩段各自遞迴。
+
+\begin{minted}[fontsize=\small]{c}
+void swap(int *a, int *b) { int t = *a; *a = *b; *b = t; }
+
+/* 把 list[left..right] 排成非遞減，基準取最左邊的 list[left] */
+void quickSort(int list[], int left, int right) {
+    if (left >= right)
+        return;                         /* 0 或 1 個數，已經排好 */
+    int pivot = list[left];
+    int i = left + 1, j = right;
+    while (1) {
+        while (i <= right && list[i] < pivot)
+            i++;                        /* 從左邊找 >= pivot 的 */
+        while (list[j] > pivot)
+            j--;                        /* 從右邊找 <= pivot 的 */
+        if (i >= j)
+            break;                      /* 兩個指標交錯，分割完成 */
+        swap(&list[i], &list[j]);
+        i++;
+        j--;
+    }
+    swap(&list[left], &list[j]);        /* 基準放到分界 j，就定位 */
+    quickSort(list, left, j - 1);
+    quickSort(list, j + 1, right);
+}
+\end{minted}
+呼叫方式：\texttt{quickSort(list, 0, n - 1);}
+
+\textbf{正確性。} 分割的迴圈不變量：$\mathit{list}[\mathit{left}+1 .. i-1]$ 都 $\le$ 基準，
+$\mathit{list}[j+1 .. \mathit{right}]$ 都 $\ge$ 基準。 一開始兩段都是空的。 $i$ 只跨過 $<$ 基準的數，
+$j$ 只跨過 $>$ 基準的數；交換之後 $\mathit{list}[i] \le$ 基準、$\mathit{list}[j] \ge$ 基準，兩個
+指標各前進一格，不變量仍成立。 $j$ 不會跑出左界：$\mathit{list}[\mathit{left}]$ 就是基準，不
+$>$ 基準，$j$ 最遠停在 $\mathit{left}$。 迴圈停下時 $i \ge j$，而且 $\mathit{list}[j] \le$ 基準
+（$j$ 停下的位置，或 $j = \mathit{left}$），$j$ 左邊（到 $\mathit{left}+1$）都 $\le$ 基準、右邊都
+$\ge$ 基準。 把基準和 $\mathit{list}[j]$ 交換，基準就在排好後該在的位置，左右兩段分別遞迴排好，
+整段就排好了（對長度歸納）。
+
+兩個內層迴圈遇到\textbf{等於}基準的數都會停下來交換，所以全部相同的數會被切在中間附近，不會
+退化成 $\Theta(n^2)$。 $i$ 的迴圈要檢查 \texttt{i <= right}：基準是最大值時 $i$ 會一路走到右界外。
+
+\textbf{複雜度。} 一次分割 $\Theta(k)$（$k$ 是這段的長度）。 平均 $\Theta(n \lg n)$（資結書
+定理~14.3）；最壞是每次基準都是最小或最大值，例如已經排好的輸入，$T(n) = T(n-1) + \Theta(n)
+= \Theta(n^2)$。 遞迴深度最壞 $\Theta(n)$。
+
+\textbf{例子。} 第 5 題的資料 $24, 4, 35, 1, 60, 12, 16, 52$：基準 $24$，$i$ 停在 $35$、$j$ 停在
+$16$，交換；$i$ 停在 $60$、$j$ 停在 $12$，交換；接著 $i$ 停在 $60$（索引 $5$）、$j$ 停在 $12$
+（索引 $4$），交錯。 基準和 $\mathit{list}[4] = 12$ 交換，得 $12, 4, 16, 1, \mathbf{24}, 60, 35, 52$，
+再遞迴兩邊，最後是 $1, 4, 12, 16, 24, 35, 52, 60$。
+\end{pastsoln}

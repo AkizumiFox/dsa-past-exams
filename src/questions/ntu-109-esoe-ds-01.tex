@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-01}]{臺大工科海洋所 109 學年度 第 1 題}
+（程式設計）
+
+\textbf{Please use C++ (or Java) for all programming questions.}
+
+\textbf{(10 \%)} Write a short recursive function that will rearrange an array of \texttt{int}
+values so that all the even values appear before all the odd values.
+\end{pastexam}
+
+\begin{pastsoln}
+想法和快速排序的分割一樣（資結書第~14.5~節）：兩個指標 $lo$、$hi$ 從兩端往中間走，左邊要放偶數、
+右邊要放奇數。 每次只看兩端：
+\begin{itemize}
+\item $a[lo]$ 是偶數：它已經在對的一邊，處理 $a[lo+1..hi]$。
+\item 否則 $a[hi]$ 是奇數：它已經在對的一邊，處理 $a[lo..hi-1]$。
+\item 否則 $a[lo]$ 奇、$a[hi]$ 偶：交換兩個數，兩邊都對了，處理 $a[lo+1..hi-1]$。
+\end{itemize}
+範圍剩不到兩個數時結束。
+
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{cpp}
+#include <utility>   // std::swap
+
+// 把 a[lo..hi] 整理成偶數在前、奇數在後
+void evenFirst(int a[], int lo, int hi)
+{
+    if (lo >= hi)
+        return;
+    if (a[lo] % 2 == 0)                 // a[lo] 是偶數，已經在對的一邊
+        evenFirst(a, lo + 1, hi);
+    else if (a[hi] % 2 != 0)            // a[hi] 是奇數，已經在對的一邊
+        evenFirst(a, lo, hi - 1);
+    else {                              // a[lo] 奇、a[hi] 偶：交換
+        std::swap(a[lo], a[hi]);
+        evenFirst(a, lo + 1, hi - 1);
+    }
+}
+
+void rearrange(int a[], int n)
+{
+    evenFirst(a, 0, n - 1);
+}
+\end{minted}
+
+判斷奇數寫成 \texttt{a[hi] \% 2 != 0}，不寫 \texttt{== 1}：C++ 的 \texttt{\%} 對負數會得到負的
+餘數（$-3 \bmod 2$ 算出 $-1$），寫成 \texttt{== 1} 會把負的奇數當成偶數。
+
+例子：$\langle 3, 8, 5, 6, 7, 2\rangle$。 $3$ 奇、$2$ 偶，交換得 $\langle 2, 8, 5, 6, 7, 3\rangle$，
+處理第 2--5 格；$8$ 偶，往右；$5$ 奇、$7$ 奇，右端往左；$5$ 奇、$6$ 偶，交換得
+$\langle 2, 8, 6, 5, 7, 3\rangle$，範圍變空，結束。
+
+\textbf{正確性}。 對 $hi - lo + 1$（範圍的長度）做歸納，證明「呼叫結束後 $a[lo..hi]$ 是原本那些數的
+一個排列，而且偶數都在奇數前面」。 長度 $\le 1$ 時顯然成立。 三種情況的遞迴範圍都比較短，由歸納
+假設，遞迴的那一段已經整理好；而範圍外被留下的數，左邊的是偶數、右邊的是奇數，所以整段也是偶數
+在前、奇數在後。 只用交換改陣列，所以是原本那些數的排列。
+
+\textbf{複雜度}。 每次呼叫範圍至少少 $1$，最多 $n$ 次呼叫，每次 $O(1)$，時間 $O(n)$。 遞迴深度
+最多 $n$，呼叫堆疊 $O(n)$；它是尾端遞迴，改成迴圈就只要 $O(1)$ 額外空間。 這種做法不保留偶數之間
+（奇數之間）原本的先後順序，題目沒有要求。
+\end{pastsoln}

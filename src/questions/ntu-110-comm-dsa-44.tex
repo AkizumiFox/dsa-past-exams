@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-44}]{臺大電信所 110 學年度（B）第 44 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Consider an AA tree that results from successively inserting keys 96, 49, 79, 14, 41, 87, 75, 90, 61 into an initially empty tree. Which of the following statements are true?
+\begin{enumerate}[label=\Alph*.]
+\item The root is key 61.
+\item There is less than 3 horizontal links.
+\item Key 41 and key 49 are in the same level.
+\item Key 87 and key 96 are siblings.
+\item Key 14 is the parent of key 41.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B、D。
+
+資結書沒有專講 AA 樹，先整理規則。 AA 樹是紅黑樹的簡化版：紅色節點只能是右子節點。 實作時不存顏色，
+每個節點存一個\textbf{層級}（level）：
+\begin{itemize}
+\item 葉子的層級是 $1$。
+\item 左子節點的層級恰好比父節點小 $1$。
+\item 右子節點的層級等於父節點或小 $1$；相等時這條右連結叫\textbf{水平連結}（相當於紅色的右子）。
+\item 不能連續兩條水平連結：右孫子的層級一定比祖父小。
+\end{itemize}
+插入時把新鍵當成層級 $1$ 的葉子放進去（像二元搜尋樹），再從新節點往根的路徑上，每個節點依序做兩個修正：
+\begin{itemize}
+\item \textbf{skew}：左子節點和自己同層級（水平的左連結）時，右旋，把它變成水平的右連結。
+\item \textbf{split}：右子和右孫子都和自己同層級（連續兩條水平連結）時，左旋，中間那個（右子）層級加 $1$、
+升上去。
+\end{itemize}
+
+追蹤（括號內是層級，$x \Rightarrow y$ 表示 $x$ 到 $y$ 的水平連結）：
+\begin{enumerate}
+\item $96$：單一節點 $96(1)$。
+\item $49$：放 $96$ 的左子，同層級，skew：$49 \Rightarrow 96$。
+\item $79$：放 $96$ 的左子，skew 成 $79 \Rightarrow 96$；回到 $49$，$49 \Rightarrow 79 \Rightarrow 96$ 連續兩條，
+split：$79$ 升為層級 $2$，左子 $49$、右子 $96$。
+\item $14$：放 $49$ 的左子，skew：$14 \Rightarrow 49$，掛在 $79$ 的左邊。
+\item $41$：$< 79$、$> 14$、$< 49$，放 $49$ 的左子，skew 成 $41 \Rightarrow 49$；回到 $14$，
+$14 \Rightarrow 41 \Rightarrow 49$，split：$41$ 升為層級 $2$，左子 $14$、右子 $49$。 回到 $79$：左子 $41$ 和
+$79$ 同為層級 $2$，skew：$41$ 上來，$41 \Rightarrow 79$，$79$ 的左子改成 $49$。 這時樹是根 $41(2)$，左子
+$14$，水平右連結到 $79(2)$，$79$ 的子節點 $49$、$96$。
+\item $87$：放 $96$ 的左子，skew：$87 \Rightarrow 96$。
+\item $75$：$> 41$、$< 79$、$> 49$，放 $49$ 的右子：$49 \Rightarrow 75$，沒有要修的。
+\item $90$：$> 41$、$> 79$、$> 87$、$< 96$，放 $96$ 的左子，skew 成 $90 \Rightarrow 96$；回到 $87$，
+$87 \Rightarrow 90 \Rightarrow 96$，split：$90$ 升為層級 $2$，子節點 $87$、$96$，成為 $79$ 的右子，
+$79 \Rightarrow 90$。 回到根 $41$：$41 \Rightarrow 79 \Rightarrow 90$ 都是層級 $2$，split：$79$ 升為層級 $3$
+成為根，左子 $41$（子節點 $14$、$49$，$49 \Rightarrow 75$）、右子 $90$。
+\item $61$：$< 79$、$> 41$、$> 49$、$< 75$，放 $75$ 的左子，skew 成 $61 \Rightarrow 75$；回到 $49$，
+$49 \Rightarrow 61 \Rightarrow 75$，split：$61$ 升為層級 $2$，子節點 $49$、$75$，成為 $41$ 的右子，
+$41 \Rightarrow 61$（同為層級 $2$）。 再往上沒有違規。
+\end{enumerate}
+最後的樹（同一高度的節點層級相同，水平連結畫成水平的雙線）：
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6mm,font=\small}]
+\node[v] (79) at (2.6,0) {79};
+\node[v] (41) at (0,-1.3) {41}; \node[v] (61) at (1.6,-1.3) {61}; \node[v] (90) at (4.6,-1.3) {90};
+\node[v] (14) at (-0.7,-2.6) {14}; \node[v] (49) at (1.0,-2.6) {49}; \node[v] (75) at (2.2,-2.6) {75};
+\node[v] (87) at (4.0,-2.6) {87}; \node[v] (96) at (5.2,-2.6) {96};
+\draw (79)--(41); \draw (79)--(90); \draw (41)--(14); \draw[double] (41)--(61);
+\draw (61)--(49); \draw (61)--(75); \draw (90)--(87); \draw (90)--(96);
+\node[font=\small,anchor=west] at (6,0) {層級 3}; \node[font=\small,anchor=west] at (6,-1.3) {層級 2};
+\node[font=\small,anchor=west] at (6,-2.6) {層級 1};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item A 錯：根是 $79$。
+\item B 對：水平連結只有 $41 \Rightarrow 61$ 一條，少於 $3$ 條。
+\item C 錯：$41$ 在層級 $2$，$49$ 在層級 $1$。
+\item D 對：$87$、$96$ 都是 $90$ 的子節點。
+\item E 錯：$41$ 是 $14$ 的父節點，不是反過來。
+\end{itemize}
+\end{pastsoln}

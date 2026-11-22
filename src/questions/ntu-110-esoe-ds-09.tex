@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-09}]{臺大工科海洋所 110 學年度（A）第 9 題}
+（追蹤）
+
+\textbf{(10 \%)} For the inputs $\{4,11,17,14,23,8,31\}$ and a hash function $h(x)=x\ \bmod\ 7$, show
+the linear probing hash table of size 7.
+\end{pastexam}
+
+\begin{pastsoln}
+照題目列出的順序插入。 線性探測：從 $h(x)$ 開始往後一格一格找空位，超過第 $6$ 格繞回第 $0$ 格
+（資結書第~12.3~節）。
+\begin{center}
+\begin{tabular}{ccl}
+\toprule
+$x$ & $h(x) = x \bmod 7$ & 探測的格子 $\to$ 放在 \\
+\midrule
+4 & 4 & $4 \to 4$ \\
+11 & 4 & $4$（4）, $5 \to 5$ \\
+17 & 3 & $3 \to 3$ \\
+14 & 0 & $0 \to 0$ \\
+23 & 2 & $2 \to 2$ \\
+8 & 1 & $1 \to 1$ \\
+31 & 3 & $3$（17）, $4$（4）, $5$（11）, $6 \to 6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+括號裡是那一格已經放的鍵。 最後的表（剛好 $7$ 個鍵填滿 $7$ 格）：
+\begin{center}
+\begin{tabular}{*{7}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+14 & 8 & 23 & 17 & 4 & 11 & 31 \\
+\bottomrule
+\end{tabular}
+\end{center}
+碰撞發生在 $11$（和 $4$ 同在第 $4$ 格）和 $31$（和 $17$ 同在第 $3$ 格，又一路被 $4$、$11$ 擋住）。 $31$ 探測
+了 $4$ 次，這就是線性探測的「群聚」：第 $3$--$5$ 格已經連成一段，落在這段裡的鍵都要走到段尾。 表滿
+了以後再插入任何鍵都會繞一圈找不到空位，實際使用時要在載入因子太高之前擴大表。
+\end{pastsoln}

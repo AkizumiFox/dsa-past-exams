@@ -1,0 +1,16 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-08}]{北科大電機所（戊組）115 學年度 是非題第 8 題}
+（是非）
+
+Depth-first search (DFS) always finds the shortest path between two nodes in a graph. \textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯（False）。
+
+DFS 一路往深處走，找到的是「第一條碰到的路」，不保證最短。 反例：三角形 $A$--$B$、$B$--$C$、$A$--$C$，從 $A$ 開始、
+鄰居依字母順序。 DFS 先走到 $B$，再從 $B$ 走到 $C$，DFS 樹上 $A$ 到 $C$ 的路是 $A \to B \to C$（$2$ 條邊），但直接
+$A \to C$ 只要 $1$ 條邊。
+
+在沒有權重的圖上找邊數最少的路要用 BFS（資結書第~21.3~節）：BFS 依距離一層一層往外擴，第一次碰到某個頂點時
+走的就是最短路徑（資結書定理~21.4）。 有權重的圖則要用 Dijkstra 等最短路徑演算法。
+\end{pastsoln}

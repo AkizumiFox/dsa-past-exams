@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ncku-113-cce-17}]{成大電通所 113 學年度 簡答題第 8 題}
+（簡答）
+
+(5 pts) Given the following Keys 62, 104, 67, 22, 77 and a hash table with 7 buckets ($m$=7),
+where each bucket has one slot. Please write down the result using the hash function
+F(x) = (x mod $m$). It adopts open addressing and it uses the quadratic probing when a collision
+happens, where the rehashing function is defined as follows:
+\[ \mathrm{i}_n = (\mathrm{F(x)} + n^2) \bmod m \]
+where $\mathrm{i}_0 = F(x)$ and $n$ denotes the collision number.
+\begin{center}
+\begin{tabular}{*{7}{|p{1.2em}}|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} \\ \hline
+ & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{*{7}{|c}|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} \\ \hline
+104 & 22 & 77 & & 67 & & 62 \\ \hline
+\end{tabular}
+\end{center}
+
+依序插入，$F(x) = x \bmod 7$，第 $n$ 次碰撞後試 $i_n = (F(x) + n^2) \bmod 7$（資結書
+第~12.3~節的平方探測）：
+\begin{center}
+\small
+\begin{tabular}{rcp{0.62\linewidth}}
+\toprule
+鍵 & $F(x)$ & 探測過程 \\
+\midrule
+62 & $6$ & $62 = 8 \cdot 7 + 6$。 $[6]$ 空，放入 \\
+104 & $6$ & $104 = 14 \cdot 7 + 6$。 $[6]$ 被 $62$ 佔；$n = 1$：$(6 + 1) \bmod 7 = 0$，空，放入 \\
+67 & $4$ & $67 = 9 \cdot 7 + 4$。 $[4]$ 空，放入 \\
+22 & $1$ & $22 = 3 \cdot 7 + 1$。 $[1]$ 空，放入 \\
+77 & $0$ & $77 = 11 \cdot 7$。 $[0]$ 被 $104$ 佔；$n = 1$：$(0 + 1) \bmod 7 = 1$，被 $22$ 佔；
+$n = 2$：$(0 + 4) \bmod 7 = 4$，被 $67$ 佔；$n = 3$：$(0 + 9) \bmod 7 = 2$，空，放入 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$77$ 碰撞了三次才找到空位。 注意每次都是從 $F(x)$ 加 $n^2$，不是從上一個位置再加
+（$i_3 = (0 + 9) \bmod 7$，不是 $(4 + 9) \bmod 7$）。
+\end{pastsoln}

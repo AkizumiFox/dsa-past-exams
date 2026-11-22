@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-05}]{臺聯大電機類 112 學年度 第 5 題}
+（單選；3 分）
+
+The following pseudo code is a simple algorithm to generate a permutation of n items. Please fill
+in the underscored area in Line 6 with a correct formula such that i <= j < n
+
+(A)~n \qquad (B)~n-i \qquad (C)~i \qquad (D)~n-1
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true]
+1 function Uniform(m)
+2     return a random integer between 0 and m-1; // uniform distribution
+3
+4 function Permutation(A,n)
+5     for i = 0 to n-2 // 0-based indexing system
+6         j = i + Uniform( ____ ); // j is a random integer. i<=j<n
+7         swap(A[i],A[j]);
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) $n - i$。
+
+Uniform$(m)$ 回傳 $0, 1, \ldots, m - 1$ 之一，所以 $j = i + \text{Uniform}(m)$ 的範圍是
+$i \le j \le i + m - 1$。 題目要 $i \le j < n$，也就是 $j$ 的最大值 $i + m - 1 = n - 1$，解出
+$m = n - i$。 這時 $j$ 在 $i, i + 1, \ldots, n - 1$ 這 $n - i$ 個位置裡均勻選一個，正好是
+「從還沒排定的 $A[i..n-1]$ 裡均勻抽一個放到第 $i$ 格」，這就是 Fisher--Yates 洗牌。
+
+逐項檢查（$j$ 的最大值是 $i + m - 1$）：
+\begin{itemize}
+\item (A) $n$：最大值 $i + n - 1$，$i \ge 1$ 時就超過 $n - 1$，會存取到陣列外面。 錯。
+\item (B) $n - i$：最大值 $n - 1$，最小值 $i$，剛好滿足 $i \le j < n$。 對。
+\item (C) $i$：$i = 0$ 時 Uniform$(0)$ 沒有可以回傳的數；$i \ge 1$ 時 $j$ 最大是 $2i - 1$，
+$i < n/2$ 時到不了後面的位置，$i > n/2$ 時又會超過 $n - 1$。 錯。
+\item (D) $n - 1$：最大值 $i + n - 2$，$i \ge 2$ 時超過 $n - 1$。 錯。
+\end{itemize}
+
+補充：填 $n - i$ 時，每個排列出現的機率都是 $1/n!$。 第 $i$ 圈有 $n - i$ 種選法，全部選法共
+$n (n - 1) \cdots 2 = n!$ 種，每種機率相同；不同的選法得到不同的排列（從第 $0$ 格往後看，第 $i$
+格放的是哪一個元素，就唯一決定了第 $i$ 圈選的 $j$），所以 $n!$ 種選法和 $n!$ 個排列一一對應。
+\end{pastsoln}

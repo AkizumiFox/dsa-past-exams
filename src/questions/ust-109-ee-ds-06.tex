@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-06}]{臺聯大電機類 109 學年度 第 6 題}
+（問答；10 分）
+
+(10\%) Given 5 records: ``Aarom'', ``Ana'', ``Donnie'', ``Tyriom'', and ``Monz''. The key of each
+record is defined by the sum of the ASCII code of each character (ASCII of `A' is 65 and `a' is 97).
+Assume we have a 37-bucket table with one slot per bucket. Let's insert the 5 records into the
+bucket in sequence and in case of collision, we adopt open addressing strategy to handle the case.
+Please determine the bucket index of each record.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：Aarom $\to 15$，Ana $\to 13$，Donnie $\to 14$，Tyriom $\to 16$，Monz $\to 17$。
+
+題目沒說雜湊函數和探測方法。 表有 $37$ 個桶（編號 $0$--$36$），雜湊函數取最常見的除法
+$h(k) = k \bmod 37$（資結書第~12.1~節）；開放定址用線性探測 $h(k), h(k)+1, h(k)+2, \ldots$
+（模 $37$，資結書第~12.3~節）。 字母的 ASCII 碼由 \texttt{A} $= 65$、\texttt{a} $= 97$ 往後數。
+
+\textbf{算鍵值。}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+記錄 & 各字元的 ASCII & 鍵值 $k$ \\
+\midrule
+Aarom & $65 + 97 + 114 + 111 + 109$ & $496$ \\
+Ana & $65 + 110 + 97$ & $272$ \\
+Donnie & $68 + 111 + 110 + 110 + 105 + 101$ & $605$ \\
+Tyriom & $84 + 121 + 114 + 105 + 111 + 109$ & $644$ \\
+Monz & $77 + 111 + 110 + 122$ & $420$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{依序插入。}
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+記錄 & $h(k) = k \bmod 37$ & 探測的桶 & 放在 \\
+\midrule
+Aarom & $496 = 13 \cdot 37 + 15$，$15$ & $15$ & $15$ \\
+Ana & $272 = 7 \cdot 37 + 13$，$13$ & $13$ & $13$ \\
+Donnie & $605 = 16 \cdot 37 + 13$，$13$ & $13$（Ana）、$14$ & $14$ \\
+Tyriom & $644 = 17 \cdot 37 + 15$，$15$ & $15$（Aarom）、$16$ & $16$ \\
+Monz & $420 = 11 \cdot 37 + 13$，$13$ & $13$、$14$、$15$、$16$（都有人）、$17$ & $17$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後桶 $13$--$17$ 依序是 Ana、Donnie、Aarom、Tyriom、Monz，其他桶都空。 Monz 探測了 $5$ 次：
+$13$、$15$ 兩個起點的記錄擠成一長串，這就是線性探測的主要叢集（primary clustering）。
+
+如果改用二次探測 $h(k) + i^2$：Donnie 試 $13, 14$；Tyriom 試 $15, 16$；Monz 試 $13, 14, 17$，
+位置和線性探測一樣，只是 Monz 少試兩個桶。 題目只說「開放定址」，作答時要寫明用哪一種探測。
+\end{pastsoln}

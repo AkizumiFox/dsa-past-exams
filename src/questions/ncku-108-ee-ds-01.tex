@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-108-ee-ds-01}]{成大電機所 108 學年度 複選題第 1 題}
+（複選；10 分，全對才給分）
+
+Given an undirected graph G=(V, E), where V is a finite set of n vertices and E contains e pairs of
+vertices called edges, with no self-edge and multi-occurrence of the same edge, which of the
+following statements is(are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item If we represent G by its adjacency list, the depth-first search takes O(e) time to complete
+the search.
+\item If we represent G by its adjacency matrix, the depth-first search takes O(n\^{}2) time to
+complete the search.
+\item If we represent G by its adjacency list, the breadth-first search can take O(e) time to
+complete the search.
+\item If we represent G by its adjacency matrix, the breadth-first search has to take at least
+O(n\^{}2) time to complete the search.
+\item The connected-component can be found by calling either the depth-first search or the
+breadth-first search function in a graph.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)、(E)。
+
+先說明採用的解讀。 這幾個選項的寫法來自 Horowitz 的資料結構課本：「search」指從一個起點出發的
+\texttt{dfs(v)}、\texttt{bfs(v)}，分析時假設 G 是連通的（從起點走得到所有頂點）。 連通時
+$e \ge n - 1$，所以 $O(n + e) = O(e)$。 下面照這個解讀逐項說明，最後補充 G 不連通時哪些說法要修正。
+
+用鄰接串列時，DFS、BFS 每個頂點處理一次，每個頂點的串列走過一次，無向圖每條邊在兩個串列裡各出現
+一次，共 $\Theta(n + e)$；用鄰接矩陣時，處理一個頂點要掃過矩陣的一整列 $n$ 格，共 $\Theta(n^2)$（資結書
+第~21.2~節的比較表、第~21.3、21.4~節）。
+\begin{itemize}
+\item (A) 鄰接串列的 DFS：$\Theta(n + e)$，G 連通時 $= O(e)$。 對。
+\item (B) 鄰接矩陣的 DFS：$n$ 個頂點各掃一列，$O(n^2)$。 對。
+\item (C) 鄰接串列的 BFS：和 (A) 相同，$O(e)$。 對（「can take」更沒有問題）。
+\item (D) 鄰接矩陣的 BFS：每個出佇列的頂點都要掃完自己那一列的 $n$ 格才知道鄰居是誰，不管圖有多稀疏；
+G 連通時 $n$ 個頂點都會出佇列，恰好 $n \cdot n$ 格，所以至少要 $n^2$ 量級的時間，也就是
+$\Omega(n^2)$。 選項把下界寫成「at least O(n\^{}2)」，記號用得不嚴謹，意思是對的。 對。
+\item (E) 無向圖從 $s$ 做一次 DFS 或 BFS，走到的頂點恰好是 $s$ 所在的連通元件；依序對每個還沒走過的頂點
+再做一次，就得到所有連通元件（資結書第~21.6~節）。 DFS、BFS 都可以。 對。
+\end{itemize}
+
+補充：如果 G 可以不連通，而「complete the search」指把所有頂點都走過（外層迴圈對每個未走過的頂點
+呼叫一次），那麼 (A)(C) 要寫成 $O(n + e)$ 才對（例如 $e = 0$ 時仍要 $\Theta(n)$），(D) 仍然成立（每個頂點都
+要掃一整列，$\Theta(n^2)$）。 作答時把「假設 G 連通」寫出來最保險。
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-02}]{臺大電信所 108 學年度（B）第 2 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+The following array is a min-heap.
+\begin{center}2\quad 5\quad 9\quad 8\quad 10\quad 13\quad 12\quad 22\quad 50\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對。
+
+陣列從 $1$ 開始編號，$A[i]$ 的子節點是 $A[2i]$、$A[2i + 1]$（資結書第~8.1~節）。 陣列存的一定
+是完整二元樹，只要檢查每個有子節點的位置都不大於它的子節點：
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$i$ & $A[i]$ & 子節點 & 成立？ \\
+\midrule
+1 & 2 & $A[2] = 5$, $A[3] = 9$ & 是 \\
+2 & 5 & $A[4] = 8$, $A[5] = 10$ & 是 \\
+3 & 9 & $A[6] = 13$, $A[7] = 12$ & 是 \\
+4 & 8 & $A[8] = 22$, $A[9] = 50$ & 是 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$i = 5$ 以後沒有子節點（$2 \cdot 5 = 10 > 9$）。 每一對父子都滿足父 $\le$ 子，是最小堆積。 同一層
+沒有大小要求，$13 > 12$ 不影響。
+\end{pastsoln}

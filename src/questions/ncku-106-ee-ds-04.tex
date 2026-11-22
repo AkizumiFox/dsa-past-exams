@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-106-ee-ds-04}]{成大電機所 106 學年度 複選題第 4 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item The insertion sort is a stable algorithm.
+\item The quick sort is the fastest sorting algorithm.
+\item The merge sort and quick sort both apply the divide-and-conquer strategy, but the quick sort is the
+in-place algorithm while the merge sort is not.
+\item The heap sort is a comparison based sorting algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)(D)。 名詞（穩定、原地、比較排序）見資結書第~14.1~節。
+
+\textbf{(A) 對。} 插入排序只在 $A[j] > \mathit{key}$ 時把 $A[j]$ 往右挪，遇到相等的就停，相同鍵的元素不會
+互相越過，原本的先後順序保留，是穩定的。
+
+\textbf{(B) 錯。} 沒有「最快的排序法」。 快速排序平均 $\Theta(n \lg n)$、常數小，實務上常常最快，但最壞
+$\Theta(n^2)$（例如每次都選到最大或最小的基準）。 合併排序、堆積排序最壞也是 $\Theta(n \lg n)$；資料範圍
+小的整數用計數排序、基數排序可以做到線性時間（資結書第~15~章）；幾乎排好的資料用插入排序只要 $\Theta(n)$。
+
+\textbf{(C) 對。} 兩者都是分治：合併排序切成兩半、各自排、再合併；快速排序先分割、再各自排。 快速排序的分割
+在原陣列裡交換元素，只用遞迴堆疊（平均 $\Theta(\lg n)$），一般算原地排序；陣列的合併排序在合併時需要
+$\Theta(n)$ 的暫存陣列，不是原地的。 （串列的合併排序只改指標，可以不用額外陣列，但題目講的是一般的陣列版本。）
+
+\textbf{(D) 對。} 堆積排序靠比較鍵值來調整堆積（sift-down 時比較父子），是比較排序，所以最壞至少要
+$\Omega(n \lg n)$ 次比較（資結書第~15.1~節的下界），它的 $\Theta(n \lg n)$ 已經達到這個下界。
+\end{pastsoln}

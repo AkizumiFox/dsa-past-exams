@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-19}]{北科大電機所（戊組）115 學年度 簡答題第 4 題}
+（簡答）
+
+In a hash table with 20 slots using linear probing, what is the worst-case number of comparisons
+needed to search for an element that is NOT in the table when the load factor is 0.75? \textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$15$ 次（和鍵的比較；若連最後檢查到空格那一次也算，是 $16$ 次探測）。
+
+載入因子 $\alpha = n/m = 0.75$，$m = 20$，表裡有 $n = 15$ 個鍵、$5$ 個空格。 線性探測（資結書第~12.3~節）找一個不在表裡
+的鍵，從 $h(k)$ 開始往後一格一格看，直到碰到空格才能確定找不到。 最壞情況是 $15$ 個鍵全部連成一段（一個大群聚），
+而要找的鍵 $h(k)$ 正好落在這一段的第一格：要和 $15$ 個鍵逐一比較，第 $16$ 次探測才碰到空格。 不會更多，因為表裡只有
+$15$ 個鍵。
+
+這題是最壞情況，和平均情況的公式（線性探測失敗搜尋約 $\frac12\bigl(1 + 1/(1-\alpha)^2\bigr) = 8.5$ 次，資結書第~12.4~節）
+是兩回事：群聚越大，最壞情況越接近「把所有鍵看一遍」。
+\end{pastsoln}

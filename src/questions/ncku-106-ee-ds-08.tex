@@ -1,0 +1,191 @@
+\begin{pastexam}[label={px:ncku-106-ee-ds-08}]{成大電機所 106 學年度 填充題}
+（填充）
+
+The following shows a C++ implementation of a forward iterator for the class Chain, and ChainIterator is a
+public member of Chain.
+\begin{minted}[fontsize=\small]{cpp}
+class ChainIterator {
+public:
+    // increment
+    ChainIterator& operator ++() { // preincrement
+        current = current->link; // increment iterator
+        return *this; } // reference return
+    ChainIterator operator ++(int)  { // postincrement
+        ChainIterator old = *this; // hold current state of object
+        current = current->link; // increment iterator
+        return old; } // value return; return unincremented/saved object
+private:
+    ChainNode *current;
+};
+\end{minted}
+
+\begin{enumerate}[leftmargin=2.5em]
+\item[(一)] \textbf{(2 pts)} What is the purpose of the iterator used by a container in C++?
+\item[(二)] \textbf{(10 pts)} Assume that we use the definition of \textbf{class} ChainNode and the chain nodes
+shown in the following figure, where first is a ChainNode pointer pointing to the first node of the chain.
+Please implement the following predecrement and postdecrement function for ChainIterator.
+\begin{minted}[fontsize=\small]{cpp}
+class ChainNode {
+private:
+    int data;
+    ChainNode *link;
+};
+\end{minted}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={To[length=2.2mm,width=2.4mm]},scale=0.85]
+\foreach \x/\l in {0/,3.2/,8.4/0}{
+  \fill (\x,0) rectangle (\x+1.6,0.9);
+  \draw (\x,0) rectangle (\x+2.3,0.9);
+  \node at (\x+1.95,0.45) {\small \l};
+}
+\node[left] at (-1.4,0.45) {first};
+\draw[->] (-1.3,0.45) -- (0,0.45);
+\draw[->] (1.95,0.45) -- (3.2,0.45);
+\draw[->] (5.15,0.45) -- (6.3,0.45);
+\node at (6.75,0.38) {\dots};
+\draw[->] (7.2,0.45) -- (8.4,0.45);
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}[fontsize=\small]{cpp}
+ChainIterator& operator --() { //predecrement
+  if (current == first) {__A__;}
+  ChainNode *it = first;
+  while (__B__) {
+      ______C______;
+  }
+  ______D______;
+  return *this;
+}
+\end{minted}
+\smallskip
+\begin{minted}[fontsize=\small]{cpp}
+ChainIterator operator --(int) { //postdecrement
+  if (current == first){__A__;}
+  ChainNode *it = first;
+  ChainIterator old ;
+  while (__B__) {
+      ______C______;
+  }
+  ______E______;
+  ______D______;
+  return old;
+}
+\end{minted}
+
+\item[(三)] \textbf{(4 pts)} If we change the definition of ChainNode and the way of nodes connecting in the
+chain as follows, please implement the corresponding predecrement and postdecrement function for
+ChainIterator.
+\begin{minted}[fontsize=\small]{cpp}
+class ChainNode {
+private:
+    int data;
+    ChainNode *left, *right;
+};
+\end{minted}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={To[length=2.2mm,width=2.4mm]},scale=0.85]
+\foreach \x/\l/\r in {0/0/,3.0/ / ,7.7/ /0}{
+  \draw (\x,0) rectangle (\x+2.1,0.9);
+  \fill (\x+0.55,0) rectangle (\x+1.55,0.9);
+  \node at (\x+0.28,0.4) {\small \l};
+  \node at (\x+1.83,0.4) {\small \r};
+}
+\node[above] at (1.05,1.9) {first};
+\draw[->] (1.05,1.9) -- (1.05,0.9);
+\draw[->] (1.83,0.55) -- (2.85,0.55);
+\draw[->] (3.28,0.38) -- (2.25,0.38);
+\draw[->] (4.83,0.55) -- (5.85,0.55);
+\draw[->] (6.3,0.38) -- (5.25,0.38);
+\draw[->] (6.5,0.55) -- (7.55,0.55);
+\draw[->] (7.98,0.38) -- (6.95,0.38);
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}[fontsize=\small]{cpp}
+ChainIterator& operator --() { //predecrement
+  ______F______;
+  return *this;;
+}
+\end{minted}
+\smallskip
+\begin{minted}[fontsize=\small]{cpp}
+ChainIterator operator --(int) { //postdecrement
+  ChainIterator old;
+  ______G______;
+  ______F______;
+  return old;
+}
+\end{minted}
+
+\item[(四)] \textbf{(4 pts)} The iterator supports the dereference operator and the inequality operator. Please
+complete the codes in the following.
+\begin{minted}[fontsize=\small]{cpp}
+// dereferencing operators
+T& operator *() const {return______H______;}
+bool operator!=(const ChainIterator right) const
+{return______I______;}
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{cl@{\qquad}cl}
+\toprule
+空格 & 填入 & 空格 & 填入 \\
+\midrule
+A & \texttt{return *this} & F & \texttt{current = current->left} \\
+B & \texttt{it->link != current} & G & \texttt{old = *this} \\
+C & \texttt{it = it->link} & H & \texttt{current->data} \\
+D & \texttt{current = it} & I & \texttt{current != right.current} \\
+E & \texttt{old = *this} & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+這是 Horowitz《Fundamentals of Data Structures in C++》第~4~章的 \texttt{Chain} 迭代器，屬於資結書
+第~5~章（串列）。 程式碼本身有幾個小地方要先說明：\texttt{ChainNode} 的 \texttt{data}、\texttt{link} 寫成
+\texttt{private}，迭代器要能存取，書上是把 \texttt{Chain}、\texttt{ChainIterator} 宣告成 \texttt{ChainNode} 的
+\texttt{friend}；\texttt{first} 是 \texttt{Chain} 的成員，迭代器要能讀到它（例如巢狀類別或另外存一份）；
+\texttt{data} 是 \texttt{int}，(四) 的 \texttt{T\&} 就是 \texttt{int\&}。 這些都不影響要填的內容。
+
+\textbf{(一)} 迭代器讓使用者\textbf{不必知道容器內部怎麼存}，就能用同一套寫法（\texttt{*it} 取值、\texttt{++it}
+前進、\texttt{it != end} 判斷結束）依序走過容器裡的每個元素。 串列、陣列、樹的內部結構完全不同，但演算法（例如
+找最大值、加總）可以只寫一次，透過迭代器套用到各種容器上，同時容器的內部資料也不必公開。
+
+\textbf{(二) 單向串列的遞減。} 單向串列的節點只有往後的 \texttt{link}，要退回前一個節點，只能從 \texttt{first}
+往後找，找到「\texttt{link} 指向 \texttt{current}」的那個節點。
+\begin{itemize}
+\item \textbf{A}：\texttt{current} 已經是第一個節點時沒有前一個，不移動，直接 \texttt{return *this}。 同一個 A 也要填
+在後遞減裡：回傳 \texttt{*this}（型別是 \texttt{ChainIterator}，傳回一份副本）也合法。
+\item \textbf{B、C}：\texttt{it} 從 \texttt{first} 開始，只要 \texttt{it->link != current} 就 \texttt{it = it->link}。 迴圈
+停下時 \texttt{it->link == current}，\texttt{it} 就是前一個節點。 \texttt{current} 是 \texttt{0}（已經走到串列尾端之後）
+時，迴圈停在最後一個節點（它的 \texttt{link} 是 \texttt{0}），\texttt{--} 剛好退到最後一個，這是我們要的。
+\item \textbf{D}：\texttt{current = it}。
+\item \textbf{E}：後遞減要回傳「改之前」的迭代器，所以在 D 改掉 \texttt{current} 之前先存 \texttt{old = *this}。
+程式把 E 放在 D 前面，順序就是為了這個。
+\end{itemize}
+填好的前遞減：
+\begin{minted}[fontsize=\small]{cpp}
+ChainIterator& operator --() {      // predecrement
+    if (current == first) { return *this; }
+    ChainNode *it = first;
+    while (it->link != current) { it = it->link; }
+    current = it;
+    return *this;
+}
+\end{minted}
+每次 \texttt{--} 要從頭走到目前位置，最壞 $\Theta(n)$；這就是單向串列的限制，也是 (三) 要改成雙向串列的原因。
+
+\textbf{(三) 雙向串列的遞減。} 每個節點有 \texttt{left} 指向前一個，退一格只要 \textbf{F}：
+\texttt{current = current->left}，$\Theta(1)$。 後遞減同樣先 \textbf{G}：\texttt{old = *this}，再做 F。 （在第一個節點
+上做 \texttt{--} 會得到 \texttt{0}，和走過尾端時 \texttt{++} 得到 \texttt{0} 對稱。）
+
+\textbf{(四)} 解參考要回傳目前節點資料的參考，\textbf{H}：\texttt{current->data}，回傳型別是參考，所以
+\texttt{*it = 5;} 可以直接改到節點裡的資料。 兩個迭代器指向不同節點才算不相等，\textbf{I}：
+\texttt{current != right.current}。 比的是指標（是不是同一個節點），不是資料：兩個不同節點資料相同時，迭代器仍然
+不相等。
+\end{pastsoln}

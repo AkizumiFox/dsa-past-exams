@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ncku-113-cce-08}]{成大電通所 113 學年度 是非題第 9 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+We can find the precedence relation of the edges in an Activity-on-Vertex (AOV) network if the
+graph corresponds to the network that is not irreflexive.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 AOV 網路的前置關係必須是\textbf{非自反}（irreflexive）的，才排得出可行的先後順序；題目
+說 ``not irreflexive'' 剛好相反。
+
+把「$i$ 是 $j$ 的前置活動（有一條路徑 $i \leadsto j$）」記成 $i \prec j$。 這個關係可行，要滿足
+遞移和非自反兩個性質，也就是一個偏序（資結書第~22.4~節）。 非自反是說沒有 $i \prec i$；
+$i \prec i$ 表示從 $i$ 走得回 $i$，網路裡有環，$i$ 必須等自己完成才能開始，這個計畫做不完，
+也排不出拓樸順序（Kahn 演算法會在還有頂點時找不到入度為 $0$ 的點而停下來）。
+
+所以：網路是非自反的（無環），才能求出各活動的先後順序；不是非自反的（有環）時求不出來。
+\end{pastsoln}

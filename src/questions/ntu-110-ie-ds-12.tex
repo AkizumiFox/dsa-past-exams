@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-12}]{臺大工工所 110 學年度 第 12 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Suppose $\mathrm{f(n)}$ is a positive function, which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item If $\mathrm{f(n)}=O(n^2)$, then $\lim\limits_{n\to\infty}\frac{\mathrm{f(n)}}{n^2}$ exists and that
+$\lim\limits_{n\to\infty}\frac{\mathrm{f(n)}}{n^2}<\infty$.
+\item If $\mathrm{f(n)}=\Theta(n^3)$, and that $\lim\limits_{n\to\infty}\frac{\mathrm{f(2n)}}{\mathrm{f(n)}}$
+exists, then $\lim\limits_{n\to\infty}\frac{\mathrm{f(2n)}}{\mathrm{f(n)}}=8$.
+\item If $\mathrm{f(n)}=\Theta(\sqrt{\mathrm{n}})$, then $\mathrm{f(n)}^2=\Theta(\mathrm{n})$.
+\item If $\mathrm{f(n)}=\Omega(\mathrm{n}\log_2 n)$, then $2^{\mathrm{f(n)}}=\Omega(\mathrm{n!})$.
+\item If $\mathrm{f(n)}=\Omega(n!)$, then $\log f(n)=\Omega(\mathrm{n}\log\mathrm{n})$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(C)、(E)。 以下用資結書第~1.5~節的定義。
+
+\begin{itemize}
+\item (A) 錯。 $O$ 只要求比值有上界，不要求極限存在。 反例：$f(n) = n^2$（$n$ 偶數）、$f(n) = n$（$n$ 奇數）。
+$f(n) \le n^2$，所以 $f(n) = O(n^2)$；但 $f(n)/n^2$ 在偶數項是 $1$、奇數項是 $1/n \to 0$，極限不存在。
+（也可以用 $f(n) = n^2(2 + \sin n)$。）
+\item (B) 對。 設極限是 $L$，又有常數 $c_1, c_2 > 0$ 使 $n$ 夠大時 $c_1 n^3 \le f(n) \le c_2 n^3$。 假設
+$L > 8$：取 $8 < r < L$，存在 $N$ 使 $n \ge N$ 時 $f(2n) > r f(n)$。 反覆用 $k$ 次得
+$f(2^k N) > r^k f(N)$，而 $f(2^k N) \le c_2 (2^k N)^3 = c_2 N^3 8^k$，所以 $(r/8)^k < c_2 N^3 / f(N)$
+對所有 $k$ 成立；但 $r/8 > 1$，左邊趨近無限大，矛盾。 $L < 8$ 時同理（取 $L < r < 8$，得
+$f(2^k N) < r^k f(N)$，和下界 $c_1 N^3 8^k$ 矛盾）。 所以 $L = 8$。
+\item (C) 對。 $c_1\sqrt n \le f(n) \le c_2\sqrt n$，三邊都是正的，平方得 $c_1^2 n \le f(n)^2 \le c_2^2 n$。
+\item (D) 錯。 $\Omega(n\log n)$ 允許常數很小。 反例：$f(n) = \frac12 n\log_2 n$，則
+$2^{f(n)} = n^{n/2}$。 而 $n! \ge (n/e)^n$，
+$\dfrac{n^{n/2}}{n!} \le \dfrac{n^{n/2}e^n}{n^n} = \left(\dfrac{e^2}{n}\right)^{n/2} \to 0$，
+所以 $2^{f(n)} = o(n!)$，不是 $\Omega(n!)$。 （$f(n) = n\log_2 n$ 時 $2^{f(n)} = n^n \ge n!$ 才成立，但題目只給下界的階。）
+\item (E) 對。 $n$ 夠大時 $f(n) \ge c\cdot n!$，取對數 $\log f(n) \ge \log c + \log(n!)$。 $\log(n!) = \Theta(n\log n)$
+（資結書第~1.6~節），$\log c$ 是常數，所以 $\log f(n) = \Omega(n\log n)$。 對數把乘上的常數變成加上的常數，不影響階，
+這是 (E) 成立、(D) 不成立的差別：指數會把乘上的常數變成次方。
+\end{itemize}
+\end{pastsoln}

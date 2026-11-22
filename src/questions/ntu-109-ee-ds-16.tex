@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-16}]{臺大電機所 109 學年度（B）第 16 題}
+（單選；每題 4 分，答錯不倒扣）
+
+In this exam: The order of a node in a tree is defined as the number of its children. The order of
+a tree is defined as the maximum order among its nodes.
+
+In a binomial heap of 2020 items, the maximum order among all binomial trees is
+
+(A)~8 \qquad (B)~9 \qquad (C)~10 \qquad (D)~11 \qquad (E)~12
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) 10。
+
+二項樹 $B_k$ 有 $2^k$ 個節點，根有 $k$ 個子節點，而且根是子節點最多的節點，所以 $B_k$ 的 order
+（依本題定義）就是 $k$。 $n$ 個元素的二項堆積，每個階數最多一棵，哪幾棵由 $n$ 的二進位決定：第 $k$
+位是 $1$ 就有一棵 $B_k$（資結書第~8.5~節）。
+\[
+2020 = 1024 + 512 + 256 + 128 + 64 + 32 + 4 = (11111100100)_2 .
+\]
+最高位是 $2^{10}$，所以有 $B_{10}, B_9, B_8, B_7, B_6, B_5, B_2$ 共七棵樹，最大的 order 是 $10$。
+
+(D) 11 要 $2^{11} = 2048 > 2020$ 個節點，放不下；(A)、(B) 漏掉了 $B_{10}$ 這棵（$2020 \ge 1024$，
+一定有）；(E) 也放不下。
+\end{pastsoln}

@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ust-108-ee-ds-04}]{臺聯大電機類 108 學年度 第 4 題}
+（問答）
+
+(10\%) ``Block chain'' is one of the hottest topic in the information technology. Which calculation
+algorithm is the core of block chain? Briefly describe this algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：核心是\textbf{密碼雜湊函數}（cryptographic hash function）。 比特幣用的是 SHA-256（區塊標頭
+連做兩次 SHA-256）；以太坊用 Keccak-256。 這題超出資結書的範圍，資結書第~12~章的雜湊函數是拿來
+分散鍵值、建雜湊表的，下面說明兩者的差別和區塊鏈怎麼用它。
+
+\textbf{雜湊函數做什麼。} SHA-256 把任意長度的資料對應到固定 $256$ 位元的雜湊值（摘要）。
+做法是 Merkle--Damgård 結構：
+\begin{enumerate}
+\item 補位：在訊息後面補一個 $1$ 位元、若干個 $0$，最後 $64$ 位元寫原訊息長度，使總長是 $512$ 的倍數。
+\item 切成 $512$ 位元的區塊，從一組固定的初始值（$8$ 個 $32$ 位元字）開始，每個區塊用壓縮函數
+（$64$ 回合的位元旋轉、XOR、模 $2^{32}$ 加法）把目前的 $256$ 位元狀態和這個區塊混成新的狀態。
+\item 最後的狀態就是雜湊值。
+\end{enumerate}
+
+\textbf{和雜湊表的雜湊函數有什麼不同。} 雜湊表的函數（例如除法法 $h(k) = k \bmod m$，資結書
+第~12.1~節）只要算得快、分佈均勻。 密碼雜湊函數另外要求：
+\begin{itemize}
+\item \textbf{單向}：給雜湊值 $y$，找不到 $x$ 使 $h(x) = y$（只能亂試）。
+\item \textbf{抗碰撞}：找不到兩個不同的輸入有相同的雜湊值（輸出空間雖然有限，碰撞一定存在，但算不出來）。
+\item \textbf{雪崩效應}：輸入改一個位元，輸出大約一半的位元會變。
+\end{itemize}
+
+\textbf{區塊鏈怎麼用。}
+\begin{itemize}
+\item \textbf{串成鏈}：每個區塊的標頭記錄前一個區塊標頭的雜湊值。 改了某個舊區塊的任何一筆資料，
+它的雜湊值就變了，後面每一個區塊記錄的「前一個雜湊值」全部對不上，竄改馬上看得出來。
+\item \textbf{Merkle 樹}：區塊內的交易兩兩取雜湊、再兩兩取雜湊，一路往上合成一個根雜湊放進標頭，
+只要比對根雜湊就能確認整批交易沒被改過，驗證某一筆交易只需要樹上 $O(\lg n)$ 個雜湊值。
+\item \textbf{工作量證明}（proof of work）：礦工不斷改標頭裡的 nonce，直到標頭的雙重雜湊值
+$\mathrm{SHA256}(\mathrm{SHA256}(\text{標頭}))$ 小於目標值（開頭有夠多個 $0$）。 因為單向，
+只能一個一個試，但別人驗證只要算一次雜湊。 想竄改舊區塊，就得把它和之後所有區塊的工作量
+重做一遍，而且要比全網其他節點更快，實際上做不到。
+\end{itemize}
+\end{pastsoln}

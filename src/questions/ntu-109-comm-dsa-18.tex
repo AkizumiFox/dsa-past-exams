@@ -1,0 +1,16 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-18}]{臺大電信所 109 學年度（B）第 18 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of one find-min operations is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+費氏堆積一直維護一個指向最小根的指標（插入、合併、delete-min、decrease-key 之後都會更新），
+find-min 直接回傳它，$O(1)$。 這是最壞情形也成立的 $O(1)$，不是平攤（資結書第~8.6~節）。
+\end{pastsoln}

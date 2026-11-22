@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-01}]{成大電機所 107 學年度 複選題第 2 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item The number of nodes with two children in a binary tree must be smaller than or equal to number
+of leaf nodes.
+\item The worse time complexity to insert a node into a binary search tree is O($\log n$) when the
+tree contains $n$ nodes.
+\item There exists $n$+1 thread in a threaded binary search tree with $n$ nodes.
+\item If we use a list representation to represent a $k$-ary tree (i.e., at tree of degree k) for
+$n$ nodes, where each node in a list has a fixed size $k$ to record its children, then $n(k-1)+1$
+fields will be wasted in the representation.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)(D)。
+
+\textbf{(A) 對}。 非空的二元樹有 $n_0 = n_2 + 1$（資結書定理~7.2）：$n$ 個節點有 $n - 1$ 條邊，每條邊從
+父節點往下數，$n - 1 = n_1 + 2n_2$；又 $n = n_0 + n_1 + n_2$，相減得 $n_0 = n_2 + 1$。 所以兩個子節點的節點
+數 $n_2 = n_0 - 1 < n_0$，「小於或等於」成立（空樹時兩者都是 $0$，也成立）。
+
+\textbf{(B) 錯}。 插入要從根走到一個空位置，時間是 $O(h)$，$h$ 是樹高。 最壞情況樹退化成一條鏈（例如
+依序插入 $1, 2, \ldots, n$），$h = n$，插入要 $\Theta(n)$。 $O(\log n)$ 是平衡時（或隨機插入的期望）的
+情形，不是最壞情況。
+
+\textbf{(C) 對}。 $n$ 個節點的二元樹共有 $2n$ 個指標欄位；除了根以外每個節點被父節點指一次，用掉
+$n - 1$ 個，剩下 $2n - (n - 1) = n + 1$ 個是空指標。 引線二元樹（資結書第~7.5~節）就是把這 $n + 1$ 個空指標
+改成指向中序前驅或後繼的引線，所以有 $n + 1$ 條引線。 中序第一個節點的左引線和最後一個節點的右引線
+沒有前驅、後繼可指，指向表頭節點（或設為 \NIL），仍然算在這 $n + 1$ 個欄位裡。 題目說的是
+「threaded binary search tree」，引線的個數只和形狀有關，和是不是搜尋樹無關。
+
+\textbf{(D) 對}。 每個節點固定開 $k$ 個子節點欄位，共 $nk$ 個。 同 (C) 的數法，真正用到的只有 $n - 1$ 個
+（每個非根節點一個），浪費的是
+\[
+nk - (n - 1) = n(k - 1) + 1
+\]
+個。 例如 $k = 3$、$n = 4$（根有三個子節點）：$12$ 個欄位用掉 $3$ 個，浪費 $9 = 4 \cdot 2 + 1$ 個。 $k$ 越大浪費
+的比例 $\bigl(n(k-1)+1\bigr)/(nk)$ 越接近 $1$，這就是一般樹改用「左子右兄弟」表示（資結書第~7.2.3~節）的理由：
+每個節點只要兩個欄位。
+\end{pastsoln}

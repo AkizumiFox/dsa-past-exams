@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ncku-113-cce-09}]{成大電通所 113 學年度 是非題第 10 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+It will waste $n$(k-1) fields if we use a list representation to represent each node in a k-ary
+tree (i.e., a tree of degree k) with $n$ nodes, where each node uses a list with a fixed size k to
+record its children.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 浪費的欄位數是 $n(k - 1) + 1$，不是 $n(k - 1)$。
+
+每個節點固定 $k$ 個子節點欄位，$n$ 個節點共 $nk$ 個。 用到的欄位數等於邊數：$n$ 個節點的樹有
+$n - 1$ 條邊（除了根，每個節點恰好被它的父節點的一個欄位指到），所以用到 $n - 1$ 個。 空著的
+欄位是
+\[
+nk - (n - 1) = n(k - 1) + 1 .
+\]
+例如 $n = 1$ 時只有根，$k$ 個欄位全空，是 $1 \cdot (k - 1) + 1 = k$ 個，不是 $k - 1$ 個。 這也
+是資結書第~7.2.3~節說固定 $k$ 個欄位很浪費、改用左孩子右兄弟表示法的原因。
+\end{pastsoln}

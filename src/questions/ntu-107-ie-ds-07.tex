@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-07}]{臺大工工所 107 學年度 第 7 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Answer questions 5 to 8 for the following setting.\\
+Let $s$(node) be the number of comparisons required to find the node in the BST, e.g. $s$(root) = 1. Let $t$(node) be the number of the nodes in its left subtree, e.g. $t$(leaf) = 0.
+
+\medskip
+7. With the information of $t$(node), the median can be found in O(log $n$) time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+有了 $t$，找第 $k$ 小只要從根往下走一條路徑。 在節點 $x$，它在自己子樹裡的名次是
+$r = t(x) + 1$：
+\begin{itemize}
+\item $k = r$：答案是 $x$；
+\item $k < r$：往左子樹找第 $k$ 小；
+\item $k > r$：往右子樹找第 $k - r$ 小。
+\end{itemize}
+這就是資結書虛擬碼~9.8 \proc{Tree-Select}，只是把 $x.\mathit{left}.\mathit{size}$ 換成
+$t(x)$。 $n$ 也能用 $t$ 算出來：沿著根一路往右走，把每個節點的 $t(x) + 1$ 加起來。 中位數取
+$k = \lceil n/2 \rceil$。 兩件事都只走一條從根往下的路徑，時間是 $O(h)$，$h$ 是樹高。
+
+問題在 $h$。 這組題目講的是一般的 BST（第 5 題就考慮了很高的樹），$h$ 最壞是 $n - 1$。 例如
+依序插入 $1, 2, \ldots, n$ 得到一條往右的鏈，中位數在深度 $\lceil n/2 \rceil - 1$，從根走到它就要
+$\Theta(n)$ 步。 所以只靠 $t$ 不能保證 $O(\log n)$；樹是平衡的（$h = O(\log n)$，例如 AVL 樹、紅
+黑樹）才是 $O(\log n)$。
+\end{pastsoln}

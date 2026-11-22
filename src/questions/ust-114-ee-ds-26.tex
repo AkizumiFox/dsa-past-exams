@@ -1,0 +1,98 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-26}]{臺聯大電機類 114 學年度 問答題第 2 題}
+（問答；10 分）
+
+The following table is the adjacency list and edge weights of a graph:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Node & Adjacent Nodes (Target Node, Weight) \\ \hline
+0 & (1, 4), (2, 1) \\ \hline
+1 & (3, 1) \\ \hline
+2 & (1, 2), (3, 5) \\ \hline
+3 & \\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item Please draw the graph based on the table. (5 point)
+\item Using Dijkstra's algorithm, calculate the shortest path from node 0 to all other nodes and draw
+the resulting shortest path. (5 point)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(A)} 鄰接串列寫的是「目標節點」，而且節點 3 的串列是空的、節點 1 有 $(3, 1)$ 卻沒有反向，所以
+這是\textbf{有向}圖（資結書第~21.2~節）。 五條有向邊：$0 \to 1$（$4$）、$0 \to 2$（$1$）、
+$1 \to 3$（$1$）、$2 \to 1$（$2$）、$2 \to 3$（$5$）。
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\small},
+  e/.style={-{Stealth[length=2.5mm]},thick}, w/.style={font=\small,fill=white,inner sep=1pt}]
+\node[v] (0) at (0,0) {0};
+\node[v] (1) at (2.6,1.3) {1};
+\node[v] (2) at (2.6,-1.3) {2};
+\node[v] (3) at (5.2,0) {3};
+\draw[e] (0) -- node[w] {4} (1);
+\draw[e] (0) -- node[w] {1} (2);
+\draw[e] (2) -- node[w] {2} (1);
+\draw[e] (1) -- node[w] {1} (3);
+\draw[e] (2) -- node[w] {5} (3);
+\end{tikzpicture}
+\end{center}
+
+\textbf{(B)} Dijkstra（資結書虛擬碼~25.3）：$d[0] = 0$，其餘 $\infty$；每次從還沒確定的節點裡取 $d$
+最小的，確定它，再鬆弛它的出邊。 $\pi$ 是前一個節點。
+\begin{center}
+\small
+\begin{tabular}{cccccc}
+\toprule
+步驟 & 取出 & $d[0]$ & $d[1]$ & $d[2]$ & $d[3]$ \\
+\midrule
+開始 & & $0$ & $\infty$ & $\infty$ & $\infty$ \\
+1 & 0 & \textbf{0} & $4$（$\pi = 0$） & $1$（$\pi = 0$） & $\infty$ \\
+2 & 2 & & $3$（$\pi = 2$） & \textbf{1} & $6$（$\pi = 2$） \\
+3 & 1 & & \textbf{3} & & $4$（$\pi = 1$） \\
+4 & 3 & & & & \textbf{4} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{enumerate}
+\item 取出 0，鬆弛 $0 \to 1$：$d[1] = 4$；$0 \to 2$：$d[2] = 1$。
+\item 未確定的節點裡 $d[2] = 1$ 最小，取出 2。 鬆弛 $2 \to 1$：$1 + 2 = 3 < 4$，$d[1]$ 改成 $3$、
+$\pi[1] = 2$；$2 \to 3$：$1 + 5 = 6$，$d[3] = 6$。
+\item 取出 1（$d = 3$）。 鬆弛 $1 \to 3$：$3 + 1 = 4 < 6$，$d[3]$ 改成 $4$、$\pi[3] = 1$。
+\item 取出 3（$d = 4$），沒有出邊，結束。
+\end{enumerate}
+結果：
+\begin{center}
+\begin{tabular}{ccl}
+\toprule
+節點 & 最短距離 & 最短路徑 \\
+\midrule
+1 & 3 & $0 \to 2 \to 1$ \\
+2 & 1 & $0 \to 2$ \\
+3 & 4 & $0 \to 2 \to 1 \to 3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+由 $\pi$ 得到的最短路徑樹是 $0 \to 2$、$2 \to 1$、$1 \to 3$ 三條邊（下圖粗線）；$0 \to 1$ 和 $2 \to 3$
+不在樹上。
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\small},
+  e/.style={-{Stealth[length=2.5mm]},thick}, t/.style={-{Stealth[length=3mm]},line width=1.6pt},
+  w/.style={font=\small,fill=white,inner sep=1pt}]
+\node[v] (0) at (0,0) {0};
+\node[v] (1) at (2.6,1.3) {1};
+\node[v] (2) at (2.6,-1.3) {2};
+\node[v] (3) at (5.2,0) {3};
+\node[font=\small,below=1mm of 0] {$d = 0$};
+\node[font=\small,above=1mm of 1] {$d = 3$};
+\node[font=\small,below=1mm of 2] {$d = 1$};
+\node[font=\small,below=1mm of 3] {$d = 4$};
+\draw[e,densely dashed,black!45] (0) -- node[w] {4} (1);
+\draw[t] (0) -- node[w] {1} (2);
+\draw[t] (2) -- node[w] {2} (1);
+\draw[t] (1) -- node[w] {1} (3);
+\draw[e,densely dashed,black!45] (2) -- node[w] {5} (3);
+\end{tikzpicture}
+\end{center}
+所有權重都是正的，Dijkstra 的結果正確（資結書定理~25.6）。
+\end{pastsoln}

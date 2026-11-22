@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-05}]{臺大生機所 114 學年度 第 5 題}
+（追蹤；15 分）
+
+\textbf{(15\%)} Draw the 2-3 tree that results when you insert the following keys in this order: Y,
+L, P, M, X, H, C, R, A, E, S. Start with an initially empty tree.
+\end{pastexam}
+
+\begin{pastsoln}
+鍵值照字母順序比大小。 2-3 樹的插入（資結書第~11.1.3~節）：從根往下找到該放的葉節點，把鍵值
+放進去；葉節點若變成 $3$ 個鍵值，就把中間那個推到父節點，左右兩個各成一個節點；父節點因此變成
+$3$ 個鍵值時同樣分裂，一路往上，根分裂時樹長高一層。 下面用 $[\,\cdot\,]$ 表示一個節點。
+
+\begin{enumerate}
+\item Y：根 [Y]。
+\item L：[L Y]。
+\item P：[L P Y] 有 $3$ 個，分裂，P 往上成為新根：根 [P]，子節點 [L]、[Y]。
+\item M：M $<$ P，放進左葉：[L M]。
+\item X：X $>$ P，放進右葉：[X Y]。
+\item H：H $<$ P，左葉變成 [H L M]，分裂，L 推上去，根變成 [L P]，子節點 [H]、[M]、[X Y]。
+\item C：C $<$ L，放進 [H]：[C H]。
+\item R：R $>$ P，右葉變成 [R X Y]，分裂，X 推上去，根變成 [L P X]，又分裂，P 推上去成為新根。
+現在根 [P]；左子節點 [L]，下面是 [C H]、[M]；右子節點 [X]，下面是 [R]、[Y]。 樹長到三層。
+\item A：A $<$ P、A $<$ L，葉變成 [A C H]，分裂，C 推上去，[L] 變成 [C L]，下面是 [A]、[H]、[M]。
+\item E：E $<$ P，C $<$ E $<$ L，走中間，[H] 變成 [E H]。
+\item S：S $>$ P，S $<$ X，[R] 變成 [R S]。
+\end{enumerate}
+
+幾個分裂之後的樣子和最後結果：
+\begin{center}
+\begin{tikzpicture}[b/.style={draw,rectangle,minimum height=6mm,inner sep=3pt,font=\small},
+  level distance=11mm, level 1/.style={sibling distance=14mm},
+  lab/.style={font=\small}, edge from parent/.style={draw}]
+\node[b] {P} child {node[b] {L}} child {node[b] {Y}};
+\node[lab] at (0,-2.2) {插入 P 之後};
+\begin{scope}[xshift=40mm, level 1/.style={sibling distance=15mm}]
+\node[b] {L\;\;P} child {node[b] {H}} child {node[b] {M}} child {node[b] {X\;\;Y}};
+\node[lab] at (0,-2.2) {插入 H 之後};
+\end{scope}
+\end{tikzpicture}
+
+\bigskip
+\begin{tikzpicture}[b/.style={draw,rectangle,minimum height=6mm,inner sep=3pt,font=\small},
+  level distance=11mm, level 1/.style={sibling distance=30mm}, level 2/.style={sibling distance=13mm},
+  lab/.style={font=\small}]
+\node[b] {P}
+  child {node[b] {L} child {node[b] {C\;\;H}} child {node[b] {M}}}
+  child {node[b] {X} child {node[b] {R}} child {node[b] {Y}}};
+\node[lab] at (0,-3.2) {插入 R 之後};
+\begin{scope}[xshift=70mm, level 1/.style={sibling distance=34mm}, level 2/.style={sibling distance=12mm}]
+\node[b] {P}
+  child {node[b] {C\;\;L} child {node[b] {A}} child {node[b] {E\;\;H}} child {node[b] {M}}}
+  child {node[b] {X} child {node[b] {R\;\;S}} child {node[b] {Y}}};
+\node[lab] at (0,-3.2) {最後結果（插入 S 之後）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+最後的 2-3 樹：根 [P]；左子節點 [C L]，三個子節點是 [A]、[E H]、[M]；右子節點 [X]，兩個子節點
+是 [R S]、[Y]。 檢查：所有葉節點都在第 $3$ 層；中序是 A C E H L M P R S X Y，由小到大，$11$ 個
+鍵值都在。
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-12}]{臺大電信所 110 學年度（B）第 12 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Let $f(n)$ and $g(n)$ be two asymptotically non-negative functions. Which of the following is \textit{always} true?
+
+A.~$f(n)\times g(n)\in\Theta\big(\min(f(n),g(n))\big)$\\
+B.~$f(n)\times g(n)\in\Theta\big(\max(f(n),g(n))\big)$\\
+C.~$f(n)+g(n)\in\Theta\big(\min(f(n),g(n))\big)$\\
+D.~$f(n)+g(n)\in\Theta\big(\max(f(n),g(n))\big)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+\textbf{D 對}。 $n$ 夠大時 $f(n), g(n) \ge 0$，令 $m(n) = \max(f(n), g(n))$。 兩個非負數的和至少是較大
+的那個，至多是較大那個的兩倍：
+\[
+m(n) \le f(n) + g(n) \le 2m(n).
+\]
+取 $c_1 = 1$、$c_2 = 2$，就是 $f(n) + g(n) = \Theta(\max(f(n), g(n)))$ 的定義（資結書第~1.5~節）。
+
+其他三個用反例：
+\begin{itemize}
+\item A、B 錯：取 $f(n) = g(n) = n$。 $f(n)g(n) = n^2$，但 $\min = \max = n$，$n^2 \notin \Theta(n)$。
+\item C 錯：取 $f(n) = 1$、$g(n) = n$。 $f(n) + g(n) = n + 1 = \Theta(n)$，但 $\min = 1$，$n + 1 \notin \Theta(1)$。
+\end{itemize}
+\end{pastsoln}

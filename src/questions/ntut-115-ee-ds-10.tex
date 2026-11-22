@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-10}]{北科大電機所（戊組）115 學年度 是非題第 10 題}
+（是非）
+
+An AVL tree is a self-balancing binary search tree where the height difference between left and right
+subtrees of any node is at most 1. \textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（True）。
+
+這正是 AVL 樹的定義（資結書定義~10.1）：它是二元搜尋樹，而且\textbf{每一個}節點的平衡因子
+（左子樹高度減右子樹高度）只能是 $-1$、$0$、$1$。 插入或刪除之後若某個節點的高度差變成 $2$，就用旋轉（LL、RR、
+LR、RL）調整回來，所以叫自我平衡。 這個條件保證 $n$ 個節點的 AVL 樹高度是 $O(\log n)$（約 $1.44 \lg n$ 以內，
+資結書定理~10.1），搜尋、插入、刪除都是 $O(\log n)$。 要注意是「任何一個節點」都要滿足，只看根是不夠的。
+\end{pastsoln}

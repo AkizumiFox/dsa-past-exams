@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-15}]{臺大電機所 108 學年度（B）第 15 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*).]
+\item Hash tables are generally used in cases where insertion and deletion operations are more
+often than searches.
+\item Open-addressed hash tables cannot be used if the data does not have unique keys.
+\item With linear probing, searches become faster as we remove data from the hash table.
+\item Both linear and quadratic probing can probe all locations in the table.
+\item Double hashing resolves the clustering issue by using key-dependent probe intervals.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+\textbf{(A) 錯}。 雜湊表的長處是用鍵直接算出位置，\textbf{搜尋}期望 $O(1)$，所以它用在「查詢
+很頻繁」的場合，例如符號表、字典、快取。 如果只是大量插入、刪除而很少搜尋，用不著雜湊：一個
+未排序的串列插入就是 $O(1)$。 而且雜湊表的插入、刪除本身也要先搜尋（插入要確認鍵不重複、刪除
+要先找到它），搜尋快是一切的基礎。
+
+\textbf{(B) 錯}。 開放定址的探測機制沒有要求鍵不重複。 允許重複鍵時，插入就沿探測序列放進第一個
+空格（不必先檢查有沒有相同的鍵）；要找出某個鍵的所有紀錄，就沿探測序列一直走到空格為止，把
+沿途鍵相同的都收集起來。 這和鏈結法要掃完整條鏈才能找齊重複鍵是同一回事。 常見的實作（例如
+資結書虛擬碼~12.3 的 \proc{Mark-Insert}）遇到相同的鍵就不再插入，那是「集合」這種用法的選擇，不是
+開放定址做不到。
+
+\textbf{(C) 錯}。 開放定址的刪除不能把格子清空，否則會切斷經過那一格的探測序列，要改成放刪除
+標記（資結書第~12.3.4~節）。 搜尋遇到刪除標記時必須當成有東西、繼續往下找，所以刪除之後探測
+序列並沒有變短：失敗的搜尋照樣要走到真正的空格才停。 刪除標記越積越多，搜尋反而越來越慢，
+這也是用刪除標記的表要定期重建的原因。 （線性探測另有「刪除後把後面的鍵往前搬」的做法，可以真的
+縮短序列，但那不是開放定址的一般刪除方式，題目的敘述不能當成一般性質。）
+
+\textbf{(D) 錯}。 線性探測 $h(k) + i$ 會走遍所有 $m$ 格。 二次探測 $h(k) + i^2$ 不一定：$m$ 是
+奇質數時只保證前 $(m + 1)/2$ 個位置互不相同（資結書定理~12.3），而 $i^2 \bmod m$ 只有
+$(m+1)/2$ 種值，所以最多只探得到一半多一點的格子。 例如 $m = 7$：$i^2 \bmod 7$ 只有
+$0, 1, 4, 2$ 四種，表有 $7$ 格卻只探得到 $4$ 格，其他 $3$ 格都空著時插入也可能失敗。
+
+\textbf{(E) 對}。 雙重雜湊 $h(k, i) = (h_1(k) + i\, h_2(k)) \bmod m$ 的間隔 $h_2(k)$ 由鍵決定
+（資結書第~12.3~節）。 兩個鍵即使 $h_1$ 相同，間隔通常不同，探測序列很快分開；線性探測的主要
+叢集（連成一大片）和二次探測的次要叢集（同 $h(k)$ 的鍵序列完全相同）都因此大為減輕。
+\end{pastsoln}

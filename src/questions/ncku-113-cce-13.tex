@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncku-113-cce-13}]{成大電通所 113 學年度 簡答題第 4 題}
+（簡答）
+
+(6 pts) Please show the data structures to record the following graph in the form of adjacency
+matrix and the inversed adjacency list.
+
+\begin{center}
+\begin{tikzpicture}[>={Latex[length=5pt]},thick,v/.style={draw,circle,minimum size=0.8cm,inner sep=0pt,font=\sffamily\large}]
+  \node[v] (0) at (0,0) {0}; \node[v] (1) at (1.5,0) {1}; \node[v] (2) at (3.1,0) {2};
+  \draw[->] ([yshift=0.22cm]1.west)--([yshift=0.22cm]0.east);
+  \draw[->] ([yshift=-0.22cm]0.east)--([yshift=-0.22cm]1.west);
+  \draw[->] (1)--(2);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+圖有三條有向邊：$0 \to 1$、$1 \to 0$、$1 \to 2$。
+
+\textbf{相鄰矩陣}：$A[i][j] = 1$ 表示有邊 $i \to j$，否則是 $0$（資結書第~21.2~節）。 第 $i$ 列
+是 $i$ 的出邊，第 $j$ 行是 $j$ 的入邊。
+\begin{center}
+\begin{tabular}{c|ccc}
+ & 0 & 1 & 2 \\ \hline
+0 & 0 & 1 & 0 \\
+1 & 1 & 0 & 1 \\
+2 & 0 & 0 & 0 \\
+\end{tabular}
+\end{center}
+有向圖的矩陣不一定對稱：$A[1][2] = 1$ 但 $A[2][1] = 0$。
+
+\textbf{反鄰接串列}（inverse adjacency list）：每個頂點 $v$ 一條串列，存所有\textbf{指向} $v$
+的頂點 $u$（有邊 $u \to v$），也就是相鄰矩陣第 $v$ 行裡的 $1$。
+\begin{center}
+\begin{tikzpicture}[>={Latex[length=4pt]},
+  hd/.style={draw,minimum width=0.6cm,minimum height=0.6cm,inner sep=0pt},
+  nd/.style={draw,minimum width=0.7cm,minimum height=0.6cm,inner sep=0pt},
+  lk/.style={draw,minimum width=0.5cm,minimum height=0.6cm,inner sep=0pt}]
+  \foreach \v/\u/\y in {0/1/0, 1/0/-0.6, 2/1/-1.2} {
+    \node at (-0.75,\y) {$\v$};
+    \node[hd] (h\v) at (0,\y) {};
+    \node[nd] (n\v) at (2,\y) {\u};
+    \node[lk,anchor=west] (l\v) at (n\v.east) {};
+    \draw[->] (h\v.center)--(n\v.west);
+    \fill (h\v.center) circle (1.2pt);
+    \draw (l\v.south west)--(l\v.north east);
+  }
+\end{tikzpicture}
+\end{center}
+即 $0\colon 1$；$1\colon 0$；$2\colon 1$（斜線表示 \NIL）。 用反鄰接串列，找一個頂點的所有入邊
+只要走它自己那一條串列，入度就是串列長度；一般的鄰接串列則要掃過整個結構才找得到入邊。
+\end{pastsoln}

@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-03}]{成大電通所 114 學年度 單選題第 3 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Given a directed graph in the following, please identify which edge would become a cross edge if we traverse
+the graph by the breadth first search algorithm from node C. Assume that the nodes are stored in the adjacent
+list according to alphabetic order. Please specify which edge forms a cross edge in the resulting breadth-first
+spanning tree.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=7.5mm},>={Stealth[length=2.4mm]}]
+\node[v] (A) at (0,0) {A};
+\node[v] (B) at (1.9,1.15) {B};
+\node[v] (C) at (2.4,-0.8) {C};
+\node[v] (D) at (4.9,0) {D};
+\node[v] (F) at (7.0,1.6) {F};
+\node[v] (E) at (7.0,0) {E};
+\draw[->] (A) -- (B);
+\draw[->] (A.-40) -- (C.195);
+\draw[->] (C.160) -- (A.-5);
+\draw[->] (B.-95) -- (C.130);
+\draw[->] (C.95) -- (B.-60);
+\draw[->] (B.-30) -- (D.170);
+\draw[->] (D.135) -- (B.5);
+\draw[->] (C) -- (D);
+\draw[->] (D) -- (F);
+\draw[->] (D) -- (E);
+\draw[->] (F) -- (E);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*),nosep]
+\item (F, E)
+\item (B, D)
+\item (D, B)
+\item (A, B)
+\item All of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：e) All of the above。
+
+圖的邊：A$\to$B、A$\to$C、B$\to$C、B$\to$D、C$\to$A、C$\to$B、C$\to$D、D$\to$B、D$\to$E、D$\to$F、F$\to$E。
+鄰接串列依字母順序，從 C 做 BFS（資結書第~21.3~節）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+取出 & 依序看的邊 & 佇列（取出後） \\
+\midrule
+C（層 0） & C$\to$A、C$\to$B、C$\to$D 都是新點，樹邊 & A, B, D \\
+A（層 1） & A$\to$B（B 已發現）、A$\to$C（C 已發現） & B, D \\
+B（層 1） & B$\to$C（已發現）、B$\to$D（已發現） & D \\
+D（層 1） & D$\to$B（已發現）、D$\to$E、D$\to$F 新點，樹邊 & E, F \\
+E（層 2） & 沒有出邊 & F \\
+F（層 2） & F$\to$E（已發現） & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+BFS 樹：C 是根，子節點 A、B、D；E、F 是 D 的子節點。
+
+非樹邊依兩端在樹上的關係分類（資結書第~21.5~節）：終點是起點的祖先叫後向邊（back edge），兩端沒有祖孫關係叫交叉邊
+（cross edge）。 有向圖的 BFS 不會有前向邊。
+\begin{itemize}
+\item (F, E)：F、E 都在層 2，是兄弟（都是 D 的子節點），沒有祖孫關係，交叉邊。
+\item (B, D)：B、D 都在層 1，都是 C 的子節點，交叉邊。
+\item (D, B)：同上，反方向，也是交叉邊。
+\item (A, B)：A、B 都在層 1，交叉邊。
+\end{itemize}
+四條都是交叉邊，選 e)。 其餘的非樹邊 A$\to$C、B$\to$C 指向根 C，是後向邊。
+\end{pastsoln}

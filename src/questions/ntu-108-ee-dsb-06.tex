@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-06}]{臺大電機所 108 學年度（B）第 6 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+Hash tables that use separate chaining need rehashing to avoid performance degradation due to
+long chains.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，對。
+
+鏈結法的表永遠不會「滿」：$m$ 格可以存任意多個鍵，所以它不像開放定址那樣非再雜湊不可。 但
+效能會變差。 簡單均勻雜湊下，一條鏈的期望長度是載入因子 $\alpha = n/m$，搜尋的期望時間是
+$\Theta(1 + \alpha)$（資結書第~12.2.2~節、定理~12.2）。 $m$ 固定而 $n$ 一直增加時，$\alpha$
+跟著線性變大，搜尋、刪除就從 $O(1)$ 退化成 $\Theta(n/m)$，也就是正比於 $n$。
+
+解法就是再雜湊（資結書第~12.5~節）：$\alpha$ 超過某個門檻（例如 $1$）時，開一個大約兩倍大的新表，
+把所有鍵用新的雜湊函數重新放進去。 這樣 $\alpha$ 一直維持在常數以下，鏈的期望長度是 $O(1)$；
+每次再雜湊花 $\Theta(n)$，但表大小倍增，平攤到每次插入只是 $O(1)$。 題目說「為了避免長鏈造成
+效能下降而需要再雜湊」，正是這個意思。
+\end{pastsoln}

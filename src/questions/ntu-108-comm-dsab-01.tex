@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-01}]{臺大電信所 108 學年度（B）第 1 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+Suppose there are $n$ people born between the year 0 A.D. and the year 2003 A.D. It is possible
+to sort all of them by birthdate in $o(n\lg n)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對。
+
+$\Omega(n \lg n)$ 的下界只限制「靠比較來排序」的演算法（資結書第~15.1~節）。 這題的鍵是生日，
+可能的值是有限的：年份只有 $0$ 到 $2003$ 共 $2004$ 種，月、日最多 $12 \times 31$ 種，所以不同的
+生日不超過 $k = 2004 \times 12 \times 31 = 745{,}488$ 種，是和 $n$ 無關的常數。
+
+做法一：把生日編號成 $0$ 到 $k - 1$ 的整數（$\text{年} \times 372 + (\text{月} - 1) \times 31 +
+(\text{日} - 1)$），用計數排序（資結書第~15.2.1~節），時間 $O(n + k) = O(n)$。
+
+做法二：LSD 基數排序（資結書第~15.2.2~節），先依日、再依月、最後依年各做一次穩定的計數排序，
+三趟的範圍分別是 $31$、$12$、$2004$，總時間 $O(3n + 31 + 12 + 2004) = O(n)$。
+
+兩種都是 $O(n)$，而 $O(n) \subseteq o(n \lg n)$（$n / (n \lg n) = 1/\lg n \to 0$），所以敘述對。
+\end{pastsoln}

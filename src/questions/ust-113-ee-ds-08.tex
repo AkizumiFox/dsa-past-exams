@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-08}]{臺聯大電機類 113 學年度 第 8 題}
+（單選；每題 3 分，答錯不倒扣）
+
+Consider the following Python codes, which traversal order will the codes produce when starting
+from node 'A' in the given graph?
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{python}
+def search(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    print(start, end=' ')
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            search(graph, neighbor, visited)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+\end{minted}
+
+(A)~A B D E F C \qquad (B)~A C F B D E \qquad (C)~A B E F C D\\
+(D)~A B D E C F \qquad (E)~A D F C B E
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+\texttt{search} 拜訪一個頂點時先印出它，再依串列的順序對每個還沒拜訪的鄰居遞迴，這就是遞迴版的深度優先
+搜尋（資結書第~21.4~節）。 \texttt{graph} 是有向圖的鄰接串列，題目沒有另外畫圖，就用這個字典。 追蹤
+（縮排表示遞迴的深度）：
+\begin{itemize}
+\item \texttt{search(A)}：印 A。 鄰居 B、C。
+\begin{itemize}
+\item \texttt{search(B)}：印 B。 鄰居 D、E。
+\begin{itemize}
+\item \texttt{search(D)}：印 D，沒有鄰居，返回。
+\item \texttt{search(E)}：印 E。 鄰居 F 未拜訪：\texttt{search(F)} 印 F，返回。
+\end{itemize}
+\item 回到 A，下一個鄰居 C 未拜訪：\texttt{search(C)} 印 C。 鄰居 F 已拜訪，不做。
+\end{itemize}
+\end{itemize}
+輸出 \texttt{A B D E F C}。
+
+逐項：(B) 先走 C，但 A 的串列裡 B 在前，錯；(C) 在 B 底下先走 E，但 B 的串列裡 D 在前，錯；(D) 把 F 放在
+C 之後，但 F 在走 E 時就已經拜訪了，錯；(E) A 的第一個鄰居是 B，不是 D，錯。
+\end{pastsoln}

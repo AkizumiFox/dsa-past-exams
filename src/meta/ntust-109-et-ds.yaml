@@ -1,0 +1,15 @@
+paper: ntust-109-et-ds
+volume: 3
+school: 臺科大
+dept: 電子所甲組
+year: 109
+subject: 資料結構
+instructions: （總分為 100 分）
+questions:
+  - {id: ntust-109-et-ds-01, label: 第 1 題, chapter: 4}
+  - {id: ntust-109-et-ds-02, label: 第 2 題, chapter: 8}
+  - {id: ntust-109-et-ds-03, label: 第 3 題, chapter: 6}
+  - {id: ntust-109-et-ds-04, label: 第 4 題, chapter: 1}
+  - {id: ntust-109-et-ds-05, label: 第 5 題, chapter: 7}
+  - {id: ntust-109-et-ds-06, label: 第 6 題, chapter: 14}
+  - {id: ntust-109-et-ds-07, label: 第 7 題, chapter: 1}

@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-06}]{臺大電機所 109 學年度（B）第 6 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of one insert operation is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) O(log n)。
+
+插入是把一棵 $B_0$ 併進去，像二進位加 $1$（資結書第~8.5~節）。 連結的次數等於 $n$ 的二進位最低位
+連續的 $1$ 的個數。 最壞情況是 $n = 2^k - 1$（二進位是 $k$ 個 $1$）：堆積裡有 $B_0, B_1, \ldots,
+B_{k-1}$ 各一棵，新的 $B_0$ 和舊的 $B_0$ 連成 $B_1$，再和舊的 $B_1$ 連成 $B_2$，……，一共連結 $k =
+\lg(n + 1)$ 次，最後只剩一棵 $B_k$。 任何 $n$ 的連結次數都不超過位數 $\lfloor \lg n \rfloor + 1$，
+所以一次插入最壞是 $\Theta(\log n)$。
+
+(A)、(B) 太小，$n = 2^k - 1$ 的例子就要 $\lg(n+1)$ 次連結。 $O(1)$ 是平攤的成本（第 5 題（歷屆試題~\ref{px:ntu-109-ee-ds-05}）），
+不是單次的最壞。 (D)、(E) 是上界但不緊。
+\end{pastsoln}

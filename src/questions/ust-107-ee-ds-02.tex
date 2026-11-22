@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-02}]{臺聯大電機類 107 學年度 第二題}
+（問答；10 分）
+
+(10\%) Convert an infix expression (B-A)*D+(C-F)/G+F to a postfix expression by using a stack. Your answer should include step-by-step status of input, stack, and output.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：\texttt{B A - D * C F - G / + F +}。
+
+照資結書第~6.3.3~節（虛擬碼~6.8）的規則，由左往右讀：運算元直接輸出；左括號 push；右括號一直 pop 並輸出到
+左括號為止，左括號丟掉；運算子 $\mathit{op}$ 先把堆疊頂端「優先順序不低於 $\mathit{op}$」的運算子 pop 出來輸出
+（遇到左括號停），再 push $\mathit{op}$。 $*$、$/$ 比 $+$、$-$ 高，同級的由左往右結合，所以同級時也要 pop。
+讀完以後把堆疊剩下的全部 pop。 每讀一個記號寫一列，「剩下的輸入」是讀完這個記號之後還沒讀的部分，堆疊由底
+到頂寫。
+
+\begin{center}
+\small
+\begin{tabular}{@{}cllll@{}}
+\toprule
+記號 & 剩下的輸入 & 動作 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+( & \texttt{B-A)*D+(C-F)/G+F} & push & ( &  \\
+B & \texttt{-A)*D+(C-F)/G+F} & 輸出 & ( & B \\
+$-$ & \texttt{A)*D+(C-F)/G+F} & 頂端是 (，push & (~$-$ & B \\
+A & \texttt{)*D+(C-F)/G+F} & 輸出 & (~$-$ & B A \\
+) & \texttt{*D+(C-F)/G+F} & pop $-$，丟掉 ( &  & B A $-$ \\
+$*$ & \texttt{D+(C-F)/G+F} & 堆疊空，push & $*$ & B A $-$ \\
+D & \texttt{+(C-F)/G+F} & 輸出 & $*$ & B A $-$ D \\
+$+$ & \texttt{(C-F)/G+F} & pop $*$，push & $+$ & B A $-$ D $*$ \\
+( & \texttt{C-F)/G+F} & push & $+$~( & B A $-$ D $*$ \\
+C & \texttt{-F)/G+F} & 輸出 & $+$~( & B A $-$ D $*$ C \\
+$-$ & \texttt{F)/G+F} & 頂端是 (，push & $+$~(~$-$ & B A $-$ D $*$ C \\
+F & \texttt{)/G+F} & 輸出 & $+$~(~$-$ & B A $-$ D $*$ C F \\
+) & \texttt{/G+F} & pop $-$，丟掉 ( & $+$ & B A $-$ D $*$ C F $-$ \\
+$/$ & \texttt{G+F} & $/$ 比 $+$ 高，push & $+$~$/$ & B A $-$ D $*$ C F $-$ \\
+G & \texttt{+F} & 輸出 & $+$~$/$ & B A $-$ D $*$ C F $-$ G \\
+$+$ & \texttt{F} & pop $/$、$+$，push & $+$ & B A $-$ D $*$ C F $-$ G $/$ $+$ \\
+F & （無） & 輸出 & $+$ & B A $-$ D $*$ C F $-$ G $/$ $+$ F \\
+結束 & （無） & pop $+$ &  & B A $-$ D $*$ C F $-$ G $/$ $+$ F $+$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+結果是 \texttt{B A - D * C F - G / + F +}。 檢查：運算元的順序 B、A、D、C、F、G、F 和原式相同；把後序式還原，
+\texttt{B A -} 是 $(B - A)$，乘 $D$；\texttt{C F - G /} 是 $(C - F)/G$；兩者相加後再加 $F$，就是
+$\bigl((B-A) \cdot D + (C-F)/G\bigr) + F$，和原式的運算順序一樣。 讀到第二個 $+$ 時，堆疊頂端的 $/$ 和底下的
+$+$ 都不比它低，兩個都要 pop，這是最容易漏的一步。
+\end{pastsoln}

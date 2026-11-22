@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-06}]{臺大生機所 108 學年度 第 6 題}
+（設計）
+
+(15\%) How do you print all nodes of a given binary tree using inorder traversal without
+recursion?
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法：用自己的堆疊模擬遞迴}（資結書第~7.3.3~節虛擬碼~7.3）。 遞迴版進到一個節點時，要
+先把左子樹整個做完才輪到它自己，所以「它自己」要先存起來。 迴圈版從根開始一路往左走，路上的
+節點都 push；走到底之後 pop 出來的就是下一個要印的（它的左子樹已經做完），印出它，再轉到它的
+右子樹，重複同樣的事。
+
+\begin{pseudo}{中序走訪的迴圈版}
+\Procedure{Inorder-Print}{$T$}
+    \State 建立空堆疊 $S$
+    \State $x \gets T.\mathit{root}$
+    \While{$x \ne \NIL$ \OR $S$ 不是空的}
+        \While{$x \ne \NIL$} \Comment{一路往左，路上的節點先存著}
+            \State \Call{Push}{$S, x$}
+            \State $x \gets x.\mathit{left}$
+        \EndWhile
+        \State $x \gets$ \Call{Pop}{$S$} \Comment{它的左子樹已經印完}
+        \State 印出 $x.\mathit{key}$
+        \State $x \gets x.\mathit{right}$
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{追蹤}，樹是 $A(B(D, E), C(F, \text{空}))$（根 $A$；$B$ 的孩子 $D$、$E$；$C$ 只有左孩子
+$F$）。 每一列是一次印出，「推入」是印出前第 5--7 行 push 的節點：
+\begin{center}
+\begin{tabular}{ccl}
+\toprule
+印出 & 印出前推入 & 印出後的堆疊（底 $\to$ 頂） \\
+\midrule
+$D$ & $A, B, D$ & $A\;B$ \\
+$B$ & & $A$ \\
+$E$ & $E$ & $A$ \\
+$A$ & & （空） \\
+$F$ & $C, F$ & $C$ \\
+$C$ & & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+印出 $D\,B\,E\,A\,F\,C$，和遞迴版的中序一樣。 印完 $C$ 後 $x = C.\mathit{right} = \NIL$、堆疊
+空，迴圈結束。
+
+\textbf{正確性。} 每個節點恰好 push 一次、pop 一次。 一個節點 $x$ 被 pop 時，它左子樹的節點都
+比它早 push、晚於它被 push 才 push 的節點都在它上面，已經先 pop 掉，所以左子樹已經全部印完；
+接著印 $x$，再處理右子樹。 這正是「左、根、右」，和遞迴版每一步對應。
+
+\textbf{複雜度。} 每個節點 push、pop 各一次，時間 $\Theta(n)$；堆疊最多同時放一條從根往下的
+路徑，空間 $O(h)$，$h$ 是樹高。 如果連堆疊都不能用，可以用引線二元樹（資結書第~7.5~節）：沿著
+引線找中序後繼，額外空間 $O(1)$。
+\end{pastsoln}

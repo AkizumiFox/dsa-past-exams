@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-40}]{臺大電信所 110 學年度（B）第 40 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Which of the following statements are true?
+\begin{enumerate}[label=\Alph*.]
+\item An insertion in AVL tree requires $\Omega(\log n)$ single- and double-rotations in the worst case.
+\item An insertion in AVL tree requires $O(1)$ single- and double-rotations in the worst case.
+\item A deletion in AVL tree requires $\Omega(\log n)$ single- and double-rotations in the worst case.
+\item A deletion in AVL tree requires $O(1)$ single- and double-rotations in the worst case.
+\item There is no red left child in AA tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B、C、E。
+
+\textbf{AVL 插入（A 錯、B 對）}。 插入後從新節點往上找第一個失衡的節點，做一次單旋轉或雙旋轉，該子樹的高度
+就恢復成插入前的高度，再往上的祖先都不受影響，所以一次插入至多一次旋轉（單或雙），$O(1)$
+（資結書定理~10.2）。
+
+\textbf{AVL 刪除（C 對、D 錯）}。 刪除後旋轉可能讓子樹高度減 $1$，上面的祖先又可能失衡，一路傳到根。
+最壞情況出現在「最省節點」的 AVL 樹（資結書第~10.2.2~節的費氏樹）：刪掉較矮那邊最深處的節點，每往上
+一層都失衡一次，需要 $\Theta(\log n)$ 次旋轉（資結書第~10.2.6~節）。
+
+\textbf{AA 樹（E 對）}。 AA 樹是紅黑樹的變形，多一條規則：紅色節點只能是右子節點。 用「層級」表示時，
+左子節點的層級一定比父節點低（不能有水平的左連結），插入時遇到水平左連結就用 skew（右旋）消掉。
+所以 AA 樹沒有紅色的左子節點。 資結書沒有專講 AA 樹，它的規則見第~44~題的詳解。
+\end{pastsoln}

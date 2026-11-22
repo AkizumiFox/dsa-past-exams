@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-14}]{臺大電信所 109 學年度（B）第 14 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of $O(\log n)$ consecutive insert operations is
+
+(A)~$O(\log n)$ \qquad (B)~$O(\log^2 n)$ \qquad (C)~$O(n\log n)$\\
+(D)~$O(n\log^2 n)$ \qquad (E)~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+一次插入最壞要 $O(\log n)$，乘上 $O(\log n)$ 次會得到 (B) $O(\log^2 n)$，但這個上界不緊。
+插入就是二進位加一（資結書第~8.5~節）：$n$ 的二進位第 $k$ 位是 $1$ 就有一棵 $B_k$，插入
+一棵 $B_0$ 時，尾端有幾個連續的 $1$ 就要連結幾次（進位幾次）。 用第~3~章二進位計數器的
+想法算連續 $k$ 次插入的總連結次數。
+
+令 $b(x)$ 是 $x$ 的二進位中 $1$ 的個數。 某次插入前堆積有 $x$ 個元素、尾端有 $t$ 個連續的
+$1$，這次插入連結 $t$ 次，而且 $t$ 個 $1$ 變成 $0$、一個 $0$ 變成 $1$，所以
+$b(x + 1) = b(x) - t + 1$，也就是 $t = 1 - \bigl(b(x + 1) - b(x)\bigr)$。 從 $n$ 開始連續插入
+$k$ 次，把每次的 $t$ 加起來，$b$ 的差會互相消掉：
+\[
+\text{總連結次數} = k - \bigl(b(n + k) - b(n)\bigr) \le k + b(n) \le k + \lfloor \lg n \rfloor + 1.
+\]
+每次插入除了連結以外只做常數的工作，所以 $k$ 次插入總共 $O(k + \log n)$。 代入
+$k = O(\log n)$，得 $O(\log n)$。 第一次插入可能就要連結 $\lfloor \lg n \rfloor$ 次（例如
+$n = 2^m - 1$），但之後尾端都是 $0$，很便宜，壞的情形不會連續發生。 下界也是 $\Omega(\log n)$
+（光是 $\Theta(\log n)$ 次操作就要這麼多時間），所以 $\Theta(\log n)$ 是緊的。
+
+這裡用的是「插入只沿著進位往上走」的做法。 如果每次插入都呼叫一般的合併、把整條根串列
+掃一遍，每次就是 $\Theta(\log n)$，總共 $\Theta(\log^2 n)$；題目要最緊的界，以好的實作為準，
+選 (A)。 (C)、(D)、(E) 都大得多。
+\end{pastsoln}

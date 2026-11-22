@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-09}]{臺聯大電機類 109 學年度 第 9 題}
+（證明；14 分）
+
+(14\%) A \textit{bipartite graph} G = (V, E) is an undirected graph whose vertices V can be partitioned
+into two disjoint sets U and W with the properties that no vertices in U are adjacent in G and no
+vertices in W are adjacent in G. Prove that every graph without cycles is bipartite.
+\end{pastexam}
+
+\begin{pastsoln}
+圖是有限的無向簡單圖。 對頂點數 $n$ 歸納，先證一個引理。
+
+\textbf{引理。} 沒有環、而且至少有一條邊的圖，一定有一個度數恰為 $1$ 的頂點。
+
+\textbf{證明。} 圖有邊，所以有長度至少 $1$ 的路徑（頂點不重複）；頂點有限，取一條最長的路徑
+$P = v_0 v_1 \cdots v_k$，$k \ge 1$。 $v_0$ 和 $v_1$ 相鄰。 假設 $v_0$ 還有另一個鄰居 $x \ne v_1$：
+如果 $x$ 不在 $P$ 上，$x v_0 v_1 \cdots v_k$ 是更長的路徑，和 $P$ 最長矛盾；如果 $x = v_i$
+（$i \ge 2$），$v_0 v_1 \cdots v_i v_0$ 是一個環，和圖沒有環矛盾。 所以 $v_0$ 的度數是 $1$。
+\hfill$\blacksquare$
+
+\textbf{定理。} 沒有環的圖都是二分圖。
+
+\textbf{證明。} 對頂點數 $n$ 歸納。
+
+\textbf{基底}：$n = 1$（或圖沒有邊）時，取 $U = V$、$W = \emptyset$，沒有任何邊，條件成立。
+
+\textbf{歸納}：設 $n \ge 2$，而且頂點數少於 $n$ 的無環圖都是二分圖。 $G$ 沒有邊時同基底。 $G$ 有邊
+時，由引理取度數 $1$ 的頂點 $v$，它唯一的鄰居是 $x$。 $G - v$（拿掉 $v$ 和它的那條邊）是 $G$ 的
+子圖，也沒有環，頂點數 $n - 1$，由歸納假設可以分成 $U'$、$W'$，兩邊內部都沒有邊。 如果
+$x \in U'$，令 $U = U'$、$W = W' \cup \{v\}$；如果 $x \in W'$，令 $U = U' \cup \{v\}$、$W = W'$。
+$G$ 比 $G - v$ 只多了邊 $(v, x)$，而 $v$ 和 $x$ 分在不同的一邊，所以 $U$、$W$ 內部仍然沒有邊。
+$U$、$W$ 不相交、聯集是 $V$，$G$ 是二分圖。 \hfill$\blacksquare$
+
+\textbf{另一種寫法（直接構造）。} 每個連通元件是一棵樹，取一個根 $r$，把到 $r$ 的路徑長度是偶數
+的頂點放 $U$、奇數的放 $W$。 樹上的每條邊連接一個節點和它的父節點，兩端的深度差 $1$，奇偶不同，
+所以每條邊都跨過 $U$ 和 $W$。 這也是資結書第~21.6~節用 BFS 判斷二分圖的做法：BFS 的層數就是
+深度，無環圖不會出現同層的邊。 更一般的結論是資結書定理~21.9：一個圖是二分圖若且唯若它沒有
+長度為奇數的環；沒有環當然也沒有奇數長的環。 考試若直接引用這個定理，最好也把上面的證明寫出來，
+因為題目要的就是證明。
+\end{pastsoln}

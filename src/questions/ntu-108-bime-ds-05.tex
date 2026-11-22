@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-05}]{臺大生機所 108 學年度 第 5 題}
+（選擇並說明理由）
+
+(10\%) What is the best case complexity in building a heap? Please justify your answer.
+\begin{enumerate}[label=\Alph*.]
+\item O(n*log n)
+\item O(n$^2$)
+\item O(log n)
+\item O(n)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D，$O(n)$；而且最好情況也不會更快，是 $\Theta(n)$。
+
+\textbf{下界。} 建堆積至少要把 $n$ 個元素都看過一次（沒看過的元素可能是最大值），所以任何
+情況都是 $\Omega(n)$。 這就排除了 C 的 $O(\log n)$。
+
+\textbf{上界：由下而上建堆積是 $O(n)$}（資結書第~8.2~節虛擬碼~8.3、定理~8.1）。 從最後一個
+內部節點 $\lfloor n/2 \rfloor$ 往回到根，每個節點做一次往下調整。 高度為 $h$ 的節點最多
+$\lceil n / 2^{h+1} \rceil$ 個，往下調整最多 $h$ 層，總成本
+\[
+\sum_{h=0}^{\lfloor \lg n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil O(h)
+= O\!\left(n \sum_{h=0}^{\infty} \frac{h}{2^h}\right) = O(2n) = O(n),
+\]
+用到 $\sum_{h \ge 0} h/2^h = 2$（資結書定理~A.5）。 這是\textbf{最壞}情況的上界，最好情況當然也
+不超過它。 最好的輸入（例如已經是堆積的陣列）每個內部節點只比較一兩次就停，仍然要做
+$\lfloor n/2 \rfloor$ 次，所以是 $\Theta(n)$。
+
+另一種建法是一個一個插入（每次往上調整）。 最壞 $\Theta(n \log n)$，但最好情況（例如建最大堆積
+時輸入由大到小，每個新元素都不必往上移）每次插入 $O(1)$，也是 $\Theta(n)$。 不論哪種建法，
+最好情況都是 $\Theta(n)$。
+
+逐項檢查：
+\begin{itemize}
+\item A. $O(n \log n)$：一個一個插入的最壞情況，不是最好情況。 雖然寫成大 $O$ 也不算錯，但不是
+緊的界，不選。
+\item B. $O(n^2)$：更鬆，不選。
+\item C. $O(\log n)$：連每個元素看一次都不夠，不可能。
+\item D. $O(n)$：上下界都對得上，選 D。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-16}]{臺聯大電機類 113 學年度 第 16 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+In the context of Red-Black Trees, which of the following statements are false? (Select all that
+apply)
+\begin{enumerate}[label=(\Alph*)]
+\item Red-Black Trees ensure a maximum height difference of 2 between any two leaf nodes.
+\item They are a type of self-balancing binary search tree.
+\item Red-Black Trees can degenerate to a linked list during certain insertions.
+\item The root of a Red-Black Tree is always red.
+\item Red-Black Trees require additional memory compared to regular binary search trees due to
+color information stored with each node.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案（敘述錯誤的）：(A)、(C)、(D)。 注意題目問的是 \textbf{false}。
+
+紅黑樹的性質（資結書第~10.3~節）：每個節點紅或黑；根是黑的；\textsc{nil} 葉是黑的；紅節點的子節點都是黑的；
+從任一節點到它下面每個 \textsc{nil} 葉的路徑，黑節點個數相同。 由這些性質，樹高 $\le 2\lg(n+1)$
+（資結書定理~10.4）。
+\begin{itemize}
+\item (A) 紅黑樹保證的是「從根到葉的最長路徑不超過最短路徑的兩倍」（最短的全黑，最長的紅黑相間），
+不是「深度最多差 $2$」。 例如黑高度 $b$ 時，最短的根到葉路徑長 $b$，最長可以到 $2b$，差 $b$，$b$ 可以
+任意大。 敘述錯誤，選。
+\item (B) 紅黑樹是自我平衡的二元搜尋樹。 敘述正確，不選。
+\item (C) 高度永遠 $O(\log n)$，依序插入也會靠旋轉和改色保持平衡，不會退化成串列（那是一般 BST 的
+問題）。 敘述錯誤，選。
+\item (D) 根一定是黑的（插入修正的最後一步就是把根塗黑）。 敘述錯誤，選。
+\item (E) 每個節點要多存一個位元的顏色，比一般 BST 多一點空間（實作上常塞進指標的空位元或對齊的
+空間，但概念上確實是額外的資訊）。 敘述正確，不選。
+\end{itemize}
+\end{pastsoln}

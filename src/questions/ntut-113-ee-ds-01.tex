@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-01}]{北科大電機所（戊組）113 學年度 第 I.1 題}
+（選擇；4 分）
+
+Which of the following applications may use a stack? (4\%)
+\begin{enumerate}[label=\alph*)]
+\item A parentheses-balancing program.
+\item Data Transfer between two asynchronous processes.
+\item Tracking of local variables at run time.
+\item Compiler Syntax Analyzer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a)、c)、d)。 原卷沒有說明是單選還是複選；這一題有三個選項都對，只能當複選來答。
+
+\textbf{a) 對}。 括號配對：由左往右讀，左括號推入堆疊；讀到右括號就彈出堆疊頂端，檢查是不是同
+一種左括號。 最後堆疊要是空的（資結書第~6.1.4~節）。 最晚出現的左括號要最先配對，正是後進先出。
+
+\textbf{b) 錯}。 兩個非同步的行程傳資料，一方寫入、另一方以自己的速度讀出，先寫的要先讀，要
+用\textbf{佇列}（緩衝區，常用環狀佇列實作）。 用堆疊的話，後寫的資料會先被讀走，順序就亂了。
+
+\textbf{c) 對}。 每次呼叫函式時，系統把它的區域變數、參數、返回位址包成一個框（stack frame）推入
+執行時期堆疊；函式返回時彈出。 最後被呼叫的函式最先返回，所以用堆疊（資結書第~6.4~節的遞迴
+就是靠這個堆疊）。
+
+\textbf{d) 對}。 編譯器的語法分析器（parser）用堆疊處理巢狀的結構：LR 剖析器把讀進來的符號和
+狀態推入堆疊、歸約時彈出；運算式依優先順序轉成後序（資結書第~6.3.3~節）也是用堆疊。
+\end{pastsoln}

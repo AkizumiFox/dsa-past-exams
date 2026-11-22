@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-20}]{臺聯大電機類 112 學年度 第 20 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Which of the following statements about depth first search (DFS) are true?
+
+(A)~DFS is a searching algorithm that visits all the nodes of a graph in a depth-first manner\\
+(B)~DFS always finds the shortest path between two nodes in a graph\\
+(C)~DFS can be used to find the topological ordering of the nodes in a directed acyclic graph\\
+(D)~DFS can be used to solve the traveling salesperson problem in polynomial time\\
+(E)~All of the above is true
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(C)。
+
+\begin{itemize}
+\item (A)：對。 DFS 從一個頂點出發，盡量往深處走，走不下去才退回上一層；從一個起點只走得到
+同一個連通部分，完整的 DFS（資結書虛擬碼~21.3）會對每個還沒拜訪的頂點再出發一次，所以每個
+頂點都會被拜訪恰好一次。
+\item (B)：錯。 DFS 找到的路徑不一定最短。 反例：三角形 $s$--$a$--$t$ 加上邊 $s$--$t$，從 $s$
+先走 $a$ 時，DFS 經由 $s \to a \to t$ 到 $t$，用了 $2$ 條邊，但最短只要 $1$ 條。 無權重圖的最短
+路徑要用 BFS（資結書第~21.3~節）。
+\item (C)：對。 對 DAG 做 DFS，依完成時間由大到小排列頂點就是一個拓樸順序（資結書第~22.2~節、
+定理~22.4）。
+\item (D)：錯。 旅行推銷員問題的判定版本是 NP 完備問題（資結書第~28.5.3~節），目前不知道有
+多項式時間演算法。 用 DFS 窮舉所有路線要看 $(n - 1)!$ 量級的排列，是指數時間。
+\item (E)：(B)(D) 錯，所以錯。
+\end{itemize}
+\end{pastsoln}

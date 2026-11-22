@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-14}]{臺聯大電機類 113 學年度 第 14 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+Consider the following statements about hashing. Which of these are correct? (Select all that
+apply.)
+\begin{enumerate}[label=(\Alph*)]
+\item Chaining as a collision resolution technique can degrade to O(n) in the worst case.
+\item Hash functions should ideally be dependent on the size of the input data.
+\item Reducing the size of a hash table will generally improve its performance.
+\item A hash table with a larger load factor is always more efficient.
+\item Hash functions should ideally distribute the data uniformly across the hash table.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(E)。
+
+\begin{itemize}
+\item (A) 鏈結法最壞的情況是 $n$ 個鍵都算到同一格，串成一條長 $n$ 的串列，搜尋 $\Theta(n)$（資結書
+第~12.2~節）。 對。
+\item (B) 雜湊函數的輸入是\textbf{鍵}，輸出要落在表的大小 $m$ 的範圍內；它應該由鍵的內容決定，讓鍵
+均勻散開，和「資料有多少筆」無關（資料變多時調整的是表的大小，資結書第~12.5~節）。 錯。
+\item (C) 表變小，載入因子 $\alpha = n/m$ 變大，碰撞變多，鏈結法的期望時間 $\Theta(1 + \alpha)$、開放定址的
+期望探測次數 $1/(1 - \alpha)$ 都變大（資結書第~12.2.2、12.4~節），效能通常變差。 錯。
+\item (D) 理由同 (C)，載入因子越大越慢；「always」更不對。 （載入因子大的好處只有省空間。） 錯。
+\item (E) 這正是好的雜湊函數的目標（資結書第~12.1~節的簡單均勻雜湊）。 對。
+\end{itemize}
+\end{pastsoln}

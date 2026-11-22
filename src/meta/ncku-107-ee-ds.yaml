@@ -1,0 +1,18 @@
+paper: ncku-107-ee-ds
+volume: 3
+school: 成大
+dept: 電機所
+year: 107
+subject: 資料結構
+instructions: 本試題不可使用計算機。 請於答案卷（卡）作答，於本試題紙上作答者，不予計分。 一、複選題（25 分，每題 5 分，全對才給分）；二、問答題（75 分）。
+questions:
+  - {id: ncku-107-ee-ds-01, label: 複選題第 2 題, chapter: 7}
+  - {id: ncku-107-ee-ds-02, label: 複選題第 3 題, chapter: 14}
+  - {id: ncku-107-ee-ds-03, label: 複選題第 4 題, chapter: 21}
+  - {id: ncku-107-ee-ds-04, label: 複選題第 5 題, chapter: 8}
+  - {id: ncku-107-ee-ds-05, label: 問答題第 1 題, chapter: 20}
+  - {id: ncku-107-ee-ds-06, label: 問答題第 2 題, chapter: 4}
+  - {id: ncku-107-ee-ds-07, label: 問答題第 3 題, chapter: 6}
+  - {id: ncku-107-ee-ds-08, label: 問答題第 4 題（節錄 a, b, c, e, f 小題）, chapter: 7}
+  - {id: ncku-107-ee-ds-09, label: 問答題第 5 題, chapter: 24}
+  - {id: ncku-107-ee-ds-10, label: 問答題第 6 題, chapter: 13}

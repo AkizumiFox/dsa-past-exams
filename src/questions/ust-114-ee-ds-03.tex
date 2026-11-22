@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-03}]{臺聯大電機類 114 學年度 第 3 題}
+（單選；2 分，答錯不倒扣）
+
+The postfix expression of A*(B+C)-D is:
+
+(A)~A*(BC+)-D \qquad (B)~ABC+*D- \qquad (C)~-*A(+BC)D \qquad (D)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+照運算順序加括號：$((\mathrm{A} * (\mathrm{B} + \mathrm{C})) - \mathrm{D})$。 後序式是把每個
+運算子移到它那對括號的右括號位置、再去掉括號：$\mathrm{B} + \mathrm{C} \to$ BC+，乘法
+$\to$ A BC+ *，減法 $\to$ ABC+*D-。
+
+用資結書虛擬碼~6.8 的堆疊轉換追蹤一次（運算元直接輸出）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀到 & 動作 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+A & 輸出 & & A \\
+* & 推入 & * & A \\
+( & 推入 & * ( & A \\
+B & 輸出 & * ( & AB \\
++ & 頂端是 (，推入 & * ( + & AB \\
+C & 輸出 & * ( + & ABC \\
+) & 彈出到 ( 為止 & * & ABC+ \\
+- & * 優先順序較高，彈出；再推入 - & - & ABC+* \\
+D & 輸出 & - & ABC+*D \\
+結束 & 彈出剩下的 & & ABC+*D- \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item (A) A*(BC+)-D：還有括號和中序的運算子位置，不是後序式。 錯。
+\item (B) ABC+*D-：正確。
+\item (C) -*A(+BC)D：運算子在前，像前序式，又留著括號。 正確的前序式是 -*A+BCD。 錯。
+\item (D)：(B) 正確，所以錯。
+\end{itemize}
+\end{pastsoln}

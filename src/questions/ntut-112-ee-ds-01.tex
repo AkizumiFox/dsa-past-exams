@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntut-112-ee-ds-01}]{北科大電機所（戊組）112 學年度 第 1 題}
+（計算）
+
+Order the following functions by their growth rate from slowest to fastest:\\
+$O(n), O(n^2), O(n\log n), O(\log n), O(n!), O\left(n^{\frac{1}{\log}}\right)$. (6\%)
+\end{pastexam}
+
+\begin{pastsoln}
+最後一個 $n^{1/\log}$ 的指數少了自變數，照常見的出法讀成 $n^{1/\log n}$。 對數取以 $2$ 為底：
+\[
+n^{1/\lg n} = \left(2^{\lg n}\right)^{1/\lg n} = 2 ,
+\]
+是常數，所以 $O(n^{1/\lg n}) = O(1)$。 換成其他底 $b$ 也一樣，$n^{1/\log_b n} = b$ 是常數。
+
+由慢到快：
+\[
+O\bigl(n^{1/\log n}\bigr) = O(1) \;<\; O(\log n) \;<\; O(n) \;<\; O(n\log n) \;<\; O(n^2) \;<\; O(n!) .
+\]
+
+相鄰兩個的比較（資結書第~1.6~節）：
+\begin{itemize}
+\item 常數 $< \log n$：$\log n \to \infty$。
+\item $\log n < n$：$\lim (\lg n)/n = 0$，對數比任何正次方都慢。
+\item $n < n\log n$：比值 $\log n \to \infty$。
+\item $n\log n < n^2$：比值 $n / \log n \to \infty$。
+\item $n^2 < n!$：$n \ge 4$ 時 $n! = n(n-1)(n-2)\cdots 1 \ge n(n-1)(n-2) \ge n^3/4$（$n \ge 4$ 時 $(n-1)(n-2) \ge n^2/4$），
+所以 $n!/n^2 \ge n/4 \to \infty$。 實際上 $n!$ 比任何多項式、甚至比 $2^n$ 都快（$\lg n! = \Theta(n\log n)$）。
+\end{itemize}
+如果題目原意是別的寫法（例如 $n^{1/\log\log n}$），它比任何 $n^\varepsilon$ 慢、比 $\log n$ 快，位置會在
+$O(\log n)$ 和 $O(n)$ 之間；照卷面最合理的讀法，答案如上。
+\end{pastsoln}

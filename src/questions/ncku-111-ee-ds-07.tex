@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-07}]{成大電機所 111 學年度 單選題第 7 題}
+（單選；每題 4 分）
+
+Identify the data structure which allows deletions at both ends of the list but insertion at only one end
+
+A.~Input-restricted dequeuer \qquad B.~Output-restricted dequeue
+
+C.~Priority queues \qquad D.~None of above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+雙端佇列（deque）兩端都可以加入和刪除（資結書第~6.2.6~節）。 限制其中一種操作只能在一端做，有兩種變形：
+\begin{itemize}
+\item \textbf{輸入受限}（input-restricted）：加入（輸入）只能在一端，刪除兩端都可以。 正是題目描述的，A 對（選項的
+「dequeuer」是 dequeue 的筆誤）。
+\item \textbf{輸出受限}（output-restricted）：刪除（輸出）只能在一端，加入兩端都可以。 和題目相反，B 錯。
+\end{itemize}
+C.~優先佇列是依優先順序刪除，和「哪一端」無關，錯。 D.~A 就是，錯。
+\end{pastsoln}

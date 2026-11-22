@@ -1,0 +1,11 @@
+paper: ntust-108-et-dlds
+volume: 3
+school: 臺科大
+dept: 電子所甲組
+year: 108
+subject: 數位邏輯設計與資料結構
+instructions: 總分為 100 分。
+questions:
+  - {id: ntust-108-et-dlds-05, label: 第 5 題, chapter: 4}
+  - {id: ntust-108-et-dlds-06, label: 第 6 題, chapter: 6}
+  - {id: ntust-108-et-dlds-07, label: 第 7 題, chapter: 6}

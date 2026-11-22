@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-02}]{臺聯大電機類 106 學年度 第二題}
+（問答）
+
+(10\%) A linked list [$I_1, I_2, \ldots, I_n$] is symmetric if $I_1 = I_n$, $I_2 = I_{n-1}, \ldots$
+Write a function (by using a stack) to determine if the list is symmetric.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}。 堆疊後進先出：把串列從頭到尾的元素依序 push 進去，再一個一個 pop，pop 出來的順序
+就是 $I_n, I_{n-1}, \ldots, I_1$。 再從頭走一次串列，第 $k$ 個節點 $I_k$ 和第 $k$ 次 pop 出來的
+$I_{n-k+1}$ 比較，全部相等就是對稱的。 堆疊的操作見資結書第~6.1~節，串列的走訪見資結書第~5.1~節。
+
+\begin{pseudo}{判斷串列是否對稱}
+\Function{Symmetric}{$\mathit{first}$}
+    \State $S \gets$ 空堆疊
+    \State $p \gets \mathit{first}$
+    \While{$p \ne \NIL$}
+        \State \Call{Push}{$S, p.\mathit{data}$}
+        \State $p \gets p.\mathit{link}$
+    \EndWhile
+    \State $p \gets \mathit{first}$
+    \While{$p \ne \NIL$}
+        \If{$p.\mathit{data} \ne$ \Call{Pop}{$S$}}
+            \State \Return \FALSE
+        \EndIf
+        \State $p \gets p.\mathit{link}$
+    \EndWhile
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+寫成 C（堆疊用陣列，先數出長度 $n$ 再配置）：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+typedef struct node { element data; struct node *link; } node;
+
+bool symmetric(node *first)
+{
+    int n = 0;
+    for (node *p = first; p != NULL; p = p->link) n++;
+    element *stack = malloc(n * sizeof(element));
+    int top = -1;
+    for (node *p = first; p != NULL; p = p->link)
+        stack[++top] = p->data;              /* push */
+    bool ok = true;
+    for (node *p = first; p != NULL && ok; p = p->link)
+        if (p->data != stack[top--])         /* pop 出來比較 */
+            ok = false;
+    free(stack);
+    return ok;
+}
+\end{minted}
+
+\textbf{正確性}。 第一個迴圈結束時，堆疊由底到頂是 $I_1, I_2, \ldots, I_n$。 第二個迴圈的第 $k$
+輪（$k = 1, 2, \ldots$），$p$ 指向 $I_k$，pop 出來的是目前的頂端；前面已經 pop 了 $k - 1$ 個，
+所以這一個是 $I_{n-k+1}$。 回傳 \TRUE 表示每一個 $k$ 都有 $I_k = I_{n-k+1}$，正是對稱的定義；
+只要有一對不相等就回傳 \FALSE。 空串列（$n = 0$）和只有一個節點時直接回傳 \TRUE，也合理。
+
+\textbf{複雜度}。 走兩次串列，每個節點各 push、pop 一次，時間 $\Theta(n)$；堆疊放 $n$ 個元素，
+額外空間 $\Theta(n)$。 其實只要比較前一半：先算出 $n$，只 push 前 $\lfloor n/2 \rfloor$ 個，
+再跳過中間那一個（$n$ 是奇數時），用後一半和 pop 出來的比較，時間、空間的階不變，常數減半。
+\end{pastsoln}

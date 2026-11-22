@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-05}]{臺聯大電機類 115 學年度 第 5 題}
+（單選；2 分）
+
+Which of the following situations would lead to Stack Overflow?
+\begin{enumerate}[label=(\Alph*)]
+\item Try popping data from an empty stack.
+\item The recursion is too deep and there is no convergence condition.
+\item The front of the circular queue caught up with the rear
+\item The number of nodes in the implementation of linked sequences is too small.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+溢位（overflow）是堆疊已經滿了還要 \proc{Push}（資結書第~6.1~節）。 程式執行時的呼叫堆疊
+（call stack）容量有限，每呼叫一次函式就壓一個框（參數、返回位址、區域變數），函式返回才拿掉。
+遞迴沒有終止條件（題目說的 convergence condition）或深度太大時，框一直壓上去不會拿掉，最後
+超出呼叫堆疊的容量，就是 stack overflow（遞迴和堆疊的關係見資結書第~6.4~節）。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對空堆疊 \proc{Pop} 是下溢（underflow），不是溢位。 錯。
+\item (B) 對，見上。
+\item (C) 這是佇列的空、滿判斷，和堆疊無關。 錯。
+\item (D) 「串列的節點太少」不會造成溢位；串列實作的堆疊沒有固定容量，節點少只表示裡面的資料
+少。 錯。
+\end{itemize}
+\end{pastsoln}

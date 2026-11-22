@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-115-bmei-alg-04}]{臺大生醫電資所 115 學年度 第 6 題}
+（問答）
+
+(6\%) Please write the recursive pseudo code int Fibonacci(N) to compute and print Fibonacci number:
+Fibonacci(0)=0, Fibonacci(1)=1...
+\end{pastexam}
+
+\begin{pastsoln}
+費氏數的定義是 $F(0) = 0$、$F(1) = 1$、$F(n) = F(n-1) + F(n-2)$（$n \ge 2$）。 遞迴函式直接照定義寫：
+兩個起始條件是遞迴的終止條件，其餘呼叫自己兩次。 題目要「compute and print」，函式負責計算，
+印出由呼叫的程式做；另外寫一個把 $F(0)$ 到 $F(N)$ 都印出來的程序。
+\begin{pseudo}{遞迴計算費氏數}
+\Function{Fibonacci}{$N$} \Comment{回傳 int，$N \ge 0$}
+    \If{$N = 0$}
+        \State \Return $0$
+    \ElsIf{$N = 1$}
+        \State \Return $1$
+    \Else
+        \State \Return \Call{Fibonacci}{$N - 1$} $+$ \Call{Fibonacci}{$N - 2$}
+    \EndIf
+\EndFunction
+\Statex
+\Procedure{Print-Fibonacci}{$N$}
+    \For{$i \gets 0$ \To $N$}
+        \State 印出 \Call{Fibonacci}{$i$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+例如 \proc{Print-Fibonacci}$(9)$ 印出 $0, 1, 1, 2, 3, 5, 8, 13, 21, 34$；只要第 $N$ 個就印
+\proc{Fibonacci}$(N)$ 一個值。
+
+\textbf{正確性}：對 $N$ 做強歸納。 $N = 0, 1$ 由第 2--5 行直接回傳定義的值；$N \ge 2$ 時，由歸納假設
+兩個遞迴呼叫分別回傳 $F(N-1)$、$F(N-2)$，相加正是 $F(N)$。 每次呼叫的參數都變小，最後一定落到
+$0$ 或 $1$，遞迴會結束。
+
+\textbf{時間（可以補充）}：設 $C(N)$ 是計算 \proc{Fibonacci}$(N)$ 的總呼叫次數，$C(0) = C(1) = 1$，
+$C(N) = C(N-1) + C(N-2) + 1$。 令 $D(N) = C(N) + 1$，得 $D(N) = D(N-1) + D(N-2)$、$D(0) = D(1) = 2$，
+所以 $D(N) = 2F(N+1)$，$C(N) = 2F(N+1) - 1$，是 $\Theta(\varphi^N)$，$\varphi = (1 + \sqrt 5)/2 \approx 1.618$。
+慢的原因是同一個子問題被重複算：算 $F(5)$ 時 $F(3)$ 算了 $2$ 次、$F(2)$ 算了 $3$ 次。 這是資結書
+第~18.1.1~節「重疊子問題」的標準例子：用一個陣列記下算過的值（記憶化），或由小到大填表，都只要
+$O(N)$ 時間。 也因為這樣，\proc{Print-Fibonacci} 每一項都重新遞迴很浪費，實務上會一邊填表一邊印。
+另外 $F(N)$ 成長很快，int 是 32 位元時 $F(47)$ 就溢位了。
+\end{pastsoln}

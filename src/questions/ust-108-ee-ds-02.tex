@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ust-108-ee-ds-02}]{臺聯大電機類 108 學年度 第 2 題}
+（問答）
+
+(20\%) Given a link list structure as
+\begin{minted}[fontsize=\small]{c}
+struct Node
+{
+    int data;
+    struct Node* next;
+};
+\end{minted}
+A list head: \texttt{struct Node *Head}, A particular middle list element \texttt{struct Node *Mid}.
+Write a program to delete \texttt{Mid} from the list.
+\end{pastexam}
+
+\begin{pastsoln}
+單向串列的節點只知道後面是誰，不知道前面是誰。 要把 \texttt{Mid} 拿掉，得改的是\textbf{它前一個
+節點}的 \texttt{next}，所以要從 \texttt{Head} 往後找，找到 \texttt{next} 等於 \texttt{Mid} 的節點
+\texttt{prev}，再讓 \texttt{prev->next} 跳過 \texttt{Mid}（資結書虛擬碼~5.3）。
+
+題目說 \texttt{Mid} 是中間的元素，照理不會是第一個；下面的程式還是把「\texttt{Mid} 就是第一個」
+和「\texttt{Mid} 不在串列裡」也處理掉，因為第一個節點被刪時 \texttt{Head} 本身要改，所以參數用
+\texttt{struct Node **head}。
+
+\begin{minted}[fontsize=\small]{c}
+#include <stdlib.h>
+
+void delete_node(struct Node **head, struct Node *mid)
+{
+    struct Node *prev;
+
+    if (*head == NULL || mid == NULL)
+        return;
+    if (*head == mid) {                 /* 刪第一個：Head 往後移 */
+        *head = mid->next;
+        free(mid);
+        return;
+    }
+    prev = *head;                       /* 找 mid 的前一個節點 */
+    while (prev->next != NULL && prev->next != mid)
+        prev = prev->next;
+    if (prev->next == mid) {            /* 找到了才刪 */
+        prev->next = mid->next;
+        free(mid);
+    }
+}
+\end{minted}
+呼叫時寫 \texttt{delete\_node(\&Head, Mid);}。
+
+\textbf{正確性。} 迴圈不變量：\texttt{prev} 是串列中某個節點，而且從 \texttt{*head} 到
+\texttt{prev} 的節點都不是 \texttt{mid}。 一開始 \texttt{prev = *head}，前面已經確定
+\texttt{*head != mid}，成立；每次往後移一格之前都檢查過 \texttt{prev->next != mid}，所以仍成立。
+迴圈結束時不是 \texttt{prev->next == mid}（找到前一個節點），就是走到最後一個節點都沒找到。 找到時，
+\texttt{prev->next = mid->next} 讓串列從 \texttt{prev} 直接接到 \texttt{mid} 後面那個節點（\texttt{mid}
+是最後一個時就是 \texttt{NULL}），其他節點的順序不變；最後才 \texttt{free(mid)}，先後不能顛倒，否則
+\texttt{mid->next} 會讀到已經釋放的記憶體。
+
+例如串列 $10 \to 20 \to 30 \to 40 \to 50$，\texttt{Mid} 指向 $30$：\texttt{prev} 從 $10$ 走到 $20$
+（$20$ 的 \texttt{next} 就是 \texttt{Mid}），改成 $20 \to 40$，結果是 $10 \to 20 \to 40 \to 50$。
+
+\textbf{複雜度。} 最壞要從頭走到 \texttt{Mid} 前面，$\Theta(n)$ 時間，$\Theta(1)$ 額外空間。
+真正改指標只要 $\Theta(1)$，花時間的是找前一個節點。
+
+\textbf{另一種寫法（只能用在 \texttt{Mid} 不是最後一個時）。} 不找前一個節點，而是把後一個節點
+的內容搬到 \texttt{Mid}，再刪掉後一個：
+\begin{minted}[fontsize=\small]{c}
+void delete_middle(struct Node *mid)   /* mid 必須有下一個節點 */
+{
+    struct Node *q = mid->next;
+    mid->data = q->data;
+    mid->next = q->next;
+    free(q);
+}
+\end{minted}
+這是 $\Theta(1)$，題目說 \texttt{Mid} 是中間的元素，剛好可以用。 但它有兩個限制，作答時要寫出來：
+\texttt{Mid} 是最後一個節點時沒有後一個可以搬，這招不能用；而且實際被釋放的是後一個節點，如果程式
+別的地方還留著指向那個節點的指標，就會指到已經釋放的記憶體。
+\end{pastsoln}

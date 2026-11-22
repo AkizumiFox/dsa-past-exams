@@ -1,0 +1,39 @@
+paper: ntu-109-ee-ds
+volume: 3
+school: 臺大
+dept: 電機所
+year: 109
+subject: 資料結構（B）
+instructions: >-
+  In this exam: The height of a singleton tree is defined as 0. The order of a node in a tree is
+  defined as the number of its children. The order of a tree is defined as the maximum order among
+  its nodes. Unless otherwise specified, all logarithms are taken with respect to base 2, i.e.,
+  $\log_2$. 一、(68\%)單選題（每題 4 分，答錯不倒扣）：Please choose the best possible answer in
+  each of the following questions. In questions that ask for time complexities, please choose the
+  tightest bound. 二、(32\%)複選題（每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）。
+questions:
+  - {id: ntu-109-ee-ds-01, label: 第 1 題, chapter: 12}
+  - {id: ntu-109-ee-ds-02, label: 第 2 題, chapter: 8}
+  - {id: ntu-109-ee-ds-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-109-ee-ds-04, label: 第 4 題, chapter: 8}
+  - {id: ntu-109-ee-ds-05, label: 第 5 題, chapter: 8}
+  - {id: ntu-109-ee-ds-06, label: 第 6 題, chapter: 8}
+  - {id: ntu-109-ee-ds-07, label: 第 7 題, chapter: 8}
+  - {id: ntu-109-ee-ds-08, label: 第 8 題, chapter: 8}
+  - {id: ntu-109-ee-ds-09, label: 第 9 題, chapter: 8}
+  - {id: ntu-109-ee-ds-10, label: 第 10 題, chapter: 8}
+  - {id: ntu-109-ee-ds-11, label: 第 11 題, chapter: 8}
+  - {id: ntu-109-ee-ds-12, label: 第 12 題, chapter: 8}
+  - {id: ntu-109-ee-ds-13, label: 第 13 題, chapter: 8}
+  - {id: ntu-109-ee-ds-14, label: 第 14 題, chapter: 10}
+  - {id: ntu-109-ee-ds-15, label: 第 15 題, chapter: 11}
+  - {id: ntu-109-ee-ds-16, label: 第 16 題, chapter: 8}
+  - {id: ntu-109-ee-ds-17, label: 第 17 題, chapter: 8}
+  - {id: ntu-109-ee-ds-18, label: 第 18 題, chapter: 10}
+  - {id: ntu-109-ee-ds-19, label: 第 19 題, chapter: 10}
+  - {id: ntu-109-ee-ds-20, label: 第 20 題, chapter: 10}
+  - {id: ntu-109-ee-ds-21, label: 第 21 題, chapter: 10}
+  - {id: ntu-109-ee-ds-22, label: 第 22 題, chapter: 10}
+  - {id: ntu-109-ee-ds-23, label: 第 23 題, chapter: 12}
+  - {id: ntu-109-ee-ds-24, label: 第 24 題, chapter: 8}
+  - {id: ntu-109-ee-ds-25, label: 第 25 題, chapter: 1}

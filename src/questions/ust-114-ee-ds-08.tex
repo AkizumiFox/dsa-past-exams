@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-08}]{臺聯大電機類 114 學年度 第 8 題}
+（單選；2 分，答錯不倒扣）
+
+The height of a tree is defined as the number of edges present in the longest path connecting the
+root to a leaf node. What is the height of a max binary heap after inserting 3, 41, 52, 26, 38, 57, 9,
+49 sequentially? The heap is empty initially.
+
+(A)~1 \qquad (B)~2 \qquad (C)~3 \qquad (D)~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+二元堆積一定是完整二元樹，形狀只由元素個數決定。 $8$ 個元素佔第 $1$ 到第 $8$ 格：第 $1$ 層 $1$
+個、第 $2$ 層 $2$ 個、第 $3$ 層 $4$ 個、第 $4$ 層 $1$ 個（第 $8$ 格），共 $4$ 層，根到最深的葉
+有 $3$ 條邊，高度是 $\lfloor \lg 8 \rfloor = 3$（資結書定理~7.3）。
+
+實際插入一次（陣列第 $1$ 格起，新元素比父節點大就往上換，資結書第~8.1~節）：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+插入 & 往上換的過程 & 陣列 \\
+\midrule
+3 & -- & 3 \\
+41 & 和 3 換 & 41, 3 \\
+52 & 和 41 換 & 52, 3, 41 \\
+26 & 和 3 換 & 52, 26, 41, 3 \\
+38 & 和 26 換 & 52, 38, 41, 3, 26 \\
+57 & 和 41、52 換 & 57, 38, 52, 3, 26, 41 \\
+9 & -- & 57, 38, 52, 3, 26, 41, 9 \\
+49 & 和 3、38 換 & 57, 49, 52, 38, 26, 41, 9, 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 $8$ 格的 $3$ 在第 $4$ 層，路徑 $57 \to 49 \to 38 \to 3$ 有 $3$ 條邊。 (A)(B)(D) 都不對：高度 $2$ 的
+二元樹最多只能放 $7$ 個節點，放不下 $8$ 個；完整二元樹要高度 $4$ 至少要 $16$ 個節點。
+\end{pastsoln}

@@ -1,0 +1,13 @@
+paper: ntu-113-bme-ds
+volume: 3
+school: 臺大
+dept: 生機所
+year: 113
+subject: 資料結構
+instructions: When a question asks for pseudocode, you can use a mixture of English and programming notation to describe your solution. Ensure to provide enough details so that a skilled programmer can readily implement your proposed solution.
+questions:
+  - {id: ntu-113-bme-ds-01, label: 第 1 題, chapter: 6}
+  - {id: ntu-113-bme-ds-02, label: 第 2 題, chapter: 21}
+  - {id: ntu-113-bme-ds-03, label: 第 3 題, chapter: 5}
+  - {id: ntu-113-bme-ds-04, label: 第 4 題, chapter: 11}
+  - {id: ntu-113-bme-ds-05, label: 第 5 題, chapter: 8}

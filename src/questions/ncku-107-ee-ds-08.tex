@@ -1,0 +1,105 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-08}]{成大電機所 107 學年度 問答題第 4 題（節錄 a, b, c, e, f 小題）}
+（問答；d 小題問 C++ 的 friend 關鍵字，未收）
+
+\textbf{4. Tree (14 pts)}
+
+Given the following pseudo code whose input includes two trees which are pointed by $s$ and $t$,
+respectively, the algorithm checks equality of the two trees.
+\begin{minted}[fontsize=\small]{text}
+1. bool operator==(const Tree& s, const Tree& t) { // Driver
+2.        return Equal(s.root, t.root);
+3. }
+
+4. bool Tree <T>::Equal(TreeNode <T> *a, TreeNode <T> *b) { // Workhorse
+5.     Terminal Condition
+6.     else return  ( a && b
+7.                 && (a->data == b->data)
+8.                 && Equal(a->leftChild, b->leftChild)
+9.                 && Equal(a->rightChild, b->rightChild));     }
+\end{minted}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(2 pts)} Please complete the terminal condition in \textbf{Line} 5.
+\item \textbf{(2 pts)} What is the purpose of \textbf{Line} 6?
+\item \textbf{(3 pts)} Can we obtain a correct answer if we change the sequence of Lines 7 to 9? Why?
+\end{enumerate}
+
+The \textbf{satisfiability (SAT)} is an important problem to answer the question if there exists an
+assignment to make a boolean expression true.
+\begin{minted}[fontsize=\small]{text}
+9.  enum Operator {Not, And, Or, True, False};
+10. class SatTree; // forward declaration
+11. class SatNode {
+12.          friend class SatTree;
+13.          Operator data;
+14.          bool value;
+15.          SatNode *leftChild;
+16           SatNode *rightChild;      }
+\end{minted}
+\begin{minted}[fontsize=\small]{text}
+17. void SatTree::PostOrderEval() {PostOrderEval(root);}
+
+18. void SatTree::PostOrderEval(SatNode *s) {
+19.    if (s) { // not null
+          ??????????????????
+20.    }
+\end{minted}
+\begin{enumerate}[label=\alph*.,start=5]
+\item \textbf{(2 pts)} What is the correct sequence inside \textbf{Lines} 19-20 according to the
+following codes? (A)~甲 乙 丙 \qquad (B)~甲 丙 乙 \qquad (C)~乙 甲 丙 \qquad (D)~None of above
+
+甲、\texttt{PostOrderEval(s->leftChild);}
+
+乙、
+\begin{minted}[fontsize=\footnotesize]{text}
+switch(s->data) {
+  b.1  case Not:   s->value = !s->rightChild->value; break;
+  b.2  case And:   s->value = s->leftChild->value && s->rightChild->value; break;
+  b.3  case Or:    s->value = s->leftChild->value || s->rightChild->value;; break;
+  b.4  case True:  s->value = true; break; // terminal node
+  b.5  case False: s->value = false; // terminal node
+}
+\end{minted}
+
+丙、\texttt{PostOrderEval(s->rightChild);}
+\item \textbf{(3 pts)} Please give the reason for your choice in the last question.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+a、b、c 是判斷兩棵二元樹是否相同（結構和每個節點的資料都一樣），e、f 是運算式樹的後序求值（資結書第~7.3、
+7.7~節）。 d 問的是 C++ 類別的存取權限，不屬於資料結構，沒有收。
+
+\textbf{a.} 第 5 行：
+\begin{center}
+\texttt{if ((!a) \&\& (!b)) return true;}
+\end{center}
+兩個指標都是空的，表示兩棵（子）樹都是空樹，它們相等。 這是遞迴的終止條件：每次遞迴都往下一層，最後一定會
+走到空指標。
+
+\textbf{b.} 第 6 行的 \texttt{a \&\& b} 處理「剛好一邊是空的」：走到這裡，表示 \texttt{a}、\texttt{b} 不會兩個都是空的
+（第 5 行已經處理掉）。 若其中一個是空的，一棵樹在這個位置有節點、另一棵沒有，形狀不同，\texttt{a \&\& b} 為假，
+整個運算式回傳 \texttt{false}。 它還有第二個作用：\texttt{\&\&} 是短路求值，\texttt{a \&\& b} 為假時後面不會執行，避免
+第 7--9 行對空指標取 \texttt{a->data}、\texttt{a->leftChild}，否則程式會當掉。
+
+\textbf{c.} 可以，答案一樣正確，只要第 6 行的 \texttt{a \&\& b} 仍然放在最前面。 第 6--9 行是幾個條件用 \texttt{\&\&} 連起來，
+結果是「全部為真才為真」，和條件的先後順序無關；三個條件都沒有副作用（只讀不改），換順序也不會改變任何資料。
+順序影響的只有效率：把 \texttt{a->data == b->data} 放在兩個遞迴呼叫前面，根的資料不同時立刻回傳，不必走遍子樹；
+放在後面則要先比完左、右子樹（可能整棵樹都比過）才發現根不同。 最壞情況（兩棵樹相同）每個節點都比一次，
+時間都是 $O(\min(n_1, n_2))$。 但如果把 \texttt{a \&\& b} 移到後面，就會先對空指標取值，那就錯了。
+
+\textbf{e.} 選 (B)：甲 丙 乙。
+
+\textbf{f.} 理由：每個運算子節點的值由子節點的值算出來（\texttt{And} 要 \texttt{s->leftChild->value} 和
+\texttt{s->rightChild->value}），所以在 \texttt{switch} 讀子節點的 \texttt{value} 之前，左右子樹都必須已經算好。 先遞迴算左
+子樹（甲）、再算右子樹（丙）、最後處理自己（乙），正是後序走訪（左、右、根），函式名稱 \texttt{PostOrderEval}
+也是這個意思。
+\begin{itemize}
+\item (A) 甲 乙 丙 是中序：處理 \texttt{And}、\texttt{Or} 時右子節點的 \texttt{value} 還沒算，讀到的是舊值或未初始化的值。
+\item (C) 乙 甲 丙 是前序：左右子節點都還沒算。
+\end{itemize}
+\texttt{Not} 只有一個運算元，放在右子節點（b.1 用的是 \texttt{rightChild}），左子樹是空的，\texttt{PostOrderEval(NULL)} 因為
+\texttt{if (s)} 直接返回；\texttt{True}、\texttt{False} 是葉節點，兩個遞迴都直接返回。 例如 $(x_1 \wedge \neg x_2)$ 在
+$x_1 = \text{true}$、$x_2 = \text{false}$ 時：後序先算葉節點 $x_1$（true）、再算 \texttt{Not} 的子節點 $x_2$（false）、\texttt{Not}
+得 true，最後 \texttt{And} 得 true。 每個節點處理一次，時間 $O(n)$。 （b.3 的 \texttt{;;} 多一個分號、b.5 沒有 \texttt{break}，
+都不影響結果：多的分號是空敘述，b.5 是最後一個 case。）
+\end{pastsoln}

@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-10}]{成大智慧資安學程 114 學年度 單選題第 10 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+If Queue is implemented by the circular list, which operation requires linear time in the worst case.
+
+a)~Find(); \qquad b)~isEmpty(); \qquad c)~Push(); \qquad d)~Pop(); \qquad e)~Noe of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a) Find()。
+
+用單向環狀串列做佇列時，只要存一個指標 $\mathit{last}$ 指向最後一個節點：佇列的前端就是
+$\mathit{last}.\mathit{link}$，不用另外存（資結書第~5.2~節、第~6.2~節）。
+\begin{itemize}
+\item b) isEmpty()：看 $\mathit{last} = \NIL$，$O(1)$。
+\item c) Push()（加到尾端）：新節點 $x$ 接在 $\mathit{last}$ 後面，$x.\mathit{link} \gets \mathit{last}.\mathit{link}$、
+$\mathit{last}.\mathit{link} \gets x$、$\mathit{last} \gets x$，$O(1)$（資結書虛擬碼~5.5）。
+\item d) Pop()（拿掉前端）：前端 $f = \mathit{last}.\mathit{link}$，令 $\mathit{last}.\mathit{link} \gets f.\mathit{link}$
+（只剩一個時 $\mathit{last} \gets \NIL$），$O(1)$。
+\item a) Find()：找某個元素在不在佇列裡，只能從前端一個一個看，最壞看完全部 $n$ 個，$\Theta(n)$。
+\end{itemize}
+只有 Find 是線性時間，答案 a)。 （e) 的 ``Noe'' 是原卷的錯字，指 None。）
+\end{pastsoln}

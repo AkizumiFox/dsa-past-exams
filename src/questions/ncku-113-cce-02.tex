@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ncku-113-cce-02}]{成大電通所 113 學年度 是非題第 2 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+The time complexity of Dijkstral's algorithm is O( $n\log n$) if a graph is recorded by an
+adjacency matrix, where $n$ is the number of vertices in a graph.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 用相鄰矩陣存圖時，Dijkstra 演算法是 $O(n^2)$。 原題的 ``Dijkstral'' 是 Dijkstra。
+
+Dijkstra 演算法（資結書第~25.2~節）做 $n$ 輪，每一輪：
+\begin{enumerate}
+\item 從還沒確定的頂點裡挑距離最小的 $u$；
+\item 對 $u$ 的每一條出邊 $(u, v)$ 做鬆弛。
+\end{enumerate}
+用相鄰矩陣時，第 2 步要找出 $u$ 的鄰居，只能把矩陣第 $u$ 列的 $n$ 格全部看過，每輪 $\Theta(n)$，
+$n$ 輪合計 $\Theta(n^2)$。 光這一步就超過 $n \log n$，不管第 1 步用什麼結構都一樣：
+\begin{itemize}
+\item 第 1 步用陣列逐一掃描找最小值，每輪 $O(n)$，總時間 $O(n^2)$。 這是相鄰矩陣的標準搭配。
+\item 第 1 步改用二元堆積，取出最小值共 $O(n \log n)$，但掃描矩陣仍是 $\Theta(n^2)$，加上最多
+$e = O(n^2)$ 次 decrease-key，各 $O(\log n)$，總時間 $O(n^2 \log n)$，反而更慢。
+\end{itemize}
+$O((n + e)\log n)$ 這一類的界要用相鄰串列才達得到；題目說的 $O(n \log n)$ 連邊都沒有算進去，
+在相鄰矩陣下不成立。
+\end{pastsoln}

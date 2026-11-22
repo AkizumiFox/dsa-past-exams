@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-06}]{臺聯大電機類 111 學年度 第 6 題}
+（設計）
+
+(10\%) In double hashing, we use a secondary hash function to produce different collision paths for
+different keys. Please give a design of double hashing and show how your design can avoid both
+primary and secondary clustering.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{設計。} 表的大小 $m$ 取質數，第 $i$ 次探測（$i = 0, 1, 2, \dots$）的位置是
+\[
+h(k, i) = \bigl(h_1(k) + i \cdot h_2(k)\bigr) \bmod m, \qquad
+h_1(k) = k \bmod m, \quad h_2(k) = 1 + \bigl(k \bmod (m - 2)\bigr).
+\]
+$h_2$ 有兩個要求（資結書第~12.3~節）：
+\begin{itemize}
+\item $h_2(k) \ne 0$，否則每次都探測同一格。 上面的 $h_2$ 的值在 $1..m-2$ 之間。
+\item $h_2(k)$ 和 $m$ 互質，探測序列才會走遍全部 $m$ 格（資結書定理~12.4）。 $m$ 是質數，
+$1..m-1$ 都和它互質。
+\end{itemize}
+插入時依 $i = 0, 1, 2, \dots$ 探測，找到空格就放；搜尋時沿同一個序列找，遇到空格就停。
+
+\textbf{例子}：$m = 13$，$h_1(k) = k \bmod 13$，$h_2(k) = 1 + (k \bmod 11)$。
+\begin{center}
+\small
+\begin{tabular}{rccl}
+\toprule
+$k$ & $h_1(k)$ & $h_2(k)$ & 探測序列的前幾格 \\
+\midrule
+14 & 1 & 4 & 1, 5, 9, 0, 4, \dots \\
+27 & 1 & 6 & 1, 7, 0, 6, 12, \dots \\
+40 & 1 & 8 & 1, 9, 4, 12, 7, \dots \\
+5 & 5 & 6 & 5, 11, 4, 10, 3, \dots \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{為什麼沒有次要叢集（secondary clustering）。} 次要叢集是「起點相同的鍵，整條探測序列都一樣」：
+二次探測 $h_1(k) + c_1 i + c_2 i^2$ 的序列只由起點決定，同一格碰撞的鍵會一個接一個排在同一條
+路上。 雙重雜湊的步長 $h_2(k)$ 也跟著鍵變：上表的 $14$、$27$、$40$ 起點都是 $1$，但步長是
+$4$、$6$、$8$，第二次探測就分別到 $5$、$7$、$9$，從此走不同的路。 序列由 $\bigl(h_1(k), h_2(k)\bigr)$
+這一對決定，可能的序列有 $m(m-1)$ 種，不是只有 $m$ 種。
+
+\textbf{為什麼沒有主要叢集（primary clustering）。} 主要叢集是線性探測的現象：步長固定是 $1$，任何
+落在一段連續已占用格子裡的鍵，都會走到這一段的尾端，把它再接長一格，於是長的叢集越長越快。
+雙重雜湊中，兩個鍵就算在某一格碰上，下一步也各自跳 $h_2$ 格，不會沿著同一段連續格子走：例如
+$14$ 的第二次探測是第 $5$ 格，若第 $5$ 格已經被 $5$ 占了，$14$ 接著去第 $9$ 格，而 $5$ 自己的序列是
+$11, 4, \dots$，兩條路只在第 $5$ 格交會一次，不會一起把同一段叢集接長。 所以占用的格子散在表裡，
+不會長成一大段。
+
+在均勻雜湊的假設下，雙重雜湊不成功搜尋的期望探測次數約是 $1/(1 - \alpha)$（資結書第~12.4~節），
+比線性探測的 $\frac{1}{2}\bigl(1 + 1/(1-\alpha)^2\bigr)$ 小很多，這就是避開叢集的效果。
+\end{pastsoln}

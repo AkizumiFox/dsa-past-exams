@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-06}]{臺大電信所 108 學年度（B）第 6 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+Given an unweighted, undirected graph $G=(V,E)$ and two vertices $u,v\in V$, breadth-first search
+can be applied to find the shortest path between $u$ and $v$ or whether no such path exists.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對。
+
+從 $u$ 做 BFS（資結書第~21.3~節）。 BFS 一層一層往外走，結束時每個點的 $d[x]$ 就是 $u$ 到 $x$
+的最短路徑邊數（資結書定理~21.4）；沒被走到的點 $d[x] = \infty$，也就是不連通。 所以：
+\begin{itemize}
+\item $d[v] = \infty$：$u$ 到 $v$ 沒有路徑。
+\item 否則從 $v$ 沿著前驅 $\pi$ 一路往回走到 $u$，反過來就是一條最短路徑（資結書
+虛擬碼~21.2）。
+\end{itemize}
+時間 $O(|V| + |E|)$。 無權圖的「最短」就是邊數最少，正是 BFS 算的東西。
+\end{pastsoln}

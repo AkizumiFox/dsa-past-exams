@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-08}]{臺大電機所 109 學年度（B）第 8 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of one insert operations is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) O(1)。
+
+費氏堆積的插入只把新節點當成一棵單一節點的樹，加進根串列，必要時更新最小指標，不做任何連結
+（資結書第~8.6~節）。 根串列是雙向環狀串列，加一個節點是 $O(1)$，和最小值比一次也是 $O(1)$。
+所以這不只是平攤，\textbf{單次}的實際成本就是 $O(1)$。 連結的工作都延到之後的 extract-min 才做。
+
+(B)--(E) 都是上界但不緊。
+\end{pastsoln}

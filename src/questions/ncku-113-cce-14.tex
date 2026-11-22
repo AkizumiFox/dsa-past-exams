@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-113-cce-14}]{成大電通所 113 學年度 簡答題第 5 題}
+（簡答）
+
+(5 pts) To find biconnected components in a connected graph G, we have to construct a depth
+first search (DFS) spanning tree. Please give the reason why the root of the tree must be an
+articulation point if it has at least two child.
+\end{pastexam}
+
+\begin{pastsoln}
+關鍵是無向圖的 DFS 沒有交叉邊：每一條不在樹上的邊都連接一對祖先和子孫（資結書定理~21.8）。
+下面照資結書定理~23.8 的論證寫完整。
+
+\textbf{證明。} 設 DFS 樹的根 $r$ 至少有兩個子節點 $c_1$、$c_2$，以它們為根的子樹是 $T_1$、
+$T_2$。 先說明 $T_1$ 和 $T_2$ 之間沒有任何邊。 假設有一條邊 $(u, w)$，$u \in T_1$、
+$w \in T_2$：
+\begin{itemize}
+\item 它不是樹邊：樹邊連接父子，而 $T_1$、$T_2$ 裡的節點互相都不是父子（$c_1$、$c_2$ 的
+父節點是 $r$）。
+\item 它也不是非樹邊：$u$ 和 $w$ 分屬根的兩棵不同子樹，誰都不是誰的祖先，違反「非樹邊只連接
+祖先和子孫」。
+\end{itemize}
+（直觀的說法：DFS 從 $c_1$ 往下走時，若 $T_1$ 裡有點和 $w$ 相鄰，$w$ 還沒被拜訪，DFS 會在
+回到 $r$ 之前就從那裡走到 $w$，$w$ 就會落在 $T_1$ 裡，不會成為 $c_2$ 底下的點。）
+
+所以從 $c_1$ 到 $c_2$ 的任何路徑，離開 $T_1$ 之後只能經過 $T_1$ 以外的點；而 $T_1$ 的點的
+鄰居都在 $T_1 \cup \{r\}$ 裡，路徑離開 $T_1$ 的第一步一定走到 $r$。 也就是說 $c_1$ 到 $c_2$
+的每一條路徑都經過 $r$。 把 $r$ 刪掉，$c_1$ 和 $c_2$ 就不連通了，圖被切開，所以 $r$ 是割點
+（articulation point）。\hfill$\blacksquare$
+
+反過來，根只有一個子節點時，刪掉根以後其餘的點仍由那棵子樹連在一起，根不是割點。 所以根的
+判斷規則是「至少兩個子節點」，和非根節點用 low 值判斷不同。
+\end{pastsoln}

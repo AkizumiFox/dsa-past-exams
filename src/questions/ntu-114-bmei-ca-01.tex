@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:ntu-114-bmei-ca-01}]{臺大生醫電資所 114 學年度 第 1 題（節錄第 (1)(2)(17)(18)(19)(20) 小題）}
+（名詞解釋）
+
+(40\%, 2 points for each problem) Please define the following terms and explain the content, purpose, and application of each term and give an illustrative example if possible. If possible, define the term in mathematical equation. If it is an acronym, please write the full name. For example: SSD: Solid-State Drive: A solid-state drive (SSD) is a storage device that typically uses flash memory to store data, instructions, and information. Flash memory contains no moving parts, making it more durable and shock resistant than other types of media. SSDs offer higher input/output rates and lower latency, but are slightly more expensive for the same capacity. For this reason, manufacturers typically offer SSDs as an option instead of hard disks in their laptops, tablets, and desktops.
+
+(1) NP complete (2) palindrome \ldots\ (17) hash function (18) MST: Minimum Spanning Tree (19) black-red tree (20) heap data structure
+\end{pastexam}
+
+\begin{pastsoln}
+原題共 $20$ 個名詞，其餘是計算機概論的名詞（SVM、NTFS、HTTPS、TCP/IP 等），本書只收和資料結構與演算法有關的
+六個。 各小題屬於的章：(1) 第~28~章，(2) 字串（第~18~章最長回文子序列），(17) 第~12~章，(18) 第~24~章，
+(19) 第~10~章，(20) 第~8~章。 題目要求寫全名、定義（能寫數學式就寫）、用途和例子，下面每個都照這個順序寫。
+
+\textbf{(1) NP complete}（NP-complete，NP 完備；NP 是 Nondeterministic Polynomial time）。
+判定問題 $L$ 是 NP 完備，若
+\[
+L \in \mathrm{NP}\quad\text{而且}\quad \forall L' \in \mathrm{NP},\ L' \le_P L,
+\]
+也就是 $L$ 的「是」答案有多項式時間可驗證的證書，而且所有 NP 問題都能在多項式時間歸約到 $L$（資結書第~28.4~節）。
+它是 NP 裡最難的一群：只要其中任何一個有多項式時間演算法，就 $\mathrm{P} = \mathrm{NP}$。 例子：SAT、3-SAT、
+頂點覆蓋、漢米爾頓迴路、0/1 背包的判定版。 用途：證明一個新問題是 NP 完備（從已知的 NP 完備問題歸約過去），
+就知道不必再找有效率的精確演算法，改用近似演算法、啟發式或限制輸入的特殊情形。
+
+\textbf{(2) palindrome}（回文）。 正著讀和倒著讀一樣的字串。 長度 $n$ 的字串 $s = s_1 s_2 \cdots s_n$ 是回文
+若且唯若
+\[
+s_i = s_{n+1-i},\qquad i = 1, 2, \ldots, n,
+\]
+即 $s = s^R$（$s^R$ 是 $s$ 反轉）。 例子：\texttt{level}、\texttt{racecar}、$12321$。 判斷方法：兩個指標從頭尾
+往中間比，$O(n)$；或把前半段推進堆疊再和後半段逐一比對。 應用：演算法題目常見的最長回文子字串、最長回文子
+序列（動態規劃，資結書第~18~章）；生物資訊裡 DNA 的限制酶切位常是「和自己的反向互補序列相同」的回文序列。
+
+\textbf{(17) hash function}（雜湊函數）。 把很大的鍵值集合 $U$ 對應到表的位置的函數
+\[
+h : U \to \{0, 1, \ldots, m - 1\},
+\]
+例如除法法 $h(k) = k \bmod m$（$m$ 取不靠近 $2$ 的次方的質數）（資結書第~12.1~節）。 用途：雜湊表用 $h(k)$ 直接算出
+鍵 $k$ 該放哪一格，搜尋、插入、刪除的期望時間是 $O(1)$。 好的雜湊函數要算得快、值落在 $0..m-1$、而且把鍵
+平均地散開；不同的鍵算出同一格叫碰撞，用鏈結法或開放定址處理。 例子：$m = 7$，鍵 $15, 22, 8$ 的
+$h(k) = 1, 1, 1$，三個都碰撞。 其他應用：資料庫索引、程式語言的字典（Python \texttt{dict}）、檔案完整性檢查
+（SHA-256 之類的密碼學雜湊函數）。
+
+\textbf{(18) MST: Minimum Spanning Tree}（最小生成樹）。 給一個連通的無向加權圖 $G = (V, E, w)$，生成樹是包含
+所有頂點、$|V| - 1$ 條邊、沒有環的子圖；最小生成樹是總權重
+\[
+w(T) = \sum_{(u, v) \in T} w(u, v)
+\]
+最小的生成樹（資結書第~24.1~節）。 演算法：Kruskal（邊由小到大，不成環就加入，$O(E\lg E)$）、Prim（從一個頂點
+長出去，每次加連出去最輕的邊，二元堆積 $O(E\lg V)$）。 例子：本卷第~10~題的圖，Kruskal 依序選
+$1$--$2$（1）、$2$--$3$（2）、$0$--$1$（3）、$3$--$4$（3），總權重 $9$。 應用：用最少的線路成本把所有地點連起來
+（電網、網路佈線）、群集分析。
+
+\textbf{(19) black-red tree}（一般稱 red-black tree，紅黑樹）。 每個節點多一個顏色位元的二元搜尋樹，滿足
+（資結書第~10.3~節）：
+\begin{enumerate}
+\item 每個節點是紅色或黑色；
+\item 根是黑色；
+\item 每個 NIL 葉子是黑色；
+\item 紅色節點的兩個子節點都是黑色（不能有連續兩個紅色）；
+\item 從任一節點到它底下各個 NIL 的路徑，經過的黑色節點數相同（黑高度）。
+\end{enumerate}
+這些規則保證 $n$ 個內部節點的紅黑樹高度 $h \le 2\lg(n + 1)$，所以搜尋、插入、刪除最壞都是 $O(\log n)$；插入、
+刪除後用重新著色和至多常數次旋轉恢復規則。 例子：依序插入 $1, 2, 3$，插入 $3$ 後 $2$ 成為黑色的根，$1$、$3$ 是
+紅色子節點。 應用：C++ 的 \texttt{std::map}、Java 的 \texttt{TreeMap}、Linux 的行程排程器 CFS。
+
+\textbf{(20) heap data structure}（堆積）。 一棵完整二元樹，滿足堆積性質；以最小堆積為例：
+\[
+A[\mathrm{parent}(i)] \le A[i],\qquad \mathrm{parent}(i) = \lfloor i/2\rfloor,
+\]
+所以根是最小值（資結書第~8.1~節）。 用陣列存，節點 $i$ 的子節點在 $2i$、$2i + 1$，不需要指標。 操作：取最小值
+$O(1)$，插入（放最後再往上浮）和刪除最小值（最後一個搬到根再往下沉）$O(\log n)$，把 $n$ 個數建成堆積 $O(n)$。
+例子：$[1, 3, 2, 7, 4]$ 是最小堆積。 應用：優先佇列（作業系統排程、事件模擬）、堆積排序、Dijkstra 和 Prim
+演算法、找前 $k$ 大的數。
+\end{pastsoln}

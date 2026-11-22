@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-11}]{臺聯大電機類 113 學年度 第 11 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+If there are two nodes such that their ``next'' pointers point to the same node in a singly linked
+list structure, what configurations are possible?
+\begin{enumerate}[label=(\Alph*)]
+\item There are two normal singly linked lists
+\item There is a loop in the linked list
+\item It is impossible that two nodes can point to the same node as their next node
+\item This is a cyclical list structure
+\item Two singly linked lists intersect
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(E)。
+
+一條正常的單向串列（不論是以 \texttt{NULL} 結尾的線性串列，或尾端指回開頭的環狀串列），每個節點最多
+只有一個節點指向它。 兩個節點的 \textit{next} 指向同一個節點 $z$，表示 $z$ 有兩個「前一個」，只有兩種
+形狀：
+\begin{itemize}
+\item \textbf{交會（Y 字形）}：兩條串列從 $z$ 開始共用後面那一段，例如 $a_1 \to a_2 \to z \to w$ 和
+$b_1 \to z$。
+\item \textbf{有一個迴圈（$\rho$ 字形）}：一條串列走到後面又指回中間的 $z$，例如
+$a \to z \to b \to c \to z$，$a$ 和 $c$ 都指向 $z$。 資結書第~5.6~節判斷串列有沒有環、找環的起點，
+處理的就是這種形狀，環的起點正是有兩個前一個節點的那個節點。
+\end{itemize}
+
+逐項：
+\begin{itemize}
+\item (A) 「兩條正常的串列」各自獨立、沒有共用節點時，不會有節點被兩個節點指到。 共用了就是 (E) 的交會，
+不是兩條「正常」（互不相干）的串列。 錯。
+\item (B) 對，$\rho$ 字形，見上。
+\item (C) 上面兩個例子都做得到，錯。
+\item (D) 「環狀串列」是尾端指回開頭、所有節點連成一個圈，圈上每個節點恰好被一個節點指到，不會有兩個。
+有兩個節點指向同一個節點的是「前面有一段尾巴、後面接一個環」的 $\rho$ 字形，那是 (B)，不是環狀串列。 錯。
+\item (E) 對，Y 字形，見上。
+\end{itemize}
+(A)、(D) 的措辭有解讀空間：如果把 (A) 讀成「兩條各自以 \texttt{NULL} 結尾的串列（共用尾段）」，它和 (E)
+說的是同一件事。 本書照字面的一般讀法，「normal」指彼此獨立，判為錯。
+\end{pastsoln}

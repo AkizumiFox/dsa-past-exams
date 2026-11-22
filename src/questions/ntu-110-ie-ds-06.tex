@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-06}]{臺大工工所 110 學年度 第 6 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In this exam, the depth of the root (in either a tree or heap) is defined as 0.
+
+A binomial heap contains 2021 items. How many among them have depth 7?
+
+(A)~165 \qquad (B)~170 \qquad (C)~175 \qquad (D)~180 \qquad (E)~185
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) 165。
+
+二項堆積由一組二項樹組成，每種階數最多一棵；$n$ 個元素時，有哪些階數的樹恰好由 $n$ 的二進位表示決定
+（資結書第~8.5~節）。
+\[
+  2021 = 1024 + 512 + 256 + 128 + 64 + 32 + 4 + 1 = (11111100101)_2 ,
+\]
+所以有 $B_{10}, B_9, B_8, B_7, B_6, B_5, B_2, B_0$ 各一棵。
+
+二項樹 $B_k$ 深度 $d$ 的節點恰好有 $\binom{k}{d}$ 個（資結書附錄~A.3 的二項式係數）：$B_k$ 由兩棵 $B_{k-1}$ 組成，
+一棵當根，另一棵接成根的子樹、整棵往下一層，所以深度 $d$ 的節點數 $D_k(d) = D_{k-1}(d) + D_{k-1}(d-1)$，
+這正是巴斯卡公式，加上 $D_0(0) = 1$，得 $D_k(d) = \binom{k}{d}$。
+
+深度 $7$ 只出現在 $k \ge 7$ 的樹：
+\[
+  \binom{10}{7} + \binom{9}{7} + \binom{8}{7} + \binom{7}{7} = 120 + 36 + 8 + 1 = 165 ,
+\]
+選 (A)。
+\end{pastsoln}

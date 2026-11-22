@@ -1,0 +1,116 @@
+\begin{pastexam}[label={px:ntu-106-esoe-ds-01}]{臺大工科海洋所 106 學年度 第 1 題}
+（程式設計）
+
+\textbf{(15 \%)} A singly linked list originally stores $n$ nodes of integers not in order. It is
+desired to convert this singly linked list into a special doubly linked list with a particular
+dummy node, which is not seen from outside. The converted list has three different sections. The
+first section contains all nodes with negative integers starting from the head. The second
+section is the dummy node, whose value indicates the number of zeros encountered during the
+conversion. The final section contains all nodes with positive integers to the end. There is no
+need to sort the integers in the first and final sections.
+\begin{enumerate}[label=\alph*.]
+\item (5 \%) Write down the definitions of the singly and doubly linked list classes and nodes.
+\item (10 \%) Write a program that accepts a singly linked list and returns the specified doubly
+linked list.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+原卷規定程式題用 C++ 或 Java，這裡用 C++。
+
+\textbf{想法。} 雙向串列一開始只放虛擬節點（dummy）。 把單向串列從頭走一遍：負數接在虛擬
+節點前面，正數接在串列最後面，$0$ 不建節點，只把虛擬節點的值加 $1$。 虛擬節點永遠在負數和
+正數之間，三段自然就分好了，不需要排序。 「外面看不到」的做法是把它設成 \texttt{private}，
+並讓走訪用的 \texttt{first}、\texttt{after} 自動跳過它。 雙向串列的插入是資結書第~5.2~節
+虛擬碼~5.6 的寫法。
+
+\textbf{(a) 類別定義。}
+\begin{minted}[fontsize=\small]{cpp}
+struct SNode {                 // 單向串列的節點
+    int val;
+    SNode* next;
+    SNode(int v, SNode* n = nullptr) : val(v), next(n) {}
+};
+class SList {                  // 單向串列
+public:
+    SNode* head = nullptr;
+    void pushFront(int v) { head = new SNode(v, head); }
+};
+
+struct DNode {                 // 雙向串列的節點
+    int val;
+    DNode *prev, *next;
+    DNode(int v) : val(v), prev(nullptr), next(nullptr) {}
+};
+class DList {                  // 負數 | 虛擬節點 | 正數
+public:
+    DList() { dummy = head = tail = new DNode(0); }  // 一開始只有虛擬節點
+    ~DList();
+    DNode* first() const {     // 外面看到的第一個節點（跳過虛擬節點）
+        return head == dummy ? dummy->next : head;
+    }
+    DNode* after(DNode* p) const {   // p 的下一個（跳過虛擬節點）
+        DNode* q = p->next;
+        return q == dummy ? q->next : q;
+    }
+    int zeros() const { return dummy->val; }
+    void insertBefore(DNode* pos, DNode* x);   // 把 x 接在 pos 前面
+    void insertAfter(DNode* pos, DNode* x);    // 把 x 接在 pos 後面
+    friend DList* convert(SList& s);
+private:
+    DNode *head, *tail, *dummy;  // 串列裡一定有 dummy
+};
+\end{minted}
+\texttt{head}、\texttt{tail} 是整條雙向串列（含虛擬節點）的頭尾，所以串列永遠不是空的，插入時
+只有「接在最前面」「接在最後面」兩種邊界要處理。
+
+\textbf{(b) 轉換。}
+\begin{minted}[fontsize=\small]{cpp}
+DList::~DList() {
+    for (DNode* p = head; p != nullptr; ) { DNode* q = p->next; delete p; p = q; }
+}
+void DList::insertBefore(DNode* pos, DNode* x) {
+    x->next = pos; x->prev = pos->prev;
+    if (pos->prev) pos->prev->next = x; else head = x;
+    pos->prev = x;
+}
+void DList::insertAfter(DNode* pos, DNode* x) {
+    x->prev = pos; x->next = pos->next;
+    if (pos->next) pos->next->prev = x; else tail = x;
+    pos->next = x;
+}
+
+DList* convert(SList& s) {
+    DList* d = new DList();
+    SNode* p = s.head;
+    while (p != nullptr) {
+        SNode* nxt = p->next;
+        if (p->val < 0)
+            d->insertBefore(d->dummy, new DNode(p->val));
+        else if (p->val > 0)
+            d->insertAfter(d->tail, new DNode(p->val));
+        else
+            d->dummy->val++;               // 0：只計數
+        delete p;                          // 單向串列的節點用完就還
+        p = nxt;
+    }
+    s.head = nullptr;
+    return d;
+}
+\end{minted}
+
+\textbf{正確性。} 迴圈的不變量：處理完單向串列的前 $t$ 個節點後，雙向串列是「這 $t$ 個裡的
+負數（依原順序）、虛擬節點、這 $t$ 個裡的正數（依原順序）」，虛擬節點的值等於這 $t$ 個裡
+$0$ 的個數。 第 $t + 1$ 個是負數時接在虛擬節點前面，也就是負數段的最後；是正數時接在
+\texttt{tail} 後面，也就是正數段的最後；是 $0$ 時只改計數，三種情形都保持不變量。 迴圈結束
+時 $t = n$，就是題目要的串列。
+
+例如單向串列 $3, -1, 0, 5, -7, 0, 0, 2, -4, 9$ 轉換後是
+$-1 \leftrightarrow -7 \leftrightarrow -4 \leftrightarrow [3] \leftrightarrow 3 \leftrightarrow 5
+\leftrightarrow 2 \leftrightarrow 9$，方括號是虛擬節點，值 $3$ 是零的個數；從外面用
+\texttt{first}、\texttt{after} 走訪只看到 $-1, -7, -4, 3, 5, 2, 9$。
+
+\textbf{複雜度。} 每個節點處理一次，每次插入只改常數個指標，時間 $\Theta(n)$；新串列有
+$n - z + 1$ 個節點（$z$ 是零的個數），舊節點邊走邊刪除，額外空間只多一個虛擬節點。 單向
+節點沒有 \texttt{prev} 欄位，型別不同，不能直接把舊節點拿來用，所以是建新節點、刪舊節點。
+\end{pastsoln}

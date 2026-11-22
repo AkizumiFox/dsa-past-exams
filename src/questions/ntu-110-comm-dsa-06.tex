@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-06}]{臺大電信所 110 學年度（B）第 6 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Every weighted graph has a unique minimum spanning tree (MST).
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+反例：三個頂點 $a, b, c$ 的三角形，三條邊的權重都是 $1$。 任取兩條邊都是生成樹，總權重都是 $2$，
+三棵都是最小生成樹，不唯一。
+
+最小生成樹唯一的一個充分條件是所有邊的權重互不相同（資結書第~24.1~節）；有相同權重時可能（不一定）
+有好幾棵。 另外，不連通的圖根本沒有生成樹，「every」也不成立。
+\end{pastsoln}

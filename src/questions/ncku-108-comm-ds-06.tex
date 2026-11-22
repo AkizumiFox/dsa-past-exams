@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-06}]{成大電通所 108 學年度 問答題第 3 題}
+（問答；5 分）
+
+What is the maximum number of nodes in a full K-ray tree (degree of nodes in the tree is no more than K)
+with height L? (5 points)
+\end{pastexam}
+
+\begin{pastsoln}
+``K-ray'' 是 K-ary（$K$ 元樹）的筆誤。 高度照資結書第~7.1~節的定義：高度 $L$ 就是有 $L$ 層，根在第
+$1$ 層。
+
+第 $1$ 層只有根，$1$ 個節點；每個節點最多 $K$ 個子節點，所以第 $i$ 層最多 $K^{i-1}$ 個節點（對 $i$
+歸納：第 $i$ 層的每個節點最多帶出 $K$ 個第 $i + 1$ 層的節點）。 $L$ 層全部填滿時節點最多：
+\[
+1 + K + K^2 + \cdots + K^{L-1} = \frac{K^{L} - 1}{K - 1}, \qquad K \ge 2 .
+\]
+$K = 1$ 時樹是一條鏈，最多 $L$ 個節點。 例：$K = 2$ 時是 $2^L - 1$，正是滿二元樹的節點數；$K = 3$、
+$L = 3$ 時是 $1 + 3 + 9 = 13$。
+
+若題目的高度是指邊數（根到最深葉的邊數為 $L$，共 $L + 1$ 層），答案改成
+$\dfrac{K^{L+1} - 1}{K - 1}$。 作答時寫明採用哪一種高度。
+\end{pastsoln}

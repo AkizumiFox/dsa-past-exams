@@ -1,0 +1,97 @@
+\begin{pastexam}[label={px:ncku-112-isec-ds-06}]{成大智慧資安學程 112 學年度 第 6 題}
+（問答）
+
+(15\%) (a) Given a graph G=(V,E), write a \textbf{pseudo-code} to generate all pairs shortest
+paths. (b) Also, you need to define the input, and output of the data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+用 Floyd--Warshall 演算法（資結書第~25.6~節）。 題目沒有說邊有沒有權重、權重會不會是負的；
+Floyd--Warshall 允許負權重的邊，只要沒有負環，所以以它為答案最一般。 先回答 (b)，再寫 (a)
+的虛擬碼。
+
+\textbf{(b) 輸入與輸出的資料結構}
+\begin{itemize}
+\item \textbf{輸入}：頂點編號 $1, 2, \ldots, n$（$n = |V|$），以及 $n \times n$ 的\textbf{權重矩陣}
+$W$（相鄰矩陣存權重）：
+\[
+W[i, j] = \begin{cases}
+0, & i = j, \\
+\text{邊 } (i, j) \text{ 的權重}, & i \ne j \text{ 且 } (i, j) \in E, \\
+\infty, & i \ne j \text{ 且 } (i, j) \notin E.
+\end{cases}
+\]
+無向圖把每條邊當成兩個方向各一條，$W$ 是對稱的；沒有權重的圖每條邊的權重當成 $1$。
+假設 $G$ 沒有負環。
+\item \textbf{輸出}：兩個 $n \times n$ 矩陣。
+\begin{itemize}
+\item \textbf{距離矩陣} $D$：$D[i, j]$ 是從 $i$ 到 $j$ 的最短路徑權重 $\delta(i, j)$，到不了是 $\infty$。
+\item \textbf{前驅矩陣} $\Pi$：$\Pi[i, j]$ 是從 $i$ 到 $j$ 的某條最短路徑上 $j$ 的前一個頂點；
+$i = j$ 或到不了時是 \NIL。 有了 $\Pi$，任一對 $(i, j)$ 的路徑都能用 \proc{Print-Path} 印出來，
+所以「所有點對的最短路徑」用 $O(n^2)$ 的空間就存得下，不用把 $n^2$ 條路徑各存一份。
+\end{itemize}
+\end{itemize}
+
+\textbf{(a) 虛擬碼}（同資結書虛擬碼~25.8、25.9）
+\begin{pseudo}{所有點對最短路徑：Floyd--Warshall}
+\Function{Floyd-Warshall}{$W, n$}
+    \For{$i \gets 1$ \To $n$}
+        \For{$j \gets 1$ \To $n$}
+            \State $D[i, j] \gets W[i, j]$；$\Pi[i, j] \gets \NIL$
+            \If{$i \ne j$ \AND $W[i, j] < \infty$}
+                \State $\Pi[i, j] \gets i$
+            \EndIf
+        \EndFor
+    \EndFor
+    \For{$k \gets 1$ \To $n$} \Comment{允許 $k$ 當中間點}
+        \For{$i \gets 1$ \To $n$}
+            \For{$j \gets 1$ \To $n$}
+                \If{$D[i, k] + D[k, j] < D[i, j]$}
+                    \State $D[i, j] \gets D[i, k] + D[k, j]$
+                    \State $\Pi[i, j] \gets \Pi[k, j]$
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \If{$D[i, i] < 0$}
+            \State \Return 「有負環」
+        \EndIf
+    \EndFor
+    \State \Return $D, \Pi$
+\EndFunction
+\Statex
+\Procedure{Print-Path}{$\Pi, i, j$}
+    \If{$i = j$}
+        \State 印出 $i$
+    \ElsIf{$\Pi[i, j] = \NIL$}
+        \State 印出「從 $i$ 到不了 $j$」
+    \Else
+        \State \Call{Print-Path}{$\Pi, i, \Pi[i, j]$}；印出 $j$
+    \EndIf
+\EndProcedure
+\end{pseudo}
+其中 $\infty + x$ 一律當成 $\infty$（實作時用一個夠大的數，並且在 $D[i, k]$ 或 $D[k, j]$ 是
+$\infty$ 時跳過，避免溢位）。
+
+\textbf{正確性}。 令 $d_{ij}^{(k)}$ 為從 $i$ 到 $j$、中間頂點都在 $\{1, \ldots, k\}$ 裡的最短路徑權重。
+$k = 0$ 時不能經過任何中間點，$d_{ij}^{(0)} = W[i, j]$。 $k \ge 1$ 時，這樣的最短路徑要嘛不經過
+$k$，權重 $d_{ij}^{(k-1)}$；要嘛經過 $k$ 恰一次（沒有負環時可以只看簡單路徑），拆成
+$i \leadsto k$ 和 $k \leadsto j$ 兩段，中間點都在 $\{1, \ldots, k-1\}$ 裡，各自是最短的
+（最短路徑的子路徑也是最短路徑）。 所以
+\[
+d_{ij}^{(k)} = \min\bigl(d_{ij}^{(k-1)},\ d_{ik}^{(k-1)} + d_{kj}^{(k-1)}\bigr).
+\]
+第 $k$ 輪迴圈結束時 $D[i, j] = d_{ij}^{(k)}$（迴圈不變量）；就地更新沒有問題，因為第 $k$ 輪裡
+$D[i, k]$、$D[k, j]$ 不會改變（$D[k, k] = 0$，$D[i, k] + D[k, k]$ 不會比 $D[i, k]$ 小）。
+做完 $k = n$，$D[i, j] = d_{ij}^{(n)} = \delta(i, j)$。 $\Pi[i, j]$ 隨 $D[i, j]$ 一起更新：改走
+$i \leadsto k \leadsto j$ 時，$j$ 的前一個頂點就是 $k \leadsto j$ 那段上 $j$ 的前一個，即
+$\Pi[k, j]$。 如果有負環，環上某個頂點 $i$ 會得到 $D[i, i] < 0$，最後那個迴圈就能偵測到。
+
+\textbf{複雜度}。 三層迴圈各 $n$ 次，時間 $\Theta(n^3) = \Theta(|V|^3)$；空間是 $D$、$\Pi$ 兩個
+矩陣，$\Theta(|V|^2)$。 \proc{Print-Path} 印一條有 $\ell$ 條邊的路徑花 $O(\ell)$。
+
+\textbf{其他做法}。 權重都不是負的時，也可以從每個頂點各跑一次 Dijkstra，用二元堆積共
+$O(|V|(|V| + |E|)\lg|V|)$，稀疏圖比 $\Theta(|V|^3)$ 快；沒有權重的圖從每個頂點各跑一次 BFS，
+共 $O(|V|(|V| + |E|))$。 稀疏又有負邊（沒有負環）時用 Johnson 演算法（資結書第~25.7~節）。
+\end{pastsoln}

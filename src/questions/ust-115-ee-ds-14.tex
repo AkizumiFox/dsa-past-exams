@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-14}]{臺聯大電機類 115 學年度 第 14 題}
+（單選；2 分）
+
+What would be the effect of using the standard ``3-Way Partitioning Quick Sort (Dutch National
+Flag problem)'' on an array containing a large number of duplicate keys?
+\begin{enumerate}[label=(\Alph*)]
+\item Efficiency became very poor, close to $O(n^2)$
+\item Extremely efficient, close to $O(n)$
+\item lead to Stack Overflow
+\item No significant difference
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+一般的快速排序（例如資結書虛擬碼~14.8 的 Lomuto 分割）遇到大量相同的鍵值時很糟：全部相同時，
+每次分割都切成 $n - 1$ 和 $0$，總時間 $\Theta(n^2)$。 三路分割（荷蘭國旗問題）把一段切成
+「小於基準、等於基準、大於基準」三塊，只對左右兩塊遞迴，中間等於基準的整塊不再處理：
+\begin{pseudo}{三路分割（Dijkstra）}
+\Procedure{Quicksort-3Way}{$A, p, r$}
+    \If{$p \ge r$}
+        \State \Return
+    \EndIf
+    \State $x \gets A[p]$；$\mathit{lt} \gets p$；$i \gets p + 1$；$\mathit{gt} \gets r$
+    \While{$i \le \mathit{gt}$}
+        \If{$A[i] < x$}
+            \State 交換 $A[\mathit{lt}]$ 和 $A[i]$；$\mathit{lt} \gets \mathit{lt} + 1$；$i \gets i + 1$
+        \ElsIf{$A[i] > x$}
+            \State 交換 $A[i]$ 和 $A[\mathit{gt}]$；$\mathit{gt} \gets \mathit{gt} - 1$
+        \Else
+            \State $i \gets i + 1$
+        \EndIf
+    \EndWhile
+    \State \Call{Quicksort-3Way}{$A, p, \mathit{lt} - 1$} \Comment{$A[\mathit{lt}..\mathit{gt}]$ 都等於 $x$}
+    \State \Call{Quicksort-3Way}{$A, \mathit{gt} + 1, r$}
+\EndProcedure
+\end{pseudo}
+一次分割是 $\Theta(\text{段長})$。 如果陣列只有 $k$ 種不同的鍵值，每一層遞迴至少把一種鍵值整塊
+排除，遞迴深度不超過 $k$，總時間 $O(kn)$；鍵值種類是常數時就是 $O(n)$。 極端情形全部相同：一次
+分割後中間那塊就是整個陣列，兩邊都是空的，$\Theta(n)$ 就結束。 所以重複鍵值越多，三路分割越快。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $O(n^2)$ 是一般二路分割遇到大量重複鍵值的情形，三路分割正是為了避免它。 錯。
+\item (B) 對。
+\item (C) 遞迴深度最多是鍵值的種類數，重複越多深度越小，不會因此堆疊溢位。 錯。
+\item (D) 和一般快速排序比，從 $\Theta(n^2)$ 降到接近 $\Theta(n)$，差別很大。 錯。
+\end{itemize}
+\end{pastsoln}

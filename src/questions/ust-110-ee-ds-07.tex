@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-07}]{臺聯大電機類 110 學年度 第 7 題}
+（問答）
+
+(10\%) Explain why a heap is always implemented in an array rather than linked list.
+\end{pastexam}
+
+\begin{pastsoln}
+二元堆積是一棵\textbf{完整二元樹}（complete binary tree）：除了最後一層都是滿的，最後一層從左邊連續
+排起（資結書第~8.1~節）。 完整二元樹照層序編號放進陣列 $A[1..n]$，剛好不留空格，而且父子關係可以
+直接用索引算出來：
+\[
+\mathrm{Parent}(i) = \lfloor i/2 \rfloor, \qquad \mathrm{Left}(i) = 2i, \qquad \mathrm{Right}(i) = 2i + 1.
+\]
+所以用陣列有下面幾個好處：
+\begin{enumerate}
+\item \textbf{不用存指標，省空間}：陣列只存 $n$ 個鍵。 串列（樹的指標表示法）每個節點要存左、右子節點，
+往上調整（sift-up）還要父節點指標，三個指標往往比鍵本身還大。 完整二元樹沒有空格，陣列不浪費。
+\item \textbf{直接找到「最後一個位置」}：插入要放在最後一層最右邊的下一個空位，刪除最小（大）值要把
+最後一個元素搬到根。 陣列裡就是 $A[n + 1]$ 和 $A[n]$，$O(1)$。 指標表示法要從根依 $n$ 的二進位一路
+走下去才找得到，多花 $\Theta(\lg n)$，寫起來也麻煩。
+\item \textbf{往上、往下走都是 $O(1)$ 的索引運算}：sift-up 用 $\lfloor i/2 \rfloor$ 找父節點，sift-down 用
+$2i$、$2i + 1$ 找子節點，不用額外指標。
+\item \textbf{由下而上建堆積很自然}：從 $i = \lfloor n/2 \rfloor$ 倒著做到 $1$，$\Theta(n)$（資結書第~8.2~節）。
+\item \textbf{快取友善}：陣列連續存放，存取比到處跳的指標快。
+\end{enumerate}
+
+陣列的缺點是大小要預先決定，滿了要重新配置；用倍增的動態陣列，平攤下來每次插入仍是 $O(1)$ 的搬移
+成本，不影響 $O(\lg n)$ 的操作時間。
+
+「always」說得太絕對：需要\textbf{合併}兩個堆積的場合（左傾樹、二項堆積、費氏堆積，資結書第~8.5、8.6~節），
+形狀不再是完整二元樹，陣列放不下，就要用指標。 題目指的是一般的二元堆積。
+\end{pastsoln}

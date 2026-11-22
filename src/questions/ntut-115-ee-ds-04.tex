@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-04}]{北科大電機所（戊組）115 學年度 是非題第 4 題}
+（是非）
+
+The time complexity of accessing an element in a hash table is always $O(1)$ in the worst case.
+\textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯（False）。
+
+雜湊表的 $O(1)$ 是\textbf{平均}（期望）情況，要假設雜湊函數把鍵平均分散、載入因子是常數（資結書第~12.2.2、
+12.4~節）。 最壞情況下所有的鍵都落在同一格：用鏈結法時整條串列有 $n$ 個鍵，找一個鍵要 $\Theta(n)$；用開放定址
+時探測序列要經過所有被占的格子，也是 $\Theta(n)$。 例如 $h(k) = k \bmod 10$ 而存的鍵是 $10, 20, 30, \ldots$，全部落在
+第 $0$ 格。 所以最壞情況是 $O(n)$，不是 $O(1)$。
+\end{pastsoln}

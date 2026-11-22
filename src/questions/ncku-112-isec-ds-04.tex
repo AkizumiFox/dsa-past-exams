@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-112-isec-ds-04}]{成大智慧資安學程 112 學年度 第 4 題}
+（問答）
+
+(15\%)(a) Using recursive definition (i.e., having Base case and Recursive case) to define a
+binary tree. (b) Show the maximum number of nodes in a binary tree on level i.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 遞迴定義（資結書定義~7.1）：
+\begin{itemize}
+\item \textbf{基本情形}：空集合（沒有任何節點）是一棵二元樹，叫空樹。
+\item \textbf{遞迴情形}：若 $T_L$、$T_R$ 是兩棵二元樹（可以是空樹），沒有共同的節點，$r$ 是不在
+它們裡面的一個節點，則以 $r$ 為根、$T_L$ 為\textbf{左子樹}、$T_R$ 為\textbf{右子樹}組成的結構
+也是一棵二元樹。
+\item 只有用上面兩條有限次做出來的才是二元樹。
+\end{itemize}
+要注意兩點。 一、左、右子樹有分別：只有一個子節點時，它是左子節點還是右子節點是不同的兩棵
+二元樹，所以二元樹不等於「每個節點最多兩個子節點的樹」。 二、基本情形也可以取「只有一個
+節點的樹」，但那樣就得另外允許「沒有左子樹」「沒有右子樹」，不如以空樹當基本情形乾淨。
+
+\textbf{(b)} 根在第 $1$ 層時，第 $i$ 層最多有 $2^{i-1}$ 個節點（$i \ge 1$）。 若根算第 $0$ 層，
+同一件事寫成第 $i$ 層最多 $2^i$ 個；作答時先寫清楚採用哪一種層的編號。
+
+證明（對 $i$ 歸納，資結書定理~7.1）：$i = 1$ 時第 $1$ 層只有根，$1 = 2^0$。 設第 $i - 1$ 層最多
+$2^{i-2}$ 個節點。 第 $i$ 層的每個節點都是第 $i - 1$ 層某個節點的子節點，而每個節點最多有
+左、右兩個子節點，所以第 $i$ 層最多 $2 \cdot 2^{i-2} = 2^{i-1}$ 個。 \hfill$\blacksquare$
+
+上界達得到：高度 $k$ 的滿二元樹每一層都是滿的，第 $i$ 層恰有 $2^{i-1}$ 個節點。 把各層加起來
+也得到 $k$ 層的二元樹最多有 $\sum_{i=1}^{k} 2^{i-1} = 2^k - 1$ 個節點。
+\end{pastsoln}

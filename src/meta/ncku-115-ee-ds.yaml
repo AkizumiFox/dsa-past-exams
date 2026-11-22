@@ -1,0 +1,11 @@
+paper: ncku-115-ee-ds
+volume: 3
+school: 成大
+dept: 電機所
+year: 115
+subject: 資料結構
+instructions: 不可使用計算機。 請於答案卷(卡)作答，於試題上作答，不予計分。
+questions:
+  - {id: ncku-115-ee-ds-01, label: 第 1 題, chapter: 8}
+  - {id: ncku-115-ee-ds-02, label: 第 2 題, chapter: 5}
+  - {id: ncku-115-ee-ds-03, label: 第 4 題, chapter: 14}

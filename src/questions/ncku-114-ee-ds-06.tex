@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-06}]{成大電機所 114 學年度 單選題第 6 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please identify the incorrect descriptions.
+\begin{enumerate}[label=\alph*)]
+\item The max number of nodes in a binary tree with depth $k$ is $2^k$-1, where $k\ge 1$.
+\item Using the most significant digit first (MSD) to sort multiple keys exist is simple than that
+using the least significant digit first (LSD).
+\item Merge sort is not a in-place sorting algorithm.
+\item The number of threads in a binary tree with $n$ nodes is $n$+1.
+\item The above descriptions are correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b)。 各選項分屬資結書第~7~章（a、d）、第~15~章（b）、第~14~章（c）；答案 b) 是第~15~章的內容，本題放在第~15~章。
+
+\begin{itemize}
+\item a) 對。 「$k \ge 1$」表示根的深度算 $1$。 深度 $i$ 最多 $2^{i-1}$ 個節點，深度 $k$ 的二元樹最多
+$\sum_{i=1}^{k} 2^{i-1} = 2^k - 1$ 個節點（資結書第~7.1~節），滿二元樹時達到。
+\item b) \textbf{錯}。 多鍵值排序時，LSD 從最次要的鍵開始，每一趟對整個序列做一次穩定的分配排序，
+不必切成子序列，寫起來最簡單；MSD 從最主要的鍵開始，每一趟之後要把序列切成許多子序列各自
+遞迴處理（資結書第~15.2.2~、15.2.4~節）。 所以是 LSD 比 MSD 簡單，敘述說反了。
+\item c) 對。 陣列上的合併排序需要 $\Theta(n)$ 的暫存陣列，不是原地排序（資結書第~14.1~節）。
+\item d) 對。 $n$ 個節點有 $2n$ 個指標欄位，其中 $n - 1$ 個指向孩子（每個非根節點被指一次），空的
+有 $2n - (n - 1) = n + 1$ 個；引線二元樹把這些空指標都換成引線，所以有 $n + 1$ 條引線（資結書
+第~7.5~節）。
+\end{itemize}
+錯的只有 b)，所以 e)「都對」也不成立。
+\end{pastsoln}

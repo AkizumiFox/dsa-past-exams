@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntust-109-et-ds-07}]{臺科大電子所甲組 109 學年度 第 7 題}
+（問答；10 分）
+
+(10\%) Please explain the relationship among data structure, programming language, and algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+先分別說三者是什麼，再說它們之間的關係。
+\begin{itemize}
+\item \textbf{演算法}（algorithm）：解決一個問題的有限步驟，每一步明確、可以執行，對合法的
+輸入一定會停下來並給出正確的輸出。 它和用什麼語言寫無關，可以用虛擬碼描述（資結書第~1~章）。
+\item \textbf{資料結構}（data structure）：資料在電腦裡的組織方式，加上可以對它做的操作，例如
+陣列、鏈結串列、堆疊、樹、雜湊表。 它決定了每個操作要花多少時間和空間。
+\item \textbf{程式語言}（programming language）：把演算法和資料結構寫成電腦能執行的形式的工具，
+例如 C。 它提供基本的型別、陣列、指標、結構，讓我們實作資料結構；提供迴圈、條件、函式，
+讓我們實作演算法的步驟。
+\end{itemize}
+
+\textbf{關係。}
+\begin{enumerate}
+\item \textbf{演算法和資料結構互相依賴。} 演算法的步驟是對資料做操作，資料怎麼存決定了這些
+操作有多快。 同一個演算法換了資料結構，複雜度就不同：例如 Dijkstra 演算法用陣列找最小值是
+$O(n^2)$，用二元堆積是 $O(m\log n)$；反過來，設計資料結構時也要看演算法最常做哪些操作。 所以
+有一句常被引用的話（Wirth 的書名）：Algorithms + Data Structures = Programs。
+\item \textbf{程式語言是實作的工具。} 演算法和資料結構是抽象的設計，程式語言把它們變成真正
+能執行的程式。 語言提供的功能會影響實作的方便程度（例如 C 用指標和 \texttt{malloc} 做鏈結串列，
+有些語言內建串列和雜湊表），但不改變演算法本身的正確性和漸近複雜度。
+\item \textbf{三者合起來就是程式。} 先選好資料結構、設計演算法並分析複雜度，再用程式語言寫出來；
+寫的時候語言的細節（記憶體配置、型別大小、陣列下標從 $0$ 開始）又會回過頭影響資料結構的實際
+存法。
+\end{enumerate}
+\end{pastsoln}

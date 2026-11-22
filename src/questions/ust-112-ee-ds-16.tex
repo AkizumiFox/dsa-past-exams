@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-16}]{臺聯大電機類 112 學年度 第 16 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Given a graph G(V,E) where vertices V=\{A,B,C,D,E,F\} and Edges E=\{(A,B), (A,D), (C,A), (C,E),
+(C,F), (D,C), (F,D)\}. Edges (A,B), (A,D), \ldots\ are directed from A to B, A to D, etc. Which of
+the following vertices form loops?
+
+(A)~ABC \qquad (B)~ABD \qquad (C)~CAD \qquad (D)~BDF \qquad (E)~DCF
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(E)。
+
+題目的 loop 指有向環（cycle）。 先列出每個頂點的出邊：
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+頂點 & 出邊指向 \\
+\midrule
+A & B, D \\
+B & （沒有） \\
+C & A, E, F \\
+D & C \\
+E & （沒有） \\
+F & D \\
+\bottomrule
+\end{tabular}
+\end{center}
+三個頂點構成環，要能照某個順序 $x \to y \to z \to x$ 走回來，三條邊都要存在。
+
+\begin{itemize}
+\item (A) ABC：B 沒有出邊，任何經過 B 的環都不存在。 錯。
+\item (B) ABD：同樣含 B。 錯。
+\item (C) CAD：$C \to A$、$A \to D$、$D \to C$ 三條邊都在 $E$ 裡，構成環 $C \to A \to D \to C$。 對。
+\item (D) BDF：含 B。 錯。
+\item (E) DCF：$D \to C$、$C \to F$、$F \to D$ 都在，構成環 $D \to C \to F \to D$。 對。
+\end{itemize}
+用 DFS 也找得到這兩個環：從 A 出發，$A \to D \to C$ 時 C 的出邊 $C \to A$ 指到還在遞迴堆疊上的
+A，是一條後向邊（資結書定理~21.10：有向圖有環若且唯若 DFS 有回邊）；再從 C 走 $C \to F$，$F \to D$
+又指到堆疊上的 D，是第二條後向邊。
+\end{pastsoln}

@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-36}]{臺聯大電機類 115 學年度 第 36 題}
+（單選；2 分）
+
+Which of the following C functions/macros are valid codes to swap two int variables?
+\begin{minted}[fontsize=\small]{c}
+M1. #define SWAP(type,a,b) {type temp=a;a=b;b=temp;}
+    //SWAP(int,a,b)
+M2. #define SWAP(a,b) (a+=b,b=a-b,a-=b)
+    //SWAP(a,b);
+F3. void swap(int* a, int* b) {
+        int temp;
+        temp = *a;
+        *a = *b;
+        *b = temp;
+    }
+    //int x,y; swap(&x,&y);
+F4. void swap(int* a, int* b) {
+        *a = *b;
+        *b = *a;
+    }
+    //int x,y; swap(&x,&y);
+F5. void swap(int a, int b) {
+        int temp;
+        temp = a;
+        a = b;
+        b = temp;
+        Return;
+    }
+    //int x,y; swap(x,y);
+\end{minted}
+
+(A)~M1 and M2 only \qquad (B)~F3 only \qquad (C)~M2 and F3 \qquad (D)~M1, M2, and F3 \qquad (E)~All
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+逐一檢查（設 \texttt{a}、\texttt{b} 是兩個不同的 \texttt{int} 變數）：
+\begin{itemize}
+\item \textbf{M1}：\texttt{SWAP(int,a,b)} 展開成 \texttt{\{int temp=a;a=b;b=temp;\}}，是一個區塊，
+用暫存變數交換，正確。 （小缺點：如果要交換的變數本身叫 \texttt{temp} 會出錯；在 \texttt{if-else}
+裡寫成 \texttt{SWAP(...);} 時多出的分號會讓 \texttt{else} 對不上，所以一般寫成
+\texttt{do \{ ... \} while (0)}。 照題目給的用法沒有問題。）
+\item \textbf{M2}：設 \texttt{a} $= x$、\texttt{b} $= y$。 \texttt{a+=b} 後 \texttt{a} $= x + y$；
+\texttt{b=a-b} 後 \texttt{b} $= x$；\texttt{a-=b} 後 \texttt{a} $= y$。 逗號運算子保證由左到右
+依序執行，正確。 （限制：$x + y$ 溢位時是未定義行為；\texttt{SWAP(x,x)} 會把 \texttt{x} 變成 $0$。
+題目問一般的兩個變數，視為正確。）
+\item \textbf{F3}：傳入兩個位址，透過指標用暫存變數交換，是標準寫法，正確。
+\item \textbf{F4}：\texttt{*a = *b} 先把 \texttt{*a} 蓋掉，原來的值就沒了；\texttt{*b = *a} 只是把
+\texttt{*b} 指定成自己。 結果兩個都變成原來的 \texttt{y}。 錯。
+\item \textbf{F5}：參數是傳值，函式裡交換的是 \texttt{a}、\texttt{b} 這兩個複本，呼叫者的
+\texttt{x}、\texttt{y} 不變。 而且 C 區分大小寫，\texttt{Return;} 不是 \texttt{return}，連編譯都
+不會過。 錯。
+\end{itemize}
+正確的是 M1、M2、F3，選 (D)。 (A) 漏了 F3，(B) 漏了 M1、M2，(C) 漏了 M1，(E) 把 F4、F5 也算進去。
+\end{pastsoln}

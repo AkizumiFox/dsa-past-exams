@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-06}]{臺聯大電機類 112 學年度 第 6 題}
+（單選；3 分）
+
+Run the function Permutation(A,n) given in question 5 with A=[1,2,3,4,5,6], n=6 and the
+randomization results: i=0, j =4; i=1, j =3; i=2, j =2; i=3, j =5; i=4, j =5. What is the
+resultant permuted A?
+
+(A)~[5,4,3,6,2,1] \qquad (B)~[4,2,6,5,3,1] \qquad (C)~[2,5,4,6,1,3] \qquad (D)~[4,6,2,5,3,1]
+
+（第 5 題的虛擬碼見歷屆試題~\ref{px:ust-112-ee-ds-05}。）
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) $[5, 4, 3, 6, 2, 1]$。
+
+陣列從 $0$ 開始編號，每一圈交換 $A[i]$ 和 $A[j]$：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+$i$ & $j$ & 交換的值 & 交換後的 $A$ \\
+\midrule
+  &   &         & $[1, 2, 3, 4, 5, 6]$ \\
+0 & 4 & $1 \leftrightarrow 5$ & $[5, 2, 3, 4, 1, 6]$ \\
+1 & 3 & $2 \leftrightarrow 4$ & $[5, 4, 3, 2, 1, 6]$ \\
+2 & 2 & 不變 & $[5, 4, 3, 2, 1, 6]$ \\
+3 & 5 & $2 \leftrightarrow 6$ & $[5, 4, 3, 6, 1, 2]$ \\
+4 & 5 & $1 \leftrightarrow 2$ & $[5, 4, 3, 6, 2, 1]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+迴圈跑到 $i = n - 2 = 4$ 為止，結果是 $[5, 4, 3, 6, 2, 1]$，選 (A)。
+
+(B)(C)(D) 的第一格都不是 $5$；第一圈把 $A[4] = 5$ 換到第 $0$ 格之後，後面的交換都只動 $i \ge 1$
+的位置，第 $0$ 格不會再變，所以這三個都不可能。 常見的錯是把 $j$ 當成「值」而不是「位置」，或
+用 $1$ 開始的編號去數。
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-11}]{成大電通所 114 學年度 單選題第 11 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Given a hash table with 11 buckets; labeled from 0 to 10. The hash function h(key)= key \% 11 allocates data
+into a hash table. The chaining strategy is used to store data in each bucket. Please show the total number of
+comparisons required to store the numbers ``3, 41, 15, 36, 74, 58, 91, 45, 48, 64''.\\
+a) 20\quad b) 16\quad c) 22\quad d) 14\quad e) None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：e) None of the above（照一般的算法是 8 次）。
+
+題目沒定義「比較」怎麼算。 鏈結法（資結書第~12.2~節）插入一個鍵時，先算出桶子，再和桶子串列裡已有的鍵逐一比較（確認沒有重複），
+最後接上去；所以插入一個鍵的比較次數等於那個桶子裡已經有的鍵數。 先算每個鍵的桶子：
+\begin{center}
+\begin{tabular}{l*{10}{c}}
+\toprule
+key & 3 & 41 & 15 & 36 & 74 & 58 & 91 & 45 & 48 & 64 \\
+key \% 11 & 3 & 8 & 4 & 3 & 8 & 3 & 3 & 1 & 4 & 9 \\
+比較次數 & 0 & 0 & 0 & 1 & 1 & 2 & 3 & 0 & 1 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $36 = 3 \times 11 + 3$、$74 = 6 \times 11 + 8$、$58 = 5 \times 11 + 3$、$91 = 8 \times 11 + 3$、$48 = 4 \times 11 + 4$、
+$64 = 5 \times 11 + 9$。 最後的桶子：[1] 45；[3] 3, 36, 58, 91；[4] 15, 48；[8] 41, 74；[9] 64。
+
+總比較次數 $= 1 + 1 + 2 + 3 + 1 = 8$。 如果另一種算法把「找到串列尾端」也算一次（每次插入多算 1 次），是 $8 + 10 = 18$。
+兩種算法都不是 20、16、22、14，所以選 e)。
+\end{pastsoln}

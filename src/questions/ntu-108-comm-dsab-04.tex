@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-04}]{臺大電信所 108 學年度（B）第 4 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+In a dynamic programming solution, its space complexity is always at least as large as the
+number of unique subproblems.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯。
+
+動態規劃要算出每個子問題，但不必把每個答案一直留著。 如果算某一列只需要前一兩列，舊的就可以
+丟掉，空間可以比子問題數少很多：
+\begin{itemize}
+\item 費氏數 $F_n$：子問題 $F_0, \ldots, F_n$ 共 $n + 1$ 個，由小到大算時只要記最後兩個，空間
+$O(1)$。
+\item LCS 的長度：子問題 $(m + 1)(n + 1)$ 個，只留兩列，空間 $O(\min(m, n))$（資結書第~18.3.6~節）。
+\item 0/1 背包：子問題 $(n + 1)(W + 1)$ 個，用一維陣列由大到小更新，空間 $O(W)$（資結書
+第~18.5.4~節）。
+\end{itemize}
+所以「空間至少和子問題數一樣多」不一定成立。 （要回溯出最佳解本身時，常常還是得留整張表；但
+題目說的是 always。）
+\end{pastsoln}

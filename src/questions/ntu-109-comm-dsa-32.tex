@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-32}]{臺大電信所 109 學年度（B）第 32 題}
+（單選；每題 2 分，答錯不倒扣）
+
+What's the time complexity to do (deterministic) quick sort, insertion sort and merge sort on a list
+of numbers in perfect sorted order?
+\begin{enumerate}[label=(\Alph*)]
+\item quick sort: $O(n^2)$, insertion sort: $O(n)$, merge sort: $O(n\log n)$
+\item quick sort: $O(n\log n)$, insertion sort: $O(n^2)$, merge sort: $O(n\log n)$
+\item quick sort: $O(n)$, insertion sort: $O(n^2)$, merge sort: $O(n\log n)$
+\item quick sort: $O(n^2)$, insertion sort: $O(n^2)$, merge sort: $O(n)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+「deterministic」quick sort 指基準的位置固定（取第一個或最後一個），不隨機。 三種排序分別看：
+\begin{itemize}
+\item \textbf{快速排序}：輸入已經由小到大排好，取最後一個當基準時它是最大值（取第一個時是
+最小值），每次分割都切成 $m - 1$ 和 $0$ 個，遞迴式 $T(n) = T(n - 1) + \Theta(n)$，
+$T(n) = \Theta(n^2)$（資結書第~14.5~節）。
+\item \textbf{插入排序}：每個新元素只和前一個比一次就發現不用移動，共 $n - 1$ 次比較，
+$\Theta(n)$，這是它的最好情形（資結書第~14.2~節）。
+\item \textbf{合併排序}：不管輸入長怎樣都對半切、合併，遞迴式 $T(n) = 2T(n/2) + \Theta(n)$，
+$\Theta(n \log n)$。 已排序時每次合併的比較次數少一點（一邊先用完），但每層仍要搬 $n$ 個元素，
+階數不變。
+\end{itemize}
+組合起來是 (A)。 (B) 把快速排序和插入排序的情形弄反了；(C) 的快速排序 $O(n)$ 不可能（光是
+第一次分割就要 $n - 1$ 次比較，之後還有很多層）；(D) 的合併排序 $O(n)$ 不對。
+
+如果快速排序改用三數取中或隨機基準，已排序的輸入反而是好情形，但題目指定 deterministic，
+指的就是固定取頭或尾的版本。
+\end{pastsoln}

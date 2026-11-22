@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-15}]{臺聯大電機類 113 學年度 第 15 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+In the context of graph theory and finding optimal paths or trees, which statements accurately
+describe features of Dijkstra's, Prim's, and Kruskal's algorithms? (Select all that apply)
+\begin{enumerate}[label=(\Alph*)]
+\item Dijkstra's Algorithm operates on graphs with non-negative edge weights only.
+\item Kruskal's Algorithm guarantees finding a minimum spanning tree for both directed and
+undirected graphs.
+\item Prim's Algorithm selects the next node based on the lowest edge weight.
+\item Dijkstra's Algorithm guarantees finding the longest path from a single source to all other
+vertices in a graph.
+\item Prim's Algorithm guarantees the creation of a minimum spanning tree starting from an
+arbitrary vertex.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(C)、(E)。
+
+\begin{itemize}
+\item (A) Dijkstra 的正確性證明用到「已經確定的頂點，距離不會再被更短的路徑改小」，這需要邊的權重都
+$\ge 0$；有負邊時可能算錯（資結書第~25.2~節，有負邊要用 Bellman-Ford）。 對。
+\item (B) Kruskal 處理的是無向圖。 有向圖的「最小生成樹」是最小樹形圖（從根出發到每個頂點都有有向路徑），
+Kruskal 不保證找得到。 例如三個頂點、四條有向邊：$a \to r$ 權重 $1$、$a \to b$ 權重 $2$、$r \to a$ 權重 $5$、
+$r \to b$ 權重 $6$，以 $r$ 為根。 Kruskal 不看方向，先選 $a \to r$、再選 $a \to b$（不成環），就有 $2$ 條邊、
+總權重 $3$；但 $r$ 沒有任何出去的邊，從 $r$ 到不了 $a$、$b$，不是以 $r$ 為根的樹形圖。 正確答案是
+$r \to a$、$a \to b$，總權重 $7$（要用 Chu–Liu/Edmonds 演算法）。 錯。
+\item (C) Prim 每一步從「一端在樹上、一端不在樹上」的邊裡選權重最小的，把那個頂點加進樹（資結書第~24.3~節）。
+選項的說法簡略，但描述的就是這件事。 對。
+\item (D) Dijkstra 求的是\textbf{最短}路徑。 一般圖的最長簡單路徑是 NP 困難的問題，Dijkstra 把 $\min$ 換成
+$\max$ 也不對。 錯。
+\item (E) 割的性質保證每一步加入的邊都屬於某棵最小生成樹，和起點無關（資結書定理~24.7）；連通圖從任何
+頂點開始都會得到最小生成樹。 對。
+\end{itemize}
+\end{pastsoln}

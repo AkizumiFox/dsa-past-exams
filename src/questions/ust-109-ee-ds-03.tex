@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-03}]{臺聯大電機類 109 學年度 第 3 題}
+（問答；12 分）
+
+(12\%) The period of a string $p_1 \ldots p_n$ is the smallest $m > 0$ such that
+$p_1 \ldots p_{n-m} = p_{m+1} \ldots p_n$. That is, removing the first $m$ characters yields the same
+string as removing the last $m$ characters. Propose an algorithm to compute the period of a length $n$
+string that runs in time $O(n)$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法。} $1 \le m < n$ 時，「$p_1 \cdots p_{n-m} = p_{m+1} \cdots p_n$」就是說長度 $n - m$
+的前綴同時是後綴，也就是 $P$ 有長度 $n - m$ 的\textbf{邊界}（border，資結書定義~27.2：既是
+前綴又是後綴、而且不是 $P$ 本身的字串）。 $m = n$ 時兩邊都是空字串，一定成立，對應長度 $0$ 的
+邊界（空字串）。 所以 $m$ 越小，對應的邊界越長；最小的 $m$ 對應最長的邊界。 KMP 的失敗函數
+$\pi[q]$ 正是 $P[1..q]$ 最長邊界的長度（資結書第~27.3~節），週期就是 $n - \pi[n]$。
+
+\begin{pseudo}{字串的週期}
+\Function{Period}{$P, n$}
+    \State $\pi[1] \gets 0$；$k \gets 0$ \Comment{以下照資結書虛擬碼~27.3 算失敗函數}
+    \For{$q \gets 2$ \To $n$}
+        \While{$k > 0$ \AND $P[k + 1] \ne P[q]$}
+            \State $k \gets \pi[k]$ \Comment{換成下一個較短的邊界}
+        \EndWhile
+        \If{$P[k + 1] = P[q]$}
+            \State $k \gets k + 1$
+        \EndIf
+        \State $\pi[q] \gets k$
+    \EndFor
+    \State \Return $n - \pi[n]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 令 $b = \pi[n]$，$P[1..b]$ 是 $P$ 最長的邊界。
+\begin{itemize}
+\item $n - b$ 滿足條件：$b \ge 1$ 時 $P[1..b]$ 是 $P$ 的後綴，$P[1..b] = P[n - b + 1 .. n]$，就是
+$p_1 \cdots p_{n-m} = p_{m+1} \cdots p_n$ 取 $m = n - b$；$b = 0$ 時 $m = n$，兩邊都是空字串。
+\item 沒有更小的：若 $m' < n - b$ 也滿足條件，則 $1 \le m' < n$，$P[1..n - m']$ 同時是前綴和
+後綴，長度 $n - m' < n$，是 $P$ 的邊界；但 $n - m' > b$，和 $b$ 是最長邊界的長度矛盾。
+\end{itemize}
+失敗函數本身的正確性見資結書第~27.3~節。
+
+\textbf{時間。} 第 2--8 行就是失敗函數的計算，$\Theta(n)$（資結書定理~27.4）：$k$ 每一輪最多
+加一，總共最多加 $n - 1$；第 5 行每做一次 $k$ 至少減一，而 $k \ge 0$，所以第 5 行總共最多做
+$n - 1$ 次。 第 9 行 $O(1)$，總共 $\Theta(n)$，額外空間 $\Theta(n)$ 存 $\pi$。
+
+\textbf{例子。} $P = \mathtt{abcabcab}$，$\pi = 0, 0, 0, 1, 2, 3, 4, 5$，週期 $8 - 5 = 3$：去掉前 $3$
+個和去掉後 $3$ 個都是 \texttt{abcab}。 $P = \mathtt{abcd}$，$\pi[4] = 0$，週期是 $4$。
+$P = \mathtt{aaaa}$，$\pi[4] = 3$，週期是 $1$。
+\end{pastsoln}

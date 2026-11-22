@@ -1,0 +1,17 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-10}]{臺大電信所 110 學年度（B）第 10 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Every problem in NP can be solved in exponential time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（正確）。
+
+問題 $L$ 屬於 NP，表示有一個多項式時間的驗證器 $A(x, y)$ 和一個多項式 $p$：$x \in L$ 若且唯若存在
+長度不超過 $p(|x|)$ 的證書 $y$ 使 $A(x, y) = 1$（資結書第~28.2~節）。
+
+窮舉所有可能的證書就能解 $L$：長度不超過 $p(n)$ 的二進位字串共
+$2^0 + 2^1 + \cdots + 2^{p(n)} = 2^{p(n)+1} - 1$ 個，每個跑一次驗證器，花 $q(n)$（某個多項式）。
+總時間 $O\big(2^{p(n)+1} q(n)\big) = 2^{O(p(n))}$，是指數時間（指數上是多項式）。 所以
+$\mathrm{NP} \subseteq \mathrm{EXP}$，敘述正確。
+\end{pastsoln}

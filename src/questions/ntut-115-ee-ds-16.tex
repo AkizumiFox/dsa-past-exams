@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-16}]{北科大電機所（戊組）115 學年度 簡答題第 1 題}
+（簡答）
+
+The evaluation of the prefix expression: / + * - * \underline{5} \underline{3} \underline{7}
+\underline{2} \underline{10} + \underline{4} \underline{2}. \textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$13/3 \approx 4.33$（若照整數除法則是 $4$）。
+
+前序式的求值（資結書第~6.3.5~節）：由\textbf{右往左}讀，運算元 push；碰到運算子就 pop 兩個，先 pop 出來的是左運算元、
+後 pop 的是右運算元，算完把結果 push 回去。 記號由左到右是
+\texttt{/ + * - * 5 3 7 2 10 + 4 2}，由右往左處理（堆疊由底到頂寫）：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+記號 & 動作 & 堆疊 \\
+\midrule
+2 & push & 2 \\
+4 & push & 2 4 \\
+$+$ & pop $4$、$2$，$4 + 2 = 6$ & 6 \\
+10 & push & 6 10 \\
+2 & push & 6 10 2 \\
+7 & push & 6 10 2 7 \\
+3 & push & 6 10 2 7 3 \\
+5 & push & 6 10 2 7 3 5 \\
+$*$ & pop $5$、$3$，$5 \times 3 = 15$ & 6 10 2 7 15 \\
+$-$ & pop $15$、$7$，$15 - 7 = 8$ & 6 10 2 8 \\
+$*$ & pop $8$、$2$，$8 \times 2 = 16$ & 6 10 16 \\
+$+$ & pop $16$、$10$，$16 + 10 = 26$ & 6 26 \\
+$/$ & pop $26$、$6$，$26 / 6 = 13/3$ & $13/3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+對應的中序式是 $\bigl((5 \times 3 - 7) \times 2 + 10\bigr) / (4 + 2) = 26/6 = 13/3$。 題目沒說是不是整數運算，結果
+不是整數，寫 $13/3$（約 $4.33$）；如果照 C 的整數除法，是 $4$。 注意減法和除法的順序：$-$ 是「先 pop 的減後 pop 的」，
+$15 - 7$ 不是 $7 - 15$。
+\end{pastsoln}

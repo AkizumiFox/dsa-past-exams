@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-24}]{臺大電機所 109 學年度（B）第 24 題}
+（複選；每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）
+
+In this exam: The height of a singleton tree is defined as 0. The order of a node in a tree is
+defined as the number of its children. The order of a tree is defined as the maximum order among
+its nodes.
+
+Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item In a binomial heap, there is at most one binomial tree of order 3.
+\item In a binomial heap of n items, the height among all binomial trees is O($\log n$).
+\item In a binomial heap of n items, there is O($\log n$) binomial trees.
+\item Stack is first-in-first-out.
+\item Queue is first-in-first-out.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(E)。
+
+\begin{itemize}
+\item (A) 對。 二項堆積的定義就是「同一個階數最多一棵」（資結書第~8.5~節），合併時同階的兩棵會
+連結成高一階的一棵，像二進位進位。 3 階的二項樹 $B_3$ 最多一棵。 （費氏堆積可以有很多棵同階的樹，
+但那不是二項堆積。）
+\item (B) 對。 $B_k$ 有 $2^k$ 個節點，高度（數邊）是 $k$。 堆積裡最大的樹 $B_k$ 滿足 $2^k \le n$，
+所以每棵樹的高度都 $\le \lg n$。
+\item (C) 對。 樹的棵數是 $n$ 的二進位裡 $1$ 的個數，最多 $\lfloor \lg n \rfloor + 1$ 棵。
+\item (D) 錯。 堆疊是後進先出（LIFO），最後放進去的最先拿出來（資結書第~6.1~節）。
+\item (E) 對。 佇列是先進先出（FIFO，資結書第~6.2~節）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-47}]{臺大電信所 110 學年度（B）第 47 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Which of the following are desirable properties of a hash function $\mathrm{h(x)}$?
+\begin{enumerate}[label=\Alph*.]
+\item If $x_1,\ldots,x_n$ are the items to be hashed, then the numbers $h(x_1),\ldots,h(x_n)$ should be uniformly distributed over the integers.
+\item The range of h(x) should include a wide range of integers.
+\item The range of h(x) should stay within the desired hash-table size.
+\item It should be computable in O(1) time.
+\item It should take distinct values over all possible items to be hashed.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A、C、D。
+
+A 的「uniformly distributed over the integers」字面上是「在全體整數上均勻分布」，這做不到；配合 C，這裡把它
+讀成「在雜湊函數的值域（表的位置）上均勻分布」，這正是好的雜湊函數最重要的性質。
+
+好的雜湊函數要做到三件事（資結書第~12.1~節）：
+\begin{itemize}
+\item A 對：鍵的雜湊值平均散在各個位置，碰撞才少，搜尋的期望時間才是 $O(1 + \alpha)$。
+\item B 錯：值域要的是表的大小 $m$，不是越寬越好；值域超出表的大小就不能直接當索引。
+\item C 對：$h(x)$ 的值要落在 $0..m-1$，才能當表的索引。
+\item D 對：每次搜尋、插入、刪除都要算一次雜湊值，必須很快，通常是常數時間（對固定長度的鍵）。
+\item E 錯：可能的鍵（例如所有字串）遠多於表的位置，由鴿籠原理一定有兩個鍵雜湊值相同，不可能對所有鍵都
+不同；碰撞是用鏈結或開放定址處理的，不是靠雜湊函數避免。 （事先知道全部鍵時可以做完美雜湊，但那不是
+一般雜湊函數的要求。）
+\end{itemize}
+\end{pastsoln}

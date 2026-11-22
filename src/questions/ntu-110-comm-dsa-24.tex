@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-24}]{臺大電信所 110 學年度（B）第 24 題}
+（單選；每題 2 分，答錯不倒扣）
+
+(22-25) Consider the following six items with their weights and values. Suppose you have a knapsack with a maximum weight capacity of 10. Please answer the following questions.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Item} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6}\\ \hline
+\textbf{Weight} ($w$) & 2 & 1 & 4 & 5 & 2 & 10\\ \hline
+\textbf{Value} ($v$) & 10 & 6 & 28 & 50 & 10 & 80\\ \hline
+\end{tabular}
+\end{center}
+
+Suppose you can only choose to take or leave each entire item. What is the highest total value you can get by filling your knapsack?
+
+A.~184 \qquad B.~90 \qquad C.~84 \qquad D.~80
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C（84）。
+
+用第~23~題的遞迴式 $V[i][j] = \max(V[i-1][j], V[i-1][j - w_i] + v_i)$ 填表（資結書第~18.5.3~節），
+列是物品 $0..6$，行是容量 $0..10$：
+\begin{center}
+\small
+\begin{tabular}{c|ccccccccccc}
+\toprule
+$i \backslash j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 $(2, 10)$ & 0 & 0 & 10 & 10 & 10 & 10 & 10 & 10 & 10 & 10 & 10 \\
+2 $(1, 6)$ & 0 & 6 & 10 & 16 & 16 & 16 & 16 & 16 & 16 & 16 & 16 \\
+3 $(4, 28)$ & 0 & 6 & 10 & 16 & 28 & 34 & 38 & 44 & 44 & 44 & 44 \\
+4 $(5, 50)$ & 0 & 6 & 10 & 16 & 28 & 50 & 56 & 60 & 66 & 78 & 84 \\
+5 $(2, 10)$ & 0 & 6 & 10 & 16 & 28 & 50 & 56 & 60 & 66 & 78 & 84 \\
+6 $(10, 80)$ & 0 & 6 & 10 & 16 & 28 & 50 & 56 & 60 & 66 & 78 & 84 \\
+\bottomrule
+\end{tabular}
+\end{center}
+幾格的算法：
+\begin{itemize}
+\item $V[3][7] = \max(V[2][7], V[2][3] + 28) = \max(16, 16 + 28) = 44$。
+\item $V[4][9] = \max(V[3][9], V[3][4] + 50) = \max(44, 28 + 50) = 78$。
+\item $V[4][10] = \max(V[3][10], V[3][5] + 50) = \max(44, 34 + 50) = 84$。
+\item $V[5][10] = \max(V[4][10], V[4][8] + 10) = \max(84, 76) = 84$。
+\item $V[6][10] = \max(V[5][10], V[5][0] + 80) = \max(84, 80) = 84$。
+\end{itemize}
+答案 $V[6][10] = 84$。 回推：$V[6][10] = V[5][10] = V[4][10]$，$V[4][10] \ne V[3][10]$ 所以拿物品 4，
+剩容量 $5$；$V[3][5] = 34 \ne V[2][5] = 16$，拿物品 3，剩 $1$；$V[2][1] = 6 \ne V[1][1] = 0$，拿物品 2。
+最佳組合是物品 $\{2, 3, 4\}$，重量 $1 + 4 + 5 = 10$，價值 $6 + 28 + 50 = 84$，選 C。
+
+D 80 是只拿物品 6；B 90 是可以分割時的答案（第~22~題），整個拿時達不到；A 184 是全部物品的總價值。
+\end{pastsoln}

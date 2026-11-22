@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-08}]{臺科大電子所甲組 110 學年度 第 8 題}
+（程式）
+
+{[}10\%{]} Please write the \textbf{\textit{quick-sort}} code to sort $\boldsymbol{n}$ items and explain its
+average and worst-case time complexity.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{程式}。 快速排序是分治法（資結書第~14.5~節）：選一個基準（pivot），把陣列分割成「$\le$ 基準」
+「基準」「$>$ 基準」三段，基準就落在最終位置，再對左右兩段遞迴。 下面用 Lomuto 分割、取最右邊的
+元素當基準（資結書虛擬碼~14.8、14.9），排序 \texttt{a[0..n-1]} 呼叫 \texttt{quick\_sort(a, 0, n - 1)}：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+static void swap(int *x, int *y) { int t = *x; *x = *y; *y = t; }
+
+/* 以 a[hi] 為基準分割 a[lo..hi]，回傳基準最後的位置 */
+static int partition(int a[], int lo, int hi)
+{
+    int pivot = a[hi];
+    int i = lo;                     /* a[lo..i-1] 都 <= pivot */
+    for (int j = lo; j < hi; j++)
+        if (a[j] <= pivot)
+            swap(&a[i++], &a[j]);
+    swap(&a[i], &a[hi]);            /* 基準放到兩區中間 */
+    return i;
+}
+
+void quick_sort(int a[], int lo, int hi)
+{
+    if (lo >= hi)                   /* 0 或 1 個元素，已經排好 */
+        return;
+    int q = partition(a, lo, hi);
+    quick_sort(a, lo, q - 1);
+    quick_sort(a, q + 1, hi);
+}
+\end{minted}
+分割的迴圈維持「\texttt{a[lo..i-1]} 都 $\le$ 基準、\texttt{a[i..j-1]} 都 $>$ 基準」；結束時把基準和
+\texttt{a[i]} 交換，基準左邊都不大於它、右邊都大於它。 兩邊遞迴排好後整段就排好了，不需要合併。
+
+\textbf{時間}。 分割長度 $m$ 的一段要比較 $m - 1$ 次，$\Theta(m)$。 基準是第 $k$ 小時
+$T(n) = T(k - 1) + T(n - k) + \Theta(n)$。
+
+\textbf{最壞情況 $\Theta(n^2)$}：每次基準都是最大或最小值，切成 $n - 1$ 和 $0$ 個，
+\[
+T(n) = T(n - 1) + \Theta(n) = \Theta\bigl(n + (n - 1) + \cdots + 1\bigr) = \Theta(n^2),
+\]
+比較次數 $n(n - 1)/2$。 取最右邊當基準時，輸入已經排好（或反向排好）就會發生。
+
+\textbf{平均情況 $\Theta(n \log n)$}：假設 $n$ 個數互不相同、每種排列機會相同，基準是第 $k$ 小的機率
+都是 $1/n$，分割後的兩段仍是隨機排列。 令 $C(n)$ 是平均比較次數，$C(0) = C(1) = 0$：
+\[
+C(n) = (n - 1) + \frac{2}{n}\sum_{k=0}^{n-1} C(k).
+\]
+兩邊乘 $n$，減去 $n - 1$ 時的同一式，得 $nC(n) = (n + 1)C(n - 1) + 2(n - 1)$。 兩邊除以
+$n(n + 1)$：
+\[
+\frac{C(n)}{n + 1} = \frac{C(n - 1)}{n} + \frac{4}{n + 1} - \frac{2}{n},
+\]
+從 $n = 2$ 加到 $n$ 再整理，$C(n) = 2(n + 1)H_n - 4n \approx 2n \ln n \approx 1.39\,n \lg n$，
+$H_n = 1 + \frac12 + \cdots + \frac1n$。 所以平均 $\Theta(n \log n)$（資結書定理~14.3）。 最好情況每次
+切成兩半，$T(n) = 2T(n/2) + \Theta(n) = \Theta(n \log n)$。
+
+空間：原地排序，額外空間是遞迴堆疊，平均深度 $\Theta(\log n)$，最壞 $\Theta(n)$。 實務上隨機選基準或
+三數取中，讓已排好的輸入不再觸發最壞情況。
+\end{pastsoln}

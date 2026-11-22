@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-25}]{臺大電信所 108 學年度（B）第 25 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of constructing a binomial heap from an unordered array of $n$
+items is (choose the tightest bound)
+
+A.~$O(n)$ \qquad B.~$O(n\log^* n)$ \qquad C.~$O(n\log n)$ \qquad D.~$O(n^2)$ \qquad
+E.~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+把陣列的元素一個一個插入空的二項堆積。 單次插入最壞要連結 $O(\lg n)$ 次，但整串加起來不多：插入就是
+「加一棵 $B_0$」，和二進位計數器加一一樣，連結的次數等於目前元素個數的二進位尾端連續 $1$ 的個數
+（資結書第~8.5~節）。 換個方式數：$n$ 次插入一共放進 $n$ 棵 $B_0$，每次連結讓樹少一棵，最後剩
+$b(n)$ 棵（$n$ 的二進位裡 $1$ 的個數），所以總共剛好連結 $n - b(n) < n$ 次。 每次連結 $O(1)$，每次
+插入除了連結以外也只做常數的工作，總時間 $O(n)$。
+
+至少要讀過 $n$ 個元素，$\Omega(n)$，所以 $O(n)$ 最緊。 C 是「每次插入 $O(\lg n)$ 乘以 $n$」的粗估，
+是對的上界但不緊；D、E 更鬆；B 比 $O(n)$ 鬆。
+\end{pastsoln}

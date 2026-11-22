@@ -1,0 +1,14 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-02}]{北科大電機所（戊組）115 學年度 是非題第 2 題}
+（是非）
+
+In a binary search tree, the left child of any node must be greater than its parent node.
+\textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯（False）。
+
+BST 的定義（資結書第~9.1~節）剛好相反：節點左子樹的每個鍵都\textbf{小於}它，右子樹的每個鍵都大於它。 所以左
+子節點一定比父節點小，不是大。 例如根 $8$ 的左子節點可以是 $3$，不能是 $10$。 也因為這樣，中序走訪 BST 會得到
+遞增的序列。
+\end{pastsoln}

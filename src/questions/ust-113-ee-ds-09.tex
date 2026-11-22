@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-09}]{臺聯大電機類 113 學年度 第 9 題}
+（單選；每題 3 分，答錯不倒扣）
+
+（第 8 題的程式）
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{python}
+def search(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    print(start, end=' ')
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            search(graph, neighbor, visited)
+\end{minted}
+
+Which search concept is the code in question 10 implemented for?
+
+(A)~Breadth-first search \qquad (B)~Depth-first search \qquad (C)~Binary search\\
+(D)~Linear search \qquad (E)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+原卷寫「question 10」，但第 10 題是樹的邊數，沒有程式；有程式的是前一題（第 8 題），這裡照第 8 題的
+程式作答。
+
+程式拜訪一個頂點後，立刻對第一個還沒拜訪的鄰居遞迴下去，一路走到底才退回來試下一個鄰居，這是深度
+優先搜尋（資結書第~21.4~節）；遞迴的呼叫堆疊扮演了 DFS 的堆疊。
+\begin{itemize}
+\item (A) BFS 要用佇列，先把同一層的鄰居都拜訪完再往下一層；第 8 題若用 BFS，順序會是
+A B C D E F。 錯。
+\item (B) 對。
+\item (C) 二分搜尋是在排好的陣列裡每次砍一半，和圖無關。 錯。
+\item (D) 線性搜尋是依序逐一比對一個序列。 錯。
+\item (E) (B) 是對的。 錯。
+\end{itemize}
+\end{pastsoln}

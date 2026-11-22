@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntust-109-et-ds-01}]{臺科大電子所甲組 109 學年度 第 1 題}
+（問答；20 分）
+
+In computer systems, the main memory can be regarded as a one-dimensional array $B$. Using the
+following two-dimensional array as an example, answer each of the following questions:
+\[ A=\begin{bmatrix} 43 & 21 & 5 & 7\\ 24 & 31 & 6 & 9\\ 21 & 13 & 66 & 87\\ -12 & 10 & 3 & 1\\ 2 & 5 & 8 & 4 \end{bmatrix} \]
+\begin{enumerate}[label=(\alph*)]
+\item Store array $A$ in the one-dimensional array $B$ using the row-major order and show how to
+access $A[i,j]$, where $0\le i\le 3$, and $0\le j\le 4$, from $B[k]$, where $0\le k\le 19$; that is,
+represent $k$ as a function of $i$ and $j$. (10\%)
+\item Store array $A$ in the one-dimensional array $B$ using the column-major order and show how to
+access $A[i,j]$, where $0\le i\le 3$, and $0\le j\le 4$, from $B[k]$, where $0\le k\le 19$; that is,
+represent $k$ as a function of $i$ and $j$. (10\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題目的不一致。} 圖上的 $A$ 是 $5$ 列 $4$ 行（5 rows, 4 columns），但題目寫
+$0 \le i \le 3$、$0 \le j \le 4$，等於說 $4$ 列 $5$ 行，兩者對不上。 $A[i, j]$ 的 $i$ 通常是列、
+$j$ 是行，所以本書照\textbf{圖上的矩陣}作答：$A$ 是 $5 \times 4$，$0 \le i \le 4$（列）、
+$0 \le j \le 3$（行）。 最後也附上照題目文字範圍（$4 \times 5$）的公式。 作答時把採用的讀法寫在
+第一行。
+
+一般地，$m$ 列 $n$ 行、下標從 $0$ 開始的陣列（資結書第~4.1~節）：
+\begin{itemize}
+\item 列優先：先放第 $0$ 列的 $n$ 個，再放第 $1$ 列……。 $A[i, j]$ 前面有 $i$ 整列（$in$ 個）加上
+同一列左邊 $j$ 個，$k = in + j$。
+\item 行優先：先放第 $0$ 行的 $m$ 個，再放第 $1$ 行……。 $A[i, j]$ 前面有 $j$ 整行（$jm$ 個）加上
+同一行上面 $i$ 個，$k = jm + i$。
+\end{itemize}
+
+\textbf{(a) 列優先。} $m = 5$、$n = 4$：
+\[
+k = 4i + j, \qquad 0 \le i \le 4,\ 0 \le j \le 3 .
+\]
+$B[0..19]$ 依序是
+\[
+43, 21, 5, 7,\ 24, 31, 6, 9,\ 21, 13, 66, 87,\ -12, 10, 3, 1,\ 2, 5, 8, 4 .
+\]
+驗證兩格：$A[2, 3] = 87$，$k = 4 \cdot 2 + 3 = 11$，$B[11] = 87$；$A[4, 0] = 2$，$k = 16$，
+$B[16] = 2$。
+
+\textbf{(b) 行優先。}
+\[
+k = 5j + i, \qquad 0 \le i \le 4,\ 0 \le j \le 3 .
+\]
+$B[0..19]$ 依序是
+\[
+43, 24, 21, -12, 2,\ 21, 31, 13, 10, 5,\ 5, 6, 66, 3, 8,\ 7, 9, 87, 1, 4 .
+\]
+驗證：$A[2, 3] = 87$，$k = 5 \cdot 3 + 2 = 17$，$B[17] = 87$；$A[3, 0] = -12$，$k = 3$，
+$B[3] = -12$。
+
+\textbf{照題目文字的範圍。} 若把 $A$ 看成 $4$ 列 $5$ 行（$0 \le i \le 3$、$0 \le j \le 4$，也就是
+上面矩陣的轉置），列優先 $k = 5i + j$，行優先 $k = 4j + i$。 兩種讀法的公式剛好交換。
+\end{pastsoln}

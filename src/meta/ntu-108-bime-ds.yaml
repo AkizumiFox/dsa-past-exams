@@ -1,0 +1,14 @@
+paper: ntu-108-bime-ds
+volume: 3
+school: 臺大
+dept: 生機所
+year: 108
+subject: 資料結構（C）
+questions:
+  - {id: ntu-108-bime-ds-01, label: 第 1 題, chapter: 14}
+  - {id: ntu-108-bime-ds-02, label: 第 2 題, chapter: 5}
+  - {id: ntu-108-bime-ds-03, label: 第 3 題, chapter: 6}
+  - {id: ntu-108-bime-ds-04, label: 第 4 題, chapter: 7}
+  - {id: ntu-108-bime-ds-05, label: 第 5 題, chapter: 8}
+  - {id: ntu-108-bime-ds-06, label: 第 6 題, chapter: 7}
+  - {id: ntu-108-bime-ds-07, label: 第 7 題, chapter: 21}

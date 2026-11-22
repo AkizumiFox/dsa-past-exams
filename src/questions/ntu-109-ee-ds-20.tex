@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-20}]{臺大電機所 109 學年度（B）第 20 題}
+（複選；每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）
+
+In a red-black tree of size n
+\begin{enumerate}[label=(\Alph*)]
+\item The root is always black.
+\item Each node is colored red or black.
+\item No root-to-external-node path has two consecutive red nodes.
+\item All root-to-external-node path have the same number of black nodes.
+\item The height of is O($\log n$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)、(E)。
+
+(E) 原題少了一個字（「The height of is」），照上下文讀成「the height of the tree is $O(\log n)$」。
+
+紅黑樹的定義（資結書第~10.3~節）：每個節點是紅或黑；根是黑的；外部節點（\NIL）是黑的；紅節點的
+兩個子節點都是黑的；從任一節點到它底下每個外部節點的路徑上，黑節點個數都相同。
+\begin{itemize}
+\item (A) 對。 這是定義的一條。 有些書允許根暫時是紅的，但插入、刪除結束時都會把根塗黑；而且根
+改成黑色不會破壞其他性質（每條路徑都多一個黑節點），所以一律可以假設根是黑的。
+\item (B) 對。 定義的第一條。
+\item (C) 對。 紅節點的子節點都是黑的，所以任何一條路徑上不會有兩個相鄰的紅節點。
+\item (D) 對。 從根出發的黑高度性質，是「每個節點」那條性質在根的特例。
+\item (E) 對。 由 (C)、(D)：設根的黑高度是 $b$，以根為根的子樹至少有 $2^b - 1$ 個內部節點（對高度
+歸納），所以 $b \le \lg(n+1)$；一條路徑上紅節點不超過黑節點，高度 $\le 2b \le 2\lg(n+1)$（資結書
+定理~10.4）。
+\end{itemize}
+\end{pastsoln}

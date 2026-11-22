@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-03}]{臺大電信所 110 學年度（B）第 3 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Consider two algorithms whose running times $T(n)$ satisfy the following recurrences:\\
+\textit{Algorithm A}: $T(n)=4T(n/2)+O(1)$\\
+\textit{Algorithm B}: $T(n)=2T(n/4)+O(1)$\\
+Then, \textit{Algorithm A} is asymptotically faster than \textit{Algorithm B}.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+兩個都用主定理第一種情形（資結書第~2.4~節），額外工作都是常數。
+\begin{itemize}
+\item \textbf{Algorithm A}：$n^{\log_2 4} = n^2$，$f(n) = O(1) = O(n^{2 - \varepsilon})$，$T(n) = \Theta(n^2)$。
+\item \textbf{Algorithm B}：$n^{\log_4 2} = n^{1/2}$，$f(n) = O(1) = O(n^{1/2 - \varepsilon})$，
+$T(n) = \Theta(\sqrt{n})$。
+\end{itemize}
+（題目寫 $O(1)$，若額外工作實際上更小，遞迴樹的節點數仍然分別是 $\Theta(n^2)$ 和 $\Theta(\sqrt n)$，
+每個節點至少做常數的工作，結論一樣。）
+
+$\sqrt n = o(n^2)$，B 比 A 快，所以「A 比 B 快」是錯的。
+\end{pastsoln}

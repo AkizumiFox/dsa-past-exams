@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-02}]{臺大電信所 110 學年度（B）第 2 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Consider two algorithms whose running times $T(n)$ satisfy the following recurrences:\\
+\textit{Algorithm A}: $T(n)=1000T(n/2)+O(n^{1000})$\\
+\textit{Algorithm B}: $T(n)=2T(n-1000)+O(1)$\\
+Then, \textit{Algorithm A} is asymptotically faster than \textit{Algorithm B}.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（正確）。
+
+\textbf{Algorithm A}：$a = 1000$、$b = 2$，$n^{\log_b a} = n^{\lg 1000}$，$\lg 1000 \approx 9.97$。
+額外的工作 $f(n) = n^{1000}$ 比 $n^{9.97}$ 大了多項式倍（$\varepsilon \approx 990$），而且正則條件
+$1000 \cdot (n/2)^{1000} = 1000 \cdot 2^{-1000} \, n^{1000} \le c\, n^{1000}$ 對 $c = 1/2$ 成立，主定理第三種情形
+給出 $T(n) = \Theta(n^{1000})$（資結書第~2.4~節）。 題目寫的是 $O(n^{1000})$，所以嚴格說只能得到
+$T(n) = O(n^{1000})$，不影響結論。
+
+\textbf{Algorithm B}：每往下一層 $n$ 少 $1000$、呼叫數加倍。 展開
+\[
+T(n) = 2T(n - 1000) + c = 4T(n - 2000) + 3c = \cdots = 2^k T(n - 1000k) + (2^k - 1)c,
+\]
+取 $k = \lfloor n/1000\rfloor$ 到底，$T(n) = \Theta(2^{n/1000})$（資結書第~2.5~節）。
+
+$2^{n/1000}$ 是指數函數，任何多項式 $n^{1000}$ 都是 $o(2^{n/1000})$：取對數比較，
+$1000\lg n$ 對上 $n/1000$，後者遲早遠大於前者。 所以 A 的上界 $O(n^{1000})$ 漸近地小於 B 的
+$\Theta(2^{n/1000})$，A 比較快，敘述正確。 小的 $n$ 時 A 的 $n^{1000}$ 非常大，但「asymptotically」
+只看 $n$ 夠大的情形。
+\end{pastsoln}

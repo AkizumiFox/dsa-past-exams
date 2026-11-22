@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-38}]{臺聯大電機類 115 學年度 第 38 題}
+（單選；2 分）
+
+Given a set of $\boldsymbol{n}$ elements ($n\ge 1$), the following code prints out all possible
+permutations of this set. For example, if the set is \{a, b, c\}, then the set of permutation is
+\{(a, b, c), (a, c, b), (b, a, c), (b, c, a), (c, b, a), (c, a, b)\}.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+#include <stdio.h>
+#include <string.h>
+#define SWAP(A, B) do { char _tmp[sizeof((A))]; \
+    memcpy(_tmp,&(A),sizeof((A)));             \
+    (A)=(B);                                    \
+    memcpy(&(B),_tmp,sizeof((B)));} while(0)
+void perm(char *list, int i, int n) {
+    int j, temp;
+    if(i==n){
+        for(j=0;j<=n;j++)
+            printf("%c",list[j]);
+        printf(",");
+    }
+    else {
+        for (j=i;j<=n;j++){
+            SWAP(list[i],list[j]);
+            printf("%d%d,",i,j); //swap i,j
+            perm(list,i+1,n);
+            printf("%d%d,",j,i); //swap j,i
+            SWAP(list[j],list[i]);
+        }
+    }
+}
+int main(){
+    char str[]="abc";
+    perm(str,0,2);
+    return 0;
+}
+\end{minted}
+What will the code print?
+{\footnotesize\ttfamily
+\begin{enumerate}[label=(\Alph*)]
+\item 00,11,abc,11,22,acb,22,00,01,11,bac,11,22,bca,22,10,02,11,cba,11,22,cab,22,20,
+\item 00,12,abc,21,11,acb,11,00,01,12,bac,21,11,bca,11,10,02,12,cba,21,11,cab,11,20,
+\item 00,01,abc,10,12,acb,21,00,01,01,bac,10,12,bca,21,10,02,01,cba,10,12,cab,21,20,
+\item 00,11,abc,11,12,acb,21,00,01,11,bac,11,12,bca,21,10,02,11,cba,11,12,cab,21,20,
+\item 00,11,abc,11,12,acb,21,00,10,11,bac,11,12,bca,21,01,20,11,cba,11,12,cab,21,02,
+\end{enumerate}}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+\texttt{perm(list, i, n)} 是回溯法產生排列（狀態空間樹見資結書第~20.1~節）：第 $i$ 格輪流換成
+\texttt{list[i..n]} 裡的每一個字元，遞迴排好後面，再換回來還原。 每次交換前印 \texttt{"ij,"}，
+遞迴回來後印 \texttt{"ji,"}；到 $i = n$ 時印出整個字串。 \texttt{main} 呼叫 \texttt{perm(str,0,2)}，
+$n = 2$ 是最後一格的足標。
+
+追蹤（縮排表示遞迴深度）：
+\begin{itemize}
+\item $i = 0, j = 0$：交換 \texttt{list[0]} 和自己，印 \texttt{00,}，字串 abc。
+  \begin{itemize}
+  \item $i = 1, j = 1$：印 \texttt{11,}，$i = 2$ 印 \texttt{abc,}，回來印 \texttt{11,}。
+  \item $i = 1, j = 2$：交換第 1、2 格成 acb，印 \texttt{12,}，再印 \texttt{acb,}，回來印
+  \texttt{21,}，換回 abc。
+  \end{itemize}
+  回來印 \texttt{00,}。
+\item $i = 0, j = 1$：交換第 0、1 格成 bac，印 \texttt{01,}；同上一段印出
+\texttt{11,bac,11,12,bca,21,}；回來印 \texttt{10,}，換回 abc。
+\item $i = 0, j = 2$：交換第 0、2 格成 cba，印 \texttt{02,}；印出 \texttt{11,cba,11,12,cab,21,}；
+回來印 \texttt{20,}。
+\end{itemize}
+接起來就是 (D)：
+
+\noindent{\footnotesize\texttt{00,11,abc,11,12,acb,21,00,01,11,bac,11,12,bca,21,10,02,11,cba,11,12,cab,21,20,}}
+
+逐項找出錯處：
+\begin{itemize}
+\item (A) $i = 1, j = 2$ 時印成 \texttt{22,}，但印的是 \texttt{i} 再 \texttt{j}，應為 \texttt{12,}。 錯。
+\item (B) 第二個數就印 \texttt{12,}，但第一輪 $j$ 從 $i = 1$ 開始，應為 \texttt{11,}。 錯。
+\item (C) 第二層印 \texttt{01,}，第二層的 $i$ 是 $1$，不可能印出 \texttt{0} 開頭。 錯。
+\item (D) 對。
+\item (E) 第一層 $j = 1$ 時印成 \texttt{10,}、回來印 \texttt{01,}，前後顛倒（交換前印的是
+\texttt{i} 再 \texttt{j}，應為 \texttt{01,}）；$j = 2$ 也一樣。 錯。
+\end{itemize}
+另外可以注意：產生的順序是 abc, acb, bac, bca, cba, cab，最後兩個是 cba 在 cab 前面，正是題目
+敘述裡列出的順序。
+\end{pastsoln}

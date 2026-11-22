@@ -1,0 +1,129 @@
+\begin{pastexam}[label={px:ncku-111-cce-ds-01}]{成大電通所 111 學年度 第 1 題（節錄第 b--e 小題）}
+（是非）
+
+(20 \textbf{pts}) True or False (一題一分，答錯一題倒扣一分)
+\begin{enumerate}[label=\alph*.]
+\setcounter{enumi}{1}
+\item Recursive function
+\begin{enumerate}[label=\Alph*)]
+\item Any program that be written using assignment, the if-else statement, and the while
+statement can also be written using assignment, if-else, and recursion.
+\item Merge sort is stable if we use the iterative procedure to implement it. However, it is not
+stable in the recursive version.
+\item No matter in the recursive version or in the iterative version, the time complexity of
+merge sort is O(n log n), where n is the number of input.
+\item Merge sort is an in-place algorithm.
+\end{enumerate}
+
+\item Tree
+\begin{enumerate}[label=\Alph*)]
+\item The time complexity to insert a key in to a binary tree is O(log $n$).
+\item The time complexity to increase a value in a Max-Heap is O(log $n$).
+\item It will waste $n(k$-1) + 1 fields if we use a list representation to represent each node in
+a k-ary tree (i.e., a tree of degree k), where each node uses a list with a fixed size $k$ to
+record its children.
+\item We need an additional node to represent the overall winner in a loser tree and it runs
+slower than a winner tree.
+\end{enumerate}
+
+\item Graph
+\begin{enumerate}[label=\Alph*)]
+\item
+\begin{tikzpicture}[baseline=(a.base),v/.style={circle,draw,inner sep=1pt,minimum size=4.5mm,font=\small},>={Stealth[length=1.6mm]}]
+\node[v] (a) at (0,0) {2}; \node[v] (b) at (1.1,0) {3};
+\draw[->] ([yshift=1.6pt]a.east) -- ([yshift=1.6pt]b.west); \draw[->] ([yshift=-1.6pt]b.west) -- ([yshift=-1.6pt]a.east);
+\end{tikzpicture} is a strongly connect component of the graph
+\begin{tikzpicture}[baseline=(a.base),v/.style={circle,draw,inner sep=1pt,minimum size=4.5mm,font=\small},>={Stealth[length=1.6mm]}]
+\node[v] (a) at (0,0) {1}; \node[v] (b) at (1.1,0) {2}; \node[v] (c) at (2.2,0) {3}; \node[v] (d) at (3.2,0) {4};
+\draw[->] ([yshift=1.6pt]a.east) -- ([yshift=1.6pt]b.west); \draw[->] ([yshift=-1.6pt]b.west) -- ([yshift=-1.6pt]a.east);
+\draw[->] ([yshift=1.6pt]b.east) -- ([yshift=1.6pt]c.west); \draw[->] ([yshift=-1.6pt]c.west) -- ([yshift=-1.6pt]b.east);
+\draw[->] (c) -- (d);
+\end{tikzpicture}
+\item The precedence relation of the edges in an AOV network can be irreflexive.
+\item We can avoid traversing the same edge if the adjacency multilist is used to record a
+graph.
+\item There exists no backward edge in a breath-first search tree obtained from a undirected
+graph.
+\end{enumerate}
+
+\item Stack and queue
+\begin{enumerate}[label=\Alph*)]
+\item The infix expression of the postfix expression ``x 4 + y 7 - / z + '' is
+``(x+4)/(y-7)+z''
+\item With postfix nation, there is no need for parentheses because there is no ambiguity.
+\item Evaluating the postfix expression ``7 2 + 5 8 4 / - *'' returns 27.
+\item ``+*abcd'' is a valid prefix expression.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+原題 a.\ 小題（Objective oriented language 四小句）考物件導向，不在本書範圍，沒有收。 各小題分屬
+資結書第~14~章（b）、第~7、8、15~章（c）、第~21--23~章（d）、第~6~章（e），本題放在第~7~章。
+
+答案：
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+ & A) & B) & C) & D) \\
+\midrule
+b. & T & F & T & F \\
+c. & F & T & T & F \\
+d. & F & T & T & T \\
+e. & T & T & T & F \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{b. Recursive function}
+\begin{itemize}
+\item A) \textbf{T}。 while 迴圈 \textbf{while} $C$ \textbf{do} $S$ 可以改寫成遞迴函式
+$W()$：「\textbf{if} $C$ \textbf{then} $S$；$W()$」，迴圈裡用到的變數當參數傳下去（或放在
+共用的變數裡）。 所以 assignment、if-else、while 能寫的程式，assignment、if-else、遞迴也能寫
+（反方向就是資結書第~6.4~節的「把遞迴改成迴圈」）。
+\item B) \textbf{F}。 合併排序是否穩定只看合併這一步：兩邊的鍵值相同時先取左半邊的，就是穩定的
+（資結書第~14.1~、14.4~節）。 遞迴版和迴圈版（由下而上）用的是同一個合併，都是穩定的。
+\item C) \textbf{T}。 遞迴版 $T(n) = 2T(n/2) + \Theta(n)$；迴圈版做 $\lceil \lg n \rceil$ 趟、每趟
+$\Theta(n)$。 都是 $\Theta(n \log n)$，好、壞、平均都一樣。
+\item D) \textbf{F}。 陣列版合併需要 $\Theta(n)$ 的暫存陣列，不是原地排序（資結書第~14.1~節）。
+\end{itemize}
+
+\textbf{c. Tree}
+\begin{itemize}
+\item A) \textbf{F}。 一般的二元樹（或二元搜尋樹）高度可能是 $n - 1$（歪斜），插入要從根走到
+葉，最壞 $O(n)$。 只有保證平衡的樹（AVL、紅黑樹）才是 $O(\log n)$。
+\item B) \textbf{T}。 最大堆積某個值變大，只可能比父節點大，往上調整（sift-up）最多走樹高
+$\lfloor \lg n \rfloor$ 層，$O(\log n)$（資結書第~8.3~節的 increase-key）。
+\item C) \textbf{T}。 $n$ 個節點，每個節點固定 $k$ 個子節點欄位，共 $nk$ 個欄位。 除了根，每個
+節點恰被一個欄位指到，用到的欄位是 $n - 1$，浪費 $nk - (n - 1) = n(k - 1) + 1$ 個。
+\item D) \textbf{F}。 前半句對：敗者樹的內部節點存的是比賽的敗者，總冠軍要另外放在一個節點
+（第 $0$ 號）。 後半句錯：輸出冠軍後重新比賽時，敗者樹只要沿著路徑和父節點存的敗者比，不必
+去讀兄弟節點，比勝者樹省事，跑得\textbf{比較快}，這正是外部排序用敗者樹的原因（資結書
+第~15.3.4~節）。
+\end{itemize}
+
+\textbf{d. Graph}
+\begin{itemize}
+\item A) \textbf{F}。 強連通元件要是\textbf{極大}的互相可達集合（資結書第~23.1~節）。 圖中
+$1 \rightleftarrows 2 \rightleftarrows 3$，$1, 2, 3$ 兩兩互相可達；$4$ 沒有出邊，回不去。 所以
+強連通元件是 $\{1, 2, 3\}$ 和 $\{4\}$，$\{2, 3\}$ 不是極大的，不是強連通元件。
+\item B) \textbf{T}。 AOV 網路的先後關係必須是偏序：遞移而且反自反（irreflexive，沒有活動排在
+自己前面），否則就有環、排不出拓樸順序（資結書第~22.4~節）。 所以它可以、而且必須是反自反的。
+\item C) \textbf{T}。 鄰接多重串列（adjacency multilist）每條邊只存一個節點，兩端的串列共用它，
+節點上有一個標記欄位。 走訪時把看過的邊標記起來，就不會把同一條邊處理兩次（鄰接串列每條邊有
+兩份，做不到這件事）。
+\item D) \textbf{T}。 無向圖的 BFS 中，非樹邊兩端的層數最多差 $1$，而且一定不是祖先和後代的
+關係，所以只有交叉邊，沒有後向邊（資結書第~21.5~節）。
+\end{itemize}
+
+\textbf{e. Stack and queue}
+\begin{itemize}
+\item A) \textbf{T}。 x 4 + 得 $(x+4)$；y 7 $-$ 得 $(y-7)$；$/$ 得 $(x+4)/(y-7)$；z $+$ 得
+$((x+4)/(y-7)) + z$。 除法優先於加法，去掉多餘括號就是 $(x+4)/(y-7)+z$。
+\item B) \textbf{T}。 後序式的運算順序完全由位置決定，求值時從左到右用一個堆疊就能算，不需要
+括號也不需要優先順序（資結書第~6.3~節）。
+\item C) \textbf{T}。 7 2 $+$ 得 $9$；8 4 $/$ 得 $2$；5 2 $-$ 得 $3$；$9 \times 3 = 27$。
+\item D) \textbf{F}。 合法的前序式運算元要比（二元）運算子多一個。 $+*abcd$ 有 $2$ 個運算子、
+$4$ 個運算元，$+(*ab)c$ 已經是完整的式子，最後的 $d$ 多出來，不合法。
+\end{itemize}
+\end{pastsoln}

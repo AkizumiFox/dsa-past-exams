@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-24}]{臺聯大電機類 115 學年度 第 24 題}
+（單選；2 分）
+
+\textbf{If you want to find the top 100 students by scanning a list of scores, which of the
+following data structures will offer the best computational time?}
+\begin{enumerate}[label=(\Alph*)]
+\item min-heap sized 100
+\item max-heap sized 100
+\item balanced binary search tree such as AVL-tree with 100 nodes
+\item sorted linked list sized 100
+\item sorted array sized 100
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+設共有 $n$ 筆成績、要前 $k = 100$ 名。 掃描時要一直保留「目前看過的前 $k$ 名」，每讀一筆新成績，
+就要和「前 $k$ 名裡最低的那一個」比：比它高就把最低的踢掉、把新的放進去。 所以需要的操作是
+「看最小值」和「刪最小值再插入」，正是最小堆積（資結書第~8.3~節）：
+\begin{pseudo}{前 $k$ 名}
+\State $H \gets$ 前 $k$ 筆成績建成的最小堆積 \Comment{$\Theta(k)$}
+\For{其餘每一筆成績 $x$}
+    \If{$x > H$ 的最小值} \Comment{看根，$\Theta(1)$}
+        \State 把根換成 $x$，再往下沉 \Comment{$O(\log k)$}
+    \EndIf
+\EndFor
+\State \Return $H$ 裡的 $k$ 筆
+\end{pseudo}
+總時間 $O(n \log k)$，大部分成績只和根比一次就丟掉，實際上接近 $\Theta(n)$。 $k = 100$ 是常數時
+就是 $O(n)$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對，見上。
+\item (B) 最大堆積的根是前 $100$ 名裡最高的，用不到；要踢掉的最低分在某個葉子，找它要 $\Theta(k)$。 錯。
+\item (C) AVL 樹也能做到每筆 $O(\log k)$（找最小、刪除、插入），漸近上和 (A) 一樣，但每次都要
+走到最左邊找最小值、插入刪除還要旋轉，常數比堆積大，也多存指標。 題目問「最好」，選 (A)。
+\item (D) 排序好的串列：最小值在頭，但插入要找位置，$\Theta(k)$。 錯。
+\item (E) 排序好的陣列：可以二分找位置，但插入要搬移，$\Theta(k)$。 錯。
+\end{itemize}
+\end{pastsoln}

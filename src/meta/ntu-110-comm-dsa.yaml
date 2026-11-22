@@ -1,0 +1,55 @@
+paper: ntu-110-comm-dsa
+volume: 3
+school: 臺大
+dept: 電信所
+year: 110
+subject: 資料結構與演算法（B）
+instructions: '※ 注意：請用 2B 鉛筆作答於答案卡，並先詳閱答案卡上之「畫記說明」。 In this exam, the height of a leaf (in either a tree or heap) is defined as 0; the depth of the root (in either a tree or heap) is defined as 0; the degree of a node (in either a tree or heap) is defined as the number of its children; the size of a tree/heap is defined as the total number of keys (items) it stores; all heaps, unless otherwise specified, are min heaps. 一、(20%) 是非題，正確請選 A，錯誤請選 B（每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）。 二、(50%) 選擇題（每題 2 分，答錯不倒扣）。 三、(30%) 複選題（每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）。'
+questions:
+  - {id: ntu-110-comm-dsa-01, label: 第 1 題, chapter: 1}
+  - {id: ntu-110-comm-dsa-02, label: 第 2 題, chapter: 2}
+  - {id: ntu-110-comm-dsa-03, label: 第 3 題, chapter: 2}
+  - {id: ntu-110-comm-dsa-04, label: 第 4 題, chapter: 18}
+  - {id: ntu-110-comm-dsa-05, label: 第 5 題, chapter: 21}
+  - {id: ntu-110-comm-dsa-06, label: 第 6 題, chapter: 24}
+  - {id: ntu-110-comm-dsa-07, label: 第 7 題, chapter: 21}
+  - {id: ntu-110-comm-dsa-08, label: 第 8 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-09, label: 第 9 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-10, label: 第 10 題, chapter: 28}
+  - {id: ntu-110-comm-dsa-11, label: 第 11 題, chapter: 1}
+  - {id: ntu-110-comm-dsa-12, label: 第 12 題, chapter: 1}
+  - {id: ntu-110-comm-dsa-13, label: 第 13 題, chapter: 2}
+  - {id: ntu-110-comm-dsa-14, label: 第 14 題, chapter: 14}
+  - {id: ntu-110-comm-dsa-15, label: 第 15 題, chapter: 19}
+  - {id: ntu-110-comm-dsa-16, label: 第 16 題, chapter: 21}
+  - {id: ntu-110-comm-dsa-17, label: 第 17 題, chapter: 24}
+  - {id: ntu-110-comm-dsa-18, label: 第 18 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-19, label: 第 19 題, chapter: 21}
+  - {id: ntu-110-comm-dsa-20, label: 第 20 題, chapter: 28}
+  - {id: ntu-110-comm-dsa-21, label: 第 21 題, chapter: 28}
+  - {id: ntu-110-comm-dsa-22, label: 第 22 題, chapter: 19}
+  - {id: ntu-110-comm-dsa-23, label: 第 23 題, chapter: 18}
+  - {id: ntu-110-comm-dsa-24, label: 第 24 題, chapter: 18}
+  - {id: ntu-110-comm-dsa-25, label: 第 25 題, chapter: 18}
+  - {id: ntu-110-comm-dsa-26, label: 第 26 題, chapter: 2}
+  - {id: ntu-110-comm-dsa-27, label: 第 27 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-28, label: 第 28 題, chapter: 11}
+  - {id: ntu-110-comm-dsa-29, label: 第 29 題, chapter: 8}
+  - {id: ntu-110-comm-dsa-30, label: 第 30 題, chapter: 8}
+  - {id: ntu-110-comm-dsa-31, label: 第 31 題, chapter: 8}
+  - {id: ntu-110-comm-dsa-32, label: 第 32 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-33, label: 第 33 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-34, label: 第 34 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-35, label: 第 35 題, chapter: 25}
+  - {id: ntu-110-comm-dsa-36, label: 第 36 題, chapter: 1}
+  - {id: ntu-110-comm-dsa-37, label: 第 37 題, chapter: 6}
+  - {id: ntu-110-comm-dsa-38, label: 第 38 題, chapter: 9}
+  - {id: ntu-110-comm-dsa-39, label: 第 39 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-40, label: 第 40 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-41, label: 第 41 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-42, label: 第 42 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-43, label: 第 43 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-44, label: 第 44 題, chapter: 10}
+  - {id: ntu-110-comm-dsa-45, label: 第 45 題, chapter: 8}
+  - {id: ntu-110-comm-dsa-46, label: 第 46 題, chapter: 8}
+  - {id: ntu-110-comm-dsa-47, label: 第 47 題, chapter: 12}

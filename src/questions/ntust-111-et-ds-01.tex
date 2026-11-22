@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntust-111-et-ds-01}]{臺科大電子所甲組 111 學年度 第 1 題}
+（問答、分析）
+
+(15\%)\\
+(1) Please explain f(n)=O(g(n)), where O is the ``big oh'' notation. (5\%)\\
+(2) rsum() is a recursive summing function, please analyze the time complexity by the ``big oh''
+notation. (10\%)
+\begin{minted}[fontsize=\small]{c}
+float rsum(float list[], int n)
+{
+      if(n)
+          return rsum(list,n-1)+list[n-1];
+      return list[0];
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+(1) 屬資結書第~1~章；(2) 是由程式寫出遞迴式再解，屬第~2~章。
+
+\textbf{(1)} $f(n) = O(g(n))$ 的意思是：存在正的常數 $c$ 和 $n_0$，使得所有 $n \ge n_0$ 都有
+\[
+  0 \le f(n) \le c \cdot g(n)
+\]
+（資結書第~1.5~節）。 白話說，$n$ 夠大以後，$f$ 不會超過 $g$ 的某個常數倍，$g$ 是 $f$ 的一個
+\textbf{漸近上界}。 它只是上界，不一定緊：例如 $3n + 5 = O(n)$（取 $c = 4$、$n_0 = 5$，$n \ge 5$ 時
+$3n + 5 \le 4n$），而 $3n + 5 = O(n^2)$ 也是對的。 要說「剛好是這個階」要用 $\Theta$。
+
+\textbf{(2)} 答案：$O(n)$（而且是 $\Theta(n)$）。
+
+令 $T(n)$ 是呼叫 \texttt{rsum(list, n)} 的執行時間。 $n = 0$ 時只做一次判斷和一次 \texttt{return}，
+是常數 $c_0$；$n > 0$ 時做一次判斷、一次加法、一次陣列存取，再遞迴呼叫 \texttt{rsum(list, n-1)}
+（資結書第~2.1~節「從程式寫出遞迴式」）：
+\[
+  T(n) = \begin{cases} c_0, & n = 0,\\ T(n - 1) + c_1, & n \ge 1. \end{cases}
+\]
+展開：
+\[
+  T(n) = T(n-1) + c_1 = T(n-2) + 2c_1 = \cdots = T(0) + n c_1 = c_0 + c_1 n ,
+\]
+所以 $T(n) = \Theta(n)$，當然也是 $O(n)$。 遞迴深度是 $n + 1$ 層，每層的堆疊框是常數大小，額外空間也是
+$\Theta(n)$；同樣的工作用迴圈寫只要 $\Theta(1)$ 的額外空間。
+
+附帶一提，這段程式的回傳值不是陣列的總和：$n = 0$ 時回傳 \texttt{list[0]} 而不是 $0$，所以
+\texttt{rsum(list, n)} 算出來的是 \texttt{list[0] + list[0] + list[1] + ... + list[n-1]}，第一個元素被加了兩次
+（例如 $\{1, 2, 3, 4\}$ 會得到 $11$ 而不是 $10$），陣列是空的時還會讀到不存在的 \texttt{list[0]}。 正確的
+寫法是最後一行改成 \texttt{return 0;}。 這不影響時間複雜度的分析。
+\end{pastsoln}

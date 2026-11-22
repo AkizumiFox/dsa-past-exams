@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ust-108-ee-ds-01}]{臺聯大電機類 108 學年度 第 1 題}
+（問答）
+
+(15\%)Write a pseudo code for poping data from a stack.
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有指定堆疊怎麼存，下面用最常見的陣列堆疊寫（資結書虛擬碼~6.1），最後再補串列堆疊的寫法。
+
+\textbf{陣列堆疊。} 堆疊 $S$ 有一個陣列 $S.\mathit{item}[1..\mathit{cap}]$ 和一個整數
+$S.\mathit{top}$，$S.\mathit{top}$ 是頂端元素的位置，空堆疊時 $S.\mathit{top} = 0$。 頂端以下的
+$S.\mathit{item}[1..S.\mathit{top}]$ 依放入的先後排好，最後放的在最上面。
+
+\begin{pseudo}[unbreakable]{從陣列堆疊彈出頂端元素}
+\Function{Stack-Empty}{$S$}
+    \State \Return $S.\mathit{top} = 0$
+\EndFunction
+\Statex
+\Function{Pop}{$S$}
+    \If{\Call{Stack-Empty}{$S$}}
+        \State \Error{underflow} \Comment{空堆疊不能彈出}
+    \EndIf
+    \State $x \gets S.\mathit{item}[S.\mathit{top}]$
+    \State $S.\mathit{top} \gets S.\mathit{top} - 1$
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+\textbf{為什麼對。} 堆疊是後進先出（LIFO），彈出的必須是最後放進去的元素，也就是
+$S.\mathit{item}[S.\mathit{top}]$。 先把它存到 $x$，再把 $\mathit{top}$ 減一，頂端就變成下面那一個，
+$S.\mathit{item}[1..S.\mathit{top}]$ 仍然是剩下的元素，順序沒變。 舊的那一格不用清掉，下次
+\proc{Push} 會直接蓋過去。 空堆疊時先報 underflow，否則會讀到 $S.\mathit{item}[0]$，
+而且 $\mathit{top}$ 會變成負數。
+
+\textbf{複雜度。} 只做一次比較、一次讀取、一次減法，$\Theta(1)$。
+
+\textbf{串列堆疊。} 用單向串列存時，頂端就是串列的第一個節點 $S.\mathit{head}$：
+\begin{pseudo}[unbreakable]{從串列堆疊彈出頂端元素}
+\Function{Pop}{$S$}
+    \If{$S.\mathit{head} = \NIL$}
+        \State \Error{underflow}
+    \EndIf
+    \State $p \gets S.\mathit{head}$；$x \gets p.\mathit{key}$
+    \State $S.\mathit{head} \gets p.\mathit{next}$
+    \State 釋放節點 $p$
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+一樣是 $\Theta(1)$（資結書第~6.1~節）。 注意要先記下 $p$，改完 $S.\mathit{head}$ 再釋放，
+順序反過來就會用到已經釋放的節點。
+\end{pastsoln}

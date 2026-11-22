@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-18}]{臺聯大電機類 115 學年度 第 18 題}
+（單選；2 分）
+
+Regarding the comparison between Red-Black Trees and AVL Trees, which of the following statements
+is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item AVL trees have more lenient balance conditions than red-black trees, so they can be taller.
+\item Red-black trees guarantee that the longest path from the root to a leaf is no more than twice
+the length of the shortest path.
+\item In scenarios with a large number of lookups, red-black trees are faster than AVL trees.
+\item In scenarios involving numerous insertions and deletions, AVL trees outperform red-black
+trees.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+紅黑樹的兩條性質：從任一節點到它下面每個 \NIL 葉的路徑，黑節點個數都一樣（黑高度）；紅節點的
+孩子一定是黑的（不會有兩個紅的相連）。 設根的黑高度是 $b$。 最短的根到葉路徑至少有 $b$ 個節點
+（全黑）；最長的路徑上紅黑最多交錯，至多 $2b$ 個節點。 所以最長路徑不超過最短路徑的兩倍，這也是
+紅黑樹高度 $\le 2\lg(n + 1)$ 的由來（資結書定理~10.4）。
+
+逐項檢查（比較見資結書第~10.5~節）：
+\begin{itemize}
+\item (A) 反了。 AVL 樹要求每個節點左右子樹高度差不超過 $1$，比紅黑樹嚴格，高度上界約
+$1.44 \lg n$（資結書定理~10.1），比紅黑樹的 $2 \lg n$ 矮。 錯。
+\item (B) 對，見上。
+\item (C) AVL 樹比較矮，搜尋路徑比較短，查詢多時 AVL 樹通常比較快（至少不會比較慢）。 錯。
+\item (D) 插入、刪除多時紅黑樹比較好：紅黑樹插入最多旋轉 $2$ 次、刪除最多 $3$ 次；AVL 樹刪除時
+可能一路旋轉到根，$O(\log n)$ 次。 錯。
+\end{itemize}
+\end{pastsoln}

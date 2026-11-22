@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-15}]{成大電機所 114 學年度 單選題第 15 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please give the maximum flow from S to T in the network flow graph in Fig 2, where the value
+associated to an edge is its capacity.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=7mm,inner sep=0pt},>={Stealth[length=2.2mm]}]
+  \node[v] (s) at (0,0) {};
+  \node[v] (a) at (2,1.2) {};
+  \node[v] (b) at (2,-1.2) {};
+  \node[v] (c) at (4.3,1.2) {};
+  \node[v] (d) at (4.3,-1.2) {};
+  \node[v] (t) at (6.3,0) {};
+  \draw[->] (s) -- node[above left] {4} (a);
+  \draw[->] (s) -- node[below left] {6} (b);
+  \draw[->] (a) -- node[above] {3} (c);
+  \draw[->] (b) -- node[below] {3} (d);
+  \draw[->] (c) -- node[above right] {5} (t);
+  \draw[->] (d) -- node[below right] {11} (t);
+  \draw[->] (a.south east) -- node[below left] {1} (d.north west);
+  \draw[->] ([shift={(1.2mm,1.2mm)}]d.north west) -- node[above right] {8} ([shift={(1.2mm,1.2mm)}]a.south east);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+\item 10
+\item 7
+\item 16
+\item 14
+\item None of above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b) 7。
+
+原卷的圖沒有標頂點名稱，題目說的「Fig 2」其實是簡答題第 2 題的圖；這裡指的是上面這張流網路，
+最左邊是 S、最右邊是 T。 為了說明，把頂點取名：
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=7mm,inner sep=0pt},>={Stealth[length=2.2mm]},
+    cut/.style={draw=black!50, dashed, thick}]
+  \node[v] (s) at (0,0) {S};
+  \node[v] (a) at (2,1.2) {$a$};
+  \node[v] (b) at (2,-1.2) {$b$};
+  \node[v] (c) at (4.3,1.2) {$c$};
+  \node[v] (d) at (4.3,-1.2) {$d$};
+  \node[v] (t) at (6.3,0) {T};
+  \draw[->] (s) -- node[above left] {4} (a);
+  \draw[->] (s) -- node[below left] {6} (b);
+  \draw[->, very thick] (a) -- node[above] {3} (c);
+  \draw[->, very thick] (b) -- node[below] {3} (d);
+  \draw[->] (c) -- node[above right] {5} (t);
+  \draw[->] (d) -- node[below right] {11} (t);
+  \draw[->, very thick] (a.south east) -- node[below left] {1} (d.north west);
+  \draw[->] ([shift={(1.2mm,1.2mm)}]d.north west) -- node[above right] {8} ([shift={(1.2mm,1.2mm)}]a.south east);
+\end{tikzpicture}
+\end{center}
+
+\textbf{一個值為 $7$ 的流。} S$\to a\to c\to$T 送 $3$；S$\to a\to d\to$T 送 $1$；S$\to b\to d\to$T 送
+$3$。 每條邊都沒超過容量（$a$ 收 $4$、送出 $3 + 1$；$d$ 收 $1 + 3$、送出 $4 \le 11$），流量值
+$3 + 1 + 3 = 7$。
+
+\textbf{一個容量為 $7$ 的割。} 取 $S$ 側 $= \{S, a, b\}$，從 S 側到 T 側的邊是 $a \to c$（$3$）、
+$a \to d$（$1$）、$b \to d$（$3$），容量 $3 + 1 + 3 = 7$（圖中粗線）。 $d \to a$ 是從 T 側指回 S 側，
+不算在割的容量裡。
+
+任何流的值都不超過任何割的容量（資結書第~26.5~節），流 $7$ 和割 $7$ 相等，所以最大流是 $7$，
+這個割是最小割。 容量 $8$ 的 $d \to a$ 看起來很大，但它在這個割裡是從 T 側指回 S 側，不會增加割的容量，所以幫不上忙。
+
+其他選項：a) $10$ 是 S 的出邊總和 $4 + 6$，被中間的瓶頸擋住；c) $16$ 是 T 的入邊總和 $5 + 11$；
+d) $14$ 也超過割的容量 $7$，都不可能。
+\end{pastsoln}

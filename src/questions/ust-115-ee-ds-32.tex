@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-32}]{臺聯大電機類 115 學年度 第 32 題}
+（單選；2 分）
+
+The adjacency-matrix representation of a graph $G=(V,E)$ assumes that the vertices are numbered
+$1, 2, \ldots, |V|$. Then the adjacency-matrix representation of a graph G consists of a
+$|V|\times|V|$ matrix $A=(a_{ij})$ such that
+\[ a_{ij}=\begin{cases}1 & \text{if } (i,j)\in E\\ 0 & \text{otherwise.}\end{cases} \]
+Let \texttt{V = \{1,2,3,4,5\}} and its adjacency matrix be
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+  & 1 & 2 & 3 & 4 & 5\\\hline
+1 & 0 & 1 & 0 & 1 & 0\\\hline
+2 & 0 & 0 & 0 & 0 & 1\\\hline
+3 & 0 & 0 & 0 & 0 & 1\\\hline
+4 & 0 & 1 & 0 & 0 & 0\\\hline
+5 & 0 & 0 & 0 & 1 & 0\\\hline
+\end{tabular}
+\end{center}
+
+Which of the following descriptions is \textbf{WRONG or the least accurate}?
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{E=\{(1,2),(1,4),(2,5),(3,5),(4,2),(5,4)\}}
+\item The graph is a directed acyclic graph
+\item The graph has 5 vertices
+\item The graph has 6 edges
+\item There is no path that can go from vertex 1 to vertex 3
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+$a_{ij} = 1$ 表示有一條 $i \to j$ 的邊（資結書第~21.2~節）。 逐列讀出：第 1 列 $(1,2), (1,4)$；
+第 2 列 $(2,5)$；第 3 列 $(3,5)$；第 4 列 $(4,2)$；第 5 列 $(5,4)$。 矩陣不對稱（例如 $a_{12} = 1$、
+$a_{21} = 0$），所以是有向圖。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 正是上面讀出的六條邊。 正確。
+\item (B) $2 \to 5 \to 4 \to 2$ 是有向環（$a_{25} = a_{54} = a_{42} = 1$），所以不是 DAG。
+\textbf{錯誤}，選它。
+\item (C) 矩陣是 $5 \times 5$，有 $5$ 個頂點。 正確。
+\item (D) 矩陣裡有 $6$ 個 $1$，有向圖每個 $1$ 是一條邊，共 $6$ 條。 正確。
+\item (E) 第 3 行全是 $0$，沒有任何邊進入頂點 $3$，所以從哪裡都走不到 $3$。 從 $1$ 出發能到的是
+$\{1, 2, 4, 5\}$。 正確。
+\end{itemize}
+\end{pastsoln}

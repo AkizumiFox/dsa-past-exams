@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ncku-109-comm-ds-05}]{成大電通所 109 學年度 第 5 題}
+（手算追蹤）
+
+Find the lengths of the shortest paths from vertex A to all remaining vertices in the following
+directed graph.\quad Generate the paths in ascending order of length. (15 points)
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6.5mm},
+  w/.style={font=\small,inner sep=2.5pt},
+  e/.style={-{Latex[length=2.2mm]},semithick}]
+\node[v] (E) at (2.15,1.25) {E};
+\node[v] (B) at (6.85,1.25) {B};
+\node[v] (D) at (0,0) {D};
+\node[v] (A) at (9.35,0) {A};
+\node[v] (F) at (2.15,-1.3) {F};
+\node[v] (C) at (6.85,-1.3) {C};
+\draw[e] (B) -- node[w,above] {10} (E);
+\draw[e] (E) -- node[w,above left,pos=0.4] {15} (D);
+\draw[e] (F) -- node[w,below left,pos=0.4] {4} (D);
+\draw[e] (F) -- node[w,left,pos=0.4] {10} (E);
+\draw[e] (C) -- node[w,above right,pos=0.82,inner sep=1.5pt] {1} (E);
+\draw[e] (B) -- node[w,above left,pos=0.8,inner sep=1.5pt] {30} (F);
+\draw[e] (C) -- node[w,right,pos=0.45] {3} (B);
+\draw[e] (A) -- node[w,below left,pos=0.45,inner sep=1.5pt] {2} (B);
+\draw[e] (A) -- node[w,below right,pos=0.5,inner sep=1.5pt] {15} (C);
+\draw[e] (C) -- node[w,below] {10} (F);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+權重都是正的，用 Dijkstra 演算法（資結書第~25.2~節）。 它取出頂點的順序就是距離由小到大的順序，
+正好是題目要的「依長度由小到大產生路徑」。
+
+邊：$A \to B$（2）、$A \to C$（15）、$B \to E$（10）、$B \to F$（30）、$C \to B$（3）、$C \to E$（1）、
+$C \to F$（10）、$E \to D$（15）、$F \to D$（4）、$F \to E$（10）。
+
+下表每一列是取出一個頂點並鬆弛它的出邊之後，各頂點的 $d$ 值（括號裡是前驅）；粗體是這一步取出的
+頂點，取出後就不再改變。
+\begin{center}
+\small
+\begin{tabular}{ccccccc}
+\toprule
+取出 & $B$ & $C$ & $D$ & $E$ & $F$ & 說明 \\
+\midrule
+$A$（0） & 2 ($A$) & 15 ($A$) & $\infty$ & $\infty$ & $\infty$ & \\
+$B$（2） & \textbf{2} & 15 ($A$) & $\infty$ & 12 ($B$) & 32 ($B$) & $2 + 10$、$2 + 30$ \\
+$E$（12） & & 15 ($A$) & 27 ($E$) & \textbf{12} & 32 ($B$) & $12 + 15$ \\
+$C$（15） & & \textbf{15} & 27 ($E$) & & 25 ($C$) & $15 + 10 < 32$；$C \to B$、$C \to E$ 不更新 \\
+$F$（25） & & & 27 ($E$) & & \textbf{25} & $25 + 4 = 29 > 27$，不更新 \\
+$D$（27） & & & \textbf{27} & & & 沒有出邊 \\
+\bottomrule
+\end{tabular}
+\end{center}
+取出 $C$ 時，$C \to B$ 得 $15 + 3 = 18 > 2$、$C \to E$ 得 $15 + 1 = 16 > 12$，都不更新；$C \to F$ 得
+$25 < 32$，$F$ 的前驅改成 $C$。
+
+依長度由小到大的最短路徑：
+\begin{center}
+\begin{tabular}{clr}
+\toprule
+順序 & 路徑 & 長度 \\
+\midrule
+1 & $A \to B$ & 2 \\
+2 & $A \to B \to E$ & 12 \\
+3 & $A \to C$ & 15 \\
+4 & $A \to C \to F$ & 25 \\
+5 & $A \to B \to E \to D$ & 27 \\
+\bottomrule
+\end{tabular}
+\end{center}
+（$D$ 的另一條候選 $A \to C \to F \to D$ 長 $29$，比 $27$ 長。）
+\end{pastsoln}

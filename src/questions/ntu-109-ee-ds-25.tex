@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-25}]{臺大電機所 109 學年度（B）第 25 題}
+（複選；每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）
+
+In this exam: Unless otherwise specified, all logarithms are taken with respect to base 2, i.e.,
+$\log_2$.
+
+Let f(n) $\sim$ g(n) denote f(n) $\in\Theta$(g(n)), and f(n) $\succ$ g(n) denote f(n) $\in\Omega$(g(n))
+but f(n) $\notin\Theta$(g(n)). Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item $\lceil log_2 n\rceil! \sim n\log n \succ \log n \sim log_e n \succ 10000^{10000}$.
+\item $n^n \succ$ n! $\sim (\log n)^n \succ 4^n \succ n^3 2^n$.
+\item n! $\succ (\log n)^n \succ \log(n!) \sim n\log n \succ n + 2^{log_3 n}$.
+\item If f(n) is O($\sqrt{n}$), then f(n)$^2$ is O(n).
+\item If f(n) is O(n), then 2$^{\text{f(n)}}$ is O(2$^n$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(D)。
+
+一串式子要每一個關係都對才算對。 判斷 $f \succ g$ 時，常用 $\lim f/g = \infty$；判斷 $f \sim g$
+用 $\lim f/g$ 是正的常數（資結書第~1.5~、1.6~節）。 Stirling 公式（資結書定理~A.8）給
+$\lg(k!) = k \lg k - k \lg e + O(\lg k) = \Theta(k \log k)$。
+\begin{itemize}
+\item (A) 錯，錯在第一個 $\sim$。 令 $k = \lceil \lg n \rceil$，$\lg(k!) = \Theta(k \log k) = \Theta(\log n
+\cdot \log\log n)$，所以 $k! = 2^{\Theta(\log n \log\log n)} = n^{\Theta(\log\log n)}$，比任何多項式都大，
+更比 $n \log n$ 大，兩者不是 $\Theta$。 後面的 $n \log n \succ \log n$、$\log n \sim \ln n$（只差常數
+倍 $\ln 2$）、$\ln n \succ 10000^{10000}$（常數）都對。
+\item (B) 錯，錯在 $n! \sim (\log n)^n$。 $\dfrac{n!}{(\log n)^n} \ge \dfrac{(n/e)^n}{(\log n)^n} =
+\Bigl(\dfrac{n}{e \log n}\Bigr)^n \to \infty$，所以 $n! \succ (\log n)^n$，不是 $\sim$。 其他幾個：$n^n
+\succ n!$ 對（$n!/n^n \to 0$）；$(\log n)^n \succ 4^n$ 對（$n \ge 2^{5}$ 之後 $\log n \ge 5$，比值
+$(\log n / 4)^n \to \infty$）；$4^n \succ n^3 2^n$ 對（比值 $2^n / n^3 \to \infty$）。
+\item (C) 對。 逐個檢查：
+  \begin{itemize}
+  \item $n! \succ (\log n)^n$：上面 (B) 已證。
+  \item $(\log n)^n \succ \log(n!)$：$(\log n)^n \ge 2^n$（$n \ge 4$），$\log(n!) \le n \log n$，而
+  $2^n / (n \log n) \to \infty$。
+  \item $\log(n!) \sim n \log n$：Stirling，$\log(n!) = n\log n - \Theta(n)$。 或直接：$\log(n!) \le n \log n$，
+  且 $n! \ge (n/2)^{n/2}$ 得 $\log(n!) \ge \frac{n}{2}\log\frac{n}{2}$。
+  \item $n \log n \succ n + 2^{\log_3 n}$：$2^{\log_3 n} = n^{\log_3 2} \approx n^{0.63}$，所以右邊是
+  $\Theta(n)$，而 $n \log n / n = \log n \to \infty$。
+  \end{itemize}
+\item (D) 對。 這裡的 $f$ 是執行時間這類非負函數。 $f(n) \le c\sqrt{n}$（$n \ge n_0$），兩邊平方得
+$f(n)^2 \le c^2 n$，所以 $f(n)^2 = O(n)$。
+\item (E) 錯。 反例 $f(n) = 2n = O(n)$，$2^{f(n)} = 4^n$，$4^n / 2^n = 2^n \to \infty$，不是 $O(2^n)$。
+常數倍放在指數上會變成底數的改變，不能忽略。
+\end{itemize}
+\end{pastsoln}

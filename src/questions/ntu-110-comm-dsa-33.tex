@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-33}]{臺大電信所 110 學年度（B）第 33 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 32 to 35, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with Fibonacci heap as priority queue, then the complexity is
+
+A.~$O(|V|^2+|E|\log|V|)$ \qquad B.~$O(|V|^2)$ \qquad C.~$O(|E|\log|V|)$\\
+D.~$O(|E|+|V|\log|V|)$ \qquad E.~$O(|E|)$
+\end{pastexam}
+
+\begin{pastsoln}
+Dijkstra 演算法對優先佇列做 $|V|$ 次插入（或一開始建好）、$|V|$ 次 \proc{Extract-Min}、至多 $|E|$ 次
+\proc{Decrease-Key}（每條邊鬆弛一次），總時間
+\[
+|V| \cdot T_{\text{extract}} + |E| \cdot T_{\text{decrease}} + (\text{建佇列})
+\]
+（資結書第~25.2~節）。
+
+費氏堆積的 \proc{Extract-Min} 平攤 $O(\log|V|)$，\proc{Decrease-Key} 平攤 $O(1)$（資結書第~8.6~節），
+總時間 $O(|V|\log|V| + |E|)$，選 D。 這是一連串操作的總時間，用平攤分析得到的界對整個演算法成立。
+
+C 的 $O(|E|\log|V|)$ 是二元或二項堆積的時間，在 $|E| = \omega(|V|)$ 時比 D 大，不是最緊的。
+E 的 $O(|E|)$ 太樂觀：$|E| = \Theta(|V|)$ 時它是 $O(|V|)$，但 Dijkstra 以比較為基礎依距離順序取出頂點，
+需要 $\Omega(|V|\log|V|)$。
+\end{pastsoln}

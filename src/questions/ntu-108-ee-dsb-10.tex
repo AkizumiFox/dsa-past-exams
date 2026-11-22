@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-10}]{臺大電機所 108 學年度（B）第 10 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+The postfix expression ``5 3 + 7 7 - 1 - /'' evaluates to 4.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯。 值是 $-8$。
+
+用堆疊求值（資結書第~6.3.2~節）：看到數字就推入；看到運算子就彈出兩個，先彈出的是右運算元
+$b$、後彈出的是左運算元 $a$，把 $a \mathbin{\mathrm{op}} b$ 推回。 堆疊由左（底）寫到右（頂）：
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+步 & 讀到 & 動作 & 堆疊 \\
+\midrule
+1 & \texttt{5} & 推入 & $5$ \\
+2 & \texttt{3} & 推入 & $5, 3$ \\
+3 & \texttt{+} & $5 + 3 = 8$ & $8$ \\
+4 & \texttt{7} & 推入 & $8, 7$ \\
+5 & \texttt{7} & 推入 & $8, 7, 7$ \\
+6 & \texttt{-} & $7 - 7 = 0$ & $8, 0$ \\
+7 & \texttt{1} & 推入 & $8, 0, 1$ \\
+8 & \texttt{-} & $0 - 1 = -1$ & $8, -1$ \\
+9 & \texttt{/} & $8 / (-1) = -8$ & $-8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+寫成中序式是 $(5 + 3) / ((7 - 7) - 1) = 8 / (-1) = -8$，不是 $4$。 第 8 步要注意順序：後彈出
+的 $0$ 是左運算元、先彈出的 $1$ 是右運算元，算的是 $0 - 1$ 而不是 $1 - 0$。
+\end{pastsoln}

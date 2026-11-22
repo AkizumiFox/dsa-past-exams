@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-02}]{臺大工科海洋所 109 學年度 第 2 題}
+（程式設計）
+
+\textbf{Please use C++ (or Java) for all programming questions.}
+
+\textbf{(10 \%)} Write a method called \textsf{removeNode} in a singly-linked list called
+\textsf{SList}. The method takes an \textsf{SListNode} node and removes it. After completion, all
+the other nodes must still be in the list, in the same order as before.
+\end{pastexam}
+
+\begin{pastsoln}
+單向串列的節點只有 $\mathit{next}$，刪掉 \textsf{node} 要改的是它\textbf{前一個}節點的
+$\mathit{next}$，所以要從 $\mathit{head}$ 開始找前一個節點（資結書第~5.1~節、虛擬碼~5.3）。
+\textsf{node} 是第一個節點時沒有前一個，改 $\mathit{head}$。
+
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{cpp}
+struct SListNode {
+    int item;
+    SListNode *next;
+};
+
+class SList {
+    SListNode *head = nullptr;
+    int size = 0;
+public:
+    void removeNode(SListNode *node);
+    // ……其他方法
+};
+
+void SList::removeNode(SListNode *node)
+{
+    if (node == nullptr || head == nullptr)
+        return;
+    if (head == node) {                       // 要刪的是第一個節點
+        head = node->next;
+    } else {
+        SListNode *prev = head;
+        while (prev->next != nullptr && prev->next != node)
+            prev = prev->next;
+        if (prev->next == nullptr)            // node 不在這個串列裡
+            return;
+        prev->next = node->next;              // 跳過 node
+    }
+    node->next = nullptr;
+    size--;
+    delete node;                              // 節點由串列擁有時才 delete
+}
+\end{minted}
+
+\textbf{正確性}。 迴圈結束時要嘛 $\mathit{prev.next} = \textsf{node}$，要嘛走到尾端還沒找到。 找到時
+令 $\mathit{prev.next} \gets \textsf{node.next}$：\textsf{node} 前面的節點（$\mathit{head}$ 到
+$\mathit{prev}$）沒動，後面的節點從 $\textsf{node.next}$ 起整段接在 $\mathit{prev}$ 後面，也沒動，
+所以其他節點都還在、順序不變。 \textsf{node} 是第一個節點時，$\mathit{head}$ 改成第二個節點，道理
+相同。 用 Java 寫時把 \texttt{delete} 拿掉即可，沒有人參照的節點會被回收。
+
+\textbf{複雜度}。 找前一個節點最壞要走過整條串列，時間 $O(n)$，額外空間 $O(1)$。
+
+\textbf{常見的錯誤做法}：把 $\textsf{node.next}$ 的內容複製到 \textsf{node}，再刪掉
+$\textsf{node.next}$，看起來是 $O(1)$。 但這樣真正被拿掉的是\textbf{下一個節點}，題目要求「其他
+節點都還在串列裡」就不成立（外面如果有指標指著那個節點，它就變成懸置指標）；\textsf{node} 是最後
+一個節點時也做不到。 要 $O(1)$ 刪除，得改用雙向串列（資結書第~5.2~節），直接用
+$\textsf{node.prev}$ 找到前一個節點。
+\end{pastsoln}

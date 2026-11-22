@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-23}]{臺大電信所 109 學年度（B）第 23 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a leftist heap of size n, the worst case time complexity of one decrease-key operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+資結書沒有講左傾堆積的 decrease-key，這裡補上。 假設有指向該節點 $x$ 的指標，每個節點也記
+父指標。
+
+\textbf{不能像二元堆積那樣往上換。} 左傾樹可以很不平衡：例如每個節點只有左子節點的一條
+鏈，$s$ 全是 $1$，是合法的左傾樹，高度 $n - 1$。 把最底下的節點減成最小，一路往上換要
+$\Theta(n)$ 次。
+
+\textbf{做法：剪下來再合併。}
+\begin{enumerate}
+\item 把 $x$ 的鍵改小。 若 $x$ 是根，或新鍵不小於父節點的鍵，結束。
+\item 否則把以 $x$ 為根的子樹從父節點 $p$ 剪下來。 這棵子樹本身仍是最小左傾堆積（只有根變
+小，堆積性質不受影響）。
+\item 剩下的樹在 $p$ 少了一個子節點，從 $p$ 往上修正：重算 $s$，左邊的 $s$ 比右邊小就左右
+對調；某個節點的 $s$ 沒有改變就停止，上面的節點都不受影響。
+\item 把剪下的子樹和剩下的樹合併：$O(\log n)$（第~22~題）。
+\end{enumerate}
+
+\textbf{第 3 步只走 $O(\log n)$ 個節點。} 設往上修正時 $s$ 有改變的節點依序是 $y_1 = p, y_2,
+\ldots, y_k$，$y_{i+1}$ 是 $y_i$ 的父節點。 $y_{i+1}$ 的 $s$ 會改變，一定是因為它的子節點 $y_i$
+的 $s$ 變小，而且變小後成了兩個子節點中較小的那個，所以 $s_{\text{新}}(y_{i+1}) =
+s_{\text{新}}(y_i) + 1$。 $s_{\text{新}}(y_1) \ge 1$，所以 $s_{\text{新}}(y_k) \ge k$。 另一方面
+任何節點的 $s$ 都不超過 $\lg(n + 1)$（資結書定理~8.2：$s(x) = t$ 的子樹至少有 $2^t - 1$ 個
+節點），所以 $k \le \lg(n + 1)$，再往上多看一個節點就停了。 若某個節點的 $s$ 沒變，它的子節點
+大小關係也沒有反過來（反過來的話 $s$ 會變），不用對調，所以停在那裡是對的。
+
+合計 $O(\log n)$，選 (C)。 (D) $O(n)$ 是「往上換」的做法，(A)、(B) 太小。
+\end{pastsoln}

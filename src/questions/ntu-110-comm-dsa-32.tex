@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-32}]{臺大電信所 110 學年度（B）第 32 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 32 to 35, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with Binomial heap as priority queue, then the complexity is
+
+A.~$O(|V|^2+|E|\log|V|)$ \qquad B.~$O(|V|^2)$ \qquad C.~$O(|E|\log|V|)$\\
+D.~$O(|E|+|V|\log|V|)$ \qquad E.~$O(|E|)$
+\end{pastexam}
+
+\begin{pastsoln}
+Dijkstra 演算法對優先佇列做 $|V|$ 次插入（或一開始建好）、$|V|$ 次 \proc{Extract-Min}、至多 $|E|$ 次
+\proc{Decrease-Key}（每條邊鬆弛一次），總時間
+\[
+|V| \cdot T_{\text{extract}} + |E| \cdot T_{\text{decrease}} + (\text{建佇列})
+\]
+（資結書第~25.2~節）。
+
+二項堆積的 \proc{Extract-Min} 和 \proc{Decrease-Key}（往上交換）都是 $O(\log|V|)$（資結書第~8.5~節），
+總時間 $O(|V|\log|V| + |E|\log|V|) = O((|V| + |E|)\log|V|)$。 題目假設 $|E| = \Omega(|V|)$，
+所以 $|V| + |E| = O(|E|)$，化簡成 $O(|E|\log|V|)$，選 C。
+
+A 也是上界但多了 $|V|^2$ 項，不是最緊的；D 是費氏堆積的時間（第~33~題），二項堆積的
+\proc{Decrease-Key} 不是 $O(1)$，達不到。
+\end{pastsoln}

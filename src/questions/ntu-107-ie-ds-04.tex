@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-04}]{臺大工工所 107 學年度 第 4 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+For a streaming data where numbers are given one-by-one, keeping track of the median requires $\Theta(n)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+題意是：數字一個一個進來，每進來一個就要能回答目前的中位數，問每次更新要花多少時間。 用兩個堆
+積（資結書第~8.3~節的優先佇列）就能做到 $O(\log n)$：
+\begin{itemize}
+\item 最大堆積 $L$ 放比較小的一半，最小堆積 $R$ 放比較大的一半，隨時保持 $L$ 的每個數都不大於
+$R$ 的每個數，而且 $|L| = |R|$ 或 $|L| = |R| + 1$。
+\item 新的數 $x$：若 $L$ 是空的或 $x \le \max L$，插入 $L$，否則插入 $R$。 接著如果
+$|L| > |R| + 1$，把 $L$ 的最大值取出放進 $R$；如果 $|R| > |L|$，把 $R$ 的最小值取出放進 $L$。
+\item 中位數是 $\max L$（$n$ 為偶數時，兩個中位數是 $\max L$ 和 $\min R$），在兩個堆積的頂端，
+$O(1)$ 讀到。
+\end{itemize}
+每進來一個數，最多一次插入、一次取出、一次插入，$O(\log n)$；查中位數 $O(1)$。 所以不需要
+$\Theta(n)$。
+
+如果每次都把所有數重新排序或重新做選擇（例如資結書第~16~章的線性時間選擇），才會是每次
+$\Theta(n)$ 以上，那是做法不好，不是問題本身需要的。
+\end{pastsoln}

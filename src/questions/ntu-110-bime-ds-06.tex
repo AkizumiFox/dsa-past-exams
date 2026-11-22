@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-110-bime-ds-06}]{臺大生機所 110 學年度 第 6 題}
+（問答；共 20 分）
+
+(10\%) a. List both the advantages and disadvantages of \textbf{adjacency list} and
+\textbf{adjacency matrix} for the graph representation, respectively.\\
+(10\%) b. Analyze the complexity of depth-first search (DFS) on a graph represented by the adjacency
+list or adjacency matrix, respectively.
+\end{pastexam}
+
+\begin{pastsoln}
+下面 $G = (V, E)$，$n = |V|$，$m = |E|$（資結書第~21.2~節）。
+
+\textbf{(a)} 鄰接矩陣是 $n \times n$ 的陣列，$A[u][v] = 1$（或邊權）表示有邊 $(u, v)$；鄰接串列是
+長度 $n$ 的陣列，第 $u$ 格是一條串列，串著 $u$ 的所有鄰居。
+\begin{center}
+\small
+\begin{tabular}{p{0.14\textwidth}p{0.38\textwidth}p{0.38\textwidth}}
+\toprule
+ & 鄰接矩陣 & 鄰接串列 \\
+\midrule
+空間 & $\Theta(n^2)$，不管有幾條邊。 & $\Theta(n + m)$（無向圖每條邊存兩次）。 \\
+問「$(u, v)$ 是不是邊」 & $\Theta(1)$，直接看 $A[u][v]$。 & 要走 $u$ 的串列，$\Theta(\deg u)$。 \\
+列出 $u$ 的所有鄰居 & $\Theta(n)$，整列都要看。 & $\Theta(\deg u)$，只看真正的鄰居。 \\
+加一條邊／刪一條邊 & $\Theta(1)$。 & 加邊 $\Theta(1)$（插在串列前端）；刪邊要先找到，$\Theta(\deg u)$。 \\
+加一個頂點 & 要重新配置 $(n+1)^2$ 的陣列，$\Theta(n^2)$。 & 陣列多一格，攤還 $\Theta(1)$。 \\
+其他 & 寫法簡單；適合稠密圖（$m$ 接近 $n^2$）和要用矩陣運算的演算法（例如 Floyd--Warshall、遞移閉包）。 & 適合稀疏圖（$m$ 遠小於 $n^2$，實際的圖多半如此）；要多存指標，存取不連續。 \\
+\bottomrule
+\end{tabular}
+\end{center}
+總結：鄰接矩陣的優點是判斷有沒有邊快、簡單；缺點是空間固定 $\Theta(n^2)$、列鄰居要 $\Theta(n)$。
+鄰接串列的優點是空間 $\Theta(n + m)$、列鄰居只花鄰居個數的時間；缺點是判斷特定一條邊要掃串列。
+
+\textbf{(b)} DFS（資結書第~21.4~節，虛擬碼~21.3）對每個頂點呼叫一次 \textsc{DFS-Visit}（著色保證
+每個頂點只變灰一次），每次呼叫要把這個頂點的所有鄰居看一遍。 所以總時間是
+\[
+\Theta(n) + \sum_{u \in V} (\text{列出 } u \text{ 的鄰居的時間}).
+\]
+\begin{itemize}
+\item \textbf{鄰接串列}：列出 $u$ 的鄰居花 $\Theta(1 + \deg u)$。 $\sum_u \deg u$ 在有向圖是 $m$
+（出度和），在無向圖是 $2m$（握手定理，資結書定理~21.1）。 總時間
+$\Theta(n) + \Theta(m) = \Theta(n + m)$。
+\item \textbf{鄰接矩陣}：列出 $u$ 的鄰居要掃 $A[u][1..n]$ 整列，$\Theta(n)$，和 $u$ 有幾個鄰居無關。
+$n$ 個頂點共 $\Theta(n^2)$，總時間 $\Theta(n^2)$。
+\end{itemize}
+兩者在稠密圖（$m = \Theta(n^2)$）時一樣；稀疏圖（例如 $m = \Theta(n)$）時串列的 $\Theta(n)$ 遠好於
+矩陣的 $\Theta(n^2)$。 額外空間兩者都是 $\Theta(n)$（顏色陣列加上遞迴堆疊，最深 $n$ 層）。
+\end{pastsoln}

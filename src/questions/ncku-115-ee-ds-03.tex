@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ncku-115-ee-ds-03}]{成大電機所 115 學年度 第 4 題}
+（問答）
+
+\textbf{Problem 4: Sorting \& Routing (20 pts)}
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{[4 pts]} To minimize maximum lateness in Package delivery logistics, packages are
+sorted by deadline. What is the name of this scheduling strategy?
+\item \textbf{[4 pts]} You are running \textbf{Insertion Sort} on the array: \texttt{[45, 10, 30, 25, 60]}.\\
+Show the state of the array after the element \texttt{10} has been processed and inserted into the
+sorted portion.
+\item \textbf{[5 pts]} Select the most appropriate sorting algorithm for the following scenarios:
+\begin{enumerate}[label=\arabic*.]
+\item The data is already \textbf{nearly sorted}.
+\item The dataset is huge (cannot fit in RAM).
+\end{enumerate}
+\item \textbf{[4 pts]} The road network has \textbf{non-negative} travel times. Name the standard
+shortest-path algorithm used here.
+\item \textbf{[3 pts]} If the road network has \textbf{negative} edge weights (e.g., time
+gains/discounts), which algorithm must be used instead?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+各小題分屬不同章：(a) 是貪心排程（資結書第~19~章），(b)(c) 是排序（第~14、15~章），(d)(e) 是最短路徑
+（第~25~章）。 排序的份量最重，所以放在本章。
+
+\textbf{(a)} \textbf{最早截止時間優先}（Earliest Deadline First，EDF；也叫 Jackson's rule）：依截止時間由早到
+晚處理，中間不留空檔。 為什麼它讓最大延遲（lateness，完成時間減截止時間，負的算 $0$）最小，用交換
+論證：任何一個排程，如果有相鄰的兩件工作 $i$ 在 $j$ 前面但 $d_i > d_j$（逆序），把它們對調。 其他工作
+的完成時間不變；對調後 $j$ 提早完成，延遲不會變大；$i$ 的完成時間變成原本 $j$ 的完成時間 $f$，延遲
+$f - d_i < f - d_j$，不超過對調前 $j$ 的延遲。 所以每次對調最大延遲不會變大，一直對調到沒有逆序，
+就是 EDF 的順序。 因此 EDF 是最佳的。 （和資結書第~19.4~節的排程題一樣，都是「排序之後貪心」。）
+
+\textbf{(b)} 插入排序從第 $2$ 個元素開始，把它插進前面已經排好的部分（資結書第~1.3~節）。 一開始排好
+的部分是 $[45]$；處理 $10$：$45 > 10$，$45$ 往右挪一格，$10$ 放到最前面。
+\[
+[45, 10, 30, 25, 60] \ \longrightarrow\ [10, 45, 30, 25, 60].
+\]
+（之後處理 $30$ 得 $[10, 30, 45, 25, 60]$，處理 $25$ 得 $[10, 25, 30, 45, 60]$，$60$ 不動。）
+
+\textbf{(c)}
+\begin{enumerate}
+\item 幾乎排好：\textbf{插入排序}。 它的時間是 $O(n + I)$，$I$ 是逆序對的個數（每挪一次消掉一個逆序對，
+資結書第~14.2~節）。 幾乎排好時 $I$ 很小，接近 $O(n)$；而且是穩定、原地的。 快速排序取第一個或最後
+一個當基準時，排好的輸入反而是最壞情況 $\Theta(n^2)$。
+\item 資料放不進記憶體：\textbf{外部合併排序}（external merge sort，資結書第~15.3~節）。 先一次讀入記憶體
+放得下的一段，在記憶體裡排好寫回磁碟，產生很多段排好的「run」；再用 $k$ 路合併（用最小堆積或
+敗者樹挑出 $k$ 段裡最小的）把 run 合併起來。 合併只需要依序讀寫，正好適合磁碟，總共讀寫磁碟的
+趟數約 $1 + \lceil \log_k(\text{run 數}) \rceil$。
+\end{enumerate}
+
+\textbf{(d)} \textbf{Dijkstra 演算法}（資結書第~25.2~節）。 邊權非負時，每次取出目前距離最小的頂點，它的
+距離就已經確定。 用二元堆積是 $O((n + m)\log n)$。
+
+\textbf{(e)} \textbf{Bellman--Ford 演算法}（資結書第~25.3~節）。 有負邊時 Dijkstra 的「取出就確定」不再成立
+（之後可能經過負邊得到更短的路），要改用 Bellman--Ford：把所有邊鬆弛 $n - 1$ 輪，$O(nm)$。 再多鬆弛一輪
+如果還有距離變小，表示從起點走得到一個負環，最短路徑沒有定義，Bellman--Ford 可以偵測出來。 （如果
+路網恰好沒有環，也可以依拓樸順序鬆弛，$O(n + m)$，資結書第~25.5~節；一般路網有環，標準答案是
+Bellman--Ford。）
+\end{pastsoln}

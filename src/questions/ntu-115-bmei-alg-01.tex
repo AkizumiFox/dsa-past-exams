@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ntu-115-bmei-alg-01}]{臺大生醫電資所 115 學年度 第 1 題（節錄第 (1)(5)(6)(7)(11) 小題）}
+（名詞解釋；每小題 2 分。 其餘十五個名詞是計算機概論，未收）
+
+(40\%, 2 points for each problem) Please define the following terms and explain the content,
+purpose, and application of each term and give an illustrative example if possible. If possible,
+define the term in mathematical equation. If it is an acronym, please write the full name. For
+example: SSD: Solid-State Drive: A solid-state drive (SSD) is a storage device that typically uses
+flash memory to store data, instructions, and information. Flash memory contains no moving parts,
+making it more durable and shock resistant than other types of media. SSDs offer higher
+input/output rates and lower latency, but are slightly more expensive for the same capacity. For
+this reason, manufacturers typically offer SSDs as an option instead of hard disks in their
+laptops, tablets, and desktops.
+
+(1) Viterbi algorithm \quad (5) min-max heap \quad (6) AVL tree (Adelson-Velsky and Landis tree)
+\quad (7) dynamic programming \quad (11) stack data structure
+\end{pastexam}
+
+\begin{pastsoln}
+五個小題分屬第~18~章（(1)(7)）、第~8~章（(5)）、第~10~章（(6)）、第~6~章（(11)），放在動態規劃這
+一章。 題目要求「定義、內容、用途、應用、例子，能寫數學式就寫」，每個名詞各寫一段。
+
+\textbf{(1) Viterbi algorithm（維特比演算法）}。 在隱藏馬可夫模型（HMM）裡，給定觀測序列
+$o_1, o_2, \ldots, o_T$，找出機率最大的隱藏狀態序列的動態規劃演算法。 模型有 $N$ 個狀態、初始機率
+$\pi_i$、轉移機率 $a_{ij}$、發射機率 $b_j(o)$。 令 $\delta_t(j)$ 是「前 $t$ 個觀測、第 $t$ 步停在狀態 $j$」
+的所有路徑裡最大的機率：
+\[
+\delta_1(j) = \pi_j\, b_j(o_1), \qquad
+\delta_t(j) = \max_{1 \le i \le N} \bigl(\delta_{t-1}(i)\, a_{ij}\bigr)\, b_j(o_t) \quad (t \ge 2),
+\]
+同時記下取到最大值的 $i$（回溯指標 $\psi_t(j)$）。 最後取 $\max_j \delta_T(j)$，順著 $\psi$ 倒回去就是最可能
+的狀態序列。 時間 $O(TN^2)$，若暴力列舉 $N^T$ 條路徑則是指數時間。 應用：語音辨識、詞性標註、
+通訊的迴旋碼解碼、生物序列分析（基因預測）。 例子：觀測到病人連續三天「正常、發冷、頭暈」，
+推算三天各是「健康」或「發燒」最可能的組合。
+
+\textbf{(5) min-max heap（最小最大堆積）}。 一種雙端優先佇列（資結書第~8.5~節、定義~8.2）：外形是
+完整二元樹，各層輪流是 min 層和 max 層：根所在的深度 $0$ 是 min 層，深度 $1$ 是 max 層，依此類推；min 層的節點不大於它子樹裡所有的鍵，
+max 層的節點不小於它子樹裡所有的鍵。 所以根是最小值，最大值是根的兩個子節點中較大的那個。
+取最小值、取最大值是 $O(1)$，插入、刪除最小值、刪除最大值都是 $O(\lg n)$。 用途：同時需要最小和
+最大的場合，例如保留前 $k$ 名又要隨時淘汰最差者的排行榜、外部排序時的緩衝區。 例子：
+$\{5, 70, 40, 30, 9, 7, 45\}$ 可以排成根 $5$；深度 $1$ 是 $70$、$45$；深度 $2$ 的 $30, 9$ 在 $70$ 底下，$7, 40$ 在
+$45$ 底下。 根 $5$ 是最小，最大值是 $\max(70, 45) = 70$。
+
+\textbf{(6) AVL tree（Adelson-Velsky and Landis tree）}。 一種自我平衡的二元搜尋樹（資結書第~10.2~節、
+定義~10.1）：每個節點左右子樹的高度差（平衡因子 $\mathit{bf}(x) = h(x.\mathit{left}) - h(x.\mathit{right})$）
+只能是 $-1$、$0$、$1$。 插入或刪除後若某節點的平衡因子變成 $\pm 2$，用 LL、RR、LR、RL 四種旋轉修
+回來。 $n$ 個節點的 AVL 樹高度（層數）小於 $1.4405 \lg(n + 1)$（資結書定理~10.1），所以搜尋、插入、刪除都是 $O(\lg n)$，不會像
+普通 BST 退化成鏈。 應用：查詢多、需要保證最壞時間的字典或索引，例如記憶體內資料庫索引。 例子：
+依序插入 $1, 2, 3$，普通 BST 是一條鏈；AVL 樹在插入 $3$ 時根的平衡因子變 $-2$（RR 型），左旋一次
+變成根 $2$、左 $1$、右 $3$。
+
+\textbf{(7) dynamic programming（動態規劃）}。 把問題拆成重疊的子問題，每個子問題只解一次並把答案
+存表，再由小問題的答案組出大問題的答案（資結書第~18.1~節）。 適用條件有兩個：最佳子結構（最佳解
+由子問題的最佳解組成）和重疊子問題（同一個子問題會被重複用到）。 寫法有由上而下的記憶化和由下而上
+填表兩種。 例子：費氏數 $F(n) = F(n-1) + F(n-2)$，直接遞迴是指數時間，填表 $F(0), F(1), \ldots,
+F(n)$ 只要 $O(n)$；最長共同子序列
+\[
+c[i][j] = \begin{cases} 0 & i = 0 \text{ 或 } j = 0, \\ c[i-1][j-1] + 1 & x_i = y_j, \\
+\max(c[i-1][j],\, c[i][j-1]) & x_i \ne y_j, \end{cases}
+\]
+時間 $O(mn)$。 應用：序列比對（生物資訊的 DNA 比對）、背包問題、最短路徑（Floyd--Warshall），
+以及上面的 Viterbi 演算法。
+
+\textbf{(11) stack data structure（堆疊）}。 只能在同一端（頂端）放入和取出的線性串列，後進先出
+（LIFO）（資結書第~6.1~節）。 基本操作是 push（放到頂端）、pop（取出頂端）、top（看頂端），用陣列或
+鏈結串列做都是 $O(1)$。 應用：函式呼叫（呼叫堆疊存返回位址和區域變數）、運算式求值與中序轉後序、
+括號配對、DFS 與回溯、瀏覽器的「上一頁」、編輯器的復原。 例子：依序 push $1, 2, 3$，再 pop 兩次，
+得到 $3, 2$，堆疊裡剩 $1$。
+\end{pastsoln}

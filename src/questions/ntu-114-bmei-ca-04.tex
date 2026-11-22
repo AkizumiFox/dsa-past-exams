@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-114-bmei-ca-04}]{臺大生醫電資所 114 學年度 第 6 題}
+（問答）
+
+(6\%) Please write the recursive pseudo code Hanoi(from, to, temp, N) to solve Tower of Hanoi problem.
+\end{pastexam}
+
+\begin{pastsoln}
+把 $N$ 個盤子從柱子 \textit{from} 搬到 \textit{to}、以 \textit{temp} 暫放，遞迴分三步（資結書虛擬碼~6.11）：
+上面 $N - 1$ 個先從 \textit{from} 搬到 \textit{temp}，再把最大的第 $N$ 號盤子從 \textit{from} 搬到 \textit{to}，
+最後把那 $N - 1$ 個從 \textit{temp} 搬到 \textit{to}。 參數順序照題目。
+\begin{pseudo}[unbreakable]{河內塔}
+\Procedure{Hanoi}{$\mathit{from}, \mathit{to}, \mathit{temp}, N$}
+    \If{$N = 0$}
+        \State \Return \Comment{沒有盤子，不用搬}
+    \EndIf
+    \State \Call{Hanoi}{$\mathit{from}, \mathit{temp}, \mathit{to}, N - 1$}
+    \State 印出「把第 $N$ 號盤子從 $\mathit{from}$ 搬到 $\mathit{to}$」
+    \State \Call{Hanoi}{$\mathit{temp}, \mathit{to}, \mathit{from}, N - 1$}
+\EndProcedure
+\end{pseudo}
+呼叫 \proc{Hanoi}$(A, C, B, N)$ 就把 $N$ 個盤子從 $A$ 搬到 $C$。
+
+\textbf{正確性}（對 $N$ 歸納）。 $N = 0$ 不用搬。 設 $N - 1$ 個盤子時正確。 第一個遞迴呼叫把上面 $N - 1$ 個
+（比第 $N$ 號都小）搬到 \textit{temp}，過程中第 $N$ 號留在 \textit{from} 最底下，小盤子放在它上面合法。 接著
+\textit{from} 只剩第 $N$ 號，\textit{to} 是空的（$N$ 個盤子一開始都在 \textit{from}），直接搬過去。 第二個遞迴
+呼叫把 $N - 1$ 個從 \textit{temp} 搬到 \textit{to}，它們都比第 $N$ 號小，疊在它上面合法。
+
+\textbf{步數與時間}。 搬動次數 $M(N) = 2M(N - 1) + 1$，$M(0) = 0$，解得 $M(N) = 2^N - 1$（資結書第~2~章）。
+時間 $\Theta(2^N)$，遞迴深度 $N$，堆疊空間 $\Theta(N)$。 例如 $N = 2$：
+$A \to B$（1 號）、$A \to C$（2 號）、$B \to C$（1 號），共 $3 = 2^2 - 1$ 步。
+\end{pastsoln}

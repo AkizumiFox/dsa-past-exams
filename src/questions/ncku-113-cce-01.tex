@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-113-cce-01}]{成大電通所 113 學年度 是非題第 1 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+\begin{tikzpicture}[baseline=(a.base),>={Latex[length=4pt]},v/.style={draw,circle,inner sep=1.2pt,font=\small}]
+  \node[v] (a) at (0,0) {2}; \node[v] (b) at (1,0) {3};
+  \draw[->] ([yshift=2pt]a.east)--([yshift=2pt]b.west);
+  \draw[->] ([yshift=-2pt]b.west)--([yshift=-2pt]a.east);
+\end{tikzpicture} is a strongly connect component of the graph
+\begin{tikzpicture}[baseline=(a.base),>={Latex[length=4pt]},v/.style={draw,circle,inner sep=1.2pt,font=\small}]
+  \node[v] (a) at (0,0) {1}; \node[v] (b) at (1,0) {2}; \node[v] (c) at (2,0) {3};
+  \node[v] (d) at (3,0) {5}; \node[v] (e) at (4,0) {4};
+  \foreach \s/\t in {a/b,b/c,c/d} {
+    \draw[->] ([yshift=2pt]\s.east)--([yshift=2pt]\t.west);
+    \draw[->] ([yshift=-2pt]\t.west)--([yshift=-2pt]\s.east);
+  }
+  \draw[->] (d)--(e);
+\end{tikzpicture}.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 原題的 ``strongly connect'' 是 strongly connected。
+
+強連通元件是「極大的」強連通子圖：一群兩兩互相可達的頂點，而且再加進任何一個頂點就不再兩兩
+互相可達（資結書第~23.1~節）。 這張圖裡 $1 \leftrightarrows 2$、$2 \leftrightarrows 3$、
+$3 \leftrightarrows 5$ 都是雙向邊，所以 $1, 2, 3, 5$ 兩兩互相可達；$5 \to 4$ 只有單向，$4$ 沒有
+出邊，回不到其他點。 整張圖的強連通元件是
+\[
+\{1, 2, 3, 5\} \quad\text{和}\quad \{4\}.
+\]
+$\{2, 3\}$ 雖然兩點互相可達，但它包含在更大的 $\{1, 2, 3, 5\}$ 裡（加進 $1$ 或 $5$ 仍然兩兩互相
+可達），不是極大的，所以不是強連通元件。
+\end{pastsoln}

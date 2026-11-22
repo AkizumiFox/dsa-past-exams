@@ -1,0 +1,24 @@
+paper: ntu-106-ie-ds
+volume: 3
+school: 臺大
+dept: 工工所
+year: 106
+subject: 資料結構（B）
+instructions: '答案請務必填在電腦閱卷之「答案卡」上。(一) 是非題 (共 10 小題，若你覺得該小題命題正確，請填 (A)，錯誤，請填 (B)。每題答對得 4 分，答錯倒扣 4 分，未填答者不計分也不扣分，倒扣至是非題總分為 0 分為止) (二) 複選題 (共六小題，每題 10 分, 題內每個選項單獨計分，答對得 2 分，答錯倒扣 2 分，倒扣至複選題總分為 0 分為止。如某題未作答則該題得 0 分，不到扣。) (例：正確答案為 ABC，若答 BCD，則答對三個選項(BCE)，答錯兩個選項(AD)，故共計得 3*2 - 2*2 = 2 分)'
+questions:
+  - {id: ntu-106-ie-ds-01, label: 第 1 題, chapter: 1}
+  - {id: ntu-106-ie-ds-02, label: 第 2 題, chapter: 5}
+  - {id: ntu-106-ie-ds-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-106-ie-ds-04, label: 第 4 題, chapter: 8}
+  - {id: ntu-106-ie-ds-05, label: 第 5 題, chapter: 10}
+  - {id: ntu-106-ie-ds-06, label: 第 6 題, chapter: 10}
+  - {id: ntu-106-ie-ds-07, label: 第 7 題, chapter: 21}
+  - {id: ntu-106-ie-ds-08, label: 第 8 題, chapter: 20}
+  - {id: ntu-106-ie-ds-09, label: 第 9 題, chapter: 8}
+  - {id: ntu-106-ie-ds-10, label: 第 10 題, chapter: 8}
+  - {id: ntu-106-ie-ds-11, label: 第 11 題, chapter: 10}
+  - {id: ntu-106-ie-ds-12, label: 第 12 題, chapter: 9}
+  - {id: ntu-106-ie-ds-13, label: 第 13 題, chapter: 11}
+  - {id: ntu-106-ie-ds-14, label: 第 14 題, chapter: 12}
+  - {id: ntu-106-ie-ds-15, label: 第 15 題, chapter: 8}
+  - {id: ntu-106-ie-ds-16, label: 第 16 題, chapter: 21}

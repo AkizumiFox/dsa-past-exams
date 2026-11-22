@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-02}]{臺聯大電機類 111 學年度 第 2 題}
+（設計）
+
+(10\%)Please write a function to swap the position $m$ and $n$ in a singly linked list, where
+$1 \leqq m \leqq n \leqq$ the length of the linked list. For example, given $m$=2, $n$=4, and a
+linked list: 1->5->4->3. Your function should return the list as 1->3->4->5. Please note that the list
+should only be traversed once (i.e., in one-pass).
+\end{pastexam}
+
+\begin{pastsoln}
+「swap the position $m$ and $n$」是把第 $m$ 個和第 $n$ 個節點對調。 只對調兩個節點裡的資料也符合
+例子，而且很簡單（走到第 $m$ 個時記住它，走到第 $n$ 個時交換兩者的 $\mathit{key}$），但資料很大
+或外面有指標指著節點時不能這樣做，所以下面寫\textbf{改指標}的版本。 位置從 $1$ 算起。
+
+\textbf{想法。} 對調節點要改它們\textbf{前一個}節點的 $\mathit{next}$，所以要找的是第 $m - 1$ 個和
+第 $n - 1$ 個節點。 在最前面放一個假的節點 $d$（$d.\mathit{next} = \mathit{head}$），把它當成第 $0$
+個，$m = 1$ 時就不用特別處理。 從 $d$ 往後走 $n - 1$ 步，途中經過第 $m - 1$ 個時記下來，只走一趟。
+
+\begin{pseudo}{對調第 $m$ 個和第 $n$ 個節點}
+\Function{Swap-Nodes}{$\mathit{head}, m, n$}
+    \If{$m = n$}
+        \State \Return $\mathit{head}$
+    \EndIf
+    \State 建立假節點 $d$；$d.\mathit{next} \gets \mathit{head}$
+    \State $p \gets d$；$i \gets 0$ \Comment{$p$ 是第 $i$ 個節點}
+    \While{$i < n - 1$}
+        \If{$i = m - 1$}
+            \State $a \gets p$ \Comment{第 $m$ 個的前一個}
+        \EndIf
+        \State $p \gets p.\mathit{next}$；$i \gets i + 1$
+    \EndWhile
+    \State $b \gets p$ \Comment{第 $n$ 個的前一個}
+    \State $x \gets a.\mathit{next}$；$y \gets b.\mathit{next}$ \Comment{要對調的兩個節點}
+    \If{$x = b$} \Comment{相鄰：$n = m + 1$}
+        \State $x.\mathit{next} \gets y.\mathit{next}$；$y.\mathit{next} \gets x$；$a.\mathit{next} \gets y$
+    \Else
+        \State $t \gets y.\mathit{next}$
+        \State $a.\mathit{next} \gets y$；$y.\mathit{next} \gets x.\mathit{next}$
+        \State $b.\mathit{next} \gets x$；$x.\mathit{next} \gets t$
+    \EndIf
+    \State \Return $d.\mathit{next}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} $m < n$ 時 $m - 1 < n - 1$，所以迴圈裡一定會經過 $i = m - 1$，$a$ 有值；迴圈結束時
+$p$ 是第 $n - 1$ 個。 不相鄰時，原本是 $a \to x \to \cdots \to b \to y \to t$，改完是
+$a \to y \to (x \text{ 原本的下一個}) \to \cdots \to b \to x \to t$，中間那段不動，正好是 $x$、$y$ 換位。
+相鄰時 $b = x$，原本 $a \to x \to y \to t$，改成 $a \to y \to x \to t$；這時若用不相鄰的寫法，
+$y.\mathit{next} \gets x.\mathit{next}$ 會讓 $y$ 指向自己，所以要分開處理。 $m = 1$ 時 $a = d$，
+新的第一個節點寫在 $d.\mathit{next}$，最後回傳它。
+
+\textbf{例子}：$1 \to 5 \to 4 \to 3$，$m = 2$、$n = 4$。 走的過程：$i = 0$（$p = d$）、$i = 1$
+（$p = 1$，記 $a = 1$）、$i = 2$（$p = 4$），停下，$b = 4$。 $x = 5$、$y = 3$，不相鄰，$t = \NIL$。
+$1.\mathit{next} \gets 3$，$3.\mathit{next} \gets 4$，$4.\mathit{next} \gets 5$，$5.\mathit{next} \gets \NIL$，
+得到 $1 \to 3 \to 4 \to 5$，和題目一樣。
+
+\textbf{複雜度}：只走到第 $n - 1$ 個節點一次，$O(n)$；額外空間 $O(1)$。
+\end{pastsoln}

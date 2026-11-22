@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-01}]{成大智慧資安學程 114 學年度 單選題第 1 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+\textbf{一、單選題 (80 分，每題 5 分，答錯到扣2分)}
+
+A is a two dimension array, the locations of A(3, 2) and A(2, 3) are 1115 and 1207, respectively.
+Assume that each element occupies two addresses. Please give the location of A(5, 10).
+
+a)~1841 \qquad b)~1851 \qquad c)~1861 \qquad d)~1871 \qquad e)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 d) 1871。
+
+題目沒說以列為主還是以行為主，先用兩個已知位址判斷（資結書第~4.1~節）。 設陣列有 $R$ 列、$C$ 行，
+每個元素占 $2$ 個位址。
+
+\textbf{以列為主（row-major）}：$A(2, 3)$ 在 $A(3, 2)$ 前面（第 2 列整列在第 3 列之前），位址應該比較小，
+但 $1207 > 1115$，不合。 用公式算也一樣：
+$\mathrm{loc}(2, 3) - \mathrm{loc}(3, 2) = 2\bigl[(2 - 3)C + (3 - 2)\bigr] = 2(1 - C) = 92$，得 $C = -45$，不可能。
+
+\textbf{以行為主（column-major）}：同一行的元素連在一起，
+\[
+\mathrm{loc}(2, 3) - \mathrm{loc}(3, 2) = 2\bigl[(3 - 2)R + (2 - 3)\bigr] = 2(R - 1) = 1207 - 1115 = 92,
+\]
+所以 $R = 47$。 再從 $A(3, 2)$ 算到 $A(5, 10)$：行差 $8$、列差 $2$，
+\[
+\mathrm{loc}(5, 10) = 1115 + 2\bigl[(10 - 2) \times 47 + (5 - 3)\bigr] = 1115 + 2 \times 378 = 1115 + 756 = 1871 .
+\]
+下界（從 $0$ 還是 $1$ 開始）不影響，因為只用到兩個位置的差。 答案 d)。
+\end{pastsoln}

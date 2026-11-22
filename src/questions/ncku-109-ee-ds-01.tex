@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-109-ee-ds-01}]{成大電機所 109 學年度 第 1 題}
+（問答；15 分）
+
+Three of the following statements are incorrect. Pick out and correct them. (15 points)
+
+(A)~If T($n$)=2T($n$/2)+O($n$) and T(1)=O(1), then T($n$)=O($n$log$n$).\\
+(B)~If T($n$)=T($n$/2)+O($n$) and T(1)=O(1), then T($n$)=O($n$).\\
+(C)~$n^{10}$+1.1$^n$=O($n^{10}$) \qquad\qquad (D)~2$n^2$+1.5$n$log$^5n$=O($n^2$)\\
+(E)~The number of odd degree nodes in an undirected graph must be odd.\\
+(F)~To obtain the breadth first search tree of a graph, we need to use a stack data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+錯的三個是 (C)、(E)、(F)。 本題分屬資結書第~1、2、21~章，放在本章是因為前兩個敘述要用主定理。
+
+\begin{itemize}
+\item (A)：對。 $a = 2$、$b = 2$，$n^{\log_b a} = n$，$f(n) = O(n)$ 和它同階，由主定理第二種情形
+$T(n) = O(n \log n)$（資結書定理~2.4）。 也可以畫遞迴樹：每層總共 $cn$，共 $\lg n + 1$ 層。
+\item (B)：對。 $a = 1$、$b = 2$，$n^{\log_2 1} = n^0 = 1$；$f(n) = O(n)$。 展開：
+$T(n) \le cn + cn/2 + cn/4 + \cdots + c \le 2cn$，所以 $T(n) = O(n)$。 （$f(n) = \Theta(n)$ 時是主定理
+第三種情形，$T(n) = \Theta(n)$。）
+\item (C)：錯。 指數函數比任何多項式長得快：$\lim_{n\to\infty} n^{10} / 1.1^{n} = 0$（資結書第~1.6~節），
+所以 $1.1^{n}$ 不是 $O(n^{10})$。 改正：$n^{10} + 1.1^{n} = O(1.1^{n})$（也是 $\Theta(1.1^{n})$）。
+\item (D)：對。 $\log^{5} n = o(n)$（任何多對數都比 $n$ 的正次方慢），所以
+$1.5 n \log^{5} n = o(n^{2})$，整個式子是 $\Theta(n^{2})$，當然是 $O(n^{2})$。
+\item (E)：錯。 握手定理：所有頂點的度數和等於 $2|E|$，是偶數（資結書定理~21.1）。 度數為偶數的
+頂點加起來是偶數，所以度數為奇數的頂點，度數和也必須是偶數，個數只能是偶數。 改正：奇數度數的
+頂點個數一定是\textbf{偶數}。
+\item (F)：錯。 BFS 依距離由近到遠處理頂點，要先進先出，用的是\textbf{佇列}（queue）（資結書
+第~21.3~節）。 改用堆疊（後進先出）會變成 DFS 的走法，得到的不是 BFS 樹。 改正：要用 queue。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-09}]{臺聯大電機類 111 學年度 第 9 題}
+（設計）
+
+(10\%) Please design an efficient algorithm to find a path from u to v such that the biggest edge
+weight on that path can be minimized. In other words, if all the paths from u to v have their edge
+weights sorted (there should exist a biggest edge weight in all edges), this path found by the
+algorithm has the smallest "biggest-edge-weight" among all paths' biggest edge weights.
+\end{pastexam}
+
+\begin{pastsoln}
+這是\textbf{瓶頸最小路徑}（minimax path）。 題目沒說圖的種類，這裡假設是無向、連通、帶權重的圖
+$G = (V, E)$，$n = |V|$、$m = |E|$。
+
+\textbf{關鍵性質}（資結書第~24.5.3~節、定理~24.13）：$T$ 是 $G$ 的一棵最小生成樹，
+則 $T$ 上 $u$ 到 $v$ 的那一條路徑，就是瓶頸最小的路徑。 所以先求最小生成樹，再在樹上找 $u$ 到 $v$
+的路徑。 Kruskal 還可以提早停：$u$、$v$ 一連通就夠了。
+
+\begin{pseudo}{瓶頸最小路徑}
+\Function{Minimax-Path}{$G, w, u, v$}
+    \State 把 $E$ 的邊依 $w$ 由小到大排序
+    \For{每個頂點 $x \in V$}
+        \State \Call{Make-Set}{$x$}
+    \EndFor
+    \State $F \gets \emptyset$
+    \For{依序的每條邊 $(x, y)$}
+        \If{\Call{Find-Set}{$u$} $=$ \Call{Find-Set}{$v$}}
+            \State \Break \Comment{$u$、$v$ 已經相連}
+        \EndIf
+        \If{\Call{Find-Set}{$x$} $\ne$ \Call{Find-Set}{$y$}}
+            \State $F \gets F \cup \{(x, y)\}$；\Call{Union}{$x, y$}
+        \EndIf
+    \EndFor
+    \If{\Call{Find-Set}{$u$} $\ne$ \Call{Find-Set}{$v$}}
+        \State \Return \NIL \Comment{$u$、$v$ 不連通}
+    \EndIf
+    \State 在森林 $(V, F)$ 上從 $u$ 做 BFS，記下每個點的父節點 $\pi$
+    \State 從 $v$ 沿 $\pi$ 走回 $u$，倒過來就是路徑 $P$
+    \State \Return $P$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} $F$ 是 Kruskal 演算法到某一刻為止選進來的邊，所以 $F$ 包含在 Kruskal 最後得到的
+最小生成樹 $T$ 裡。 $F$ 是森林，$u$、$v$ 在同一棵樹裡時，森林裡 $u$ 到 $v$ 只有一條路，它也是 $T$ 上
+$u$ 到 $v$ 的路。 剩下證明 $T$ 上的路徑 $P$ 瓶頸最小。
+
+設 $e$ 是 $P$ 上最重的邊，權重 $w(e)$。 假設有另一條 $u$ 到 $v$ 的路徑 $Q$，上面每條邊都比 $w(e)$ 輕。
+把 $e$ 從 $T$ 拿掉，$T$ 斷成兩塊，$u$ 和 $v$ 分在兩邊（$e$ 在 $T$ 唯一的 $u$--$v$ 路徑上）。 $Q$ 從 $u$
+走到 $v$，必定有一條邊 $f$ 跨過這兩塊。 $T - e + f$ 又是一棵生成樹，總權重
+$w(T) - w(e) + w(f) < w(T)$，和 $T$ 是最小生成樹矛盾。 所以任何 $u$ 到 $v$ 的路徑，最重的邊都至少是
+$w(e)$，$P$ 達到最小。
+
+另一個看法：讓 $u$、$v$ 相連的那條邊（迴圈 \Break 之前最後加入 $F$ 的邊）權重就是答案的瓶頸值。
+在它之前加入的邊都比它輕，只用比它輕的邊時 $u$、$v$ 還不連通，所以任何路徑都得用到至少這麼重的邊。
+
+\textbf{複雜度。} 排序 $O(m \log m) = O(m \log n)$；互斥集合（按大小合併加路徑壓縮，資結書第~13~章）
+做 $O(m)$ 次操作，幾乎是線性；BFS 在 $n - 1$ 條邊以內的森林上 $O(n)$。 總共 $O(m \log n)$。
+
+也可以改 Dijkstra：$d[x]$ 定義成「從 $u$ 到 $x$ 的路徑最小可能的最大邊」，鬆弛改成
+$d[y] \gets \min\bigl(d[y], \max(d[x], w(x, y))\bigr)$，用二元堆積同樣是 $O(m \log n)$。
+\end{pastsoln}

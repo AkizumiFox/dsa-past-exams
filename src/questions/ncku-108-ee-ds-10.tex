@@ -1,0 +1,163 @@
+\begin{pastexam}[label={px:ncku-108-ee-ds-10}]{成大電機所 108 學年度 問答題第 9 題}
+（問答）
+
+Given two sparse matrices as follows:
+\[
+\mathrm{M}_1=\begin{bmatrix}0&10&0&12\\0&0&0&0\\0&0&5&0\\15&12&0&0\end{bmatrix},\quad
+\mathrm{M}_2=\begin{bmatrix}0&0&8&0\\0&0&0&23\\0&0&10&0\\20&25&0&0\end{bmatrix}
+\]
+\begin{enumerate}[label=(\Alph*)]
+\item Please use the linked list to represent the above two sparse matrices (5 points)
+\item Please compute the multiplication of two matrices, M$_1$ X M$_2$, using linked list
+representations. Please explain your method in details. (10 points)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(A)} 用正交串列（十字串列，資結書第~5.3~節）：每個非零元素一個節點，存列號、行號、值，以及兩個指標
+$\mathit{right}$（同一列的下一個非零元素）和 $\mathit{down}$（同一行的下一個非零元素）。 每一列、每一行各有
+一個頭節點，同一列的節點依行號由小到大串起來，同一行的節點依列號由小到大串起來，最後一個節點指回頭節點
+（環狀）。 下圖節點寫「列,行　值」，實線箭頭是 $\mathit{right}$，虛線箭頭是 $\mathit{down}$；指回頭節點的指標
+和沒有元素的列（$\mathrm{M}_1$ 的第 2 列）指向自己的指標沒有畫出。
+
+\begin{center}
+\begin{tikzpicture}[baseline=(current bounding box.center),
+    hd/.style={draw, fill=black!8, minimum width=0.75cm, minimum height=0.55cm, font=\small},
+    en/.style={draw, thick, minimum width=1.2cm, minimum height=0.55cm, font=\scriptsize},
+    rl/.style={-{Stealth[length=1.6mm]}, thick},
+    dl/.style={-{Stealth[length=1.6mm]}, thick, densely dashed}]
+\node[font=\small] at (0,0) {$\mathrm{M}_1$};
+\node[hd] (C1) at (1.75,0) {C1};
+\node[hd] (C2) at (3.50,0) {C2};
+\node[hd] (C3) at (5.25,0) {C3};
+\node[hd] (C4) at (7.00,0) {C4};
+\node[hd] (R1) at (0,-0.90) {R1};
+\node[hd] (R2) at (0,-1.80) {R2};
+\node[hd] (R3) at (0,-2.70) {R3};
+\node[hd] (R4) at (0,-3.60) {R4};
+\node[en] (e12) at (3.50,-0.90) {1,2 \quad 10};
+\node[en] (e14) at (7.00,-0.90) {1,4 \quad 12};
+\node[en] (e33) at (5.25,-2.70) {3,3 \quad 5};
+\node[en] (e41) at (1.75,-3.60) {4,1 \quad 15};
+\node[en] (e42) at (3.50,-3.60) {4,2 \quad 12};
+\draw[rl] (R1) -- (e12);
+\draw[rl] (e12) -- (e14);
+\draw[rl] (R3) -- (e33);
+\draw[rl] (R4) -- (e41);
+\draw[rl] (e41) -- (e42);
+\draw[dl] (C1) -- (e41);
+\draw[dl] (C2) -- (e12);
+\draw[dl] (e12) -- (e42);
+\draw[dl] (C3) -- (e33);
+\draw[dl] (C4) -- (e14);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[baseline=(current bounding box.center),
+    hd/.style={draw, fill=black!8, minimum width=0.75cm, minimum height=0.55cm, font=\small},
+    en/.style={draw, thick, minimum width=1.2cm, minimum height=0.55cm, font=\scriptsize},
+    rl/.style={-{Stealth[length=1.6mm]}, thick},
+    dl/.style={-{Stealth[length=1.6mm]}, thick, densely dashed}]
+\node[font=\small] at (0,0) {$\mathrm{M}_2$};
+\node[hd] (C1) at (1.75,0) {C1};
+\node[hd] (C2) at (3.50,0) {C2};
+\node[hd] (C3) at (5.25,0) {C3};
+\node[hd] (C4) at (7.00,0) {C4};
+\node[hd] (R1) at (0,-0.90) {R1};
+\node[hd] (R2) at (0,-1.80) {R2};
+\node[hd] (R3) at (0,-2.70) {R3};
+\node[hd] (R4) at (0,-3.60) {R4};
+\node[en] (e13) at (5.25,-0.90) {1,3 \quad 8};
+\node[en] (e24) at (7.00,-1.80) {2,4 \quad 23};
+\node[en] (e33) at (5.25,-2.70) {3,3 \quad 10};
+\node[en] (e41) at (1.75,-3.60) {4,1 \quad 20};
+\node[en] (e42) at (3.50,-3.60) {4,2 \quad 25};
+\draw[rl] (R1) -- (e13);
+\draw[rl] (R2) -- (e24);
+\draw[rl] (R3) -- (e33);
+\draw[rl] (R4) -- (e41);
+\draw[rl] (e41) -- (e42);
+\draw[dl] (C1) -- (e41);
+\draw[dl] (C2) -- (e42);
+\draw[dl] (C3) -- (e13);
+\draw[dl] (e13) -- (e33);
+\draw[dl] (C4) -- (e24);
+\end{tikzpicture}
+\end{center}
+
+$\mathrm{M}_1$ 有 $5$ 個非零元素：$(1,2)\,10$、$(1,4)\,12$、$(3,3)\,5$、$(4,1)\,15$、$(4,2)\,12$；$\mathrm{M}_2$ 有 $5$ 個：
+$(1,3)\,8$、$(2,4)\,23$、$(3,3)\,10$、$(4,1)\,20$、$(4,2)\,25$。 每個矩陣是 $5$ 個元素節點加 $8$ 個頭節點，不必存
+$11$ 個 $0$。 （只用「每列一條串列」也可以表示，但 (B) 要沿著 $\mathrm{M}_2$ 的行走，有 $\mathit{down}$ 指標
+比較方便。）
+
+\textbf{(B)} $\mathrm{P} = \mathrm{M}_1 \times \mathrm{M}_2$，$\mathrm{P}[i][j] = \sum_k \mathrm{M}_1[i][k]\,\mathrm{M}_2[k][j]$。
+只有 $\mathrm{M}_1[i][k]$ 和 $\mathrm{M}_2[k][j]$ \textbf{都不是 $0$} 的 $k$ 才有貢獻。 $\mathrm{M}_1$ 第 $i$ 列的串列依
+行號 $k$ 排好，$\mathrm{M}_2$ 第 $j$ 行的串列依列號 $k$ 排好，所以算 $\mathrm{P}[i][j]$ 就是把這兩條排好的串列
+像合併一樣同時往前走，找出 $k$ 相同的節點相乘再加起來（和資結書第~5.3~節多項式相加比較指數的走法一樣）：
+
+\begin{pseudo}{正交串列的矩陣乘法}
+\Procedure{Sparse-Mult}{$M_1, M_2, n$}
+    \State 建立空的正交串列 $P$（$n$ 個列頭、$n$ 個行頭）
+    \For{$i \gets 1$ \To $n$}
+        \For{$j \gets 1$ \To $n$}
+            \State $p \gets M_1.\mathit{row}[i].\mathit{right}$；$q \gets M_2.\mathit{col}[j].\mathit{down}$；$s \gets 0$
+            \While{$p$ 不是列頭 \AND $q$ 不是行頭}
+                \If{$p.\mathit{col} = q.\mathit{row}$}
+                    \State $s \gets s + p.\mathit{val} \cdot q.\mathit{val}$
+                    \State $p \gets p.\mathit{right}$；$q \gets q.\mathit{down}$
+                \ElsIf{$p.\mathit{col} < q.\mathit{row}$}
+                    \State $p \gets p.\mathit{right}$
+                \Else
+                    \State $q \gets q.\mathit{down}$
+                \EndIf
+            \EndWhile
+            \If{$s \ne 0$}
+                \State 新節點 $(i, j, s)$ 接在 $P$ 第 $i$ 列的尾端和第 $j$ 行的尾端
+            \EndIf
+        \EndFor
+    \EndFor
+\EndProcedure
+\end{pseudo}
+$j$ 由小到大，所以第 $i$ 列的新節點本來就依行號排好；$i$ 由小到大，第 $j$ 行也依列號排好。 每一列、每一行
+各記一個尾指標，接上去是 $O(1)$。
+
+\textbf{計算}（只列兩條串列都不空的 $(i, j)$；$\mathrm{M}_1$ 第 2 列是空的，整列結果都是 $0$）：
+\begin{center}
+\small
+\begin{tabular}{cllll}
+\toprule
+$(i, j)$ & $\mathrm{M}_1$ 第 $i$ 列 $(k, \text{值})$ & $\mathrm{M}_2$ 第 $j$ 行 $(k, \text{值})$ & 相同的 $k$ & $\mathrm{P}[i][j]$ \\
+\midrule
+$(1,1)$ & $(2,10), (4,12)$ & $(4,20)$ & $4$ & $12 \cdot 20 = 240$ \\
+$(1,2)$ & $(2,10), (4,12)$ & $(4,25)$ & $4$ & $12 \cdot 25 = 300$ \\
+$(1,3)$ & $(2,10), (4,12)$ & $(1,8), (3,10)$ & 無 & $0$ \\
+$(1,4)$ & $(2,10), (4,12)$ & $(2,23)$ & $2$ & $10 \cdot 23 = 230$ \\
+$(3,1)$ & $(3,5)$ & $(4,20)$ & 無 & $0$ \\
+$(3,2)$ & $(3,5)$ & $(4,25)$ & 無 & $0$ \\
+$(3,3)$ & $(3,5)$ & $(1,8), (3,10)$ & $3$ & $5 \cdot 10 = 50$ \\
+$(3,4)$ & $(3,5)$ & $(2,23)$ & 無 & $0$ \\
+$(4,1)$ & $(1,15), (2,12)$ & $(4,20)$ & 無 & $0$ \\
+$(4,2)$ & $(1,15), (2,12)$ & $(4,25)$ & 無 & $0$ \\
+$(4,3)$ & $(1,15), (2,12)$ & $(1,8), (3,10)$ & $1$ & $15 \cdot 8 = 120$ \\
+$(4,4)$ & $(1,15), (2,12)$ & $(2,23)$ & $2$ & $12 \cdot 23 = 276$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+走法舉例，$(1,1)$：$p$ 在 $(1,2)$、$q$ 在 $(4,1)$，比較 $k$：$2 < 4$，$p$ 前進到 $(1,4)$；$4 = 4$，相乘 $12 \cdot 20$，
+兩個都前進，走到頭節點，結束。 $(1,3)$：$p$ 的 $k = 2$、$q$ 的 $k = 1$，$q$ 前進；$2 < 3$，$p$ 前進；$4 > 3$，$q$
+前進到頭節點，結束，$s = 0$，不建節點。
+
+結果：
+\[
+\mathrm{M}_1 \times \mathrm{M}_2 = \begin{bmatrix}240&300&0&230\\0&0&0&0\\0&0&50&0\\0&0&120&276\end{bmatrix},
+\]
+用正交串列存是 $6$ 個元素節點：$(1,1)\,240$、$(1,2)\,300$、$(1,4)\,230$ 串在第 1 列，$(3,3)\,50$ 在第 3 列，
+$(4,3)\,120$、$(4,4)\,276$ 在第 4 列；行的方向，第 3 行是 $(3,3) \to (4,3)$，第 4 行是 $(1,4) \to (4,4)$。
+
+\textbf{複雜度}。 $n \times n$ 的矩陣，$\mathrm{M}_1$ 第 $i$ 列有 $r_i$ 個非零、$\mathrm{M}_2$ 第 $j$ 行有 $c_j$ 個非零時，
+算 $\mathrm{P}[i][j]$ 的合併最多走 $r_i + c_j$ 步，總共
+$\sum_i \sum_j (1 + r_i + c_j) = n^2 + n t_1 + n t_2$，$t_1$、$t_2$ 是兩個矩陣的非零個數，也就是 $O(n^2 + n(t_1 + t_2))$。
+直接用二維陣列乘是 $\Theta(n^3)$，矩陣越稀疏，省得越多。 （另一種寫法是對 $\mathrm{M}_1$ 第 $i$ 列的每個
+$(i, k, a)$，走 $\mathrm{M}_2$ 第 $k$ 列，把 $a \cdot b$ 累加到一個長度 $n$ 的暫存列，最後把非零的收成第 $i$ 列；
+結果相同。）
+\end{pastsoln}

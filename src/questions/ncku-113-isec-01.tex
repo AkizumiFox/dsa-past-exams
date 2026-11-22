@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ncku-113-isec-01}]{成大智慧資安學程 113 學年度 是非題第 1 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+\begin{tikzpicture}[baseline=(a.base),>={Latex[length=4pt]},v/.style={draw,circle,inner sep=1.2pt,font=\small}]
+  \node[v] (a) at (0,0) {2}; \node[v] (b) at (1,0) {3};
+  \draw[->] ([yshift=2pt]a.east)--([yshift=2pt]b.west);
+  \draw[->] ([yshift=-2pt]b.west)--([yshift=-2pt]a.east);
+\end{tikzpicture} is a strongly connect component of the graph
+\begin{tikzpicture}[baseline=(a.base),>={Latex[length=4pt]},v/.style={draw,circle,inner sep=1.2pt,font=\small}]
+  \node[v] (a) at (0,0) {1}; \node[v] (b) at (1,0) {2}; \node[v] (c) at (2,0) {3};
+  \node[v] (d) at (3,0) {5}; \node[v] (e) at (4,0) {4};
+  \foreach \s/\t in {a/b,b/c,c/d} {
+    \draw[->] ([yshift=2pt]\s.east)--([yshift=2pt]\t.west);
+    \draw[->] ([yshift=-2pt]\t.west)--([yshift=-2pt]\s.east);
+  }
+  \draw[->] (d)--(e);
+\end{tikzpicture}.
+\end{pastexam}
+
+\begin{pastsoln}
+本卷和成大電通所 113 學年度用同一份試題，這一題和歷屆試題~\ref{px:ncku-113-cce-01} 完全相同，完整的詳解見該題。
+
+答案：錯。 $\{2, 3\}$ 不是極大的：$1, 2, 3, 5$ 兩兩互相可達，強連通元件是 $\{1, 2, 3, 5\}$ 和 $\{4\}$。
+\end{pastsoln}

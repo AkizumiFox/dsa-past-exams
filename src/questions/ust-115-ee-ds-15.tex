@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-15}]{臺聯大電機類 115 學年度 第 15 題}
+（單選；2 分）
+
+If writing to memory (Write/Swap) is very expensive (e.g., Flash Memory), we want to minimize the
+number of writes. Which of the following algorithms guarantees the fewest number of writes?
+
+(A)~Selection Sort \qquad (B)~Cycle Sort \qquad (C)~Heap Sort \qquad (D)~Quick Sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+\textbf{循環排序}（cycle sort）的想法：一個元素的最終位置，等於「比它小的元素個數」。 拿起一個
+元素，算出它該去的位置，直接寫進去，再拿起被擠出來的那個元素重複，直到繞回起點。 每個不在正確
+位置上的元素\textbf{恰好被寫一次}，已經在正確位置的完全不寫。 任何排序法至少要寫每個不在定位的
+元素一次，所以循環排序的寫入次數是最少的。 下面是鍵值互不相同時的寫法（有重複時，算位置後要
+跳過相同的鍵值）：
+\begin{pseudo}{循環排序（鍵值互不相同）}
+\Procedure{Cycle-Sort}{$A, n$}
+    \For{$s \gets 1$ \To $n - 1$}
+        \State $\mathit{item} \gets A[s]$；$\mathit{pos} \gets s + |\{\, t > s : A[t] < \mathit{item} \,\}|$
+        \If{$\mathit{pos} \ne s$} \Comment{已在定位就不動}
+            \While{$\mathit{pos} \ne s$}
+                \State 交換 $\mathit{item}$ 和 $A[\mathit{pos}]$ \Comment{寫入 $A$ 一次}
+                \State $\mathit{pos} \gets s + |\{\, t > s : A[t] < \mathit{item} \,\}|$
+            \EndWhile
+            \State $A[s] \gets \mathit{item}$ \Comment{繞回起點，寫入一次}
+        \EndIf
+    \EndFor
+\EndProcedure
+\end{pseudo}
+例：$A = \langle 3, 1, 2\rangle$。 $s = 1$：$\mathit{item} = 3$，該去第 $3$ 格，寫入後
+$A = \langle 3, 1, 3\rangle$、手上是 $2$；$2$ 該去第 $2$ 格，寫入後手上是 $1$；$1$ 該去第 $1$
+格，寫入，$A = \langle 1, 2, 3\rangle$。 一共寫 $3$ 次，每個元素一次。 選擇排序做同一個陣列要交換
+$2$ 次，每次交換寫兩格，共寫 $4$ 次。
+
+代價是比較次數：每算一次位置要掃一遍，總共 $\Theta(n^2)$ 次比較，所以只在「寫入非常貴、比較
+便宜」時划算，正是題目說的情境。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 選擇排序最多交換 $n - 1$ 次，是 $O(n)$ 次寫入，已經很少，但每次交換要寫兩格，最多約
+$2(n - 1)$ 次寫入；而且有些元素會被搬動不只一次（先被換到別處，之後再換到定位）。 不是最少。 錯。
+\item (B) 對，見上。
+\item (C) 堆積排序建堆和每次取出都要下沉交換，共 $\Theta(n \log n)$ 次交換。 錯。
+\item (D) 快速排序平均也要 $\Theta(n \log n)$ 次交換，最壞 $\Theta(n^2)$。 錯。
+\end{itemize}
+\end{pastsoln}

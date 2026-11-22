@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-05}]{成大電機所 114 學年度 單選題第 5 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+What will the array look like after a delete operation is applied on the maximum heap stored in
+the array?
+
+\begin{center}
+\begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{75} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29}\\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+\item \begin{tabular}[t]{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ }\\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}[t]{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ }\\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}[t]{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ }\\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}[t]{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{ }\\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c)：$67, 58, 30, 42, 55, 29$。
+
+堆積從索引 $1$ 開始存，$A[i]$ 的子節點是 $A[2i]$、$A[2i+1]$。 先確認是最大堆積：$75 \ge 58, 67$；
+$58 \ge 42, 55$；$67 \ge 30, 29$，成立。
+
+刪除（取出最大值，資結書第~8.1~節虛擬碼~8.2）：拿走根 $75$，把最後一格的 $29$ 搬到根，大小變
+$6$，再往下調整，每次和\textbf{比較大}的子節點比：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+步驟 & 比較 & $A[1..6]$ \\
+\midrule
+$29$ 搬到根 & & $29, 58, 67, 42, 55, 30$ \\
+$29$ 在 $[1]$ & 子節點 $58$、$67$，較大的 $67 > 29$，交換 & $67, 58, 29, 42, 55, 30$ \\
+$29$ 在 $[3]$ & 子節點只有 $[6] = 30 > 29$，交換 & $67, 58, 30, 42, 55, 29$ \\
+$29$ 在 $[6]$ & 沒有子節點，停 & $67, 58, 30, 42, 55, 29$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果和 c) 一樣，$[7]$ 空出來。
+
+其他選項：a) 把 $42$、$55$ 對調了，但它們沒有動過；b) 是把剩下的數由大到小排，那是排序不是堆積
+刪除；d) 少做了最後一次交換，$[3] = 29 < [6] = 30$ 違反堆積性質。
+\end{pastsoln}

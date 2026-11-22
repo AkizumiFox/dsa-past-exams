@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntust-109-et-ds-03}]{臺科大電子所甲組 109 學年度 第 3 題}
+（問答；10 分）
+
+Queues and stacks are two different kinds of data structures. Answer each of the following
+questions:
+\begin{enumerate}[label=(\alph*)]
+\item What is a queue? When is a queue used? (5\%)
+\item What is a stack? When is a stack employed? (5\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a) 佇列。} 佇列（queue）是一種有序的串列，插入只在一端（rear，尾端），刪除只在另一端
+（front，前端），所以先進去的先出來，叫\textbf{先進先出}（FIFO）（資結書第~6.2~節）。 基本操作是
+\proc{Enqueue}（從尾端加入）和 \proc{Dequeue}（從前端取出），用環狀陣列或鏈結串列實作時都是
+$O(1)$。
+
+使用時機：要「依到達的順序處理」的場合。 例如
+\begin{itemize}
+\item 作業系統的工作排程、印表機的列印工作、網路封包的緩衝區：誰先來誰先處理。
+\item 廣度優先搜尋（BFS）、二元樹的層序走訪：先發現的節點先展開，才能一層一層往外走。
+\item 生產者和消費者速度不同時的緩衝（例如鍵盤輸入緩衝區）。
+\end{itemize}
+
+\textbf{(b) 堆疊。} 堆疊（stack）是插入和刪除都只在同一端（top，頂端）進行的有序串列，最後放進去的
+最先拿出來，叫\textbf{後進先出}（LIFO）（資結書第~6.1~節）。 基本操作是 \proc{Push} 和 \proc{Pop}，
+都是 $O(1)$。
+
+使用時機：要「先處理最近的那一個」或「回到上一步」的場合。 例如
+\begin{itemize}
+\item 函式呼叫：呼叫時把返回位址和區域變數推入系統堆疊，返回時彈出；遞迴就是靠它（資結書
+第~6.4~節）。
+\item 運算式處理：檢查括號是否配對、中序轉後序、後序式求值（資結書第~6.1.4、6.3~節）。
+\item 深度優先搜尋（DFS）、迷宮的回溯、編輯器的「復原」（undo）。
+\end{itemize}
+
+兩者的差別一句話：佇列是兩端各管一件事（尾端進、前端出），堆疊是同一端進出。
+\end{pastsoln}

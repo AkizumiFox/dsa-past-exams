@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-04}]{臺大電機所 108 學年度（B）第 4 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+Arrays are inefficient for implementing dynamic sorted lists because the \textit{insert} and
+\textit{delete} operations require moving a quarter of the elements, on average.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯。 前半句（陣列不適合做常常插入刪除的有序串列）對，錯在「平均搬動四分之一」，
+實際上平均要搬一半。
+
+設陣列 $A[1..n]$ 已經排好，新的鍵等可能落在 $n + 1$ 個位置中的任何一個。 插入到第 $i$ 個
+位置（$1 \le i \le n + 1$）時，$A[i..n]$ 這 $n - i + 1$ 個元素都要往後搬一格。 平均搬動量是
+\[
+\frac{1}{n + 1} \sum_{i=1}^{n+1} (n - i + 1) = \frac{1}{n + 1} \cdot \frac{n(n + 1)}{2} = \frac{n}{2}.
+\]
+刪除第 $i$ 個元素（$1 \le i \le n$，等可能）時，後面 $n - i$ 個元素往前搬一格，平均
+\[
+\frac{1}{n} \sum_{i=1}^{n} (n - i) = \frac{n - 1}{2}.
+\]
+兩者都大約是 $n/2$，也就是一半，不是四分之一。 所以每次插入、刪除是 $\Theta(n)$，這才是陣列
+不適合的原因；改用鏈結串列，找到位置後只要改一兩個指標（資結書第~5.1~節）。
+\end{pastsoln}

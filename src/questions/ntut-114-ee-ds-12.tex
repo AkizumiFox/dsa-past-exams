@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-12}]{北科大電機所（戊組） 114 學年度 第 III-4 題}
+（計算；10 分）
+
+For the AOE (Activity on Edge) network described in Table I, answer the following questions:\\
+{[}Note that state 1 is the starting state, and state 8 is the goal state.{]}
+\begin{enumerate}[label=(\alph*)]
+\item What is the earliest time the project can finish? \textbf{(5\%)}
+\item Please list all critical paths. \textbf{(5\%)}
+\end{enumerate}
+\begin{center}
+\textbf{Table II}\\[2pt]
+\begin{tabular}{|c|c|c|c||c|c|c|c|}
+\hline
+Activity & \begin{tabular}{@{}c@{}}From\\state\end{tabular} & \begin{tabular}{@{}c@{}}To\\state\end{tabular} & Time & Activity & \begin{tabular}{@{}c@{}}From\\state\end{tabular} & \begin{tabular}{@{}c@{}}To\\state\end{tabular} & Time \\ \hline
+A1 & 1 & 2 & 4 & A7 & 4 & 6 & 5 \\ \hline
+A2 & 1 & 3 & 6 & A8 & 5 & 6 & 3 \\ \hline
+A3 & 2 & 4 & 3 & A9 & 5 & 7 & 6 \\ \hline
+A4 & 2 & 5 & 5 & A10 & 6 & 8 & 4 \\ \hline
+A5 & 3 & 4 & 2 & A11 & 7 & 8 & 2 \\ \hline
+A6 & 3 & 5 & 4 & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答：(a) 最早 $18$ 個時間單位完成。 (b) 關鍵路徑只有一條：$1 \to 3 \to 5 \to 7 \to 8$，即 A2, A6, A9, A11。
+
+原題文字寫「Table I」，但活動表是 Table II（Table I 是第 III-1 題的串列），這裡照 Table II 算。
+
+用資結書第~22.5~節的方法：先由前往後算每個事件（state）的最早時間 $e$，再由後往前算最晚時間 $l$。
+\[
+e(v) = \max_{(u, v)} \bigl(e(u) + t(u, v)\bigr), \qquad l(u) = \min_{(u, v)} \bigl(l(v) - t(u, v)\bigr).
+\]
+
+\textbf{最早時間}（照拓樸順序 1, 2, \dots, 8）：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+事件 & $e$ \\
+\midrule
+1 & $0$ \\
+2 & $e(1) + 4 = 4$ \\
+3 & $e(1) + 6 = 6$ \\
+4 & $\max(e(2) + 3,\ e(3) + 2) = \max(7, 8) = 8$ \\
+5 & $\max(e(2) + 5,\ e(3) + 4) = \max(9, 10) = 10$ \\
+6 & $\max(e(4) + 5,\ e(5) + 3) = \max(13, 13) = 13$ \\
+7 & $e(5) + 6 = 16$ \\
+8 & $\max(e(6) + 4,\ e(7) + 2) = \max(17, 18) = 18$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{(a)} 整個工程最早在 $e(8) = 18$ 完成。
+
+\textbf{最晚時間}（從 $l(8) = 18$ 倒推）：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+事件 & $l$ \\
+\midrule
+8 & $18$ \\
+7 & $l(8) - 2 = 16$ \\
+6 & $l(8) - 4 = 14$ \\
+5 & $\min(l(6) - 3,\ l(7) - 6) = \min(11, 10) = 10$ \\
+4 & $l(6) - 5 = 9$ \\
+3 & $\min(l(4) - 2,\ l(5) - 4) = \min(7, 6) = 6$ \\
+2 & $\min(l(4) - 3,\ l(5) - 5) = \min(6, 5) = 5$ \\
+1 & $\min(l(2) - 4,\ l(3) - 6) = \min(1, 0) = 0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{每個活動的寬裕時間}：活動 $a = (u, v)$ 最早開始 $e(u)$，最晚開始 $l(v) - t(a)$，寬裕時間是兩者的差；
+寬裕時間 $0$ 的是關鍵活動。
+\begin{center}
+\small
+\begin{tabular}{lcccc|lcccc}
+\toprule
+活動 & 最早 & 最晚 & 寬裕 & & 活動 & 最早 & 最晚 & 寬裕 & \\
+\midrule
+A1 (1,2) & 0 & 1 & 1 & & A7 (4,6) & 8 & 9 & 1 & \\
+A2 (1,3) & 0 & 0 & 0 & 關鍵 & A8 (5,6) & 10 & 11 & 1 & \\
+A3 (2,4) & 4 & 6 & 2 & & A9 (5,7) & 10 & 10 & 0 & 關鍵 \\
+A4 (2,5) & 4 & 5 & 1 & & A10 (6,8) & 13 & 14 & 1 & \\
+A5 (3,4) & 6 & 7 & 1 & & A11 (7,8) & 16 & 16 & 0 & 關鍵 \\
+A6 (3,5) & 6 & 6 & 0 & 關鍵 & & & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(b)} 關鍵活動是 A2, A6, A9, A11，它們連成從 1 到 8 的唯一一條路徑 $1 \to 3 \to 5 \to 7 \to 8$，長度
+$6 + 4 + 6 + 2 = 18$，等於 (a) 的答案。 其他路徑都比較短，例如 $1 \to 2 \to 5 \to 7 \to 8$ 是 $17$，
+$1 \to 3 \to 5 \to 6 \to 8$ 是 $17$，$1 \to 3 \to 4 \to 6 \to 8$ 是 $17$，所以關鍵路徑只有這一條。
+\end{pastsoln}

@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-03}]{臺大工工所 107 學年度 第 3 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Constructing a min heap with $n$ elements requires $\Theta(n\log n)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+由下而上建堆積（資結書虛擬碼~8.3，第~8.2~節）從最後一個內部節點倒著做下沉，高度 $h$ 的節點最多
+$\lceil n / 2^{h+1} \rceil$ 個，每個下沉 $O(h)$ 步，總時間
+\[
+\sum_{h=0}^{\lfloor \lg n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil O(h)
+= O\!\left(n \sum_{h \ge 0} \frac{h}{2^{h}}\right) = O(n)
+\]
+（資結書定理~8.1）。 每個元素至少要讀一次，所以建堆積是 $\Theta(n)$。
+
+一個一個插入確實是 $O(n \log n)$，最壞也會用到 $\Theta(n \log n)$（例如由大到小插入最小堆積，
+每個新元素都浮到根），但那只是其中一種做法。 題目說「requires」，表示每一種做法都至少要這麼久，
+這不成立。
+\end{pastsoln}

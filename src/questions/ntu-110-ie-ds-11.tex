@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-11}]{臺大工工所 110 學年度 第 11 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item $\lceil\log n\rceil!=O(n^2)$
+\item $(\log n)^n=O(n!)$
+\item $\log(n!)=O(n\log n)$
+\item $\log^* n=O(\log^*\log n)$
+\item $3^{\log_9 n}=O(\sqrt{n})$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(C)、(D)、(E)。 以下 $\log$ 以 $2$ 為底（底數不影響結論）。
+
+\begin{itemize}
+\item (A) 錯。 令 $m = \lceil \log n \rceil$，$m \ge \log n$。 $m!$ 的後半段 $m/2$ 個因子都至少 $m/2$，所以
+$m! \ge (m/2)^{m/2}$。 取對數：$\log(m!) \ge \frac{m}{2}\log\frac{m}{2}$；而 $\log(n^2) = 2\log n \le 2m$。
+$\frac{m}{2}\log\frac{m}{2}$ 對 $2m$ 的比值是 $\frac14 \log\frac m2 \to \infty$，所以 $\lceil\log n\rceil!$ 長得比 $n^2$
+（其實比任何多項式 $n^k$）都快，不是 $O(n^2)$。 數值上，$n = 2^{16}$ 時 $16! \approx 2.1 \times 10^{13}$，
+已經大於 $n^2 \approx 4.3 \times 10^9$。
+\item (B) 對。 $n! \ge (n/e)^n$（由 $e^n = \sum n^k/k! \ge n^n/n!$）。 所以
+$\dfrac{(\log n)^n}{n!} \le \left(\dfrac{e\log n}{n}\right)^n$，$n$ 夠大時括號裡小於 $1$，整個趨近 $0$，
+$(\log n)^n = o(n!)$，當然是 $O(n!)$。
+\item (C) 對。 $\log(n!) = \sum_{i=1}^{n}\log i \le n\log n$，取 $c = 1$。 （其實 $\log(n!) = \Theta(n\log n)$，
+資結書第~1.6~節。）
+\item (D) 對。 $\log^*$ 的定義是一直取對數到 $\le 1$ 為止要取幾次，所以 $n > 1$ 時
+$\log^*(\log n) = \log^* n - 1$。 $\log^* n \ge 2$（$n > 2$）時 $\log^* n \le 2(\log^* n - 1)$，取 $c = 2$
+即可。 兩者只差 $1$，是同一個階。
+\item (E) 對。 $3^{\log_9 n} = 3^{\frac{\log_3 n}{\log_3 9}} = 3^{\frac12\log_3 n} = n^{1/2} = \sqrt n$，等於
+$\sqrt n$，所以是 $O(\sqrt n)$（$c = 1$）。
+\end{itemize}
+\end{pastsoln}

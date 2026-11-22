@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-04}]{臺聯大電機類 106 學年度 第四題}
+（問答）
+
+(10\%) A square matrix $A$ is called an upper triangular matrix when all the elements below the main
+diagonal of the matrix are zero. Obtain an addressing formula for element $a_{ij}$ in the upper
+triangular if this upper triangular is stored by rows in an array $B[n(n{+}1)/2]$ with $A[0][0]$ being
+stored in $B[0]$. What is the relationship between $i$ and $j$ for elements in the zero part of $A$?
+\end{pastexam}
+
+\begin{pastsoln}
+題目用 $A[0][0]$ 對到 $B[0]$，所以 $A$ 是 $n \times n$、下標 $0$ 到 $n - 1$，$B$ 的索引也從 $0$
+開始。
+
+\textbf{位址公式}。 上三角、列優先時，第 $r$ 列要存的是 $a_{rr}, a_{r,r+1}, \ldots, a_{r,n-1}$，
+共 $n - r$ 個。 $a_{ij}$（$i \le j$）前面有：
+\begin{itemize}
+\item 第 $0$ 列到第 $i - 1$ 列的全部，共
+\[
+\sum_{r=0}^{i-1} (n - r) = in - \frac{i(i - 1)}{2} = \frac{i(2n - i + 1)}{2}
+\]
+個；
+\item 第 $i$ 列裡排在它前面的 $a_{ii}, \ldots, a_{i,j-1}$，共 $j - i$ 個。
+\end{itemize}
+$B$ 從 $0$ 開始，前面有幾個元素，它的索引就是幾，所以
+\[
+a_{ij} \text{ 存在 } B\!\left[\frac{i(2n - i + 1)}{2} + (j - i)\right], \qquad 0 \le i \le j \le n - 1.
+\]
+
+檢查幾個點：
+\begin{itemize}
+\item $a_{00}$：$0 + 0 = 0$，是 $B[0]$。
+\item $a_{0,n-1}$：$0 + (n - 1) = n - 1$，第 $0$ 列共 $n$ 個，最後一個在 $B[n - 1]$。
+\item $a_{11}$：$\frac{2n}{2} + 0 = n$，第 $1$ 列緊接在第 $0$ 列後面。
+\item $a_{n-1,n-1}$：$\frac{(n - 1)(n + 2)}{2} + 0 = \frac{n(n + 1)}{2} - 1$，是 $B$ 的最後一格。
+\end{itemize}
+以 $n = 4$ 為例，$a_{12}$ 在 $\frac{1 \cdot 8}{2} + 1 = 5$，$a_{23}$ 在
+$\frac{2 \cdot 7}{2} + 1 = 8$：
+\[
+B = [\,a_{00}, a_{01}, a_{02}, a_{03}, a_{11}, a_{12}, a_{13}, a_{22}, a_{23}, a_{33}\,].
+\]
+
+這個公式和資結書第~4.2~節表格裡「上三角、列優先」的公式是同一個，只是那裡下標和 $B$ 都從 $1$ 開始；
+從 $0$ 開始時要重新數「前面有幾個」，不要直接拿 $1$ 起算的公式減 $1$。
+
+\textbf{零的部分}。 主對角線以下全是 $0$，也就是列號大於行號的元素：$i > j$ 時 $a_{ij} = 0$。 這些
+元素不存在 $B$ 裡；讀 $a_{ij}$ 時先判斷 $i > j$ 就直接回傳 $0$，否則才用上面的公式到 $B$ 裡找。
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-01}]{臺聯大電機類 115 學年度 第 1 題}
+（單選；2 分）
+
+Given a two-dimensional array A[5][4] (5 rows and 4 columns), assuming it is stored in a
+``row-major'' manner and each element occupies 2 bytes, if the address of A[0][0] is 1000, what is
+the address of A[2][3]?
+
+(A)~1018 \qquad (B)~1022 \qquad (C)~1024 \qquad (D)~1011
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+列優先時，$A[i][j]$ 前面有完整的 $i$ 列（每列 $4$ 個），再加上同一列左邊的 $j$ 個（資結書
+第~4.1~節）。 $A[2][3]$ 前面有 $2 \times 4 + 3 = 11$ 個元素，每個 $2$ 位元組：
+\[
+1000 + (2 \times 4 + 3) \times 2 = 1000 + 22 = 1022 .
+\]
+
+逐項檢查：
+\begin{itemize}
+\item (A) 1018：$1000 + 9 \times 2$，是 $A[2][1]$ 的位址（或者把列數 $5$、行數 $4$ 弄錯的結果）。 錯。
+\item (B) 1022：對。
+\item (C) 1024：$1000 + 12 \times 2$，多算了一個元素，是 $A[3][0]$ 的位址。 錯。
+\item (D) 1011：$1000 + 11$，忘了乘上每個元素 $2$ 位元組。 錯。
+\end{itemize}
+附帶一提，如果改成行優先，$A[2][3]$ 前面有 $3 \times 5 + 2 = 17$ 個，位址是 $1034$，不在選項裡。
+\end{pastsoln}

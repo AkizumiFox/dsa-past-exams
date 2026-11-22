@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-10}]{臺大工工所 106 學年度 第 10 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+Given two leftist heaps of n and 1 nodes, it takes O(1) time to combine them into a new leftist heap.
+Therefore, the insertion operation of leftist heap is also O(1).
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) 錯。
+
+後半句「插入就是和一個單節點的堆積合併」是對的（資結書第~8.5~節），問題在前半句：合併不是 $O(1)$。
+
+左傾樹的合併（資結書虛擬碼~8.9，以最小堆積為例）比較兩個根，根比較小的留下來，把它的\textbf{右子樹}和另一個堆積
+遞迴合併，回來後如果右邊的 $s$ 值變大就左右對調。 遞迴只沿著右邊的路徑往下走。 一個堆積只有一個節點 $x$ 時，
+$x$ 會沿著 $n$ 個節點那棵的最右路徑往下比，直到遇到比 $x$ 大的節點或走到底。 由資結書定理~8.2，最右路徑最多
+$\lg(n+1)$ 個節點，所以合併是 $O(\log n)$；而且這個上界會達到：例如 $n = 2^k - 1$、形狀是完美二元樹的最小左傾樹，
+最右路徑有 $k$ 個節點，插入一個比所有鍵都大的 $x$，要往下比 $k$ 次，再一路回來調整，$\Theta(\log n)$。
+
+所以插入是 $O(\log n)$，不是 $O(1)$；前提錯，結論也錯。
+\end{pastsoln}

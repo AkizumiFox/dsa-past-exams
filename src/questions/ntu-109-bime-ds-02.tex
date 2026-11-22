@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ntu-109-bime-ds-02}]{臺大生機所 109 學年度 第 2 題}
+（問答）
+
+(20\%) Create a data structure that efficiently supports the \textbf{stack} operations
+\textbf{(push and pop)} and also a \textbf{return-the-minimum} operation. Assume the elements are
+real numbers so that you can compare them.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：用兩個堆疊。 資料堆疊 $S$ 照常存元素；最小值堆疊 $M$ 和 $S$ 同步，$M$ 的第 $k$ 格存的是
+「$S$ 最底下 $k$ 個元素的最小值」。 這樣 $M$ 的頂端永遠是目前整個堆疊的最小值，三個操作都是
+$O(1)$。
+
+\textbf{為什麼一個變數不夠}。 只記一個 $\mathit{min}$，push 時更新很容易，但 pop 掉的正好是最小值時，
+新的最小值是誰就不知道了，只能把剩下的元素掃一遍，變成 $O(n)$。 堆疊的特性是「後進先出」：
+pop 之後的狀態一定是之前某一次 push 之前的狀態，所以只要把每個狀態的最小值存起來，pop 時一
+起丟掉就回到上一個狀態的最小值。 $M$ 就是存這些值。
+
+\begin{pseudo}{支援取最小值的堆疊（$S$、$M$ 是資結書第~6.1~節的一般堆疊）}
+\Procedure{Min-Push}{$x$}
+    \State \Call{Push}{$S, x$}
+    \If{$M$ 是空的 \OR $x <$ \Call{Top}{$M$}}
+        \State \Call{Push}{$M, x$}
+    \Else
+        \State \Call{Push}{$M, \textproc{Top}(M)$} \Comment{最小值沒變，再存一次}
+    \EndIf
+\EndProcedure
+\Statex
+\Function{Min-Pop}{}
+    \If{$S$ 是空的}
+        \State \Error{下溢}
+    \EndIf
+    \State \Call{Pop}{$M$}
+    \State \Return \Call{Pop}{$S$}
+\EndFunction
+\Statex
+\Function{Get-Min}{}
+    \If{$S$ 是空的}
+        \State \Error{堆疊是空的}
+    \EndIf
+    \State \Return \Call{Top}{$M$}
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 不變量：$S$ 和 $M$ 一樣高，而且對每個 $k$，$M$ 由底往上第 $k$ 格等於 $S$ 由底往上前
+$k$ 個元素的最小值。 一開始兩個都空，成立。 \proc{Min-Push}$(x)$ 之後，新的前 $k + 1$ 個元素的
+最小值是 $\min(\text{前 } k \text{ 個的最小值}, x) = \min(\text{原本 } M \text{ 的頂端}, x)$，第 3--6 行放進
+$M$ 的正是這個值，下面的格子不變，成立。 \proc{Min-Pop} 兩邊各拿掉頂端一格，剩下的格子沒動，
+成立。 所以 $M$ 的頂端（第 $k$ 格，$k$ 是目前高度）就是全部元素的最小值，\proc{Get-Min} 正確。
+
+\textbf{時間與空間}。 三個操作都只做常數次堆疊操作，各是 $O(1)$（用陣列或串列做的堆疊，push、pop、
+top 都是 $O(1)$）。 額外空間是 $M$，和 $S$ 一樣是 $O(n)$。
+
+\textbf{追蹤}：依序 push $5, 3, 7, 3, 1$，再 pop 三次（堆疊由底到頂寫）。
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+操作 & $S$ & $M$ & \proc{Get-Min} \\
+\midrule
+push 5 & 5 & 5 & 5 \\
+push 3 & 5 3 & 5 3 & 3 \\
+push 7 & 5 3 7 & 5 3 3 & 3 \\
+push 3 & 5 3 7 3 & 5 3 3 3 & 3 \\
+push 1 & 5 3 7 3 1 & 5 3 3 3 1 & 1 \\
+pop（回傳 1） & 5 3 7 3 & 5 3 3 3 & 3 \\
+pop（回傳 3） & 5 3 7 & 5 3 3 & 3 \\
+pop（回傳 7） & 5 3 & 5 3 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第一次 pop 拿掉最小值 $1$ 之後，$M$ 的頂端立刻是 $3$，不必重新找。 兩個 $3$ 的情形也沒問題，
+因為 $M$ 每格都對應 $S$ 的一格，不靠「值相等」去判斷要不要 pop $M$。
+
+\textbf{省空間的寫法}（可以補充）：$M$ 只在 $x \le$ \proc{Top}$(M)$ 時才 push，pop 時只有當 $S$ 彈出的
+值等於 \proc{Top}$(M)$ 才把 $M$ 也 pop。 這裡一定要用 $\le$ 而不是 $<$：上面的例子第二個 $3$
+如果沒進 $M$，pop 掉它時會把 $M$ 裡唯一的 $3$ 也拿掉，最小值就錯成 $5$。 最壞情況（元素一路
+遞減）空間仍是 $O(n)$，時間仍是 $O(1)$。
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-09}]{成大電機所 114 學年度 單選題第 9 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please identify the wrong descriptions in the following:
+\begin{enumerate}[label=\alph*)]
+\item Heap is suitable for a priority queue.
+\item Binary search is good for a dictionary.
+\item Binary search is faster than Heap in the insert operation.
+\item Max Heap is faster than binary serach in finding the maximum value.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c)。
+
+這題拿「堆積」和「用二元搜尋的結構」（排好序的陣列，或二元搜尋樹）比較。
+\begin{itemize}
+\item a) 對。 優先佇列要的是插入和取出最大（最小）值，二元堆積兩者都是 $O(\log n)$，看最大值
+$O(1)$（資結書第~8.3~節）。
+\item b) 對。 字典（dictionary）的主要操作是用鍵值搜尋，排好序的陣列可以二元搜尋，$O(\log n)$；
+二元搜尋樹也是同樣的想法。 堆積不支援有效率的搜尋（任意鍵值要 $O(n)$）。
+\item c) \textbf{錯}。 堆積插入是 $O(\log n)$（放在最後再往上調整）。 排好序的陣列插入要搬移
+元素，最壞 $O(n)$；二元搜尋樹插入是 $O(h)$，平衡時 $O(\log n)$，也不會比堆積快。 所以「二元搜尋
+在插入上比堆積快」是錯的。
+\item d) 對。 最大堆積的最大值就在根，$O(1)$。 二元搜尋樹要一路往右走到底，$O(h)$。（若是排好
+序的陣列，最大值在最後一格，也是 $O(1)$，兩者一樣快；但就二元搜尋樹或一般的「搜尋」操作而言，
+堆積不會比較慢，這個敘述一般當成對的。）
+\end{itemize}
+單選題，明確錯的是 c)。
+\end{pastsoln}

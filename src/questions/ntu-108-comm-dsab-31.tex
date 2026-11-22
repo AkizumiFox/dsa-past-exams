@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-31}]{臺大電信所 108 學年度（B）第 31 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+Consider disjoint-set union/find algorithms with weighted union and path compression. Assume the
+disjoint-set forest consists of $n$ items, what is the worst-case time complexity of $n$
+find/union operations? (choose the tightest bound)
+
+A.~$O(n)$ \qquad B.~$O(n\log^* n)$ \qquad C.~$O(n\log n)$ \qquad D.~$O(n^2)$ \qquad
+E.~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+依大小（weighted）合併加上路徑壓縮，$m$ 個操作的總時間是 $O(m\,\alpha(n))$（資結書定理~13.4，
+依大小合併和依秩合併的上界一樣）。 這裡 $m = n$，是 $O(n\,\alpha(n))$。 選項裡沒有 $\alpha$：
+\begin{itemize}
+\item A $O(n)$：不成立。 Tarjan 證明了這個演算法有些操作序列真的要 $\Theta(m\,\alpha(n))$，而
+$\alpha(n)$ 雖然長得極慢，仍然會無限變大，不是常數（資結書第~13.3~節）。
+\item B $O(n \lg^* n)$：$\alpha(n) \le \lg^* n$，所以是對的上界（這也是 Hopcroft 和 Ullman 最早證明的
+界），而且是選項裡最緊的。
+\item C $O(n \lg n)$：只用依大小合併、不壓縮也做得到，對但太鬆。 D、E 更鬆。
+\end{itemize}
+\end{pastsoln}

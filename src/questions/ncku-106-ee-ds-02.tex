@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncku-106-ee-ds-02}]{成大電機所 106 學年度 複選題第 2 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item A binary tree is a special case of a tree.
+\item It is still legal to have a tree without any node.
+\item Given a root n of a tree T$_1$ whose left subtree and right subtree are respectively S$_1$ and S$_2$,
+we generate a new tree T$_2$ by exchanging S$_1$ and S$_2$. Then, T$_1$ is equal to T$_2$.
+\item The maximum number of nodes in a binary tree is $2^{K-1}$ if the depth of a tree is k.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+這一題考的是 Horowitz《Fundamentals of Data Structures》對「樹」和「二元樹」的區分（這份考卷的其他題
+也出自這本書）：
+\begin{itemize}
+\item 樹至少有一個節點；二元樹可以是空的。
+\item 樹的子樹不分順序；二元樹的左、右子樹是有區別的。
+\item 所以二元樹\textbf{不是}樹的特例，是另一種東西。
+\end{itemize}
+資結書第~7.1~節也寫了同樣的區別：「二元樹也可以是空的，樹的定義通常不允許空樹」，以及兩個節點的二元樹
+有兩種、兩個節點的有序樹只有一種。
+
+\textbf{(A) 錯。} 二元樹可以是空的，樹不行；二元樹「只有一個子節點」時還要分左右，樹不分。 例如只有根
+和一個左子節點的二元樹，和只有根和一個右子節點的二元樹是兩棵不同的二元樹，當成樹卻是同一棵。 所以
+二元樹不能看成樹的特例。
+
+\textbf{(B) 錯。} 依上面的定義，樹是「一個或多個節點」的有限集合，沒有零個節點的樹（零個節點的是空的
+二元樹）。 有些書（例如 CLRS 的有根樹）允許空樹，但這一題的 (A)(B)(C) 顯然是照 Horowitz 的定義出的。
+
+\textbf{(C) 對（照 Horowitz 的定義）。} 題目說的是 tree：樹的子樹沒有順序，交換兩棵子樹得到的還是同一棵樹，
+$T_1 = T_2$。 這個選項正是用來對照「二元樹交換左右子樹會變成不同的二元樹」。 如果把 $T_1$ 當成二元樹或
+有序樹（資結書預設的樹是有序樹），交換之後一般就不相等，只有 $S_1$、$S_2$ 長得一模一樣時才相等，那 (C)
+就是錯的，而四個選項全錯；複選題不會沒有答案，所以這裡採用 Horowitz 的讀法。
+
+\textbf{(D) 錯。} 深度（層數）為 $k$ 的二元樹，第 $i$ 層最多 $2^{i-1}$ 個節點，總共最多
+\[
+\sum_{i=1}^{k} 2^{i-1} = 2^k - 1
+\]
+個，不是 $2^{k-1}$（$2^{k-1}$ 是第 $k$ 層一層的最多個數）。 資結書第~7.1~節用「高度 $h$（數節點）的二元樹
+最多 $2^h - 1$ 個節點」。 若深度從 $0$ 算，最多是 $2^{k+1} - 1$，也不是 $2^{k-1}$。 題目 $K$、$k$ 大小寫
+不一致，應該是同一個數。
+\end{pastsoln}

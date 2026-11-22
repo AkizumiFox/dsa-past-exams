@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-18}]{臺大電信所 110 學年度（B）第 18 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Suppose we run Dijkstra's single-source shortest-path algorithm on the following weighted directed graph with vertex $a$ as the source. In what order do the nodes get included into the set of vertices for which the shortest path distances are finalized?
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6mm,font=\itshape},l/.style={inner sep=1.5pt,font=\small},>={Stealth[length=2mm]}]
+\node[v] (a) at (0,0) {a}; \node[v] (b) at (1.2,1.2) {b}; \node[v] (c) at (3.6,1.2) {c};
+\node[v] (d) at (2.4,0) {d}; \node[v] (e) at (1.2,-1.2) {e}; \node[v] (f) at (3.6,-1.2) {f};
+\draw[->] (a) -- node[l,above left] {1} (b);
+\draw[->] (b) -- node[l,above] {1} (c);
+\draw[->] (a) -- node[l,above] {6} (d);
+\draw[->] (b) -- node[l,above right] {4} (d);
+\draw[->] (c) -- node[l,above left] {2} (d);
+\draw[->] (c) -- node[l,right] {1} (f);
+\draw[->] (d) -- node[l,above left] {3} (e);
+\draw[->] (d) -- node[l,above right] {2} (f);
+\draw[->] (a) -- node[l,below left] {7} (e);
+\draw[->] (e) -- node[l,below] {2} (f);
+\end{tikzpicture}
+\end{center}
+
+A.~$a,b,c,d,e,f$ \qquad B.~$a,b,c,f,d,e$ \qquad C.~$a,b,c,f,e,d$ \qquad D.~$a,b,e,c,f,d$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+Dijkstra 每一輪從還沒確定的頂點裡取出 $d$ 值最小的，把它確定，再鬆弛它出去的邊（資結書第~25.2~節）。
+下表每一列是取出該頂點並鬆弛之後的 $d$ 值（$\infty$ 表示還沒有路徑，已確定的打 $*$）：
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+取出 & $a$ & $b$ & $c$ & $d$ & $e$ & $f$ \\
+\midrule
+（開始） & 0 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+$a$ & $0^*$ & 1 & $\infty$ & 6 & 7 & $\infty$ \\
+$b$ & $0^*$ & $1^*$ & 2 & 5 & 7 & $\infty$ \\
+$c$ & $0^*$ & $1^*$ & $2^*$ & 4 & 7 & 3 \\
+$f$ & $0^*$ & $1^*$ & $2^*$ & 4 & 7 & $3^*$ \\
+$d$ & $0^*$ & $1^*$ & $2^*$ & $4^*$ & 7 & $3^*$ \\
+$e$ & $0^*$ & $1^*$ & $2^*$ & $4^*$ & $7^*$ & $3^*$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+說明幾個關鍵步驟：
+\begin{itemize}
+\item 取出 $b$（$d = 1$）：$c \gets 1 + 1 = 2$；$d \gets \min(6, 1 + 4) = 5$。
+\item 取出 $c$（$d = 2$）：$d \gets \min(5, 2 + 2) = 4$；$f \gets 2 + 1 = 3$。
+\item 此時未確定的是 $d = 4$、$e = 7$、$f = 3$，取最小的 $f$。 $f$ 沒有出邊。
+\item 取出 $d$（$4$）：$e \gets \min(7, 4 + 3) = 7$ 不變；$f$ 已確定。 最後取出 $e$。
+\end{itemize}
+確定的順序是 $a, b, c, f, d, e$，選 B。 A、C 都把 $f$（距離 $3$）排在 $d$（距離 $4$）之後或把 $e$ 排在
+$d$ 前面；D 在 $c$ 之前就取 $e$，但當時 $e$ 的 $d$ 值是 $7$，比 $c$ 的 $2$ 大，不會先取。
+\end{pastsoln}

@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncku-110-ee-ds-05}]{成大電機所 110 學年度 第 5 題}
+（問答）
+
+Consider the merge sort and quick sort. Let $L_1$ and $L_2$ be two sorted lists of $m$ and $n$
+elements, respectively. \quad (15 \%)
+\begin{enumerate}[label=(\alph*)]
+\item What is the maximum number of comparisons needed for merging $L_1$ and $L_2$? \hfill (5 \%)
+\item What is the minimum number of comparisons needed for merging $L_1$ and $L_2$? \hfill (5 \%)
+\item Both merge sort and quick sort are suitable for external sorting. Right? Explain your answer.
+(5 \%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $m + n - 1$；(b) $\min(m, n)$；(c) 不對，合併排序適合，快速排序不適合。
+
+(a)(b) 指一般的合併程序（資結書虛擬碼~14.4）：兩個串列都還有元素時，比較兩個開頭，把小的移到輸出；
+有一個串列空了，就把另一個剩下的直接接上，不用再比較。 設 $m, n \ge 1$。
+
+\textbf{(a)} 每次比較恰好輸出一個元素，而且比較只發生在兩邊都還有元素時。 一邊空掉的那一刻，另一邊至少
+剩一個元素沒經過比較就輸出，所以比較次數最多 $m + n - 1$。 這做得到：兩個串列交錯，例如
+$L_1 = \langle 1, 3, \ldots, 2m - 1\rangle$、$L_2 = \langle 2, 4, \ldots, 2n\rangle$ 且 $n = m$ 時，
+最後一個 $2n$ 之前的每個元素都要比較一次才輸出，共 $2m - 1 = m + n - 1$ 次。 一般的 $m, n$：讓兩邊的
+最大值分別是全部的最大和第二大，就要一直比到其中一邊只剩最大值為止。
+
+\textbf{(b)} 合併結束時至少有一個串列被全部輸出完。 一個串列的元素要在比較中「贏」才會被輸出（一邊
+空掉後直接接上的是另一個串列），所以先被清空的那個串列，每個元素都經過一次比較，比較次數至少
+$\min(m, n)$。 這做得到：設 $m \le n$，$L_1$ 的每個元素都比 $L_2$ 的第一個小，$L_1$ 的 $m$ 個元素各和
+$L_2[1]$ 比一次就全部輸出，接著把 $L_2$ 整個接上，共 $m$ 次。
+
+\textbf{(c)} 不對。 外部排序的資料在磁碟上，只能大塊、循序地讀寫（資結書第~15.3~節）。
+\begin{itemize}
+\item \textbf{合併排序適合}：先把資料分成記憶體放得下的段，各自排好寫回磁碟；再把好幾段做 $k$ 路合併，
+每一段都只要從頭到尾循序讀一遍，輸出也是循序寫。 這正是外部排序的標準做法。
+\item \textbf{快速排序不適合}：分割要從兩端往中間掃、把元素在整個陣列的任意位置之間交換，需要隨機
+存取。 在磁碟上這會變成大量的隨機讀寫，非常慢；而且它的最壞情況 $\Theta(n^2)$ 對大量資料風險很高。
+\end{itemize}
+\end{pastsoln}

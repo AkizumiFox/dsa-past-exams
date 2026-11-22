@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-35}]{臺聯大電機類 115 學年度 第 35 題}
+（單選；2 分）
+
+Let matrices \textbf{A} and \textbf{D} represent the \textbf{Adjacency} and \textbf{Degree} matrices
+of un undirected graph ($n$ vertices, $m$ edges) with no self-loops. Let \textbf{B} be an oriented
+incidence matrix of the same undirected graph. What is the relationship of \textbf{A}, \textbf{B},
+and \textbf{D}. (\textbf{D} is the diagonal matrix of vertex degree ($n\times n$), where the entries
+$d_{i,i}$ is the degree of vertex $i$, the number of edges incident to it.
+\begin{enumerate}[label=(\Alph*)]
+\item $\mathbf{B}=\mathbf{D}-\mathbf{A}$
+\item $\mathbf{B}^{\mathrm{T}}\mathbf{B}=\mathbf{A}-\mathbf{D}$
+\item $\mathbf{B}^{\mathrm{T}}\mathbf{B}=\mathbf{D}-\mathbf{A}$
+\item $\mathbf{B}\mathbf{B}^{\mathrm{T}}=\mathbf{2D}-\mathbf{A}$
+\item $\mathbf{B}\mathbf{B}^{\mathrm{T}}=\mathbf{D}-\mathbf{A}$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+$B$ 是 $n \times m$（列是頂點、行是邊）。 歷屆試題~\ref{px:ust-115-ee-ds-33} 的詳解已經證明：
+$(BB^{\mathrm T})_{ii} = \sum_k b_{ik}^2 = \deg(v_i)$；$i \ne j$ 時，$b_{ik} b_{jk}$ 只在 $e_k$
+連接 $v_i, v_j$ 時不為 $0$，而且一正一負，乘積是 $-1$。 圖沒有重邊（題目的 $A$ 是 $0/1$ 矩陣）時，
+$(BB^{\mathrm T})_{ij} = -a_{ij}$。 合起來就是 $BB^{\mathrm T} = D - A$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $B$ 是 $n \times m$，$D - A$ 是 $n \times n$，大小就不合（$m \ne n$ 時），而且 $B$ 的值
+和方向有關，$D - A$ 和方向無關。 錯。
+\item (B)(C) $B^{\mathrm T}B$ 是 $m \times m$，以邊為索引，不能等於 $n \times n$ 的矩陣。 它的
+對角線是 $2$（每條邊兩個端點），非對角線表示兩條邊有沒有共用端點。 錯。
+\item (D) 對角線應該是 $\deg(v_i)$，不是 $2\deg(v_i)$。 錯（無向圖的「無號」關聯矩陣
+$|B|$ 才有 $|B||B|^{\mathrm T} = D + A$）。
+\item (E) 對。
+\end{itemize}
+\end{pastsoln}

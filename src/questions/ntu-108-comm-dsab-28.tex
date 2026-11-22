@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-28}]{臺大電信所 108 學年度（B）第 28 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of $n$ decrease key operations in a Fibonacci heap of $n$ items is
+(choose the tightest bound)
+
+A.~$O(n)$ \qquad B.~$O(n\log^* n)$ \qquad C.~$O(n\log n)$ \qquad D.~$O(n^2)$ \qquad
+E.~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+費氏堆積的 \proc{Decrease-Key} 平攤 $O(1)$（資結書第~8.6~節）。 用位能 $\Phi = t(H) + 2m(H)$（$t$ 是
+根串列的樹數，$m$ 是有標記的節點數）：一次減少鍵值做了 $c$ 次剪下（包含連鎖剪下），實際成本
+$O(c)$；樹多了 $c$ 棵，而除了第一次剪下以外，每次連鎖剪下都去掉一個標記，最後最多新增一個標記，
+$\Delta\Phi \le c + 2(2 - c) = 4 - c$。 平攤成本 $O(c) + 4 - c = O(1)$（位能單位取得夠大）。
+
+$n$ 次的實際總成本 $\le$ 平攤總和 $+ \Phi_{\text{開始}} - \Phi_{\text{結束}} \le O(n) + 3n$，因為一開始
+$t(H) \le n$、$m(H) \le n$，$\Phi \le 3n$，而 $\Phi_{\text{結束}} \ge 0$。 所以總共 $O(n)$；每次至少
+要常數時間，也是 $\Omega(n)$。
+
+B 到 E 都是對的上界，但不緊。 注意下一題：單獨一次可能很貴，平攤才是 $O(1)$。
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-02}]{成大電機所 112 學年度 第 2 題}
+（問答）
+
+(10\%) Write the prefix and postfix form of the following expressions:\\
+(a) (A*B)/D+E*(f*A+D)-C\\
+(b) \texttt{!((a \&\& c) || (c > d))} \qquad\qquad // assuming C precedence
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~2~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-02}，這裡只列答案和重點。
+
+答案（C 的優先順序：\texttt{!} 最高，再來 \texttt{>}，再來 \texttt{\&\&}，最低 \texttt{||}；
+\texttt{*}、\texttt{/} 高於 \texttt{+}、\texttt{-}，同級由左往右）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & 前序（prefix） & 後序（postfix） \\
+\midrule
+(a) & \texttt{- + / * A B D * E + * f A D C} & \texttt{A B * D / E f A * D + * + C -} \\
+(b) & \texttt{! || \&\& a c > c d} & \texttt{a c \&\& c d > || !} \\
+\bottomrule
+\end{tabular}
+\end{center}
+(a) 加滿括號是 $\bigl(\bigl(((A*B)/D) + (E*((f*A)+D))\bigr) - C\bigr)$，運算子搬到左括號得前序、
+搬到右括號得後序（資結書第~6.3~節）。 (b) 的 \texttt{!} 是一元運算子，作用在整個括號上，前序放
+最前面、後序放最後面。
+\end{pastsoln}

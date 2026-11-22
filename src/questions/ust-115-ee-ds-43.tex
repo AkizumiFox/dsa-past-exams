@@ -1,0 +1,97 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-43}]{臺聯大電機類 115 學年度 第 43 題}
+（單選；2 分）
+
+Answer \textbf{Questions 41-43} according to the following C code.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+#include <stdio.h>
+int counter; // counting comparison
+int binary_search(int arr[], int key, int left, int right) {
+    int mid;
+    if(left>right){
+        counter++;
+        return left;
+    }
+    if (key<arr[left]){ //left boundary
+        counter++;
+        return left;
+    }
+    if (key>=arr[right]){ //right boundary
+        counter++;
+        return right+1;
+    }
+    mid=(left+right)/2;
+    if (key<arr[mid].val){
+        counter++;
+        binary_search(arr,key,left,mid-1);
+    }
+    else { // (key>=arr[mid].val)
+        binary_search(arr,key,mid+1,right);
+    }
+}
+int main() {
+    int arr[9]={1,2,3,5,5,5,6,7,9};
+    counter=0;
+    int j=binary_search(arr,5,0,8);
+    printf("%d",j);
+    printf("%d",counter);
+}
+\end{minted}
+
+The \texttt{\textbf{memmove}} function is declared in the \texttt{<string.h>} header file in C, and
+the \texttt{<cstring>} header file in C++. The function prototype is:\\
+\texttt{void *memmove(void *dest, const void *src, size\_t count);}\\
+It copies \texttt{count} bytes from the \texttt{src} memory to the \texttt{dest} memory area, safely
+handling cases where the source and destination regions overlap. Its speed is generally excellent
+and optimized by compiler/hardware. The following code provides fast \textbf{Insertion operation}
+using both \textbf{Binary Search} and \textbf{memmove}. Which of the following statements is the
+\textbf{least accurate}?
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+void insert(int arr[], int n, int key) {
+    int j;
+    if (n<=0){
+        j=0;
+    }
+    else{
+        j=binary_search(arr,key,0,n-1);
+    }
+    if ((n-j)>0) {
+        memmove(arr+j+1,arr+j,(n-j)*sizeof(int));
+    }
+    arr[j]=key;
+}
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item It is stable.
+\item It is in-place.
+\item Computation complexity is $O(n \log n)$
+\item \textbf{Binary search} has $O(\log n)$ computational complexity
+\item The insertion operation in an array using \texttt{\textbf{memmove}} can be as efficient as
+that of a linked list, provided there is optimized hardware support.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+\texttt{binary\_search} 照第 41、42 題的解讀（見歷屆試題~\ref{px:ust-115-ee-ds-41}）：補上 \texttt{return}、
+\texttt{arr[mid].val} 當成 \texttt{arr[mid]}。 \texttt{insert} 在排好的 \texttt{arr[0..n-1]} 裡找到
+「第一個大於 \texttt{key} 的位置」$j$，用 \texttt{memmove} 把 \texttt{arr[j..n-1]} 整段往右搬一格，
+再把 \texttt{key} 放進 \texttt{arr[j]}。 對每個元素依序呼叫它，就是二分插入排序。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $j$ 是第一個\textbf{大於} \texttt{key} 的位置，和 \texttt{key} 相等的舊元素都在 $j$ 前面，
+新的排在它們後面，相等元素保持原來的先後，是穩定的。 正確。
+\item (B) 只在原陣列上搬移，額外空間 $O(1)$（假設陣列後面有空位，這是呼叫者的責任）。 正確。
+\item (C) 一次 \texttt{insert}：二分搜尋 $O(\log n)$，但 \texttt{memmove} 最壞要搬 $n$ 個元素，
+$\Theta(n)$，合計 $\Theta(n)$，不是 $O(n \log n)$。 拿來排序 $n$ 個數（插入 $n$ 次），比較
+$O(n \log n)$ 次，但搬移最壞 $1 + 2 + \cdots + (n-1) = \Theta(n^2)$ 次，總共 $\Theta(n^2)$，也不是
+$O(n \log n)$。 不論指單次插入還是整個排序都不對（單次的 $\Theta(n)$ 雖然也屬於 $O(n \log n)$，但
+那是沒有意義的鬆上界）。 \textbf{最不準確}，選它。
+\item (D) 二分搜尋每次把區間減半，$O(\log n)$。 正確。
+\item (E) 這句話不完全精確（\texttt{memmove} 仍要搬 $\Theta(n)$ 個元素，串列在已知位置插入是
+$\Theta(1)$）。 但若比的是「在排好的資料裡插入」這整件事：串列要循序找位置 $\Theta(n)$，陣列是
+二分搜尋 $O(\log n)$ 加一次大塊連續搬移 $\Theta(n)$，兩者都是 $\Theta(n)$，而連續記憶體的搬移
+有硬體加速，實際上常常比串列快。 這是可以成立的說法，比 (C) 準確。
+\end{itemize}
+\end{pastsoln}

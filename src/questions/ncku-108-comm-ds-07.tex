@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-07}]{成大電通所 108 學年度 問答題第 4 題}
+（問答；15 分）
+
+\begin{enumerate}[label=(\Alph*)]
+\item Please transform the following infix expression `` A*B-C+(D+E)*F+G/H '' to the corresponding
+postfix expression using the Stack or Queue data structures. Please describe your answer in details. (10
+points)
+\item Please evaluate the result from the above postfix expression using the Stack or Queue data
+structures if [A=8, B=7, C=6, D=5, E=4, F=3, G=2, H=1]. Please describe your answer in details. (5
+points)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(A)} 用堆疊做中序轉後序（資結書虛擬碼~6.8）：運算元直接輸出；左括號推入；右括號就一直彈出輸出，
+直到遇到左括號（丟掉）；運算子要推入前，先把堆疊頂端優先順序\textbf{不低於}它的運算子彈出輸出（同優先
+順序左結合，所以相等也彈出），遇到左括號停。 \texttt{*}、\texttt{/} 優先於 \texttt{+}、\texttt{-}。
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀到 & 動作 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+A & 輸出 & & A \\
+* & 推入 & * & A \\
+B & 輸出 & * & AB \\
+- & 彈出 *（不低於 -），推入 - & - & AB* \\
+C & 輸出 & - & AB*C \\
++ & 彈出 -（同級），推入 + & + & AB*C- \\
+( & 推入 & + ( & AB*C- \\
+D & 輸出 & + ( & AB*C-D \\
++ & 頂端是 (，推入 & + ( + & AB*C-D \\
+E & 輸出 & + ( + & AB*C-DE \\
+) & 彈出到 ( & + & AB*C-DE+ \\
+* & 頂端 + 較低，推入 & + * & AB*C-DE+ \\
+F & 輸出 & + * & AB*C-DE+F \\
++ & 彈出 *、+，推入 + & + & AB*C-DE+F*+ \\
+G & 輸出 & + & AB*C-DE+F*+G \\
+/ & 頂端 + 較低，推入 & + / & AB*C-DE+F*+G \\
+H & 輸出 & + / & AB*C-DE+F*+GH \\
+結束 & 彈出剩下的 / 、+ & & AB*C-DE+F*+GH/+ \\
+\bottomrule
+\end{tabular}
+\end{center}
+後序式：\textbf{AB*C-DE+F*+GH/+}。 檢查：加上括號是 $(((A*B)-C)+((D+E)*F))+(G/H)$，轉成後序正是這個結果。
+
+\textbf{(B)} 用堆疊求值（資結書虛擬碼~6.7）：運算元推入；遇到運算子彈出兩個，先彈出的是右運算元，算完
+推回。
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+讀到 & 動作 & 堆疊（底 $\to$ 頂） \\
+\midrule
+A, B & 推入 8、7 & 8, 7 \\
+* & $8 \times 7 = 56$ & 56 \\
+C & 推入 6 & 56, 6 \\
+- & $56 - 6 = 50$ & 50 \\
+D, E & 推入 5、4 & 50, 5, 4 \\
++ & $5 + 4 = 9$ & 50, 9 \\
+F & 推入 3 & 50, 9, 3 \\
+* & $9 \times 3 = 27$ & 50, 27 \\
++ & $50 + 27 = 77$ & 77 \\
+G, H & 推入 2、1 & 77, 2, 1 \\
+/ & $2 / 1 = 2$ & 77, 2 \\
++ & $77 + 2 = 79$ & 79 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結束時堆疊只剩一個數，結果是 \textbf{79}。 直接代入原式驗證：$8 \times 7 - 6 + (5 + 4) \times 3 + 2 / 1
+= 56 - 6 + 27 + 2 = 79$。
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-49}]{臺大電信所 109 學年度（B）第 49 題}
+（複選；每題 2 分，每答錯一個選項倒扣 0.4 分）
+
+Which of the following operations are supported by binary search trees?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item Find key
+\item Insert key
+\item Delete key
+\item Find-Min
+\item Delete-Min
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)(D)(E)，全對。
+
+二元搜尋樹的性質是左子樹的鍵都比根小、右子樹的鍵都比根大，以下操作都能在 $O(h)$ 時間做完，
+$h$ 是樹高（資結書第~9.1、9.2~節）：
+\begin{itemize}
+\item (A) 搜尋：從根開始，比根小往左、比根大往右，找到或走到空的為止。
+\item (B) 插入：像搜尋一樣走到空的位置，把新節點接上去。
+\item (C) 刪除：分成沒有子節點、一個子節點、兩個子節點三種情形；兩個子節點時用後繼（右子樹
+最小的）取代。
+\item (D) 找最小：從根一路往左走，走到沒有左子節點的那一個。
+\item (E) 刪除最小：先用 (D) 找到最小的節點，它沒有左子節點，屬於「最多一個子節點」的簡單
+情形，直接用它的右子節點取代它。
+\end{itemize}
+所以二元搜尋樹也能當優先佇列用（insert 加 delete-min），只是不平衡時最壞要 $O(n)$。
+\end{pastsoln}

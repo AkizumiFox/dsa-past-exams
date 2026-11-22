@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-06}]{成大電通所 114 學年度 單選題第 6 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please identify the incorrect descriptions.
+\begin{enumerate}[label=\alph*),nosep]
+\item The max number of nodes in a binary tree with depth $k$ is $2^k$-1, where k $\ge$ 1.
+\item Using the most significant digit first (MSD) to sort multiple keys exist is simple than that using the
+least significant digit first (LSD).
+\item Merge sort is not a in-place sorting algorithm.
+\item The number of threads in a binary tree with $n$ nodes is $n$+1.
+\item The above descriptions are correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：b)。
+
+\begin{itemize}
+\item a) 正確。 這裡的「depth」是 Horowitz 課本的用法：根在第 1 層，深度 $k$ 就是有 $k$ 層，所以 $k \ge 1$。 第 $i$ 層最多
+$2^{i-1}$ 個節點，總共最多 $\sum_{i=1}^{k} 2^{i-1} = 2^k - 1$（資結書定理~7.1，資結書把這個量叫高度）。 若深度數邊
+（根深度 0），最多是 $2^{k+1} - 1$；但題目寫 $k \ge 1$，可以看出用的是層數的定義。
+\item b) \textbf{錯誤}，正好說反了。 LSD 從最低位開始，每一趟都對\textbf{整份}資料做一次穩定的分配排序，做完所有位數就排好，
+寫法簡單（資結書第~15.2.2~節）。 MSD 依最高位分堆以後，每一堆要\textbf{各自}再依下一位排序，要遞迴或另外管理許多子堆，
+比較複雜（資結書第~15.2.4~節）。 所以通常說 LSD 比 MSD 簡單。
+\item c) 正確。 陣列版的合併排序在合併時需要 $\Theta(n)$ 的輔助陣列，不是原地（in-place）排序（資結書第~14.4~節）。
+\item d) 正確。 $n$ 個節點共有 $2n$ 個子指標，其中 $n - 1$ 個指向子節點（每個非根節點被指一次），空的有 $2n - (n - 1) = n + 1$
+個，引線二元樹把這 $n + 1$ 個空指標全部改成引線（資結書第~7.5~節）。
+\item e) 錯，因為 b) 不正確。
+\end{itemize}
+\end{pastsoln}

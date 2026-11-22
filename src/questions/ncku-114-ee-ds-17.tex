@@ -1,0 +1,81 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-17}]{成大電機所 114 學年度 簡答題第 1 題}
+（填空）
+
+(10 PTs) Given a circular list (or, a singly-linked circular list) that the link field of the last
+node points to the first node as shown in Fig 1, please complete the code to insert a new node to
+the front of the list in the following:
+
+\begin{minipage}[t]{0.55\textwidth}
+\begin{minted}[fontsize=\footnotesize,escapeinside=||]{cpp}
+template <class T>
+void CircularList<T>::InsertFront(const T& e)
+{
+  ChainNode <T> *n = new ChainNode <T>(e);
+  if (last) { // nonempty chain
+     |\blank{a)}|;
+     |\blank{b)}|;
+  } else {
+     |\blank{c)}|;
+     |\blank{d)}|;
+  }
+}
+\end{minted}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.4\textwidth}
+\begin{minted}[fontsize=\footnotesize]{cpp}
+template <class T> class Chain;
+
+template <class T>
+class ChainNode {
+  friend class Chain <T>;
+  private:
+    T data;
+    ChainNode <T> *link;
+};
+\end{minted}
+\end{minipage}
+
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},font=\small]
+  \foreach \k/\x in {1/0,2/3.2,3/6.4} {
+    \draw[fill=black!25] (\x,0) rectangle (\x+1.7,0.6);
+    \draw (\x+1.7,0) rectangle (\x+2.4,0.6);
+    \node[inner sep=1pt] at (\x+0.85,0.3) {$x_{\k}$};
+  }
+  \draw[->] (2.05,0.3) -- (3.2,0.3);
+  \draw[->] (5.25,0.3) -- (6.4,0.3);
+  \draw[->] (8.45,0.3) -- (9.2,0.3) -- (9.2,1.2) -- (0.85,1.2) -- (0.85,0.6);
+  \node[font=\small\sffamily\itshape] at (0.85,-0.3) {data};
+  \node[font=\small\sffamily\itshape] at (2.05,-0.3) {link};
+  \draw[->] (8.45,-0.6) -- (8.45,-0.05);
+  \node[font=\small\sffamily\itshape] at (8.45,-0.85) {last};
+  \node at (4.4,-0.85) {Fig. 1};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{minted}[fontsize=\small]{cpp}
+if (last) {                // 非空：接在 last 後面，也就是第一個節點前面
+    n->link = last->link;  // a) 新節點指向原本的第一個節點
+    last->link = n;        // b) 最後一個節點改指向新節點
+} else {                   // 空串列：新節點自己成一個環
+    last = n;              // c)
+    n->link = n;           // d)
+}
+\end{minted}
+
+環狀串列記的是最後一個節點 \texttt{last}，第一個節點是 \texttt{last->link}。 在最前面插入，就是把
+新節點接在 \texttt{last} 和原本的第一個節點之間；\texttt{last} 不用動，因為最後一個節點沒變
+（資結書第~5.2~節，和虛擬碼~5.5 在最後面插入只差最後要不要移 \texttt{last}）。
+
+a)、b) 的順序不能對調：先做 \texttt{last->link = n} 的話，原本的第一個節點就找不到了。 空串列時新
+節點既是第一個也是最後一個，\texttt{link} 指向自己；c)、d) 兩行的順序可以對調（寫成
+\texttt{last = n; last->link = last;} 也可以）。 例如依序在空串列前端插入 $1, 2, 3$，得到環
+$3 \to 2 \to 1 \to 3$，\texttt{last} 一直指向 $1$。 時間 $\Theta(1)$。
+
+附帶一提：右邊的 \texttt{ChainNode} 只把 \texttt{Chain<T>} 宣告成 friend，要讓
+\texttt{CircularList<T>} 存取 private 的 \texttt{link}，實際程式還得把 \texttt{CircularList<T>}
+也宣告成 friend。 這不影響填空的答案。
+\end{pastsoln}

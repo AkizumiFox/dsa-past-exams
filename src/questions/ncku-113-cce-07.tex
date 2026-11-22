@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ncku-113-cce-07}]{成大電通所 113 學年度 是非題第 8 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+Fig. (a) show the two points x and y. The result of *x=*y is as that shown in Fig. (b).
+
+\begin{center}
+\begin{tikzpicture}[>={Straight Barb[length=4pt,width=6pt]},font=\sffamily,
+  dat/.style={draw,fill=gray!40,minimum width=1.3cm,minimum height=0.7cm,inner sep=0pt},
+  lnk/.style={draw,minimum width=0.6cm,minimum height=0.7cm,inner sep=0pt}]
+  % (a)
+  \foreach \lab/\y in {a/0.95,b/0} {
+    \node[dat] (d\lab) at (0,\y) {\textit{\lab}};
+    \node[lnk,anchor=west] (l\lab) at (d\lab.east) {};
+    \draw[->] (l\lab.center)--++(0.95,0) node[right] {...};
+  }
+  \node (x) at (-1.95,0.95) {\textit{x}}; \draw[->] (x)--(da.west);
+  \node (y) at (-1.95,0) {\textit{y}}; \draw[->] (y)--(db.west);
+  \node at (0.1,-1) {(a)};
+  % (b)
+  \begin{scope}[xshift=5.3cm]
+  \foreach \lab/\y in {a/0.95,b/0} {
+    \node[dat] (d\lab) at (0,\y) {\textit{\lab}};
+    \node[lnk,anchor=west] (l\lab) at (d\lab.east) {};
+    \draw[->] (l\lab.center)--++(0.95,0) node[right] {...};
+  }
+  \node[inner sep=1pt] at (-1.85,0.14) {\textit{x}}; \draw[->] (-1.6,0.14)--([yshift=0.14cm]db.west);
+  \node[inner sep=1pt] at (-1.85,-0.16) {\textit{y}}; \draw[->] (-1.6,-0.14)--([yshift=-0.14cm]db.west);
+  \node at (0.4,-1) {(b) *\textit{x} = *\textit{y}};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 圖 (b) 是 \texttt{x = y}（指標指派）的結果，不是 \texttt{*x = *y}。 原題的 ``points'' 指
+pointers（指標）。
+
+在 C 裡，\texttt{x}、\texttt{y} 是指向節點的指標，節點有資料欄和鏈結欄（資結書第~5.1~節）。
+\begin{itemize}
+\item \texttt{x = y}：改的是指標 \texttt{x} 本身，讓它和 \texttt{y} 指向同一個節點（資料 $b$
+的那個），兩個節點的內容都不變。 這正是圖 (b)：\texttt{x}、\texttt{y} 都指向 $b$。 如果沒有
+別的指標指著 $a$ 那個節點，它就再也找不到了。
+\item \texttt{*x = *y}：改的是 \texttt{x} 指向的那個\textbf{節點的內容}，把 \texttt{y} 所指
+節點的整個結構（資料欄和鏈結欄）複製過去。 兩個指標仍然各指各的節點，但第一個節點的資料變成
+$b$，它的鏈結也改成指向 $b$ 原本的下一個節點；$a$ 原本的下一個節點如果沒有別人指著，就斷掉了。
+\end{itemize}
+\texttt{*x = *y} 之後的正確結果：
+\begin{center}
+\begin{tikzpicture}[>={Straight Barb[length=4pt,width=6pt]},font=\sffamily,
+  dat/.style={draw,fill=gray!40,minimum width=1.3cm,minimum height=0.7cm,inner sep=0pt},
+  lnk/.style={draw,minimum width=0.6cm,minimum height=0.7cm,inner sep=0pt}]
+  \foreach \lab/\y in {1/0.95,2/0} {
+    \node[dat] (d\lab) at (0,\y) {\textit{b}};
+    \node[lnk,anchor=west] (l\lab) at (d\lab.east) {};
+  }
+  \node (x) at (-1.95,0.95) {\textit{x}}; \draw[->] (x)--(d1.west);
+  \node (y) at (-1.95,0) {\textit{y}}; \draw[->] (y)--(d2.west);
+  \node (nx) at (3.6,0.475) {...};
+  \draw[->] (l1.center)--(nx.west);
+  \draw[->] (l2.center)--(nx.west);
+  \node[font=\small\rmfamily, anchor=west] at (4.1,0.475) {（$b$ 原本的下一個節點）};
+\end{tikzpicture}
+\end{center}
+\end{pastsoln}

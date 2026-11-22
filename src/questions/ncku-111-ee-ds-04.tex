@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-04}]{成大電機所 111 學年度 單選題第 4 題}
+（單選；每題 4 分）
+
+A \underline{\hspace{2em}} is a data structure that organizes data similar to a line in the supermarket, where
+the first one in line is the first one out.
+
+A.~queue linked list \qquad B.~stacks linked list \qquad C.~both of them \qquad D.~neither of them
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+超市排隊，先排的先結帳，就是\textbf{先進先出}（FIFO），也就是佇列（資結書第~6.2~節）。 選項的「queue linked list」
+是用串列實作的佇列：從尾端加入、從前端移除，兩邊各記一個指標，兩個操作都是 $\Theta(1)$。
+\begin{itemize}
+\item A.~佇列：對。
+\item B.~堆疊：後進先出，最後排的先出來，不像排隊。 錯。
+\item C.~兩者都是：堆疊不是。 錯。
+\item D.~兩者都不是：佇列就是。 錯。
+\end{itemize}
+\end{pastsoln}

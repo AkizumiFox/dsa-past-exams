@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-01}]{臺聯大電機類 109 學年度 第 1 題}
+（問答；10 分）
+
+(10\%) Propose an algorithm to implement a queue using two stacks.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{做法。} 用兩個堆疊：$S_{\mathit{in}}$ 只負責放進來，$S_{\mathit{out}}$ 只負責拿出去。
+放進佇列就 push 到 $S_{\mathit{in}}$；從佇列拿出時，如果 $S_{\mathit{out}}$ 是空的，先把
+$S_{\mathit{in}}$ 的東西一個一個 pop 出來、push 進 $S_{\mathit{out}}$（順序因此倒過來），再從
+$S_{\mathit{out}}$ pop。 堆疊的操作照資結書第~6.1~節。
+
+\begin{pseudo}{用兩個堆疊做佇列}
+\Procedure{Enqueue}{$Q, x$}
+    \State \Call{Push}{$Q.S_{\mathit{in}}, x$}
+\EndProcedure
+\Statex
+\Function{Dequeue}{$Q$}
+    \If{$Q.S_{\mathit{out}}$ 是空的}
+        \While{$Q.S_{\mathit{in}}$ 不是空的}
+            \State $y \gets$ \Call{Pop}{$Q.S_{\mathit{in}}$}
+            \State \Call{Push}{$Q.S_{\mathit{out}}, y$}
+        \EndWhile
+    \EndIf
+    \If{$Q.S_{\mathit{out}}$ 是空的}
+        \State \Error{queue underflow} \Comment{兩個堆疊都空，佇列是空的}
+    \EndIf
+    \State \Return \Call{Pop}{$Q.S_{\mathit{out}}$}
+\EndFunction
+\end{pseudo}
+
+\textbf{例子。} Enqueue $1, 2, 3$，Dequeue，Enqueue $4$，Dequeue，Dequeue，Dequeue（堆疊寫成
+「底 $\ldots$ 頂」）：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+操作 & $S_{\mathit{in}}$ & $S_{\mathit{out}}$ & 回傳 \\
+\midrule
+Enqueue $1, 2, 3$ & $1, 2, 3$ & （空） & \\
+Dequeue & （空） & $3, 2$ & $1$（先搬成 $3, 2, 1$ 再 pop） \\
+Enqueue $4$ & $4$ & $3, 2$ & \\
+Dequeue & $4$ & $3$ & $2$ \\
+Dequeue & $4$ & （空） & $3$ \\
+Dequeue & （空） & （空） & $4$（先搬 $4$ 再 pop） \\
+\bottomrule
+\end{tabular}
+\end{center}
+取出的順序 $1, 2, 3, 4$ 就是放進去的順序。
+
+\textbf{正確性。} 不變量：把 $S_{\mathit{out}}$ 從頂到底、再接上 $S_{\mathit{in}}$ 從底到頂，
+就是佇列從前端到後端的內容。 一開始兩個都空，成立。 Enqueue 把 $x$ 放在 $S_{\mathit{in}}$ 的
+頂端，也就是這個序列的最後面，對應佇列的後端，成立。 搬移只在 $S_{\mathit{out}}$ 空的時候做：
+$S_{\mathit{in}}$ 由頂到底 pop 出來依序 push，搬完之後 $S_{\mathit{out}}$ 由頂到底正好是原來
+$S_{\mathit{in}}$ 由底到頂的順序，序列不變。 Dequeue 拿走 $S_{\mathit{out}}$ 的頂端，就是序列的
+第一個，也就是佇列的前端。 所以兩個操作都符合先進先出。 注意 $S_{\mathit{out}}$ 不空時\textbf{不能}
+搬，否則新放進去的會壓在舊的上面，順序就亂了。
+
+\textbf{複雜度。} Enqueue 是 $O(1)$。 Dequeue 最壞要搬 $S_{\mathit{in}}$ 裡全部的 $k$ 個，是
+$O(k)$；但每個元素一生最多被 push 進 $S_{\mathit{in}}$、pop 出 $S_{\mathit{in}}$、push 進
+$S_{\mathit{out}}$、pop 出 $S_{\mathit{out}}$ 各一次。 所以任意 $n$ 個操作的總時間是 $O(n)$，
+平攤下來每個操作 $O(1)$（資結書第~3~章的聚集分析）。 兩個堆疊合起來只存佇列裡的元素，空間
+$\Theta(k)$。
+\end{pastsoln}

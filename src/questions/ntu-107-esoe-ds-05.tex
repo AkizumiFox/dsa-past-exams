@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-05}]{臺大工科海洋所 107 學年度 第 5 題}
+（問答；10 分）
+
+\textbf{(10 \%)} Would you use the adjacency list structure or the adjacency matrix structure in each
+of the following cases? Please justify your choice.
+\begin{enumerate}[label=\alph*.]
+\item (5 \%) The graph has 12,000 vertices and 25,000 edges, and it is important to use as little
+space as possible.
+\item (5 \%) The graph has 12,000 vertices and 30,000,000 edges, and it is important to use as little
+space as possible.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a. 用相鄰串列；b. 用相鄰矩陣。
+
+比空間（資結書第~21.2~節）：$n$ 個頂點、$m$ 條邊，相鄰矩陣是 $n^2$ 格，和邊數無關；相鄰串列是
+$n$ 個串列頭加上 $2m$ 個串列節點（無向圖每條邊在兩端各記一次；有向圖是 $m$ 個），每個節點至少
+要存一個頂點編號，用鏈結串列還要一個指標。 這裡 $n = 12{,}000$，$n^2 = 1.44 \times 10^8$。
+題目沒說有向或無向，下面兩種都算，結論相同。
+
+\textbf{a.} $m = 25{,}000$，平均每個頂點只有大約 $4$ 個鄰居，非常稀疏。
+\begin{itemize}
+\item 相鄰矩陣：就算每格只用 $1$ 個位元，也要 $1.44 \times 10^8$ 位元 $= 18$ MB；用一個位元組
+存一格是 $144$ MB。
+\item 相鄰串列：$2m = 50{,}000$ 個節點，每個存一個 $4$ 位元組的頂點編號和一個 $8$ 位元組的指標，
+$600$ KB，加上 $12{,}000$ 個串列頭不到 $0.1$ MB，總共不到 $1$ MB。
+\end{itemize}
+差了一百倍以上，用相鄰串列。 矩陣裡 $1.44 \times 10^8$ 格只有 $5 \times 10^4$ 格是 $1$，絕大部分在
+記「沒有邊」。
+
+\textbf{b.} 無向圖最多 $n(n-1)/2 = 71{,}994{,}000$ 條邊，$3 \times 10^7$ 條大約是 $42\%$，算稠密。
+\begin{itemize}
+\item 相鄰矩陣：一格一個位元，$1.44 \times 10^8$ 位元 $= 18$ MB（無向圖只存上三角還可以再省一半）。
+\item 相鄰串列：$2m = 6 \times 10^7$ 個頂點編號，編號 $0$--$11{,}999$ 至少要 $14$ 個位元
+（$2^{14} = 16{,}384$），光是編號就要 $8.4 \times 10^8$ 位元 $= 105$ MB；實際用 $4$ 位元組的整數是
+$240$ MB，用鏈結串列再加指標是 $720$ MB。
+\end{itemize}
+有向圖的話 $m = 3 \times 10^7$ 個編號，至少 $52.5$ MB，仍然比矩陣的 $18$ MB 大。 所以用相鄰矩陣。
+一般的判斷：串列每條邊要 $\Theta(\lg n)$ 位元（存一個頂點編號），矩陣每個頂點對只要 $1$ 位元，
+邊數超過大約 $n^2 / \lg n$ 的量級時矩陣比較省；這裡 $n^2 / \lceil \lg n \rceil \approx 10^7$，
+b 的邊數已經超過。 稠密圖用矩陣還多一個好處：查「$u$、$v$ 之間有沒有邊」是 $O(1)$。
+\end{pastsoln}

@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-05}]{臺大工工所 107 學年度 第 5 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Answer questions 5 to 8 for the following setting.\\
+Let $s$(node) be the number of comparisons required to find the node in the BST, e.g. $s$(root) = 1. Let $t$(node) be the number of the nodes in its left subtree, e.g. $t$(leaf) = 0.
+
+\medskip
+5. The summation of $s$ for all nodes can be as large as $\Omega(n^2\log n)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+$s(x)$ 就是 $x$ 的深度加 $1$（根的深度是 $0$，找根比較 $1$ 次）。 $n$ 個節點的 BST 高度最多
+$n - 1$，所以每個 $s(x) \le n$，總和
+\[
+\sum_{x} s(x) \le n \cdot n = n^2 .
+\]
+最大的情況是一條鏈（例如依序插入 $1, 2, \ldots, n$），深度分別是 $0, 1, \ldots, n - 1$，
+\[
+\sum_{x} s(x) = 1 + 2 + \cdots + n = \frac{n(n+1)}{2} = \Theta(n^2).
+\]
+總和最大也只是 $\Theta(n^2)$，不可能達到 $\Omega(n^2 \log n)$（$n^2 \log n / n^2 = \log n \to \infty$，
+上界 $n^2$ 追不上）。
+\end{pastsoln}

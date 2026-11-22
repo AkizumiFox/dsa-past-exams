@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-05}]{成大電機所 107 學年度 問答題第 1 題}
+（問答）
+
+\textbf{1. Permutation (12 pts)}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(3 pts)} Please show the output of the function in serial. Assume the initial state of
+the array is \{1 2 3\} and k=0, m =2.
+\item \textbf{(7 pts)} Please show the recursive function in order to compute the time complexity of
+the function and give the answer of the function. Assume the dimension of the array in $n$ and it
+takes O(1) to swap two elements (i.e., swap(a[k], a[i]).
+\item \textbf{(2 pts)} Is this program a polynomial time algorithm?
+\end{enumerate}
+\begin{minted}[fontsize=\small]{cpp}
+void Function (char *a, const int k, const int m) {
+    if (k == m) { // output permutation
+        cout << "[";
+        for (int i = 0; i <= m; i++) {
+            if (i != m)   cout << a[i] << ", ";
+            else          cout << a[i] << "] "; }
+    } else {
+        for (i = k; i <= m; i++)) {
+            swap(a[k], a[i]);
+            Function (a, k+1, m);
+            swap(a[k], a[i]); }
+    }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+原題程式第 8 行有兩個錯字：\texttt{i} 沒有宣告，右括號多一個。 下面照
+\texttt{for (int i = k; i <= m; i++) \{} 來讀。 陣列 \{1 2 3\} 是字元 \texttt{'1'}、\texttt{'2'}、\texttt{'3'}。
+
+這是用交換產生所有排列的回溯法（資結書第~20.1~節）：呼叫 \texttt{Function(a, k, m)} 時，$a[0..k-1]$ 已經
+固定，迴圈輪流把 $a[k..m]$ 的每一個元素換到位置 $k$，遞迴排後面，回來後再換回去（撤銷），讓下一輪從
+原本的順序開始。
+
+\textbf{a.} 輸出：
+\begin{center}
+\texttt{[1, 2, 3] [1, 3, 2] [2, 1, 3] [2, 3, 1] [3, 2, 1] [3, 1, 2]}
+\end{center}
+追蹤（$k$ 是正在決定的位置，箭頭後是交換後的陣列）：
+\begin{itemize}
+\item $k = 0$，$i = 0$：不動，$\langle 1, 2, 3 \rangle$。 進 $k = 1$：$i = 1$ 不動，印 \texttt{[1, 2, 3]}；$i = 2$ 交換
+$a[1]$、$a[2]$ $\to \langle 1, 3, 2 \rangle$，印 \texttt{[1, 3, 2]}，換回。
+\item $k = 0$，$i = 1$：交換 $a[0]$、$a[1]$ $\to \langle 2, 1, 3 \rangle$。 進 $k = 1$：印 \texttt{[2, 1, 3]}；交換後
+$\langle 2, 3, 1 \rangle$，印 \texttt{[2, 3, 1]}，換回。 回到 $k = 0$ 換回 $\langle 1, 2, 3 \rangle$。
+\item $k = 0$，$i = 2$：交換 $a[0]$、$a[2]$ $\to \langle 3, 2, 1 \rangle$。 進 $k = 1$：印 \texttt{[3, 2, 1]}；交換後
+$\langle 3, 1, 2 \rangle$，印 \texttt{[3, 1, 2]}，換回。 回到 $k = 0$ 換回 $\langle 1, 2, 3 \rangle$。
+\end{itemize}
+注意最後兩個是 \texttt{[3, 2, 1]} 再 \texttt{[3, 1, 2]}，不是字典順序：把 $3$ 換到前面時，原本的 $1$ 被換到最後。
+每個結果後面跟一個空白（\texttt{"] "}），六個排列印在同一行。
+
+\textbf{b.} 令 $n = m + 1$ 是陣列大小，$T(r)$ 是還剩 $r = m - k + 1$ 個位置要排時，這次呼叫（含所有遞迴）
+的時間。
+\begin{itemize}
+\item $r = 1$（$k = m$）：印出整個陣列，迴圈跑 $n$ 次，$T(1) = c_1 n$。
+\item $r \ge 2$：迴圈跑 $r$ 輪，每輪兩次交換加一次遞迴，遞迴時剩 $r - 1$ 個位置：
+\[
+T(r) = r\,T(r - 1) + c_2\, r .
+\]
+\end{itemize}
+所求是 $T(n)$。 兩邊除以 $r!$：
+\[
+\frac{T(r)}{r!} = \frac{T(r-1)}{(r-1)!} + \frac{c_2}{(r-1)!} ,
+\]
+從 $r = 2$ 加到 $n$，左右相消得
+\[
+\frac{T(n)}{n!} = T(1) + c_2 \sum_{j=1}^{n-1} \frac{1}{j!} ,
+\qquad\text{所以}\qquad
+T(n) = n! \Bigl( c_1 n + c_2 \sum_{j=1}^{n-1} \frac{1}{j!} \Bigr) .
+\]
+括號裡的和小於 $e - 1 < 2$，所以 $T(n) = c_1\, n \cdot n! + O(n!) = \Theta(n \cdot n!)$。
+
+直觀的數法也一樣：遞迴樹的葉節點是 $n!$ 個排列，每個印 $n$ 個字元，共 $\Theta(n \cdot n!)$；第 $j$ 層（$k = j$）
+有 $n!/(n-j)!$ 次呼叫，$j = 0, \ldots, n-2$ 是內部節點，總數 $\sum_{j=0}^{n-2} n!/(n-j)! < e \cdot n!$，每個做
+$O(n)$ 的迴圈，不超過 $O(n \cdot n!)$。 若不把印出的時間算進去（題目只說交換是 $O(1)$），只數交換次數，則是
+$2\sum_{t=1}^{n-1} n!/(n-t)! = \Theta(n!)$（例如 $n = 3$ 是 $2(3 + 6) = 18$ 次）。 答案寫 $O(n \cdot n!)$。
+
+\textbf{c.} 不是。 $n$ 個元素有 $n!$ 種排列，程式要全部印出來，光是輸出就要 $n \cdot n!$ 個字元。
+$n! \ge (n/2)^{n/2}$，比任何多項式 $n^c$ 都長得快（$n$ 夠大時），所以不是多項式時間演算法。 這不是寫法不好：
+任何要列出所有排列的程式都至少要 $\Omega(n!)$ 的時間。
+\end{pastsoln}

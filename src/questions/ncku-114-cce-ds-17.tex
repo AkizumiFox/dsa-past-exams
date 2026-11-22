@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-17}]{成大電通所 114 學年度 簡答題第 1 題}
+（簡答）
+
+(10 PTs) Given a circular list (or, a singly-linked circular list) that the link field of the last node points to
+the first node as shown in Fig 1, please complete the code to insert a new node to the front of the list in the
+following:
+
+\noindent\begin{minipage}[t]{0.55\linewidth}
+\begin{minted}[fontsize=\small]{cpp}
+template <class T>
+void CircularList<T>::InsertFront(const T& e)
+{
+   ChainNode <T> *n = new ChainNode <T>(e);
+   if (last) { // nonempty chain
+      _______a)_______;
+      _______b)_______;
+   } else {
+      _______c)_______;
+      _______d)_______;
+   }
+}
+\end{minted}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.42\linewidth}
+\begin{minted}[fontsize=\small]{cpp}
+template <class T> class Chain;
+
+template <class T>
+class ChainNode {
+  friend class Chain <T>;
+  private:
+    T data;
+    ChainNode <T> *link;
+};
+\end{minted}
+\end{minipage}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8,>={Straight Barb[length=2mm,width=2.4mm]}]
+\foreach \i/\x in {1/0,2/4.4,3/8.8}{
+  \draw[fill=gray!55] (\x,0) rectangle ++(2.2,0.9);
+  \draw (\x+2.2,0) rectangle ++(1.0,0.9);
+  \node at (\x+1.1,0.45) {$x_{\i}$};
+  \coordinate (L\i) at (\x+2.7,0.4);
+  \coordinate (W\i) at (\x,0.4);
+}
+\draw[->] (L1) -- (W2);
+\draw[->] (L2) -- (W3);
+\draw[->] (L3) -- ++(1.1,0) -- ++(0,1.3) -| (1.1,0.9);
+\node[font=\itshape\sffamily] at (1.6,-0.4) {data};
+\node[font=\itshape\sffamily] at (2.7,-0.4) {link};
+\draw[->] (11.5,-0.75) -- (11.5,-0.1);
+\node[font=\itshape\sffamily] at (11.5,-1.0) {last};
+\end{tikzpicture}\\
+Fig. 1
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{minted}[fontsize=\small]{cpp}
+   if (last) { // nonempty chain
+      n->link = last->link;   // a)
+      last->link = n;         // b)
+   } else {
+      last = n;               // c)
+      n->link = n;            // d)
+   }
+\end{minted}
+
+串列只記 \texttt{last}（最後一個節點），第一個節點是 \texttt{last->link}（資結書第~5.2~節）。
+
+\textbf{非空的情形}：插在最前面，就是插在 \texttt{last} 和原來的第一個 \texttt{last->link} 之間。 a) 先讓
+\texttt{n->link} 指向原來的第一個，b) 再讓 \texttt{last->link} 指向 \texttt{n}，\texttt{n} 就成了新的第一個。 順序不能
+對調：先做 b) 的話，原來的第一個節點的位址就被蓋掉，找不回來了。 \texttt{last} 不用改，最後一個節點沒有變；這正是只記
+\texttt{last} 的好處，插在前面和後面都是 $\Theta(1)$（插在後面只要多做一步 \texttt{last = n}，資結書虛擬碼~5.5）。
+
+\textbf{空的情形}：插入後只有 \texttt{n} 一個節點，它既是第一個也是最後一個，環狀的條件是最後一個的 link 指向第一個，
+所以 \texttt{n->link = n}，並且 \texttt{last = n}。 這兩行先後都可以。
+
+附註：原題的 \texttt{ChainNode} 只把 \texttt{Chain<T>} 宣告成 friend，\texttt{CircularList<T>} 的成員函式照字面不能存取
+private 的 \texttt{link}；作答時當成 \texttt{CircularList<T>} 也是 friend（或兩者是同一個類別）即可，不影響答案。
+\end{pastsoln}

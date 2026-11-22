@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-10}]{臺大工工所 110 學年度 第 10 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 7 to 10, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra
+algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with doubly-linked list as priority queue, then the complexity is
+
+\begin{enumerate}[label=(\Alph*)]
+\item $O(|V|^2+|E|\log|V|)$
+\item $O(|V|^2)$
+\item $O(|E|\log|V|)$
+\item $O(|E|+|V|\log|V|)$
+\item $O(|E|)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+分析方法見歷屆試題~\ref{px:ntu-110-ie-ds-07}：總時間是 $|V|$ 次 \proc{Extract-Min} 加上最多 $|E|$ 次 \proc{Decrease-Key}，再加 $O(|V| + |E|)$；題目的假設下 $|V| + |E| = \Theta(|E|)$。
+
+\textbf{雙向串列}（不排序）：\proc{Insert} 接到串列一端 $O(1)$；\proc{Extract-Min} 要掃過整條串列找最小的，
+$O(|V|)$，找到後用前後指標拿掉是 $O(1)$；\proc{Decrease-Key} 直接改那個節點的鍵（用頂點編號對到節點的指標），
+$O(1)$。 這和資結書第~25.2~節表裡「陣列」那一列一樣：
+\[
+  |V| \cdot O(|V|) + |E| \cdot O(1) = O(|V|^2 + |E|) = O(|V|^2) ,
+\]
+最後一步用了 $|E| = O(|V|^2)$。 選 (B)。
+
+雙向串列的好處是拿掉一個節點只要 $O(1)$。 如果把串列維持成排好序的，\proc{Extract-Min} 變 $O(1)$，但
+\proc{Decrease-Key} 要把節點往前移到正確位置，最壞 $O(|V|)$，總時間 $O(|V||E|)$，更慢，選項裡也沒有。
+
+其他選項：(A) 多了 $|E|\log|V|$，在稠密圖時比 $|V|^2$ 大，不是最緊的。 (C)、(D)、(E) 在稀疏圖時都比
+$|V|^2$ 小，但 $|V|$ 次掃串列本身就要 $\Theta(|V|^2)$，所以都不對。
+\end{pastsoln}

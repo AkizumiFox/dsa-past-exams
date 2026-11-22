@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-07}]{臺大電信所 108 學年度（B）第 7 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+If all edges in the graph have integer capacities, then there exists a maximum flow in which all
+flows are integers.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對。
+
+這是整數性定理（資結書定理~26.2）。 理由：Ford--Fulkerson 從全 $0$ 的流開始。 如果目前每條邊的
+流量都是整數，剩餘容量（容量減流量，或反向邊的流量）也都是整數，所以增廣路徑的瓶頸是正整數，
+增廣後流量仍是整數。 每次增廣流量值至少加 $1$，而流量值不超過 $s$ 出去的容量總和，所以一定會
+停；停的時候沒有增廣路徑，由最大流最小割定理，這個流是最大流，而且每條邊的流量都是整數。
+
+注意定理說的是「存在」一個整數最大流。 最大流可能不只一個，其中也可能有非整數的（兩個不同的
+整數最大流取平均就是）。
+\end{pastsoln}

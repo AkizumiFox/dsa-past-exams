@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-04}]{臺聯大電機類 115 學年度 第 4 題}
+（單選；2 分）
+
+If we use an array A[0...N-1] to implement a circular queue, and use the variables $\mathit{front}$
+and $\mathit{rear}$, If the condition for a queue to be ``empty'' is $\mathit{front}$ ==
+$\mathit{rear}$, what is the condition for a queue to be ``full'' ? (To distinguish between empty
+and full, one space is usually sacrificed.)
+\begin{enumerate}[label=(\Alph*)]
+\item ($\mathit{rear}$ + 1) mod (N+1) == $\mathit{front}$
+\item ($\mathit{front}$ + 1) mod (N-1) == $\mathit{rear}$
+\item ($\mathit{rear}$ + 1) mod N == $\mathit{front}$
+\item ($\mathit{front}$ + 1) mod N == $\mathit{rear}$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+照資結書第~6.2.2~節的約定：$\mathit{front}$ 是前端元素的位置，$\mathit{rear}$ 是下一個要放的
+位置，往後走一格是 $(i + 1) \bmod N$。 加入時放在 $A[\mathit{rear}]$，再
+$\mathit{rear} \gets (\mathit{rear} + 1) \bmod N$。 「留一格不用」就是：如果 $\mathit{rear}$
+再往後一格會撞上 $\mathit{front}$，就當作滿了，所以滿的條件是
+\[
+(\mathit{rear} + 1) \bmod N = \mathit{front},
+\]
+這時佇列裡有 $N - 1$ 個元素。 以 $N = 5$ 為例：$\mathit{front} = 0$，連續加入 $4$ 個後
+$\mathit{rear} = 4$，$(4 + 1) \bmod 5 = 0 = \mathit{front}$，判定為滿；如果再放第 $5$ 個，
+$\mathit{rear}$ 會變成 $0$，和空的條件 $\mathit{front} = \mathit{rear}$ 分不開，這正是要犧牲
+一格的原因。 另一種常見約定（$\mathit{front}$ 指前端元素的前一格、$\mathit{rear}$ 指尾端元素）
+推出來的滿條件也是同一個式子。
+
+逐項檢查（都用 $N = 5$、$\mathit{front} = 0$）：
+\begin{itemize}
+\item (A) 對 $N + 1$ 取餘數，索引會跑到 $N$，超出 $A[0..N-1]$。 而且 $\mathit{rear} = 4$ 時
+$(4 + 1) \bmod 6 = 5 \ne 0$，明明已滿卻判為未滿。 錯。
+\item (B) 模數 $N - 1$ 不是陣列長度，繞回的位置不對；而且式子在比 $\mathit{front}$ 的下一格是不是
+$\mathit{rear}$，意思是「剛好有一個元素」，和滿無關。 錯。
+\item (C) 對，見上。
+\item (D) $(\mathit{front} + 1) \bmod N = \mathit{rear}$ 表示佇列裡剛好一個元素（例如
+$\mathit{front} = 0$、$\mathit{rear} = 1$）。 錯。
+\end{itemize}
+\end{pastsoln}

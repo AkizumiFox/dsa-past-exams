@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-05}]{臺聯大電機類 110 學年度 第 5 題}
+（問答）
+
+A typical maze problem, where the goal is to find a path between two cells in a maze, is often solved
+with a stack. Answer the following questions:
+
+(3\%) (a) What is the purpose of using a stack?
+
+(3\%) (b) If using a stack, what information should be pushed onto the stack when moving to a new cell?
+
+(4\%) (c) Can you use recursion to solve the same problem? Explain.
+\end{pastexam}
+
+\begin{pastsoln}
+迷宮找路就是在格子圖上做深度優先搜尋（DFS）：能往前就往前，走到死路就退回上一個岔路口，換一個方向
+再試。 這種「退回去」就是回溯（backtracking）。
+
+\textbf{(a) 堆疊的用途。} 記住\textbf{從起點走到目前這一格的路徑}，以便走到死路時回溯。 走進新的一格
+就 push，碰到死路就 pop，回到上一格繼續試它還沒試過的方向。 後進先出剛好符合「最後走進來的那一格最先
+退出去」。 找到終點時，堆疊裡由底到頂就是一條從起點到終點的路徑；堆疊變空表示所有可能都試過了，
+沒有路。
+
+\textbf{(b) 要 push 什麼。} 至少要存\textbf{這一格的位置}（列 $r$、行 $c$），以及\textbf{下一個要試的
+方向}（例如 $0..3$ 代表東南西北）。 存方向是為了回溯到這一格時，從還沒試過的方向繼續，而不是從頭再試
+一遍、走回剛剛的死路。 另外要有一個和迷宮一樣大的 $\mathit{visited}$ 陣列（或在迷宮上做記號），走過
+的格子不再進去，否則會在環路上繞圈子永遠出不來；這個陣列不用放進堆疊。
+\begin{pseudo}[unbreakable]{用堆疊走迷宮}
+\Function{Maze-Path}{$\mathit{maze}, s, t$}
+    \State 標記 $s$ 已走過；\Call{Push}{$S, (s, 0)$}
+    \While{$S$ 不是空的}
+        \State $(x, d) \gets$ \Call{Pop}{$S$}
+        \If{$x = t$}
+            \State \Call{Push}{$S, (x, d)$}；\Return $S$ \Comment{$S$ 由底到頂就是路徑}
+        \EndIf
+        \While{$d < 4$}
+            \State $y \gets x$ 往方向 $d$ 走一格；$d \gets d + 1$
+            \If{$y$ 在迷宮內、不是牆、沒走過}
+                \State 標記 $y$ 已走過
+                \State \Call{Push}{$S, (x, d)$} \Comment{記下 $x$ 下次從方向 $d$ 試起}
+                \State $x \gets y$；$d \gets 0$
+                \If{$x = t$}
+                    \State \Call{Push}{$S, (x, d)$}；\Return $S$
+                \EndIf
+            \EndIf
+        \EndWhile
+    \EndWhile
+    \State \Return 沒有路
+\EndFunction
+\end{pseudo}
+每一格最多被標記、進堆疊一次（死路的格子被 pop 之後也不會再進來），每格試 $4$ 個方向，所以時間和
+空間都是 $O(R \cdot C)$，$R \times C$ 是迷宮大小。
+
+\textbf{(c) 可以用遞迴。} 遞迴呼叫本身就用一個堆疊（呼叫堆疊）：每一層呼叫的區域變數（目前的格子、試到
+第幾個方向）就是 (b) 裡 push 的資料，函數回傳就是 pop、回到上一格。 所以把 (b) 的迴圈改寫成「從 $x$
+出發，對四個方向的每個沒走過的鄰格 $y$，遞迴找 $y$ 到終點的路；找到就回傳成功」即可，這正是 DFS 的
+遞迴寫法（資結書第~21.4~節）。 反過來，資結書第~6.4~節和第~21.4.6~節講的就是把遞迴改成自己管理的
+堆疊。 兩者的差別在實作：遞迴寫起來短，但迷宮很大時遞迴深度可能到 $R \cdot C$，呼叫堆疊的空間有限，
+可能溢位；自己管理堆疊放在堆積區，可以放得比較多。
+\end{pastsoln}

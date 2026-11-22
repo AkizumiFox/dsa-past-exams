@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-48}]{臺大電信所 109 學年度（B）第 48 題}
+（複選；每題 2 分，每答錯一個選項倒扣 0.4 分）
+
+In an AA tree, which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item There are no two consecutive right horizontal links.
+\item There is no left horizontal link.
+\item A node has the same level as its right horizontal link child.
+\item A node has the same level as its left-link child.
+\item The height is $O(\log n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)(E)。
+
+資結書沒有講 AA 樹，這裡先補定義。 AA 樹（Andersson 1993）是紅黑樹的簡化版：規定紅色節點只能
+是右子節點。 它不用顏色，改給每個節點一個\textbf{層級}（level），規則是：
+\begin{enumerate}
+\item 葉節點的層級是 $1$。
+\item 左子節點的層級剛好比父節點少 $1$。
+\item 右子節點的層級和父節點相同，或少 $1$。
+\item 右孫節點的層級一定比祖父節點小。
+\item 層級大於 $1$ 的節點一定有兩個子節點。
+\end{enumerate}
+父子層級相同的那條連結叫\textbf{水平連結}（horizontal link），對應紅黑樹裡「紅色子節點」那條邊。
+
+\begin{itemize}
+\item (A) 對：連續兩條右水平連結表示右孫和祖父同層級，違反規則 4。 （對應紅黑樹「紅色節點的
+子節點不能是紅色」。 插入時出現這種情形就做 split：左旋並把中間節點的層級加一。）
+\item (B) 對：由規則 2，左子節點一定低一層，所以水平連結只會往右。 （插入時出現左水平連結就做
+skew：右旋把它改成右水平連結。）
+\item (C) 對：水平連結的定義就是兩端層級相同。
+\item (D) 錯：左子節點的層級是父節點減 $1$（規則 2），不會相同。
+\item (E) 對：把水平連結的右子節點看成紅色、其他看成黑色，AA 樹就是一棵紅黑樹，層級就是黑高度，
+所以高度不超過 $2\lg(n + 1)$（資結書定理~10.4）。 也可以直接看：由規則 2、5，層級 $L$ 的節點
+底下至少有 $2^L - 1$ 個節點，所以根的層級 $L \le \lg(n + 1)$；每下降一層級最多經過兩條邊
+（一條水平、一條往下），高度不超過 $2L$。
+\end{itemize}
+\end{pastsoln}

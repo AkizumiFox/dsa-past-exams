@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:ncku-111-cce-ds-07}]{成大電通所 111 學年度 第 7 題}
+（填空）
+
+(5 \textbf{pts}) An available list can be used to recycle unused nodes in a linked list to speed
+up runtime. Please complete the procedure to recycle a circular list to an availabe list, pointed
+by \textit{av}, where the circular list has only one point, \textit{last}, pointing to its last
+node.
+\begin{minted}[fontsize=\small,escapeinside=||]{cpp}
+void CircularList<T>::~CircularList()
+{ // Delete the whole circular list
+   if (last) {
+      ChainNode<T>* first = |\blank{1}|;
+      |\blank{2}| = |\blank{3}|;
+      |\blank{4}| = |\blank{5}|;
+      last = 0;
+   }
+}
+\end{minted}
+\begin{center}
+\begin{tikzpicture}[>={Straight Barb[length=1.6mm,width=2.2mm]},font=\small]
+\node[align=left,anchor=east] at (-0.4,3) {Unused\\circular list};
+\draw[fill=gray!55] (0.00,2.70) rectangle (0.85,3.30); \draw (0.85,2.70) rectangle (1.40,3.30);
+\draw[->] (1.12,3.00) -- (2.10,3.00);
+\draw[fill=gray!55] (2.10,2.70) rectangle (2.95,3.30); \draw (2.95,2.70) rectangle (3.50,3.30);
+\draw[->] (3.23,3.00) -- (4.00,3.00);
+\node at (4.4,3) {$\cdots$};
+\draw[->] (4.80,3.00) -- (5.70,3.00);
+\draw[fill=gray!55] (5.70,2.70) rectangle (6.55,3.30); \draw (6.55,2.70) rectangle (7.10,3.30);
+\draw[->] (6.825,3) -- (6.825,3.75) -- (0.4,3.75) -- (0.4,3.3);
+\draw[->] (6.1,2.15) -- (6.1,2.7); \node at (6.1,1.9) {\textit{last}};
+\draw (3.35,1.95) -- (3.35,2.15) -- (3.65,2.15) -- (3.65,1.95) -- (3.85,1.95) -- (3.85,1.65) -- (3.65,1.65) -- (3.65,1.45) -- (3.35,1.45) -- (3.35,1.65) -- (3.15,1.65) -- (3.15,1.95) -- cycle;
+\node[align=left,anchor=east] at (-0.4,0.75) {Available\\list};
+\draw (0.20,0.45) rectangle (1.05,1.05); \draw (1.05,0.45) rectangle (1.60,1.05);
+\draw[->] (1.32,0.75) -- (2.30,0.75);
+\draw (2.30,0.45) rectangle (3.15,1.05); \draw (3.15,0.45) rectangle (3.70,1.05);
+\draw[->] (3.42,0.75) -- (4.20,0.75);
+\node at (4.6,0.75) {$\cdots$};
+\draw[->] (5.00,0.75) -- (5.90,0.75);
+\draw (5.90,0.45) rectangle (6.75,1.05); \draw (6.75,0.45) rectangle (7.30,1.05); \node at (7.03,0.75) {0};
+\node at (0.5,1.75) {\textit{av}}; \draw[->] (0.5,1.55) -- (0.5,1.05);
+\draw[fill=gray!55] (3.3,0.05) -- (3.7,0.05) -- (3.7,-0.2) -- (4.15,-0.2) -- (3.5,-0.55) -- (2.85,-0.2) -- (3.3,-0.2) -- cycle;
+\node at (-1.2,-0.75) {\textit{av}}; \draw[->] (-1.2,-0.95) -- (-1.2,-1.45);
+\draw (-1.50,-2.05) rectangle (-0.65,-1.45); \draw (-0.65,-2.05) rectangle (-0.10,-1.45);
+\draw[->] (-0.38,-1.75) -- (0.60,-1.75);
+\draw (0.60,-2.05) rectangle (1.45,-1.45); \draw (1.45,-2.05) rectangle (2.00,-1.45);
+\draw[->] (1.73,-1.75) -- (2.50,-1.75);
+\node at (4.2,-1.6) {$\cdots$};
+\draw[->] (6.30,-1.75) -- (7.20,-1.75);
+\draw (7.20,-2.05) rectangle (8.05,-1.45); \draw (8.05,-2.05) rectangle (8.60,-1.45); \node at (8.32,-1.75) {0};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) \texttt{last->link}；(2) \texttt{last->link}；(3) \texttt{av}；(4) \texttt{av}；
+(5) \texttt{first}。
+
+\begin{minted}[fontsize=\small]{cpp}
+ChainNode<T>* first = last->link;   // (1) 環上第一個節點
+last->link = av;                    // (2)(3) 在 last 後面剪開，接上原本的可用串列
+av = first;                         // (4)(5) 可用串列改從環的第一個節點開始
+last = 0;
+\end{minted}
+
+這就是資結書第~5.4~節虛擬碼~5.11 \proc{Ring-Erase}。 環狀串列記的是最後一個節點，第一個節點是
+\texttt{last->link}，要先存進 \texttt{first}，因為下一行就把 \texttt{last->link} 改掉了。
+\texttt{last->link = av} 把環在 \texttt{last} 後面剪開，接到原本可用串列的開頭；
+\texttt{av = first} 讓可用串列從環的第一個節點開始。 結果是「環上的 $k$ 個節點（順序不變）
+＋原本的可用串列」，和題目最下面那張圖一樣。
+
+順序不能對調：先做 \texttt{av = first} 的話，原本的可用串列就找不到了；不先存 \texttt{first}
+的話，改完 \texttt{last->link} 也找不到環的開頭。 整個過程只改兩個指標，時間 $\Theta(1)$，和環
+上有幾個節點無關；用單向串列（只記 \texttt{first}）的話，要先走到最後一個節點，得花
+$\Theta(k)$。 原本可用串列是空的（\texttt{av} 為 \texttt{0}）時也對：\texttt{last->link} 變成
+\texttt{0}，可用串列就是原本的環拉直。
+\end{pastsoln}

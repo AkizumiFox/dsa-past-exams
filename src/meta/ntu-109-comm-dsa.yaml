@@ -1,0 +1,59 @@
+paper: ntu-109-comm-dsa
+volume: 3
+school: 臺大
+dept: 電信所
+year: 109
+subject: 資料結構與演算法（B）
+instructions: >-
+  In this exam: The height of a singleton tree is defined as 0. The order of a node in a tree is
+  defined as the number of its children. The order of a tree is defined as the maximum order among
+  its nodes. Unless otherwise specified, all logarithms are taken with respect to base 2, i.e.,
+  $\log_2$. 一、(20\%)是非題（每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）。 二、(64\%)單選題（每題
+  2 分，答錯不倒扣） Please choose the best possible answer in each of the following questions. In
+  questions that ask for time complexities, please choose the tightest bound. 三、(16\%)複選題（每題
+  2 分，每答錯一個選項倒扣 0.4 分至該題 0 分止）。
+questions:
+  - {id: ntu-109-comm-dsa-01, label: 第 1 題, chapter: 21}
+  - {id: ntu-109-comm-dsa-02, label: 第 2 題, chapter: 21}
+  - {id: ntu-109-comm-dsa-03, label: 第 3 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-04, label: 第 4 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-05, label: 第 5 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-06, label: 第 6 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-07, label: 第 7 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-08, label: 第 8 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-09, label: 第 9 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-10, label: 第 10 題, chapter: 25}
+  - {id: ntu-109-comm-dsa-11, label: 第 11 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-12, label: 第 12 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-13, label: 第 13 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-14, label: 第 14 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-15, label: 第 15 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-16, label: 第 16 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-17, label: 第 17 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-18, label: 第 18 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-19, label: 第 19 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-20, label: 第 20 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-21, label: 第 21 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-22, label: 第 22 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-23, label: 第 23 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-24, label: 第 24 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-25, label: 第 25 題, chapter: 11}
+  - {id: ntu-109-comm-dsa-26, label: 第 26 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-27, label: 第 27 題, chapter: 8}
+  - {id: ntu-109-comm-dsa-28, label: 第 28 題, chapter: 1}
+  - {id: ntu-109-comm-dsa-29, label: 第 29 題, chapter: 1}
+  - {id: ntu-109-comm-dsa-30, label: 第 30 題, chapter: 2}
+  - {id: ntu-109-comm-dsa-31, label: 第 31 題, chapter: 15}
+  - {id: ntu-109-comm-dsa-32, label: 第 32 題, chapter: 14}
+  - {id: ntu-109-comm-dsa-33, label: 第 33 題, chapter: 17}
+  - {id: ntu-109-comm-dsa-34, label: 第 34 題, chapter: 19}
+  - {id: ntu-109-comm-dsa-35, label: 第 35 題, chapter: 18}
+  - {id: ntu-109-comm-dsa-36, label: 第 36--42 題, chapter: 18}
+  - {id: ntu-109-comm-dsa-43, label: 第 43 題, chapter: 7}
+  - {id: ntu-109-comm-dsa-44, label: 第 44 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-45, label: 第 45 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-46, label: 第 46 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-47, label: 第 47 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-48, label: 第 48 題, chapter: 10}
+  - {id: ntu-109-comm-dsa-49, label: 第 49 題, chapter: 9}
+  - {id: ntu-109-comm-dsa-50, label: 第 50 題, chapter: 8}

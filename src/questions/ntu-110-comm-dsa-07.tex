@@ -1,0 +1,17 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-07}]{臺大電信所 110 學年度（B）第 7 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Given an adjacency-list representation of a directed graph $G=(V,E,w)$, it takes $O(V)$ time to compute the in-degree of every vertex.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+相鄰串列 $\mathit{Adj}[u]$ 存的是從 $u$ 出去的邊，出分支度就是串列長度，但入分支度要數「有多少條邊
+指向 $v$」，這些邊散在別人的串列裡。 做法是開一個陣列 $\mathit{in}[1..|V|]$ 全設 $0$，掃過每個
+$\mathit{Adj}[u]$ 的每個 $v$，$\mathit{in}[v] \gets \mathit{in}[v] + 1$。 初始化 $\Theta(V)$，掃描
+$\Theta(E)$，共 $\Theta(V + E)$（資結書第~21.2~節）。
+
+只花 $O(V)$ 不夠：每一條邊都可能影響某個頂點的入分支度，沒看過的邊無法排除，所以一定要讀完全部
+$E$ 條邊。 $E$ 可以到 $\Theta(V^2)$，$O(V)$ 的時間讀不完。
+\end{pastsoln}

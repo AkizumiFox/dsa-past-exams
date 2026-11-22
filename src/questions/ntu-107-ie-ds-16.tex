@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-16}]{臺大工工所 107 學年度 第 16 題}
+（複選；每題 10 分，至少一個選項正確；每個選項答對得 2 分，答錯倒扣 2 分，每題倒扣至零分為止）
+
+Which of the following trees achieve O(log $n$) in time in the worst case for both insertion and deletion, where $n$ is the number of elements stored in the tree?
+\begin{enumerate}[label=(\alph*),nosep]
+\item AVL trees
+\item Red-black trees
+\item 2-3 trees
+\item 2-3-4 trees
+\item Splay trees
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)(b)(c)(d)。
+
+\begin{itemize}
+\item (a) \textbf{對}。 AVL 樹高度 $< 1.4405\lg(n+1)$（資結書定理~10.1）。 插入找位置 $O(\log n)$，往
+上更新高度、最多旋轉 $2$ 次；刪除往上每層最多旋轉一次，最壞 $\Theta(\log n)$ 次旋轉，每次 $O(1)$。
+兩者最壞都是 $O(\log n)$。
+\item (b) \textbf{對}。 紅黑樹高度 $\le 2\lg(n+1)$（資結書定理~10.4）；插入、刪除的修正沿路徑往上換色，
+旋轉最多 $2$ 次和 $3$ 次（資結書第~10.5~節的比較表），最壞 $O(\log n)$。
+\item (c) \textbf{對}。 2-3 樹所有葉節點在同一層，每個內部節點有 $2$ 或 $3$ 個子節點，高度
+$\le \lg(n+1)$。 插入時分裂、刪除時借或合併，都沿一條路徑往上，每層 $O(1)$（資結書第~11.1~節）。
+\item (d) \textbf{對}。 2-3-4 樹同理，高度 $\le \lg(n+1)$，插入（可以由上往下先分裂滿的節點）和刪除
+都是 $O(\log n)$（資結書第~11.1.5~節）；紅黑樹就是 2-3-4 樹的二元表示。
+\item (e) \textbf{錯}。 伸展樹的 $O(\log n)$ 是\textbf{平攤}的（資結書定理~10.6）。 單一次操作可能很貴：
+依序插入 $1, 2, \ldots, n$，每次新節點伸展到根後樹變成一條往左的鏈；接著搜尋（或刪除）最小的
+$1$，要從根走 $n - 1$ 步，那一次是 $\Theta(n)$。 刪除也要先把目標伸展上來，最壞同樣 $\Theta(n)$。
+\end{itemize}
+\end{pastsoln}

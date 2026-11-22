@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-03}]{北科大電機所（戊組）113 學年度 第 I.3 題}
+（選擇；4 分）
+
+Algorithms like merge sort, quick sort, and binary search are based on (4\%)
+\begin{enumerate}[label=\alph*)]
+\item Greedy algorithm
+\item Divide and Conquer algorithm
+\item Hash table
+\item Parsing
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b)。
+
+三個演算法都是「切成較小的子問題、遞迴解、再合起來」的分治法（資結書第~17~章）：
+\begin{itemize}
+\item 合併排序：切成兩半，各自遞迴排序，再把兩段排好的合併（資結書第~14.4~節），
+$T(n) = 2T(n/2) + \Theta(n)$。
+\item 快速排序：用基準分割成「小於基準」和「大於基準」兩段，各自遞迴排序；合起來不用做事
+（資結書第~14.5~節）。
+\item 二分搜尋：和中間的元素比一次，只留下可能含目標的那一半，遞迴下去，
+$T(n) = T(n/2) + \Theta(1)$（資結書第~17.1~節）。 只有一個子問題的分治，有時也叫「減治」。
+\end{itemize}
+其他選項：a) 貪心法每一步做眼前最好的選擇、不回頭，例如 Kruskal、Huffman；c) 雜湊表是資料
+結構，不是設計方法；d) 剖析是編譯器分析語法的步驟。 都不是這三個演算法的共同基礎。
+\end{pastsoln}

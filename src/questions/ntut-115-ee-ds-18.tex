@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-18}]{北科大電機所（戊組）115 學年度 簡答題第 3 題}
+（簡答）
+
+Let $T(n) = 3T\left(\frac{n}{3}\right) + n, T(1) = 2, then\ T(n) = O(b)$. What is b? \textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$b = n \log n$，也就是 $T(n) = O(n \log n)$（而且是 $\Theta(n \log n)$）。
+
+\textbf{主定理}（資結書定理~2.4）：$a = 3$、$b = 3$、$f(n) = n$。 $n^{\log_b a} = n^{\log_3 3} = n$，$f(n) = \Theta(n)$
+和它同階，是第二種情況，$T(n) = \Theta(n^{\log_3 3} \log n) = \Theta(n \log n)$。
+
+\textbf{直接展開驗證}（$n = 3^k$）：
+\[
+T(n) = 3T(n/3) + n = 9T(n/9) + 2n = \cdots = 3^k T(1) + kn = 2n + n \log_3 n .
+\]
+例如 $T(3) = 3 \cdot 2 + 3 = 9 = 2 \cdot 3 + 3 \cdot 1$，$T(9) = 3 \cdot 9 + 9 = 36 = 18 + 18$。 遞迴樹有 $\log_3 n$ 層，每層的工作
+都是 $n$，加上 $n$ 個葉節點各 $T(1) = 2$。 $T(1) = 2$ 只影響低次項，不影響答案。
+\end{pastsoln}

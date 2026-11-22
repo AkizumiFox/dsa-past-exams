@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-02}]{臺大電機所 112 學年度 第 2 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+If we implement a \textit{min-heap} using a \textit{dynamic array}, then its \texttt{findMin()}, \texttt{insert()}, and \texttt{deleteMin()} operations have the time complexities \texttt{O(1)}, \texttt{O(log n)}, and \texttt{O(log n)}, respectively.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確（\texttt{insert()} 和 \texttt{deleteMin()} 的 $O(\log n)$ 是平攤的意思）。
+
+最小堆積放在陣列裡（資結書第~8.1~節）：
+\begin{itemize}
+\item \texttt{findMin()}：最小值在根 $A[1]$，$O(1)$。
+\item \texttt{insert()}：放在最後一格再上浮，最多走樹高 $\lfloor \lg n \rfloor$ 層，$O(\log n)$。
+\item \texttt{deleteMin()}：最後一格搬到根再下沉，$O(\log n)$。
+\end{itemize}
+「動態陣列」只影響陣列滿了的時候：配置兩倍大的陣列、搬 $n$ 個元素，那一次 \texttt{insert()} 是
+$\Theta(n)$。 但加倍的成本平攤到每次插入只有 $O(1)$（資結書第~3.4~節），所以 \texttt{insert()} 的平攤時間
+仍是 $O(\log n) + O(1) = O(\log n)$；\texttt{deleteMin()} 若也會縮小陣列（照第~3.4~節，剩不到四分之一
+才減半），同樣是平攤 $O(\log n)$。 用動態陣列的目的正是讓堆積大小不受限制，複雜度照一般的堆積寫，
+所以這題判正確。
+
+要注意：如果題目要的是\textbf{每一次}操作的最壞時間，碰到加倍的那一次 \texttt{insert()} 是 $\Theta(n)$，
+這句就不成立了。 作答時可以在答案卷註明「插入為平攤 $O(\log n)$」。
+\end{pastsoln}

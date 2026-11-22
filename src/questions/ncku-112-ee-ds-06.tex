@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-06}]{成大電機所 112 學年度 第 6 題}
+（問答）
+
+(15\%) (a) Given a graph G=(V,E), write a \textbf{pseudo-code} to generate all pairs shortest
+paths. (b) Also, you need to define the input, and output of the data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~6~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-06}，這裡只列答案和重點。
+
+答案：用 Floyd--Warshall（資結書第~25.6~節、虛擬碼~25.8）。
+\begin{itemize}
+\item 輸入：頂點 $1, \ldots, n$ 和 $n \times n$ 權重矩陣 $W$：$W[i, i] = 0$；有邊 $(i, j)$ 時是它的權重；
+沒有邊時是 $\infty$。 假設沒有負環。
+\item 輸出：距離矩陣 $D$（$D[i, j] = \delta(i, j)$）和前驅矩陣 $\Pi$（$\Pi[i, j]$ 是 $i$ 到 $j$ 最短路徑上
+$j$ 的前一個頂點），用 $\Pi$ 可以印出任一對的路徑。
+\item 主迴圈：$D \gets W$，然後對 $k = 1, \ldots, n$、所有 $i, j$，若 $D[i, k] + D[k, j] < D[i, j]$ 就
+更新 $D[i, j]$，並令 $\Pi[i, j] \gets \Pi[k, j]$。 時間 $\Theta(n^{3})$，空間 $\Theta(n^{2})$。
+\end{itemize}
+完整的虛擬碼和正確性說明見智慧資安學程的那一題。
+\end{pastsoln}

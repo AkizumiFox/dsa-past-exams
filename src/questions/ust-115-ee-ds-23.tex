@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-23}]{臺聯大電機類 115 學年度 第 23 題}
+（單選；2 分）
+
+\textbf{What is the balance of the root of a Binary Search Tree (BST) after inserting 5, 3, 9, 2,
+4, 7, 1, 6, 10, 8? The tree is empty initially}
+
+(A)~-2 \qquad (B)~-1 \qquad (C)~0 \qquad (D)~1 \qquad (E)~2
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+高度和平衡的定義在上一題（歷屆試題~\ref{px:ust-115-ee-ds-22}）：高度用邊數算、葉子是 $0$、
+\NIL 是 $-1$；平衡 $=$ 左孩子的高度 $-$ 右孩子的高度。 樹也是上一題建出來的那棵：根 $5$ 的左孩子
+是 $3$（子樹 $\{3, 2, 4, 1\}$），右孩子是 $9$（子樹 $\{9, 7, 10, 6, 8\}$）。
+
+$3$ 的高度：最長路徑 $3 \to 2 \to 1$，$2$ 條邊，高度 $2$。 $9$ 的高度：最長路徑 $9 \to 7 \to 6$
+（或 $9 \to 7 \to 8$），高度 $2$。 根的平衡是
+\[
+h(3) - h(9) = 2 - 2 = 0 .
+\]
+注意右子樹的節點比較多（$5$ 個對 $4$ 個），但平衡只看高度，不看節點數。
+
+其他選項：(A) $-2$、(E) $2$ 要一邊比另一邊高兩層；(B) $-1$、(D) $1$ 要高一層。 這棵樹左右子樹一樣高，
+都不對。
+\end{pastsoln}

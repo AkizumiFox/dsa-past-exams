@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-13}]{成大智慧資安學程 114 學年度 單選題第 13 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please indicate the algorithm that cannot allow negative weighted edges in finding the shortest path.
+
+a.)~Jonson's algorithm, \qquad b.)~Bellman and Ford's Algorithm, \qquad c)~Floyd Warshall's Algorithm,
+\qquad d)~Dijkstra's Algorithm, \qquad e)~None of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 d) Dijkstra's Algorithm。（a) 的 ``Jonson'' 是原卷的拼法，指 Johnson。）
+
+\begin{itemize}
+\item a) Johnson 演算法：先用 Bellman--Ford 算出每個點的位能 $h(v)$，把權重改成
+$w(u, v) + h(u) - h(v) \ge 0$，再對每個點跑 Dijkstra（資結書第~25.7~節）。 允許負權重的邊，只要沒有
+負迴圈（有負迴圈時它會偵測出來）。
+\item b) Bellman--Ford：對所有邊做 $|V| - 1$ 輪鬆弛，允許負權重；有從起點走得到的負迴圈時會回報
+（資結書第~25.3~節）。
+\item c) Floyd--Warshall：動態規劃，正確性不依賴權重的正負，允許負權重的邊，只要沒有負迴圈
+（資結書第~25.6~節）。
+\item d) Dijkstra：每次把目前距離最小的點定案，之後不再更新，這一步要靠「所有邊權重非負，後面的路
+只會更長」。 有負邊時會出錯，例如 $s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重 $-2$：Dijkstra 先定案
+$d[a] = 2$，但 $s \to b \to a$ 只要 $1$（資結書第~25.2.5~節）。
+\end{itemize}
+只有 Dijkstra 不允許負權重的邊，答案 d)。
+\end{pastsoln}

@@ -1,0 +1,16 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-07}]{北科大電機所（戊組） 114 學年度 第 II-3 題}
+（簡答；4 分）
+
+What is the time complexity of breadth-first search on a graph with "V" vertices and "E" edges when
+using an adjacency list representation? \textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答：$O(V + E)$。
+
+BFS（資結書第~21.3~節）裡，每個頂點最多進出佇列一次，這部分是 $O(V)$；每個頂點出佇列時掃過它的
+鄰接串列一次，所有串列的長度總和是 $E$（有向圖）或 $2E$（無向圖），這部分是 $O(E)$。 初始化每個頂點
+的顏色、距離也是 $O(V)$。 合計 $O(V + E)$。
+
+對照：用鄰接矩陣時，找一個頂點的鄰居要掃整列 $V$ 格，總共 $O(V^2)$。
+\end{pastsoln}

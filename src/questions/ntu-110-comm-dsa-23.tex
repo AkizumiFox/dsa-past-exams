@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-23}]{臺大電信所 110 學年度（B）第 23 題}
+（單選；每題 2 分，答錯不倒扣）
+
+(22-25) Consider the following six items with their weights and values. Suppose you have a knapsack with a maximum weight capacity of 10. Please answer the following questions.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Item} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6}\\ \hline
+\textbf{Weight} ($w$) & 2 & 1 & 4 & 5 & 2 & 10\\ \hline
+\textbf{Value} ($v$) & 10 & 6 & 28 & 50 & 10 & 80\\ \hline
+\end{tabular}
+\end{center}
+
+Suppose you can only choose to take or leave each entire item. Let $V[i][j]$ denote the highest total value you can obtain with items $1\sim i$ and a knapsack of weight capacity $j$. Which of the following recurrence relations is correct?
+
+A.~$V[i][j]=\max(V[i-1][j],V[i-1][j-1]+v[i])$\\
+B.~$V[i][j]=\max(V[i-1][j],V[i-1][j-w[i]]+v[i])$\\
+C.~$V[i][j]=\max(V[i][j-1],V[i-1][j-1]+v[i])$\\
+D.~$V[i][j]=\max(V[i][j-w[i]],V[i-1][j-w[i]]+v[i])$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+0/1 背包的最佳解對第 $i$ 個物品只有兩種情形（資結書第~18.5~節）：
+\begin{itemize}
+\item 不拿物品 $i$：只用物品 $1..i-1$、容量 $j$，最多 $V[i-1][j]$。
+\item 拿物品 $i$（需要 $w[i] \le j$）：它占掉 $w[i]$ 的容量，帶來 $v[i]$，剩下的容量 $j - w[i]$ 只能用物品
+$1..i-1$（每個物品只能拿一次），最多 $V[i-1][j - w[i]] + v[i]$。
+\end{itemize}
+取兩者較大的，就是 B：
+\[
+V[i][j] = \max\big(V[i-1][j],\ V[i-1][j - w[i]] + v[i]\big)\quad (w[i] \le j),
+\]
+$w[i] > j$ 時只能不拿，$V[i][j] = V[i-1][j]$；邊界 $V[0][j] = 0$。
+
+逐項：A、C 的 $j - 1$ 把物品重量當成 $1$，錯。 C 的 $V[i][j-1]$ 是「容量少 $1$」，和拿不拿物品 $i$ 無關。
+D 的第一項 $V[i][j - w[i]]$ 還能再用物品 $i$，等於允許重複拿，而且沒有「不拿 $i$」的選項，錯。
+\end{pastsoln}

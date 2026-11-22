@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-01}]{臺聯大電機類 114 學年度 第 1 題}
+（單選；2 分，答錯不倒扣）
+
+for(int i=0; i*i < n; i++) \{statement\ldots\ \}. Time complexity of the for-loop is
+
+(A)~O(1) \qquad (B)~O(n) \qquad (C)~O(n$^2$) \qquad (D)~O(n$^{1/2}$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+假設迴圈本體 statement 是 $O(1)$。 迴圈繼續的條件是 $i^2 < n$，$i$ 從 $0$ 開始每次加 $1$，所以
+執行的 $i$ 是 $0, 1, \ldots, \lceil \sqrt n \rceil - 1$，共 $\lceil \sqrt n \rceil$ 次
+（例如 $n = 10$ 時 $i = 0, 1, 2, 3$，$4 = \lceil \sqrt{10} \rceil$ 次）。 時間是
+$\Theta(\sqrt n) = \Theta(n^{1/2})$（資結書第~1.7~節）。
+\begin{itemize}
+\item (A) O(1)：次數隨 $n$ 增加，不是常數。 錯。
+\item (B) O(n)：$\sqrt n = O(n)$，當上界不算錯，但不是緊的界；四個選項裡要選最精確的。 不選。
+\item (C) O(n$^2$)：同上，上界太鬆。 不選。
+\item (D) O(n$^{1/2}$)：正確且最緊。
+\end{itemize}
+\end{pastsoln}

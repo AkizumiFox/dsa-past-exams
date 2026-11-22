@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntust-111-et-ds-04}]{臺科大電子所甲組 111 學年度 第 4 題}
+（程式設計）
+
+(10\%) Assume that a linked list has the following definition (i.e., struct listNode) and please
+write delete(struct listNode *first, struct listNode *trail, struct listNode *x) function to delete x
+from the linked list, where trail is the preceding node of x and first is the front of the linked list.
+\begin{minted}[fontsize=\small]{c}
+struct listNode {
+     int data;
+     struct listNode *next; // point to the next node
+};
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+有兩種情形（資結書第~5.1~節，虛擬碼~5.3 \proc{List-Delete-After}）：
+\begin{itemize}
+\item $x$ 不是第一個節點（\texttt{trail} 不是 \texttt{NULL}）：讓前一個節點跳過 $x$，
+\texttt{trail->next = x->next}。
+\item $x$ 是第一個節點（沒有前一個，\texttt{trail} 是 \texttt{NULL}）：串列的開頭要改成 $x$ 的下一個。
+\end{itemize}
+最後釋放 $x$。
+
+第二種情形要改的是呼叫端的 \texttt{first}。 題目的參數是 \texttt{struct listNode *first}，C 是傳值呼叫，在函式裡
+改 \texttt{first} 不會影響呼叫端，所以讓函式回傳新的開頭（另一種寫法見後面）。
+
+\begin{minted}[fontsize=\small]{c}
+struct listNode *delete(struct listNode *first, struct listNode *trail,
+                        struct listNode *x)
+{
+    if (trail != NULL)            // x 不是第一個節點
+        trail->next = x->next;
+    else                          // x 是第一個節點
+        first = first->next;
+    free(x);
+    return first;                 // 新的第一個節點
+}
+\end{minted}
+呼叫方式是 \texttt{first = delete(first, trail, x);}。
+
+\textbf{說明}。 \texttt{x->next} 要在 \texttt{free(x)} 之前讀，順序不能反過來，否則讀到的是已經釋放的記憶體。
+$x$ 是最後一個節點時 \texttt{x->next} 是 \texttt{NULL}，\texttt{trail} 成為新的最後一個節點，同一行程式就處理好了；
+串列只有一個節點時，刪掉後回傳 \texttt{NULL}，表示空串列。 例：串列 $10 \to 20 \to 30$，刪 $20$（\texttt{trail} 指
+$10$）得 $10 \to 30$；刪 $10$（\texttt{trail} 是 \texttt{NULL}）得 $20 \to 30$，回傳指向 $20$ 的指標。 只改常數個
+指標，時間 $O(1)$。
+
+\textbf{另一種寫法}：照 Horowitz 課本的寫法，把第一個參數改成指標的指標
+\texttt{struct listNode **first}，第二種情形寫 \texttt{*first = (*first)->next;}，呼叫時傳 \texttt{\&first}，
+函式就可以直接改呼叫端的變數，回傳型別用 \texttt{void}。
+\end{pastsoln}

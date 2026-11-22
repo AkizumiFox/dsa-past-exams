@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncku-112-isec-ds-01}]{成大智慧資安學程 112 學年度 第 1 題}
+（問答）
+
+(10\%) Show the asymptotic notations for the following statements.\\
+(a) n! \qquad (b) n$^3$ + 10$^6$ n$^2$
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有說要用哪一個符號。 只寫 $n! = \Theta(n!)$ 沒有資訊，這裡的讀法是：用常見的函數
+給出最緊的界（能寫 $\Theta$ 就寫 $\Theta$），並且證明。 符號的定義見資結書第~1.5~節。
+
+\textbf{(a)} 答案：
+\[
+n! = \Theta\!\left(\sqrt{n}\left(\frac{n}{e}\right)^{n}\right),\qquad
+n! = O(n^n),\qquad n! = \Omega(2^n),\qquad \lg(n!) = \Theta(n \lg n).
+\]
+第一式是斯特林公式 $n! = \sqrt{2\pi n}\,(n/e)^n\bigl(1 + \Theta(1/n)\bigr)$ 的直接結果
+（資結書第~1.6~節）：$n$ 夠大時括號裡的因子落在 $1$ 和 $2$ 之間，取 $c_1 = \sqrt{2\pi}$、
+$c_2 = 2\sqrt{2\pi}$ 即可。 考場上記不住斯特林公式時，後面三式可以直接證：
+\begin{itemize}
+\item $n! = 1 \cdot 2 \cdots n \le n \cdot n \cdots n = n^n$，所以 $n! = O(n^n)$（$c = 1$、
+$n_0 = 1$）。 而且 $\dfrac{n!}{n^n} = \dfrac{1}{n}\cdot\dfrac{2}{n}\cdots\dfrac{n}{n} \le \dfrac{1}{n}
+\to 0$，所以其實是 $n! = o(n^n)$，不是 $\Theta(n^n)$。
+\item $n! = 1 \cdot 2 \cdot 3 \cdots n \ge 1 \cdot 2 \cdot 2 \cdots 2 = 2^{n-1} = \tfrac12 \cdot 2^n$，
+所以 $n! = \Omega(2^n)$（$c = 1/2$、$n_0 = 1$）。 又
+$\dfrac{n!}{2^n} = \dfrac{1}{2}\cdot\dfrac{2}{2}\cdot\dfrac{3}{2}\cdots\dfrac{n}{2}
+\ge \dfrac12\left(\dfrac32\right)^{n-2} \to \infty$，所以 $n! = \omega(2^n)$，也不是 $\Theta(2^n)$。
+\item 取對數：$\lg(n!) \le \lg(n^n) = n\lg n$；只留後半段的乘數，
+$n! \ge (n/2)^{n/2}$，$\lg(n!) \ge \frac{n}{2}\lg\frac{n}{2} \ge \frac{n}{4}\lg n$（$n \ge 4$）。
+所以 $\lg(n!) = \Theta(n\lg n)$，這是比較排序下界用到的式子。
+\end{itemize}
+總結：$n!$ 比任何 $b^n$（$b$ 固定）都快，又比 $n^n$ 慢，緊的界是斯特林公式那一個。
+
+\textbf{(b)} 答案：$n^3 + 10^6 n^2 = \Theta(n^3)$。
+
+證明：令 $f(n) = n^3 + 10^6 n^2$。 下界：$f(n) \ge n^3$ 對所有 $n \ge 1$ 成立，取 $c_1 = 1$。
+上界：$n \ge 10^6$ 時 $10^6 n^2 \le n \cdot n^2 = n^3$，所以 $f(n) \le 2n^3$，取 $c_2 = 2$。
+因此 $c_1 = 1$、$c_2 = 2$、$n_0 = 10^6$ 時 $c_1 n^3 \le f(n) \le c_2 n^3$，
+$f(n) = \Theta(n^3)$，當然也是 $O(n^3)$ 和 $\Omega(n^3)$。 $10^6$ 這個大係數只影響 $n_0$，
+不影響階數；它提醒的是：$n < 10^6$ 時，$10^6 n^2$ 那一項其實比 $n^3$ 大。
+\end{pastsoln}

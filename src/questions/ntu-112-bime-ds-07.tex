@@ -1,0 +1,57 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-07}]{臺大生機所 112 學年度（A）第 7 題}
+（問答）
+
+(14\%) How to construct a \textbf{heap} in linear time complexity? Please justify your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+用\textbf{由下而上建堆積}（資結書第~8.2~節）。 下面以最小堆積說明，最大堆積只要把比較反過來。
+
+\textbf{做法}。 把 $n$ 個數直接放進 $A[1..n]$，看成一棵完整二元樹。 葉節點（位置
+$\lfloor n/2 \rfloor + 1$ 到 $n$）自己就是一個堆積，不用處理。 從最後一個有子節點的位置
+$\lfloor n/2 \rfloor$ 開始\textbf{倒著}到 $1$，對每個位置做下沉：
+\begin{pseudo}{由下而上建最小堆積}
+\Procedure{Build-Min-Heap}{$A, n$}
+    \For{$i \gets \lfloor n/2 \rfloor$ \DownTo $1$}
+        \State \Call{Sift-Down}{$A, i, n$}
+    \EndFor
+\EndProcedure
+\Procedure{Sift-Down}{$A, i, n$}
+    \While{$2i \le n$}
+        \State $c \gets 2i$ \Comment{左子節點}
+        \If{$c + 1 \le n$ \AND $A[c + 1] < A[c]$}
+            \State $c \gets c + 1$ \Comment{取較小的子節點}
+        \EndIf
+        \If{$A[i] \le A[c]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[c]$
+        \State $i \gets c$
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}：迴圈每一輪開始時，位置 $i + 1, \ldots, n$ 的每個節點都是一個最小堆積的根。 一開始
+後面全是葉節點，成立。 處理位置 $i$ 時，它的兩個子節點 $2i$、$2i + 1$ 位置比 $i$ 大，已經是堆積
+的根，正好符合下沉的前提：把 $A[i]$ 和較小的子節點交換、往下一路換到比兩個子節點都小（或到葉
+節點）為止，以 $i$ 為根的子樹就變成堆積。 迴圈結束時 $i = 0$，位置 $1$ 是堆積的根，整個陣列就是
+最小堆積。
+
+\textbf{為什麼是線性時間}。 令節點 $x$ 的高度 $h(x)$ 是以它為根的子樹的層數（葉節點是 $1$）。
+對 $x$ 下沉最多往下走 $h(x) - 1$ 步，每步 $O(1)$，所以總時間是
+$O\bigl(n + \sum_x (h(x) - 1)\bigr)$。 高度至少 $2$ 的節點最多 $n/2$ 個，高度至少 $3$ 的最多
+$n/4$ 個……高度至少 $\ell$ 的最多 $n/2^{\ell - 1}$ 個。 把 $\sum_x (h(x) - 1)$ 換個方向數：
+每個高度 $h$ 的節點，在「高度至少 $\ell$」（$\ell = 2, \ldots, h$）的計數裡各被數一次，剛好
+$h - 1$ 次，所以
+\[
+\sum_x \bigl(h(x) - 1\bigr) = \sum_{\ell \ge 2} \#\{x : h(x) \ge \ell\}
+\le \sum_{\ell \ge 2} \frac{n}{2^{\ell - 1}} = n\Bigl(\frac12 + \frac14 + \cdots\Bigr) \le n .
+\]
+（嚴格的寫法見資結書定理~8.1：總和恰好是 $n - b(n)$，$b(n)$ 是 $n$ 的二進位裡 $1$ 的個數，
+一定小於 $n$。） 所以交換次數少於 $n$，比較次數不超過交換次數的兩倍再加上 $2\lfloor n/2 \rfloor$，
+總時間 $O(n)$；每個數至少要看一次，所以是 $\Theta(n)$。
+
+直覺：一半的節點是葉節點，完全不用動；只有很少的節點（靠近根的那幾個）要走很遠。 相對地，逐一
+插入是讓每個新的數「上浮」，最下面一層的數最多，偏偏它們上浮的路最長，最壞是
+$\sum_{i=1}^{n} \lfloor \lg i \rfloor = \Theta(n \log n)$（例如最小堆積依遞減順序插入）。
+\end{pastsoln}

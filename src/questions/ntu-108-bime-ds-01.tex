@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-01}]{臺大生機所 108 學年度 第 1 題}
+（選擇並說明理由）
+
+(15\%) Which of the following sorting algorithms can be used to sort a random linked list with
+minimum time complexity? Please justify your answer.
+\begin{enumerate}[label=\Alph*.]
+\item Insertion sort
+\item Quick sort
+\item Heap sort
+\item Merge sort
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D（Merge sort）。
+
+串列和陣列最大的差別是\textbf{不能隨機存取}：要拿第 $i$ 個節點得從頭走 $i$ 步。 所以要看的是
+每個演算法「在串列上」最壞要多久，而不是在陣列上的時間。 「random linked list」指元素次序
+任意的串列，也就是要看一般輸入（最壞情況）。
+
+\begin{itemize}
+\item A. 插入排序：在串列上可以做（每次把一個節點拆下來，插進已排好的串列，資結書第~5.1~節
+虛擬碼~5.4 的有序插入），但找插入位置要從頭走，最壞（例如原本由大到小）$\Theta(n^2)$。 只有
+幾乎排好時才快。
+\item B. 快速排序：串列上可以做分割（逐一把節點分到「比基準小」「比基準大」兩條串列），平均
+$\Theta(n \log n)$；但基準只能方便地取第一個節點，最壞（例如原本已排好）每次切成 $0$ 和
+$n - 1$，$\Theta(n^2)$（資結書第~14.5~節）。 串列上也不能像陣列那樣隨機選基準或三數取中而
+不多花時間。
+\item C. 堆積排序：堆積靠的是「$A[i]$ 的子節點在 $A[2i]$、$A[2i+1]$」這種用索引直接跳的操作
+（資結書第~8.1~節），串列上每跳一次都要從頭走 $O(n)$ 步，直接做會比 $\Theta(n \log n)$ 慢得多。
+要用它就得先把串列複製到陣列，那已經不是在串列上排序了。
+\item D. 合併排序：找中間（快慢指標）、切兩半、遞迴、合併，全部只需要從頭往後走（資結書
+第~5.5~節、第~14.4~節虛擬碼~14.7）。 遞迴式 $T(n) = 2T(n/2) + \Theta(n)$，最壞也是
+$\Theta(n \log n)$。 合併時只改 next 指標，不需要陣列版那 $\Theta(n)$ 的暫存陣列，額外空間只有
+遞迴的 $O(\log n)$，而且是穩定的。
+\end{itemize}
+
+比較排序的下界是 $\Omega(n \log n)$（資結書第~15.1~節），合併排序在串列上就達到這個下界，所以
+選 D。
+\end{pastsoln}

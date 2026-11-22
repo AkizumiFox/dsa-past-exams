@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-13}]{臺大電機所 109 學年度（B）第 13 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a leftist heap of size n, the worst case time complexity of one find-min operation is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) O(1)。
+
+左傾樹（最小左傾樹）是一棵二元樹，每個節點的鍵不大於子節點的鍵（資結書第~8.5~節），所以最小值
+就在根，find-min 直接回傳根的鍵，$O(1)$。 和二元堆積一樣，左傾只是額外的形狀限制（每個節點
+$s(\text{左}) \ge s(\text{右})$），不影響「根最小」這件事。
+
+(B)--(E) 都是上界但不緊。
+\end{pastsoln}

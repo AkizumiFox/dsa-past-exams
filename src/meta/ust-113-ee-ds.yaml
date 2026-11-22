@@ -1,0 +1,27 @@
+paper: ust-113-ee-ds
+volume: 3
+school: 臺聯大
+dept: 電機類
+year: 113
+subject: 資料結構
+instructions: 第一大題 單選題，每題 3 分，答錯不倒扣，共 30 分。 第二大題 多選題（5 points per question），每題每一選項(ABCDE)單獨計分，每一選項個別分數為 1 分，答錯倒扣 1 分，倒扣至本大題(即多選題) 0 分為止。 第三大題 問答題（10 points per question）。（第 2 題是排隊位置的邏輯推理題，本書不收。）
+questions:
+  - {id: ust-113-ee-ds-01, label: 第 1 題, chapter: 1}
+  - {id: ust-113-ee-ds-03, label: 第 3 題, chapter: 14}
+  - {id: ust-113-ee-ds-04, label: 第 4 題, chapter: 14}
+  - {id: ust-113-ee-ds-05, label: 第 5 題, chapter: 5}
+  - {id: ust-113-ee-ds-06, label: 第 6 題, chapter: 14}
+  - {id: ust-113-ee-ds-07, label: 第 7 題, chapter: 14}
+  - {id: ust-113-ee-ds-08, label: 第 8 題, chapter: 21}
+  - {id: ust-113-ee-ds-09, label: 第 9 題, chapter: 21}
+  - {id: ust-113-ee-ds-10, label: 第 10 題, chapter: 21}
+  - {id: ust-113-ee-ds-11, label: 第 11 題, chapter: 5}
+  - {id: ust-113-ee-ds-12, label: 第 12 題, chapter: 6}
+  - {id: ust-113-ee-ds-13, label: 第 13 題, chapter: 14}
+  - {id: ust-113-ee-ds-14, label: 第 14 題, chapter: 12}
+  - {id: ust-113-ee-ds-15, label: 第 15 題, chapter: 24}
+  - {id: ust-113-ee-ds-16, label: 第 16 題, chapter: 10}
+  - {id: ust-113-ee-ds-17, label: 問答題第 1 題, chapter: 17}
+  - {id: ust-113-ee-ds-18, label: 問答題第 2 題, chapter: 12}
+  - {id: ust-113-ee-ds-19, label: 問答題第 3 題, chapter: 24}
+  - {id: ust-113-ee-ds-20, label: 問答題第 4 題, chapter: 9}

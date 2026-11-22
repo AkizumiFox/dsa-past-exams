@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-23}]{臺聯大電機類 114 學年度 第 23 題}
+（複選；5 分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+Given the following directed graph:\\
+Let G = (V, E) be a graph, V and E are sets of vertices and edges.\\
+V = \{V0, V1, V2, V3, V4, V5, V6\}\\
+E = \{(V0->V1), (V0->V3), (V1->V3), (V1->V4), (V2->V0), (V2->V3), (V2->V5), (V3->V2), (V3->V4),
+(V3->V5), (V3->V6), (V4->V6), (V5->V6), (V6->V4), (V6->V5)\}, where (V0->V1) represents an edge from
+V0 to V1.\\
+Which of the following statements are true based on the definitions given above. (5\%) multiple
+anwsers
+\begin{enumerate}[label=(\Alph*)]
+\item G is a directed acyclic graph
+\item Do a breadth-first search beginning at V0, V0>V1>V2>V3>V4>V5>V6 is a possible order visited by
+the algorithm
+\item Do a depth-first search beginning at V3, V3>V6>V4>V5>V2>V0>V1 is a possible order visited by
+the algorithm
+\item Do a breadth-first search beginning at V2, V2>V0>V3>V5>V1>V4>V6 is a possible order visited by
+the algorithm
+\item Do a depth-first search beginning at V1, V1>V3>V2>V5>V>V4>V0 is a possible order visited by the
+algorithm
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)(D)(E)。
+
+原卷 (E) 的順序寫成 ``V1>V3>V2>V5>V>V4>V0''，其中 ``V'' 少了編號。 七個頂點裡只有 V6 沒出現，這裡讀成
+V6。
+
+各頂點的出邊（題目沒規定鄰接順序，所以「可能的順序」是指存在某種鄰接順序讓走訪照這個順序拜訪）：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+頂點 & 出邊指向 \\
+\midrule
+V0 & V1, V3 \\
+V1 & V3, V4 \\
+V2 & V0, V3, V5 \\
+V3 & V2, V4, V5, V6 \\
+V4 & V6 \\
+V5 & V6 \\
+V6 & V4, V5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item (A)：V0$\to$V3$\to$V2$\to$V0 是一個有向環（另外還有 V4$\to$V6$\to$V4）。 不是 DAG，錯。
+\item (B)：BFS 從 V0 開始，先發現的是 V0 的鄰居 V1、V3，所以拜訪順序的第 2、3 個一定是 V1、V3
+（某種順序）。 V2 不是 V0 的鄰居，不可能排第三。 錯。
+\item (C)：DFS 從 V3。 V3 先走 V6；V6 走 V4；V4 只指向已拜訪的 V6，退回 V6，再走 V5；V5 只指向 V6，
+退回到 V6、再退回 V3；V3 接著走 V2；V2 走 V0；V0 走 V1（V3 已拜訪）。 順序
+V3, V6, V4, V5, V2, V0, V1，每一步都是沿著存在的邊（V3$\to$V6、V6$\to$V4、V6$\to$V5、V3$\to$V2、
+V2$\to$V0、V0$\to$V1）而且符合「先走到底再退回」。 對。
+\item (D)：BFS 從 V2（資結書第~21.3~節）。 取出 V2，發現 V0、V3、V5；取出 V0，發現 V1；取出 V3，發現
+V4、V6（V4 排在 V6 前面）；取出 V5，V6 已發現；之後 V1、V4、V6 都沒有新頂點。 拜訪順序
+V2, V0, V3, V5, V1, V4, V6，對。
+\item (E)（讀成 V6）：DFS 從 V1。 V1 走 V3；V3 走 V2；V2 先走 V5（題目允許 V2 的鄰居先試 V5）；V5 走 V6；
+V6 走 V4；V4 只指向 V6，退回；V6 的 V5 已拜訪，退回 V5、再退回 V2；V2 接著走 V0；V0 的鄰居 V1、V3 都已拜訪。
+順序 V1, V3, V2, V5, V6, V4, V0，對。 照字面（``V'' 不是頂點）這個順序不成立，作答時寫出這個解讀。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-12}]{臺聯大電機類 112 學年度 第 12 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Use a stack structure with only push and pop operations. An array with 4 items \{A,B,C,D\} is
+processed by push(A), push(B), push(C), push(D) sequentially with all possible legal pop() to remove
+the item on top of the stack at any time. For example, we can execute push(A), push(B), push(C),
+push(D), and then pop(), pop(), pop(), pop() to reverse the order to get D, C, B, A pop
+sequentially. What of the following are not possible pop sequences using a stack?
+
+(A)~ACBD \qquad (B)~CDBA \qquad (C)~CDAB \qquad (D)~BDCA \qquad (E)~BDAC
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(E)。
+
+模擬：照輸出序列一個一個要，要的元素如果不在堆疊頂端，就把還沒 push 的依序 push 進去，直到
+它出現在頂端再 pop；如果它已經在堆疊裡、但不在頂端，就不可能（資結書第~6.1.5~節）。
+
+\begin{itemize}
+\item (A) ACBD：push A、pop A；push B、push C、pop C；pop B；push D、pop D。 可能。
+\item (B) CDBA：push A、B、C，pop C；push D、pop D；堆疊剩 A、B（B 在頂），pop B、pop A。 可能。
+\item (C) CDAB：push A、B、C，pop C；push D、pop D；這時堆疊是 A、B，頂端是 B，要的是 A，
+A 被 B 壓住。 \textbf{不可能}。
+\item (D) BDCA：push A、B，pop B；push C、D，pop D；pop C；pop A。 可能。
+\item (E) BDAC：push A、B，pop B；push C、D，pop D；堆疊是 A、C，頂端是 C，要的是 A。
+\textbf{不可能}。
+\end{itemize}
+
+也可以用資結書定理~6.1 判斷：依序 push 的輸出序列不可能，若且唯若裡面有三個數
+（照 push 順序叫小、中、大）以「大、小、中」的順序出現。 (C) 的 D、A、B 和 (E) 的 D、A、C 都是
+這種樣子；(A)(B)(D) 找不到。
+\end{pastsoln}

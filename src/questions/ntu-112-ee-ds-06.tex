@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-06}]{臺大電機所 112 學年度 第 6 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+Since the leaf nodes of a \textit{red-black} (\textit{RB}) \textit{tree} are all black nodes, when we insert a new data to a \textit{RB tree}, we first insert this new data to the \textit{RB tree} like a regular \textit{binary search tree} operation (i.e. push it to the leaf), paint the corresponding new leaf node red, and then perform rotation(s) to balance the \textit{RB tree}, if necessary.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。 紅黑樹插入後的修正不只是旋轉，還要\textbf{改顏色}；而且有些情況只改顏色、不旋轉。
+
+插入的流程（資結書第~10.3.4~節、虛擬碼~10.6）：照 BST 插入新節點 $z$，塗成紅色（這樣每條路徑的黑色節點
+數不變），然後修正可能出現的「紅色父節點有紅色子節點」：
+\begin{itemize}
+\item 叔叔是紅色：父節點和叔叔改成黑色、祖父改成紅色，問題往上移兩層。 \textbf{只改顏色，不旋轉}。
+\item 叔叔是黑色：做一次或兩次旋轉，\textbf{同時}把轉上來的節點改成黑色、原本的祖父改成紅色。
+\item 最後把根塗成黑色（新節點是根時，直接塗黑）。
+\end{itemize}
+
+只靠旋轉是修不好的。 例子：根 $10$ 是黑色，兩個子節點 $5$、$15$ 是紅色，插入 $1$ 成為 $5$ 的紅色左子節點。
+這時四個鍵 $\{1, 5, 10, 15\}$ 裡只有一個黑色節點。 旋轉不改顏色，不管怎麼轉，根必須是黑的 $10$，另外三個
+紅色節點掛在它底下，根最多兩個子節點，至少有一個紅色節點的父節點也是紅色，一定違反性質。 正確的做法
+是改顏色：$5$、$15$ 改黑，$10$ 改紅再因為是根改回黑。
+
+另外，前半句「因為葉節點都是黑色，所以新節點塗紅」的理由也不精確：新節點塗紅是為了不改變黑高度；若
+塗黑，經過它的路徑黑色節點會多一個，比紅紅相鄰更難修。 題目最主要的錯在「只做旋轉」。
+\end{pastsoln}

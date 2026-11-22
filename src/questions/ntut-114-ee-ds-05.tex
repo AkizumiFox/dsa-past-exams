@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-05}]{北科大電機所（戊組） 114 學年度 第 II-1 題}
+（簡答；4 分）
+
+\textbf{II.\quad Short answers:}
+
+What is the value of the postfix expression 10 5 + 2 * 4 / ?\textbf{(4\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答：$7.5$（若用整數除法則是 $7$）。
+
+後序求值（資結書第~6.3.2~節）：由左往右讀，數字 push；遇到運算子就 pop 兩個數，\textbf{先 pop 出來的是
+右運算元}，算完把結果 push 回去。
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+讀入 & 動作 & 堆疊（左邊是底） \\
+\midrule
+10 & push & 10 \\
+5 & push & 10, 5 \\
+$+$ & pop 出 5、10，算 $10 + 5 = 15$ & 15 \\
+2 & push & 15, 2 \\
+$*$ & pop 出 2、15，算 $15 \times 2 = 30$ & 30 \\
+4 & push & 30, 4 \\
+$/$ & pop 出 4、30，算 $30 / 4 = 7.5$ & 7.5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+讀完時堆疊剩一個數，就是答案 $7.5$，也就是中序的 $(10 + 5) \times 2 / 4$。 題目沒說數的型別；若是 C 的
+整數運算，$30 / 4$ 會截成 $7$。
+\end{pastsoln}

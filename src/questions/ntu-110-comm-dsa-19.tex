@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-19}]{臺大電信所 110 學年度（B）第 19 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask for time complexities, please choose the tightest bound.
+
+Let $G$ be a graph represented using adjacency matrix with $n$ vertices and $m$ edges. What is the tightest upper bound on the running time of depth-first search (DFS) on this graph?
+
+A.~$O(n)$ \qquad B.~$O(m+n)$ \qquad C.~$O(n^2)$ \qquad D.~$O(mn)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+DFS 對每個頂點 $u$ 恰好呼叫一次 \proc{DFS-Visit}$(u)$，每次要找出 $u$ 的所有鄰居（資結書第~21.4~節）。
+用相鄰矩陣時，$u$ 的鄰居藏在第 $u$ 列，不論 $u$ 有幾個鄰居，都要把整列 $n$ 格掃完。 $n$ 個頂點各掃
+一列，共 $\Theta(n^2)$（資結書第~21.2~節）。
+
+逐項：A $O(n)$ 連矩陣都讀不完，錯。 B $O(m + n)$ 是相鄰串列的時間，用矩陣時即使 $m$ 很小（例如 $m = 0$）
+還是要掃 $n^2$ 格，所以不是上界。 D $O(mn)$ 在 $m \ge n$ 時是對的上界但不夠緊，而 $m$ 很小時甚至比
+$n^2$ 小而不成立。 最緊的上界是 $O(n^2)$。
+\end{pastsoln}

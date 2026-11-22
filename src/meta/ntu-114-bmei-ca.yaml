@@ -1,0 +1,12 @@
+paper: ntu-114-bmei-ca
+volume: 3
+school: 臺大
+dept: 生醫電資所
+year: 114
+subject: 計算機概論與演算法
+questions:
+  - {id: ntu-114-bmei-ca-01, label: 第 1 題（節錄）, chapter: 28}
+  - {id: ntu-114-bmei-ca-02, label: 第 2 題, chapter: 7}
+  - {id: ntu-114-bmei-ca-03, label: 第 3 題, chapter: 9}
+  - {id: ntu-114-bmei-ca-04, label: 第 6 題, chapter: 6}
+  - {id: ntu-114-bmei-ca-05, label: 第 10 題, chapter: 21}

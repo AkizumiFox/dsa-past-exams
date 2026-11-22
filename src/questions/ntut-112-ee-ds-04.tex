@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntut-112-ee-ds-04}]{北科大電機所（戊組）112 學年度 第 4 題}
+（計算）
+
+Assume Data[1..100,1..100] is a two-dimensional integer array whose start address is 00A0$_{(16)}$.
+Please explain the possible addresses of Data[3,5]. (integer: 4 bytes) (10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+「possible addresses」是因為題目沒有說陣列以列為主還是以行為主存放，兩種都要算（資結書第~4.1~節）。 起始
+位址 $\alpha = 00\mathrm{A0}_{16} = 160$，每個元素 $4$ 個位元組，列、行的下標都從 $1$ 到 $100$。
+
+\textbf{以列為主}（row-major）：一列一列存，$\mathrm{Data}[i, j]$ 前面有完整的 $i - 1$ 列（每列 $100$ 個）加上同一列的
+$j - 1$ 個：
+\[
+\mathrm{addr}(\mathrm{Data}[3,5]) = 160 + \bigl((3-1)\cdot 100 + (5-1)\bigr)\cdot 4 = 160 + 204 \cdot 4 = 160 + 816 = 976 = 03\mathrm{D0}_{16}.
+\]
+
+\textbf{以行為主}（column-major）：一行一行存，前面有完整的 $j - 1$ 行加上同一行的 $i - 1$ 個：
+\[
+\mathrm{addr}(\mathrm{Data}[3,5]) = 160 + \bigl((5-1)\cdot 100 + (3-1)\bigr)\cdot 4 = 160 + 402 \cdot 4 = 160 + 1608 = 1768 = 06\mathrm{E8}_{16}.
+\]
+
+換算十六進位：$816 = 330_{16}$，$\mathrm{A0}_{16} + 330_{16} = 3\mathrm{D0}_{16}$；$1608 = 648_{16}$，
+$\mathrm{A0}_{16} + 648_{16} = 6\mathrm{E8}_{16}$。 所以 $\mathrm{Data}[3,5]$ 的位址是 $03\mathrm{D0}_{16}$（以列為主）或
+$06\mathrm{E8}_{16}$（以行為主）。 這裡假設位址以位元組為單位；C 語言的二維陣列是以列為主，Fortran 是以行為主。
+\end{pastsoln}

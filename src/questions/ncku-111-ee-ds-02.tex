@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-02}]{成大電機所 111 學年度 單選題第 2 題}
+（單選；每題 4 分）
+
+A linked list index is \underline{\hspace{2em}}representing the position of a node in a linked list.
+
+A.~an Integer \qquad B.~a variable \qquad C.~a character \qquad D.~a Boolean
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+串列的「索引」指的是節點在串列裡的位置：第 $0$ 個（或第 $1$ 個）、第 $1$ 個……，是一個\textbf{整數}。 要找第 $i$
+個節點，就從第一個節點沿著 \texttt{next} 走 $i$ 步，$\Theta(i)$ 時間（陣列才能用索引 $O(1)$ 取值，資結書第~5.1~節）。
+\begin{itemize}
+\item A.~整數：對。
+\item B.~變數：索引的值可以存在變數裡，但「變數」不是一種值的種類，答非所問。 錯。
+\item C.~字元、D.~布林值：都不能表示第幾個。 錯。
+\end{itemize}
+\end{pastsoln}

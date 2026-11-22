@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-07}]{臺聯大電機類 114 學年度 第 7 題}
+（單選；2 分，答錯不倒扣）
+
+What is the algorithm's computation efficiency using a heap sized k (given in the previous question)
+to maintain top-k numbers by scanning through a list of numbers?
+
+(A)~O(n) \qquad (B)~O(nlogn) \qquad (C)~O(nlogk) \qquad (D)~O(k)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+「前一題」是歷屆試題~\ref{px:ust-114-ee-ds-06}：用大小 $k$ 的最小堆積。 掃過 $n$ 個數，每個數做
+一次和根的比較（$O(1)$），最多再做一次刪除根和一次插入，堆積大小不超過 $k$，各 $O(\log k)$。
+總時間 $n \cdot O(\log k) = O(n \log k)$，額外空間 $O(k)$。
+\begin{itemize}
+\item (A) O(n)：最壞情況（例如數列遞增，每個數都要進堆積）每個數都要 $\Theta(\log k)$ 的調整，
+$k$ 不是常數時超過 $O(n)$。 錯。
+\item (B) O(nlogn)：$k \le n$，所以 $O(n \log k) \subseteq O(n \log n)$，當上界不算錯，但不是這個
+演算法的緊界；先整個排序再取前 $k$ 個才是 $O(n \log n)$。 不選。
+\item (C) O(nlogk)：正確。
+\item (D) O(k)：光是讀完 $n$ 個數就要 $\Omega(n)$。 錯。
+\end{itemize}
+\end{pastsoln}

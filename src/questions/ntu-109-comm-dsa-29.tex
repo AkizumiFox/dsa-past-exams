@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-29}]{臺大電信所 109 學年度（B）第 29 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Unless otherwise specified, all logarithms are taken with respect to base 2, i.e., $\log_2$.
+
+Order the following functions by the big-Oh notation in decreasing order.\\
+(\textit{a}) $1.001^n$ \quad (\textit{b}) $n!$ \quad (\textit{c}) $n^{5/2}$ \quad (\textit{d}) $2^{7\log n}$
+\quad (\textit{e}) $3^{100000}$ \quad (\textit{f}) $\log\log n$ \quad (\textit{g}) $\sqrt{n}$ \quad
+(\textit{h}) $n^n$\\
+Which of the following order is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item $h>a>b>d>c>g>f>e$
+\item $h>b>a>d>c>g>f>e$
+\item $h>b>a>d>c>f>g>e$
+\item $b>h>a>d>c>g>f>e$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+先化簡 (\textit{d})：對數以 $2$ 為底，$2^{7\log n} = (2^{\log n})^7 = n^7$。 (\textit{e}) $3^{100000}$
+雖然很大，但和 $n$ 無關，是常數，排最後。 接著由大到小相鄰兩個比較（資結書第~1.6~節）：
+\begin{itemize}
+\item $n^n > n!$：$\dfrac{n!}{n^n} = \dfrac{1}{n}\cdot\dfrac{2}{n}\cdots\dfrac{n}{n} \le \dfrac{1}{n}
+\to 0$。
+\item $n! > 1.001^n$：$n!$ 的後一半每個因數都至少 $n/2$，所以 $n! \ge (n/2)^{n/2}$；
+$n \ge 4 \cdot 1.001^2$ 之後 $(n/2)^{n/2} \ge (2 \cdot 1.001^2)^{n/2} = 2^{n/2} \cdot 1.001^n$，
+比值 $n!/1.001^n \ge 2^{n/2} \to \infty$。
+\item $1.001^n > n^7$：底數大於 $1$ 的指數函數比任何多項式長得快，
+$n^7 / 1.001^n \to 0$（雖然 $n$ 要非常大才看得出來）。
+\item $n^7 > n^{5/2} > n^{1/2}$：多項式比次方。
+\item $\sqrt{n} > \log\log n$：$\log\log n$ 比 $\log n$ 還慢，$\log n$ 又比任何正次方慢。
+\item $\log\log n > 3^{100000}$：$\log\log n \to \infty$，終究超過任何常數。
+\end{itemize}
+所以順序是 $h > b > a > d > c > g > f > e$，就是 (B)。
+
+其他選項：(A) 把 $a$ 放在 $b$ 前面，但 $n! > 1.001^n$；(C) 把 $f$ 放在 $g$ 前面，但
+$\sqrt{n} > \log\log n$；(D) 把 $b$ 放在 $h$ 前面，但 $n^n > n!$。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-02}]{臺科大電子所甲組 110 學年度 第 2 題}
+（問答）
+
+\begin{enumerate}[label=(\alph*)]
+\item (6\%) What are the minimum and maximum numbers of elements in a heap of height $h$?
+\item (4\%) What is the height of the heap with $n$ elements?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有定義高度。 英文教科書（例如 CLRS）通常把高度定義成根到最深葉節點路徑上的
+\textbf{邊數}；資結書第~7.1~節數的是\textbf{層數}，比邊數多 $1$。 下面用邊數作答，最後附上
+層數的版本。
+
+堆積是完整二元樹（資結書第~8.1~節）：除了最下面一層，每一層都填滿，最下面一層從左邊開始放。
+深度 $d$ 那一層（根的深度 $0$）填滿時有 $2^d$ 個節點。
+
+\textbf{(a)} 高度 $h$ 表示深度 $0$ 到 $h - 1$ 這 $h$ 層都填滿，深度 $h$ 那一層至少 $1$ 個、最多
+$2^h$ 個節點。 上面填滿的部分有 $1 + 2 + \cdots + 2^{h-1} = 2^h - 1$ 個，所以
+\[
+\text{最少 } (2^h - 1) + 1 = 2^h \text{ 個}, \qquad
+\text{最多 } (2^h - 1) + 2^h = 2^{h+1} - 1 \text{ 個}.
+\]
+例如高度 $2$ 的堆積有 $4$ 到 $7$ 個元素。
+
+\textbf{(b)} 由 (a)，高度 $h$ 的堆積滿足 $2^h \le n \le 2^{h+1} - 1 < 2^{h+1}$。 取對數得
+$h \le \lg n < h + 1$，所以
+\[
+h = \lfloor \lg n \rfloor .
+\]
+例如 $n = 7$ 時 $\lfloor \lg 7 \rfloor = 2$，$n = 8$ 時多出一層，$\lfloor \lg 8 \rfloor = 3$。
+
+\textbf{用層數算高度時}（資結書的定義，空樹高度 $0$、只有根時高度 $1$）：高度 $h$ 的堆積最少
+$2^{h-1}$ 個、最多 $2^h - 1$ 個元素；$n$ 個元素的堆積高度是 $\lfloor \lg n \rfloor + 1$
+（資結書定理~7.3）。 作答時先寫明採用哪一種定義。
+\end{pastsoln}

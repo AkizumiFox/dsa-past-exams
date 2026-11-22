@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ntu-110-bime-ds-05}]{臺大生機所 110 學年度 第 5 題}
+（問答；20 分）
+
+(20\%) Given a reference that points to a node $x$ in a \textbf{doubly circular linked list}. Please
+write a pseudocode function to delete the node $x$ from the doubly circular linked list. No return
+values are expected.\\
+Note: A node in a \textbf{doubly circular linked list} has two pointers, named `next' and `prev',
+respectively, where the `next' pointer is used to find the next node and the `prev' pointer is used to
+find the previous one.
+\end{pastexam}
+
+\begin{pastsoln}
+題目只給 $x$，沒說串列有沒有頭節點（header）。 下面先照資結書第~5.2~節的做法：雙向環狀串列帶一個
+不存資料的頭節點 $h$，$x$ 是資料節點（$x \ne h$）。 這樣串列永遠不空，$x.\mathit{prev}$、
+$x.\mathit{next}$ 一定存在，刪除不必分情況，也不必傳回什麼。 最後再說沒有頭節點時要補什麼。
+
+\textbf{想法}。 $x$ 的前一個是 $a = x.\mathit{prev}$，後一個是 $b = x.\mathit{next}$。 刪掉 $x$
+就是讓 $a$ 和 $b$ 互相指：$a.\mathit{next} \gets b$，$b.\mathit{prev} \gets a$。
+\begin{center}
+\begin{tikzpicture}[dn/.style={draw,minimum width=9mm,minimum height=6mm},>={Stealth[length=2mm]}]
+\node[dn] (a) at (0,0) {$a$};
+\node[dn] (x) at (2.4,0) {$x$};
+\node[dn] (b) at (4.8,0) {$b$};
+\draw[->] ([yshift=1.5mm]a.east) -- ([yshift=1.5mm]x.west);
+\draw[->] ([yshift=-1.5mm]x.west) -- ([yshift=-1.5mm]a.east);
+\draw[->] ([yshift=1.5mm]x.east) -- ([yshift=1.5mm]b.west);
+\draw[->] ([yshift=-1.5mm]b.west) -- ([yshift=-1.5mm]x.east);
+\draw[->, thick, dashed] (a.north) to[bend left=35] node[above] {\small 新的 $a.\mathit{next}$} (b.north);
+\draw[->, thick, dashed] (b.south) to[bend left=35] node[below] {\small 新的 $b.\mathit{prev}$} (a.south);
+\end{tikzpicture}
+\end{center}
+
+\begin{pseudo}{雙向環狀串列（有頭節點）刪除節點 $x$}
+\Procedure{DC-Delete}{$x$}
+    \State $x.\mathit{prev}.\mathit{next} \gets x.\mathit{next}$
+    \State $x.\mathit{next}.\mathit{prev} \gets x.\mathit{prev}$
+    \State 釋放 $x$
+\EndProcedure
+\end{pseudo}
+
+第 2、3 行都只讀 $x$ 自己的兩個指標，$x$ 的指標在這兩行裡沒有被改，所以兩行先後對調也對；
+第 4 行一定要在最後。 $x$ 是唯一的資料節點時，$a = b = h$，兩行做完 $h.\mathit{next} = h.\mathit{prev} = h$，
+正好是空串列的樣子，不必特別處理。 這是資結書虛擬碼~5.7，只多了釋放。
+
+\textbf{正確性}。 刪除前環上的順序是 $\ldots, a, x, b, \ldots$，$a.\mathit{next} = x$、
+$b.\mathit{prev} = x$。 做完後 $a.\mathit{next} = b$、$b.\mathit{prev} = a$，其他節點的指標都沒動，
+所以環上的順序變成 $\ldots, a, b, \ldots$，正是少了 $x$ 的同一個環，往前、往後走都一致。
+
+\textbf{複雜度}。 改兩個指標，$\Theta(1)$，和串列長度無關；這正是雙向串列比單向串列好的地方：
+單向串列只有 $x$ 的指標時找不到前一個節點，要從頭走 $\Theta(n)$（或用「把下一個節點的資料複製過來
+再刪下一個」的技巧，但刪最後一個節點時行不通）。
+
+\textbf{沒有頭節點時}。 這時外面有一個指標 $L.\mathit{first}$ 指向串列的某一個節點。 上面兩行仍然
+正確地把 $x$ 從環上拿掉，但有兩個情形要另外處理，而且都要改 $L.\mathit{first}$，所以函式需要知道 $L$：
+$x$ 是唯一的節點（$x.\mathit{next} = x$）時，刪完串列變空，$L.\mathit{first} \gets \NIL$；
+$L.\mathit{first} = x$ 時，要改成 $x.\mathit{next}$，否則 $L.\mathit{first}$ 會指向被釋放的節點。
+\begin{pseudo}{沒有頭節點的版本}
+\Procedure{DC-Delete-NoHeader}{$L, x$}
+    \If{$x.\mathit{next} = x$} \Comment{唯一的節點}
+        \State $L.\mathit{first} \gets \NIL$
+    \Else
+        \State $x.\mathit{prev}.\mathit{next} \gets x.\mathit{next}$
+        \State $x.\mathit{next}.\mathit{prev} \gets x.\mathit{prev}$
+        \If{$L.\mathit{first} = x$}
+            \State $L.\mathit{first} \gets x.\mathit{next}$
+        \EndIf
+    \EndIf
+    \State 釋放 $x$
+\EndProcedure
+\end{pseudo}
+仍然是 $\Theta(1)$。 題目只給 $x$ 且不要傳回值，用有頭節點的版本最自然。
+\end{pastsoln}

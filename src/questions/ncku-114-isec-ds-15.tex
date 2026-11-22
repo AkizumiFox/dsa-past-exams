@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-15}]{成大智慧資安學程 114 學年度 單選題第 15 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please give the maximum flow from S to T in the network flow graph in Fig 2, where the value associated
+to an edge is its capacity.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=7mm,inner sep=0pt},>={Stealth[length=2.2mm]}]
+  \node[v] (s) at (0,0) {};
+  \node[v] (a) at (2,1.2) {};
+  \node[v] (b) at (2,-1.2) {};
+  \node[v] (c) at (4.3,1.2) {};
+  \node[v] (d) at (4.3,-1.2) {};
+  \node[v] (t) at (6.3,0) {};
+  \draw[->] (s) -- node[above left] {4} (a);
+  \draw[->] (s) -- node[below left] {6} (b);
+  \draw[->] (a) -- node[above] {3} (c);
+  \draw[->] (b) -- node[below] {3} (d);
+  \draw[->] (c) -- node[above right] {5} (t);
+  \draw[->] (d) -- node[below right] {11} (t);
+  \draw[->] (a.south east) -- node[below left] {1} (d.north west);
+  \draw[->] ([shift={(1.2mm,1.2mm)}]d.north west) -- node[above right] {8} ([shift={(1.2mm,1.2mm)}]a.south east);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+\item 10
+\item 7
+\item 16
+\item 14
+\item None of above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b) 7。
+
+原圖沒有標 S、T，也沒有標「Fig 2」，照圖的樣子，最左邊的點是 S、最右邊是 T。 把中間的點命名：上排
+左 $a$、右 $c$，下排左 $b$、右 $d$。 邊和容量：$S \to a$ 4、$S \to b$ 6、$a \to c$ 3、$b \to d$ 3、$c \to T$ 5、
+$d \to T$ 11、$a \to d$ 1、$d \to a$ 8。
+
+\textbf{找增廣路徑}（資結書第~26.3~節，這裡每次取邊數最少的路徑）：
+\begin{enumerate}
+\item $S \to a \to c \to T$，瓶頸 $\min(4, 3, 5) = 3$。 流量 $3$。
+\item $S \to a \to d \to T$，$S \to a$ 剩 $1$，瓶頸 $\min(1, 1, 11) = 1$。 流量 $4$。
+\item $S \to b \to d \to T$，瓶頸 $\min(6, 3, 11) = 3$。 流量 $7$。
+\end{enumerate}
+之後剩餘網路裡，從 $S$ 只走得到 $b$（$S \to a$ 滿了，$S \to b$ 剩 $3$，但 $b \to d$ 滿了），到不了 $T$，結束。
+
+\textbf{用最小割確認}（資結書第~26.5~節）：取 $S$ 這一側 $= \{S, b\}$。 從這一側出去的邊是 $S \to a$（4）和
+$b \to d$（3），容量和 $7$；從另一側進來的邊不算。 任何流都不超過任何割的容量，而上面找到了流量 $7$
+的流，所以最大流是 $7$，答案 b)。
+
+$d \to a$ 那條容量 $8$ 的邊用不上：從 $d$ 送回 $a$ 之後，$a$ 只能再走 $a \to c$（已經滿了）或 $a \to d$ 回去，
+不會增加送到 $T$ 的量。 a) 10 是 $S$ 兩條出邊的容量和，但下排 $b$ 只能送出 $3$。
+\end{pastsoln}

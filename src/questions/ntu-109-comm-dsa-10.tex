@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-10}]{臺大電信所 109 學年度（B）第 10 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+Given a weighted directed graph $G=(V,E,w)$ and a shortest path $p$ from $s$ to $t$, if we doubled
+the weight of every edge to produce $G'=(V,E,w')$, then $p$ is also a shortest path in $G'$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：T（對）。
+
+$w'(e) = 2w(e)$。 對任一條路徑 $q = \langle v_0, v_1, \ldots, v_k\rangle$，
+\[
+w'(q) = \sum_{i=1}^{k} 2w(v_{i-1}, v_i) = 2\,w(q).
+\]
+$p$ 是 $G$ 中的最短路徑，所以對每條 $s$ 到 $t$ 的路徑 $q$ 都有 $w(p) \le w(q)$，兩邊乘以正數
+$2$ 得 $w'(p) \le w'(q)$，$p$ 在 $G'$ 中也是最短路徑。 權重有負的也一樣成立，因為乘上正數不
+改變大小關係。
+
+對照：如果改成每條邊\textbf{加上}同一個常數 $c$，路徑 $q$ 的權重變成 $w(q) + ck$，和邊數 $k$
+有關，邊數多的路徑被加得多，最短路徑就可能改變。
+\end{pastsoln}

@@ -1,0 +1,179 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-07}]{成大電機所 107 學年度 問答題第 3 題}
+（問答）
+
+\textbf{3. A Mazing Problem (16 pts)}
+
+The rat in a maze experiment is a classical one from experimental psychology, where a map is recorded
+by a two-dimensional array, $maze[i][j]$, where $1\le i\le m$ and $1\le j\le p$. A value of 1 implies a
+blocked path, and a 0 means one can walk right on through. The data types needed are
+
+\quad \textbf{struct} \textit{offsets} \{ int $a$, $b$; \}
+
+\quad \textbf{enum} directions \{N, NW, W, SW, S, SE, E, NE\};
+
+\quad offsets \textit{move}[8];
+
+For example, if we are at $maze[i][j]$ and we wish to find the new position $maze[g][h]$ that is
+southwest of us, then we set $g=i+$move[SW].a and h $=j+$move[SW].b (see Fig. (a) and (b)).
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,>={Stealth[length=2mm]}]
+% (a) eight directions
+\begin{scope}
+  \draw (-0.75,-2.1) -- (-0.75,2.1) (0.75,-2.1) -- (0.75,2.1);
+  \draw (-2.1,-0.75) -- (2.1,-0.75) (-2.1,0.75) -- (2.1,0.75);
+  \node[draw,circle,fill=black!15,minimum size=5mm,inner sep=0pt] (c) at (0,0) {};
+  \node at (0,-0.5) {[i][j]};
+  \foreach \ang/\len in {90/1.45,270/1.35,0/0.75,180/0.75,45/1.9,135/1.9,225/1.9,315/1.9} {
+    \draw[->] (c) -- (\ang:\len);
+  }
+  \node at (0,1.7) {[i-1][j]};
+  \node at (0,-1.7) {[i+1][j]};
+  \node at (-1.6,1.7) {[i-1][j-1]};
+  \node at (1.6,1.7) {[i-1][j+1]};
+  \node at (-1.6,-1.7) {[i+1][j-1]};
+  \node at (1.6,-1.7) {[i+1][j+1]};
+  \node[anchor=east] at (-0.72,0) {W [i][j-1]};
+  \node[anchor=west] at (0.72,0) {[i][j+1] E};
+  \node at (-2.1,2.25) {NW}; \node at (0,2.25) {N}; \node at (2.1,2.25) {NE};
+  \node at (-2.1,-2.25) {SW}; \node at (0,-2.25) {S}; \node at (2.1,-2.25) {SE};
+  \node[font=\small] at (0,-3.1) {(a)};
+\end{scope}
+% (b) move table
+\begin{scope}[xshift=4.9cm,font=\scriptsize\sffamily]
+  \fill[black] (-1.9,0.95) rectangle (1.9,1.9);
+  \draw (-1.9,-1.95) rectangle (1.9,1.9);
+  \node[white] at (-1.3,1.42) {\textbf{\textit{q}}};
+  \node[white,align=center] at (0,1.42) {\textbf{\textit{move[q]}}\\\textbf{\textit{.a}}};
+  \node[white,align=center] at (1.25,1.42) {\textbf{\textit{move[q]}}\\\textbf{\textit{.b}}};
+  \foreach \q/\a/\b [count=\r from 0] in {N/-1/0,NE/-1/1,E/0/1,SE/1/1,S/1/0,SW/1/-1,W/0/-1,NW/-1/-1} {
+    \node at (-1.3,0.65-\r*0.33) {\q};
+    \node at (0,0.65-\r*0.33) {\a};
+    \node at (1.25,0.65-\r*0.33) {\b};
+  }
+  \node[font=\small\rmfamily] at (0,-3.1) {(b)};
+\end{scope}
+% (c) maze
+\begin{scope}[xshift=8.3cm,yshift=1.75cm,x=0.62cm,y=0.62cm,font=\small]
+  \draw[step=1] (0,0) grid (5,-5);
+  \foreach \row [count=\r from 0] in {{0,0,0,1,1},{0,1,1,0,1},{0,0,0,0,0},{1,1,1,0,1},{0,1,1,0,0}} {
+    \node at (-0.6,-\r-0.5) {\r};
+    \foreach \v [count=\c from 0] in \row { \node at (\c+0.5,-\r-0.5) {\v}; }
+  }
+  \foreach \c in {0,...,4} { \node at (\c+0.5,0.55) {\c}; }
+  \draw[->] (6.1,0.55) -- (5.3,0.55);
+  \node at (6.5,0.55) {$j$};
+  \draw[->] (-0.6,-6.0) -- (-0.6,-5.2);
+  \node at (-0.6,-6.5) {$i$};
+  \draw[->] (-0.5,0.7) -- (0,0);
+  \node[font=\scriptsize] at (-0.7,1.0) {exit};
+  \draw[->] (5.7,-5.6) -- (5,-5);
+  \node[font=\scriptsize] at (5.6,-6.0) {entrance};
+  \node at (2.5,-7.3) {(c)};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+The pseudo code is shown in the following:
+\begin{minted}[fontsize=\small, linenos, numbersep=6pt, xleftmargin=2em]{text}
+initialize list to the maze entrance coordinates and direction north;
+while (list is not empty)
+{
+  (i, j, dir) = coordinates and direction from end of list;
+  delete last element of list;
+  while (there are more moves from (i, j)) // i.e., dir < 8
+  {
+     (g, h) = coordinates of next move;
+     if ((g == m) && (h == p)) success;
+     if ((!maze[g][h] && (!mark[g][h]))
+     {
+        mark[g][h] = 1;
+        dir = next direction to try;
+        add (i, j, dir) to end of list;
+        (i, j, dir) = (g, h, N);  //move to new location
+     }
+  }
+}
+cout << "No path in maze." << endl;
+\end{minted}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(2 pts)} What kind of the data structure that you can use it to implement the
+\textit{list} in the above pseudo code? Why?
+\item \textbf{(2 pts)} How do you handle the problem when a rat touches the boundary of a maze?
+\item \textbf{(2 pts)} What is the purpose of the matrix \textit{mark} which appears in Line 10 and Line
+12?
+\item \textbf{(5 pts)} Please show the path that is found by the program in the map of Fig. (c) in term
+of the index of the matrix.
+\item \textbf{(2 pts)} Can you find the path if there exists at least one route from entrance to exit
+according to the algorithm?
+\item \textbf{(3 pts)} Assume the cost will be increased by one if you go through a grid in the maze,
+and the cost of a path is the number of grids in the path. Dose the proposed algorithm find the path
+with the smallest cost? If the answer is No, what kind of algorithm and the data structure that you
+should use in order to find the path with the smallest cost?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這是 Horowitz 課本的老鼠走迷宮，原題有幾處要先說清楚：
+\begin{itemize}
+\item 文字說下標從 $1$ 開始、出口是 $(m, p)$，但圖 (c) 的下標是 $0$ 到 $4$，入口在右下角 $(4, 4)$，出口在左上角
+$(0, 0)$。 下面照圖作答：從 $(4, 4)$ 出發，第 9 行的條件讀成「$(g, h)$ 是出口 $(0, 0)$」。
+\item 第 10 行原卷少一個右括號，意思是 \texttt{if (!maze[g][h] \&\& !mark[g][h])}。
+\item 內層迴圈只在第 13 行改 \texttt{dir}；那一格走不通時也要換下一個方向，否則會停在原地，所以讀成「不能走
+就 \texttt{dir++}」（Horowitz 的原程式有這個 else）。 入口也先設 \texttt{mark} 為 $1$，不讓老鼠走回入口。
+\item 「下一個方向」照 \textbf{enum} 的順序 N、NW、W、SW、S、SE、E、NE（enum 決定 \texttt{dir} 的數值）。
+圖 (b) 表格列的順序是 N、NE、E、SE、…，那只是查表，不影響 \texttt{dir} 加一後是哪個方向。 最後也附上照表格
+順序的結果。
+\end{itemize}
+
+\textbf{a.} 用\textbf{堆疊}。 程式只在 \textit{list} 的尾端加入（第 14 行）和取出（第 4--5 行），後進先出。 這正是
+回溯的需要：走進死路時，要退回的是\textbf{最近}經過、還有方向沒試完的那一格，也就是最後放進去的那一筆。
+堆疊裡由底到頂存的正好是目前從入口走到這裡的路徑。
+
+\textbf{b.} 在迷宮外圍加一圈 $1$（牆）：開成 $(m+2) \times (p+2)$ 的陣列，第 $0$ 列、第 $m+1$ 列、第 $0$ 行、第 $p+1$
+行全設為 $1$。 這樣任何一格往八個方向走，算出來的 $(g, h)$ 都在陣列範圍內，碰到外圍的牆自然走不通，第 10 行
+不必另外檢查邊界。 （另一種做法是每次檢查 $0 \le g < m$、$0 \le h < p$，超出範圍就當牆。）
+
+\textbf{c.} \textit{mark} 記錄哪些格子已經走過（放進過路徑）。 第 10 行只走沒走過的格子，第 12 行在走進去時標記。
+沒有它，老鼠會在兩格之間來回走（例如 $A \to B \to A \to B \cdots$）或在環裡繞圈，程式不會結束；有了它，每一格最多
+進入一次，總時間是 $O(mp)$（每格最多試八個方向）。
+
+\textbf{d.} 找到的路徑（列, 行）：
+\[
+(4,4) \to (3,3) \to (2,3) \to (1,3) \to (0,2) \to (0,1) \to (0,0).
+\]
+追蹤（「試」是依 enum 順序試過的方向，$\times$ 表示是牆或超出範圍）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+所在 & 依序試的方向 & 結果 \\
+\midrule
+$(4,4)$ & N $(3,4)$ $\times$，NW $(3,3)$ 通 & 把 $(4,4,\text{W})$ 放進堆疊，走到 $(3,3)$ \\
+$(3,3)$ & N $(2,3)$ 通 & 放進 $(3,3,\text{NW})$，走到 $(2,3)$ \\
+$(2,3)$ & N $(1,3)$ 通 & 放進 $(2,3,\text{NW})$，走到 $(1,3)$ \\
+$(1,3)$ & N $(0,3)$ $\times$，NW $(0,2)$ 通 & 放進 $(1,3,\text{W})$，走到 $(0,2)$ \\
+$(0,2)$ & N 超出，NW 超出，W $(0,1)$ 通 & 放進 $(0,2,\text{SW})$，走到 $(0,1)$ \\
+$(0,1)$ & N 超出，NW 超出，W $(0,0)$ 是出口 & 成功 \\
+\bottomrule
+\end{tabular}
+\end{center}
+這次沒有走進死路，堆疊裡的五格加上目前所在 $(0,1)$ 和出口 $(0,0)$，就是上面的路徑。
+
+若「下一個方向」照圖 (b) 表格的順序（N、NE、E、SE、S、SW、W、NW），走法會不同：$(4,4)$ 先走 W 到 $(4,3)$，
+往北到 $(3,3)$、$(2,3)$、$(1,3)$；在 $(1,3)$ 先試到 SE $(2,4)$，那是死路（周圍不是牆就是走過的格子），退回 $(1,3)$
+改走 SW $(2,2)$，再往西 $(2,1)$、$(2,0)$，往北 $(1,0)$，到出口 $(0,0)$。 路徑是
+$(4,4)$、$(4,3)$、$(3,3)$、$(2,3)$、$(1,3)$、$(2,2)$、$(2,1)$、$(2,0)$、$(1,0)$、$(0,0)$。 作答時寫清楚採用哪一種順序。
+
+\textbf{e.} 能。 只要入口到出口有路，演算法一定找得到：它是深度優先搜尋，每一格的八個方向都會試完才放棄，
+退回去時會繼續試上一格剩下的方向。 一格只有在「從它出發的所有方向都試過了」才會永久離開堆疊，所以從
+入口能走到的格子全部都會被標記、被走過（和 DFS 會拜訪起點能到的所有頂點同理，資結書第~21.4~節）。 出口
+和某個能走到的格子相鄰時，從那一格試到出口的方向就成功。 只有入口根本走不到出口時，堆疊才會清空，印出
+``No path in maze.''。
+
+\textbf{f.} 不一定。 DFS 找到的是「第一條」路，不保證最短。 上面 d 找到的路經過 $7$ 格，但
+$(4,4) \to (3,3) \to (2,2) \to (2,1) \to (1,0) \to (0,0)$ 只經過 $6$ 格。 要找格數最少的路，改用\textbf{廣度優先搜尋}
+（BFS），資料結構用\textbf{佇列}（資結書第~21.3~節）：從入口出發，一層一層往外擴，先找到的一定是步數最少的；
+每格記下從哪一格來，到出口後倒推就是最短路徑。 每一步的成本都是 $1$，所以不需要 Dijkstra；若每格成本不同
+才要用 Dijkstra 演算法配優先佇列。
+\end{pastsoln}

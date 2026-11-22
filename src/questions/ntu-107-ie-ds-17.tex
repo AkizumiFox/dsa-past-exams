@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-17}]{臺大工工所 107 學年度 第 17 題}
+（複選；每題 10 分，至少一個選項正確；每個選項答對得 2 分，答錯倒扣 2 分，每題倒扣至零分為止）
+
+Consider an undirected graph G=(V,E). Which of the following statement(s) is(are) true?
+\begin{enumerate}[label=(\alph*),nosep]
+\item Finding all connected components can be done in O(|V|+|E|) time if the adjacency matrix is provided.
+\item Finding all connected components can be done in O(|V|+|E|) time if the adjacency list is provided.
+\item If edges are dynamically added into the graph one-by-one, keeping track of all connected components for each edge addition can be done in O( log|V|) time.
+\item Detecting whether the graph is cyclic can be done in O(|V|+|E|) time if the adjacency list is provided.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)(c)(d)。
+
+以下 $n = |V|$、$m = |E|$。 (c) 是互斥集合（資結書第~13~章），其他是圖的走訪（資結書第~21~章），
+這題放在第~21~章。
+\begin{itemize}
+\item (a) \textbf{錯}。 用相鄰矩陣時，找一個頂點的所有鄰居要掃一整列，$\Theta(n)$，不管它實際有幾個
+鄰居。 BFS 或 DFS 每個頂點都要掃一次，總共 $\Theta(n^2)$（資結書第~21.2~節）。 邊很少時（例如
+$m = O(n)$），$\Theta(n^2)$ 不是 $O(n + m)$。 而且只要演算法沒讀到某一格，就可能漏掉那條邊，
+所以用矩陣時 $\Omega(n^2)$ 是免不了的。
+\item (b) \textbf{對}。 用相鄰串列，對每個還沒拜訪的頂點跑一次 BFS 或 DFS，每跑一次就是一個連通元件。
+每個頂點拜訪一次、每條邊在兩個串列各看一次，$O(n + m)$（資結書第~21.6~節）。
+\item (c) \textbf{對}。 用互斥集合森林，每個連通元件是一個集合。 加入邊 $(u, v)$ 時做
+$\proc{Find}(u)$、$\proc{Find}(v)$，不同就 $\proc{Union}$。 只用 union by rank（或 by size），樹高
+$\le \lg n$（資結書定理~13.2），每次 $\proc{Find}$ 最壞 $O(\log n)$，所以每加一條邊最壞
+$O(\log |V|)$；再加上路徑壓縮，平攤是 $O(\alpha(n))$（資結書定理~13.4）。 任何時候要問兩個頂點
+是否連通，也是比兩次 $\proc{Find}$。
+\item (d) \textbf{對}。 無向圖有環若且唯若 DFS 時遇到一條通往「已拜訪、而且不是父節點」的頂點的邊（後向邊）
+（資結書定理~21.8 和第~21.6~節）。 DFS 是 $O(n + m)$；其實更快，因為發現第一個環之前看過的邊不超過 $n - 1$
+條（無環的圖最多 $n - 1$ 條邊），$O(n)$ 就能判斷。
+\item (e) \textbf{錯}。 (b)(c)(d) 都對。
+\end{itemize}
+\end{pastsoln}

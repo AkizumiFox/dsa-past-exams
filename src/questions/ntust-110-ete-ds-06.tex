@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-06}]{臺科大電子所甲組 110 學年度 第 6 題}
+（程式）
+
+{[}10\%{]} Please write a recursive function F(n) to calculate Fibonacci numbers.\\
+(note: F(0)=1, F(1)=1, F(n)=F(n-1)+F(n-2))
+\end{pastexam}
+
+\begin{pastsoln}
+注意本題的定義是 $F(0) = F(1) = 1$，不是常見的 $F(0) = 0$，所以數列是 $1, 1, 2, 3, 5, 8, 13,
+\ldots$。 直接照定義寫成遞迴：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+long long F(int n)
+{
+    if (n <= 1)            /* 基底：F(0) = F(1) = 1 */
+        return 1;
+    return F(n - 1) + F(n - 2);
+}
+\end{minted}
+\begin{itemize}
+\item \textbf{基底}：$n = 0$ 或 $1$ 直接回傳 $1$，遞迴在這裡停下來。 寫成 \texttt{n <= 1} 也順便讓
+負數輸入回傳 $1$ 而不會無限遞迴（題目的 $n$ 應該是非負整數）。
+\item \textbf{遞迴}：$n \ge 2$ 時回傳 $F(n-1) + F(n-2)$，兩個參數都比 $n$ 小，一定會走到基底。
+\end{itemize}
+例如 $F(4) = F(3) + F(2) = (F(2) + F(1)) + (F(1) + F(0)) = (2 + 1) + (1 + 1) = 5$。 型別用
+\texttt{long long}：$F(n)$ 成長很快，$n = 46$ 時已經超過 $32$ 位元的 \texttt{int}。
+
+\textbf{效率}（題目沒問，但值得知道）：令 $C(n)$ 是算 $F(n)$ 時的呼叫次數，$C(0) = C(1) = 1$，
+$C(n) = 1 + C(n-1) + C(n-2)$，解得 $C(n) = 2F(n) - 1$。 $F(n)$ 以 $\phi^n$ 的速度成長
+（$\phi = (1 + \sqrt5)/2 \approx 1.618$），所以這個寫法是指數時間：同一個 $F(k)$ 被重複算了很多次。
+用一個陣列記住算過的值（記憶化），或從 $F(0)$、$F(1)$ 往上用迴圈算，都只要 $\Theta(n)$ 時間
+（資結書第~18.1~節）。 遞迴深度最多 $n$，堆疊空間 $\Theta(n)$（資結書第~6.4~節）。
+\end{pastsoln}

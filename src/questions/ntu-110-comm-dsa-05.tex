@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-05}]{臺大電信所 110 學年度（B）第 5 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Both depth-first search (DFS) and breadth-first search (BFS) are linear-time algorithms.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（正確）。
+
+對圖來說，「線性時間」指和輸入大小成正比，也就是 $O(V + E)$。 用相鄰串列存圖時：
+\begin{itemize}
+\item BFS 每個頂點進出佇列各一次，共 $O(V)$；每個頂點出佇列時掃一遍自己的相鄰串列，所有串列的總長是
+$E$（有向圖）或 $2E$（無向圖），共 $O(E)$。 合計 $O(V + E)$（資結書第~21.3~節）。
+\item DFS 對每個頂點呼叫一次 \proc{DFS-Visit}，每次掃一遍它的相鄰串列，同樣是 $O(V + E)$
+（資結書第~21.4~節）。
+\end{itemize}
+兩者都是輸入大小的線性函數，敘述正確。 要注意的是這個結論建立在相鄰串列上；若用相鄰矩陣，找鄰居要
+掃一整列，時間變成 $\Theta(V^2)$（本卷第~19~題）。 題目沒有指定表示法時，一般預設相鄰串列。
+\end{pastsoln}

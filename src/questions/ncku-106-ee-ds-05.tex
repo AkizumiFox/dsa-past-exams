@@ -1,0 +1,105 @@
+\begin{pastexam}[label={px:ncku-106-ee-ds-05}]{成大電機所 106 學年度 簡答題第 1 題}
+（簡答）
+
+\textbf{(20 pts)} Give a sequence of numbers 6, 2, 4, 7, 3, 9, 5 recorded by an array (the first index of the
+array is zero).
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(6 pts)} Sort the numbers in the increasing order by the quick sort algorithm and show the status
+of the array each time after you change the location of pivot (\textbf{take the last digit as pivot}). Each
+time the array [0\ldots n-1] is divided into two subarrays whose indices are
+[0 \ldots\ $\lfloor\frac{n-1}{2}\rfloor$] and [$\lfloor\frac{n-1}{2}\rfloor+1$ \ldots\ n-1], respectively,
+and the subarray with small index is handled first.
+\item \textbf{(4 pts)} Show the condition when the algorithm has to take the longest time according to the
+above numbers. What is the time complexity if there exist n numbers and why?
+\item \textbf{(5 pts)} Show the status of the heap in an array before you want to sort the number
+\textbf{in the decreasing order.}
+\item \textbf{(5 pts)} Based on the result of b, you delete the root and exchange the root with the number in
+the array with the largest index. Please show the status of the array after you legal the new heap.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+a、b 小題屬於快速排序，c、d 小題屬於堆積排序，都在資結書第~14~章。
+
+答案：a.\ 依序為 $[2, 4, 3, 5, 6, 9, 7]$、$[2, 3, 4, 5, 6, 9, 7]$、$[2, 3, 4, 5, 6, 7, 9]$；
+b.\ 每次的基準都是子陣列的最大或最小值（例如輸入已經排好），$\Theta(n^2)$；
+c.\ 最小堆積 $[2, 3, 4, 7, 6, 9, 5]$；d.\ $[3, 5, 4, 7, 6, 9, 2]$。
+
+\textbf{題意說明。} a 小題那句「每次把 $[0..n-1]$ 分成 $[0..\lfloor (n-1)/2 \rfloor]$ 和
+$[\lfloor (n-1)/2 \rfloor + 1..n-1]$」照字面是從正中間切，那是合併排序的切法；快速排序是在基準最後的位置切開。
+這組資料用「取最後一個當基準」的分割，三次分割的基準剛好都落在子陣列的正中間位置
+$\lfloor (n-1)/2 \rfloor$，所以兩種說法得到同樣的切法。 下面照快速排序做：基準放到最後的位置之後就不再
+移動，再遞迴處理它左邊和右邊，左邊（索引小的）先做。 d 小題的「result of b」應該是「result of c」（b 小題
+沒有堆積），這裡照 c 的結果做。
+
+\textbf{a.} 用 Lomuto 分割（資結書虛擬碼~14.8），以子陣列最後一個數 $x$ 為基準：$i$ 指著「$\le x$ 區」的
+最後一格，$j$ 由左往右掃，$A[j] \le x$ 就把它換進 $\le x$ 區；掃完再把基準換到 $\le x$ 區的後面。
+\begin{itemize}
+\item \textbf{第 1 次分割}，$A[0..6] = [6, 2, 4, 7, 3, 9, 5]$，基準 $5$。 $j = 0$：$6 > 5$；$j = 1$：$2 \le 5$，和
+$A[0]$ 交換得 $[2, 6, 4, 7, 3, 9, 5]$；$j = 2$：$4 \le 5$，和 $A[1]$ 交換得 $[2, 4, 6, 7, 3, 9, 5]$；$j = 3$：$7 > 5$；
+$j = 4$：$3 \le 5$，和 $A[2]$ 交換得 $[2, 4, 3, 7, 6, 9, 5]$；$j = 5$：$9 > 5$。 最後基準和 $A[3]$ 交換：
+\[
+[2, 4, 3, \underline{5}, 6, 9, 7],
+\]
+基準 $5$ 在索引 $3 = \lfloor 6/2 \rfloor$。 接著處理 $A[0..2]$，再處理 $A[4..6]$。
+\item \textbf{第 2 次分割}，$A[0..2] = [2, 4, 3]$，基準 $3$。 $j = 0$：$2 \le 3$，和自己交換；$j = 1$：$4 > 3$。
+基準和 $A[1]$ 交換：
+\[
+[2, \underline{3}, 4, 5, 6, 9, 7],
+\]
+基準在索引 $1$。 兩邊 $[2]$、$[4]$ 都只有一個數，不用再做。
+\item \textbf{第 3 次分割}，$A[4..6] = [6, 9, 7]$，基準 $7$。 $j = 4$：$6 \le 7$，和自己交換；$j = 5$：$9 > 7$。
+基準和 $A[5]$ 交換：
+\[
+[2, 3, 4, 5, 6, \underline{7}, 9],
+\]
+基準在索引 $5$。 兩邊都只剩一個數，排序完成。
+\end{itemize}
+三次分割共比較 $6 + 2 + 2 = 10$ 次。
+
+\textbf{b.} 快速排序最慢的情況是\textbf{每一次分割的基準都是子陣列的最大值或最小值}，分割後一邊是空的、
+另一邊有 $m - 1$ 個數。 以這七個數為例，輸入已經由小到大排好 $[2, 3, 4, 5, 6, 7, 9]$（每次基準都是最大值）
+或由大到小排好 $[9, 7, 6, 5, 4, 3, 2]$（基準輪流是最小、最大）時，比較次數都是
+$6 + 5 + 4 + 3 + 2 + 1 = 21$ 次，是七個數所有排列裡最多的；只要每一層的最後一個數都是最大或最小，例如
+$[6, 4, 3, 5, 2, 7, 9]$，也是 $21$ 次。
+
+$n$ 個數時，分割長度 $m$ 的子陣列要比較 $m - 1$ 次。 最壞情況的遞迴式
+\[
+T(n) = T(n - 1) + T(0) + \Theta(n), \qquad
+\text{比較次數} = (n - 1) + (n - 2) + \cdots + 1 = \frac{n(n - 1)}{2},
+\]
+所以是 $\Theta(n^2)$（資結書第~14.5~節）。 原因是每一層只把子陣列縮小一個，遞迴深度是 $n - 1$，而不是
+平衡切法的 $\lg n$。
+
+\textbf{c.} 要用堆積排序排出\textbf{由大到小}，用\textbf{最小堆積}：每次把根（目前最小的數）換到陣列最後面，
+最後陣列就是由大到小。 （由小到大用最大堆積，是資結書虛擬碼~14.13 的寫法，方向相反而已。）
+
+陣列從索引 $0$ 開始，$A[i]$ 的子節點是 $A[2i + 1]$、$A[2i + 2]$。 由下而上建堆積（資結書第~8.2~節），從最後一個
+有子節點的 $i = \lfloor 7/2 \rfloor - 1 = 2$ 往回做 sift-down：
+\begin{itemize}
+\item $i = 2$：$A[2] = 4$，子節點 $9$、$5$，$4$ 最小，不動。
+\item $i = 1$：$A[1] = 2$，子節點 $7$、$3$，$2$ 最小，不動。
+\item $i = 0$：$A[0] = 6$，子節點 $2$、$4$，和較小的 $2$ 交換，得 $[2, 6, 4, 7, 3, 9, 5]$；$6$ 到了索引 $1$，子節點
+$7$、$3$，和 $3$ 交換，得 $[2, 3, 4, 7, 6, 9, 5]$；$6$ 到了索引 $4$，沒有子節點，停。
+\end{itemize}
+排序前的最小堆積是
+\[
+[2, 3, 4, 7, 6, 9, 5].
+\]
+（逐一插入建堆積也得到同一個陣列：依序插入 $6, 2, 4, 7, 3, 9, 5$，只有插入 $2$ 時和 $6$ 交換、插入 $3$ 時和 $6$
+交換。）
+
+\textbf{d.} 把根 $2$ 和最後一格 $A[6] = 5$ 交換，$2$ 留在 $A[6]$ 不再屬於堆積：
+\[
+[5, 3, 4, 7, 6, 9 \mid 2].
+\]
+在 $A[0..5]$ 對根做 sift-down：$5$ 的子節點 $3$、$4$，和 $3$ 交換得 $[3, 5, 4, 7, 6, 9 \mid 2]$；$5$ 在索引 $1$，
+子節點 $7$、$6$ 都比 $5$ 大，停。 結果
+\[
+[3, 5, 4, 7, 6, 9, 2],
+\]
+前六格是合法的最小堆積，最後一格是已經就位的 $2$。
+
+如果 c 小題用最大堆積，排出來會是由小到大，和題目要的方向相反；最大堆積是 $[9, 7, 6, 2, 3, 4, 5]$，這不是
+本題的答案。
+\end{pastsoln}

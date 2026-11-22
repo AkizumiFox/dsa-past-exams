@@ -1,0 +1,77 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-14}]{臺大電機所 112 學年度 第 14 題}
+（複選；每題 15 分，題內每個選項單獨計分，答對得 3 分，答錯倒扣 3 分，倒扣至複選題總分 0 分為止；未作答得 0 分，不倒扣）
+
+If we design a \textit{hash function} \texttt{h(s)} as follows:
+\[ \texttt{h(s)} = \Big(\sum_i s[i]\Big)\,\%\,B \]
+where \texttt{s} is a string, \texttt{s[i]} returns the ASCII code of the i-th character in the \textit{string}, \% is the modulo operator, and \texttt{B} is the number of buckets in the \textit{hash}. In short, given a string as the key of the data, this \textit{hash function} sums the ASCII codes of all the characters and then return an integer between 0 and B - 1 by the modulo operation.
+
+The ASCII codes for the English letters are as shown below. Let the data to be inserted to the hash be \{ "USA", "MIT", "Cat", "Dog", "May", "Sam", "Bob", "Low", "Phd", "See" \}, and the number of buckers be 5. Which of the follow bucket(s) has (have) collision(s)?
+
+\begin{center}\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|*{13}{c|}}
+\hline
+A&B&C&D&E&F&G&H&I&J&K&L&M\\ \hline
+65&66&67&68&69&70&71&72&73&74&75&76&77\\ \hline
+\end{tabular}\\[4pt]
+\begin{tabular}{|*{13}{c|}}
+\hline
+N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\ \hline
+78&79&80&81&82&83&84&85&86&87&88&89&90\\ \hline
+\end{tabular}\\[4pt]
+\begin{tabular}{|*{13}{c|}}
+\hline
+a&b&c&d&e&f&g&h&i&j&k&l&m\\ \hline
+97&98&99&100&101&102&103&104&105&106&107&108&109\\ \hline
+\end{tabular}\\[4pt]
+\begin{tabular}{|*{13}{c|}}
+\hline
+n&o&p&q&r&s&t&u&v&w&x&y&z\\ \hline
+110&111&112&113&114&115&116&117&118&119&120&121&122\\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item 0
+\item 1
+\item 2
+\item 3
+\item 4
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)(E)。
+
+題目的「buckers」是 buckets 的筆誤。 $B = 5$，把每個字串的 ASCII 碼加起來再對 $5$ 取餘數：
+\begin{center}
+\small
+\begin{tabular}{lll r r}
+\toprule
+字串 & 各字元的 ASCII & 計算 & 和 & 桶子 \\
+\midrule
+USA & 85, 83, 65 & $85 + 83 + 65$ & 233 & 3 \\
+MIT & 77, 73, 84 & $77 + 73 + 84$ & 234 & 4 \\
+Cat & 67, 97, 116 & $67 + 97 + 116$ & 280 & 0 \\
+Dog & 68, 111, 103 & $68 + 111 + 103$ & 282 & 2 \\
+May & 77, 97, 121 & $77 + 97 + 121$ & 295 & 0 \\
+Sam & 83, 97, 109 & $83 + 97 + 109$ & 289 & 4 \\
+Bob & 66, 111, 98 & $66 + 111 + 98$ & 275 & 0 \\
+Low & 76, 111, 119 & $76 + 111 + 119$ & 306 & 1 \\
+Phd & 80, 104, 100 & $80 + 104 + 100$ & 284 & 4 \\
+See & 83, 101, 101 & $83 + 101 + 101$ & 285 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+各桶子收到的字串：
+\begin{itemize}
+\item 桶子 $0$：Cat、May、Bob、See，$4$ 個，有碰撞。
+\item 桶子 $1$：Low，$1$ 個。
+\item 桶子 $2$：Dog，$1$ 個。
+\item 桶子 $3$：USA，$1$ 個。
+\item 桶子 $4$：MIT、Sam、Phd，$3$ 個，有碰撞。
+\end{itemize}
+所以有碰撞的是桶子 $0$ 和 $4$，選 (A)(E)；(B)(C)(D) 的桶子都只有一個字串。 （算餘數時只看和的個位數：
+個位是 $0$ 或 $5$ 的落在桶子 $0$，個位是 $4$ 或 $9$ 的落在桶子 $4$。）
+
+這個雜湊函數只看字元的和，字元相同、順序不同的字串（例如 ``Sam''、``maS''）一定碰撞，分佈也不均勻，
+實務上會改用多項式形式 $\sum_i s[i]\, d^{\,i}$ 再取餘數（資結書第~12.1~節）。
+\end{pastsoln}

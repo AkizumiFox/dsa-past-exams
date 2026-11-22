@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-21}]{臺大工工所 110 學年度 第 21 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Consider an AA tree that results from successively inserting keys 96, 49, 79, 14, 41, 87, 75, 90, 61 into
+an initially empty tree. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item The root is key 61.
+\item There is less than 3 horizontal links.
+\item Key 41 and key 49 are in the same level.
+\item Key 87 and key 96 are siblings.
+\item Key 14 is the parent of key 41.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(D)。
+
+AA 樹資結書沒有專節，先說明規則（Andersson 1993，Weiss 的教科書用的版本）。 每個節點有一個\textbf{層級}（level），葉節點是 $1$：
+\begin{enumerate}
+\item 左子節點的層級比父節點小 $1$；
+\item 右子節點的層級等於父節點或小 $1$（相等時這條邊叫\textbf{水平連結}，相當於紅黑樹的紅色右子節點）；
+\item 右孫節點的層級一定比祖父節點小（不能連續兩條水平連結）；
+\item 層級大於 $1$ 的節點有兩個子節點。
+\end{enumerate}
+插入時照二元搜尋樹放成層級 $1$ 的葉節點，再沿著路徑往回，每個節點先做 \textbf{skew}、再做 \textbf{split}：
+\begin{itemize}
+\item skew：左子節點和自己同層（出現往左的水平連結）時右旋，讓水平連結改成往右。
+\item split：右子節點和右孫節點都和自己同層（連續兩條水平連結）時左旋，讓中間那個節點升一層。
+\end{itemize}
+下面 $k/\ell$ 表示鍵 $k$、層級 $\ell$。
+\begin{enumerate}
+\item $96$：單獨一個節點 $96/1$。
+\item $49$：放在 $96$ 左邊；在 $96$ 做 skew，變成 $49/1$，右子節點 $96/1$（水平）。
+\item $79$：路徑 $49 \to 96$，放在 $96$ 左邊；在 $96$ skew，變成 $79 \to 96$ 往右水平；回到 $49$，$49 \to 79 \to 96$ 連續兩條水平連結，
+split：$79$ 升為 $79/2$，左 $49$、右 $96$。
+\item $14$：路徑 $79 \to 49$，放在 $49$ 左邊；在 $49$ skew，變成 $14 \to 49$（水平）。
+\item $41$：路徑 $79 \to 14 \to 49$，放在 $49$ 左邊；在 $49$ skew 成 $41 \to 49$；回到 $14$，$14 \to 41 \to 49$ 連續水平，split，$41$ 升為
+$41/2$（左 $14$、右 $49$）；回到 $79$，左子節點 $41$ 和 $79$ 同為 $2$ 層，skew：$41$ 成為根，右子節點 $79/2$（水平），$49$ 改成
+$79$ 的左子節點。 樹：$41/2$，左 $14/1$，右 $79/2$（左 $49/1$、右 $96/1$）。
+\item $87$：路徑 $41 \to 79 \to 96$，放在 $96$ 左邊；skew 成 $87 \to 96$（水平）。 $79$ 的右子節點 $87$ 在第 $1$ 層，不必 split。
+\item $75$：路徑 $41 \to 79 \to 49$，放在 $49$ 右邊（水平），不必調整。
+\item $90$：路徑 $41 \to 79 \to 87 \to 96$，放在 $96$ 左邊；skew 成 $90 \to 96$；回到 $87$，$87 \to 90 \to 96$ 連續水平，split，$90$ 升為
+$90/2$（左 $87$、右 $96$）；回到 $79$，右子節點 $90/2$ 和它同層，是水平連結；回到 $41$，$41 \to 79 \to 90$ 三個都在第 $2$ 層，
+split，$79$ 升為 $79/3$ 成為根，左 $41/2$、右 $90/2$。
+\item $61$：路徑 $79 \to 41 \to 49 \to 75$，放在 $75$ 左邊；skew 成 $61 \to 75$；回到 $49$，$49 \to 61 \to 75$ 連續水平，split，$61$ 升為
+$61/2$（左 $49$、右 $75$）；回到 $41$，右子節點 $61/2$ 和它同層，是一條水平連結，$61$ 的右子節點 $75$ 在第 $1$ 層，不必 split。
+\end{enumerate}
+最後的樹（虛線是水平連結，同一層的節點畫在同一高度）：
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1.1cm,v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small}]
+\node[v] (79) at (3.3,0) {79};
+\node[v] (41) at (0.9,-1) {41}; \node[v] (61) at (2.4,-1) {61}; \node[v] (90) at (5.4,-1) {90};
+\node[v] (14) at (0,-2) {14}; \node[v] (49) at (1.7,-2) {49}; \node[v] (75) at (3.1,-2) {75};
+\node[v] (87) at (4.7,-2) {87}; \node[v] (96) at (6.1,-2) {96};
+\draw (79)--(41); \draw (79)--(90); \draw[dashed] (41)--(61);
+\draw (41)--(14); \draw (61)--(49); \draw (61)--(75); \draw (90)--(87); \draw (90)--(96);
+\node[font=\small,anchor=west] at (7,0) {第 3 層}; \node[font=\small,anchor=west] at (7,-1) {第 2 層};
+\node[font=\small,anchor=west] at (7,-2) {第 1 層};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (A) 錯。 根是 $79$。
+\item (B) 對。 只有 $41 \to 61$ 一條水平連結（同層的父子），少於 $3$ 條。
+\item (C) 錯。 $41$ 在第 $2$ 層，$49$ 在第 $1$ 層。 （換成看深度也不同：$41$ 深度 $1$，$49$ 深度 $3$。）
+\item (D) 對。 $87$、$96$ 是 $90$ 的左右子節點，是兄弟。
+\item (E) 錯。 $14$ 是 $41$ 的左子節點，$41$ 才是 $14$ 的父節點。
+\end{itemize}
+\end{pastsoln}

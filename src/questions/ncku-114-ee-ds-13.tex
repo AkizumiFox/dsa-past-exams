@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-13}]{成大電機所 114 學年度 單選題第 13 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please indicate the algorithm that cannot allow negative weighted edges in finding the shortest
+path.
+
+a.) Jonson's algorithm, \quad b.) Bellman and Ford's Algorithm, \quad c) Floyd Warshall's
+Algorithm, \quad d) Dijkstra's Algorithm, \quad e) None of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 d) Dijkstra's Algorithm。
+
+\begin{itemize}
+\item a) Johnson（原卷拼成 Jonson）：先用 Bellman--Ford 求 $h(v)$，把權重改成
+$w(u, v) + h(u) - h(v) \ge 0$，再跑 Dijkstra（資結書第~25.7~節）。 它本來就是為了有負邊的圖設計的，
+允許負邊（不能有負環）。
+\item b) Bellman--Ford：允許負邊，還能偵測從起點走得到的負環（資結書第~25.3~節）。
+\item c) Floyd--Warshall：允許負邊，只要沒有負環（資結書第~25.6~節）。
+\item d) Dijkstra：每次把目前距離最小的頂點定案，之後不再更新。 這要靠「邊權非負，後來的路徑只會
+更長」；有負邊時，一個已定案的頂點可能之後經由負邊得到更短的距離，結果會錯（資結書第~25.2.5~節）。
+例如 $s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重 $-2$：Dijkstra 先把 $a$ 定為 $2$，
+實際最短是 $3 - 2 = 1$。 \textbf{不允許}負邊。
+\end{itemize}
+\end{pastsoln}

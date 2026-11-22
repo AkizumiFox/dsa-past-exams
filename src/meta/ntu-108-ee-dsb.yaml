@@ -1,0 +1,24 @@
+paper: ntu-108-ee-dsb
+volume: 3
+school: 臺大
+dept: 電機所
+year: 108
+subject: 資料結構（B）
+instructions: 請用 2B 鉛筆作答於答案卡，並先詳閱答案卡上之「畫記說明」。是非題（若你覺得該小題命題正確，請填（A），錯誤，請填（B）。每題答對得 4 分，答錯倒扣 4 分，未填答者不計分也不扣分，倒扣至是非題總分為 0 分為止。）複選題（每題 10 分，題內每個選項單獨計分，答對得 2 分，答錯倒扣 2 分，倒扣至複選題總分為 0 分為止。）
+questions:
+  - {id: ntu-108-ee-dsb-01, label: 第 1 題, chapter: 8}
+  - {id: ntu-108-ee-dsb-02, label: 第 2 題, chapter: 8}
+  - {id: ntu-108-ee-dsb-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-108-ee-dsb-04, label: 第 4 題, chapter: 5}
+  - {id: ntu-108-ee-dsb-05, label: 第 5 題, chapter: 6}
+  - {id: ntu-108-ee-dsb-06, label: 第 6 題, chapter: 12}
+  - {id: ntu-108-ee-dsb-07, label: 第 7 題, chapter: 12}
+  - {id: ntu-108-ee-dsb-08, label: 第 8 題, chapter: 7}
+  - {id: ntu-108-ee-dsb-09, label: 第 9 題, chapter: 10}
+  - {id: ntu-108-ee-dsb-10, label: 第 10 題, chapter: 6}
+  - {id: ntu-108-ee-dsb-11, label: 第 11 題, chapter: 1}
+  - {id: ntu-108-ee-dsb-12, label: 第 12 題, chapter: 9}
+  - {id: ntu-108-ee-dsb-13, label: 第 13 題, chapter: 21}
+  - {id: ntu-108-ee-dsb-14, label: 第 14 題, chapter: 14}
+  - {id: ntu-108-ee-dsb-15, label: 第 15 題, chapter: 12}
+  - {id: ntu-108-ee-dsb-16, label: 第 16 題, chapter: 1}

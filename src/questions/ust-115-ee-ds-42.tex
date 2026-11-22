@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-42}]{臺聯大電機類 115 學年度 第 42 題}
+（單選；2 分）
+
+Answer \textbf{Questions 41-43} according to the following C code.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+#include <stdio.h>
+int counter; // counting comparison
+int binary_search(int arr[], int key, int left, int right) {
+    int mid;
+    if(left>right){
+        counter++;
+        return left;
+    }
+    if (key<arr[left]){ //left boundary
+        counter++;
+        return left;
+    }
+    if (key>=arr[right]){ //right boundary
+        counter++;
+        return right+1;
+    }
+    mid=(left+right)/2;
+    if (key<arr[mid].val){
+        counter++;
+        binary_search(arr,key,left,mid-1);
+    }
+    else { // (key>=arr[mid].val)
+        binary_search(arr,key,mid+1,right);
+    }
+}
+int main() {
+    int arr[9]={1,2,3,5,5,5,6,7,9};
+    counter=0;
+    int j=binary_search(arr,5,0,8);
+    printf("%d",j);
+    printf("%d",counter);
+}
+\end{minted}
+
+What is the output of the code on \textbf{Line 31}?
+
+(A)~4 \qquad (B)~3 \qquad (C)~2 \qquad (D)~1 \qquad (E)~larger than 4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+\textbf{原題的問題}：程式有兩處錯。 第 18、22 行的 \texttt{arr[mid].val}：\texttt{arr} 是 \texttt{int}
+陣列，沒有 \texttt{.val} 成員，照原樣編譯不過；第 20、23 行遞迴呼叫沒有寫 \texttt{return}，函式走到
+結尾沒有回傳值，\texttt{main} 使用這個回傳值是未定義行為。 本書照明顯的意圖解讀：
+\texttt{arr[mid].val} 就是 \texttt{arr[mid]}，兩個遞迴呼叫都是 \texttt{return binary\_search(...)}。
+
+追蹤 \texttt{binary\_search(arr, 5, 0, 8)}，\texttt{arr} $= \langle 1, 2, 3, 5, 5, 5, 6, 7, 9\rangle$
+（足標 $0$--$8$）：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+呼叫 & 檢查左右邊界 & 結果 & \texttt{counter} \\
+\midrule
+$(0, 8)$ & $5 < 1$？否；$5 \ge 9$？否 & $\mathit{mid} = 4$，$5 < 5$？否，往右 & 0 \\
+$(5, 8)$ & $5 < 5$？否；$5 \ge 9$？否 & $\mathit{mid} = 6$，$5 < 6$？是，往左 & 1 \\
+$(5, 5)$ & $5 < 5$？否；$5 \ge 5$？是 & 回傳 $\mathit{right} + 1 = 6$ & 2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以 \texttt{j} $= 6$、\texttt{counter} $= 2$。
+
+注意 \texttt{counter} 只在三種情形加一：區間空了、碰到左右邊界而回傳、以及往左遞迴（第 19 行）。
+往右遞迴（第 22--23 行的 \texttt{else}）不加。 第一層往右，不加；第二層往左，加一；第三層碰到右邊界
+回傳，加一。 共 $2$，第 31 行印出 $2$（緊接在第 30 行的 $6$ 後面，畫面上是 \texttt{62}）。
+
+其他選項：(B) $3$ 是把往右的那一層也算進去的結果，但往右不加一；(D) $1$ 漏了最後碰到邊界回傳時的
+那一次；(A) $4$、(E) 更多，遞迴只有三層、每層最多加一，不可能。
+\end{pastsoln}

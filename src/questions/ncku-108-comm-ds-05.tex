@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-05}]{成大電通所 108 學年度 問答題第 2 題}
+（問答；5 分）
+
+What are the contents from Front to Rear in a stack after the following operations, [push(A), push(B),
+pop(), push(C), pop(), pop(), push(D), push(E), pop(), push(F)]? (5 points)
+\end{pastexam}
+
+\begin{pastsoln}
+堆疊只有一端（頂端）可以進出。 題目的 Front、Rear 是佇列的用語，這裡把 Front 讀成先放進去的那一端
+（底），Rear 讀成頂端。 逐步追蹤（資結書第~6.1~節）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+操作 & 彈出 & 堆疊（底 $\to$ 頂） \\
+\midrule
+push(A) & & A \\
+push(B) & & A B \\
+pop() & B & A \\
+push(C) & & A C \\
+pop() & C & A \\
+pop() & A & （空） \\
+push(D) & & D \\
+push(E) & & D E \\
+pop() & E & D \\
+push(F) & & D F \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後堆疊裡是 D、F：由底到頂是 \textbf{D, F}，F 在頂端（下一個 pop 會拿到 F）。 若把 Front 理解成頂端，
+寫成 F, D；作答時說明哪一端是頂端即可。
+\end{pastsoln}

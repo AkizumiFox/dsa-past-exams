@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-04}]{臺聯大電機類 113 學年度 第 4 題}
+（單選；每題 3 分，答錯不倒扣）
+
+Which sorting algorithm typically requires the most amount of additional memory space (i.e., has
+the highest space complexity)?
+
+(A)~Insertion Sort \qquad (B)~Selection Sort \qquad (C)~Merge Sort \qquad (D)~Heap Sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+額外空間（不算輸入的陣列本身，資結書第~14.1~節「原地」的定義、第~14.7~節的比較表）：
+\begin{itemize}
+\item (A) 插入排序：只用一個暫存變數 $\mathit{key}$，$O(1)$，原地。
+\item (B) 選擇排序：只記最小值的位置和交換用的暫存，$O(1)$，原地。
+\item (C) 合併排序：陣列版合併兩段時要把資料複製到暫存陣列 $L$、$R$，額外 $\Theta(n)$，再加上
+遞迴堆疊 $O(\log n)$。 四個裡最多。
+\item (D) 堆積排序：在原陣列上建堆、交換，$O(1)$（迴圈版的 sift-down），原地。
+\end{itemize}
+題目說「typically」，指的是一般陣列版的寫法；串列版的合併排序只改指標，額外空間只有遞迴堆疊，但
+這不是一般的情形。
+\end{pastsoln}

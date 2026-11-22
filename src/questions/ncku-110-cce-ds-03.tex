@@ -1,0 +1,97 @@
+\begin{pastexam}[label={px:ncku-110-cce-ds-03}]{成大電通所 110 學年度 第 3 題}
+（問答、追蹤；22 分）
+
+(\textbf{22 pts}) Hash table
+\begin{enumerate}[label=\alph*.]
+\item (2 \textbf{pts}) What is the uniform hashing function?
+\item (2 \textbf{pts}) What is the perfect hashing function?
+\end{enumerate}
+Consider inserting the keys 10, 22, 31, 4, 15, 28, 17, 88, 59 into a hash table with 11 buckets (i.e., $m$ = 11) and each bucket has 1 slot.
+\begin{enumerate}[label=\alph*.,start=3]
+\item (2 \textbf{pts}) What is the loading factor?
+\end{enumerate}
+Assume the hash function h($k$) = $k$ mod $m$. Show the result in the hash table after inserting the above keys with the following:
+\begin{enumerate}[label=\alph*.,start=4]
+\item (4 \textbf{pts}) Open addressing with linear probing
+\item (6 \textbf{pts}) Open addressing with quadratic probing, where the rehashing function rh($k$, $i$) = (h($k$) + 2 $i^2$) mod $m$
+\item (6 \textbf{pts}) Open addressing with a second hash function h$_2$($k$) = ($m$-1) $-$ ($k$ mod ($m$-1)).
+\end{enumerate}
+
+hash table $\longrightarrow$
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} & \multicolumn{1}{c}{10}\\\hline
+\hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em} & \hspace{1em}\\\hline
+\end{tabular}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 均勻雜湊（資結書第~12.2.2~節的簡單均勻雜湊）：每個鍵被雜湊到 $m$ 個桶子中任何一個的機率都是 $1/m$，而且和其他
+鍵被放到哪裡無關。 這是分析雜湊表平均效能時的理想假設，實際的函數只能儘量接近。 用在開放定址時，假設要講的是整條探測
+序列：每個鍵的探測序列 $\langle h(k,0), \ldots, h(k,m-1)\rangle$ 等可能地是 $0, 1, \ldots, m-1$ 的 $m!$ 種排列中的任何一種
+（資結書第~12.4~節，均勻雜湊）。
+
+\textbf{(b)} 完美雜湊函數：對一組事先知道、不再改變的鍵，雜湊函數是一對一的，任兩個鍵都不會碰撞，所以搜尋最壞也只要
+$O(1)$。 如果桶子數剛好等於鍵的個數，叫最小完美雜湊函數。 常見的做法是兩層雜湊：第一層把鍵分到 $n$ 個桶子，第 $j$ 個桶子
+的 $n_j$ 個鍵再用大小 $n_j^2$ 的第二層表，挑一個沒有碰撞的函數。
+
+\textbf{(c)} 載入因子 $\alpha = n/m = 9/11 \approx 0.818$。
+
+\textbf{(d)--(f)} 先算 $h(k) = k \bmod 11$：
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+$k$ & 10 & 22 & 31 & 4 & 15 & 28 & 17 & 88 & 59 \\
+$h(k)$ & 10 & 0 & 9 & 4 & 4 & 6 & 6 & 0 & 4 \\
+$h_2(k) = 10 - (k \bmod 10)$ & 10 & 8 & 9 & 6 & 5 & 2 & 3 & 2 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+依序插入，第 $i$ 次探測（$i = 0, 1, 2, \ldots$）的位置寫在箭頭後面，最後一個是放下的位置。
+
+\textbf{(d) 線性探測} $h(k, i) = (h(k) + i) \bmod 11$：
+\begin{itemize}
+\item $10 \to 10$；$22 \to 0$；$31 \to 9$；$4 \to 4$。
+\item $15$：$4$（有 $4$）$\to 5$。 $28 \to 6$。 $17$：$6$（有 $28$）$\to 7$。
+\item $88$：$0$（有 $22$）$\to 1$。
+\item $59$：$4, 5, 6, 7$ 都有了 $\to 8$。
+\end{itemize}
+
+\textbf{(e) 二次探測} $rh(k, i) = (h(k) + 2i^2) \bmod 11$，位移依序是 $0, 2, 8, 18, \ldots$：
+\begin{itemize}
+\item $10 \to 10$；$22 \to 0$；$31 \to 9$；$4 \to 4$。
+\item $15$：$4$（有 $4$）$\to 4 + 2 = 6$。
+\item $28$：$6$（有 $15$）$\to 8$。
+\item $17$：$6$（有 $15$）、$8$（有 $28$）$\to (6 + 8) \bmod 11 = 3$。
+\item $88$：$0$（有 $22$）$\to 2$。
+\item $59$：$4$、$6$ 都有了 $\to (4 + 8) \bmod 11 = 1$。
+\end{itemize}
+
+\textbf{(f) 雙重雜湊} $h(k, i) = (h(k) + i \cdot h_2(k)) \bmod 11$。 $h_2(k)$ 的值在 $1$ 到 $10$ 之間，和 $11$ 互質，探測序列會走過所有
+格子（資結書第~12.3~節）。
+\begin{itemize}
+\item $10 \to 10$；$22 \to 0$；$31 \to 9$；$4 \to 4$。
+\item $15$：$h_2 = 5$，$4$（有 $4$）、$9$（有 $31$）$\to 14 \bmod 11 = 3$。
+\item $28 \to 6$。
+\item $17$：$h_2 = 3$，$6$（有 $28$）、$9$（有 $31$）$\to 12 \bmod 11 = 1$。
+\item $88$：$h_2 = 2$，$0$（有 $22$）$\to 2$。
+\item $59$：$h_2 = 1$，$4$（有 $4$）$\to 5$。
+\end{itemize}
+
+三種做法最後的表（空白是空格）：
+\begin{center}
+\small
+\begin{tabular}{l*{11}{c}}
+\toprule
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+(d) 線性探測 & 22 & 88 & & & 4 & 15 & 28 & 17 & 59 & 31 & 10 \\
+(e) 二次探測 & 22 & 59 & 88 & 17 & 4 & & 15 & & 28 & 31 & 10 \\
+(f) 雙重雜湊 & 22 & 17 & 88 & 15 & 4 & 59 & 28 & & & 31 & 10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+探測次數的總和：線性探測 $1+1+1+1+2+1+2+2+5 = 16$，二次探測 $1+1+1+1+2+2+3+2+3 = 16$，雙重雜湊
+$1+1+1+1+3+1+3+2+2 = 15$。 線性探測裡 $4$ 到 $10$ 連成一長串（主要群聚），$59$ 一路走了五格；二次探測和雙重雜湊沒有這種長串。
+二次探測不保證走過所有格子（$m = 11$ 時 $2i^2 \bmod 11$ 只有 $6$ 種值），這題剛好都放得下。
+\end{pastsoln}

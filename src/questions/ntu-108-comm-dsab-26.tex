@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-26}]{臺大電信所 108 學年度（B）第 26 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+Also note that in this exam, the degree of a node $x$ in a tree indicates the number of children
+of $x$.
+
+How many nodes have degree 5 in a binomial heap with 2019 items?
+
+A.~32 \qquad B.~63 \qquad C.~64 \qquad D.~128 \qquad E.~256
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+\textbf{有哪幾棵樹}：$2019 = 1024 + 512 + 256 + 128 + 64 + 32 + 2 + 1 = 11111100011_2$，所以二項堆積由
+$B_{10}, B_9, B_8, B_7, B_6, B_5, B_1, B_0$ 各一棵組成（資結書第~8.5~節）。
+
+\textbf{$B_k$ 裡階數 $d$ 的節點有幾個}：設為 $c_k(d)$。 根的階數是 $k$，所以 $c_k(k) = 1$。 對
+$d < k$，主張 $c_k(d) = 2^{k-1-d}$。 對 $k$ 歸納：$B_k$ 是兩棵 $B_{k-1}$，其中一棵的根接到另一棵的根
+底下。 只有被接上的那個根階數從 $k - 1$ 變成 $k$，其他節點的階數都不變。
+\begin{itemize}
+\item $d \le k - 2$：兩棵 $B_{k-1}$ 各有 $c_{k-1}(d) = 2^{k-2-d}$ 個，合起來 $2^{k-1-d}$。
+\item $d = k - 1$：兩個根原本階數都是 $k - 1$，其中一個變成 $k$，剩 $1 = 2^0$ 個。
+\end{itemize}
+
+\textbf{數階數 $5$ 的節點}：$B_0$、$B_1$ 沒有；$B_5$ 只有根；$B_k$（$k \ge 6$）有 $2^{k-6}$ 個。
+\[
+1 + 2^0 + 2^1 + 2^2 + 2^3 + 2^4 = 1 + 1 + 2 + 4 + 8 + 16 = 32.
+\]
+選 A。 只數 $B_{10}$ 裡的 $16$ 個、或忘了 $B_5$ 的根（得到 $31$）都是常見的漏算；B 到 E 都不對。
+\end{pastsoln}
