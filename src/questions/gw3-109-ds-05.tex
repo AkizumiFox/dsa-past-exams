@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:gw3-109-ds-05}]{關務三等資訊處理 109 年 第五題}
+（申論；20 分）
+
+給予兩線性鏈結串列，其節點 C 語言的宣告如下：（20 分）
+\begin{minted}[fontsize=\small,xleftmargin=1.5em]{c}
+#include <stdio.h>
+#include <stdlib.h>
+struct node{
+     int data;
+     struct node *next;
+};
+typedef struct node *NODEPTR;
+\end{minted}
+此兩線性鏈結串列，分別由指標 plist1 與 plist2 指在串列首，請完成下列程式片段，將 plist2 所指串列接在 plist1 所指串列後面。
+\begin{minted}[fontsize=\small,xleftmargin=1.5em]{c}
+void concate(NODEPTR plist1, NODEPTR plist2)
+{
+     NODEPTR    p;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+做法（資結書第~5.1~節）：用 \texttt{p} 從 \texttt{plist1} 的第一個節點往後走，走到最後一個節點（\texttt{next} 是 \texttt{NULL} 的那個），把它的
+\texttt{next} 改成 \texttt{plist2}。
+\begin{minted}[fontsize=\small]{c}
+void concate(NODEPTR plist1, NODEPTR plist2)
+{
+     NODEPTR    p;
+
+     if (plist1 == NULL)         /* list 1 is empty: see below */
+          return;
+     p = plist1;
+     while (p->next != NULL)     /* stop at the last node of list 1 */
+          p = p->next;
+     p->next = plist2;           /* attach list 2 after it */
+}
+\end{minted}
+
+\textbf{說明}。
+\begin{itemize}
+\item 迴圈條件要檢查 \texttt{p->next != NULL}，不是 \texttt{p != NULL}：後者會讓 \texttt{p} 走出串列變成 \texttt{NULL}，最後一行就對空指標取值。
+\item 第一個 \texttt{if} 處理 \texttt{plist1} 是空串列的情形：這時沒有「最後一個節點」可以接，若不檢查，\texttt{p->next} 會對空指標取值。 正確的結果應該
+是「整條串列就是 \texttt{plist2}」，但 \texttt{plist1} 是傳值進來的，在函式裡改 \texttt{plist1 = plist2} 不會改到呼叫端的指標。 要處理這種情形，必須把
+函式改成傳回新的串列首（\texttt{NODEPTR concate(...)}，空的時候傳回 \texttt{plist2}），或改傳 \texttt{NODEPTR *}。 照題目給的函式原型，只能讓它
+安全地什麼都不做；題目通常默認 \texttt{plist1} 不是空的。
+\item \texttt{plist2} 是空串列（\texttt{NULL}）時，最後一行把 \texttt{NULL} 接上去，等於什麼都沒變，結果正確。
+\item 不需要配置新節點，也不必複製資料，只改一個指標。 時間是 $O(m)$，$m$ 是 \texttt{plist1} 的長度（要走到尾端）；若另外記錄串列的尾指標，
+可以做到 $O(1)$。
+\end{itemize}
+
+例：\texttt{plist1}：$3 \to 8 \to 5$，\texttt{plist2}：$7 \to 2$。 \texttt{p} 依序指向 $3$、$8$、$5$，$5$ 的 \texttt{next} 是 \texttt{NULL}，停下，把它
+改成指向 $7$，得到 $3 \to 8 \to 5 \to 7 \to 2$。
+\end{pastsoln}

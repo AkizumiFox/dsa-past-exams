@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncu-114-dsa-11}]{中央資工所 114 學年度 第 11 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Which of the following statements about hashing algorithms are incorrect?
+\begin{enumerate}[label=(\alph*)]
+\item A good hash function should distribute the keys uniformly into the slots of the table.
+\item The load factor of a hash table is the average number of keys per slot.
+\item Assume all keys are integers, and define $h(k)=k \bmod m$. If $m$ has a divisor $d$, a
+preponderance of keys that are congruent modulo $d$ can favorably affect uniformity.
+\item If open addressing is used for resolving collisions, the probe sequence
+$h(k,0),h(k,1),\cdots,h(k,m-1)$ should be a permutation of $\{1,2,\cdots,m\}$.
+\item Theoretically speaking, there is no perfect hashing.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)(d)(e)。 題目問的是\textbf{錯誤}的敘述。
+
+\begin{itemize}
+\item (a) 正確。 好的雜湊函數要讓鍵盡量均勻地落到各個格子（資結書第~12.1~節），鏈的平均長度或探測
+次數才會小。
+\item (b) 正確。 負載因子 $\alpha = n/m$，$n$ 個鍵、$m$ 個格子，就是每格平均的鍵數（資結書第~12.2.2~節）。
+\item (c) 錯誤。 $d \mid m$ 時，$k \bmod m$ 除以 $d$ 的餘數等於 $k \bmod d$（因為 $k \bmod m = k - qm$，
+$qm$ 是 $d$ 的倍數）。 如果很多鍵模 $d$ 同餘，它們的 $h(k)$ 也全部模 $d$ 同餘，只會落在 $m/d$ 個
+格子裡，例如 $m = 12$、$d = 4$，鍵都是 $4$ 的倍數，就只用到 $0, 4, 8$ 三格。 這是\textbf{不利}於均勻
+（adversely affect），不是有利；所以除法雜湊的 $m$ 通常取不靠近 $2$ 的次方的質數。
+\item (d) 錯誤。 格子編號是 $0, 1, \ldots, m - 1$，探測序列要是 $\langle 0, 1, \ldots, m-1\rangle$ 的
+排列，每個格子都探到才能保證表沒滿就找得到空格（資結書第~12.3~節）。 題目寫成 $\{1, 2, \ldots, m\}$，
+編號範圍錯了。
+\item (e) 錯誤。 鍵的集合固定（靜態）時，有完美雜湊：兩層雜湊（FKS），第二層的表大小取該格鍵數的平方，
+可以挑到沒有碰撞的雜湊函數，最壞情況 $O(1)$ 搜尋、總空間 $O(n)$ 的期望值。 完美雜湊在理論上存在。
+\end{itemize}
+\end{pastsoln}

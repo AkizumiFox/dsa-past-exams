@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nccu-113-dsa-08}]{政大資科所 113 學年度 第 8 題}
+（單選；不必說明理由）
+
+(4\%) In the context of computational complexity, which of the following best describes a
+pseudo-polynomial time algorithm?
+\begin{enumerate}[label=\Alph*.]
+\item An algorithm whose running time is polynomial in the size of the input.
+\item An algorithm whose running time is polynomial in the numeric value of the input, often involving
+dynamic programming.
+\item An algorithm that runs in logarithmic time.
+\item An algorithm with linear time complexity, solving problems efficiently regardless of the input size.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。 資結書定義~28.5：擬多項式時間是輸入長度和輸入中最大的\textbf{數值}兩者的多項式。 B 說的「是輸入
+數值的多項式，常用動態規劃」最接近，例如 0/1 背包的 $\Theta(nW)$、子集合和的 $\Theta(mt)$，時間和 $W$、$t$ 的
+數值成正比（資結書第~18.5.5、28.6~節）。 B 的說法少了「和輸入長度」，但四個選項裡只有它抓到「數值」這個重點。
+
+A 是多項式時間的定義（資結書第~28.1~節）：時間是輸入大小（位元數）的多項式。 擬多項式時間不一定是多項式時間，
+因為數值 $M$ 只占 $\lg M$ 個位元，$\Theta(nM)$ 是位元數的指數。 C、D 只說時間是對數或線性，和「依數值還是依
+位元數量」無關；D 的「不管輸入大小都很快」也不對，線性時間仍隨輸入大小增加。
+\end{pastsoln}

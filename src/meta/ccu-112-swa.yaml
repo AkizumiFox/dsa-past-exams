@@ -1,0 +1,12 @@
+paper: ccu-112-swa
+volume: 2
+school: 中正
+dept: 資工所甲組
+year: 112
+subject: 軟體設計
+questions:
+  - {id: ccu-112-swa-01, label: 第 8 題, chapter: 7}
+  - {id: ccu-112-swa-02, label: 第 9 題, chapter: 10}
+  - {id: ccu-112-swa-03, label: 第 10 題, chapter: 15}
+  - {id: ccu-112-swa-04, label: 第 11 題, chapter: 25}
+  - {id: ccu-112-swa-05, label: 第 12 題, chapter: 26}

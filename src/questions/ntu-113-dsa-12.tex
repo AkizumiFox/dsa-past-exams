@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-113-dsa-12}]{臺大資工所 113 學年度 第 12 題}
+（複選；每個選項單獨計分）
+
+(5 points) Consider a directed acylic graph $G=(V,E)$ of $n$ tasks where every node is a task and
+every edge is a dependency. If there is an edge from a task $v$ to another task $w$, that means we need
+to finish $v$ before starting $w$. We have $p$ processors of the same capability and every processor
+can finish any task in one unit of time.
+
+We define a schedule function $s$ to map a task $v$ to a positive integer time step $s(v)$. Since we
+have only $p$ processors, so the system can only process at most $p$ tasks in one time step. Also, a
+schedule needs to respect the dependency of edges.
+\begin{enumerate}[label=\Alph*.]
+\item For every positive integer $i$, $|\{v\mid s(v)\le i\}|\le p$.
+\item If there is a path $(v_{i_1},\ldots,v_{i_k})$ in $G$, then $s(v_{i_j})<s(v_{i_k})$ for
+$1\le j\le k$.
+\item The number of time steps required is at least $\min(\lceil n/p\rceil,L)$, where $L$ is the
+number of tasks along the longest path in $G$.
+\item Without loss of generality, we can always assume $s(v)=1$ for all $v$'s without incoming
+edges.
+\item If the number of processors is infinite, then we can finish all tasks in $L$ time steps, where
+$L$ is the number of tasks along the longest path in $G$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+照字面作答，答案是 C、E。 B 有一個看起來是筆誤的地方，下面說明。 記 $T$ 為排程用的時間步數（最大的
+$s(v)$），$L$ 為最長路徑上的工作數。 合法的排程要滿足兩件事：每個時間步最多 $p$ 個工作，也就是
+$|\{v \mid s(v) = i\}| \le p$；每條邊 $v \to w$ 有 $s(v) < s(w)$。
+\begin{itemize}
+\item A 錯。 限制的是「同一個時間步」的工作數，不是「到時間 $i$ 為止」的累計數。 反例：$p = 1$，兩個沒
+有邊的工作排在 $s = 1, 2$，合法，但 $|\{v \mid s(v) \le 2\}| = 2 > 1$。
+\item B 照字面錯。 $j = k$ 時要求 $s(v_{i_k}) < s(v_{i_k})$，不可能成立。 如果原意是 $1 \le j < k$，那就是
+對的：沿著路徑每走一條邊 $s$ 至少加一，所以路徑前面的工作都比最後一個早。 本題照字面判 B 錯；作答時遇到
+這種情形，可以在答案旁寫一句你採用的讀法。
+\item C 對。 $n$ 個工作、每步最多 $p$ 個，$T \ge \lceil n/p \rceil$；最長路徑上的 $L$ 個工作兩兩有先後，時間步
+都不同，$T \ge L$。 所以 $T \ge \max(\lceil n/p \rceil, L) \ge \min(\lceil n/p \rceil, L)$。 這個下界寫成
+$\min$ 比較弱，但敘述本身成立。
+\item D 錯。 沒有前置工作的工作超過 $p$ 個時，它們不可能全部擠在時間 $1$。 反例：$p = 1$，兩個沒有邊的工作。
+（沒有前置工作的工作不超過 $p$ 個時，把它們都提前到時間 $1$ 確實不會出問題，但敘述說的是「總是可以」。）
+\item E 對。 處理器無限多時，令 $s(v)$ 為「以 $v$ 結尾的最長路徑上的工作數」，依拓樸順序用
+$s(v) = 1 + \max_{u \to v} s(u)$ 算（沒有前置工作時是 $1$），就是資結書第~22.4~節 $\mathit{EF}$ 的算法，
+每個工作的工期都是 $1$。 每條邊 $u \to v$ 有 $s(v) \ge s(u) + 1$，排程合法，而最大的 $s(v)$ 正好是 $L$。 再加上
+C 裡的 $T \ge L$，$L$ 步做得完，也不能更少。
+\end{itemize}
+\end{pastsoln}

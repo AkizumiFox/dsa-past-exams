@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-114-dsa-06}]{中興資工所甲組 114 學年度 單選題第 6 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Given the text $T$ = ``abcdefg'' and the pattern $P$ = ``bcd'', which algorithm would use hashing to compute the index of the first match efficiently?
+
+(A)~Knuth-Morris-Pratt Algorithm\\
+(B)~Boyer-Moore Algorithm\\
+(C)~Naive String Matching Algorithm\\
+(D)~Rabin-Karp Algorithm
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+\begin{itemize}
+\item (A) KMP：先算樣式的失敗函數，比對時文字的指標不後退，$\Theta(n + m)$，沒有用雜湊（資結書第~27.3~節）。 錯。
+\item (B) Boyer-Moore：從樣式的右端往左比，用 bad character、good suffix 規則決定往右跳多遠，沒有用雜湊。 錯。
+\item (C) Naive：每個起點逐字比對，最壞 $\Theta((n - m + 1)m)$，沒有用雜湊。 錯。
+\item (D) Rabin-Karp：把長度 $m$ 的字串看成一個 $d$ 進位數取模 $q$ 當雜湊值，樣式的雜湊值算一次，
+文字每個長度 $m$ 的視窗的雜湊值用「去掉最高位、補上新的一位」在 $O(1)$ 時間滾動更新；雜湊值相同時
+再逐字確認，排除假警報（資結書第~27.2~節）。 對。
+\end{itemize}
+這個例子的第一個相符位置：$T$ 的視窗依序是 abc、bcd、……，第二個視窗 bcd 和 $P$ 相同，從 $0$ 起算是
+索引 $1$（從 $1$ 起算是第 $2$ 個字元）。
+\end{pastsoln}

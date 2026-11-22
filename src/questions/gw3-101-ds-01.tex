@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:gw3-101-ds-01}]{關務三等資訊處理 101 年 第一題}
+（申論）
+
+復原（undo）是文字編輯器的一個功能，可將最近的編輯操作取消，將文件恢復成先前狀態。試設計合適的資料結構及
+相關運作，以達成此功能。（10 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：用\textbf{堆疊}存放編輯操作的紀錄。 每做一次編輯就 push 一筆紀錄；按 undo 就 pop 出最近的一筆，做它的
+反向操作。 push、pop 都是 $O(1)$。
+
+\textbf{為什麼是堆疊。} undo 取消的是「最近」的編輯，再按一次取消的是再前一次，順序和做的順序相反，正是
+後進先出（資結書第~6.1~節）。
+
+\textbf{存什麼。} 不必存整份文件的副本，只要存足以把這次編輯倒回去的資訊。 每筆紀錄：
+\begin{itemize}
+\item $\mathit{type}$：插入或刪除（取代可以看成先刪除再插入，或另設一種）。
+\item $\mathit{pos}$：在文件中的位置。
+\item $\mathit{text}$：插入的字串，或被刪掉的字串（刪除時一定要把被刪的內容存起來，否則無法復原）。
+\end{itemize}
+
+\textbf{相關運作。} 另外加一個 redo 堆疊，可以把 undo 掉的操作再做回來：
+\begin{pseudo}{編輯、復原與重做}
+\Procedure{Edit}{$\mathit{op}$}
+    \State 對文件執行 $\mathit{op}$
+    \State \Call{Push}{$\mathit{undoStack}, \mathit{op}$}
+    \State 清空 $\mathit{redoStack}$ \Comment{做了新編輯，舊的重做紀錄失效}
+\EndProcedure
+\Procedure{Undo}{}
+    \If{$\mathit{undoStack}$ 是空的}
+        \State \Return \Comment{沒有可以復原的}
+    \EndIf
+    \State $\mathit{op} \gets$ \Call{Pop}{$\mathit{undoStack}$}
+    \State 對文件執行 $\mathit{op}$ 的反向操作 \Comment{插入 $\leftrightarrow$ 刪除}
+    \State \Call{Push}{$\mathit{redoStack}, \mathit{op}$}
+\EndProcedure
+\Procedure{Redo}{}
+    \If{$\mathit{redoStack}$ 是空的}
+        \State \Return
+    \EndIf
+    \State $\mathit{op} \gets$ \Call{Pop}{$\mathit{redoStack}$}
+    \State 對文件再執行一次 $\mathit{op}$
+    \State \Call{Push}{$\mathit{undoStack}, \mathit{op}$}
+\EndProcedure
+\end{pseudo}
+反向操作：紀錄是「在 $\mathit{pos}$ 插入 $\mathit{text}$」，就刪除從 $\mathit{pos}$ 起長度 $|\mathit{text}|$ 的字串；
+紀錄是「從 $\mathit{pos}$ 刪除 $\mathit{text}$」，就在 $\mathit{pos}$ 插回 $\mathit{text}$。
+
+例如依序輸入 ``ab''、刪除 ``b''、輸入 ``c''：undo 堆疊由底到頂是 \{插入 ab\}、\{刪除 b\}、\{插入 c\}，文件是 ``ac''。
+按 undo 一次 pop 出 \{插入 c\}，刪掉 c，文件 ``a''；再按一次 pop 出 \{刪除 b\}，插回 b，文件 ``ab''。
+
+\textbf{成本與限制。} push、pop 都是 $O(1)$（陣列或鏈結串列實作皆可，資結書第~6.1~節），反向操作的成本和
+被改動的文字長度成正比。 若只保留最近 $k$ 步（編輯器常見的設定），堆疊滿時要丟掉\textbf{最舊}的一筆，也就是
+從底端刪除，這時改用大小 $k$ 的環狀陣列當雙向佇列：頂端 push/pop，滿了從另一端丟掉，仍然都是 $O(1)$。
+\end{pastsoln}

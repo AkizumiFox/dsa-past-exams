@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:gk3-105-ds-03}]{高考三級資訊處理 105 年 第三題}
+（申論）
+
+請對下面的樹，分別做前序（preOrder）、中序（inOrder）、後序（postOrder）及廣度優先（breadth-first）
+四種走訪（traversals），請分別寫出結果。（20 分）
+\begin{center}
+\begin{tikzpicture}[every node/.style={inner sep=1.5pt,font=\small},
+  level distance=9mm, level 1/.style={sibling distance=26mm}, level 2/.style={sibling distance=14mm},
+  level 3/.style={sibling distance=14mm}]
+\node {$+$}
+  child {node {$-$} child {node {X}} child {node {Y}}}
+  child {node {$/$} child {node {Z}} child {node {$*$} child {node {A}} child {node {B}}}};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+前序 & $+\ -\ X\ Y\ /\ Z\ *\ A\ B$ \\
+中序 & $X\ -\ Y\ +\ Z\ /\ A\ *\ B$ \\
+後序 & $X\ Y\ -\ Z\ A\ B\ *\ /\ +$ \\
+廣度優先 & $+\ -\ /\ X\ Y\ Z\ *\ A\ B$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+這是運算式 $(X - Y) + Z / (A * B)$ 的運算式樹（資結書第~7.7~節）。 走訪的定義見資結書第~7.3~節
+（虛擬碼~7.1、7.2）：前序「根、左、右」，中序「左、根、右」，後序「左、右、根」，廣度優先由上而下
+一層一層、每層由左到右。
+
+\textbf{前序。} 先輸出根 $+$，再前序走左子樹 $-$：輸出 $-, X, Y$；再前序走右子樹 $/$：輸出 $/$、
+$Z$，然後右子樹 $*$ 輸出 $*, A, B$。 得 $+\,-\,X\,Y\,/\,Z\,*\,A\,B$，就是前序式（波蘭式）。
+
+\textbf{中序。} 左子樹 $-$ 的中序是 $X\,-\,Y$，接著根 $+$，再右子樹 $/$ 的中序：$Z$、$/$、
+$*$ 子樹的中序 $A\,*\,B$。 得 $X\,-\,Y\,+\,Z\,/\,A\,*\,B$。 中序不帶括號，看不出 $A * B$ 要先算；
+要還原原式得在每個運算子子樹外加括號：$((X - Y) + (Z / (A * B)))$。
+
+\textbf{後序。} 左子樹 $-$ 的後序 $X\,Y\,-$；右子樹 $/$ 的後序：$Z$、$*$ 子樹的後序 $A\,B\,*$、
+最後 $/$；最後根 $+$。 得 $X\,Y\,-\,Z\,A\,B\,*\,/\,+$，就是後序式（逆波蘭式）。
+
+\textbf{廣度優先。} 第 1 層 $+$；第 2 層 $-, /$；第 3 層 $X, Y, Z, *$；第 4 層 $A, B$。 用佇列
+（資結書虛擬碼~7.2）：取出 $+$ 放入 $-, /$；取出 $-$ 放入 $X, Y$；取出 $/$ 放入 $Z, *$；取出 $X$、
+$Y$、$Z$；取出 $*$ 放入 $A, B$；取出 $A$、$B$。 得 $+\,-\,/\,X\,Y\,Z\,*\,A\,B$。
+\end{pastsoln}

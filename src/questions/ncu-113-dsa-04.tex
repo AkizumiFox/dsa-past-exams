@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncu-113-dsa-04}]{中央資工所 113 學年度 第 4 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Which of the following are true for dynamic programming?
+\begin{enumerate}[label=(\Alph*)]
+\item The solution has optimal substructure
+\item Breaking a problem into smaller overlapping subproblems.
+\item Solving problems in a sequential manner.
+\item The time complexity of dynamic programming (with overlapping subproblems using memorization) is O(n$^2$)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)。
+
+(C) 的說法比較模糊，這裡把它理解成動態規劃的經典描述：問題的解是「一連串決策」的結果，子問題由小到大、
+依照相依的順序一個一個解，後面的子問題用前面已經算好的答案。 下面逐項說明。
+
+\begin{itemize}
+\item (A) 對。 最佳子結構（資結書第~18.1.4~節）：最佳解裡包含子問題的最佳解，遞迴式才能只從子問題的
+最佳值組合出來。
+\item (B) 對。 重疊子問題（資結書第~18.1.1~節）：同一個子問題會被不同的遞迴路線用到很多次，所以把答案
+存起來才有好處。 子問題不重疊時用分治就好。
+\item (C) 對（照上面的解讀）。 由下而上的做法（資結書第~18.1.3~節）先排出子問題的相依順序，從最小的開始
+依序把表填滿；每個子問題被解的時候，它需要的子問題都已經解好了。
+\item (D) 錯。 動態規劃的時間是「子問題個數 $\times$ 每個子問題的選擇數」，看問題而定：費氏數 $\Theta(n)$，
+LCS $\Theta(mn)$，矩陣鏈乘 $\Theta(n^3)$，0/1 背包 $\Theta(nW)$（擬多項式）。 沒有固定是 $O(n^2)$。
+題目的 memorization 是 memoization 的誤寫。
+\end{itemize}
+\end{pastsoln}

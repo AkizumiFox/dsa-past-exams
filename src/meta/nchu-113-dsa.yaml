@@ -1,0 +1,34 @@
+paper: nchu-113-dsa
+volume: 2
+school: 中興
+dept: 資工所甲組
+year: 113
+subject: 資料結構與演算法
+instructions: ※本科目依簡章規定「不可以」使用計算機。A. Multiple Choice(選擇題) 64\%，本大題請於答案卡畫記作答。PART 1：Data Structures 24\% (12 Questions)，單選題，每題 2 分，未答題得 0 分，答錯題倒扣 0.5 分。PART 2：Algorithms 40\% (8 Questions)，單選題，每題 5 分，未答題得 0 分，答錯不倒扣。B. Short Answers (申論問答題) 36\%，本大題請於答案卷作答；PART 1：Data Structures 26\% (6 Questions)，PART 2：Algorithms 10\% (2 Questions)。
+questions:
+  - {id: nchu-113-dsa-01, label: 選擇題第 1 題, chapter: 7}
+  - {id: nchu-113-dsa-02, label: 選擇題第 2 題, chapter: 10}
+  - {id: nchu-113-dsa-03, label: 選擇題第 3 題, chapter: 19}
+  - {id: nchu-113-dsa-04, label: 選擇題第 4 題, chapter: 5}
+  - {id: nchu-113-dsa-05, label: 選擇題第 5 題, chapter: 9}
+  - {id: nchu-113-dsa-06, label: 選擇題第 6 題, chapter: 7}
+  - {id: nchu-113-dsa-07, label: 選擇題第 7 題, chapter: 7}
+  - {id: nchu-113-dsa-08, label: 選擇題第 8 題, chapter: 7}
+  - {id: nchu-113-dsa-09, label: 選擇題第 9 題, chapter: 9}
+  - {id: nchu-113-dsa-10, label: 選擇題第 10 題, chapter: 2}
+  - {id: nchu-113-dsa-11, label: 選擇題第 11 題, chapter: 9}
+  - {id: nchu-113-dsa-12, label: 選擇題第 12 題, chapter: 14}
+  - {id: nchu-113-dsa-13, label: 選擇題第 13 題, chapter: 16}
+  - {id: nchu-113-dsa-14, label: 選擇題第 14 題, chapter: 25}
+  - {id: nchu-113-dsa-15, label: 選擇題第 15 題, chapter: 2}
+  - {id: nchu-113-dsa-16, label: 選擇題第 16 題, chapter: 14}
+  - {id: nchu-113-dsa-17, label: 選擇題第 17 題, chapter: 19}
+  - {id: nchu-113-dsa-18, label: 選擇題第 18 題, chapter: 18}
+  - {id: nchu-113-dsa-19, label: 選擇題第 19 題, chapter: 14}
+  - {id: nchu-113-dsa-20, label: 選擇題第 20 題, chapter: 17}
+  - {id: nchu-113-dsa-21, label: 申論題 PART 1 第 3 題, chapter: 6}
+  - {id: nchu-113-dsa-22, label: 申論題 PART 1 第 4 題, chapter: 26}
+  - {id: nchu-113-dsa-23, label: 申論題 PART 1 第 5 題, chapter: A}
+  - {id: nchu-113-dsa-24, label: 申論題 PART 1 第 6 題, chapter: 24}
+  - {id: nchu-113-dsa-25, label: 申論題 PART 2 第 1 題, chapter: 9}
+  - {id: nchu-113-dsa-26, label: 申論題 PART 2 第 2 題, chapter: 28}

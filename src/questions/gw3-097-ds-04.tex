@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:gw3-097-ds-04}]{關務三等資料處理 97 年 第四題}
+（申論；15 分）
+
+試說明鏈結串列（Link list）的結構，並以自己熟悉的電腦語言寫一函式來計算鏈結串列的節點數目。
+（請註明使用的語言）（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{結構。} 鏈結串列由一個個\textbf{節點}組成，每個節點有兩部分：存資料的欄位（data），以及指向
+下一個節點的指標（link，或稱 next）。 另外用一個指標 \texttt{head} 指向第一個節點，最後一個節點的
+next 是 \texttt{NULL}，表示串列結束；空串列時 \texttt{head} 就是 \texttt{NULL}。 節點在記憶體裡不必
+相鄰，順序完全由指標決定（資結書第~5.1~節）。
+\begin{center}
+\begin{tikzpicture}[x=1.7cm, >=Stealth,
+  d/.style={draw, minimum width=8mm, minimum height=6.5mm, inner sep=1pt},
+  p/.style={draw, minimum width=4mm, minimum height=6.5mm, inner sep=0pt, anchor=west}]
+\node (h) at (0,0) {\texttt{head}};
+\foreach \c [count=\i] in {12, 7, 30} {
+  \node[d] (d\i) at (\i,0) {\c};
+  \node[p] (p\i) at (d\i.east) {};
+}
+\node (nil) at (4.1,0) {\texttt{NULL}};
+\draw[->] (h) -- (d1);
+\draw[->] (p1.center) -- (d2.west);
+\draw[->] (p2.center) -- (d3.west);
+\draw[->] (p3.center) -- (nil);
+\node[font=\scriptsize, anchor=north east] at (d1.south east) {data};
+\node[font=\scriptsize, anchor=north west] at (p1.south west) {next};
+\end{tikzpicture}
+\end{center}
+常見的變化還有：最後一個節點指回第一個的環狀串列、每個節點同時有前後兩個指標的雙向串列，以及在最前面
+放一個不存資料的頭節點，讓插入刪除不必特別處理串列開頭（資結書第~5.2~節）。
+
+\textbf{計算節點數目（使用 C 語言）}：從 \texttt{head} 開始沿著 next 走，每經過一個節點就加一，走到
+\texttt{NULL} 為止。
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+struct node {
+    int data;
+    struct node *next;
+};
+
+/* 傳回以 head 開頭的鏈結串列有幾個節點；空串列傳回 0 */
+int count_nodes(struct node *head)
+{
+    int count = 0;
+    struct node *p;
+    for (p = head; p != NULL; p = p->next)   /* 逐一走過每個節點 */
+        count++;
+    return count;
+}
+\end{minted}
+也可以寫成遞迴：空串列有 $0$ 個節點，否則是 $1$ 加上後面那條串列的節點數。
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+int count_rec(struct node *p)
+{
+    return (p == NULL) ? 0 : 1 + count_rec(p->next);
+}
+\end{minted}
+以上圖為例：\texttt{p} 依序指向 $12$、$7$、$30$ 三個節點，\texttt{count} 變成 $1, 2, 3$，接著
+\texttt{p} 變成 \texttt{NULL}，傳回 $3$。 兩個版本都要走過每個節點一次，時間 $O(n)$；迴圈版只用
+常數空間，遞迴版要 $O(n)$ 的呼叫堆疊。 若經常需要長度，可以另外用一個變數記錄節點數，插入時加一、
+刪除時減一，就能 $O(1)$ 得到。
+\end{pastsoln}

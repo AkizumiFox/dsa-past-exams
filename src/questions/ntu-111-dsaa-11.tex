@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-11}]{臺大資工所 111 學年度 第 11 題}
+（單選）
+
+(5 points) Consider a string of length $n$, e.g., cbaabcba. We want to add the smallest number
+of characters to the front of the string to make it a palindrome, e.g., \underline{ab}cbaabcba.
+This problem can be solved by first concatenating the string with its inverse with a delimiter
+\#, e.g. cbaabcba\underline{\#abcbaabc}. Then, run the pre-processing routine of the
+Knuth-Morris-Pratt algorithm on the new string $s_0s_1\cdots s_{2n}$ of length $(2n+1)$ to get
+a failure function $f_s(j)$, which computes the length of the longest prefix of the string
+$s_0s_1\ldots s_j$ that is also a suffix. After running the pre-processing algorithm, how can we
+calculate the smallest number of characters that should be added to the front of the original
+string to make a palindrome?
+\begin{enumerate}[label=(\Alph*)]
+\item $n-f_s(n-1)+1$
+\item $n-f_s(n)$
+\item $n-\max\limits_{0\le j\le n-1}(f_s(j))$
+\item $n-\max\limits_{n+1\le j\le 2n}(f_s(j))$
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。 正確的式子是 $n - f_s(2n)$，不在選項裡；(D) 對題目的例子算得出正確答案，但有反例。
+
+這裡的 $f_s(j)$ 就是資結書第~27.3~節的失敗函數（「真」前綴，長度小於 $j + 1$），只是索引從
+$0$ 開始。 記原字串 $S = s_0 \cdots s_{n-1}$，$s = S\,\#\,S^R$（$S^R$ 是 $S$ 倒過來）。
+
+\textbf{第一步：要補幾個字元。} 設 $S$ 最長的「是迴文的前綴」長度為 $L$。
+\begin{itemize}
+\item 補 $n - L$ 個一定夠：把 $S$ 後面 $n - L$ 個字元倒過來放到前面，得到
+$(s_{L} \cdots s_{n-1})^R \, S$，它是迴文（中間是迴文 $s_0 \cdots s_{L-1}$，兩邊互為倒影）。
+\item 少於 $n - L$ 個不行：若在前面補 $x$ 個字元（$x < n$）得到迴文 $T$，$T$ 的第 $x + j$ 個字元
+（$= s_j$）和它的鏡像位置 $n - 1 - j$ 相同；$j \le n - 1 - x$ 時鏡像位置還在 $S$ 裡，是
+$s_{n-1-x-j}$。 所以 $s_0 \cdots s_{n-1-x}$ 是迴文，長度 $n - x \le L$，即 $x \ge n - L$。
+\end{itemize}
+所以答案是 $n - L$。
+
+\textbf{第二步：$L = f_s(2n)$。} $\#$ 只出現一次，所以 $s$ 的邊界（既是前綴又是後綴）不會含
+$\#$，長度 $\ell \le n$。 長度 $\ell$ 的前綴是 $s_0 \cdots s_{\ell-1}$，長度 $\ell$ 的後綴是
+$S^R$ 的最後 $\ell$ 個字元，也就是 $(s_0 \cdots s_{\ell-1})^R$。 兩者相等，恰好表示
+$s_0 \cdots s_{\ell-1}$ 是迴文。 因此 $f_s(2n)$（整個 $s$ 最長的邊界）$= L$，答案是
+$n - f_s(2n)$。
+
+題目的例子：$s = \texttt{cbaabcba\#abcbaabc}$，$f_s$ 依序是
+\[
+0,0,0,0,0,1,2,3,\;0,\;0,0,1,2,3,4,5,6,
+\]
+$f_s(16) = 6$（最長的迴文前綴是 cbaabc），答案 $8 - 6 = 2$，和題目補的 ab 相同。
+
+\textbf{逐項檢查。}
+\begin{itemize}
+\item (A) $f_s(n - 1)$ 是 $S$ 自己最長的邊界，和迴文無關。 例子裡 $f_s(7) = 3$，算出
+$8 - 3 + 1 = 6 \ne 2$。 錯。
+\item (B) $s_0 \cdots s_n = S\#$，$\#$ 不在別處出現，$f_s(n) = 0$，算出 $n$，例子得 $8$。 錯。
+\item (C) 只看 $S$ 自己的邊界，例子裡最大是 $3$，算出 $5$。 錯。
+\item (D) 例子裡 $j = 2n$ 的 $6$ 最大，剛好得到 $2$。 但對 $j < 2n$，$f_s(j)$ 只表示 $S$ 的前綴
+出現在 $S^R$ \textbf{中間}，不代表是迴文。 反例 $S = \texttt{abcdba}$（$n = 6$）：
+$s = \texttt{abcdba\#abdcba}$，$f_s$ 依序是 $0,0,0,0,0,1,\;0,\;1,2,0,0,0,1$。 最長迴文前綴是
+a，正確答案是 $6 - 1 = 5$（補 abdcb 得 abdcbabcdba）；但 $f_s(8) = 2$（$s_0 \cdots s_8$ 的
+前後綴 ab），(D) 算出 $6 - 2 = 4$，比正確答案少。 所以 (D) 不是一般正確的算法。
+\item (E) 對：正確的是 $n - f_s(2n)$。
+\end{itemize}
+
+如果出題的本意是 (D)，那是把「最大值一定出現在 $j = 2n$」當成理所當然；上面的反例說明它不成立。
+\end{pastsoln}

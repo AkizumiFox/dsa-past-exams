@@ -1,0 +1,97 @@
+\begin{pastexam}[label={px:ncu-111-dsa-10}]{中央資工所 111 學年度 複選題第 10 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+The adjacency list below is for an AOE network. The \textbf{end} field points to a list of adjacent
+vertices, \textbf{dur} field is the duration of the activity, \textbf{link} field points to another
+adjacent vertex, \textbf{vertex} field is the id of the adjacent vertex, \textbf{count} field is the
+number of immediate predecessors. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item The total duration of the critical path is 17.
+\item Path 0, 1, 4, 6, 8 is not a critical path.
+\item Count fields from vertex 0 to vertex 8 should be 0, 1, 1, 1, 2, 2, 1, 2, 2.
+\item The latest time that event 4 (i.e., vertex 4) can occur is 7.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2mm]},font=\small]
+\def\rh{0.56}% row pitch
+\def\cw{0.6}% cell width
+\def\ch{0.4}% list-node cell height
+\node[font=\small\bfseries,anchor=base] at (0.6,0.55) {count end};
+\node[font=\small\bfseries,anchor=base] at (3.05,0.55) {vertex dur link};
+\foreach \i in {0,...,8} {
+  \node[anchor=east] at (-0.2,-\i*\rh) {\i};
+  \draw (0,-\i*\rh-\rh/2) rectangle (\cw,-\i*\rh+\rh/2);
+  \draw (\cw,-\i*\rh-\rh/2) rectangle (2*\cw,-\i*\rh+\rh/2);
+}
+\node at (1.5*\cw,-8*\rh) {0};
+\def\lnode#1#2#3#4#5{%
+  \draw (#1,-#2*\rh-\ch/2) rectangle ++(3*\cw,\ch);
+  \draw (#1+\cw,-#2*\rh-\ch/2) -- ++(0,\ch);
+  \draw (#1+2*\cw,-#2*\rh-\ch/2) -- ++(0,\ch);
+  \node at (#1+0.5*\cw,-#2*\rh) {#3};
+  \node at (#1+1.5*\cw,-#2*\rh) {#4};
+  \node at (#1+2.5*\cw,-#2*\rh) {#5};
+}
+\foreach \i in {0,...,7} \draw[->] (1.5*\cw,-\i*\rh) -- (2.05,-\i*\rh);
+\lnode{2.1}{0}{1}{5}{}
+\lnode{4.7}{0}{2}{4}{}
+\lnode{7.3}{0}{3}{5}{0}
+\draw[->] (2.1+2.5*\cw,0) -- (4.65,0);
+\draw[->] (4.7+2.5*\cw,0) -- (7.25,0);
+\lnode{2.1}{1}{4}{1}{0}
+\lnode{2.1}{2}{4}{3}{0}
+\lnode{2.1}{3}{5}{2}{0}
+\lnode{2.1}{4}{6}{9}{}
+\lnode{4.7}{4}{7}{7}{0}
+\draw[->] (2.1+2.5*\cw,-4*\rh) -- (4.65,-4*\rh);
+\lnode{2.1}{5}{7}{5}{0}
+\lnode{2.1}{6}{8}{2}{0}
+\lnode{2.1}{7}{8}{5}{0}
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(D)。
+
+\textbf{讀出網路。} 第 $i$ 列的串列列出從事件 $i$ 出發的活動（頂點、持續時間），link 欄的 $0$ 表示串列
+結束。 共 $11$ 個活動：
+\[
+\begin{array}{l}
+0 \to 1\ (5),\quad 0 \to 2\ (4),\quad 0 \to 3\ (5),\quad 1 \to 4\ (1),\\
+2 \to 4\ (3),\quad 3 \to 5\ (2),\quad 4 \to 6\ (9),\quad 4 \to 7\ (7),\\
+5 \to 7\ (5),\quad 6 \to 8\ (2),\quad 7 \to 8\ (5).
+\end{array}
+\]
+事件 $0$ 是起點，事件 $8$ 是終點（它的 end 欄是 $0$，沒有出邊）。
+
+\textbf{最早時間 $ee$}（資結書第~22.5~節；依拓樸順序 $0, 1, \ldots, 8$，取所有前驅的最大值）：
+\[
+\arraycolsep=3pt
+\begin{array}{lll}
+ee[0] = 0, & ee[1] = 5, & ee[2] = 4, \\
+ee[3] = 5, & ee[4] = \max(5 + 1,\; 4 + 3) = 7, & ee[5] = 5 + 2 = 7, \\
+ee[6] = 7 + 9 = 16, & ee[7] = \max(7 + 7,\; 7 + 5) = 14, & ee[8] = \max(16 + 2,\; 14 + 5) = 19.
+\end{array}
+\]
+\textbf{最晚時間 $le$}（從 $le[8] = ee[8] = 19$ 往回，取所有後繼的最小值）：
+\[
+\arraycolsep=3pt
+\begin{array}{lll}
+le[8] = 19, & le[7] = 19 - 5 = 14, & le[6] = 19 - 2 = 17, \\
+le[5] = 14 - 5 = 9, & le[4] = \min(17 - 9,\; 14 - 7) = 7, & le[3] = 9 - 2 = 7, \\
+le[2] = 7 - 3 = 4, & le[1] = 7 - 1 = 6, & le[0] = \min(6 - 5,\; 4 - 4,\; 7 - 5) = 0.
+\end{array}
+\]
+活動 $i \to j$ 是關鍵活動當且僅當 $ee[i] = le[j] - \text{dur}$：$0 \to 2$、$2 \to 4$、$4 \to 7$、$7 \to 8$
+四個，關鍵路徑是 $0, 2, 4, 7, 8$，長度 $4 + 3 + 7 + 5 = 19$。
+\begin{itemize}
+\item (A) 錯：關鍵路徑長 $19$，不是 $17$。
+\item (B) 對：$0, 1, 4, 6, 8$ 的長度是 $5 + 1 + 9 + 2 = 17 < 19$，不是關鍵路徑（$1 \to 4$ 的
+$ee[1] = 5 \ne le[4] - 1 = 6$，有一單位的寬裕）。
+\item (C) 錯：count 是入分支度，依序是 $0, 1, 1, 1, 2, 1, 1, 2, 2$。 事件 $5$ 只有 $3 \to 5$ 一個前驅，
+count 是 $1$，選項寫成 $2$。
+\item (D) 對：$le[4] = 7$。
+\end{itemize}
+\end{pastsoln}

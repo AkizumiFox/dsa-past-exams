@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncu-112-dsa-09}]{中央資工所 112 學年度 複選題第 9 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Inserting the first element of an n-node one-dimension array has time complexity higher than a
+singly linked list.
+\item Removing the third element of an n-node one-dimension array takes O(n) time complexity.
+\item Inserting the first element of a circular singly linked list has time complexity much higher than
+that of a singly linked list.
+\item Inserting the last element of an n-node singly linked list takes O(n) time complexity.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(D)。
+
+(C)、(D) 的答案取決於串列記了哪些指標。 這裡照課本的慣例（資結書第~5.2~節的比較表）：單向串列只記
+第一個節點 $\mathit{head}$；單向環狀串列記\textbf{最後一個}節點 $\mathit{last}$。 陣列要維持元素的順序。
+\begin{itemize}
+\item (A) 對。 陣列要在最前面插入，原來的 $n$ 個元素都得往後挪一格，$\Theta(n)$；單向串列只要新節點的
+$\mathit{next}$ 指向舊的 $\mathit{head}$，再把 $\mathit{head}$ 改成新節點，$\Theta(1)$。
+\item (B) 對。 刪掉第三個之後，後面 $n - 3$ 個元素都要往前挪一格，$\Theta(n)$，是 $O(n)$。
+\item (C) 錯。 環狀串列記 $\mathit{last}$，第一個節點是 $\mathit{last}.\mathit{next}$。 在最前面插入
+$x$：$x.\mathit{next} \gets \mathit{last}.\mathit{next}$，$\mathit{last}.\mathit{next} \gets x$，
+兩步就好，$\Theta(1)$，和單向串列一樣，沒有「高很多」。 （如果環狀串列只記第一個節點，插入時要從頭
+走到最後一個節點去改它的 $\mathit{next}$，才會變成 $\Theta(n)$；這正是課本改記 $\mathit{last}$ 的原因。）
+\item (D) 對。 只記 $\mathit{head}$ 的單向串列，要在最後面插入得先從頭走 $n - 1$ 步找到最後一個節點，
+$\Theta(n)$。 （另外記 $\mathit{tail}$ 才能降到 $\Theta(1)$。）
+\end{itemize}
+\end{pastsoln}

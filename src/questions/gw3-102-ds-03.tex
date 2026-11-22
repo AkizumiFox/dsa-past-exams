@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:gw3-102-ds-03}]{關務三等資訊處理 102 年 第三題}
+（申論；20 分）
+
+請找出並且從小到大依序列出下列有向圖（directed graph）中，從頂點 A 到所有其他頂點的最短路徑（path）與路徑長度。
+（20 分）
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=1.25cm,>={Stealth[length=2.2mm]},
+    v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+    w/.style={inner sep=1.5pt,font=\small}]
+\node[v] (D) at (0,0) {D};
+\node[v] (E) at (1,0.5) {E};
+\node[v] (F) at (1,-0.6) {F};
+\node[v] (B) at (3,0.5) {B};
+\node[v] (C) at (3,-0.6) {C};
+\node[v] (A) at (4,0) {A};
+\draw[->] (E)--node[w,above left]{15}(D);
+\draw[->] (F)--node[w,below left]{4}(D);
+\draw[->] (F)--node[w,left]{10}(E);
+\draw[->] (B)--node[w,above]{10}(E);
+\draw[->] (B)--node[w,pos=0.4,above left]{30}(F);
+\draw[->] (C)--node[w,below]{10}(F);
+\draw[->] (C)--node[w,left]{40}(B);
+\draw[->] ([yshift=1.5pt]B.east)--node[w,above right]{20}([yshift=1.5pt]A.north west);
+\draw[->] ([yshift=-1.5pt]A.west)--node[w,below,pos=0.4]{2}([yshift=-1.5pt]B.south east);
+\draw[->] (A)--node[w,below right]{15}(C);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案（依長度由小到大）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+頂點 & 最短路徑 & 長度 \\
+\midrule
+B & A $\to$ B & 2 \\
+E & A $\to$ B $\to$ E & 12 \\
+C & A $\to$ C & 15 \\
+F & A $\to$ C $\to$ F & 25 \\
+D & A $\to$ B $\to$ E $\to$ D & 27 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+先把圖上的有向邊列出來（$\langle u, v\rangle$ 表示 $u \to v$）：$\langle A, B\rangle$ 2、$\langle A, C\rangle$ 15、
+$\langle B, A\rangle$ 20、$\langle B, E\rangle$ 10、$\langle B, F\rangle$ 30、$\langle C, B\rangle$ 40、
+$\langle C, F\rangle$ 10、$\langle E, D\rangle$ 15、$\langle F, E\rangle$ 10、$\langle F, D\rangle$ 4。 A 和 B 之間是兩條
+方向相反的邊，權重不同。
+
+權重都是非負的，用 Dijkstra 演算法（資結書第~25.2~節）：每一輪從還沒確定的頂點中取出 $d$ 最小的 $u$，確定它的
+最短距離，再用 $u$ 的出邊鬆弛（$d[v] > d[u] + w(u, v)$ 就更新 $d[v]$ 和前驅 $\pi[v]$）。 Dijkstra 取出頂點的順序
+正好是距離由小到大，就是題目要的順序。 下表每列是取出一個頂點並鬆弛之後的 $d$（括號裡是前驅），粗體是這一輪
+確定的：
+\begin{center}
+\small
+\begin{tabular}{cllllll}
+\toprule
+取出 & A & B & C & D & E & F \\
+\midrule
+（開始） & 0 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+A & \textbf{0} & 2 (A) & 15 (A) & $\infty$ & $\infty$ & $\infty$ \\
+B & & \textbf{2} & 15 (A) & $\infty$ & 12 (B) & 32 (B) \\
+E & & & 15 (A) & 27 (E) & \textbf{12} & 32 (B) \\
+C & & & \textbf{15} & 27 (E) & & 25 (C) \\
+F & & & & 27 (E) & & \textbf{25} \\
+D & & & & \textbf{27} & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+各輪說明：
+\begin{itemize}
+\item 取出 A：$d[B] = 0 + 2 = 2$，$d[C] = 0 + 15 = 15$。
+\item 取出 B（$2$）：$\langle B, E\rangle$ 得 $d[E] = 12$；$\langle B, F\rangle$ 得 $d[F] = 32$；$\langle B, A\rangle$ 的
+$2 + 20 = 22 > 0$，不更新。
+\item 取出 E（$12$）：$\langle E, D\rangle$ 得 $d[D] = 27$。
+\item 取出 C（$15$）：$\langle C, F\rangle$ 的 $15 + 10 = 25 < 32$，更新 $d[F] = 25$、$\pi[F] = C$；$\langle C, B\rangle$
+的 $55 > 2$，不更新。
+\item 取出 F（$25$）：$\langle F, D\rangle$ 的 $25 + 4 = 29 > 27$、$\langle F, E\rangle$ 的 $35 > 12$，都不更新。
+\item 取出 D（$27$）：D 沒有出邊。 結束。
+\end{itemize}
+沿前驅往回走得到路徑：E 的前驅 B、B 的前驅 A，所以 A $\to$ B $\to$ E；D 的前驅 E，所以 A $\to$ B $\to$ E $\to$ D；
+F 的前驅 C，所以 A $\to$ C $\to$ F。 注意到 D 的另一條路 A $\to$ C $\to$ F $\to$ D 長 $15 + 10 + 4 = 29$，比 $27$
+長；F 的另一條路 A $\to$ B $\to$ F 長 $32$，比 $25$ 長。
+\end{pastsoln}

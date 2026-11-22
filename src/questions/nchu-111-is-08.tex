@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:nchu-111-is-08}]{中興資工所乙組 111 學年度 第 19 題}
+（問答）
+
+{[4\%]} Assume that each of the expressions below gives the processing time T(n) spent by an algorithm for
+solving a problem of size n. Select the dominant term(s) having the steepest increase in n.
+\begin{center}
+\begin{tabular}{|c|p{6cm}|}
+\hline
+Expression & \centering Dominant term(s) \tabularnewline \hline
+$5 + 0.001n^3 + 0.025n$ & \\ \hline
+$500n + 100n^{0.5} + 50n\log_{10} n$ & \\ \hline
+$100n + 0.01n^2$ & \\ \hline
+$100n\log_3 n + n^3 + 100n$ & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+主導項是 $n \to \infty$ 時成長最快的那一項，係數大小不影響（資結書第~1.6~節的成長率順序：
+$\log n \prec n^{0.5} \prec n \prec n\log n \prec n^2 \prec n^3$）。
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+式子 & 主導項 \\
+\midrule
+$5 + 0.001n^3 + 0.025n$ & $0.001n^3$ \\
+$500n + 100n^{0.5} + 50n\log_{10} n$ & $50n\log_{10} n$ \\
+$100n + 0.01n^2$ & $0.01n^2$ \\
+$100n\log_3 n + n^3 + 100n$ & $n^3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+說明：
+\begin{itemize}
+\item 第一列：$n^3$ 比 $n$ 和常數成長快，係數 $0.001$ 很小也一樣，$n = 1000$ 時 $0.001n^3 = 10^6$，
+$0.025n = 25$。
+\item 第二列：$50n\log_{10} n / (500n) = \log_{10} n / 10 \to \infty$，所以 $n\log n$ 項終究超過 $500n$
+（$n > 10^{10}$ 之後）。 $n^{0.5}$ 比 $n$ 慢。 對數的底只差常數倍，不影響是不是主導項。
+\item 第三列：$0.01n^2 / (100n) = n/10^4 \to \infty$，$n > 10^4$ 之後 $n^2$ 項較大。
+\item 第四列：$n^3$ 比 $n\log n$、$n$ 都快。
+\end{itemize}
+所以四個式子分別是 $\Theta(n^3)$、$\Theta(n\log n)$、$\Theta(n^2)$、$\Theta(n^3)$。
+\end{pastsoln}

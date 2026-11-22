@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nchu-111-is-06}]{中興資工所乙組 111 學年度 第 6 題}
+（問答）
+
+(3 pts) Describe the worst case running time of the following pseudocode functions in Big-O notation in terms
+of the variable \textit{n}.
+\begin{minted}[fontsize=\small]{text}
+void fun(int n, int sum)
+{
+    int  j = n;
+    while (j > 2) {
+       sum++;
+       j = j / 2;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$O(\log n)$（精確地說是 $\Theta(\log n)$）。
+
+原題的程式少了一個右大括號（\texttt{while} 的區塊和函式只關了一個），不影響題意。
+
+迴圈每一輪做常數個操作，所以時間由輪數決定（資結書第~1.7~節）。 每一輪 $j$ 變成 $\lfloor j/2 \rfloor$，
+做了 $k$ 輪之後 $j = \lfloor n / 2^k \rfloor$（連續做整數除法等於一次除以 $2^k$ 再取下整）。 迴圈在
+$j \le 2$ 時停，而
+\[
+\lfloor n/2^k \rfloor \le 2 \iff n/2^k < 3 \iff 2^k > n/3 .
+\]
+所以 $n \ge 3$ 時輪數是使 $2^k > n/3$ 的最小 $k$，即 $k = \lfloor \lg(n/3) \rfloor + 1$；$n \le 2$ 時不進
+迴圈。 例如 $n = 3$ 做 $1$ 輪，$n = 6$ 做 $2$ 輪（$6 \to 3 \to 1$），$n = 100$ 做 $6$ 輪。 輪數是
+$\lg n - O(1)$，最壞（其實每個 $n$ 都一樣）時間是 $\Theta(\log n)$，寫成 $O(\log n)$。
+
+這個函式沒有最好和最壞之分：輪數只由 $n$ 決定，和 \texttt{sum} 的值無關。
+\end{pastsoln}

@@ -1,0 +1,103 @@
+\begin{pastexam}[label={px:ncku-111-prog-14}]{成大資訊聯招 111 學年度 第 14 題}
+（計算）
+
+(10\%) Given a sequence $K=\langle k_1,k_2,k_3,k_4,k_5\rangle$ of five distinct keys in sorted order (so that $k_1<k_2<k_3<k_4<k_5$) and six dummy keys $d_0,d_1,d_2,d_3,d_4,d_5$ representing values not in $K$, we have a probability $p_i$ for $k_i$ and a probability $q_i$ for $d_i$. Determine the cost of an optimal binary search tree for $K$ with the following probabilities:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 \\ \hline
+$p_i$ & & 0.08 & 0.15 & 0.05 & 0.1 & 0.12 \\ \hline
+$q_i$ & 0.04 & 0.1 & 0.08 & 0.1 & 0.06 & 0.12 \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最佳二元搜尋樹的期望搜尋成本是 $2.85$。 一棵最佳樹：根 $k_4$；$k_4$ 的左子節點 $k_2$（$k_2$ 的子節點
+$k_1$、$k_3$），右子節點 $k_5$。
+
+\textbf{動態規劃}（資結書第~18.4~節、虛擬碼~18.9）。 期望成本以「比較的次數」計，根的深度算 $1$（虛擬鍵
+$d_i$ 也算一次）。 令 $e[i, j]$ 是用 $k_i, \ldots, k_j$（和 $d_{i-1}, \ldots, d_j$）建的最佳子樹的期望成本，
+$w[i, j] = \sum_{l=i}^{j} p_l + \sum_{l=i-1}^{j} q_l$。 子樹放到某個節點下面時，裡面每個鍵的深度都加一，成本
+增加 $w[i, j]$，所以
+\[
+e[i, i-1] = q_{i-1}, \qquad
+e[i, j] = \min_{i \le r \le j}\bigl( e[i, r-1] + e[r+1, j] \bigr) + w[i, j] \quad (i \le j),
+\]
+$w[i, j] = w[i, j-1] + p_j + q_j$。 依子樹大小 $j - i + 1 = 1, 2, \ldots, 5$ 填表。
+
+$w[i, j]$（列 $i$，欄 $j$）：
+\begin{center}
+\small
+\begin{tabular}{c|cccccc}
+$i \backslash j$ & 0 & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0.04 & 0.22 & 0.45 & 0.60 & 0.76 & 1.00 \\
+2 &  & 0.10 & 0.33 & 0.48 & 0.64 & 0.88 \\
+3 &  &  & 0.08 & 0.23 & 0.39 & 0.63 \\
+4 &  &  &  & 0.10 & 0.26 & 0.50 \\
+5 &  &  &  &  & 0.06 & 0.30 \\
+6 &  &  &  &  &  & 0.12 \\
+\end{tabular}
+\end{center}
+$e[i, j]$：
+\begin{center}
+\small
+\begin{tabular}{c|cccccc}
+$i \backslash j$ & 0 & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0.04 & 0.36 & 0.89 & 1.37 & 1.98 & 2.85 \\
+2 &  & 0.10 & 0.51 & 0.99 & 1.57 & 2.35 \\
+3 &  &  & 0.08 & 0.41 & 0.86 & 1.52 \\
+4 &  &  &  & 0.10 & 0.42 & 1.04 \\
+5 &  &  &  &  & 0.06 & 0.48 \\
+6 &  &  &  &  &  & 0.12 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|ccccc}
+$\mathit{root}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & $k_1$ & $k_2$ & $k_2$ & $k_2$ & $k_4$ \\
+2 &  & $k_2$ & $k_2$ & $k_3$ & $k_4$ \\
+3 &  &  & $k_3$ & $k_4$ & $k_4$ \\
+4 &  &  &  & $k_4$ & $k_5$ \\
+5 &  &  &  &  & $k_5$ \\
+\end{tabular}
+\end{center}
+
+幾格代表性的計算：
+\begin{itemize}
+\item 大小 $1$：$e[1,1] = e[1,0] + e[2,1] + w[1,1] = 0.04 + 0.10 + 0.22 = 0.36$。 其餘同理，例如
+$e[2,2] = 0.10 + 0.08 + 0.33 = 0.51$。
+\item 大小 $2$：$e[1,2]$：$r = 1$ 得 $0.04 + 0.51 + 0.45 = 1.00$，$r = 2$ 得 $0.36 + 0.08 + 0.45 = 0.89$，取
+$0.89$（根 $k_2$）。
+\item 大小 $3$：$e[1,3]$：$r = 1$：$0.04 + 0.99 = 1.03$；$r = 2$：$0.36 + 0.41 = 0.77$；$r = 3$：
+$0.89 + 0.10 = 0.99$。 最小 $0.77$，加 $w[1,3] = 0.60$ 得 $1.37$。
+\item 全部：$e[1,5] = \min_r (e[1, r-1] + e[r+1, 5]) + w[1,5]$，$w[1,5] = 1.00$：
+\begin{center}
+\small
+\begin{tabular}{ccccc}
+\toprule
+$r$ & $e[1, r-1]$ & $e[r+1, 5]$ & 和 & $+ w[1,5]$ \\
+\midrule
+1 & 0.04 & 2.35 & 2.39 & 3.39 \\
+2 & 0.36 & 1.52 & 1.88 & 2.88 \\
+3 & 0.89 & 1.04 & 1.93 & 2.93 \\
+4 & 1.37 & 0.48 & 1.85 & \textbf{2.85} \\
+5 & 1.98 & 0.12 & 2.10 & 3.10 \\
+\bottomrule
+\end{tabular}
+\end{center}
+根選 $k_4$，$e[1,5] = 2.85$。
+\end{itemize}
+
+\textbf{還原樹}：$\mathit{root}[1,5] = k_4$；左邊 $k_1..k_3$ 的根 $\mathit{root}[1,3] = k_2$，再往下是
+$\mathit{root}[1,1] = k_1$、$\mathit{root}[3,3] = k_3$；右邊 $\mathit{root}[5,5] = k_5$。 用深度核對成本
+（深度從 $1$ 算）：
+\begin{align*}
+&\underbrace{0.10 \cdot 1}_{k_4} + \underbrace{(0.15 + 0.12) \cdot 2}_{k_2,\,k_5}
++ \underbrace{(0.08 + 0.05) \cdot 3}_{k_1,\,k_3} \\
+&\quad + \underbrace{(0.04 + 0.10 + 0.08 + 0.10) \cdot 4}_{d_0, \ldots, d_3}
++ \underbrace{(0.06 + 0.12) \cdot 3}_{d_4,\,d_5} \\
+&= 0.10 + 0.54 + 0.39 + 1.28 + 0.54 = 2.85 .
+\end{align*}
+若成本的定義是「深度從 $0$ 算」，每個鍵少算一次，總機率是 $1$，答案變成 $1.85$；本題照 CLRS 的定義，答
+$2.85$。
+\end{pastsoln}

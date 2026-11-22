@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntust-114-ice-11}]{臺科大資工所 114 學年度 第 11 題}
+（填空；每格 5 分）
+
+(5\%) Consider a two-dimensional array \textbf{R}, where each element occupies 4 memory units.
+Given that \textbf{R}(4, 3) is located at address 5182 and \textbf{R}(7, 5) is located at address
+5290, what is the address of \textbf{R}(3, 7)? \blank{A}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) $5370$。
+
+題目沒說是以列為主還是以行為主，也沒給陣列的大小和索引的起點，要從兩個已知的位址推出來（資結書
+第~4.1~節）。 兩個位址差 $5290 - 5182 = 108$，每個元素 $4$ 個單位，所以 $\mathbf{R}(7,5)$ 在
+$\mathbf{R}(4,3)$ 後面 $108 / 4 = 27$ 個元素。 索引的起點在相減時會消掉，不影響。
+\begin{itemize}
+\item \textbf{以列為主}，每列 $C$ 個元素：$\mathbf{R}(i,j)$ 和 $\mathbf{R}(i',j')$ 差 $(i' - i)C + (j' - j)$
+個元素，得 $3C + 2 = 27$，$C = 25/3$ 不是整數，不可能。
+\item \textbf{以行為主}，每行 $r$ 個元素：差 $(j' - j)r + (i' - i)$ 個，得 $2r + 3 = 27$，$r = 12$。
+\end{itemize}
+所以是以行為主、每行 $12$ 個元素。 $\mathbf{R}(3, 7)$ 相對於 $\mathbf{R}(4, 3)$ 差
+$(7 - 3) \times 12 + (3 - 4) = 47$ 個元素，位址
+\[
+5182 + 47 \times 4 = 5182 + 188 = 5370.
+\]
+檢查：用同一個公式算 $\mathbf{R}(7, 5)$，$5182 + [(5 - 3) \times 12 + (7 - 4)] \times 4 = 5182 + 108 = 5290$，
+相符。
+\end{pastsoln}

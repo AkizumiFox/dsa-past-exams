@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntust-114-ice-04}]{臺科大資工所 114 學年度 第 4 題}
+（複選；每格 5 分）
+
+(5\%) Select all the correct statements.
+\begin{enumerate}[label=(\alph*)]
+\item In a balanced binary search tree (e.g., AVL Tree or Red-Black Tree), the worst-case time
+complexity for insertion, search, and deletion is $O(\log n)$.
+\item In a Max-Heap, the extractMax operation (removing the maximum element) can be done in
+$O(\log n)$ time; however, finding the minimum element in a Max-Heap may require checking all the
+leaf nodes, taking $O(n)$ time in the worst case.
+\item In a singly linked list, if you want to search for (or access) a node when you do not know
+its location by value, both the average and worst-case time complexities are $O(n)$.
+\item With a well-chosen hash function and a reasonable load factor, hash tables (whether using
+open addressing or separate chaining) can provide $O(1)$ average-case time for insertion, search,
+and deletion. However, in the worst case, these operations can degrade to $O(n)$.
+\item In a Queue, if it is properly implemented (e.g., with a circular array or by linking front and
+rear), then enqueue (insertion) and dequeue (removal) each take $O(1)$ time; however, searching for
+an arbitrary value in a queue still requires $O(n)$ time in the worst case.
+\item In a regular Binary Search Tree, if the inserted data is nearly sorted (ascending or
+descending), the tree may degrade into a structure resembling a linked list, causing the
+worst-case time for search, insert, and delete to become $O(n)$.
+\item In a Stack, you can only push and pop from the top, and both operations can be guaranteed to
+run in $O(1)$ time; however, if you want to find an arbitrary element in the stack, you have to
+check elements one by one from top to bottom, resulting in $O(n)$ time in the worst case.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)、(b)、(c)、(d)、(e)、(f)、(g)，七個都對。
+
+這題把各種資料結構的操作時間放在一起；(a) 和 (f) 是搜尋樹的內容，放在本章，其他選項分屬資結書第~5、6、8、12~章。
+\begin{itemize}
+\item (a) 對。 AVL 樹的高度 $< 1.4405\lg(n+1)$（資結書定理~10.1），紅黑樹的高度 $\le 2\lg(n+1)$（資結書
+定理~10.4），插入、搜尋、刪除都沿一條路徑做 $O(1)$ 的事（加上最多 $O(\log n)$ 次旋轉），最壞 $O(\log n)$。
+\item (b) 對。 extractMax 把最後一個元素搬到根再往下調整，$O(\log n)$（資結書第~8.1~節）。 最小值一定在
+葉子上：任何有孩子的節點都不小於它的孩子。 但最大堆積對葉子之間的大小沒有任何限制，葉子約有 $n/2$ 個，
+最壞要全部看過，$\Theta(n)$。
+\item (c) 對。 單向串列只能從頭一個一個往後找（資結書虛擬碼~5.1）。 要找的值在第 $k$ 個節點就要看 $k$ 個，
+最壞（在最後或不存在）是 $n$ 個；每個位置機會相同時平均約 $n/2$ 個，都是 $O(n)$。
+\item (d) 對。 負載因子維持在常數以下、雜湊函數夠均勻時，鏈結法和開放定址的期望時間都是 $O(1)$
+（資結書第~12.4~節）；最壞的情況所有鍵擠在同一串或同一群，退化成 $O(n)$。
+\item (e) 對。 環狀陣列或有 front、rear 兩個指標的串列，加入、刪除都是 $O(1)$（資結書第~6.2~節）；佇列
+沒有依值排列，找任意值要逐一看，最壞 $O(n)$。
+\item (f) 對。 依序插入已排好（或幾乎排好）的資料，每個新鍵都接在最右（或最左）邊，樹退化成一條鏈，
+高度 $\Theta(n)$，操作最壞 $O(n)$（資結書第~9.3~節）。
+\item (g) 對。 push、pop 只動頂端，用串列或固定大小的陣列實作都是 $O(1)$（資結書第~6.1~節；會自動加倍的陣列
+是平攤 $O(1)$）；找任意元素要從
+頂端往下逐一看，最壞 $O(n)$。
+\end{itemize}
+\end{pastsoln}

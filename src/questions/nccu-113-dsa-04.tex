@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:nccu-113-dsa-04}]{政大資科所 113 學年度 第 4 題}
+（單選；不必說明理由）
+
+(4\%) There are various designs for min heaps (e.g., binary heap, binomial heap, and Fibonacci heap), and
+they all support ExtractMin, DecreaseKey, and Insert.
+
+Which of the following statements about min heaps is correct:
+\begin{enumerate}[label=\Alph*.]
+\item DecreaseKey always takes $\Theta(\log n)$ time in a binary heap.
+\item Insert always takes $O(1)$ time in a binary heap.
+\item It is possible to design a min heap such that both DecreaseKey and Insert always take $O(1)$ time.
+\item It is possible to design a min heap such that both ExtractMin and Insert always take $O(1)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+\begin{itemize}
+\item[A.] 錯。 二元堆積的 DecreaseKey 是把鍵改小之後往上浮（資結書虛擬碼~8.1、8.4）。 改完之後如果還是不小於
+父節點（例如改的是根，或只改小一點點），一次比較就停，$O(1)$。 $\Theta(\log n)$ 是最壞情況，不是「每次都」。
+\item[B.] 錯。 二元堆積的 Insert 放在最後再往上浮，插入比所有鍵都小的數時要浮到根，$\Theta(\log n)$
+（資結書第~8.1~節）。
+\item[C.] 對。 費氏堆積的 Insert 和 DecreaseKey 是\textbf{平攤} $O(1)$（資結書第~8.6~節）。 題目說
+「always」，要的是每次都 $O(1)$；這也做得到：Brodal（1996）的堆積在最壞情況下 Insert、DecreaseKey 都是
+$O(1)$，ExtractMin 是 $O(\log n)$。 所以「可以設計出」這樣的最小堆積，敘述成立。
+\item[D.] 錯。 如果 Insert 和 ExtractMin 都是 $O(1)$，把 $n$ 個數全部插入、再取出 $n$ 次，就在 $O(n)$ 時間內
+排好序了。 這個堆積只靠比較鍵的大小，排序要 $\Omega(n \lg n)$ 次比較（資結書定理~15.1），矛盾。 平攤 $O(1)$
+也不行，同樣的論證適用於總時間。
+\end{itemize}
+\end{pastsoln}

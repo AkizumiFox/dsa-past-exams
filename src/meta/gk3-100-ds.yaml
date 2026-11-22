@@ -1,0 +1,18 @@
+paper: gk3-100-ds
+volume: 4
+school: 高考三級
+dept: 資訊處理
+year: 100
+year_word: 年
+subject: 資料結構
+instructions: ㈠禁止使用電子計算器。㈡不必抄題，作答時請將試題題號及答案依照順序寫在試卷上，於本試題上作答者，不予計分。
+questions:
+  - {id: gk3-100-ds-01, label: 第一題, chapter: 1}
+  - {id: gk3-100-ds-02, label: 第二題, chapter: 7}
+  - {id: gk3-100-ds-03, label: 第三題, chapter: 6}
+  - {id: gk3-100-ds-04, label: 第四題, chapter: 27}
+  - {id: gk3-100-ds-05, label: 第五題, chapter: 15}
+  - {id: gk3-100-ds-06, label: 第六題, chapter: 7}
+  - {id: gk3-100-ds-07, label: 第七題, chapter: 8}
+  - {id: gk3-100-ds-08, label: 第八題, chapter: 19}
+  - {id: gk3-100-ds-09, label: 第九題, chapter: 22}

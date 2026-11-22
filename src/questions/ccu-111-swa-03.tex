@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ccu-111-swa-03}]{中正資工所甲組 111 學年度 第 11 題}
+（單選）
+
+(3\%) (\quad) There exists a binary tree, each of whose nodes contains a letter. In a
+post-order traversal, the sequence of the output is E D A C G F B H. Suppose that the number of
+children of the nodes is listed here:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+A & B & C & D & E & F & G & H\\ \hline
+1 & 2 & 0 & 1 & 0 & 1 & 0 & 2\\ \hline
+\end{tabular}
+\end{center}
+Is the tree unique? What is the order of the nodes in a pre-order traversal of the binary tree?
+
+a.~No, (H A D E B C F G) \qquad b.~Yes, (H D C A G F B E) \qquad c.~No, (H B F G C A D E)\\
+d.~Yes, (H A D E B F C G) \qquad e.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a。
+
+\textbf{還原樹的形狀。} 後序是「左子樹、右子樹、根」，每個節點都排在它的子樹後面。 從左往右讀
+後序，用一個堆疊放「已經完成的子樹」：讀到一個有 $c$ 個子節點的節點，就從堆疊頂端拿 $c$ 棵子樹
+當它的子樹（先拿到的是較晚完成的、也就是右邊那棵），組好再推回去。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+讀到 & 子節點數 & 堆疊（左邊是底） \\
+\midrule
+E & 0 & $E$ \\
+D & 1 & $D(E)$ \\
+A & 1 & $A(D(E))$ \\
+C & 0 & $A(D(E))$,\ $C$ \\
+G & 0 & $A(D(E))$,\ $C$,\ $G$ \\
+F & 1 & $A(D(E))$,\ $C$,\ $F(G)$ \\
+B & 2 & $A(D(E))$,\ $B(C, F(G))$ \\
+H & 2 & $H\bigl(A(D(E)),\ B(C, F(G))\bigr)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後堆疊裡剩一棵，根是 $H$。 有兩個子節點的 $B$、$H$，哪個是左子樹、哪個是右子樹是確定的：後序裡
+左子樹整段排在右子樹前面，所以 $H$ 的左子節點是 $A$、右子節點是 $B$；$B$ 的左子節點是 $C$、右子節點
+是 $F$。
+
+\textbf{不唯一。} $A$、$D$、$F$ 各只有一個子節點，這個子節點放在左邊或右邊，後序都一樣（後序只看
+「子樹在根前面」），子節點數也一樣。 三個節點各有兩種放法，共 $2^3 = 8$ 棵不同的二元樹都符合題目，
+所以樹不唯一。 例如 $A$ 的子節點 $D$ 可以是左子節點也可以是右子節點。
+
+\textbf{前序是唯一的。} 只有一個子節點時，前序是「根、那棵子樹」，不管子樹在左在右都一樣；兩個子節點
+的順序上面已經確定。 所以 $8$ 棵樹的前序都是
+\[
+H\ \ A\ \ D\ \ E\ \ B\ \ C\ \ F\ \ G.
+\]
+
+逐項檢查：
+\begin{itemize}
+\item a：No，前序 H A D E B C F G。 兩部分都對。
+\item b：說唯一，錯；前序也不對（$D$ 是 $A$ 的子節點，前序裡 $A$ 要在 $D$ 前面）。
+\item c：No 對，但前序 H B F G C A D E 是把每個節點的左右子樹對調後的前序。 $A$ 在後序裡排在 $B$ 前
+面，是 $H$ 的左子樹，前序要先走 $A$ 那一邊。 錯。
+\item d：說唯一，錯；前序裡 $F$ 在 $C$ 前面也不對，$C$ 是 $B$ 的左子節點。
+\item e：a 是對的。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ccu-111-swa-10}]{中正資工所甲組 111 學年度 第 18 題}
+（問答）
+
+(4\%) Argue whether the following algorithms are asymptotically optimal or not. Write down your
+reasoning. (a) Quicksort; (b) Mergesort.
+\end{pastexam}
+
+\begin{pastsoln}
+「漸近最佳」要先說清楚跟誰比：兩個都是\textbf{比較排序}（只靠比較兩個元素的大小決定順序），
+所以和比較排序的下界比。 資結書定理~15.1：任何比較排序在最壞情況下至少要做
+$\lceil \lg(n!) \rceil = \Omega(n \lg n)$ 次比較；定理~15.3：$n!$ 種輸入順序機率相同時，平均也至少
+$\lg(n!) = \Omega(n \lg n)$ 次。 一個演算法的時間和下界同級，就是漸近最佳。
+
+\textbf{下界的理由（簡述）。} 把比較排序對 $n$ 個數的執行過程畫成決策樹：每個內部節點是一次比較，
+每個葉子是一種輸出的排列。 $n!$ 種排列都必須出現在葉子上，否則某個輸入會排錯；高度（最多比較
+次數）$d$ 的二元樹最多 $2^d$ 個葉子，所以 $2^d \ge n!$，$d \ge \lg(n!)$。 再用
+$n! \ge (n/2)^{n/2}$ 得 $\lg(n!) \ge \frac{n}{2} \lg \frac{n}{2} = \Omega(n \lg n)$。
+
+\textbf{(a) Quicksort：以最壞情況來說不是漸近最佳。} 每次選到的基準都是最大或最小值時（例如固定取
+第一個當基準，輸入已經排好），每一層只切掉一個元素，$T(n) = T(n - 1) + \Theta(n) = \Theta(n^2)$
+（資結書第~14.5~節）。 $\Theta(n^2)$ 比下界 $\Omega(n \lg n)$ 高了不只常數倍，所以最壞情況下不是漸近最
+佳。 但它的平均時間是 $\Theta(n \lg n)$（資結書定理~14.3），和平均情況的下界同級，所以「平均情況
+下」是漸近最佳的；隨機選基準的版本，對任何輸入的期望時間也是 $\Theta(n \lg n)$。 一般說「漸近最佳」
+是指最壞情況，答 quicksort 不是，並補充平均情況是最佳的。
+
+\textbf{(b) Mergesort：是漸近最佳。} 合併排序每層把問題切成兩半，合併是線性時間，
+$T(n) = 2T(n/2) + \Theta(n) = \Theta(n \lg n)$，而且不管輸入長什麼樣子都是這樣，最壞情況也是
+$\Theta(n \lg n)$（資結書第~14.4~節）。 這和比較排序的下界 $\Omega(n \lg n)$ 同級，不可能有比較排序在最壞
+情況下比它快超過常數倍，所以是漸近最佳的（資結書系理~15.2）。
+\end{pastsoln}

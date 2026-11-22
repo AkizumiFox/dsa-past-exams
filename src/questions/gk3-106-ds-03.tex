@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:gk3-106-ds-03}]{高考三級資訊處理 106 年 第三題}
+（申論；20 分）
+
+表二列出五種常見的排序演算法，請填滿該表以顯示各排序法在最佳情況、一般情況、最壞情況下的時間複雜度、
+所需額外記憶體空間及是否為穩定排序法。快速排序法的各項資料已事先填入作為範例。（(a),(b),(c),(d)各 5 分，
+共 20 分）
+\begin{center}
+表二\\[2pt]
+\small
+\renewcommand{\arraystretch}{1.15}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+ & \begin{tabular}{@{}c@{}}最佳情況\\（best case）\end{tabular} & \begin{tabular}{@{}c@{}}一般情況\\（average case）\end{tabular} & \begin{tabular}{@{}c@{}}最壞情況\\（worst case）\end{tabular}
+ & 所需額外空間 & \begin{tabular}{@{}c@{}}是或不是\\穩定排序法\\（stable sort）\end{tabular} \\ \hline
+\begin{tabular}{@{}l@{}}快速排序法\\（quicksort）\end{tabular} & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ & $O(n)$ & 不是 \\ \hline
+\begin{tabular}{@{}l@{}}(a)泡沫排序法\\\quad bubble sort\end{tabular} & & & & & \\ \hline
+\begin{tabular}{@{}l@{}}(b)插入排序法\\\quad insertion sort\end{tabular} & & & & & \\ \hline
+\begin{tabular}{@{}l@{}}(c)合併排序法\\\quad merge sort\end{tabular} & & & & & \\ \hline
+\begin{tabular}{@{}l@{}}(d)堆積排序法\\\quad heap sort\end{tabular} & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\small
+\begin{tabular}{lccccc}
+\toprule
+ & 最佳 & 一般 & 最壞 & 額外空間 & 穩定 \\
+\midrule
+(a) 泡沫排序法 & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & 是 \\
+(b) 插入排序法 & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & 是 \\
+(c) 合併排序法 & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(n)$ & 是 \\
+(d) 堆積排序法 & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(1)$ & 不是 \\
+\bottomrule
+\end{tabular}
+\end{center}
+範例裡快速排序的額外空間填 $O(n)$，指的是遞迴堆疊在最壞情況的深度；下面的「額外空間」也是指除了輸入
+陣列之外要用多少空間。 各格的理由（資結書第~14.2、14.4、14.6~節，比較表在第~14.7~節）：
+
+\textbf{(a) 泡沫排序}：每一趟由左往右比較相鄰兩數、逆序就交換，一趟把最大值推到最後。
+\begin{itemize}
+\item 最佳 $O(n)$：要用「這一趟沒有交換就提早結束」的版本。 輸入已排好時，第一趟 $n - 1$ 次比較、
+沒有交換，就停了。 （不加這個檢查的版本，最佳也是 $\Theta(n^2)$。）
+\item 一般、最壞 $O(n^2)$：交換次數等於逆序對數，反序輸入有 $n(n-1)/2$ 對；隨機輸入平均 $n(n-1)/4$ 對，
+仍是 $\Theta(n^2)$。
+\item 空間 $O(1)$（一個暫存變數）；相等的相鄰兩數不交換，所以穩定。
+\end{itemize}
+
+\textbf{(b) 插入排序}：把 $A[j]$ 插到已排好的 $A[1..j-1]$ 裡。
+\begin{itemize}
+\item 最佳 $O(n)$：已排好時每個 $A[j]$ 只和前一個比一次就停，共 $n - 1$ 次比較。
+\item 一般、最壞 $O(n^2)$：搬移次數等於逆序對數，反序時 $\sum_{j=2}^{n} (j - 1) = n(n-1)/2$，平均是
+它的一半，都是 $\Theta(n^2)$。
+\item 空間 $O(1)$；往前找插入位置時遇到 $\le$ 它的就停，不越過相等的數，穩定。
+\end{itemize}
+
+\textbf{(c) 合併排序}：切兩半、各自排序、再合併。
+\begin{itemize}
+\item 三種情況都是 $O(n \log n)$：$T(n) = 2T(n/2) + \Theta(n)$，不論輸入長什麼樣，都要切 $\lg n$ 層、
+每層合併 $\Theta(n)$。
+\item 空間 $O(n)$：合併時需要暫存陣列（另加 $O(\log n)$ 的遞迴堆疊）。
+\item 合併時兩邊首項相等先取左邊的，穩定。
+\end{itemize}
+
+\textbf{(d) 堆積排序}：先建最大堆積，再反覆把堆頂換到最後、下沉。
+\begin{itemize}
+\item 三種情況都是 $O(n \log n)$：建堆 $O(n)$，之後 $n - 1$ 次下沉各 $O(\log n)$。 （鍵值全相等時下沉
+立刻停，會是 $O(n)$，但一般的表都寫 $O(n \log n)$。）
+\item 空間 $O(1)$：就地在原陣列上做。
+\item 不穩定：堆頂換到最後時會跳過中間相等的鍵。 例如 $\langle 2_a, 2_b, 1\rangle$ 已經是最大堆積，
+第一步把 $2_a$ 換到最後，最後得到 $\langle 1, 2_b, 2_a\rangle$，兩個 $2$ 的順序反了。
+\end{itemize}
+\end{pastsoln}

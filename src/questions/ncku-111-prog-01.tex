@@ -1,0 +1,135 @@
+\begin{pastexam}[label={px:ncku-111-prog-01}]{成大資訊聯招 111 學年度 第 1 題}
+（程式填空）
+
+\textbf{[4\%]} The following C program converts a preorder expression to its postorder form. For
+example, "+AB++ABC" is converted to "AB+AB+C+" with the program. Please fill in the missing parts of
+the program in C language.
+\begin{minted}[fontsize=\small]{c}
+#include<stdio.h>
+#include<stdlib.h>
+
+#define MAX_INPUT 100000
+
+typedef struct _Stack_node{
+    char val;
+    struct _Stack_node *prev;
+} Stack_node;
+
+typedef struct _Stack{
+    Stack_node *top;
+} Stack;
+
+Stack *new_stack(){
+    Stack *stk = malloc(sizeof(Stack));
+    stk->top = NULL;
+    return stk;
+}
+
+char Stack_pop(Stack *stk){
+    char value = stk->top->val;
+    Stack_node *tmp = stk->top;
+    /** TODO (A) **/
+    free(tmp);
+    return value;
+}
+
+void Stack_push(Stack *stk, char value){
+    Stack_node *new_node = malloc(sizeof(Stack_node));
+    new_node->val = value;
+    /** TODO (B) **/
+    stk->top = new_node;
+    return;
+}
+
+int Stack_is_empty(Stack *stk){
+    return stk->top == NULL;
+}
+
+void pre_to_post(char *);
+void post_to_pre(char *);
+
+int main(){
+    char input[MAX_INPUT];
+    scanf("%s", input);
+    pre_to_post(input);
+    return 0;
+}
+
+void pre_to_post(char *input){
+    Stack *stk = new_stack();
+    for (int i = 0; input[i] != '\0'; ++i){
+        switch(input[i]){
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '^':
+            case '%':
+                Stack_push(stk, input[i]);
+                break;
+            default:
+                printf("%c", input[i]);
+                while (!Stack_is_empty(stk) && stk->top->val == 'A'){
+                    char top = Stack_pop(stk);
+                    printf("%c", Stack_pop(stk));
+                }
+                if (!Stack_is_empty(stk)) Stack_push(stk, 'A');
+        }
+    }
+    printf("\n");
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) \texttt{stk->top = tmp->prev;}（或 \texttt{stk->top = stk->top->prev;}）；
+(B) \texttt{new\_node->prev = stk->top;}。
+
+\textbf{堆疊的結構}。 這是用鏈結串列做的堆疊（資結書第~6.1~節）：\texttt{top} 指向頂端節點，每個節點的
+\texttt{prev} 指向它下面那一個。
+\begin{itemize}
+\item \textbf{(A) pop}：先記下頂端的值和節點 \texttt{tmp}，在 \texttt{free(tmp)} 之前要把
+\texttt{top} 移到下一個節點，否則 \texttt{top} 會指向已經釋放的記憶體。 所以填
+\texttt{stk->top = tmp->prev;}。 順序不能和 \texttt{free} 對調：\texttt{free(tmp)} 以後就不能再讀
+\texttt{tmp->prev}。
+\item \textbf{(B) push}：新節點要壓在原本的頂端上面，所以它的 \texttt{prev} 指向原本的頂端，
+\texttt{new\_node->prev = stk->top;}，下一行再把 \texttt{top} 改成新節點。 這兩行順序也不能反，先改
+\texttt{top} 就找不回原本的頂端。 堆疊是空的時候 \texttt{stk->top} 是 \texttt{NULL}，新節點的
+\texttt{prev} 也就是 \texttt{NULL}，不用另外處理。
+\end{itemize}
+
+\textbf{這個轉換在做什麼}。 前序式的每個運算子後面接著它的兩個運算元。 程式把運算子推進堆疊；字元
+\texttt{'A'} 在堆疊裡是一個\textbf{記號}，表示「它下面那個運算子的左運算元已經輸出了」（運算元本身
+不會進堆疊，所以這個記號不會和輸入裡的運算元 A 混淆）。 讀到一個運算元：
+\begin{enumerate}
+\item 先印出它。
+\item 只要頂端是記號，就表示某個運算子的右運算元剛剛完成，彈出記號、再彈出那個運算子並印出（後序裡
+運算子在兩個運算元之後）。 印出運算子代表一個更大的運算元也完成了，所以繼續檢查。
+\item 停下來時，若堆疊不是空的，頂端是某個運算子，它的左運算元剛完成，推一個記號。
+\end{enumerate}
+
+\textbf{追蹤 \texttt{+AB++ABC}}（堆疊由底到頂，$\triangle$ 代表記號 \texttt{'A'}）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀入 & 動作 & 堆疊 & 已輸出 \\
+\midrule
+\texttt{+} & 推入 & \texttt{+} & \\
+\texttt{A} & 印 A；頂端不是記號；推記號 & \texttt{+}$\triangle$ & \texttt{A} \\
+\texttt{B} & 印 B；彈出記號和 \texttt{+}，印 \texttt{+}；堆疊空 & （空） & \texttt{AB+} \\
+\texttt{+} & 推入 & \texttt{+} & \texttt{AB+} \\
+\texttt{+} & 推入 & \texttt{++} & \texttt{AB+} \\
+\texttt{A} & 印 A；推記號 & \texttt{++}$\triangle$ & \texttt{AB+A} \\
+\texttt{B} & 印 B；彈出記號和 \texttt{+}，印 \texttt{+}；推記號 & \texttt{+}$\triangle$ & \texttt{AB+AB+} \\
+\texttt{C} & 印 C；彈出記號和 \texttt{+}，印 \texttt{+}；堆疊空 & （空） & \texttt{AB+AB+C+} \\
+\bottomrule
+\end{tabular}
+\end{center}
+輸出 \texttt{AB+AB+C+}，和題目的例子一致。 注意題目的輸入 \texttt{+AB++ABC} 其實是兩個運算式
+（\texttt{+AB} 和 \texttt{++ABC}）接在一起，程式照樣逐段轉換。 單一運算式 \texttt{*+AB-CD} 會轉成
+\texttt{AB+CD-*}，和資結書第~6.3.5~節的前序轉後序結果相同。
+
+另外，\texttt{while} 迴圈裡的 \texttt{char top = Stack\_pop(stk);} 彈出的是記號，變數 \texttt{top} 沒有
+再用到；\texttt{post\_to\_pre} 只有宣告沒有定義，也沒有被呼叫，編譯和執行都沒有影響。
+\end{pastsoln}

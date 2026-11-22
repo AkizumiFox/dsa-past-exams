@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntu-114-dsa-04}]{臺大資網所 114 學年度 第 4 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Consider two protein sequences $A$ and $B$ of lengths $m$ and $n$ respectively. You are tasked with
+implementing a dynamic programming algorithm to find the optimal global alignment between these sequences.
+Given the following definitions:
+\begin{itemize}
+\item A match score of $+2$ for identical amino acids.
+\item A mismatch penalty of $-1$ for different amino acids.
+\item A gap penalty of $-2$ for each gap introduced.
+\end{itemize}
+Which of the following statements is correct regarding the dynamic programming solution for this alignment
+problem?
+\begin{enumerate}[label=(\Alph*)]
+\item The time complexity of the algorithm is $O(m+n)$.
+\item The space complexity of the algorithm is $O(mn)$.
+\item The recurrence relation for the optimal alignment score $S(i,j)$ at position $(i,j)$ in the dynamic
+programming matrix is:
+\[S(i,j)=\max\{S(i-1,j-1)+\mathrm{match}(A[i],B[j]),S(i-1,j)-2,S(i,j-1)-2\}.\]
+\item The traceback procedure to reconstruct the optimal alignment always starts from the top-left corner of
+the dynamic programming matrix.
+\item The algorithm guarantees finding all possible optimal alignments between the two sequences.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{原題的問題}。 這是單選題，但 (B) 和 (C) 兩個敘述都成立。 本書的判斷是 (C) 最可能是命題者要的答案，(B) 也
+沒有錯；下面逐項說明。
+
+\textbf{演算法}（Needleman--Wunsch，和資結書第~18.6.1~節的編輯距離同一型，只是把「最小成本」換成「最大得分」）。
+$S(i, j)$ 是 $A[1..i]$ 和 $B[1..j]$ 的最佳全域比對得分。 最後一欄只有三種可能：$A[i]$ 對 $B[j]$、$A[i]$ 對空格、空格對
+$B[j]$，所以
+\[
+S(i, j) = \max\bigl\{S(i-1, j-1) + \mathrm{match}(A[i], B[j]),\ S(i-1, j) - 2,\ S(i, j-1) - 2\bigr\},
+\]
+$\mathrm{match}$ 相同是 $+2$、不同是 $-1$；邊界 $S(i, 0) = -2i$、$S(0, j) = -2j$。 答案是 $S(m, n)$，從右下角往回找
+是哪一項取到最大值，就得到比對。
+
+\begin{itemize}
+\item[(A)] 錯。 表有 $(m + 1)(n + 1)$ 格，每格 $O(1)$，時間 $\Theta(mn)$，不是 $O(m + n)$。
+\item[(B)] 成立。 存整張表要 $\Theta(mn)$ 空間，往回找比對時也要用到整張表。 （只要分數的話，只留兩列就是
+$O(\min(m, n))$，見資結書第~18.3.6~節；Hirschberg 的分治法甚至能在線性空間內找出比對。 但 $O(mn)$ 是上界，這些都
+不違反「空間是 $O(mn)$」。）
+\item[(C)] 對。 就是上面的遞迴式，三項分別對應配對、$B$ 這邊放空格、$A$ 這邊放空格，空格各扣 $2$。
+\item[(D)] 錯。 全域比對要對齊兩條序列的全部，往回找從\textbf{右下角} $S(m, n)$ 開始，走到左上角 $S(0, 0)$ 結束。
+（區域比對 Smith--Waterman 則從表中的最大值開始。）
+\item[(E)] 錯。 標準做法只追出一條最佳比對；最佳比對的個數可能是指數多，要「全部」找出來得另外列舉所有取到最大值
+的路徑，不是這個演算法保證的。
+\end{itemize}
+作答時只能填一個，選 (C)。
+\end{pastsoln}

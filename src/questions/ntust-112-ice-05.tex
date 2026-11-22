@@ -1,0 +1,134 @@
+\begin{pastexam}[label={px:ntust-112-ice-05}]{臺科大資工所 112 學年度 第 5 題}
+（複選；三小題）
+
+(15\%) One day, Bob creates three novel sorting algorithms to sort N integer elements stored in an
+array ARR. The index begins from 0 for the array, and the pseudo codes are listed below:
+
+\noindent\textbf{Method 1:}
+\begin{minted}[fontsize=\small]{text}
+method_one (ARR , N)
+{
+    int TEMP, k, i
+    for k=1 to N-1
+        TEMP = ARR[k]
+        i = k-1
+        while TEMP <= ARR[i] && i >= 0
+            ARR[i+1] = ARR[i]
+            i = i-1
+        ARR[i+1] = TEMP
+}
+\end{minted}
+
+\noindent\textbf{Method 2:}
+\begin{minted}[fontsize=\small]{text}
+method_two (ARR , N)
+{
+    int TEMP_a, TEMP_b, k, j
+    for k=0 to N-1
+        TEMP_a = ARR[k]
+        TEMP_b = k
+        for j=k+1 to N-1
+            if TEMP_a >= ARR[j]
+                TEMP_a = ARR[j]
+                TEMP_b = j
+        TEMP_a = ARR[k]
+        ARR[k] = ARR[TEMP_b]
+        ARR[TEMP_b] = TEMP_a
+}
+\end{minted}
+
+\noindent\textbf{Method 3:}
+\begin{minted}[fontsize=\small]{text}
+method_three (ARR , N)
+{
+    int TEMP, k, j
+    for k=0 to N-1
+        for j=0 to N-k
+            if ARR[j] >= ARR[j+1]
+                TEMP = ARR[j]
+                ARR[j] = ARR[j+1]
+                ARR[j+1] = TEMP
+}
+\end{minted}
+
+\begin{enumerate}[label=(\arabic*)]
+\item (5\%) Which statement(s) is(are) true about the first method?
+\begin{enumerate}[label=(\Alph*)]
+\item It does not work for sorting.
+\item The best case time complexity is O($n$)
+\item The average case time complexity is O($n^2$)
+\item It is a stable sorting algorithm
+\item None of the above statements is true
+\end{enumerate}
+\item (5\%) Which statement(s) is(are) true about the second method?
+\begin{enumerate}[label=(\Alph*)]
+\item The best case time complexity is O($n^2$)
+\item The average case time complexity is O($n^2$)
+\item The worst case time complexity is O($n^2$)
+\item It is a stable sorting algorithm
+\item None of the above statements is true
+\end{enumerate}
+\item (5\%) Which statement(s) is(are) true about the third method?
+\begin{enumerate}[label=(\Alph*)]
+\item It does not work for sorting.
+\item The best case time complexity is O($n^2$)
+\item The average case time complexity is O($n$)
+\item It is a stable sorting algorithm
+\item None of the above statements is true
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案：(1) (B)、(C)；(2) (A)、(B)、(C)；(3) (A)、(B)。
+
+三個方法分別是插入排序、選擇排序、氣泡排序（資結書第~14.2~節），但都有改動：比較用了
+\texttt{<=} 或 \texttt{>=}，第三個的迴圈範圍也不對。 題目強調「index begins from 0」，下面逐一照
+寫出來的程式檢查。 選項裡的 $n$ 就是題目的 $N$。
+
+\textbf{(1) Method 1：插入排序。} 第 $k$ 輪把 \texttt{ARR[k]} 插進已排好的 \texttt{ARR[0..k-1]}。
+\begin{itemize}
+\item 迴圈條件 \texttt{TEMP <= ARR[i] \&\& i >= 0} 把 \texttt{i >= 0} 寫在後面。 照 C 語言由左到右
+的求值，$i = -1$ 時會先讀 \texttt{ARR[-1]}；正確的寫法應該把 \texttt{i >= 0} 放前面。 本書把它當成
+虛擬碼的寫法不精確（\texttt{i >= 0} 是迴圈的邊界條件），讀成 $i < 0$ 就停，這樣它能正確排序，
+\textbf{(A) 錯}。
+\item \textbf{(B) 對。} 輸入已經由小到大排好、而且數字都不同時，每一輪 \texttt{TEMP <= ARR[k-1]}
+一開始就不成立，不搬移，$N - 1$ 輪共 $\Theta(N)$。
+\item \textbf{(C) 對。} 平均每個數要往前搬過前面約一半的數，總共約 $N^2/4$ 次搬移，$\Theta(N^2)$。
+\item \textbf{(D) 錯。} 條件是 \texttt{<=}，碰到相等的數也會繼續往前搬，相等的數順序被顛倒。 例：
+$\langle 5_a, 5_b\rangle$，$k = 1$ 時 $\mathit{TEMP} = 5_b \le 5_a$，$5_a$ 往後搬，得
+$\langle 5_b, 5_a\rangle$。 標準的插入排序用 \texttt{<}，才是穩定的。
+\item (E) 錯，(B)(C) 對。
+\end{itemize}
+
+\textbf{(2) Method 2：選擇排序。} 第 $k$ 輪在 \texttt{ARR[k..N-1]} 找最小值的位置
+\texttt{TEMP\_b}，再和 \texttt{ARR[k]} 交換。 範圍都正確，能排序。
+\begin{itemize}
+\item \textbf{(A)(B)(C) 對。} 不管輸入如何，內層迴圈都跑滿：比較次數
+$\sum_{k=0}^{N-1} (N - 1 - k) = N(N - 1)/2$，最好、平均、最壞都是 $\Theta(N^2)$，當然也是 $O(N^2)$。
+\item \textbf{(D) 錯。} 條件 \texttt{>=} 讓它找到的是\textbf{最後一個}最小值；而且交換會把
+\texttt{ARR[k]} 丟到後面去。 例：$\langle 5_a, 5_b\rangle$，$k = 0$ 時 $5_a \ge 5_b$，
+$\mathit{TEMP\_b} = 1$，交換得 $\langle 5_b, 5_a\rangle$。 （即使改成 \texttt{>}，選擇排序的長距離交換也不
+穩定，例如 $\langle 5_a, 5_b, 3\rangle$。）
+\item (E) 錯。
+\end{itemize}
+
+\textbf{(3) Method 3：氣泡排序。} 下標從 $0$ 到 $N - 1$，但內層迴圈 $j$ 從 $0$ 跑到 $N - k$，比較
+\texttt{ARR[j]} 和 \texttt{ARR[j+1]}：$k = 0$ 時 $j$ 到 $N$，用到 \texttt{ARR[N]}、\texttt{ARR[N+1]}；
+$k = 1$ 時 $j$ 到 $N - 1$，用到 \texttt{ARR[N]}。 這兩格在陣列外面。
+\begin{itemize}
+\item \textbf{(A) 對。} 第一趟把最大值一路換到 \texttt{ARR[N-1]}；接著 $j = N - 1$ 比
+\texttt{ARR[N-1] >= ARR[N]}，陣列外那一格的值只要不比最大值大，就會被換進陣列，最大值被換到陣列
+外。 結果陣列裡少了原本的數、多了一個不知道是什麼的值，所以照寫出來的程式不能正確排序。 正確的
+範圍是 \texttt{j=0 to N-k-2}。
+\item \textbf{(B) 對。} 沒有「一趟沒交換就提早結束」的機制，不管輸入如何兩層迴圈都跑滿，最好情況
+也是 $\Theta(N^2)$（把範圍改對以後也一樣）。
+\item \textbf{(C) 錯。} 平均也是 $\Theta(N^2)$，不是 $O(N)$。
+\item \textbf{(D) 錯。} 條件是 \texttt{>=}，相等的相鄰兩數也交換：$\langle 5_a, 5_b\rangle$ 會變成
+$\langle 5_b, 5_a\rangle$，不穩定（即使範圍改對也一樣）。
+\item (E) 錯。
+\end{itemize}
+
+如果把第 (3) 小題的迴圈範圍當成筆誤、只看演算法本身，答案是 (B)。 本書照題目強調的「下標從 $0$
+開始」逐字檢查，選 (A)、(B)。
+\end{pastsoln}

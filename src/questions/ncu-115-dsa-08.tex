@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncu-115-dsa-08}]{中央資工所 115 學年度 第 8 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Consider the single-source or all-pairs shortest path problem on a given graph, where edge weights may be positive, zero, or negative. Select one or more correct statements.
+\begin{enumerate}[label=\Alph*.]
+\item Dijkstra's shortest path algorithm may fail when negative-weight edges exist.
+\item Bellman--Ford algorithm can detect the existence of negative-weight cycles.
+\item If a graph contains a negative-weight cycle reachable from the source, then the shortest path to some nodes is not well-defined.
+\item Floyd--Warshall algorithm can be used to detect negative-weight cycles.
+\item The all-pairs shortest path problem can be solved in the O($V\times E$) time complexity, where $V$ is the number of nodes and $E$ is the number of edges.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、C、D。
+
+\textbf{A 對}。 Dijkstra 演算法每次取出 $d$ 最小的頂點，就認定它的距離已經確定；有負邊時，之後才
+取出的頂點可能經由負邊把它改得更小，但從它出發的邊已經放鬆過了，改不回來（資結書第~25.2.5~節）。
+例子：邊 $s \to a$（$1$）、$a \to c$（$1$）、$s \to b$（$3$）、$b \to a$（$-3$）。 依序取出 $s$（$0$）、
+$a$（$1$，放鬆得 $d[c] = 2$）、$c$（$2$）、$b$（$3$，放鬆 $b \to a$ 把 $d[a]$ 改成 $0$）。 結束時
+$d[c] = 2$，但 $s \to b \to a \to c$ 的長度是 $3 - 3 + 1 = 1$，$c$ 算錯了。
+
+\textbf{B 對}。 Bellman--Ford 做完 $|V| - 1$ 輪放鬆後，再檢查每一條邊一次：還有邊能放鬆，就表示從
+起點走得到一個負環，演算法回報 \textsc{false}（資結書第~25.3.4~節）。
+
+\textbf{C 對}。 從起點走得到負環時，環上的頂點（以及從環走得到的頂點）可以繞環任意多圈，路徑長度
+沒有下限，最短距離是 $-\infty$，沒有「最短路徑」。 至少環上的那些頂點是這樣，所以「some nodes」
+成立。
+
+\textbf{D 對}。 Floyd--Warshall 做完後，若某個 $d_{ii} < 0$，就表示 $i$ 在一個負環上；反過來，有負環
+時環上任一頂點 $i$ 都會得到 $d_{ii} < 0$（資結書第~25.6~節）。 所以檢查對角線就能偵測負環。
+
+\textbf{E 錯}。 一般的帶權圖（可以有負邊）目前已知的全點對演算法是：Floyd--Warshall $\Theta(V^3)$，
+每個頂點跑一次 Bellman--Ford $O(V^2 E)$，Johnson 演算法 $O(VE + V^2 \lg V)$（資結書第~25.7~節）。
+都不是一般情形的 $O(VE)$；例如 $E = \Theta(V)$ 的稀疏圖，$O(VE) = O(V^2)$，Johnson 仍然是
+$O(V^2 \lg V)$。 只有特殊情形做得到 $O(VE)$：無權圖從每個頂點做 BFS，或 $E = \Omega(V \lg V)$ 時的
+Johnson。 另外有負環時根本沒有答案。 所以這句話一般來說不成立。
+\end{pastsoln}

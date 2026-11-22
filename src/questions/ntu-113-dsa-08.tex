@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntu-113-dsa-08}]{臺大資工所 113 學年度 第 8 題}
+（複選；每個選項單獨計分）
+
+(5 points) We define the height of a tree to be the maximum number of edges from the root to a leaf.
+We also define the level of a node $v$, denoted as $l(v)$ to be the height of the subtree rooted at
+$v$. Which of the following descriptions is correct?
+\begin{enumerate}[label=\Alph*.]
+\item If $v$ is a leaf, then $l(v)=1$.
+\item If $v$ is an internal node, $l(v)=\max_{s\in S}l(s)$, where $S$ is the set of children of $v$.
+\item We can compute $l(v)$ by starting a breadth-first-search (BFS) from $v$, traversing all nodes
+of the subtree rooted at $v$, and computing the maximum distance to a leaf as $l(v)$. Since there are
+no more than $n$ $v$'s and each BFS takes $O(n)$ time, the total time complexity is $O(n^2)$
+\item We can compute the levels for all nodes by a depth-first-search (DFS) starting from the root
+of $T$. That is, we can compute the level of an internal node $v$ after we compute the $l$ values of
+all children of $v$.
+\item Since there are $n$ tree nodes to visit, the DFS from the root takes $O(n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：C、D、E。
+
+題目的高度以\textbf{邊數}計，只有一個節點的樹高度是 $0$；資結書以節點數計（資結書第~7.1~節），
+兩者差 $1$，這題要照題目的定義。 $T$ 是有 $n$ 個節點的樹。
+\begin{itemize}
+\item A 錯。 葉節點的子樹只有它自己，從根到葉節點的邊數是 $0$，$l(v) = 0$。
+\item B 錯。 少了往下走到子節點的那一條邊，正確的是 $l(v) = 1 + \max_{s \in S} l(s)$。 例如根只有一個
+子節點、子節點是葉節點：$l(\text{根}) = 1$，但 $\max_{s} l(s) = 0$。
+\item C 對。 從 $v$ 往下做 BFS（只走向子節點），每個節點的 BFS 距離就是它到 $v$ 的邊數；子樹裡離 $v$
+最遠的一定是葉節點（不是葉節點的話還能再往下走），所以最大距離就是 $l(v)$。 一次 BFS 走過 $v$ 的
+子樹，不超過 $n$ 個節點、$n - 1$ 條邊，$O(n)$；對 $n$ 個節點各做一次，$O(n^2)$。 這個上界成立（只是
+不夠好，見 D、E）。
+\item D 對。 DFS 從根出發，一個節點的所有子節點都處理完才回到它，這時用 B 的正確公式
+$l(v) = 1 + \max_{s} l(s)$ 算出 $l(v)$，也就是後序走訪（資結書第~7.3~節）。 葉節點直接設 $0$。
+\item E 對。 每個節點進出一次，每條邊（共 $n - 1$ 條）走下去、走回來各一次，每個節點算 $l(v)$ 的
+時間和它的子節點個數成正比，總共 $O(n)$。
+\end{itemize}
+\end{pastsoln}

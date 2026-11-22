@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ccu-113-swa-06}]{中正資工所甲組 113 學年度 第 6 題}
+（單選）
+
+(3\%) Given the following failure function in the KMP matching algorithm and a string "AAABAAAABAAA" with 12 characters, what are the values of the failure function for the entire string?
+\[
+f(j)=\begin{cases}\text{largest } k<j, \text{ such that } p_0p_1\ldots p_k=p_{j-k}p_{j-k+1}\ldots p_j, & \text{if such a } k\ge 0 \text{ exists}\\ -1, & \text{otherwise}\end{cases}
+\]
+\begin{enumerate}[label=\Alph*.]
+\item -1, 0, 1, -1, 0, 1, 2, 0, -1, 0, 1, 2
+\item -1, 0, 1, 0, 1, 2, 2, 2, 3, 4, 5, 6
+\item -1, 0, 1, -1, 0, 1, 2, 2, 3, 4, 5, 6
+\item -1, -1, 0, -1, -1, 0, 1, 2, 3, 4, 5, 6
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+題目的 $f(j)$ 是資結書第~27.3~節的失敗函數（從 $0$ 編號，值是「$p_0..p_j$ 的最長真前綴兼後綴」的最後一個位置，沒有
+就是 $-1$）。 字串 $p = \texttt{AAABAAAABAAA}$，位置 $0$--$11$。 用資結書虛擬碼~27.3 的遞推：算 $f(j)$ 時令
+$i = f(j - 1)$，若 $p_j = p_{i+1}$ 就得 $f(j) = i + 1$；不相等就退到 $i \gets f(i)$ 再比，退到 $i = -1$ 還不相等就是 $-1$。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$j$ & $p_j$ & $f(j)$ & 說明 \\
+\midrule
+0 & A & $-1$ & 定義 \\
+1 & A & 0 & $p_1 = p_0$ \\
+2 & A & 1 & $p_2 = p_1$ \\
+3 & B & $-1$ & $p_3 \ne p_2$；退到 $f(1) = 0$，$p_3 \ne p_1$；退到 $f(0) = -1$，$p_3 \ne p_0$ \\
+4 & A & 0 & $i = -1$，$p_4 = p_0$ \\
+5 & A & 1 & $p_5 = p_1$ \\
+6 & A & 2 & $p_6 = p_2$ \\
+7 & A & 2 & $p_7 = \texttt{A} \ne p_3 = \texttt{B}$；退到 $i = f(2) = 1$，$p_7 = p_2$，得 $2$ \\
+8 & B & 3 & $p_8 = p_3$ \\
+9 & A & 4 & $p_9 = p_4$ \\
+10 & A & 5 & $p_{10} = p_5$ \\
+11 & A & 6 & $p_{11} = p_6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+答案是 $-1, 0, 1, -1, 0, 1, 2, 2, 3, 4, 5, 6$，就是 C。 直接用定義驗兩格：$p_0..p_7 = \texttt{AAABAAAA}$，最長的真前綴兼後綴是
+\texttt{AAA}（長 $3$，最後位置 $k = 2$）；$p_0..p_{11}$ 的最長真前綴兼後綴是 \texttt{AAABAAA}（長 $7$，$k = 6$）。
+
+逐項檢查：
+\begin{itemize}
+\item A：$f(7) = 0$ 漏了 \texttt{AAA}；$f(8) = -1$ 也錯，\texttt{AAAB} 是 $p_0..p_8$ 的後綴。 錯。
+\item B：$f(3) = 0$，但 $p_0..p_3 = \texttt{AAAB}$ 以 \texttt{B} 結尾，開頭沒有 \texttt{B}，沒有真前綴兼後綴。 錯。
+\item C：上表的結果。 對。
+\item D：$f(1) = -1$，但 $p_0 = p_1$，$k = 0$ 成立。 錯。
+\item E：C 是對的。 錯。
+\end{itemize}
+\end{pastsoln}

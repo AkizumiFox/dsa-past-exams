@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ntu-112-dsa-09}]{臺大資工所 112 學年度 第 9 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{DFS advantages:} To find a feasible solution to the eight-queen problem, what is/are the
+reason(s) that we prefer to use DFS (depth-first search) instead of BFS (breadth-first search)?
+\begin{enumerate}[label=(\Alph*)]
+\item DFS is more memory efficient.
+\item DFS can be implemented using a stack.
+\item DFS usually reaches the terminal states of "good" or "bad" faster.
+\item DFS is conceptually simpler than BFS.
+\item BFS cannot be implemented using a stack.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案是 (A)、(C)。 題目問的是「偏好 DFS 的理由」，所以一個選項要算對，必須是正確的敘述，
+而且真的是 DFS 在八皇后上勝過 BFS 的原因。
+
+先用數字看兩種走法的差別。 狀態空間樹用資結書第~20.1.2~節的排列樹（每一列放一個皇后，欄不重複），
+對角線衝突的節點一產生就剪掉；節點照產生的順序數，根算第 $1$ 個，被剪掉的也算。 八皇后的答案
+全部在第 $8$ 層（放完 $8$ 個皇后）。 各層通過檢查的節點數：
+\begin{center}
+\begin{tabular}{l*{8}{r}}
+\toprule
+層 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+通過檢查的節點 & 8 & 42 & 140 & 344 & 568 & 550 & 312 & 92 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item DFS（回溯，資結書範例~20.1）：第一組解是第 $337$ 個產生的節點。 任何時刻只需要記住從根到
+目前節點的一條路徑，最多 $8$ 層。
+\item BFS（FIFO，同樣的剪枝）：第 $8$ 層的節點要等第 $1$ 到 $6$ 層的節點全部展開、第 $7$ 層也開始
+展開之後才會出現。 第一組解是第 $5209$ 個產生的節點，佇列裡同時存放的活節點最多 $573$ 個。
+\end{itemize}
+
+逐項看：
+\begin{itemize}
+\item \textbf{(A) 對。} DFS 只存一條路徑（深度 $8$ 的遞迴，加上欄和對角線的記號陣列）；BFS 要把
+整層的活節點放在佇列裡，上面算出最多 $573$ 個。 一般來說，深度 $d$、每個節點最多 $b$ 個子節點的
+樹，DFS 要 $O(d)$ 個節點的空間，BFS 最壞要 $O(b^d)$ 個。
+\item \textbf{(B) 錯。} 敘述本身是對的（遞迴就是用堆疊實作，資結書第~6.4~節），但不是偏好 DFS 的
+理由：BFS 也一樣能用佇列實作，用哪一種容器本身沒有好壞。
+\item \textbf{(C) 對。} 八皇后的解都在第 $8$ 層，DFS 一路往下走，很快就碰到「放滿 $8$ 個」或「這條
+路走不下去」的節點，找到第一組解只產生 $337$ 個節點；BFS 要先把淺層全部走完，產生 $5209$ 個節點
+才碰到第一組解。
+\item \textbf{(D) 錯。} 「概念比較簡單」是主觀的說法，兩者一樣簡單，不是選 DFS 的理由。
+\item \textbf{(E) 錯。} BFS 需要先進先出的佇列，而佇列可以用兩個堆疊做出來：放入時推進第一個
+堆疊；取出時，如果第二個堆疊是空的，先把第一個堆疊的元素全部彈出、依序推進第二個堆疊，再從
+第二個堆疊彈出。 所以 BFS 也能用堆疊實作；何況這也不是偏好 DFS 的理由。
+\end{itemize}
+\end{pastsoln}

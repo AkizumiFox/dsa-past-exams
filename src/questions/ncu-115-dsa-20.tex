@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-115-dsa-20}]{中央資工所 115 學年度 第 20 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Consider structurally unique binary trees with n nodes. For example, when n= 3, there are 5 structurally unique binary trees.
+\begin{center}
+\begin{tikzpicture}[n/.style={circle,draw,thick,minimum size=4mm,inner sep=0pt},>=Stealth,x=1cm,y=1cm]
+\node[n] (a1) at (0.50,0) {}; \node[n] (a2) at (0,-0.67) {}; \node[n] (a3) at (1.08,-0.67) {};
+\draw[->,thick] (a1)--(a2); \draw[->,thick] (a1)--(a3);
+\node[n] (b1) at (3.24,0) {}; \node[n] (b2) at (2.74,-0.67) {}; \node[n] (b3) at (2.35,-1.35) {};
+\draw[->,thick] (b1)--(b2); \draw[->,thick] (b2)--(b3);
+\node[n] (c1) at (4.85,0) {}; \node[n] (c2) at (4.35,-0.67) {}; \node[n] (c3) at (4.81,-1.35) {};
+\draw[->,thick] (c1)--(c2); \draw[->,thick] (c2)--(c3);
+\node[n] (d1) at (6.17,0) {}; \node[n] (d2) at (6.74,-0.67) {}; \node[n] (d3) at (6.21,-1.35) {};
+\draw[->,thick] (d1)--(d2); \draw[->,thick] (d2)--(d3);
+\node[n] (e1) at (8.09,0) {}; \node[n] (e2) at (8.56,-0.67) {}; \node[n] (e3) at (8.96,-1.35) {};
+\draw[->,thick] (e1)--(e2); \draw[->,thick] (e2)--(e3);
+\end{tikzpicture}
+\end{center}
+Which of the following statements is (are) true?
+\begin{enumerate}[label=\Alph*.]
+\item The space complexity of determining structurally unique n-node binary trees is O(n).
+\item The time complexity of determining structurally unique n-node binary trees is O(n$^2$).
+\item There are 429 structurally unique binary trees when n=7.
+\item There are 4862 structurally unique binary trees when n=9.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、C、D（全部都對）。
+
+A、B 的「determining」讀成「求出 $n$ 個節點的不同形二元樹有幾種」（不是把每一棵都列出來；列出來的話
+光輸出就有 $b_n$ 棵，是指數量級）。 複雜度照一般的假設，每個數字的加法、乘法算 $O(1)$。
+
+設 $b_n$ 是 $n$ 個節點的不同形二元樹個數（資結書第~7.6~節）。 根占掉一個節點，左子樹有 $i$ 個、右子樹
+有 $n - 1 - i$ 個，左右各自任選：
+\[
+b_0 = 1,\qquad b_n = \sum_{i=0}^{n-1} b_i\, b_{n-1-i}\quad (n \ge 1).
+\]
+解是卡塔蘭數 $b_n = \frac{1}{n+1}\binom{2n}{n}$（資結書定理~7.6）。 由遞迴式依序填表：
+\begin{center}
+\small
+\begin{tabular}{c|cccccccccc}
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+$b_n$ & 1 & 1 & 2 & 5 & 14 & 42 & 132 & 429 & 1430 & 4862 \\
+\end{tabular}
+\end{center}
+例如 $b_4 = b_0b_3 + b_1b_2 + b_2b_1 + b_3b_0 = 5 + 2 + 2 + 5 = 14$，
+$b_7 = 2(b_0b_6 + b_1b_5 + b_2b_4) + b_3^2 = 2(132 + 42 + 28) + 25 = 429$，
+$b_9 = 2(b_0b_8 + b_1b_7 + b_2b_6 + b_3b_5) + b_4^2 = 2(1430 + 429 + 264 + 210) + 196 = 4862$。
+也可以用公式驗：$b_7 = \frac{1}{8}\binom{14}{7} = \frac{3432}{8} = 429$，
+$b_9 = \frac{1}{10}\binom{18}{9} = \frac{48620}{10} = 4862$。
+
+\textbf{A 對}。 動態規劃只要存 $b_0, \ldots, b_n$，$O(n)$ 空間（用公式逐項乘除，甚至 $O(1)$ 就夠；
+$O(n)$ 是正確的上界）。
+
+\textbf{B 對}。 $b_k$ 要做 $k$ 次乘法，總共 $\sum_{k=1}^{n} k = O(n^2)$ 時間。
+
+\textbf{C 對}。 $b_7 = 429$。
+
+\textbf{D 對}。 $b_9 = 4862$。
+\end{pastsoln}

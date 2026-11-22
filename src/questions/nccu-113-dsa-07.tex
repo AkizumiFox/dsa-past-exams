@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nccu-113-dsa-07}]{政大資科所 113 學年度 第 7 題}
+（單選；不必說明理由）
+
+(4\%) Compare hash tables and balanced binary search trees.
+
+Which of the following operations is faster on a balanced binary search tree?
+\begin{enumerate}[label=\Alph*.]
+\item Insert a data.
+\item Search a given data.
+\item Range query.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。 比較的是一般的情況：雜湊表的插入、搜尋期望 $O(1)$（資結書第~12.2~節），平衡二元搜尋樹是
+$\Theta(\log n)$（資結書第~10.5~節）。
+
+\begin{itemize}
+\item[A.] 插入：雜湊表算出位置直接放，期望 $O(1)$；平衡樹要從根走到葉子再調整，$\Theta(\log n)$。 雜湊表比較快。
+\item[B.] 搜尋一個給定的鍵：同上，雜湊表期望 $O(1)$ 比較快。
+\item[C.] 區間查詢（找出所有落在 $[a, b]$ 裡的鍵）：雜湊函數故意把鍵打散，相鄰的鍵在表裡沒有任何關係，只能把
+整張表掃一遍，$\Theta(n + m)$（$m$ 是格數）。 平衡樹先花 $O(\log n)$ 找到 $\ge a$ 的第一個鍵，再依中序往後走到
+超過 $b$ 為止，共 $O(\log n + k)$，$k$ 是答案的個數。 平衡樹快得多。
+\item[D.] C 成立，所以錯。
+\end{itemize}
+同樣的道理，找最小值、找後繼、依序輸出這些「和順序有關」的操作，都是平衡樹的強項。
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nchu-113-dsa-23}]{中興資工所甲組 113 學年度 申論題 PART 1 第 5 題}
+（問答）
+
+(4\%) Given a system of linear congruence shown below, the solution is $\mathrm{x}=\mathrm{a}t+\mathrm{b}$,
+where $t$ is an integer ($t\in\mathbb{Z}$). Report the value of a+b.
+\[
+\begin{cases}
+\mathrm{x}\equiv 4\ (\mathrm{mod})\ 9\\
+\mathrm{x}\equiv 7\ (\mathrm{mod})\ 15
+\end{cases}
+\]
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $a + b = 67$（$x = 45t + 22$）。
+
+題目要的形式 $x = at + b$ 不唯一（例如也可以寫 $x = 45t + 67$），照慣例取 $a$ 為正的最小週期、$0 \le b < a$。
+
+\textbf{有沒有解。} 兩個模數 $9$、$15$ 不互質，$\gcd(9, 15) = 3$。 兩個同餘式要相容，必須在模 $3$ 下一致：
+$4 \equiv 1$、$7 \equiv 1 \pmod 3$，一致，所以有解，而且解是模 $\operatorname{lcm}(9, 15) = 45$ 唯一。
+
+\textbf{代入求解。} 由第一式 $x = 4 + 9k$。 代入第二式：
+\[
+4 + 9k \equiv 7 \pmod{15} \;\Longrightarrow\; 9k \equiv 3 \pmod{15}.
+\]
+兩邊和模數同除以 $3$：$3k \equiv 1 \pmod 5$。 $3 \times 2 = 6 \equiv 1$，所以 $k \equiv 2 \pmod 5$，
+$k = 2 + 5t$。 代回去：
+\[
+x = 4 + 9(2 + 5t) = 22 + 45t.
+\]
+\textbf{驗算。} $22 = 2 \times 9 + 4$，$22 = 15 + 7$，兩式都成立。 所以 $a = 45$、$b = 22$，$a + b = 67$。
+\end{pastsoln}

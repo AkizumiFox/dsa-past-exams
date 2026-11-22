@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:df3-096-ds-01}]{地方三等資訊處理 96 年 第一題}
+（申論；20 分）
+
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 試寫出 bucket sort 的演算法，並說明在何種狀況下此排序法的平均時間複雜度（average
+time complexity）為線性時間（linear time）。（10 分）
+\item[㈡] 試寫出 counting sort 的演算法，並說明在何種狀況下此排序法的時間複雜度（time
+complexity）為線性時間。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+兩種排序都不靠「兩兩比較」決定先後，所以不受比較排序 $\Omega(n \lg n)$ 下界的限制（資結書
+第~15.1~節）；代價是要對輸入的鍵多做一點假設。 下面的寫法照資結書第~15.2~節。
+
+\textbf{㈠ 桶子排序（bucket sort）。} 假設 $n$ 個數 $A[1..n]$ 都在 $[0, 1)$ 之間。 把
+$[0, 1)$ 切成 $n$ 個等寬的區間，第 $j$ 個桶子收 $[j/n, (j+1)/n)$ 的數，各桶子自己排好，
+再依桶子順序串起來。
+\begin{pseudo}{桶子排序}
+\Procedure{Bucket-Sort}{$A, n$}
+    \State 建立 $n$ 個空串列 $Q[0..n-1]$
+    \For{$i \gets 1$ \To $n$}
+        \State 把 $A[i]$ 接到串列 $Q[\lfloor n \cdot A[i] \rfloor]$ 的尾端
+    \EndFor
+    \For{$j \gets 0$ \To $n - 1$}
+        \State 用插入排序排串列 $Q[j]$
+    \EndFor
+    \State 依序把 $Q[0], Q[1], \ldots, Q[n-1]$ 串起來，寫回 $A$
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}：桶子 $j$ 裡的數都 $< (j+1)/n \le$ 桶子 $j+1$ 裡的數，所以不同桶子之間的
+先後由桶子編號決定；同一個桶子裡的先後由插入排序排好。 串起來就是排好的順序。
+
+\textbf{時間}：第 2--4 行和第 7 行都是 $\Theta(n)$。 第 6 行對每個桶子做插入排序。 設桶子 $j$ 最後有 $n_j$ 個數，插入
+排序要 $O(n_j^2)$，總時間
+\[
+T(n) = \Theta(n) + \sum_{j=0}^{n-1} O(n_j^2).
+\]
+\textbf{什麼時候平均是線性}：輸入的 $n$ 個數彼此獨立、在 $[0, 1)$ 上\textbf{均勻分布}時。
+這時每個數落在桶子 $j$ 的機率都是 $1/n$，$n_j$ 是二項分布 $B(n, 1/n)$：
+\[
+E[n_j^2] = \mathrm{Var}(n_j) + (E[n_j])^2 = n \cdot \frac{1}{n}\Bigl(1 - \frac{1}{n}\Bigr) + 1^2
+= 2 - \frac{1}{n},
+\]
+所以 $E[T(n)] = \Theta(n) + n \cdot O(2 - 1/n) = \Theta(n)$。 更一般地說，只要資料分得夠
+平均，使 $\sum_j E[n_j^2] = O(n)$，平均時間就是線性。 反過來，資料都擠在同一個桶子時
+（例如全部落在 $[0, 1/n)$），就退化成一次插入排序，最壞 $\Theta(n^2)$。 資料不在
+$[0, 1)$ 時，先用已知的最小值 $a$、最大值 $b$ 換算成 $(x - a)/(b - a + \varepsilon)$ 再分桶，
+道理一樣。
+
+\textbf{㈡ 計數排序（counting sort）。} 假設每個鍵是 $0$ 到 $k$ 之間的整數。 先數每個鍵值
+出現幾次，做前綴和得到「鍵 $\le v$ 的有幾筆」，就知道每筆資料在輸出裡的位置。 輸出放在
+另一個陣列 $B[1..n]$。
+\begin{pseudo}{計數排序（穩定）}
+\Procedure{Counting-Sort}{$A, B, n, k$}
+    \State 建立陣列 $C[0..k]$，每一格都設成 $0$
+    \For{$j \gets 1$ \To $n$}
+        \State $C[A[j]] \gets C[A[j]] + 1$ \Comment{$C[v]$ = 鍵等於 $v$ 的筆數}
+    \EndFor
+    \For{$v \gets 1$ \To $k$}
+        \State $C[v] \gets C[v] + C[v - 1]$ \Comment{$C[v]$ = 鍵 $\le v$ 的筆數}
+    \EndFor
+    \For{$j \gets n$ \DownTo $1$}
+        \State $B[C[A[j]]] \gets A[j]$
+        \State $C[A[j]] \gets C[A[j]] - 1$
+    \EndFor
+\EndProcedure
+\end{pseudo}
+\textbf{正確性}：第 5--6 行做完之後 $C[v]$ 是鍵 $\le v$ 的筆數，所以鍵等於 $v$ 的資料在輸出中應該
+佔第 $C[v-1]+1$ 到 $C[v]$ 格。 第 7--9 行由後往前放，鍵等於 $v$ 的資料從第 $C[v]$ 格往前
+填，原本在後面的放在後面，排序是穩定的（基數排序需要這個性質）。 例如 $A = \langle 2, 0, 2,
+1 \rangle$、$k = 2$：數完 $C = [1, 1, 2]$，前綴和 $C = [1, 2, 4]$，由後往前放 $1 \to B[2]$、
+$2 \to B[4]$、$0 \to B[1]$、$2 \to B[3]$，得 $B = \langle 0, 1, 2, 2 \rangle$。
+
+\textbf{時間}：第 2 行 $\Theta(k)$，第 3--4 行 $\Theta(n)$，第 5--6 行 $\Theta(k)$，第 7--9
+行 $\Theta(n)$，合計 $\Theta(n + k)$，最好、最壞都一樣。 \textbf{什麼時候是線性}：鍵是整數，
+而且範圍 $k = O(n)$ 時，$\Theta(n + k) = \Theta(n)$。 範圍很大時不划算，例如 $n = 1000$
+筆、鍵到 $10^9$，光是第 2 行就要 $10^9$ 步；這種情況改用基數排序，每一位用計數排序
+（資結書第~15.2.2~節）。
+\end{pastsoln}

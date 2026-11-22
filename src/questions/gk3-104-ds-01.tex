@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:gk3-104-ds-01}]{高考三級資訊處理 104 年 第一題}
+（申論；20 分）
+
+有位程式設計師在撰寫程式時遇到了一個難解的問題，後來發現有兩個演算法可以解這個難題：演算法 A 的時間複雜度為 $O(n^2\log(n!))$，演算法 B 的時間複雜度為 $O(n^2((\log n)!))$。假設輸入資料的個數 $n$ 通常都很大，他應該選擇那個演算法比較好，原因何在？（20 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：選演算法 A。 兩者都有 $n^2$ 這個因子，只要比較 $\log(n!)$ 和 $(\log n)!$：前者是
+$\Theta(n \log n)$，後者比任何多項式都長得快。 下面 $\log$ 都取以 $2$ 為底（換底只差常數倍，不影響
+$\log(n!)$ 的階；$(\log n)!$ 裡的 $\log n$ 不是整數時，理解成 $\Gamma(\log n + 1)$ 或取整數部分，
+不影響結論）。 漸近符號見資結書第~1.5~節，常見函數的比較見第~1.6~節。
+
+\textbf{A：$\log(n!) = \Theta(n \log n)$}。 上界：$n! \le n^n$，所以 $\log(n!) \le n \log n$。 下界：
+$n!$ 的後一半因子 $\lceil n/2 \rceil, \ldots, n$ 至少有 $n/2$ 個、每個都 $\ge n/2$，所以
+$n! \ge (n/2)^{n/2}$，$\log(n!) \ge \frac{n}{2}\log\frac{n}{2} = \Omega(n \log n)$。 因此 A 的時間是
+$O(n^2 \cdot n \log n) = O(n^3 \log n)$，是多項式等級（比 $n^4$ 小）。
+
+\textbf{B：$(\log n)!$ 比任何 $n^c$ 都大}。 令 $k = \log n$，即 $n = 2^k$。 同樣用「後一半因子」：
+\[
+k! \ge \left(\frac{k}{2}\right)^{k/2} = 2^{\frac{k}{2}\log\frac{k}{2}} = \left(2^{k}\right)^{\frac12\log\frac{k}{2}} = n^{\frac12 \log\frac{\log n}{2}}.
+\]
+指數 $\frac12 \log\frac{\log n}{2}$ 隨 $n$ 無限增大，所以對任何常數 $c$，$n$ 夠大以後 $(\log n)! \ge n^{c}$；
+也就是 $(\log n)! = n^{\Theta(\log\log n)}$，是\textbf{超多項式}（superpolynomial）函數。 特別取 $c = 2$：
+$n$ 夠大時 $(\log n)! \ge n^2 > n \log n$，所以
+\[
+\lim_{n \to \infty} \frac{n^2 \log(n!)}{n^2 (\log n)!} = \lim_{n \to \infty} \frac{\Theta(n \log n)}{(\log n)!} = 0,
+\]
+$n^2 \log(n!) = o\bigl(n^2 (\log n)!\bigr)$。
+
+\textbf{結論}。 A 的上界是 $O(n^3 \log n)$，B 的上界是 $n^{2 + \Theta(\log \log n)}$，$n$ 很大時 A 快得多，
+選 A。 實際比一下（以 $\log_2$ 計）：$n = 2^5 = 32$ 時 $\log(n!) \approx 117.7$、$(\log n)! = 5! = 120$，
+兩者差不多；$n = 2^{10} = 1024$ 時 $\log(n!) \approx 8769$，而 $10! = 3628800$，差了四百多倍，之後
+差距越拉越大。 （嚴格說，題目給的是 $O$ 上界，比較上界只能說「A 保證的時間比 B 保證的好」；國家
+考試這類題目都把 $O$ 當成實際的成長率來比，答案寫 A 即可，必要時加一句這個說明。）
+\end{pastsoln}

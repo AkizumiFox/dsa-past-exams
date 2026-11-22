@@ -1,0 +1,98 @@
+\begin{pastexam}[label={px:df3-101-ds-03}]{地方三等資訊處理 101 年 第三題}
+（申論；20 分）
+
+關於抽象資料型態（abstract data type）堆疊（stack）的實作，可以選擇用一維陣列（1D array）或鏈結串列
+（linked list）來做。堆疊提供下列運算功能:\\
+(a)Stack（stackname）-- 建造一個空的堆疊；\\
+(b)Push（stackname, data）-- 將資料（data）置入指定的堆疊之最頂端；\\
+(c)pop（stackname, data）-- 將指定的堆疊之最頂端資料刪除，並由參數 data 承接；\\
+(d)empty（stackname）-- 檢視指定的堆疊是否為空堆疊。
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請寫出如何用一維陣列來實作（implement）堆疊，並提供上述四種運算功能。（8 分）
+\item[㈡] 請寫出如何用鏈結串列來實作堆疊，並提供上述四種運算功能。（8 分）
+\item[㈢] 檢視用一維陣列或鏈結串列實作堆疊的優缺點。（4 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+資結書第~6.1~節有兩種實作（虛擬碼~6.1、6.2），這裡照題目的四個運算改寫。 \proc{Pop} 的參數
+$\mathit{data}$ 用傳參考（call by reference）的方式把頂端的值帶回去；堆疊空時回報 underflow。
+
+\textbf{㈠ 一維陣列}。 用陣列 $S.\mathit{item}[1..\mathit{MAX}]$ 存資料，$S.\mathit{top}$ 記頂端元素的位置；
+$\mathit{top} = 0$ 表示空堆疊。 堆疊底部固定在 $\mathit{item}[1]$，資料從下往上放。
+\begin{pseudo}{用一維陣列實作堆疊}
+\Procedure{Stack}{$S$}
+    \State $S.\mathit{top} \gets 0$ \Comment{陣列 $S.\mathit{item}[1..\mathit{MAX}]$ 事先配置好}
+\EndProcedure
+\Statex
+\Function{Empty}{$S$}
+    \State \Return $S.\mathit{top} = 0$
+\EndFunction
+\Statex
+\Procedure{Push}{$S, \mathit{data}$}
+    \If{$S.\mathit{top} = \mathit{MAX}$}
+        \State \Error{stack full}
+    \EndIf
+    \State $S.\mathit{top} \gets S.\mathit{top} + 1$
+    \State $S.\mathit{item}[S.\mathit{top}] \gets \mathit{data}$
+\EndProcedure
+\Statex
+\Procedure{Pop}{$S, \mathit{data}$} \Comment{$\mathit{data}$ 傳參考}
+    \If{\Call{Empty}{$S$}}
+        \State \Error{stack empty}
+    \EndIf
+    \State $\mathit{data} \gets S.\mathit{item}[S.\mathit{top}]$
+    \State $S.\mathit{top} \gets S.\mathit{top} - 1$
+\EndProcedure
+\end{pseudo}
+四個運算都只做固定幾步，都是 $O(1)$。 \proc{Pop} 只把 $\mathit{top}$ 減一，舊值留在陣列裡但已不屬於堆疊。
+
+\textbf{㈡ 鏈結串列}。 每個節點有 $\mathit{data}$ 和 $\mathit{next}$ 兩個欄位；$S.\mathit{top}$ 指向串列的
+第一個節點，就是堆疊頂端。 推入、彈出都在串列的頭做，不必走訪串列。
+\begin{pseudo}{用鏈結串列實作堆疊}
+\Procedure{Stack}{$S$}
+    \State $S.\mathit{top} \gets \NIL$
+\EndProcedure
+\Statex
+\Function{Empty}{$S$}
+    \State \Return $S.\mathit{top} = \NIL$
+\EndFunction
+\Statex
+\Procedure{Push}{$S, \mathit{data}$}
+    \State $p \gets$ 配置一個新節點 \Comment{配置失敗表示記憶體用完}
+    \State $p.\mathit{data} \gets \mathit{data}$
+    \State $p.\mathit{next} \gets S.\mathit{top}$ \Comment{新節點接在原頂端前面}
+    \State $S.\mathit{top} \gets p$
+\EndProcedure
+\Statex
+\Procedure{Pop}{$S, \mathit{data}$} \Comment{$\mathit{data}$ 傳參考}
+    \If{\Call{Empty}{$S$}}
+        \State \Error{stack empty}
+    \EndIf
+    \State $p \gets S.\mathit{top}$
+    \State $\mathit{data} \gets p.\mathit{data}$
+    \State $S.\mathit{top} \gets p.\mathit{next}$
+    \State 釋放節點 $p$
+\EndProcedure
+\end{pseudo}
+四個運算也都是 $O(1)$。 \proc{Push} 的兩行指標順序不能反過來：先把 $S.\mathit{top}$ 改成 $p$ 的話，原來的
+串列就找不到了。
+
+\textbf{㈢ 優缺點}：
+\begin{center}
+\small
+\begin{tabular}{p{0.14\linewidth}p{0.38\linewidth}p{0.38\linewidth}}
+\toprule
+ & 一維陣列 & 鏈結串列 \\
+\midrule
+容量 & 要事先決定 $\mathit{MAX}$：估小了會滿（overflow），估大了浪費空間 & 隨用隨配置，只受記憶體總量限制 \\
+空間 & 每個元素只存資料本身；但未用到的格子也占著 & 每個節點多一個指標欄位，資料小時額外負擔比例大 \\
+速度 & 運算 $O(1)$，只改一個整數，沒有配置、釋放記憶體的成本；資料連續，快取效果好 & 運算也是 $O(1)$，但每次推入、彈出都要配置或釋放節點，常數比較大 \\
+實作 & 簡單，不容易出錯 & 要注意指標順序、釋放記憶體，否則有懸置指標或記憶體洩漏 \\
+\bottomrule
+\end{tabular}
+\end{center}
+總結：最大用量大致知道時用陣列（簡單、快）；用量變化大、事先無法估計，或要同時維護很多個堆疊時用鏈結串列
+（不會有一個堆疊滿了、別的卻空著的情形）。 陣列版也可以在滿了時把容量加倍（動態陣列），平攤後推入仍是
+$O(1)$（資結書第~3~章）。
+\end{pastsoln}

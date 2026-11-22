@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntust-113-ice-07}]{臺科大資工所 113 學年度 第 II-1 題}
+（填充）
+
+II.\quad \underline{(65\%) Fill in the following blanks.}
+
+(10\%) Consider a two-dimensional array X within a system where each element occupies two bytes. The
+starting memory address for element X(4, 2) is 1978, and the starting memory address for element
+X(2, 3) is 1986.\\
+(a) The address of X(3, 8) is \blank{A}\\
+(b) The number of rows of X is \blank{B}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) $2048$；(B) $6$。
+
+每個元素 $w = 2$ 個位元組。 設 X 有 $m$ 列、$n$ 行，下標從 $1$ 開始（下標從 $0$ 開始也一樣，下面只
+用到位址的差）。 照資結書第~4.1~節的位址公式，兩個已知位址相減消掉起始位址 $\alpha$：
+\begin{itemize}
+\item 假設列優先：$\mathrm{loc}(i, j) = \alpha + [(i - 1) n + (j - 1)] \cdot 2$。
+$\mathrm{loc}(2,3) - \mathrm{loc}(4,2) = [-2n + 1] \cdot 2 = 1986 - 1978 = 8$，得 $-2n + 1 = 4$，
+$n = -1.5$，不可能。
+\item 假設行優先：$\mathrm{loc}(i, j) = \alpha + [(j - 1) m + (i - 1)] \cdot 2$。
+$\mathrm{loc}(2,3) - \mathrm{loc}(4,2) = [m - 2] \cdot 2 = 8$，得 $m = 6$。
+\end{itemize}
+所以是行優先，有 $6$ 列，(B) 填 $6$。 代回：$1978 = \alpha + [(2 - 1) \cdot 6 + 3] \cdot 2 = \alpha + 18$，
+$\alpha = 1960$。
+\[
+\mathrm{loc}(3, 8) = 1960 + [(8 - 1) \cdot 6 + (3 - 1)] \cdot 2 = 1960 + 44 \cdot 2 = 2048 .
+\]
+驗證 X(2, 3)：$1960 + [2 \cdot 6 + 1] \cdot 2 = 1986$，相符。 (A) 填 $2048$。
+\end{pastsoln}

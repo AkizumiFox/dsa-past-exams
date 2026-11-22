@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ncku-111-prog-04}]{成大資訊聯招 111 學年度 第 4 題}
+（複選）
+
+\textbf{[4\%]} You are given a Bloom filter with the three hash functions as follows, where \textit{modf}(.) returns the fractional part of a floating point number.
+\[
+\begin{aligned}
+f_1(x) &= floor(modf(x*0.31)*16)\\
+f_2(x) &= floor(modf(x*0.24)*16)\\
+f_3(x) &= floor(modf(x*0.13)*16)
+\end{aligned}
+\]
+\begin{center}\small
+\begin{tabular}{|c|*{16}{c|}}
+\hline
+\multicolumn{17}{|c|}{Bloom Filter}\\ \hline
+Index & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\ \hline
+Value & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\ \hline
+\end{tabular}
+\end{center}
+\smallskip
+Which of the followings is (are) true?
+
+(A) 8 is not in\\
+(B) 8 may be in\\
+(C) 8 is in\\
+(D) 9 is not in\\
+(E) 9 may be in\\
+(F) 9 is in
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(E)。
+
+\textbf{布隆過濾器}（Bloom filter，資結書第~12.6~節）是一個位元陣列加上 $k$ 個雜湊函數。 插入 $x$ 時把
+$f_1(x), \ldots, f_k(x)$ 這幾格都設成 $1$；查詢 $x$ 時看這幾格：
+\begin{itemize}
+\item 只要有一格是 $0$，$x$ \textbf{一定不在}：如果插入過，那一格早就被設成 $1$，之後也不會變回 $0$
+（資結書定理~12.9，沒有偽陰性）。
+\item 全部都是 $1$，$x$ \textbf{可能在}：這幾格也可能是別的元素設的（偽陽性），所以不能說「一定在」。
+\end{itemize}
+因此布隆過濾器永遠不會回答「is in」，(C)、(F) 這種說法本身就不可能成立。
+
+\textbf{計算雜湊值}。 $\mathit{modf}$ 取小數部分，乘 $16$ 再取整數部分，得到 $0$--$15$ 的索引。
+\begin{align*}
+f_1(8) &= \lfloor \mathit{modf}(2.48) \times 16 \rfloor = \lfloor 7.68 \rfloor = 7, &
+f_1(9) &= \lfloor \mathit{modf}(2.79) \times 16 \rfloor = \lfloor 12.64 \rfloor = 12, \\
+f_2(8) &= \lfloor \mathit{modf}(1.92) \times 16 \rfloor = \lfloor 14.72 \rfloor = 14, &
+f_2(9) &= \lfloor \mathit{modf}(2.16) \times 16 \rfloor = \lfloor 2.56 \rfloor = 2, \\
+f_3(8) &= \lfloor \mathit{modf}(1.04) \times 16 \rfloor = \lfloor 0.64 \rfloor = 0, &
+f_3(9) &= \lfloor \mathit{modf}(1.17) \times 16 \rfloor = \lfloor 2.72 \rfloor = 2.
+\end{align*}
+查表：$B[7] = B[14] = B[0] = 0$；$B[12] = B[2] = 1$。
+\begin{itemize}
+\item $8$：三格都是 $0$（有一格是 $0$ 就夠了），$8$ 一定不在。 (A) 對，(B)、(C) 錯。
+\item $9$：$f_2(9) = f_3(9) = 2$，實際上只檢查第 $12$、$2$ 兩格，都是 $1$。 $9$ 可能在，但無法確定。
+(E) 對；(D) 錯（不能斷定不在）；(F) 錯（不能斷定在）。
+\end{itemize}
+\end{pastsoln}

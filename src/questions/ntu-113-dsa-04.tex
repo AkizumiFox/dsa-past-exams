@@ -1,0 +1,90 @@
+\begin{pastexam}[label={px:ntu-113-dsa-04}]{臺大資工所 113 學年度 第 4 題}
+（複選；每個選項單獨計分）
+
+(10 points) Consider a hash function $h$ that maps numerous keys into an array $A$, indexed from 0 to
+$n-1$. The concern is that excessive collisions arising from the hashed keys can potentially cause
+inefficiency within the hash table. The following pseudocode, while not complete, implements a
+function that utilizes the divide-and-conquer strategy to identify the case where strictly more than
+half of the keys share the same hash value. The function takes the hash function $h$ and the
+subarray $A$ with the index range from $\mathit{low}$ to $\mathit{high}$ as input and returns the
+majority hash value shared by over $\lfloor(\mathit{high}-\mathit{low}+1)/2\rfloor$ keys. If the keys
+stored in the subarray $A[\mathit{low}..\mathit{high}]$ do not have such a majority hash value, the
+function returns $-1$.
+\begin{center}
+\begin{tabular}{rl}
+1: & function FindMajorityHashValue($h$, $A$, $\mathit{low}$, $\mathit{high}$) \\
+2: & \quad if $\mathit{low}$ = high then return $h(A[\mathit{low}])$ end if \\
+3: & \quad $\mathit{mid}$ $\leftarrow\lfloor(\mathit{low}+\mathit{high})/2\rfloor$ \\
+4: & \quad $\mathit{leftMajority}$ $\leftarrow$ FindMajorityHashValue($h$, $A$, $\mathit{low}$, $\mathit{mid}$) \\
+5: & \quad $\mathit{rightMajority}$ $\leftarrow$ FindMajorityHashValue($h$, $A$, $\mathit{mid}+1$, $\mathit{high}$) \\
+6: & \quad $\mathit{leftCount}$ $\leftarrow$ CountElement($A$, $\mathit{low}$, $\mathit{high}$, $\mathit{leftMajority}$) \\
+7: & \quad $\mathit{rightCount}$ $\leftarrow$ CountElement($A$, $\mathit{low}$, $\mathit{high}$, $\mathit{rightMajority}$) \\
+8: & \quad \fbox{\makebox[0.55\linewidth]{\strut}} \\
+9: & end function
+\end{tabular}
+\end{center}
+In the pseudocode, CountElement($A$, $\mathit{low}$, $\mathit{high}$, $\mathit{val}$) calculates and
+returns the count of keys in the subarray $A[\mathit{low}..\mathit{high}]$ whose hashed values are
+equal to the given $\mathit{val}$. Please select the correct description(s) below.
+\begin{enumerate}[label=\Alph*.]
+\item If $\mathit{leftMajority}=\mathit{rightMajority}=-1$, $A[\mathit{low}..\mathit{high}]$ may still
+have a majority hash value.
+\item If $A[\mathit{low}..\mathit{high}]$ has a majority hash value and $\mathit{rightMajority}=-1$,
+the function should return $\mathit{leftMajority}$.
+\item If $\mathit{leftCount}=\mathit{rightCount}$, the function should return $-1$.
+\item Suppose that an implementation of CountElement runs within $\Theta(\ell)$ time, where
+$\ell=\mathit{high}-\mathit{low}+1$. The time complexity of FindMajorityHashValue can be
+$O(n\log n)$.
+\item Suppose that a magical implementation of CountElement runs within $\Theta(\ell/\log\ell)$
+time, where $\ell=\mathit{high}-\mathit{low}+1$. The time complexity of FindMajorityHashValue can be
+$O(n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、D。
+
+雜湊值是表的索引，都 $\ge 0$，所以 $-1$ 不會是任何鍵的雜湊值，CountElement 拿 $-1$ 去數得到 $0$。
+記 $\ell = \mathit{high} - \mathit{low} + 1$，「多數」是出現次數 $> \lfloor \ell/2 \rfloor$。 第 8 行
+空格可以填：
+\begin{pseudo}[unbreakable]{第 8 行}
+\If{$\mathit{leftCount} > \lfloor \ell/2 \rfloor$}
+    \State \Return $\mathit{leftMajority}$
+\ElsIf{$\mathit{rightCount} > \lfloor \ell/2 \rfloor$}
+    \State \Return $\mathit{rightMajority}$
+\Else
+    \State \Return $-1$
+\EndIf
+\end{pseudo}
+它正確的關鍵是下面這個事實。
+
+\textbf{事實。} 若 $v$ 是 $A[\mathit{low}..\mathit{high}]$ 的多數，則 $v$ 是左半或右半（至少一邊）的多數。
+\textbf{證明。} 左半長 $\ell_1$、右半長 $\ell_2$，$\ell_1 + \ell_2 = \ell$。 假設 $v$ 在兩邊都不是多數，
+左半最多出現 $\lfloor \ell_1/2 \rfloor$ 次、右半最多 $\lfloor \ell_2/2 \rfloor$ 次，合計
+$\lfloor \ell_1/2 \rfloor + \lfloor \ell_2/2 \rfloor \le \lfloor (\ell_1 + \ell_2)/2 \rfloor = \lfloor \ell/2 \rfloor$，
+不是整段的多數，矛盾。\hfill$\blacksquare$
+
+所以整段的多數只可能是 $\mathit{leftMajority}$ 或 $\mathit{rightMajority}$，數一數這兩個候選人在整段
+出現幾次就知道。
+
+\begin{itemize}
+\item A 錯。 兩邊都沒有多數時，由上面的事實，整段也不可能有多數。
+\item B 對。 整段的多數 $v$ 是左半或右半的多數；右半沒有多數（回傳 $-1$），所以 $v$ 是左半的多數。
+一段裡的多數最多一個（兩個不同的值各超過一半，加起來超過 $\ell$），所以 $v = \mathit{leftMajority}$。
+\item C 錯。 兩邊的多數可以是同一個值。 例如 $A$ 的兩個鍵雜湊值都是 $5$：$\mathit{leftMajority} =
+\mathit{rightMajority} = 5$，$\mathit{leftCount} = \mathit{rightCount} = 2 > \lfloor 2/2 \rfloor$，應該回傳
+$5$。 （兩個候選人不同而次數相等時，兩者加起來不超過 $\ell$，各自 $\le \ell/2$，這時回傳 $-1$ 才對；
+但選項說的是「只要相等」。）
+\item D 對。 兩次遞迴各處理一半，兩次 CountElement 各 $\Theta(\ell)$，
+$T(n) = 2T(n/2) + \Theta(n)$。 $n^{\log_2 2} = n$，主定理情況 2（資結書定理~2.4），$T(n) = \Theta(n \log n)$，
+當然是 $O(n \log n)$。
+\item E 錯。 這時 $T(n) = 2T(n/2) + \Theta(n/\log n)$。 $f(n) = n/\log n$ 比 $n$ 只小 $\log n$ 倍，
+主定理的三種情況都不適用（資結書第~2.4~節「不能用的時候」）。 用遞迴樹算，$n = 2^m$：第 $j$ 層
+（$j = 0, \ldots, m - 1$）有 $2^j$ 個子問題，大小 $n/2^j$，這層的總和是
+\[
+2^j \cdot \frac{n/2^j}{\lg (n/2^j)} = \frac{n}{m - j},
+\]
+加起來是 $n\,(1/m + 1/(m-1) + \cdots + 1/1) = n H_m$，再加上 $n$ 個葉子的 $\Theta(n)$。
+$H_m = \Theta(\log m)$，所以 $T(n) = \Theta(n \log \log n)$，不是 $O(n)$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-115-dsa-21}]{臺大資工所 115 學年度 第 21 題}
+（單選）
+
+(4 points) Let $T$ be a B-tree of minimum degree $t\ge 2$. During the deletion of a key $k$ from an internal node $x$, suppose $k$ is stored in $x$ at index $i$. Which of the following actions correctly preserves all B-tree invariants before the recursive deletion proceeds?
+\begin{enumerate}[label=(\Alph*)]
+\item Always replace $k$ with its inorder predecessor from the left subtree, regardless of the number of keys in the subtrees.
+\item Replace $k$ with either the predecessor or successor arbitrarily, since both choices always produce valid B-trees.
+\item Merge the two children of $k$ immediately, even if both have at least $t$ keys.
+\item Delete $k$ directly from node $x$ and rebalance only if an underflow occurs afterward.
+\item Replace $k$ with the key preceeding $k$ in the left child if the left child has at least $t$ keys; otherwise, replace it with the key following $k$ if the right child has at least $t$ keys.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(E)。
+
+說明題意：題目用最小分支度 $t$，問的是 CLRS 那種「往下走一趟就刪完」的刪除
+（資結書第~11.2.7~節最後一段）：每次往下走進一個子節點之前，先確定它至少有 $t$ 個
+鍵，這樣在下面拿掉一個鍵也不會少於 $t - 1$ 個，不必回頭修。 $k$ 在內部節點 $x$ 時，CLRS
+分三種情況：$k$ 前面的子節點 $y$ 至少 $t$ 個鍵，用 $k$ 的前驅 $k'$（$y$ 子樹裡最大的鍵）取
+代 $k$，再到 $y$ 裡遞迴刪除 $k'$；否則 $k$ 後面的子節點 $z$ 至少 $t$ 個鍵，用後繼對稱處理；
+兩個都只有 $t - 1$ 個鍵，就把 $k$ 和 $z$ 併進 $y$（剛好 $2t - 1$ 個鍵），再到 $y$ 裡刪 $k$。
+原題 (E) 的 preceeding 是 preceding 的拼字錯誤，「the key preceeding $k$ in the left child」
+指左子節點那棵子樹裡排在 $k$ 前面的鍵，也就是前驅。
+
+\begin{itemize}
+\item (A) 錯。 「不管子節點有幾個鍵」就用前驅。 反例 $t = 2$：$x$ 是根 $[20]$，兩個子節點
+是葉節點 $[10]$、$[30]$。 用前驅 $10$ 取代 $20$，再從葉節點 $[10]$ 刪掉 $10$，葉節點變成
+$0$ 個鍵，少於 $t - 1 = 1$；一趟的做法不會回頭修，B 樹的性質被破壞。
+\item (B) 錯。 同一個例子，用後繼 $30$ 取代，葉節點 $[30]$ 也變空。 前驅、後繼都要看那一邊的子
+節點夠不夠鍵，不能任選。
+\item (C) 錯。 兩個子節點都至少有 $t$ 個鍵時合併，新節點至少 $t + 1 + t = 2t + 1$ 個鍵，
+超過上限 $2t - 1$。 例如 $t = 2$，根 $[20]$、子節點 $[5\ 8]$ 和 $[25\ 28]$，合併成
+$[5\ 8\ 20\ 25\ 28]$ 有 $5$ 個鍵，上限是 $3$。
+\item (D) 錯。 從內部節點直接拿掉 $k$，$x$ 少一個鍵，子節點個數卻沒變，違反「$k$ 個鍵恰有
+$k + 1$ 個子節點」；$k$ 兩邊的子樹之間少了分隔鍵。 這不是「不足」的問題，事後借或合併也
+補不回來。
+\item (E) 對。 這就是上面的前兩種情況。 $y$ 至少 $t$ 個鍵，往 $y$ 走下去刪 $k'$ 時，前提
+「進去的子節點至少 $t$ 個鍵」成立。 $k'$ 是 $y$ 子樹裡最大的鍵，比 $y$ 子樹剩下的鍵都大，
+又比 $k$ 小、所以比 $z$ 子樹的鍵都小，放在 $k$ 的位置當分隔鍵，順序不變；後繼的情況對稱。
+(E) 沒有寫兩邊都只有 $t - 1$ 個鍵時要合併，但它寫出來的動作是正確的，其他四個選項都會
+破壞 B 樹的性質。
+\end{itemize}
+資結書第~11.2.7~節用的是另一種做法：一律換成後繼，刪完之後在回程檢查不足，再借
+或合併。 那種做法下，(A)、(B) 的取代本身沒有問題，因為不足會在回程修好；但題目問的是
+「繼續往下遞迴之前」就要保持性質，是 CLRS 一趟的做法。
+\end{pastsoln}

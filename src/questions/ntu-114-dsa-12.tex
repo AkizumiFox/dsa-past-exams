@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-114-dsa-12}]{臺大資網所 114 學年度 第 12 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Let $G=(V,E,w)$ be an undirected, weighted, simple, and connected graph. Let $T_1$ and $T_2$ be two
+minimum spanning trees of $G$. Define the set of edges $F\subseteq E$ as all edges that are in either $T_1$ or $T_2$
+but not in both. Suppose that $F\neq\emptyset$. Select all correct statement(s) below.
+\begin{enumerate}[label=(\Alph*)]
+\item The subgraph $H=(V,F)$ is a disjoint union of cycles and paths.
+\item All edges in $F$ have the same weight.
+\item There is no edge in $F$ that has a unique weight.
+\item There exists a graph $G$ such that $w(F)>w(T_1)$.
+\item Consider the problem \textsc{Most-Distant-MSTs}, which seeks two minimum spanning trees $T_1$ and $T_2$ in
+order to maximize $w(F)$ on $G$. Assume $\mathsf{P}\neq\mathsf{NP}$. Then \textsc{Most-Distant-MSTs} is
+$\mathsf{NP}$-hard.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(D)。 $F = T_1 \triangle T_2$。 下面的例子都用「所有邊權重都是 $1$」的圖，這時每棵生成樹都是最小生成樹。
+
+\textbf{先證一個交換性質}：對每條 $e \in T_1 \setminus T_2$，存在 $f \in T_2 \setminus T_1$ 使 $w(f) = w(e)$。
+\begin{itemize}
+\item 把 $e$ 從 $T_1$ 拿掉，$T_1$ 分成兩塊，形成一個切割 $(S, V - S)$，$e$ 跨過它。 $T_1$ 是最小生成樹，所以 $e$ 是跨過
+這個切割最輕的邊之一：否則把 $e$ 換成更輕的跨越邊，會得到更輕的生成樹。
+\item 把 $e$ 加進 $T_2$ 會形成一個環 $C$（$e \notin T_2$）。 $T_2$ 是最小生成樹，所以 $C$ 上每條邊都 $\le w(e)$：否則
+拿掉 $C$ 上比 $e$ 重的邊、換成 $e$，$T_2$ 會變輕（資結書定理~24.3 的環性質）。
+\item 環 $C$ 跨過切割 $(S, V - S)$ 的次數是偶數，$e$ 是其中一次，所以 $C$ 上還有另一條跨越的邊 $f \ne e$，$f \in T_2$。
+$f$ 跨過 $T_1$ 拿掉 $e$ 後的切割，而 $T_1 - e$ 沒有跨越邊，所以 $f \notin T_1$。 由第一點 $w(f) \ge w(e)$，由第二點
+$w(f) \le w(e)$，所以 $w(f) = w(e)$。
+\end{itemize}
+
+\begin{itemize}
+\item[(A)] 錯。 $K_4$（頂點 $v, a, b, c$）：$T_1$ 是星形 $va, vb, vc$，$T_2$ 是 $ab, bc, cv$。 $F = \{va, vb, ab, bc\}$，
+$b$ 在 $F$ 裡的度數是 $3$（$vb, ab, bc$），不是若干環和路徑的聯集。
+\item[(B)] 錯。 兩組權重各有平手就行：兩個三角形各三條邊權重 $1$ 和 $5$，用一條權重 $3$ 的邊連起來（橋）。 每個三角形
+各選兩條邊，$T_1$、$T_2$ 在兩個三角形裡都選不同的兩條，$F$ 裡同時有權重 $1$ 和 $5$ 的邊。
+\item[(C)] 對。 設 $e \in F$，不妨 $e \in T_1 \setminus T_2$。 由交換性質，有另一條 $f \in T_2 \setminus T_1$ 和它一樣重，
+$f \ne e$；所以 $e$ 的權重不是唯一的。
+\item[(D)] 對。 $K_4$（頂點 $a, b, c, d$），所有邊權重 $1$：$T_1 = \{ab, bc, cd\}$、$T_2 = \{ac, ad, bd\}$，兩者都是生成樹
+而且沒有共同的邊。 $F = T_1 \cup T_2$，$w(F) = 6 > 3 = w(T_1)$。 一般來說 $w(F) = 2\,w(T_1 \setminus T_2)$，兩棵樹沒有共同
+邊、權重為正時 $w(F) = 2 w(T_1)$。
+\item[(E)] 錯。 這個問題有多項式時間演算法，在 $\mathsf{P} \ne \mathsf{NP}$ 的假設下就不可能是 NP-hard。 理由：
+$w(F) = w(T_1) + w(T_2) - 2\,w(T_1 \cap T_2) = 2\,w_{\mathrm{MST}} - 2\,w(T_1 \cap T_2)$，所以要讓兩棵最小生成樹的
+共同邊總重最小。 所有最小生成樹恰好是某個擬陣（matroid）的所有基底，「兩個基底的交集權重最小」可以用擬陣聯集
+（matroid union）或擬陣交集的多項式時間演算法求得。 這超出資結書的範圍，作答時知道結論即可。
+\end{itemize}
+\end{pastsoln}

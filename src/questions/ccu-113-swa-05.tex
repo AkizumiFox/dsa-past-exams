@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ccu-113-swa-05}]{中正資工所甲組 113 學年度 第 5 題}
+（單選）
+
+Given a fully parenthesized arithmetic expression provided below, please answer the following questions from Q4 to Q5.
+\begin{center}
+B $-$ E/(A$-$D) + E + C * D $-$ A * B
+\end{center}
+
+(3\%) What is the expression in prefix form?
+\begin{enumerate}[label=\Alph*.]
+\item \texttt{+ - - B / E - A D * A B + E * C D}
+\item \texttt{- B E A D / - A B * - E C D * + +}
+\item \texttt{- + - B / E - A D + E * C D * A B}
+\item \texttt{+ - - / B E - A * D A B + E * C D}
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E（None of the above）。 和第 4 題一樣，選項 C 是把 $E + C * D$ 先合起來的寫法。
+
+依題目規定（同級由左往右），式子是
+\[
+\Bigl( \bigl( (B - E/(A - D)) + E \bigr) + C * D \Bigr) - A * B ,
+\]
+運算式樹見歷屆試題~\ref{px:ccu-113-swa-04}。 前序式（資結書第~6.3.5~節）就是這棵樹的前序走訪：每個運算子寫在它的兩個
+運算元前面，由外往內展開。
+\begin{itemize}
+\item 根：\texttt{-}\ [左]\ [$A * B$]，$A * B$ 是 \texttt{* A B}。
+\item 左：\texttt{+}\ [$(B - E/(A-D)) + E$]\ [$C * D$]，$C * D$ 是 \texttt{* C D}。
+\item $(B - E/(A-D)) + E$ 是 \texttt{+}\ [\texttt{- B / E - A D}]\ \texttt{E}。
+\end{itemize}
+接起來：
+\[
+\texttt{- + + - B / E - A D E * C D * A B}.
+\]
+四個選項都不是，選 E。
+
+逐項檢查：
+\begin{itemize}
+\item A：\texttt{+ - - B / E - A D * A B + E * C D} 表示 $\bigl((B - E/(A-D)) - A * B\bigr) + (E + C * D)$，把最後的減法提前了，
+樹不同。 錯。
+\item B：開頭 \texttt{- B E A D} 後面接的是一串運算子，像是後序式倒過來寫，不是合法的前序式（從右往左掃時，第一個
+\texttt{+} 就拿不到兩個運算元）。 錯。
+\item C：\texttt{- + - B / E - A D + E * C D * A B} 表示 $\bigl((B - E/(A-D)) + (E + C * D)\bigr) - A * B$，先算了
+$E + C * D$，違反由左往右的規定。 錯。
+\item D：\texttt{/ B E} 表示 $B / E$，但原式是 $E / (A - D)$。 錯。
+\item E：正確的前序式不在 A--D 裡。 對。
+\end{itemize}
+三個合法的選項 A、C、D 裡，A、C 的值和原式相等（加減法可以重新結合），但題目要的是照規定建出的那棵樹的前序式。
+命題時若把式子讀成 $(B - E/(A - D)) + (E + C * D) - A * B$，預期答案是 C。
+\end{pastsoln}

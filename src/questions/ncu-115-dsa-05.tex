@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ncu-115-dsa-05}]{中央資工所 115 學年度 第 5 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Which of the following statements are necessarily true?
+\begin{enumerate}[label=\Alph*.]
+\item If a polynomial-time algorithm exists for the optimization version of an NP-complete problem, then the corresponding decision version is also solvable in polynomial time.
+\item If a language $L$ is NP-hard and $L\in$ coNP, then NP $=$ coNP.
+\item There exists an NP-complete problem whose complement is also NP-complete.
+\item If problem $A$ is NP-complete and $A\le_p B$, then $B$ is NP-complete.
+\item If an NP-complete problem admits a polynomial-time approximation scheme (PTAS), then P $=$ NP.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B。
+
+E 的「NP-complete problem 有 PTAS」照一般的意思，解讀成「它的最佳化版本有 PTAS」。
+
+\textbf{A 對}。 NP 完備問題的決策版本問的是「有沒有值 $\le k$（或 $\ge k$）的解」。 用最佳化版本的多項式
+時間演算法求出最佳值（如果它傳回的是一個最佳解，就在多項式時間內算出這個解的值），再和 $k$ 比一次，就
+回答了決策版本。 這是資結書第~28.1~節「決策版本不會比最佳化版本難」。
+
+\textbf{B 對}。 先記兩件事。 第一，若 $A \le_{\mathrm{p}} B$，同一個歸約函數 $f$ 也把 $A$ 的補問題
+$\overline{A}$ 歸約到 $\overline{B}$（$x$ 是 $A$ 的否實例 $\iff$ $f(x)$ 是 $B$ 的否實例）。 第二，若
+$A \le_{\mathrm{p}} B$ 且 $B \in \mathrm{NP}$，則 $A \in \mathrm{NP}$：驗證者先算 $f(x)$，再執行 $B$ 的
+驗證者。 現在任取 $A \in \mathrm{NP}$。 $L$ 是 NP 難的，$A \le_{\mathrm{p}} L$，所以
+$\overline{A} \le_{\mathrm{p}} \overline{L}$；$L \in$ co-NP 表示 $\overline{L} \in \mathrm{NP}$，於是
+$\overline{A} \in \mathrm{NP}$，也就是 $A \in$ co-NP。 這證明了 $\mathrm{NP} \subseteq$ co-NP。
+反過來，任取 $A \in$ co-NP，$\overline{A} \in \mathrm{NP} \subseteq$ co-NP，所以
+$A = \overline{\overline{A}} \in \mathrm{NP}$。 兩個方向合起來，$\mathrm{NP} =$ co-NP。
+
+\textbf{C 不一定成立}。 假設有 NP 完備的 $A$，它的補問題 $\overline{A}$ 也是 NP 完備的。 那麼
+$\overline{A} \in \mathrm{NP}$，也就是 $A \in$ co-NP；$A$ 又是 NP 難的，由 B，$\mathrm{NP} =$ co-NP。
+$\mathrm{NP} =$ co-NP 是否成立目前不知道（資結書第~28.2~節），所以這個敘述不能說「一定成立」。
+
+\textbf{D 錯}。 $B$ 是 NP 難的（資結書引理~28.6 的證明），但不一定在 NP 裡。 例如資結書第~28.4~節的
+$\textsf{SAT} \le_{\mathrm{p}}$ 停機問題：停機問題是 NP 難的，卻沒有演算法能解，不在 NP 裡，不是
+NP 完備的。
+
+\textbf{E 錯}。 0/1 背包的決策版本是 NP 完備的（資結書第~28.5.2~節），而它的最佳化版本有 FPTAS
+（資結書定理~29.6），FPTAS 當然也是 PTAS。 如果 E 成立，就已經證明了 $\mathrm{P} = \mathrm{NP}$，
+但這是還沒解決的問題。 正確的說法是資結書第~29.5~節最後一段：強 NP 完備、目標值是不大的整數的
+問題，除非 $\mathrm{P} = \mathrm{NP}$，沒有 FPTAS。
+\end{pastsoln}

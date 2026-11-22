@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ncu-113-dsa-18}]{中央資工所 113 學年度 第 18 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Given 4 matrices $Q$, $R$, $S$, and $T$ with dimensions 13x12, 12x30, 30x15, and 15x18, respectively. If we
+would like to obtain the matrix multiplication $QRST$ with the least number of scalar multiplications, which
+of the following statements are incorrect?
+\begin{enumerate}[label=(\Alph*)]
+\item This is a divide-and-conquer question.
+\item The first pair of metrices to be multiplied are $Q$ and $R$.
+\item The last matrix to be multiplied is $T$.
+\item There is more than one way to achieve the minimum number of scalar multiplications.
+\item The minimum number of scalar multiplications needed is 11250.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目問的是\textbf{錯誤}的敘述。 答案：(A)(B)(D)。
+
+\textbf{填表}（資結書第~18.2~節）。 維度序列 $p = (13, 12, 30, 15, 18)$，矩陣 $A_1 = Q$、$A_2 = R$、
+$A_3 = S$、$A_4 = T$，$A_i$ 是 $p_{i-1} \times p_i$。
+\[
+m[i, j] = \min_{i \le k < j}\bigl(m[i, k] + m[k+1, j] + p_{i-1}p_k p_j\bigr).
+\]
+\begin{itemize}
+\item 長度 $2$：$m[1,2] = 13 \cdot 12 \cdot 30 = 4680$；$m[2,3] = 12 \cdot 30 \cdot 15 = 5400$；
+$m[3,4] = 30 \cdot 15 \cdot 18 = 8100$。
+\item $m[1,3]$：$k = 1$：$0 + 5400 + 13 \cdot 12 \cdot 15 = 5400 + 2340 = 7740$；
+$k = 2$：$4680 + 0 + 13 \cdot 30 \cdot 15 = 4680 + 5850 = 10530$。 取 $7740$，$s = 1$。
+\item $m[2,4]$：$k = 2$：$0 + 8100 + 12 \cdot 30 \cdot 18 = 8100 + 6480 = 14580$；
+$k = 3$：$5400 + 0 + 12 \cdot 15 \cdot 18 = 5400 + 3240 = 8640$。 取 $8640$，$s = 3$。
+\item $m[1,4]$：
+$k = 1$：$0 + 8640 + 13 \cdot 12 \cdot 18 = 8640 + 2808 = 11448$；
+$k = 2$：$4680 + 8100 + 13 \cdot 30 \cdot 18 = 12780 + 7020 = 19800$；
+$k = 3$：$7740 + 0 + 13 \cdot 15 \cdot 18 = 7740 + 3510 = 11250$。 取 $11250$，$s = 3$。
+\end{itemize}
+最佳的括號是 $\bigl((Q(RS))T\bigr)$：先算 $RS$（$5400$ 次），再左乘 $Q$（$2340$ 次），最後乘 $T$（$3510$
+次），共 $11250$。 每一格的最小值都只由一個 $k$ 達到，所以最佳括號法是唯一的；把五種括號法全部列出來，
+成本是 $11250, 11448, 14040, 17388, 19800$，最小的也只有一個。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯誤，要選。 子問題 $m[i, j]$ 會被很多較大的區間重複用到，這是動態規劃，不是分治。
+\item (B) 錯誤，要選。 最先相乘的是 $R$ 和 $S$。
+\item (C) 正確，不選。 最外層在 $k = 3$ 切開，最後一次乘法是 $(QRS) \cdot T$。
+\item (D) 錯誤，要選。 最佳括號法唯一。
+\item (E) 正確，不選。
+\end{itemize}
+\end{pastsoln}

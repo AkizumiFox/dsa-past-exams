@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ncu-113-dsa-20}]{中央資工所 113 學年度 第 20 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Which of the following statements describe the differences between Dynamic Programming and
+Divide-and-Conquer?
+\begin{enumerate}[label=(\Alph*)]
+\item Whether the subproblems overlap or not
+\item The division of problems
+\item The combination of subproblems
+\item The way the base case is solved
+\item The depth of recurrence
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+這題的選項寫得很簡短，判斷的標準是：這一項是不是兩種方法本質上不同的地方。
+
+兩種方法的骨架其實一樣：把問題切成較小的子問題（division）、遞迴解子問題、碰到最小的情況直接解（base
+case）、再把子問題的答案組合起來（combination）。 動態規劃的遞迴式和分治的遞迴式寫起來也一樣是「大問題
+用小問題表示」。 真正的差別在於子問題會不會重複出現（資結書第~18.1.1~節）：
+\begin{itemize}
+\item 分治的子問題互不重疊（合併排序的左右兩半沒有共同的部分），每個子問題只會被解一次，直接遞迴就好。
+\item 動態規劃的子問題大量重疊（費氏數的 $F(n-2)$ 同時被 $F(n)$、$F(n-1)$ 用到），所以要把答案存起來，
+用備忘錄或由下而上填表，避免重算。
+\end{itemize}
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對，就是上面說的差別。
+\item (B) 錯。 兩者都把問題切成子問題；切法依問題而定（切一半、切掉一個元素、列舉切點……），不是區分兩者
+的依據。
+\item (C) 錯。 兩者都要把子問題的答案組合起來（合併排序的合併、DP 遞迴式裡的 $\min$／$\max$）。
+\item (D) 錯。 兩者的基底情況都是直接回答最小的子問題。
+\item (E) 錯。 遞迴深度由問題怎麼切決定，例如分治的二分搜尋深度 $\lg n$、動態規劃的費氏數深度 $n$，但也有
+深度 $n$ 的分治和深度 $\lg n$ 的動態規劃，不是兩者的差別。
+\end{itemize}
+\end{pastsoln}

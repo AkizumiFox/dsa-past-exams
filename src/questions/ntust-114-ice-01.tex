@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntust-114-ice-01}]{臺科大資工所 114 學年度 第 1 題}
+（複選；每格 5 分）
+
+(5\%) Select all the correct statements.
+\begin{enumerate}[label=(\alph*)]
+\item An iterative method will call itself many times using loops.
+\item $10N^2+100N+10000=O(N^2)$
+\item $10N^2+100N+10000=O(N^4)$
+\item $10N^2+100N+10000=\Omega(N^2)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)、(c)、(d)。 令 $f(N) = 10N^2 + 100N + 10000$，漸近符號的定義見資結書第~1.5~節。
+\begin{itemize}
+\item (a) 錯。 迭代（iterative）的方法用迴圈重複做事，\textbf{不}呼叫自己；呼叫自己的是遞迴
+（recursive）。 這句把兩者混在一起。
+\item (b) 對。 $N \ge 1$ 時 $100N \le 100N^2$、$10000 \le 10000N^2$，所以
+$f(N) \le (10 + 100 + 10000)N^2 = 10110N^2$，取 $c = 10110$、$N_0 = 1$。
+\item (c) 對。 $O$ 是上界，$N \ge 1$ 時 $N^2 \le N^4$，由 (b) 得 $f(N) \le 10110N^4$。 上界不必是最緊的。
+\item (d) 對。 $N \ge 1$ 時 $f(N) \ge 10N^2$，取 $c = 10$、$N_0 = 1$。 （(b)、(d) 合起來就是
+$f(N) = \Theta(N^2)$。）
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:nchu-114-dsa-01}]{中興資工所甲組 114 學年度 單選題第 1 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Which of the following sorting algorithms is considered a non-comparison-based sort?
+
+(A)~Heap Sort \qquad (B)~Quick Sort \qquad (C)~Counting Sort \qquad (D)~Merge Sort
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+比較式排序（comparison sort）只靠「兩個鍵值比大小」的結果決定順序；非比較式排序會直接拿鍵值
+本身去當索引或拆位數，所以不受比較式排序 $\Omega(n \log n)$ 下界的限制（資結書第~15.1~節）。
+\begin{itemize}
+\item (A) Heap Sort：建堆積、往下篩都是在比較父子的鍵值，是比較式。 錯。
+\item (B) Quick Sort：分割時每個元素和基準比大小，是比較式。 錯。
+\item (C) Counting Sort：鍵值是 $0$ 到 $k$ 的整數時，用鍵值當索引去數每個值出現幾次，再用前綴和算出
+每個元素的位置，從頭到尾沒有比較兩個元素（資結書第~15.2.1~節），時間 $\Theta(n + k)$。 對。
+\item (D) Merge Sort：合併時比較兩段的開頭誰小，是比較式。 錯。
+\end{itemize}
+\end{pastsoln}

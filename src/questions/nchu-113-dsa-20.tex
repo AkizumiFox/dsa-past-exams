@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:nchu-113-dsa-20}]{中興資工所甲組 113 學年度 選擇題第 20 題}
+（單選；答錯不倒扣）
+
+The following Python function finds the maximum sum of a contiguous subarray in an integer array. Please
+choose the correct option to fill in the blanks (\_\_\_\_\_\_) in the code. (5\%)
+\begin{minted}[fontsize=\small]{python}
+def maxSubArray(nums):
+     max_so_far = nums[0]
+     max_ending_here = nums[0]
+     for i in range(1, len(nums)):
+           max_ending_here = max(______, max_ending_here + nums[i])
+           max_so_far = max(______, max_ending_here)
+     return max_so_far
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item nums[i], max\_so\_far
+\item max\_so\_far, nums[i]
+\item nums[i], max\_ending\_here
+\item max\_ending\_here, nums[i]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+這是 Kadane 演算法（資結書第~17.2.3~節）。 \texttt{max\_ending\_here} 是「以 \texttt{nums[i]} 結尾」的最大
+子陣列和：以 \texttt{nums[i]} 結尾的子陣列，要嘛只有 \texttt{nums[i]} 自己，要嘛是以 \texttt{nums[i-1]} 結尾
+的子陣列再接上 \texttt{nums[i]}，後者最大是 \texttt{max\_ending\_here + nums[i]}。 所以第一格填
+\texttt{nums[i]}：
+\[
+\mathit{end}_i = \max(\mathit{nums}[i],\ \mathit{end}_{i-1} + \mathit{nums}[i]).
+\]
+\texttt{max\_so\_far} 是目前為止所有 $\mathit{end}$ 的最大值，每一步拿它和新的 \texttt{max\_ending\_here}
+比，第二格填 \texttt{max\_so\_far}。 兩格是 \texttt{nums[i]}、\texttt{max\_so\_far}，選 (A)。
+
+其他選項：(B) 第一格填 \texttt{max\_so\_far} 會讓「以 $i$ 結尾」的值混進不連續的舊答案，例如
+$[5, -10, 1]$：$i = 1$ 時 \texttt{max\_ending\_here} 變成 $\max(5, -5) = 5$，$i = 2$ 時再加上 $1$ 得 $6$，
+好像 $5$ 和 $1$ 接在一起，正確答案是 $5$；(C) 第二格填
+\texttt{max\_ending\_here} 等於 \texttt{max\_so\_far = max\_ending\_here}，只留下最後一個位置的值，例如
+$[5, -10]$ 回傳 $-5$，正確答案是 $5$；(D) 第一格的錯同 (B)（$[5, -10, 1]$ 一樣回傳 $6$），而且第二格填 \texttt{nums[i]} 也丟掉了舊的
+最大值。
+
+用 $[-2, 1, -3, 4, -1, 2, 1, -5, 4]$ 走一次：$\mathit{end}$ 依序是 $-2, 1, -2, 4, 3, 5, 6, 1, 5$，最大值 $6$
+（子陣列 $[4, -1, 2, 1]$），正確。
+\end{pastsoln}

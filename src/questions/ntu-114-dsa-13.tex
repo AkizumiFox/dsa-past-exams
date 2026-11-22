@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ntu-114-dsa-13}]{臺大資網所 114 學年度 第 13 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Consider the (incomplete) pseudocode snippet \textsc{Solve}().
+\begin{center}
+\small
+\begin{tabular}{rl}
+\hline
+1: & \textbf{function} \textsc{Solve}($G=(V,E,w)$, $s$, $t$) \\
+2: & \quad $P=V$ \hfill $\triangleright$ \textit{Initializes a set with all vertices.} \\
+3: & \quad Set $A[s]=0$ and $A[x]=\infty$ for all $x\neq s$. \hfill $\triangleright$ \textit{Initializes an array
+$A$.} \\
+4: & \quad \textbf{while} $P\neq\emptyset$ \textbf{do} \\
+5: & \quad\quad $x=\mathrm{argmin}_{x\in P}\{A[x]\}$ \hfill $\triangleright$ \textit{Chooses a vertex.} \\
+6: & \quad\quad $P=P-\{x\}$ \hfill $\triangleright$ \textit{Removes the vertex.} \\
+7: & \quad\quad \textbf{for each} $y\in P$ such that $(x,y)\in E$, \textbf{do} \\
+8: & \quad\quad\quad \fbox{\makebox[4cm]{($\star$)}} \\
+9: & \quad \textbf{return} \fbox{\makebox[4cm]{($\star\star$)}} \\
+\hline
+\end{tabular}
+\end{center}
+You have realized that this code snippet can be used to solve different problems by filling the blanks in
+different ways. Here are three problems we consider:
+\begin{itemize}
+\item In the \textsc{st-Distance} problem, you are given a graph $G$ with non-negative weights, and two vertices
+$s,t\in V$. The goal is to compute the shortest distance between $s$ and $t$.
+\item In the \textsc{st-Bottleneck} problem, you are given a graph $G$ with non-negative weights, and two vertices
+$s,t\in V$. The goal is to compute the smallest possible weight $wgt$ such that there exists at least one path
+from $s$ to $t$ using only edges whose weights are less than or equal to $wgt$.
+\item In the MST problem, you are given an undirected, weighted, and connected graph $G$. The goal is to compute
+the total weight of a minimum spanning tree.
+\end{itemize}
+Select all correct statement(s) below.
+\begin{enumerate}[label=(\Alph*)]
+\item To solve \textsc{st-Distance}, we fill ($\star$) with $A[y]=A[x]+w(x,y)$, and we fill ($\star\star$) with
+$A[t]$.
+\item To solve \textsc{st-Bottleneck}, we fill ($\star$) with $A[y]=\max\{A[y],\min\{A[x],w(x,y)\}\}$, and we fill
+($\star\star$) with $A[t]$.
+\item To solve MST, we fill ($\star$) with $A[y]=\min\{A[y],w(x,y)\}$, and we fill ($\star\star$) with $A[t]$.
+\item The code snippet can be implemented with Fibonacci heaps, so there exist algorithms with running time
+$O(|E|+|V|\log|V|)$ for all three problems stated above.
+\item The value $A[t]$ will always be non-negative in any correct implementation for solving any of the problems
+stated above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)。
+
+這個框架就是 Dijkstra（資結書虛擬碼~25.3）和 Prim（資結書虛擬碼~24.3）共同的骨架：每次取出 $A$ 值最小的頂點，再
+用它更新還在 $P$ 裡的鄰居。 三個問題的正確填法是：
+\begin{itemize}
+\item \textsc{st-Distance}：($\star$) $A[y] = \min\{A[y],\ A[x] + w(x, y)\}$（鬆弛），($\star\star$) $A[t]$。
+\item \textsc{st-Bottleneck}：($\star$) $A[y] = \min\{A[y],\ \max\{A[x], w(x, y)\}\}$，($\star\star$) $A[t]$。 一條路徑的
+成本是路上最重的邊，要讓它最小。 正確性的證明和 Dijkstra 一樣，只是把「加」換成「取最大」（$\max$ 也是單調的）。
+\item MST：($\star$) $A[y] = \min\{A[y],\ w(x, y)\}$（Prim），($\star\star$) $\sum_{x \in V} A[x]$：每個頂點被取出時的
+$A$ 值，就是把它接進樹的那條邊的權重（$s$ 是 $0$）。
+\end{itemize}
+
+\begin{itemize}
+\item[(A)] 錯。 少了取 $\min$，後面處理的頂點會把已經找到的較短距離蓋掉。 反例：邊 $s$--$a$ 權 $1$、$s$--$b$ 權 $2$、
+$a$--$t$ 權 $2$、$b$--$t$ 權 $5$。 先取出 $s$：$A[a] = 1$、$A[b] = 2$。 取出 $a$：$A[t] = 3$。 取出 $b$（$2 < 3$）：
+$t$ 還在 $P$ 裡，$A[t]$ 被改成 $2 + 5 = 7$。 最後取出 $t$，回傳 $7$，正確答案是 $3$。
+\item[(B)] 錯。 $\max$ 和 $\min$ 寫反了。 $y \ne s$ 時 $A[y]$ 一開始是 $\infty$，$\max\{\infty, \cdot\} = \infty$，所以
+$t \ne s$ 時 $A[t]$ 永遠是 $\infty$。 （這個寫法是「最寬路徑」問題的形式，但那要把初值改成 $A[s] = \infty$、其他 $-\infty$，
+而且每次取最大的。）
+\item[(C)] 錯。 ($\star$) 填對了，但 MST 要的是總權重，應該回傳所有 $A[x]$ 的和；$A[t]$ 只是某一條樹邊的權重（MST 問題
+本來也沒有 $t$）。
+\item[(D)] 對。 用費氏堆積當優先佇列：$|V|$ 次 Extract-Min 各平攤 $O(\log |V|)$，每條邊最多造成一次 Decrease-Key，平攤
+$O(1)$（資結書第~8.6~節）。 三種正確填法的 ($\star$) 都只會讓 $A[y]$ 變小，正是 Decrease-Key；MST 最後加總是 $O(|V|)$。
+所以三個問題都有 $O(|E| + |V| \log |V|)$ 的演算法。
+\item[(E)] 錯。 前兩個問題的權重非負，答案非負；但 MST 問題沒有說權重非負，最小生成樹的邊可以是負的，用 Prim 時
+$A[t]$ 是接上 $t$ 那條邊的權重，可能是負數。 例：兩個頂點 $s, t$ 之間一條權重 $-3$ 的邊，$A[t] = -3$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,121 @@
+\begin{pastexam}[label={px:nccu-111-dsa-02}]{政大資科所 111 學年度 第 2 題}
+（設計）
+
+(25\%) Design \textit{a singly linked list} that supports the following operations in C or pseudo code.
+\begin{enumerate}[label=2.\arabic*]
+\item Initializing an empty linked list
+\item Inserting a node of value, $x$, before the first element of the linked list
+\item Inserting a node of value, $x$, before the $i$-th element of the linked list
+\item Delete the $i$-th element of the linked list
+\item Reverse the linked list in the most memory-efficient way.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}。 每個節點有 $\mathit{key}$ 和 $\mathit{next}$ 兩個欄位；串列 $L$ 只記一個指標
+$L.\mathit{head}$，指向第一個節點，空串列時是 \NIL（資結書第~5.1~節）。 元素從 $1$ 開始編號，
+串列有 $n$ 個元素。 2.3 的 $i$ 可以是 $1$ 到 $n + 1$（$i = n + 1$ 表示接在最後面），2.4 的 $i$ 是
+$1$ 到 $n$；超出範圍時回報錯誤。
+
+單向串列的節點不知道自己前面是誰，所以「插在第 $i$ 個前面」「刪掉第 $i$ 個」都要先找到
+\textbf{第 $i - 1$ 個}節點，再改它的 $\mathit{next}$（資結書虛擬碼~5.2、5.3 的做法）。 $i = 1$ 時沒有
+前一個節點，改的是 $L.\mathit{head}$，要分開處理。
+
+\begin{pseudo}{初始化與插入}
+\Procedure{List-Init}{$L$} \Comment{2.1}
+    \State $L.\mathit{head} \gets \NIL$
+\EndProcedure
+\Statex
+\Procedure{Insert-Front}{$L, x$} \Comment{2.2}
+    \State 配置一個新節點 $p$
+    \State $p.\mathit{key} \gets x$
+    \State $p.\mathit{next} \gets L.\mathit{head}$
+    \State $L.\mathit{head} \gets p$
+\EndProcedure
+\Statex
+\Function{Node-Before}{$L, i$} \Comment{回傳第 $i - 1$ 個節點，$i \ge 2$}
+    \State $q \gets L.\mathit{head}$
+    \For{$k \gets 1$ \To $i - 2$}
+        \If{$q = \NIL$}
+            \State \Error{index out of range}
+        \EndIf
+        \State $q \gets q.\mathit{next}$
+    \EndFor
+    \If{$q = \NIL$}
+        \State \Error{index out of range}
+    \EndIf
+    \State \Return $q$
+\EndFunction
+\Statex
+\Procedure{Insert-Before}{$L, i, x$} \Comment{2.3}
+    \If{$i = 1$}
+        \State \Call{Insert-Front}{$L, x$}
+    \Else
+        \State $q \gets \Call{Node-Before}{L, i}$
+        \State 配置一個新節點 $p$
+        \State $p.\mathit{key} \gets x$
+        \State $p.\mathit{next} \gets q.\mathit{next}$ \Comment{這兩行不能對調}
+        \State $q.\mathit{next} \gets p$
+    \EndIf
+\EndProcedure
+\end{pseudo}
+
+\begin{pseudo}{刪除與反轉}
+\Procedure{Delete}{$L, i$} \Comment{2.4}
+    \If{$L.\mathit{head} = \NIL$}
+        \State \Error{empty list}
+    \EndIf
+    \If{$i = 1$}
+        \State $p \gets L.\mathit{head}$
+        \State $L.\mathit{head} \gets p.\mathit{next}$
+    \Else
+        \State $q \gets \Call{Node-Before}{L, i}$
+        \If{$q.\mathit{next} = \NIL$}
+            \State \Error{index out of range}
+        \EndIf
+        \State $p \gets q.\mathit{next}$
+        \State $q.\mathit{next} \gets p.\mathit{next}$
+    \EndIf
+    \State 釋放 $p$
+\EndProcedure
+\Statex
+\Procedure{Reverse}{$L$} \Comment{2.5}
+    \State $d \gets \NIL$ \Comment{已經反轉好的那一段}
+    \State $h \gets L.\mathit{head}$ \Comment{還沒處理的那一段}
+    \While{$h \ne \NIL$}
+        \State $r \gets h.\mathit{next}$ \Comment{先記住下一個}
+        \State $h.\mathit{next} \gets d$
+        \State $d \gets h$
+        \State $h \gets r$
+    \EndWhile
+    \State $L.\mathit{head} \gets d$
+\EndProcedure
+\end{pseudo}
+
+\textbf{說明與正確性}。
+\begin{itemize}
+\item \proc{Node-Before}$(L, i)$：迴圈做完第 $k$ 輪時 $q$ 是第 $k + 1$ 個節點，做完 $i - 2$ 輪後
+$q$ 是第 $i - 1$ 個。 走的途中碰到 \NIL，表示串列不到 $i - 1$ 個元素，$i$ 超出範圍。
+\item \proc{Insert-Before}：新節點先指向原本的第 $i$ 個（$q.\mathit{next}$，$i = n + 1$ 時是 \NIL），
+再讓第 $i - 1$ 個指向新節點，新節點就成了第 $i$ 個。 兩行對調的話，$q.\mathit{next}$ 先被改成 $p$，
+原本第 $i$ 個以後的節點就沒有人指著，整段遺失。
+\item \proc{Delete}：讓第 $i - 1$ 個直接指向第 $i + 1$ 個，第 $i$ 個就被跳過，再釋放它。 要先把
+$p$ 記下來才能釋放；C 裡忘了 \texttt{free} 會漏記憶體。
+\item \proc{Reverse}：迴圈不變量是「$d$ 是原串列前面已經走過的那幾個節點、順序相反；$h$ 是剩下
+還沒走過的部分，順序不變」。 一開始 $d$ 空、$h$ 是整條，成立；每一輪把 $h$ 的第一個節點拆下來接到
+$d$ 的最前面，仍然成立；結束時 $h$ 空，$d$ 就是整條反過來（資結書虛擬碼~5.12 有逐輪的追蹤）。
+\end{itemize}
+
+\textbf{「最省記憶體」}。 \proc{Reverse} 不配置任何新節點，也不用陣列或堆疊，只用 $d$、$h$、$r$
+三個指標，額外空間 $\Theta(1)$，這是最少的。 另外兩種常見做法都比較耗：把元素全部推進堆疊再
+依序彈出重建，要 $\Theta(n)$ 的額外空間；遞迴反轉看起來沒有用額外的資料結構，但遞迴深度是 $n$，
+呼叫堆疊也要 $\Theta(n)$。
+
+\textbf{複雜度}。 \proc{List-Init}、\proc{Insert-Front} 是 $\Theta(1)$；\proc{Insert-Before}、
+\proc{Delete} 要先走 $i - 2$ 步找前一個節點，$\Theta(i)$，最壞 $\Theta(n)$；\proc{Reverse} 每個
+節點處理一次，時間 $\Theta(n)$、額外空間 $\Theta(1)$。
+
+在串列前面加一個不存資料的「頭節點」（dummy head）也是常見寫法：第 $1$ 個元素的前一個節點就是
+頭節點，$i = 1$ 不必特別處理，程式比較短。 這種寫法也算對，只是 \proc{List-Init} 要配置頭節點，
+\proc{Reverse} 從頭節點的下一個開始反轉。
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nccu-113-dsa-09}]{政大資科所 113 學年度 第 9 題}
+（單選；不必說明理由）
+
+(4\%) Assume that all edges have distinct weights. Which of the following statements about minimum
+spanning tree is wrong?
+\begin{enumerate}[label=\Alph*.]
+\item The minimum spanning tree cannot include the edge with the largest weight.
+\item The minimum spanning tree must include the edge with the smallest weight.
+\item The minimum spanning tree must include the edge with the second smallest weight.
+\item The minimum spanning tree is unique.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。 題目問哪一個是\textbf{錯的}。 圖是連通的簡單圖，權重兩兩不同。
+
+\begin{itemize}
+\item[A.] 錯。 最重的邊如果是\textbf{橋}（拿掉就不連通），每棵生成樹都要用它。 反例：路徑 $a$--$b$--$c$，
+$w(a,b) = 1$、$w(b,c) = 2$，唯一的生成樹就是整張圖，含最重的邊。 只有最重的邊落在某個環上時，才能說它不在最小
+生成樹裡（環性質，資結書定理~24.3）。
+\item[B.] 對。 設最輕的邊是 $e = (u, v)$。 取切割 $(\{u\}, V - \{u\})$，$e$ 跨過它，而且是全圖最輕的邊，當然是
+跨過這個切割最輕的邊。 權重相異時，由切割性質（資結書推論~24.2），$e$ 在唯一的最小生成樹裡。
+\item[C.] 對。 Kruskal 演算法（資結書第~24.2~節）依權重由小到大考慮邊。 第一條一定加入；第二條只有在和第一條形成
+環時才會被丟掉，但兩條邊在簡單圖裡不會形成環，所以第二條也一定加入。 Kruskal 得到的是最小生成樹，而且權重
+相異時最小生成樹只有一棵，所以它一定含第二輕的邊。
+\item[D.] 對。 權重兩兩相異時最小生成樹唯一（資結書定理~24.4）。
+\end{itemize}
+\end{pastsoln}

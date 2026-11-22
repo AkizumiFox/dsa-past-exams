@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:gk3-099-ds-02}]{高考三級資訊處理 99 年 第二題}
+（申論；20 分）
+
+關於字串樣式比對（string pattern matching），最簡單的方法是使用窮舉樣式比對法（exhaustive pattern
+matching），此即將樣式（pattern）的字元逐一比較本文（text）的字元，若不對則移下一字元繼續比對，直到比對
+成功或本文剩下的字元數目少於樣式長度。
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 假設本文是：THERE\_IS\_MORE\_TO\_LIFE\_THAN\_INCREASING\_ITS\_SPEED，欲找尋的樣式（pattern）為
+GENTLE，問：
+\begin{enumerate}[label=\arabic*.]
+\item 總共比較多少次？（5 分）
+\item 一共比較多少個字元？（5 分）
+\end{enumerate}
+\item[㈡] 假設本文是一千個 "0"，欲找尋的樣式（pattern）為 01010，請問：
+\begin{enumerate}[label=\arabic*.]
+\item 總共比較多少次？（5 分）
+\item 一共比較多少個字元？（5 分）
+\end{enumerate}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 比較 $42$ 次（$42$ 個對齊位置），共比較 $43$ 個字元，找不到。 ㈡ 比較 $996$ 次，共比較
+$1992$ 個字元，找不到。
+
+\textbf{題意。} 「比較多少次」和「比較多少個字元」問的是兩件事。 這裡把「一次比較」讀成樣式對齊在本文
+某個位置、從樣式第一個字元開始比的那一輪（也就是試了幾個位移）；「比較多少個字元」是所有輪加起來，字元
+和字元比了幾次。 每一輪從左往右比，遇到第一個不同就停，換下一個位移（資結書第~27.1~節的樸素比對）。
+
+設本文長 $n$、樣式長 $m$。 位移 $s = 0, 1, \ldots, n - m$ 共 $n - m + 1$ 個；本文剩下的字元少於 $m$ 時
+就停，所以找不到的話正好試 $n - m + 1$ 輪。
+
+\textbf{㈠} 本文
+\[
+\texttt{THERE\_IS\_MORE\_TO\_LIFE\_THAN\_INCREASING\_ITS\_SPEED}
+\]
+數一數：THERE(5)、\_IS(3)、\_MORE(5)、\_TO(3)、\_LIFE(5)、\_THAN(5)、\_INCREASING(11)、\_ITS(4)、\_SPEED(6)，
+共 $n = 47$ 個字元；$m = |\texttt{GENTLE}| = 6$。
+\begin{enumerate}[label=\arabic*.]
+\item 本文裡沒有 GENTLE，所以 $s = 0, 1, \ldots, 41$ 全部試過，共 $47 - 6 + 1 = 42$ 次。
+\item 每一輪的第一個比較是 $P[0] = \texttt{G}$ 對本文的 $T[s]$。 $s = 0 \sim 41$ 範圍內的本文字元中，只有
+INCREASING 最後那個 G（$T[36]$，後面接著 \texttt{\_ITS\_}）等於 G；這一輪接著比 $T[37] = \texttt{\_}$ 和
+$P[1] = \texttt{E}$，不同，停。 其他 $41$ 輪都在第一個字元就不同。 共比較
+$41 \times 1 + 1 \times 2 = 43$ 個字元。
+\end{enumerate}
+
+\textbf{㈡} $n = 1000$，$P = \texttt{01010}$，$m = 5$。
+\begin{enumerate}[label=\arabic*.]
+\item 本文全是 0，不可能出現含 1 的樣式，所以每個位移都試：$1000 - 5 + 1 = 996$ 次。
+\item 每一輪：$P[0] = \texttt{0}$ 和本文的 0 相同，繼續；$P[1] = \texttt{1}$ 和 0 不同，停。 每輪比 $2$ 個
+字元，共 $996 \times 2 = 1992$ 個。
+\end{enumerate}
+樸素比對最壞要比 $(n - m + 1)m$ 個字元；這個例子每輪只比 $2$ 個就失敗，所以只有 $1992$ 個。 如果樣式換成
+\texttt{00001}，每輪要比滿 $5$ 個才失敗，就是最壞的 $996 \times 5 = 4980$ 個。
+\end{pastsoln}

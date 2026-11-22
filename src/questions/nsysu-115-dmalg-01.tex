@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-01}]{中山資工所資安組 115 學年度 第 1 題}
+（設計）
+
+{[}10\%{]} Write a computer program/algorithm to convert a positive integer in base 64 to base 10.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題意與約定}。 題目沒有說 64 進位的數字用什麼符號表示。 下面假設輸入是一串 64 進位的「位數值」
+$d_{k-1} d_{k-2} \cdots d_0$（最高位在前），每一位 $0 \le d_i \le 63$，$d_{k-1} \ne 0$；如果輸入是字元，
+先查表換成位數值，例如常見的 Base64 字母表 \texttt{A}--\texttt{Z} 是 $0$--$25$、\texttt{a}--\texttt{z} 是
+$26$--$51$、\texttt{0}--\texttt{9} 是 $52$--$61$、\texttt{+} 是 $62$、\texttt{/} 是 $63$。 輸出是十進位的
+數字串。
+
+這個數的值是
+\[
+N = \sum_{i=0}^{k-1} d_i \cdot 64^i
+= \Bigl(\cdots\bigl((d_{k-1} \cdot 64 + d_{k-2}) \cdot 64 + d_{k-3}\bigr) \cdots\Bigr) \cdot 64 + d_0 ,
+\]
+右邊一層包一層的寫法就是 Horner 法（資結書第~4.4~節、虛擬碼~4.7）：從最高位開始，每讀一位就把目前的值
+乘 $64$ 再加上這一位，只要 $k - 1$ 次乘法，不必算 $64^i$。
+
+\textbf{做法一：值放得進一個整數變數時}。 先用 Horner 法算出 $N$，再反覆除以 $10$ 取餘數，得到十進位的
+各位（餘數先得到的是個位，所以要倒過來輸出）。
+\begin{pseudo}{64 進位轉 10 進位（值放得進一個整數）}
+\Procedure{Base64-To-Decimal}{$d, k$} \Comment{$d[k-1..0]$，$d[k-1]$ 是最高位}
+    \State $N \gets 0$
+    \For{$i \gets k - 1$ \DownTo $0$}
+        \State $N \gets N \cdot 64 + d[i]$ \Comment{Horner 法}
+    \EndFor
+    \State $m \gets 0$
+    \Repeat
+        \State $m \gets m + 1$；$t[m] \gets N \bmod 10$
+        \State $N \gets \lfloor N / 10 \rfloor$
+    \Until{$N = 0$}
+    \State 依序印出 $t[m], t[m-1], \ldots, t[1]$
+\EndProcedure
+\end{pseudo}
+
+\textbf{做法二：任意長度}。 64 進位的數字很長時（$k$ 位的數最大是 $64^k - 1$，大約 $1.8k$ 個十進位位數），
+放不進一個整數變數。 改成直接用十進位的位數陣列做 Horner 法：陣列 $D[1..m]$ 存目前的值，$D[1]$ 是個位；
+「乘 $64$ 再加 $d$」就是從個位開始逐位計算 $D[j] \cdot 64 + \mathit{carry}$，留下個位、其餘進位，和手算
+乘法一樣。
+\begin{pseudo}{64 進位轉 10 進位（任意長度）}
+\Procedure{Base64-To-Decimal-Big}{$d, k$}
+    \State $m \gets 1$；$D[1] \gets 0$
+    \For{$i \gets k - 1$ \DownTo $0$}
+        \State $\mathit{carry} \gets d[i]$ \Comment{把 $D$ 改成 $D \cdot 64 + d[i]$}
+        \For{$j \gets 1$ \To $m$}
+            \State $s \gets D[j] \cdot 64 + \mathit{carry}$
+            \State $D[j] \gets s \bmod 10$；$\mathit{carry} \gets \lfloor s / 10 \rfloor$
+        \EndFor
+        \While{$\mathit{carry} > 0$}
+            \State $m \gets m + 1$；$D[m] \gets \mathit{carry} \bmod 10$；$\mathit{carry} \gets \lfloor \mathit{carry} / 10 \rfloor$
+        \EndWhile
+    \EndFor
+    \State 依序印出 $D[m], D[m-1], \ldots, D[1]$
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 做法一：迴圈不變量是「處理完 $d[k-1..i]$ 後，$N$ 等於這幾位組成的 64 進位數」，每多處理一位，
+原本的每一位都升一級（乘 $64$），新的一位當個位（加 $d[i]$），不變量保持；做完 $i = 0$ 就是 $N$。 之後
+$N \bmod 10$ 是個位，$\lfloor N/10 \rfloor$ 是去掉個位的數，反覆做就依序得到個位、十位、……。 做法二的
+內層迴圈是逐位的直式乘法：每一位 $s = D[j] \cdot 64 + \mathit{carry}$ 留下 $s \bmod 10$，把 $\lfloor s/10 \rfloor$
+進到下一位，最後剩的進位再補成新的高位，所以 $D$ 始終是同一個不變量所說的值的十進位表示。
+
+\textbf{例子}。 位數值 $(1, 0, 63)_{64}$：$N = 0 \cdot 64 + 1 = 1$，$1 \cdot 64 + 0 = 64$，$64 \cdot 64 + 63 = 4159$。
+再除以 $10$：餘數依序是 $9, 5, 1, 4$，倒過來印出 $4159$。 檢查：$1 \cdot 64^2 + 0 \cdot 64 + 63 = 4096 + 63 = 4159$。
+
+\textbf{複雜度}。 做法一：Horner 法 $k$ 次乘加，轉十進位 $O(\log_{10} N) = O(k)$ 次除法，共 $O(k)$。 做法二：
+十進位的位數 $m \le \lceil k \log_{10} 64 \rceil \approx 1.81k$，外層 $k$ 輪、內層最多 $m$ 位，共 $O(k^2)$ 次
+基本運算，額外空間 $O(k)$。
+\end{pastsoln}

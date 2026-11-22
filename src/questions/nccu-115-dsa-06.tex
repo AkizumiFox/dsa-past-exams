@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:nccu-115-dsa-06}]{政大資科所 115 學年度 第 6 題}
+（單選）
+
+(5\%) For two decision problems A and B, A is said to be \textit{polynomial-time reducible} to B, denoted
+A $\le_P$ B, if there exists a function $f$ that is computable in polynomial time, such that for every
+input $x$:
+\[ x\in A \Leftrightarrow f(x)\in B \]
+Consider two decision problems A and B. It is given that problem A is NP-Complete. Which of the
+following statements regarding the direction of reduction is true?
+\begin{enumerate}[label=(\Alph*)]
+\item If there exists a reduction A $\le_P$ B, and B belongs to the class NP, then B must be NP-Complete.
+\item If there exists a reduction B $\le_P$ A, and B belongs to the class NP, then B must be NP-Complete.
+\item If there exists a reduction A $\le_P$ B, then B must be verifiable in polynomial time.
+\item If there exists a reduction B $\le_P$ A, then B must be strictly harder than A.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+先記住方向：$X \le_P Y$ 表示「會解 $Y$ 就會解 $X$」，所以 $Y$ 至少和 $X$ 一樣難（資結書第~28.3~節）。
+要證明新問題 $B$ 是 NP 完備，是把已知的 NP 完備問題歸約\textbf{到} $B$，再證明 $B \in \text{NP}$
+。
+
+\begin{itemize}
+\item (A) 對。 $A$ 是 NP 完備，所以每個 NP 問題 $X$ 都有 $X \le_P A$。 再接上 $A \le_P B$，兩個多項式
+時間的轉換函數接起來還是多項式時間（資結書引理~28.3，遞移性），得到 $X \le_P B$，$B$ 是 NP-hard。
+再加上 $B \in \text{NP}$，$B$ 就是 NP 完備。 這正是資結書引理~28.6。
+\item (B) 錯。 因為 $A$ 是 NP 完備，\textbf{每一個} NP 問題都可以歸約到 $A$，所以「$B \le_P A$ 且
+$B \in \text{NP}$」對所有 NP 問題都成立，包括 P 裡面很簡單的問題。 例如 $B$ =「給一個整數，問它是不是
+偶數」，$B \in \text{P} \subseteq \text{NP}$，也有 $B \le_P A$，但除非 $\text{P} = \text{NP}$，$B$
+不是 NP 完備。
+\item (C) 錯。 $A \le_P B$ 只說明 $B$ 至少和 $A$ 一樣難，沒有限制 $B$ 的上限，$B$ 可以難到根本不在 NP
+裡。 例子是停機問題 HALT（給一個程式和輸入，問它會不會停）。 把一個布林公式 $\varphi$ 轉成程式
+「依序試 $\varphi$ 的所有真假指派，找到滿足的就停，全部試完都不滿足就進入無窮迴圈」，這個轉換是多項式
+時間，而且 $\varphi$ 可滿足 $\iff$ 程式會停，所以 SAT $\le_P$ HALT。 HALT 是不可判定的，不可能在
+多項式時間內驗證。
+\item (D) 錯。 方向反了：$B \le_P A$ 表示 $B$ 不比 $A$ 難（會解 $A$ 就會解 $B$）。 取 $B = A$，恆等函數
+就是一個歸約，但 $A$ 不會比自己「嚴格更難」。
+\end{itemize}
+\end{pastsoln}

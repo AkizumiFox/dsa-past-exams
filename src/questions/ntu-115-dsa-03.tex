@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-115-dsa-03}]{臺大資工所 115 學年度 第 3 題}
+（單選）
+
+(4 points) In 2022, DeepMind's AlphaTensor discovered a new state-of-the-art strategy for multiplying two $4\times 4$ matrices using only 47 multiplications (under a special arithmetic) instead of the original 49. By integrating this method into a standard divide-and-conquer framework, the complexity of multiplying two $n\times n$ matrices is reduced to $O(n^k)$. Compute $k$ based on the above information to get the tightest upper bound.
+
+
+(A)~$\log_2 47$ \qquad (B)~$\log_4(47+49)$ \qquad (C)~$\log_4 47$ \qquad (D)~$\log_{16}(47+49)$ \qquad (E)~$\log_{16}47$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+標準的分治矩陣乘法把 $n \times n$ 的矩陣切成區塊再遞迴（資結書第~17.3.4~節的 Strassen 就是這樣）。
+這裡切成 $4 \times 4$ 個區塊，每塊 $\frac{n}{4} \times \frac{n}{4}$；把題目的 $4 \times 4$ 乘法用在區塊上，
+要做 $47$ 次「$\frac{n}{4} \times \frac{n}{4}$ 矩陣相乘」，另外的區塊加減是 $\Theta(n^2)$：
+\[
+T(n) = 47\,T(n/4) + \Theta(n^2).
+\]
+$n^{\log_4 47}$ 中 $\log_4 47 \approx 2.777 > 2$，$f(n) = \Theta(n^2) = O(n^{\log_4 47 - \epsilon})$，主定理情況 1
+（資結書定理~2.4），$T(n) = \Theta(n^{\log_4 47})$，$k = \log_4 47$。 （原本的 $49$ 次就是 Strassen 的
+$7 \times 7$：$\log_4 49 = \log_2 7 \approx 2.807$，$47$ 次的確比較好。）
+
+其他選項：
+\begin{itemize}
+\item (A) $\log_2 47 \approx 5.55$：把子問題當成 $n/2$，但區塊切成 $4 \times 4$ 時每塊邊長是 $n/4$。 而且這比
+一般的 $n^3$ 還差。
+\item (B) $\log_4 96$、(D) $\log_{16} 96$：$47 + 49$ 沒有意義，遞迴的分支數是 $47$。
+\item (E) $\log_{16} 47 \approx 1.39 < 2$：光是讀進 $n^2$ 個元素就要 $\Omega(n^2)$，不可能。 這是把「$16$ 個區
+塊」誤當成子問題的縮小倍數；遞迴式裡的 $b$ 是邊長縮小的倍數 $4$。
+\end{itemize}
+\end{pastsoln}

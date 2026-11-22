@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-111-is-01}]{中興資工所乙組 111 學年度 第 1 題}
+（單選）
+
+(3 pts) Which of the following operations is not O(1) for an array of data? Assume that the array elements
+have been sorted and are all distinct.
+\begin{enumerate}[label=(\alph*).]
+\item Find the i-th largest element
+\item Delete an element
+\item Find the i-th smallest element
+\item All of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)。
+
+陣列的元素連續存放，給定註標就能用位址公式直接算出位置（資結書第~4.1~節），存取任何一格都是 $O(1)$。
+陣列已經由小到大排好、元素互不相同，設陣列是 $A[1..n]$：
+\begin{itemize}
+\item (a) 第 $i$ 大的元素就是 $A[n - i + 1]$，$O(1)$。
+\item (b) 刪除一個元素之後，陣列要維持「連續存放、依序排好」，被刪的位置後面的元素都要往前移一格。 刪掉
+$A[1]$ 要搬 $n - 1$ 個，最壞 $\Theta(n)$，平均也要搬約 $n/2$ 個。 如果還要先找到這個元素，用二分搜尋再加
+$O(\log n)$，但瓶頸是搬移。 不是 $O(1)$。
+\item (c) 第 $i$ 小的元素就是 $A[i]$，$O(1)$。
+\item (d) (a)、(c) 都是 $O(1)$，所以「以上皆是」不對。
+\end{itemize}
+\end{pastsoln}

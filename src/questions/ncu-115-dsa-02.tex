@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ncu-115-dsa-02}]{中央資工所 115 學年度 第 2 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Which of the following statements about amortized analysis are true?
+\begin{enumerate}[label=\Alph*.]
+\item Amortized analysis provides an upper bound on the average cost per operation over any sequence of operations, not assuming any probability distribution.
+\item If the amortized cost of an operation is $O(1)$, then every individual operation must also run in $O(1)$ time.
+\item The potential method assigns a potential value to the data structure state, which is used to account for future expensive operations.
+\item In the accounting method, some operations may be charged more than their actual cost to pay for later operations.
+\item Amortized analysis and average-case analysis are equivalent concepts.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、C、D。
+
+\textbf{A 對}。 平攤分析保證的是：\textbf{任何}一個長度 $n$ 的操作序列，總成本都不超過 $n$ 乘上平攤
+成本（聚集法就是直接求最壞序列的總成本 $T(n)$，再除以 $n$，資結書第~3.1~節）。 這是最壞情況的
+保證，沒有假設輸入的機率分布。
+
+\textbf{B 錯}。 平攤 $O(1)$ 只說平均下來便宜，個別操作可以很貴。 反例是資結書第~3.4~節的動態陣列：
+插入的平攤成本是 $O(1)$，但陣列滿了要擴充的那一次，必須把 $k$ 個元素全部搬到新陣列，那一次是
+$\Theta(k)$。 二進位計數器的 \proc{Increment} 也一樣，平攤 $O(1)$，但從 $0111\cdots1$ 加一要翻
+$k$ 個位元。
+
+\textbf{C 對}。 位能法（資結書第~3.3~節）定義位能函數 $\Phi$，把資料結構的狀態對應到一個數，
+第 $i$ 個操作的平攤成本是 $\hat c_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$。 便宜的操作讓位能上升，
+等於先存起來；昂貴的操作讓位能下降，用存下來的位能付掉多出來的實際成本。 只要
+$\Phi(D_n) \ge \Phi(D_0)$，平攤成本的總和就是實際總成本的上界。
+
+\textbf{D 對}。 記帳法（資結書第~3.2~節）就是讓某些操作多收費，多收的部分當作存款放在資料結構
+裡，留給以後的操作用。 例如二進位計數器把位元設成 $1$ 時收 $2$：$1$ 付這次的翻轉，$1$ 存在這個位元
+上，以後它被翻回 $0$ 時就用這筆存款付，所以 \proc{Increment} 的平攤成本是 $2$。
+
+\textbf{E 錯}。 平均情況分析要先假設輸入的分布（例如每種排列機率相同），算的是期望值；某些輸入
+仍然可能很慢。 平攤分析不談機率，對最壞的操作序列也成立。 例如快速排序的平均情況是
+$O(n \log n)$，但特定輸入要 $\Theta(n^2)$；動態陣列連續 $n$ 次插入，不論怎麼插，總成本都是
+$O(n)$。 兩者是不同的概念。
+\end{pastsoln}

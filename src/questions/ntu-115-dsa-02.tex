@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-115-dsa-02}]{臺大資工所 115 學年度 第 2 題}
+（單選）
+
+(4 points) For positive functions $f(n)$ and $g(n)$ on $\mathbb{N}$. If $f(n)=O(g(n))$ and $f(n)=\Omega(1)$, how many of the following statements are true?
+\begin{itemize}
+\item $g(n)=\Omega(f(n))$
+\item $f(n)\cdot\log(1+f(n))=O(g(n)\cdot\log(1+g(n)))$
+\item $2^{f(n)}=O(2^{g(n)})$
+\item $(f(n))^k=O((g(n))^k)$ for any $0<k<1$
+\end{itemize}
+
+
+(A)~0 \qquad (B)~1 \qquad (C)~2 \qquad (D)~3 \qquad (E)~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)：第 1、2、4 句對，第 3 句錯。
+
+先把已知條件照資結書定義~1.2 寫出來。 存在 $c > 0$、$n_1$，使 $n \ge n_1$ 時
+$f(n) \le c\,g(n)$；存在 $\delta > 0$、$n_2$，使 $n \ge n_2$ 時 $f(n) \ge \delta$。 把
+$c$ 調大不會讓不等式變錯，所以不妨設 $c \ge 1$。 以下都假設 $n \ge \max(n_1, n_2)$，
+$\log$ 的底是任何大於 $1$ 的固定數。
+
+\begin{itemize}
+\item 第 1 句對。 這是資結書第~1.5~節的轉置性質：$f(n) \le c\,g(n)$ 就是
+$\frac{1}{c} f(n) \le g(n)$，取常數 $1/c$ 得到 $g(n) = \Omega(f(n))$。
+\item 第 2 句對。 先估 $\log(1 + f)$。 因為 $c \ge 1$，
+$1 + f \le 1 + c\,g \le c\,(1 + g)$，所以 $\log(1 + f) \le \log c + \log(1 + g)$。 要
+把常數 $\log c$ 併進 $\log(1 + g)$，需要 $\log(1 + g)$ 不會趨近 $0$。 這裡用到
+$f = \Omega(1)$：$g \ge f / c \ge \delta / c$，所以
+$\log(1 + g) \ge \log(1 + \delta / c) = \lambda$，$\lambda$ 是一個正的常數。 於是
+$\log c \le \frac{\log c}{\lambda} \log(1 + g)$，
+\[
+\log(1 + f) \le \Bigl(1 + \frac{\log c}{\lambda}\Bigr) \log(1 + g).
+\]
+再和 $f \le c\,g$ 相乘（兩邊都是正的），得到
+$f \log(1 + f) \le c\,\bigl(1 + \frac{\log c}{\lambda}\bigr)\, g \log(1 + g)$，括號外
+是常數。
+\item 第 3 句錯。 反例：$f(n) = 2n$、$g(n) = n$。 $f = O(g)$（取 $c = 2$），
+$f = \Omega(1)$，但 $2^{f(n)} / 2^{g(n)} = 2^{n} \to \infty$，由資結書定理~1.2，
+$2^{2n} \ne O(2^n)$。 資結書第~1.6~節說過，指數上的常數倍不能丟。
+\item 第 4 句對。 $k > 0$ 時 $x^k$ 在正數上是遞增函數，$f \le c\,g$ 兩邊取 $k$ 次方得
+$f^k \le c^k g^k$，取常數 $c^k$。 這一步其實對任何 $k > 0$ 都成立。
+\end{itemize}
+\end{pastsoln}

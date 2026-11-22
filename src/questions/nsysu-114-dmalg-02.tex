@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-02}]{中山資工所資安組 114 學年度 第 2 題}
+（證明）
+
+{[10\%]} If $n \in Z^+$ and $n$ is composite, then there is a prime $p$ such that $p | n$. Please
+prove it using the well-ordering principle.
+\end{pastexam}
+
+\begin{pastsoln}
+良序原理（well-ordering principle）：正整數的任何非空子集合都有最小元素。 證明的方向是：
+把「$n$ 的大於 $1$ 的因數」收成一個集合，取它的最小元素，再證明這個最小元素一定是質數。
+
+\textbf{證明。} 設 $n$ 是合數。 令
+\[
+S = \{\, d \in Z^+ : d > 1 \text{ 且 } d \mid n \,\}.
+\]
+$n > 1$ 且 $n \mid n$，所以 $n \in S$，$S$ 不是空集合。 由良序原理，$S$ 有最小元素，記為 $p$。
+$p \in S$，所以 $p > 1$ 且 $p \mid n$。
+
+接著證明 $p$ 是質數。 假設 $p$ 不是質數，因為 $p > 1$，$p$ 是合數，可以寫成 $p = ab$，其中
+$1 < a < p$（$a$ 是 $p$ 的一個真因數）。 由 $a \mid p$ 和 $p \mid n$ 得到 $a \mid n$（因數的
+遞移性：$p = ab$、$n = pc$，所以 $n = a(bc)$）。 於是 $a > 1$ 且 $a \mid n$，$a \in S$；但
+$a < p$，和 $p$ 是 $S$ 的最小元素矛盾。 所以 $p$ 是質數，而且 $p \mid n$。 \hfill$\blacksquare$
+
+說明兩點：
+\begin{itemize}
+\item 證明沒有用到「$n$ 是合數」以外的事，其實對所有 $n > 1$ 都成立；$n$ 是質數時取 $p = n$。
+題目限定合數，是因為這是「每個合數都有質因數」的標準敘述。
+\item 合數的定義是「大於 $1$ 且不是質數」，等價於「可以寫成 $ab$，$1 < a, b < n$」。 上面
+「$p$ 不是質數就有 $1 < a < p$ 的因數」用的就是這個定義。
+\end{itemize}
+\end{pastsoln}

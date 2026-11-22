@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-111-dsa-12}]{中央資工所 111 學年度 多選題第 12 題}
+（多選；每題 5 分，每個選項答對得 1 分，答錯倒扣 1 分）
+
+Choose the correct statement(s):
+\begin{enumerate}[label=(\Alph*)]
+\item It has been proved that there exists no deterministic algorithm that can solve any given NPC
+problem with a polynomial time complexity in the worst case.
+\item If we can prove that the worst-case problem lower bound of an NPC problem is of a polynomial
+order, then we can prove that NP$\neq$P.
+\item If we can prove that an existing NP-hard problem is polynomially reducible to a problem X,
+then X is NP-hard.
+\item If a problem is proved to be an NP-hard and NP problem, then it is an NPC problem.
+\item If a problem X can be solved by a non-deterministic algorithm taking a polynomial time
+complexity in the worst case, then X is an NP problem.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)、(D)、(E)。
+
+名詞照資結書第~28~章：NP 是非決定性演算法能在多項式時間解的問題（等價地，答案是「是」時有多項式時間
+可驗證的證據）；NP-hard 是每個 NP 問題都能多項式時間歸約過去的問題；NPC（NP 完備）是既屬於 NP 又是
+NP-hard 的問題。
+\begin{itemize}
+\item (A) 錯。 這等於說已經證明了 $\mathrm{P} \ne \mathrm{NP}$，但這仍是未解的問題（資結書第~28.4~節）。
+\item (B) 錯。 證明某個 NPC 問題的下界是多項式（例如 $\Omega(n^2)$），並不排除它有多項式時間的演算法，
+推不出 $\mathrm{NP} \ne \mathrm{P}$。 要證明 $\mathrm{NP} \ne \mathrm{P}$，需要的是\textbf{超多項式}的
+下界。
+\item (C) 對。 設 $Y$ 是 NP-hard，$Y \le_p X$。 對任何 NP 問題 $Z$，$Z \le_p Y$，再接上 $Y \le_p X$；
+多項式時間歸約可以串接（資結書引理~28.3），所以 $Z \le_p X$，$X$ 是 NP-hard。 這正是證明 NP-hard 的
+標準做法（資結書第~28.4~節）。
+\item (D) 對。 這就是 NPC 的定義：$X \in \mathrm{NP}$ 且 $X$ 是 NP-hard。
+\item (E) 對。 這就是 NP 的定義（NP 的 N 是 nondeterministic）：存在非決定性演算法在最壞情況多項式時間
+內解決它。
+\end{itemize}
+\end{pastsoln}

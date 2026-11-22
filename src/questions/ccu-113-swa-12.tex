@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ccu-113-swa-12}]{中正資工所甲組 113 學年度 第 17 題}
+（單選）
+
+(2\%) The solution of the recurrence $\mathrm{T}(n)=4\mathrm{T}\left(\frac{n}{2}\right)+n^3$ is \quad (a)~$n^{1/2}$; (b)~$n$; (c)~$n^2$; (d)~$n^3$; (e)~$n^2logn$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d)，$T(n) = \Theta(n^3)$。
+
+$a = 4$、$b = 2$，$n^{\log_2 4} = n^2$，$f(n) = n^3 = \Omega(n^{2 + \varepsilon})$，取 $\varepsilon = 1$。 正則條件：
+$a f(n/b) = 4 \cdot \frac{n^3}{8} = \frac{1}{2} n^3 \le c\, n^3$，取 $c = \frac{1}{2}$。 主定理情況 3（資結書定理~2.4），
+$T(n) = \Theta(n^3)$。 遞迴樹第 $i$ 層的工作是 $(1/2)^i n^3$，等比遞減，總和不超過 $2n^3$。
+
+其他選項：(a) $n^{1/2}$、(b) $n$、(c) $n^2$ 都比最上層的 $n^3$ 小，不可能；(e) $n^2 \log n$ 是 $f(n) = \Theta(n^2)$（情況 2）時的答案。
+\end{pastsoln}

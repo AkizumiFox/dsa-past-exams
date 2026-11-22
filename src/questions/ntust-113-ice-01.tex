@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntust-113-ice-01}]{臺科大資工所 113 學年度 第 I-1 題}
+（選擇）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) Order the following functions by growth rate in increasing order.\\
+$N$, $\sqrt{N}$, $N^{1.5}$, $N\log N$, $N^2$, $N\log(\log N)$, $N\log^2 N$, $N\log(N^2)$, $2^N$,
+2048\\
+Which is the 5th function in the ordered sequence?\\
+(a)~$N$,\quad (b)~$\sqrt{N}$,\quad (c)~$N^{1.5}$,\quad (d)~$N\log N$,\quad (e)~$N^2$,\\
+(f)~$N\log(\log N)$,\quad (g)~$N\log^2 N$,\quad (h)~$N\log(N^2)$,\quad (i)~$2^N$,\quad (j)~2048
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d) $N \log N$。
+
+先化簡：$N \log(N^2) = 2N \log N$，$N \log^2 N = N (\log N)^2$。 $\log$ 的底不影響比較（資結書
+第~1.6~節）。 由小到大是
+\[
+2048 < \sqrt{N} < N < N \log(\log N) < N \log N < N \log(N^2) < N \log^2 N < N^{1.5} < N^2 < 2^N .
+\]
+相鄰兩個逐一說明（除了第 5、6 個，每一對的比值極限都是 $0$，用資結書定理~1.2 的極限判別）：
+\begin{itemize}
+\item $2048$ 是常數，$\sqrt{N} \to \infty$；$\sqrt{N} / N = 1/\sqrt{N} \to 0$。
+\item $N / (N \log\log N) = 1 / \log\log N \to 0$。
+\item $N \log\log N / (N \log N) = \log\log N / \log N$：令 $m = \log N$，這是 $\log m / m \to 0$。
+\item $N \log N$ 和 $N \log(N^2) = 2N \log N$ 只差 $2$ 倍，是同一個 $\Theta$；但 $N \ge 2$ 時 $N \log N$
+嚴格比較小。
+\item $2N \log N / (N \log^2 N) = 2 / \log N \to 0$。
+\item $N \log^2 N / N^{1.5} = (\log N)^2 / N^{0.5} \to 0$（任何次方的對數都比任何正次方的多項式慢，
+資結書第~1.6~節）。
+\item $N^{1.5} / N^2 \to 0$；$N^2 / 2^N \to 0$（多項式比指數慢）。
+\end{itemize}
+第 5 個是 $N \log N$。 題目要的是「排好的序列裡的第 5 個」，第 5、6 個同一級時，照實際大小排，
+$N \log N$ 在前。 代 $N = 2^{64}$ 實際算出十個值再排序，順序也和上面相同。
+\end{pastsoln}

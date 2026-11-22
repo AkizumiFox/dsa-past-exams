@@ -1,0 +1,22 @@
+paper: ccu-115-swa
+volume: 2
+school: 中正
+dept: 資工所甲組
+year: 115
+subject: 軟體設計
+instructions: '(For Questions 1 to 24.) Select multiple correct answers 複選題(可選多個選項): Choose all (one or more) that apply. NO partial credit is given.'
+questions:
+  - {id: ccu-115-swa-01, label: 第 11 題, chapter: 3}
+  - {id: ccu-115-swa-02, label: 第 12 題, chapter: 3}
+  - {id: ccu-115-swa-03, label: 第 13 題, chapter: 26}
+  - {id: ccu-115-swa-04, label: 第 14 題, chapter: 23}
+  - {id: ccu-115-swa-05, label: 第 15 題, chapter: 12}
+  - {id: ccu-115-swa-06, label: 第 16 題, chapter: 14}
+  - {id: ccu-115-swa-07, label: 第 17 題, chapter: 23}
+  - {id: ccu-115-swa-08, label: 第 18 題, chapter: 23}
+  - {id: ccu-115-swa-09, label: 第 19 題, chapter: 23}
+  - {id: ccu-115-swa-10, label: 第 20 題, chapter: 7}
+  - {id: ccu-115-swa-11, label: 第 21 題, chapter: 22}
+  - {id: ccu-115-swa-12, label: 第 22 題, chapter: 27}
+  - {id: ccu-115-swa-13, label: 第 23 題, chapter: 7}
+  - {id: ccu-115-swa-14, label: 第 24 題, chapter: 25}

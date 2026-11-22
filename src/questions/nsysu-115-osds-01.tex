@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:nsysu-115-osds-01}]{中山資工所甲組 115 學年度 第 5 題（節錄 (b) 小題）}
+（程式追蹤；5 分）
+
+What is printed by each of the following C programs?
+
+（原題有 (a)、(b) 兩小題，(a) 考 C 的位元運算子，這裡只收 (b)。）
+\begin{enumerate}[label=(\alph*)]
+\setcounter{enumi}{1}
+\item (5\%)
+\begin{minted}[fontsize=\small]{c}
+int mystery(int *p, int n) {
+    static int count = 0;
+    count++;
+    if (n <= 0) return count;
+    if (*p > 10)
+        return *p + mystery (p + 1, n - 1);
+    else
+        return mystery(p + 1, n - 1);
+}
+int main() {
+    int arr[] = {15, 5, 20, 8, 30};
+    printf("%d\n", mystery(arr, 3));
+    return 0;
+}
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：印出 \texttt{39}（再換行）。
+
+\texttt{mystery(p, n)} 看陣列從 \texttt{p} 開始的 \texttt{n} 個元素，把大於 $10$ 的加起來，最後
+再加上走到底時的 \texttt{count}。 關鍵是 \texttt{static}：\texttt{count} 只在程式開始時設成 $0$
+一次，之後每次呼叫都共用同一個變數，不會重新歸零。 所以 \texttt{count} 記的是「到目前為止一共
+呼叫了幾次」。
+
+逐層追蹤（第幾次呼叫就是那時 \texttt{count++} 之後的值）：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+呼叫 & \texttt{*p} & \texttt{n} & 做的事 \\
+\midrule
+\texttt{mystery(arr, 3)} & 15 & 3 & \texttt{count} $= 1$；$15 > 10$，回傳 $15 +$ 下一層 \\
+\texttt{mystery(arr+1, 2)} & 5 & 2 & \texttt{count} $= 2$；$5 \le 10$，回傳下一層 \\
+\texttt{mystery(arr+2, 1)} & 20 & 1 & \texttt{count} $= 3$；$20 > 10$，回傳 $20 +$ 下一層 \\
+\texttt{mystery(arr+3, 0)} & （不看） & 0 & \texttt{count} $= 4$；$n \le 0$，回傳 $4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+往回算：第三層回傳 $20 + 4 = 24$，第二層照傳 $24$，第一層回傳 $15 + 24 = 39$。
+
+兩個細節：
+\begin{itemize}
+\item \texttt{*p + mystery(...)} 裡兩個運算元的求值順序 C 沒有規定，但 \texttt{*p} 不會被遞迴改動，
+先算哪個都一樣。 \texttt{count} 的值只在最深那一層被讀出，那時四次呼叫都已經做過
+\texttt{count++}，所以一定是 $4$。
+\item 如果把 \texttt{static} 拿掉，每次呼叫的 \texttt{count} 都是新的、從 $0$ 加到 $1$，最深那層回傳
+$1$，答案會變成 $15 + 20 + 1 = 36$。 這是這題想考的地方。
+\end{itemize}
+遞迴呼叫在執行時是一層一層疊在呼叫堆疊上的（資結書第~6.4~節）：第 $4$ 層回傳後才輪到第 $3$ 層
+做加法，依序退回第 $1$ 層。 \texttt{arr[3]}、\texttt{arr[4]} 沒有被看到，因為 \texttt{n} 只有 $3$。
+\end{pastsoln}

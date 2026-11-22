@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ntu-115-dsa-22}]{臺大資工所 115 學年度 第 22 題}
+（單選）
+
+(4 points) Let $X[1\ldots m]$ and $Y[1\ldots n]$ be two sequences. Let $L[i][j]$ denote the length of the longest common subsequence (LCS) of the prefixes $X[1\ldots i]$ and $Y[1\ldots j]$, and let $C[i][j]$ denote the number of distinct LCSs (distinct sequences, not dynamic programming paths or alignments) of these prefixes. Let $C[i][0]=C[0][j]=1$, since the empty sequence is the unique LCS in these cases. Which of the following recurrences correctly computes $C[i][j]$ without double counting identical LCS sequences?
+
+Here, ``without double counting'' means that each distinct LCS sequence is counted exactly once, even if it can be obtained from multiple dynamic programming subproblems or alignments. In particular, when multiple subproblems yield LCSs of the same optimal length, any LCS sequence that appears in more than one subproblem must be counted only once.
+\begin{enumerate}[label=(\Alph*)]
+\item If $X[i]=Y[j]$: \[C[i][j]=C[i-1][j-1].\]
+Else if $L[i-1][j]>L[i][j-1]$: \[C[i][j]=C[i-1][j].\]
+Else if $L[i-1][j]<L[i][j-1]$: \[C[i][j]=C[i][j-1].\]
+Else: \[C[i][j]=C[i-1][j]+C[i][j-1].\]
+\item If $X[i]=Y[j]$: \[C[i][j]=C[i-1][j-1].\]
+Else if $L[i-1][j]>L[i][j-1]$: \[C[i][j]=C[i-1][j].\]
+Else if $L[i-1][j]<L[i][j-1]$: \[C[i][j]=C[i][j-1].\]
+Else: \[C[i][j]=C[i-1][j]+C[i][j-1]-C[i-1][j-1].\]
+\item If $X[i]=Y[j]$: \[C[i][j]=C[i-1][j]+C[i][j-1].\]
+Else: \[C[i][j]=C[i-1][j-1].\]
+\item If $X[i]=Y[j]$: \[C[i][j]=1.\]
+Else: \[C[i][j]=C[i-1][j]+C[i][j-1].\]
+\item If $X[i]=Y[j]$: \[C[i][j]=C[i-1][j-1].\]
+Else: \[C[i][j]=\max\{C[i-1][j],C[i][j-1]\}.\]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{原題有誤。} 照字面五個遞迴式都不對，各有反例（見下）。 出題者要的應該是 (B)（排容原理），但 (B) 漏了一個
+條件；作答時選 (B)，並註明它要加上「$L[i-1][j-1] = L[i][j]$ 時才減」。
+
+先推出正確的遞迴式。 記 $\mathcal{S}(i, j)$ 為 $X[1..i]$ 和 $Y[1..j]$ 的所有 LCS（相異的序列）所成的集合，
+$C[i][j] = |\mathcal{S}(i, j)|$。 LCS 長度的遞迴見資結書第~18.3~節。
+\begin{itemize}
+\item \textbf{$X[i] = Y[j] = c$。} 設 $s$ 是一個 LCS，長度 $L[i][j] = L[i-1][j-1] + 1$。 若 $s$ 的最後一個字不是 $c$，
+它在 $X$、$Y$ 裡配到的位置都在 $i$、$j$ 之前，$s$ 是 $X[1..i-1]$、$Y[1..j-1]$ 的共同子序列，長度最多
+$L[i-1][j-1]$，矛盾。 所以每個 LCS 都是「$\mathcal{S}(i-1, j-1)$ 的某個序列後面接 $c$」，反過來這些也都是 LCS，
+一一對應：$C[i][j] = C[i-1][j-1]$。
+\item \textbf{$X[i] \ne Y[j]$。} 一個共同子序列不可能同時用到 $X[i]$ 和 $Y[j]$（它們會被配成一對，但兩字不同），
+所以它是 $(i-1, j)$ 或 $(i, j-1)$ 的共同子序列。 $L[i-1][j] > L[i][j-1]$ 時 $\mathcal{S}(i, j) = \mathcal{S}(i-1, j)$；
+小於時對稱。 兩者相等（都是 $L = L[i][j]$）時 $\mathcal{S}(i, j) = \mathcal{S}(i-1, j) \cup \mathcal{S}(i, j-1)$，而交集
+裡的序列同時是 $X[1..i-1]$ 和 $Y[1..j-1]$ 的子序列、長度 $L$：$L[i-1][j-1] = L$ 時交集就是 $\mathcal{S}(i-1, j-1)$，
+$L[i-1][j-1] < L$ 時交集是空的。 由排容原理
+\[
+C[i][j] = C[i-1][j] + C[i][j-1] - \begin{cases} C[i-1][j-1], & L[i-1][j-1] = L[i][j], \\ 0, & L[i-1][j-1] < L[i][j]. \end{cases}
+\]
+\end{itemize}
+
+逐項檢查（反例都很小，可以手算）：
+\begin{itemize}
+\item (A) 錯：兩邊長度相等時直接相加，交集算了兩次。 $X = \texttt{a}$、$Y = \texttt{b}$：唯一的 LCS 是空序列，
+$C = 1$；(A) 走 Else，得 $C[0][1] + C[1][0] = 2$。
+\item (B) 錯：交集是空的時候也減。 $X = \texttt{ab}$、$Y = \texttt{ba}$：LCS 是 \texttt{a} 和 \texttt{b}，$C = 2$。
+(B) 算 $C[1][1] = 1 + 1 - 1 = 1$（空序列）、$C[1][2] = C[0][1] = 1$、$C[2][1] = C[1][0] = 1$；$(2, 2)$ 時
+$L[1][2] = L[2][1] = 1$ 走 Else，得 $1 + 1 - C[1][1] = 1$。 錯在 $L[1][1] = 0 < 1$，\texttt{a} 和 \texttt{b} 根本沒有
+重複，不該減。
+\item (C) 錯：相同字元時應該接在 $C[i-1][j-1]$ 後面。 $X = Y = \texttt{a}$：$C = 1$，(C) 得 $C[0][1] + C[1][0] = 2$。
+\item (D) 錯：$X = \texttt{a}$、$Y = \texttt{b}$ 時 (D) 也得 $2$；相同字元時令 $C = 1$ 也不對，例如
+$X = \texttt{abc}$、$Y = \texttt{bac}$ 的 LCS 是 \texttt{ac}、\texttt{bc} 兩個，(D) 在 $(3, 3)$ 得 $1$。
+\item (E) 錯：取 $\max$ 少算。 $X = \texttt{ab}$、$Y = \texttt{ba}$ 時 (E) 得 $\max(1, 1) = 1$，正確是 $2$。
+\end{itemize}
+(B) 只有在 $L[i-1][j-1] = L[i][j]$ 的情形是對的，是五個裡最接近正確的寫法。
+\end{pastsoln}

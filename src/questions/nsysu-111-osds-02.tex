@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:nsysu-111-osds-02}]{中山資工所甲組 111 學年度 第 2 題}
+（問答）
+
+(10\%) Suppose four symbols A, B, C, D are input into a stack sequentially. Four PUSH operations
+and four POP operations are used for the stack. There are some sequences are impossible output
+from the all possible combinations of PUSH and POP. Please give the number of each impossible
+case with AXXX, BXXX, CXXX, DXXX separately.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：AXXX 有 $1$ 種不可能（ADBC），BXXX 有 $1$ 種（BDAC），CXXX 有 $3$ 種（CABD、CADB、CDAB），
+DXXX 有 $5$ 種（DABC、DACB、DBAC、DBCA、DCAB），一共 $10$ 種。
+
+\textbf{判斷的工具}。 把 A、B、C、D 看成 $1, 2, 3, 4$。 資結書定理~6.1：依序進堆疊時，輸出
+順序做得到，若且唯若輸出裡找不到「先出現一個大的 $z$，之後依序出現 $x$、$y$，而
+$x < y < z$」（俗稱 3-1-2 型）。 原因是 $z$ 出來的時候，比它小的 $x$、$y$ 都已經進了堆疊，
+$x$ 在 $y$ 下面，只能 $y$ 先出來。 四個符號的排列共 $4! = 24$ 種，做得到的有卡特蘭數
+$C_4 = \frac{1}{5}\binom{8}{4} = 14$ 種（資結書定理~6.2），所以不可能的有 $24 - 14 = 10$ 種。
+下面依第一個輸出的符號分開數。
+
+\textbf{AXXX}：A 先 push 再立刻 pop，堆疊變空，剩下 B、C、D 就是三個符號依序進堆疊的問題。
+三個符號的 $6$ 種排列裡只有 $3$-$1$-$2$ 型做不到，也就是 D、B、C（D 出來時 B、C 都在堆疊裡，
+C 在上面）。 不可能：\textbf{ADBC}，$1$ 種。
+
+\textbf{BXXX}：push A、push B、pop B，此時堆疊裡有 A，還沒進的是 C、D。 後三個是 A、C、D 的
+$6$ 種排列，只有 D 在最前面而後面是 A、C 的那一種違規：D 出來時 C 已經壓在 A 上面，A 不能比 C
+早出來。 不可能：\textbf{BDAC}，$1$ 種。 其他五種都做得到，例如 BCDA（push C、pop C、push D、
+pop D、pop A）、BDCA（push C、push D、pop、pop、pop）。
+
+\textbf{CXXX}：要先輸出 C，A、B、C 都要 push，pop C 以後堆疊由底到頂是 A、B，還沒進的只有 D。
+B 在 A 上面，所以後三個裡 \textbf{B 一定在 A 前面}，D 插在哪裡都可以（D 隨時可以 push 再 pop）。
+A、B、D 的 $6$ 種排列裡 B 在 A 前面的有 BAD、BDA、DBA 三種，做得到；其餘三種 A 在 B 前面，
+做不到。 不可能：\textbf{CABD、CADB、CDAB}，$3$ 種。
+
+\textbf{DXXX}：先輸出 D，四個都要 push，堆疊由底到頂是 A、B、C，之後只能依序 pop 出 C、B、A。
+唯一做得到的是 DCBA，其他 $3! - 1 = 5$ 種都做不到：\textbf{DABC、DACB、DBAC、DBCA、DCAB}。
+
+\textbf{核對總數}：$1 + 1 + 3 + 5 = 10$，和 $24 - 14 = 10$ 相符。 每一種不可能的序列裡都能找到
+3-1-2 型，例如 ADBC 的 D、B、C，CABD 的 C、A、B，DBCA 的 D、B、C。
+\end{pastsoln}

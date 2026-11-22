@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ncku-114-prog-05}]{成大資訊聯招 114 學年度 第 5 題}
+（複選；至少有二個正確答案）
+
+{[4\%]} Please successively insert the data pairs containing the following keys into an empty height-based min leftist tree: 10, 20, 30, 40, 50, 60, 70, 5, 4, 15, 16. After each insertion, the tree should still be a min leftist tree. Which of the following descriptions are correct for the resultant tree?
+
+\textbf{Note: In a tree, each step from top to bottom is called the level of a tree. The level count starts with 1 and increments by 1 at each level or step.}
+\begin{enumerate}[label=(\Alph*)]
+\item The node containing key=10 has left child with key=30 and right child with key=20.
+\item The node containing key=10 and the node containing key=16 are siblings.
+\item After repeatedly performing the delete-min operation twice on the leftist tree, the node containing 20 is in the left subtree of the root.
+\item The difference of height between the left and right subtrees of the root is 2.
+\item The 3rd level of the tree has four nodes.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(D)。
+
+\textbf{規則}（資結書第~8.5~節、定理~8.2）。 高度偏左（height-based）的最小左傾樹：每個節點記 $s(x)$ = 從 $x$ 走到
+空子樹的最短距離（空子樹 $s = 0$），要求每個節點 $s(\text{左子}) \ge s(\text{右子})$，於是 $s(x) = s(\text{右子}) + 1$。
+插入 $k$ 就是把單一節點的樹和原樹合併（meld）：比較兩個根，較小的當根，它的右子樹和另一棵樹遞迴合併；回來後如果左子的
+$s$ 比右子小，就交換左右，再更新 $s$。 下面用 $x(L, R)$ 表示根 $x$、左子樹 $L$、右子樹 $R$，$-$ 是空的。
+
+\textbf{依序插入}：
+\begin{center}
+\small
+\begin{tabular}{rl}
+\toprule
+插入 & 結果 \\
+\midrule
+10 & $10$ \\
+20 & $10(20, -)$ \\
+30 & $10(20, 30)$：$30$ 和右子樹（空）合併放右邊，兩邊 $s$ 都是 $1$，不交換 \\
+40 & $10(20, 30(40, -))$：$40$ 併進右子樹 $30$，$30$ 的右邊是 $40$，交換到左邊 \\
+50 & $10(30(40, 50), 20)$：$50$ 併進 $30$ 得 $30(40, 50)$，$s = 2$ 大於左子 $20$ 的 $1$，交換 \\
+60 & $10(30(40, 50), 20(60, -))$ \\
+70 & $10(30(40, 50), 20(60, 70))$ \\
+5 & $5(10(\ldots), -)$：$5$ 比 $10$ 小，$5$ 當根，整棵舊樹併進它的右子樹後換到左邊 \\
+4 & $4(5(10(\ldots), -), -)$ \\
+15 & $4(5(10(\ldots), -), 15)$：$15$ 併進 $4$ 的右子樹（空），$s(5) = 1 \ge s(15) = 1$，不交換 \\
+16 & $4(5(10(\ldots), -), 15(16, -))$：$16$ 併進 $15$ 的右子樹後換到左邊 \\
+\bottomrule
+\end{tabular}
+\end{center}
+其中 $10(\ldots) = 10(30(40, 50), 20(60, 70))$。 結果：
+\begin{center}
+\begin{tikzpicture}[x=0.75cm,y=0.9cm,v/.style={circle,draw,inner sep=0pt,minimum size=6mm,font=\small}]
+\node[v] (n4) at (5,0) {4};
+\node[v] (n5) at (3,-1) {5}; \node[v] (n15) at (7.5,-1) {15};
+\node[v] (n10) at (3,-2) {10}; \node[v] (n16) at (7,-2) {16};
+\node[v] (n30) at (1.5,-3) {30}; \node[v] (n20) at (4.5,-3) {20};
+\node[v] (n40) at (0.8,-4) {40}; \node[v] (n50) at (2.2,-4) {50}; \node[v] (n60) at (3.8,-4) {60}; \node[v] (n70) at (5.2,-4) {70};
+\draw (n4)--(n5) (n4)--(n15) (n5)--(n10) (n15)--(n16) (n10)--(n30) (n10)--(n20) (n30)--(n40) (n30)--(n50) (n20)--(n60) (n20)--(n70);
+\node[font=\footnotesize,anchor=west] at (8.3,0) {第 1 層};
+\node[font=\footnotesize,anchor=west] at (8.3,-1) {第 2 層};
+\node[font=\footnotesize,anchor=west] at (8.3,-2) {第 3 層};
+\node[font=\footnotesize,anchor=west] at (8.3,-3) {第 4 層};
+\node[font=\footnotesize,anchor=west] at (8.3,-4) {第 5 層};
+\end{tikzpicture}
+\end{center}
+（$5$、$16$ 都只有左子節點。） 檢查左傾性質：$s(4) = s(15) + 1 = 2$，$s(5) = 1$、$s(15) = 1$，$s(10) = 3$，……每個節點
+左子的 $s$ 都不小於右子。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。 $10$ 的左子是 $30$、右子是 $20$（插入 $50$ 時交換過）。
+\item (B) 錯。 $10$ 的父節點是 $5$，$16$ 的父節點是 $15$，不是兄弟。
+\item (C) 錯。 刪除最小值就是拿掉根、把左右子樹合併。 第一次：合併 $5(10(\ldots), -)$ 和 $15(16, -)$，$5$ 當根，右子樹變成
+$15(16, -)$，得 $5(10(\ldots), 15(16, -))$。 第二次：合併 $10(30(40, 50), 20(60, 70))$ 和 $15(16, -)$，$10$ 當根，右子樹
+$20(60, 70)$ 和 $15(16, -)$ 合併得 $15(20(60, 70), 16)$，其 $s = 2$，和左子 $30(40, 50)$ 的 $s = 2$ 相等，不交換。 結果
+$10(30(40, 50), 15(20(60, 70), 16))$：$20$ 在根的\textbf{右}子樹裡。
+\item (D) 對。 左子樹 $5 \to 10 \to 30 \to 40$ 有 $4$ 層，右子樹 $15 \to 16$ 有 $2$ 層，相差 $2$（用邊數算是 $3$ 和 $1$，差一樣是 $2$）。
+\item (E) 錯。 第 $3$ 層只有 $10$ 和 $16$ 兩個節點。
+\end{itemize}
+\end{pastsoln}

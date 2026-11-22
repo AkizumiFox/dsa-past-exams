@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nchu-115-is-24}]{中興資工所乙組 115 學年度 第 24 題}
+（單選；每題 2 分，答錯不倒扣）
+
+What is the time complexity of the following code?
+\begin{minted}[fontsize=\small]{c}
+for (int i = 1; i < n; i *= 2) {
+    for (int j = 0; j < i; j++) {   // constant work
+    }
+}
+\end{minted}
+A.~O(n) \qquad B.~O(n log n) \qquad C.~O(log n) \qquad D.~O(n$^2$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+外層的 $i$ 依序是 $1, 2, 4, \ldots, 2^k$，其中 $2^k$ 是小於 $n$ 的最大的 $2$ 的次方（$n \ge 2$）。
+內層在外層是 $i$ 時跑 $i$ 次，所以內層總次數是等比級數（資結書第~1.7~節）：
+\[
+1 + 2 + 4 + \cdots + 2^k = 2^{k+1} - 1 < 2 \cdot n.
+\]
+另一方面 $2^{k+1} \ge n$，總次數 $\ge n - 1$。 外層本身只跑 $k + 1 = O(\log n)$ 次。 所以總時間
+$\Theta(n)$，選 A。 例如 $n = 100$：$i = 1, 2, \ldots, 64$，內層共 $127$ 次。
+\begin{itemize}
+\item B 錯：把外層 $\log n$ 次乘上內層「最多 $n$ 次」得到的上界 $O(n \log n)$ 不緊。 內層次數
+是一直加倍的，總和由最後一項主導。
+\item C 錯：那只是外層的次數。
+\item D 錯：差得更遠。
+\end{itemize}
+嚴格說 $O(n \log n)$、$O(n^2)$ 也都是這段程式的上界（大 $O$ 只是上界），但題目問的是它的
+時間複雜度，要給最緊的那一個，也就是 $\Theta(n)$ 對應的 A。
+\end{pastsoln}

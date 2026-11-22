@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nccu-114-dsa-01}]{政大資科所 114 學年度 第 1 題}
+（單選；每題 4 分）
+
+(4\%) Let $n$ an $m$ be the sizes of two sets, assume $n<m$, if the sets are implemented using
+sorted lists, what is the time complexity to find the intersection of the two sets?
+
+A.~O($n$+$m$) \qquad B.~O($n\times m$) \qquad C.~O($n$log$m$) \qquad D.~O($m$log$n$) \qquad
+E.~O(log$n\times$log$m$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。 原題的「$n$ an $m$」是「$n$ and $m$」的筆誤。
+
+兩個集合都存成\textbf{排好序的串列}，求交集可以照合併排序的合併步驟（資結書虛擬碼~14.4）同時
+掃兩個串列：指標 $p$、$q$ 各指著兩個串列目前的元素，
+\begin{itemize}
+\item $p.\mathit{key} < q.\mathit{key}$：$p$ 的元素比 $q$ 之後的都小，不可能在另一個集合裡，$p$ 往後一格；
+\item $p.\mathit{key} > q.\mathit{key}$：對稱，$q$ 往後一格；
+\item 相等：這個元素在交集裡，輸出，$p$、$q$ 都往後一格。
+\end{itemize}
+每比較一次至少有一個指標往後走，指標總共只能走 $n + m$ 步，所以是 $O(n + m)$。 串列的操作見
+資結書第~5.5~節。
+
+逐項檢查：
+\begin{itemize}
+\item A.~$O(n + m)$：就是上面的合併式掃描，對。
+\item B.~$O(n \times m)$：拿 $n$ 個元素逐一到另一個串列裡從頭找，不利用「已經排好」才會這麼慢。
+這是正確的上界，但不是好的答案，錯。
+\item C.~$O(n \log m)$：要對大的集合做二分搜尋，必須能在 $O(1)$ 時間取第 $i$ 個元素。 串列只能從
+頭一格一格走，取中間那一個就要 $\Theta(m)$，二分搜尋做不到 $O(\log m)$，錯。 （如果是排好序的
+\textbf{陣列}，$n$ 遠小於 $m$ 時對每個小集合的元素做二分搜尋確實是 $O(n \log m)$。）
+\item D.~$O(m \log n)$：在小的集合裡二分搜尋 $m$ 次，比 C 還差，而且串列一樣不能二分搜尋，錯。
+\item E.~$O(\log n \times \log m)$：交集最多可能有 $n$ 個元素，光是輸出就要 $\Omega(n)$，不可能
+比 $n$ 還快，錯。
+\end{itemize}
+\end{pastsoln}

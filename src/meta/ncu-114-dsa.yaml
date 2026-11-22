@@ -1,0 +1,28 @@
+paper: ncu-114-dsa
+volume: 2
+school: 中央
+dept: 資工所
+year: 114
+subject: 資料結構與演算法
+instructions: '本科考試禁用計算器。複選題(共 100 分，每題 5 分，全部答對才給分，答錯倒扣 1 分)'
+questions:
+  - {id: ncu-114-dsa-01, label: 第 1 題, chapter: 12}
+  - {id: ncu-114-dsa-02, label: 第 2 題, chapter: 6}
+  - {id: ncu-114-dsa-03, label: 第 3 題, chapter: 15}
+  - {id: ncu-114-dsa-04, label: 第 4 題, chapter: 7}
+  - {id: ncu-114-dsa-05, label: 第 5 題, chapter: 8}
+  - {id: ncu-114-dsa-06, label: 第 6 題, chapter: 10}
+  - {id: ncu-114-dsa-07, label: 第 7 題, chapter: 25}
+  - {id: ncu-114-dsa-08, label: 第 8 題, chapter: 19}
+  - {id: ncu-114-dsa-09, label: 第 9 題, chapter: 19}
+  - {id: ncu-114-dsa-10, label: 第 10 題, chapter: 19}
+  - {id: ncu-114-dsa-11, label: 第 11 題, chapter: 12}
+  - {id: ncu-114-dsa-12, label: 第 12 題, chapter: 18}
+  - {id: ncu-114-dsa-13, label: 第 13 題, chapter: 24}
+  - {id: ncu-114-dsa-14, label: 第 14 題, chapter: 26}
+  - {id: ncu-114-dsa-15, label: 第 15 題, chapter: 25}
+  - {id: ncu-114-dsa-16, label: 第 16 題, chapter: 28}
+  - {id: ncu-114-dsa-17, label: 第 17 題, chapter: 28}
+  - {id: ncu-114-dsa-18, label: 第 18 題, chapter: 1}
+  - {id: ncu-114-dsa-19, label: 第 19 題, chapter: 18}
+  - {id: ncu-114-dsa-20, label: 第 20 題, chapter: 20}

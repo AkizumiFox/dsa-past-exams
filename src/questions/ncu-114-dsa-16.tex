@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-114-dsa-16}]{中央資工所 114 學年度 第 16 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Choose necessary step(s) to prove that a decision problem $D$ is NP-complete:
+\begin{enumerate}[label=(\alph*)]
+\item Show that the problem $D$ can polynomially reduce to an NP-complete problem.
+\item Design a non-deterministic algorithm to solve the problem $D$ in exponential time complexity.
+\item Design a non-deterministic algorithm to solve the problem $D$ in polynomial time complexity.
+\item Design a deterministic algorithm to solve the problem $D$ in polynomial time complexity.
+\item Show that an NP-hard problem can polynomially reduce to the problem $D$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)(e)。
+
+$D$ 是 NP 完備的，定義是兩件事都成立（資結書定義~28.4）：$D \in \mathrm{NP}$，而且 $D$ 是 NP 難的。
+資結書引理~28.6 給的證明步驟就是：
+\begin{enumerate}
+\item 證明 $D \in \mathrm{NP}$：給一個多項式時間的非決定性演算法（等價地，多項式時間的驗證演算法）。
+這是 (c)。
+\item 證明 $D$ 是 NP 難的：找一個已知 NP 難（通常是已知 NP 完備）的問題 $A$，證明 $A \le_{\mathrm{p}} D$。
+因為 NP 裡每個問題都能歸約到 $A$，由歸約的遞移性（資結書引理~28.3），也都能歸約到 $D$。 這是 (e)。
+\end{enumerate}
+
+其他選項：
+\begin{itemize}
+\item (a) 方向反了。 $D \le_{\mathrm{p}} A$ 只說明 $D$ 不比 $A$ 難；NP 裡每個問題（包括 P 裡很簡單的）
+都能歸約到 NP 完備問題，所以這證明不了任何難度。
+\item (b) 非決定性的指數時間演算法太弱：NP 要求的是\textbf{多項式}時間。 任何可判定、跑得完的問題幾乎
+都有指數時間的演算法，證明不了 $D \in \mathrm{NP}$。
+\item (d) 決定性多項式時間演算法表示 $D \in \mathrm{P}$；再加上 $D$ 是 NP 難的，就推出
+$\mathrm{P} = \mathrm{NP}$。 這不是證明 NP 完備需要的步驟，一般也做不到。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,100 @@
+\begin{pastexam}[label={px:gw3-100-ds-03}]{關務三等資訊處理 100 年 第三題}
+（申論；15 分）
+
+題組：請根據下圖回答第三至五題：
+
+圖中表示有 4 個朋友，名（name）叫張三（Chang San, CS）、李四（Lee Si, LS）、王五（Wang Wu, WW）及趙六（Chao Liu, CL），用兩個字母代表各人，如 CS 代表張三，並標示兩兩住家交通狀況及距離（distance），如張三家有 7 公里的路到李四家。
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={font=\small\bfseries,inner sep=2pt},>={Stealth[length=2.2mm]},w/.style={font=\small\bfseries,inner sep=2pt}]
+\node[v] (CS) at (0,0) {張三};
+\node[v] (LS) at (2.4,1.1) {李四};
+\node[v] (WW) at (5,0) {王五};
+\node[v] (CL) at (2.4,-1.1) {趙六};
+\draw[->,thick] (CS)--node[w,above left]{7}(LS);
+\draw[->,thick] (LS)--node[w,above right]{21}(WW);
+\draw[->,thick] (LS)--node[w,right]{33}(CL);
+\draw[->,thick] (CS)--node[w,below left]{20}(CL);
+\draw[->,thick] (CL)--node[w,below right]{6}(WW);
+\end{tikzpicture}
+\end{center}
+\begin{quote}
+hash function：h(name) = int (1\textsuperscript{st} char of name)*31+int(2\textsuperscript{nd} char of name)\\
+hash table size：11 \quad (index 0 – 10)\\
+index：h(name) mod 11\\
+int( “C” )=67, int( “S” )=83, int( “L” )=76, int( “W” )=87\\
+舉張三為例：\\
+index( “CS” )=(int( “C” )*31+int( “S” )) mod 11 = (67*31+83) mod 11 = 4
+\end{quote}
+
+用 HashMap <Name, LinkedList <NameDistancePair>> 的 Java data structure 畫出此 directed weighted graph。（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+這是用雜湊表做的\textbf{鄰接串列}（資結書第~21.2~節）：HashMap 的鍵是人名，值是一條 LinkedList，串著「從這個人出發的每條邊」的
+(終點, 距離) 配對。 雜湊表用鏈結法處理碰撞（資結書第~12.2~節），這也是 Java HashMap 的做法：同一格的多筆 (鍵, 值) 串成一條鏈。
+
+\textbf{先算四個人的索引}。
+\begin{center}
+\begin{tabular}{llrr}
+\toprule
+人 & $h(\text{name})$ & & index $= h \bmod 11$ \\
+\midrule
+CS 張三 & $67 \times 31 + 83$ & $= 2160$ & $2160 = 11 \times 196 + 4$，得 $4$ \\
+LS 李四 & $76 \times 31 + 83$ & $= 2439$ & $2439 = 11 \times 221 + 8$，得 $8$ \\
+WW 王五 & $87 \times 31 + 87$ & $= 2784$ & $2784 = 11 \times 253 + 1$，得 $1$ \\
+CL 趙六 & $67 \times 31 + 76$ & $= 2153$ & $2153 = 11 \times 195 + 8$，得 $8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+LS 和 CL 都落在第 $8$ 格，發生碰撞，在第 $8$ 格串成一條鏈（依放入的順序 LS 在前）。
+
+\textbf{各人的出邊}（有向圖，只存箭頭的方向）：CS：(LS, 7)、(CL, 20)；LS：(WW, 21)、(CL, 33)；CL：(WW, 6)；WW：沒有出邊，值是一條空串列。
+
+\textbf{畫出結構}。 左邊是大小 $11$ 的桶陣列；每個方框是一筆 HashMap 的項目 (鍵 | next | 值)，next 指向同一格的下一筆項目，值指向一條 LinkedList，串列節點是
+NameDistancePair (name, distance)；$\wedge$ 表示 \texttt{null}。
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=0.62cm,>={Stealth[length=1.8mm]},
+  b/.style={draw,minimum width=6mm,minimum height=6mm,inner sep=0pt,font=\small},
+  e/.style={draw,minimum height=6mm,inner sep=2pt,font=\small},
+  p/.style={draw,minimum width=4mm,minimum height=6mm,inner sep=0pt,font=\scriptsize}]
+\foreach \i in {0,...,10} {
+  \node[b] (t\i) at (0,-\i) {};
+  \node[font=\scriptsize,anchor=east] at (-0.35,-\i) {\i};
+}
+\foreach \i in {0,2,3,5,6,7,9,10} \node[font=\scriptsize] at (t\i) {$\wedge$};
+% entry = [key | next | value]
+\newcommand{\hent}[4]{\node[e] (k#1) at (#2) {#3}; \node[p,anchor=west] (n#1) at (k#1.east) {#4}; \node[p,anchor=west] (v#1) at (n#1.east) {};}
+\hent{1}{1.4,-1}{WW}{$\wedge$}
+\draw[->] (t1.center) -- (k1.west);
+\node[font=\small,anchor=west] (l1) at (3.2,-1) {空串列};
+\draw[->] (v1.center) -- (l1.west);
+\hent{4}{1.4,-4}{CS}{$\wedge$}
+\draw[->] (t4.center) -- (k4.west);
+\node[e,anchor=west] (a41) at (3.2,-4) {LS, 7}; \node[p,anchor=west] (q41) at (a41.east) {};
+\node[e,anchor=west] (a42) at (5.3,-4) {CL, 20}; \node[p,anchor=west] (q42) at (a42.east) {$\wedge$};
+\draw[->] (v4.center) -- (a41.west); \draw[->] (q41.center) -- (a42.west);
+\hent{8}{1.4,-8}{LS}{}
+\draw[->] (t8.center) -- (k8.west);
+\node[e,anchor=west] (a81) at (3.2,-8) {WW, 21}; \node[p,anchor=west] (q81) at (a81.east) {};
+\node[e,anchor=west] (a82) at (5.3,-8) {CL, 33}; \node[p,anchor=west] (q82) at (a82.east) {$\wedge$};
+\draw[->] (v8.center) -- (a81.west); \draw[->] (q81.center) -- (a82.west);
+\hent{9}{1.4,-9.6}{CL}{$\wedge$}
+\draw[->] (n8.center) -- (n8.center |- k9.north);
+\node[e,anchor=west] (a91) at (3.2,-9.6) {WW, 6}; \node[p,anchor=west] (q91) at (a91.east) {$\wedge$};
+\draw[->] (v9.center) -- (a91.west);
+\end{tikzpicture}
+\end{center}
+對應的 Java 宣告與建立方式：
+\begin{minted}[fontsize=\small]{java}
+class NameDistancePair { String name; int distance; /* ... */ }
+HashMap<String, LinkedList<NameDistancePair>> g = new HashMap<>();
+g.put("CS", new LinkedList<>(List.of(new NameDistancePair("LS", 7),
+                                     new NameDistancePair("CL", 20))));
+g.put("LS", new LinkedList<>(List.of(new NameDistancePair("WW", 21),
+                                     new NameDistancePair("CL", 33))));
+g.put("WW", new LinkedList<>());
+g.put("CL", new LinkedList<>(List.of(new NameDistancePair("WW", 6))));
+\end{minted}
+（題目的 Name 型別這裡用 String。）查某人的所有出邊：算 index、在那一格的鏈上找到鍵、取出它的 LinkedList，平均 $O(1)$ 找到再走過串列。
+實際的 Java HashMap 會先把 hashCode 再打散、桶數取 $2$ 的次方，算出的格子和本題不同；本題照題目給的 $h$ 和表大小 $11$ 畫。
+\end{pastsoln}

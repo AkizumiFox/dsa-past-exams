@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntust-115-ice-06}]{臺科大資工所 115 學年度 第 I-6 題}
+（複選）
+
+(5\%) Let $f(n)$ and $g(n)$ be arbitrary functions $\mathbb{Z}^+\to\mathbb{Z}^+$. Select ALL statements that are
+always correct.
+\begin{enumerate}[label=(\alph*)]
+\item If $f(n)=\Theta(g(n))$, then $2^{f(n)}=\Theta(2^{g(n)})$.
+\item It is possible that $f(n)=O(g(n))$, but $g(n)\notin O(f(n))$.
+\item If $f(n)=O(g(n))$, then $f(n)+g(n)=\Theta(g(n))$.
+\item It is possible that $f(n)=\Theta(g(n))$, but $g(n)\notin\Theta(f(n))$.
+\item If $f(n)=O(g(n))$, then $2^{f(n)}=O(2^{g(n)})$.
+\item It is possible that $f(n)=o(g(n))$ and $g(n)=o(f(n))$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)、(c)。 定義見資結書第~1.5~節。
+
+\begin{itemize}
+\item[(a)] 錯。 $f(n) = 2n$、$g(n) = n$：$f = \Theta(g)$，但 $2^{f(n)} / 2^{g(n)} = 2^n$ 無界，$2^{2n} = 4^n$ 不是
+$O(2^n)$。 指數上差常數\textbf{倍}，整個函數差的不是常數倍。
+\item[(b)] 對。 $f(n) = n$、$g(n) = n^2$：$n = O(n^2)$，但 $n^2 / n = n$ 無界，$n^2 \notin O(n)$。
+\item[(c)] 對。 由 $f = O(g)$，有常數 $c > 0$ 和 $n_0$，$n \ge n_0$ 時 $f(n) \le c\, g(n)$。 函數值都是正整數，所以
+$n \ge n_0$ 時
+\[
+g(n) \le f(n) + g(n) \le (c + 1)\, g(n),
+\]
+即 $f + g = \Theta(g)$。 這裡用到 $f(n) > 0$；值域是 $\mathbb{Z}^+$，成立。
+\item[(d)] 錯。 $\Theta$ 是對稱的：$c_1 g \le f \le c_2 g$ 改寫成 $\frac{1}{c_2} f \le g \le \frac{1}{c_1} f$，所以
+$f = \Theta(g)$ 一定有 $g = \Theta(f)$。
+\item[(e)] 錯。 同 (a) 的例子，$2n = O(n)$，但 $2^{2n} \ne O(2^n)$。
+\item[(f)] 錯。 $f = o(g)$ 表示 $f(n)/g(n) \to 0$，$g = o(f)$ 表示 $g(n)/f(n) \to 0$。 $n$ 夠大時第一個比值小於
+$1$，第二個比值（它的倒數）就大於 $1$，不可能也趨近 $0$。
+\end{itemize}
+\end{pastsoln}

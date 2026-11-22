@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:nchu-111-is-05}]{中興資工所乙組 111 學年度 第 5 題}
+（單選）
+
+(3 pts) Assume this tree is a \textbf{binary search tree} even though you cannot see what the keys and values
+are at the nodes (the letters we write below are just ``names'' for the nodes for the purpose of answering the
+questions).
+
+\begin{center}
+\begin{tikzpicture}[x=0.012cm,y=-0.012cm,v/.style={circle,draw,thick,minimum size=6mm,inner sep=0pt,font=\bfseries},>={Latex[length=1.8mm]}]
+\foreach \n/\x/\y in {A/565/225,B/375/380,C/755/380,D/283/535,E/470/535,F/655/535,G/845/535,H/325/690,I/520/690,J/615/690,K/790/690,L/895/690,M/945/850}
+  \node[v] (\n) at (\x,\y) {\n};
+\foreach \a/\b in {A/B,A/C,B/D,B/E,C/F,C/G,D/H,E/I,F/J,G/K,G/L,L/M} \draw[->] (\a)--(\b);
+\end{tikzpicture}
+\end{center}
+
+What node is the successor of node A?
+
+(a).~C \qquad (b).~B \qquad (c).~J \qquad (d).~H \qquad (e).~I
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c) J。
+
+圖中每條邊都畫成斜線，從位置看出左右兒子：H 是 D 的右兒子，I 是 E 的右兒子，J 是 F 的\textbf{左}兒子，
+K、L 是 G 的左、右兒子，M 是 L 的右兒子。
+
+後繼節點是中序走訪裡緊接在 A 後面的節點，也就是鍵值比 A 大的節點裡最小的那個。 A 有右子樹，後繼就是右子
+樹的最小節點：從右兒子 C 出發，一路往左走到沒有左兒子為止（資結書虛擬碼~9.4）。 C 的左兒子是 F，F 的左
+兒子是 J，J 沒有左兒子，所以後繼是 J。
+
+整棵樹的中序走訪是 D, H, B, E, I, A, J, F, C, K, G, L, M，A 後面正是 J。
+
+其他選項：(a) C 是 A 的右兒子，但 C 的左子樹（F、J）都比 C 小、比 A 大，排在 C 前面；(b) B 在 A 的左子樹，
+比 A 小，是 A 的前驅那一側（A 的前驅是 B 的右子樹的最大值 I）；(d) H、(e) I 都在左子樹，比 A 小。
+\end{pastsoln}

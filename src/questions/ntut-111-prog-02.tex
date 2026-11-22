@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ntut-111-prog-02}]{北科大資工所 111 學年度 第 3 題（節錄 3-3、3-4 小題）}
+（程式填空；每格 2 分）
+
+\textbf{Problem 3 [13\%] [3-1 $\sim$ 3-6, each 2\%] [3-7, 1\%]}
+
+Suppose that the outputs of the following C program are as follows:
+\begin{center}
+\begin{tabular}{llllll}
+t022 & Mary & 91.67 & 90 & 95 & 90\\
+t020 & Eric & 88.33 & 90 & 95 & 80\\
+t003 & Apple & 85.00 & 90 & 85 & 80\\
+t011 & John & 78.33 & 80 & 85 & 70
+\end{tabular}
+\end{center}
+Please trace the program and fill the blanks with correct statements.
+
+（原題有 3-1 到 3-7 七格，其餘五格考的是 C 的結構和 \texttt{sizeof}。 這裡只收排序的 3-3、3-4，
+程式只列出和它有關的部分，其餘以 \texttt{...} 表示；每個學生的 \texttt{grade} 是三次小考的平均。）
+\begin{minted}[fontsize=\small]{c}
+#define NUM_OF_QUIZ 3
+
+typedef struct student {
+    char id[10];
+    char name[30];
+    float grade;
+    int quizs[NUM_OF_QUIZ];
+} STUDENT;
+...
+void descending_sort_by_grade(STUDENT* students, int numOfStudents) {
+    STUDENT tempStudent;
+    int i, j;
+    for (i = 0; i < numOfStudents; i++)
+      for (j = 0; j < __________; j++)                        /* Problem 3-3 */
+        if (students[j].grade < __________) {                 /* Problem 3-4 */
+            tempStudent = students[j+1];
+            students[j+1] = students[j];
+            students[j] = tempStudent;
+        }
+}
+
+int main(void) {
+    int numOfStudents;
+    STUDENT students[] = {{"t011", "John", 0.0, {80, 85, 70}},
+                          {"t020", "Eric", 0.0, {90, 95, 80}},
+                          {"t022", "Mary", 0.0, {90, 95, 90}},
+                          {"t003", "Apple", 0.0, {90, 85, 80}} };
+    ...
+    descending_sort_by_grade(students, numOfStudents);
+    ...
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：3-3 填 \texttt{numOfStudents - 1 - i}（填 \texttt{numOfStudents - 1} 也對）；3-4 填
+\texttt{students[j+1].grade}。
+
+這是氣泡排序（資結書第~14.2~節，虛擬碼~14.1），只是方向是由大到小：每一趟從頭比到尾，相鄰的兩個
+如果前面的分數比後面的\textbf{小}，就交換，把小的往後推。
+
+\textbf{3-4}。 交換的三行動的是第 $j$ 個和第 $j + 1$ 個學生，所以要拿第 $j$ 個和第 $j + 1$ 個比；
+比的是成績，填 \texttt{students[j+1].grade}。 前面的分數比後面小時交換，交換後前面的分數比較大，
+排出來是由大到小，和題目的輸出相符。
+
+\textbf{3-3}。 迴圈裡用到 \texttt{students[j+1]}，所以 $j + 1$ 最大只能是 $\mathit{numOfStudents} - 1$，
+$j$ 必須小於 $\mathit{numOfStudents} - 1$。 再進一步：第 $i$ 趟（$i$ 從 $0$ 算）結束時，最小的
+$i + 1$ 個已經依序沉到最後 $i + 1$ 格，下一趟不必再比，所以上界可以縮成
+$\mathit{numOfStudents} - 1 - i$。 兩種寫法都正確，後者少比一些。 寫成 \texttt{numOfStudents}
+是錯的：$j = \mathit{numOfStudents} - 1$ 時會讀 \texttt{students[numOfStudents]}，超出陣列。
+
+\textbf{追蹤}。 四人的平均是 John $78.33$、Eric $88.33$、Mary $91.67$、Apple $85.00$（照
+\texttt{students} 的初始順序）。 以 3-3 填 \texttt{numOfStudents - 1 - i} 為例：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+趟 & 比較與交換 & 這一趟結束後 \\
+\midrule
+$i = 0$ & John$<$Eric 換；John$<$Mary 換；John$<$Apple 換 & Eric, Mary, Apple, John \\
+$i = 1$ & Eric$<$Mary 換；Eric$<$Apple？否 & Mary, Eric, Apple, John \\
+$i = 2$ & Mary$<$Eric？否 & Mary, Eric, Apple, John \\
+$i = 3$ & （內層不執行） & Mary, Eric, Apple, John \\
+\bottomrule
+\end{tabular}
+\end{center}
+順序是 Mary、Eric、Apple、John，印出來就是題目的四行。 外層跑滿 $n$ 趟，比較次數是
+$(n-1) + (n-2) + \cdots + 0 = n(n-1)/2$，$\Theta(n^2)$；這個寫法沒有「一趟沒交換就提早結束」，
+最好情況也是 $\Theta(n^2)$。 相等的成績不交換（用 $<$ 而不是 $\le$），所以是穩定的排序。
+\end{pastsoln}

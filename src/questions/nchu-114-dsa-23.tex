@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:nchu-114-dsa-23}]{中興資工所甲組 114 學年度 計算題第 3 題}
+（計算）
+
+(5\%) You are given the sequence of integers 15, 10, 20, 8, 12, 17, 25, 19 to insert into an initially empty binary search tree (BST). After constructing the BST:
+\begin{enumerate}[label=\Roman*.]
+\item Delete the node with value 20 and replace it with its in-order successor.
+\item Perform a post-order traversal of the updated BST.
+\end{enumerate}
+What is the resulting post-order traversal of the BST after the deletion?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$8, 12, 10, 19, 17, 25, 15$。
+
+依序插入，每個鍵值比較過的節點（資結書第~9.2~節的寫法）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+插入 & 比較過的節點 & 接在 \\
+\midrule
+15 & （空樹） & 成為根 \\
+10 & 15 & 15 的左邊 \\
+20 & 15 & 15 的右邊 \\
+8 & 15, 10 & 10 的左邊 \\
+12 & 15, 10 & 10 的右邊 \\
+17 & 15, 20 & 20 的左邊 \\
+25 & 15, 20 & 20 的右邊 \\
+19 & 15, 20, 17 & 17 的右邊 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+得到下圖 (a)。 刪除 $20$：它有兩個子節點，中序後繼是右子樹 $\{25\}$ 的最小值 $25$。 $25$ 就是 $20$ 的
+右子節點，沒有左子節點，直接坐到 $20$ 的位置，接手左子樹 $17(-,19)$，右邊是空的，得到圖 (b)。
+
+\begin{center}
+\begin{minipage}{0.48\linewidth}\centering
+\begin{tikzpicture}[level distance=9mm, edge from parent/.style={draw=black!55, thick},
+  every node/.style={circle, draw=black!65, minimum size=6mm, inner sep=0pt, font=\footnotesize},
+  level 1/.style={sibling distance=26mm}, level 2/.style={sibling distance=13mm}]
+\node {15}
+  child {node {10} child {node {8}} child {node {12}}}
+  child {node[draw=memStroke, thick, fill=memFill] {20}
+    child {node {17} child[missing] child {node {19}}}
+    child {node[draw=optStroke, thick, fill=optFill] {25}}};
+\end{tikzpicture}
+
+{\footnotesize (a) 插入完成；橘色是要刪的 $20$，粉紅色是後繼}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}\centering
+\begin{tikzpicture}[level distance=9mm, edge from parent/.style={draw=black!55, thick},
+  every node/.style={circle, draw=black!65, minimum size=6mm, inner sep=0pt, font=\footnotesize},
+  level 1/.style={sibling distance=26mm}, level 2/.style={sibling distance=13mm}]
+\node {15}
+  child {node {10} child {node {8}} child {node {12}}}
+  child {node[draw=optStroke, thick, fill=optFill] {25}
+    child {node {17} child[missing] child {node {19}}}
+    child[missing]};
+\end{tikzpicture}
+
+{\footnotesize (b) 刪除 $20$ 之後}
+\end{minipage}
+\end{center}
+
+後序走訪（先左、再右、最後自己，資結書第~7.3~節）：左子樹 $10(8,12)$ 給出 $8, 12, 10$；右子樹
+$25(17(-,19),-)$ 給出 $19, 17, 25$；最後是根 $15$。 答案：
+\[
+8,\ 12,\ 10,\ 19,\ 17,\ 25,\ 15.
+\]
+檢查：中序走訪 $8, 10, 12, 15, 17, 19, 25$ 仍然遞增，而且少了 $20$。
+\end{pastsoln}

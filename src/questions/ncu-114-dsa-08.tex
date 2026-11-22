@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:ncu-114-dsa-08}]{中央資工所 114 學年度 第 8 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+（第 8--10 題共用下面的說明和程式。）
+
+Consider a UAV (Unmanned Aerial Vehicle) with F unit of fuel travels from NCU to a destination
+``target'' km away. There are n gas stations along the way. When the UAV refuels at a gas station, all
+the fuel of the gas station is transferred into the UAV.
+
+Suppose that the UAV consumes one unit of fuel for every kilometer it travels. Let the position and fuel
+of a gas station indicate the distance between the gas station and NCU and its volume of fuel,
+respectively. Return the minimum number of refueling stops the UAV must make in order to reach its
+destination.
+\begin{minted}[fontsize=\small]{c}
+typedef struct {
+    int position;
+    int fuel;
+} stop_info;
+
+int Refuel(int target, int F, int n, stop_info s[]) {
+    int N_R = 0;   // number of refuel
+    int i;   //gas stations ID
+    stop_info X;
+
+    while (F < target) {
+        for (i=0;  L1  ; ++i)
+            Q.push(s[i].fuel);
+        if (Q.empty()) return -1;
+        X=Q.pop();
+        F += X.fuel
+        N_R++;
+    }
+    return N_R;
+}
+\end{minted}
+
+What should be filled in blank \textbf{L1}?
+\begin{enumerate}[label=(\alph*)]
+\item (i<n) \&\& (s[i].position <=F)
+\item (i<n) \&\& (s[i].fuel <=F)
+\item (i<n) \&\& (s[i].position <=target)
+\item i<n
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)。
+
+\textbf{先把程式讀對}。 原卷的程式有幾處筆誤：\texttt{F += X.fuel} 少了分號；\texttt{Q} 推入的是
+\texttt{s[i].fuel}（整數），彈出的卻當成 \texttt{stop\_info} 用；\texttt{i} 在每一輪 \texttt{while}
+都從 $0$ 重新開始，會把同一個加油站重複推入、之後可能被重複使用。 題意是下面這個貪心法（第 8--10 題
+都照這個讀法）：加油站依 position 由小到大排好；\texttt{i} 只在進迴圈前設成 $0$，之後一路往後走，每個
+加油站只推入一次；\texttt{Q} 存油量，\texttt{pop} 傳回目前最大的油量。
+\begin{pseudo}{最少加油次數（題目的貪心法）}
+\Function{Refuel}{$\mathit{target}, F, s[1..n]$}
+    \State $r \gets 0$；$i \gets 1$；$Q \gets$ 空的最大堆積
+    \While{$F < \mathit{target}$}
+        \While{$i \le n$ \AND $s[i].\mathit{position} \le F$} \Comment{目前油量到得了的站}
+            \State \Call{Insert}{$Q, s[i].\mathit{fuel}$}；$i \gets i + 1$
+        \EndWhile
+        \If{$Q$ 是空的}
+            \State \Return $-1$ \Comment{到不了}
+        \EndIf
+        \State $F \gets F + \Call{Extract-Max}{Q}$；$r \gets r + 1$
+    \EndWhile
+    \State \Return $r$
+\EndFunction
+\end{pseudo}
+$F$ 在這裡的意思是「出發以來總共拿到的油」，也就是目前最遠飛得到的位置（每公里耗一單位油）。 經過
+一個站不一定要停；等到油不夠時，再「事後」決定在已經經過的站裡挑油最多的那一站加油。 這樣做是對的：
+已經飛過的站，當時停下來加油和事後補算，能到達的最遠位置一樣，所以每次不夠時挑油最多的站，加油次數
+最少（資結書第~19.1.6~節的貪心選擇性質：任何最佳解都可以換成先用油最多的那一站，次數不增加）。
+
+\textbf{L1 的作用}：把「目前到得了」而且還沒推入的站推進 \texttt{Q}。 到得了的條件是
+$\mathit{position} \le F$。
+\begin{itemize}
+\item (a) \texttt{(i<n) \&\& (s[i].position <=F)}：正是上面的條件，而且因為站依位置排好，遇到第一個
+到不了的站就停，後面的站下一輪再看。 對。
+\item (b) 比的是油量和 $F$，和到不到得了無關。 例如 $F = 10$、唯一的站在位置 $5$、油量 $20$：到得了，
+卻因為 $20 > 10$ 不推入，回傳 $-1$。 錯。
+\item (c) 只要在終點之前的站都推入，包括目前飛不到的站。 例如 $\mathit{target} = 100$、$F = 10$、
+唯一的站在位置 $50$、油量 $100$：飛不到那一站，正確答案是 $-1$，(c) 卻會在那裡加油而回傳 $1$。 錯。
+\item (d) 同 (c)，所有的站都推入。 錯。
+\end{itemize}
+\end{pastsoln}

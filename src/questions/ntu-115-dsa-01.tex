@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-115-dsa-01}]{臺大資工所 115 學年度 第 1 題}
+（單選）
+
+(4 points) Let $S$ be a stack containing $n+1$ coefficients $a_0,a_1,\ldots,a_n$, where $n\ge 1$, $a_n$ is at the top of the stack, and $a_0$ is at the bottom. The following algorithm computes $f(x)=\sum_{i=0}^{n}a_ix^i$. Identify the missing expression $\square$ in the pseudocode.
+
+\proc{Poly}$(S,x)$
+\par\smallskip\noindent\begin{tabular}{@{}r@{\quad}l@{}}
+1 & \textbf{while} $S$.size $\ge 2$\\
+2 & \qquad $u = S.\mathrm{pop}()$\\
+3 & \qquad $v = S.\mathrm{pop}()$\\
+4 & \qquad $S.\mathrm{push}(\square)$\\
+5 & \textbf{return} $S.\mathrm{pop}()$
+\end{tabular}\par\smallskip
+\begin{enumerate}[label=(\Alph*)]
+\item $v\cdot x+u$
+\item $u\cdot x+v$
+\item $v\cdot u+x$
+\item $u\cdot u+v\cdot x$
+\item None of the other choices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+這是 Horner 法（資結書第~4.4~節、虛擬碼~4.7）用堆疊來做。 Horner 法把多項式寫成
+\[
+f(x) = (\cdots((a_n x + a_{n-1}) x + a_{n-2}) x + \cdots) x + a_0,
+\]
+從最高次的係數開始，每次「乘以 $x$ 再加下一個係數」。 堆疊頂端是 $a_n$，第一圈先彈出的 $u = a_n$，
+再彈出的 $v = a_{n-1}$，應該推回 $u \cdot x + v = a_n x + a_{n-1}$。
+
+\textbf{迴圈不變量。} 每一圈開始時，堆疊由下到上是 $a_0, a_1, \ldots, a_{j-1}, p_j$，其中
+$p_j = \sum_{i=j}^{n} a_i x^{i-j}$。 一開始 $j = n$，$p_n = a_n$，成立。 這一圈彈出 $u = p_j$、
+$v = a_{j-1}$，推回 $u \cdot x + v = \sum_{i=j}^{n} a_i x^{i-j+1} + a_{j-1} = p_{j-1}$，不變量對 $j - 1$
+成立。 堆疊只剩一個時 $j = 0$，彈出的是 $p_0 = \sum_{i=0}^{n} a_i x^i = f(x)$。
+
+以 $n = 2$ 為例：堆疊 $a_0, a_1, a_2$。 第一圈 $u = a_2$、$v = a_1$，推回 $a_2 x + a_1$；第二圈
+$u = a_2 x + a_1$、$v = a_0$，推回 $a_2 x^2 + a_1 x + a_0$，正確。 其他選項：
+\begin{itemize}
+\item (A) $v \cdot x + u$：第一圈推回 $a_{n-1} x + a_n$，係數乘錯了次方。 $n = 1$ 時得到 $a_0 x + a_1$，
+不是 $a_1 x + a_0$。
+\item (C) $v \cdot u + x$、(D) $u \cdot u + v \cdot x$：$n = 1$ 時分別得到 $a_0 a_1 + x$、$a_1^2 + a_0 x$，
+都不是 $f(x)$。
+\item (E)：(B) 是對的。
+\end{itemize}
+\end{pastsoln}

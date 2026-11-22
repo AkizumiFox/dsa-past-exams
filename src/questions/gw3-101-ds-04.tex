@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:gw3-101-ds-04}]{關務三等資訊處理 101 年 第四題}
+（申論）
+
+㈠描述 Kruskal 演算法對一個無向權重圖（undirected weighted graph）找出最小生成樹（minimum spanning tree）的步驟，
+並分析其計算複雜度。㈡設計合適的資料結構以儲存在過程中產生的多個連結組件（connected components），並能有效率的
+決定是否採用或丟棄端點為(u,w)的一個邊（edge(u,w)），請說明。（20 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 邊依權重由小到大檢查，不會形成環的就採用；時間 $O(E \log E) = O(E \log V)$。 ㈡ 用互斥集合（union-find）
+森林存放各連通元件，依秩合併加路徑壓縮，判斷一條邊 $O(\alpha(V))$。 （$V$、$E$ 是頂點數、邊數。）
+
+\textbf{㈠ 步驟}（資結書第~24.2~節）。 設圖 $G = (V, E)$ 連通。
+\begin{enumerate}
+\item 一開始每個頂點自成一個連通元件，最小生成樹的邊集合 $T$ 是空的。
+\item 把所有的邊依權重由小到大排序。
+\item 依序取出每一條邊 $(u, w)$：若 $u$、$w$ 屬於不同的元件，採用這條邊（加入 $T$），並把兩個元件合併；若屬於同一
+個元件，加入會形成環，丟棄。
+\item $T$ 有 $|V| - 1$ 條邊時就可以停止（或所有的邊都檢查完）。 $T$ 就是一棵最小生成樹。
+\end{enumerate}
+\begin{pseudo}{Kruskal 演算法}
+\Function{MST-Kruskal}{$G, w$}
+    \State $T \gets \emptyset$
+    \For{每個頂點 $v \in G.V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \State 把 $G.E$ 依權重 $w$ 由小到大排序
+    \For{依序取每條邊 $(u, x) \in G.E$}
+        \If{\Call{Find-Set}{$u$} $\ne$ \Call{Find-Set}{$x$}} \Comment{不同元件，不會形成環}
+            \State $T \gets T \cup \{(u, x)\}$
+            \State \Call{Union}{$u, x$}
+        \EndIf
+    \EndFor
+    \State \Return $T$
+\EndFunction
+\end{pseudo}
+（虛擬碼裡邊的第二個端點寫成 $x$，避免和權重函數 $w$ 撞名。）
+
+\textbf{為什麼正確。} 每次採用的邊，是連接「$u$ 所在元件」和外面的所有邊中權重最小的（比它小的邊都已檢查過：被丟棄的，
+兩端當時就在同一元件；被採用的，兩端也已合併；元件只會變大，所以它們現在都不會跨出 $u$ 的元件）。 由切割性質（資結書第~24.1~節），這樣的邊一定屬於某棵最小
+生成樹，所以每一步都保持「$T$ 是某棵最小生成樹的子集」，最後 $|V| - 1$ 條邊就是一棵最小生成樹。
+
+\textbf{複雜度。}
+\begin{itemize}
+\item 排序：$O(E \log E)$。 簡單圖 $E < V^2$，$\log E < 2 \log V$，所以也是 $O(E \log V)$。
+\item Make-Set：$V$ 次，$O(V)$。
+\item Find-Set：每條邊 $2$ 次，共 $2E$ 次；Union 最多 $V - 1$ 次。 用㈡的結構，全部合起來 $O(E\, \alpha(V))$，
+$\alpha$ 是成長極慢的函數，實務上 $\le 4$。
+\end{itemize}
+總時間由排序主導：$O(E \log E) = O(E \log V)$。 若邊的權重已經排好（或可以用線性時間排序），總時間只剩
+$O(E\, \alpha(V))$。
+
+\textbf{㈡ 存放連通元件的資料結構：互斥集合森林}（資結書第~13~章）。
+\begin{itemize}
+\item 每個連通元件是一棵樹，樹根是這個元件的代表。 用陣列 $\mathit{parent}[1..V]$ 存每個頂點的父節點（根的父節點是
+自己），另一個陣列 $\mathit{rank}[1..V]$ 存樹高的上界。
+\item \proc{Find-Set}$(v)$：沿 $\mathit{parent}$ 往上走到根，傳回根。 走的同時把路上每個節點直接接到根（路徑壓縮），
+下次就快。
+\item \proc{Union}$(u, x)$：找到兩個根，把 $\mathit{rank}$ 較小的根接到較大的根下面（依秩合併）；一樣大就任選一個，
+新根的 $\mathit{rank}$ 加一。
+\end{itemize}
+\begin{pseudo}{互斥集合森林}
+\Procedure{Make-Set}{$v$}
+    \State $\mathit{parent}[v] \gets v$；$\mathit{rank}[v] \gets 0$
+\EndProcedure
+\Function{Find-Set}{$v$}
+    \If{$\mathit{parent}[v] \ne v$}
+        \State $\mathit{parent}[v] \gets$ \Call{Find-Set}{$\mathit{parent}[v]$} \Comment{路徑壓縮}
+    \EndIf
+    \State \Return $\mathit{parent}[v]$
+\EndFunction
+\Procedure{Union}{$u, x$}
+    \State $a \gets$ \Call{Find-Set}{$u$}；$b \gets$ \Call{Find-Set}{$x$}
+    \If{$\mathit{rank}[a] < \mathit{rank}[b]$}
+        \State $\mathit{parent}[a] \gets b$
+    \Else
+        \State $\mathit{parent}[b] \gets a$
+        \If{$\mathit{rank}[a] = \mathit{rank}[b]$}
+            \State $\mathit{rank}[a] \gets \mathit{rank}[a] + 1$
+        \EndIf
+    \EndIf
+\EndProcedure
+\end{pseudo}
+\textbf{決定採用或丟棄邊 $(u, w)$}：算 \proc{Find-Set}$(u)$ 和 \proc{Find-Set}$(w)$。 兩個根不同，表示 $u$、$w$ 目前不連通，
+加入這條邊不會形成環，採用，並呼叫 \proc{Union} 把兩個元件合成一個；兩個根相同，表示 $u$、$w$ 已經有路相連，
+再加這條邊就成環，丟棄。 只用依秩合併時樹高 $O(\log V)$，每次判斷 $O(\log V)$；再加上路徑壓縮，$m$ 次操作共
+$O(m\, \alpha(V))$（資結書定理~13.4），平均每次幾乎是常數。
+
+\textbf{比較}：若每個元件只用「元件編號」陣列存，判斷是 $O(1)$，但合併時要把一整個元件的編號全部改掉，最壞
+$O(V)$，整個演算法 $O(V^2)$ 的合併成本；把小的元件改成大的元件的編號（資結書第~13.1~節），每個頂點最多被改
+$\lg V$ 次，合併總成本 $O(V \log V)$，也可以接受，但互斥集合森林更快。
+\end{pastsoln}

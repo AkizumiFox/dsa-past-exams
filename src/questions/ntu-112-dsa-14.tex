@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-112-dsa-14}]{臺大資工所 112 學年度 第 14 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Prefix, infix, and postfix:} Which of the following statements is/are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item We can use a stack to convert an infix to postfix expression.
+\item We can use a stack to convert a postfix to an infix expression.
+\item We can derive a binary tree from its infix and prefix notations.
+\item We can derive a binary tree from its infix and postfix notations.
+\item We can derive a binary tree from its prefix and postfix notations.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案是 (A)、(B)、(C)、(D)。
+
+(A)(B) 是資結書第~6.3~節的堆疊應用，(C)(D)(E) 是第~7.4~節的由走訪序列重建二元樹；三個選項在
+第~7~章，所以放在這一章。 (C)(D)(E) 的「derive」讀成「唯一決定」，節點名稱互不相同。
+\begin{itemize}
+\item \textbf{(A) 對。} 資結書虛擬碼~6.8：由左到右掃中序式，運算元直接輸出，運算子放進堆疊，遇到
+優先順序較高或相同（左結合）的就先彈出輸出，括號另外處理。 $O(n)$。
+\item \textbf{(B) 對。} 由左到右掃後序式，堆疊裡放的是「已經組好的中序子式（字串）」：遇到運算元
+推入；遇到運算子 $\circ$ 彈出兩個子式 $y$（先出）、$x$，推入 ``$(x \circ y)$''。 掃完時堆疊裡剩
+一個字串，就是加了完整括號的中序式。 例如 \texttt{a b c * +}：推 \texttt{a}、\texttt{b}、
+\texttt{c}；遇到 \texttt{*} 得 \texttt{(b*c)}；遇到 \texttt{+} 得 \texttt{(a+(b*c))}。 這和用堆疊計算
+後序式（資結書虛擬碼~6.7）是同一個做法，只是把「算出數值」換成「組出字串」。
+\item \textbf{(C) 對。} 前序的第一個是根；在中序裡找到根，左邊是左子樹、右邊是右子樹，兩段各自
+遞迴，由資結書定理~7.4 唯一決定。
+\item \textbf{(D) 對。} 同 (C)，只是根改成後序的最後一個（資結書定理~7.4 的後半）。
+\item \textbf{(E) 錯。} 前序和後序看不出只有一個子節點時它在左邊還是右邊。 反例：根 A 只有一個
+子節點 B，不論 B 是左子節點還是右子節點，前序都是 A B、後序都是 B A，兩棵不同的樹有相同的前序和
+後序。 一般地，符合的樹有 $2^m$ 棵，$m$ 是只有一個子節點的節點數（資結書定理~7.5）。 只有在
+限定為嚴格二元樹（每個節點 $0$ 或 $2$ 個子節點，例如運算式樹）時才能唯一決定；題目說的是一般的
+binary tree，所以錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:gw3-105-ds-01}]{關務三等資料處理 105 年 第一題}
+（申論；25 分）
+
+臭皮匠排序（Stooge sort）是一種遞迴（recursive）排序法，其演算法如下：
+\begin{enumerate}[label=\textit{\arabic*.}, leftmargin=2.2em, itemsep=1pt]
+\item 如果當前集合（current set）最後一個元素值小於第一個元素值，則交換這兩個元素值。
+\item 如果當前集合（current set）元素數量大於等於 3 時：
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=0pt]
+\item[⑴] 使用臭皮匠排序前 2/3 的元素。
+\item[⑵] 使用臭皮匠排序後 2/3 的元素。
+\item[⑶] 再次使用臭皮匠排序前 2/3 的元素。
+\end{itemize}
+\item 否則結束程序，返回呼叫程序。
+\end{enumerate}
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請以任何具遞迴呼叫語法之程式語言寫出臭皮匠排序之函式。（10 分）
+\item[㈡] 請根據上述演算法將下列資料進行排序：6 8 7 1 2 4 3 9 5。請寫出前五次函式呼叫後之結果。
+（10 分）
+\item[㈢] 若以陣列表達欲排序之元素集合，請比較臭皮匠排序、插入排序（insertion sort）、以及堆積排序
+（heap sort）之最差狀況（worse case）時間複雜度。（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+原卷的 worse case 應為 worst case。 「前 2/3」在元素個數 $m$ 不是 $3$ 的倍數時要取整：通常的寫法是
+去掉 $t = \lfloor m/3 \rfloor$ 個，前 2/3 是前 $m - t = \lceil 2m/3 \rceil$ 個，後 2/3 是後 $m - t$ 個。
+這樣兩段重疊至少 $1/3$，演算法才正確。
+
+\textbf{㈠ 程式（C）}，排序 $A[i..j]$：
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+void stooge_sort(int A[], int i, int j)
+{
+    if (A[j] < A[i]) {                 /* 1. 最後一個比第一個小就交換 */
+        int tmp = A[i]; A[i] = A[j]; A[j] = tmp;
+    }
+    if (j - i + 1 >= 3) {              /* 2. 至少 3 個元素 */
+        int t = (j - i + 1) / 3;       /* 去掉 1/3（取整）後剩下 2/3 */
+        stooge_sort(A, i, j - t);      /* (1) 前 2/3 */
+        stooge_sort(A, i + t, j);      /* (2) 後 2/3 */
+        stooge_sort(A, i, j - t);      /* (3) 再一次前 2/3 */
+    }
+    /* 3. 否則直接返回 */
+}
+/* 排序 A[0..n-1]：stooge_sort(A, 0, n - 1); */
+\end{minted}
+為什麼對（簡述）：⑴之後，前 2/3 排好，所以原本最大的 $t$ 個數（若在前 2/3）都被推到前 2/3 的後段，
+也就落在後 2/3 裡；⑵把後 2/3 排好後，最大的 $t$ 個數已在最後 $t$ 格、而且排好；⑶再把前面
+剩下的 $m - t$ 個排好，整段就排好了。
+
+\textbf{㈡ 追蹤。} 位置用 $1$ 到 $9$。 「第 $k$ 次函式呼叫」依呼叫發生的先後編號（第 1 次是排整個
+陣列的那一次）。 每次呼叫進來先做步驟 1（比較頭尾、必要時交換），再依步驟 2 發出下一層的呼叫，所以
+前五次呼叫是一路往下的：
+\begin{center}
+\small
+\begin{tabular}{cccll}
+\toprule
+第幾次 & 排序範圍 & 個數 & 步驟 1 & 這次呼叫做完步驟 1 後的陣列 \\
+\midrule
+1 & $A[1..9]$ & 9 & $5 < 6$，交換 & 5 8 7 1 2 4 3 9 6 \\
+2 & $A[1..6]$（前 2/3） & 6 & $4 < 5$，交換 & 4 8 7 1 2 5 3 9 6 \\
+3 & $A[1..4]$（前 2/3） & 4 & $1 < 4$，交換 & 1 8 7 4 2 5 3 9 6 \\
+4 & $A[1..3]$（前 2/3） & 3 & $7 > 1$，不換 & 1 8 7 4 2 5 3 9 6 \\
+5 & $A[1..2]$（前 2/3） & 2 & $8 > 1$，不換 & 1 8 7 4 2 5 3 9 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 5 次呼叫只有 $2$ 個元素，做完步驟 1 就返回，它也是第一個執行完畢的呼叫。 所以\textbf{前五次函式
+呼叫後的結果是 1 8 7 4 2 5 3 9 6}。
+
+接下去的幾次（方便對照）：第 6 次 $A[2..3]$ 把 $8, 7$ 換成 $7, 8$，得 1 7 8 4 2 5 3 9 6；第 7 次
+$A[1..2]$ 不換，第 4 次呼叫到此結束，$A[1..3] = 1, 7, 8$ 排好。 整個排序共有 $121$ 次呼叫，最後得到
+1 2 3 4 5 6 7 8 9。
+
+\textbf{㈢ 最差時間複雜度。}
+\begin{itemize}[nosep]
+\item \textbf{臭皮匠排序}：每次呼叫做常數工作，再對 $\lceil 2n/3 \rceil$ 個元素遞迴三次：
+$T(n) = 3T(2n/3) + \Theta(1)$。 主定理 $a = 3$、$b = 3/2$，$n^{\log_b a} = n^{\log_{1.5} 3}$，
+$f(n) = \Theta(1)$ 屬情況一，$T(n) = \Theta(n^{\log 3 / \log 1.5}) \approx \Theta(n^{2.71})$（資結書
+第~2.4~節）。 不論輸入如何都要做這麼多次呼叫，最好、最壞都一樣。
+\item \textbf{插入排序}：最差（反序）比較 $n(n-1)/2$ 次，$\Theta(n^2)$。
+\item \textbf{堆積排序}：建堆積 $O(n)$，再做 $n - 1$ 次取出最大值、往下調整各 $O(\lg n)$，最差
+$\Theta(n \lg n)$（資結書第~14.6~節）。
+\end{itemize}
+所以最差情況：堆積排序 $\Theta(n \lg n)$ $<$ 插入排序 $\Theta(n^2)$ $<$ 臭皮匠排序 $\Theta(n^{2.71})$。
+臭皮匠排序比最簡單的插入排序還慢，只有教學上的意義。
+\end{pastsoln}

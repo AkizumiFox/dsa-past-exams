@@ -1,0 +1,101 @@
+\begin{pastexam}[label={px:df3-097-ds-05}]{地方三等資訊處理 97 年 第五題}
+（申論；20 分）
+
+下圖是一個假想的遊戲樹（game tree），其中終端節點（terminal nodes）的分數表示先下的電腦（以矩形表示）
+的得分，分數為正數表示電腦贏了對手（opponent，以圓形表示），為負數則表示電腦輸了。
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=1.1cm,font=\small,
+  sq/.style={draw,minimum size=5.5mm,inner sep=0pt},
+  ci/.style={circle,draw,minimum size=6.5mm,inner sep=0pt},
+  tr/.style={regular polygon,regular polygon sides=3,draw,minimum size=6.5mm,inner sep=0pt},
+  lab/.style={draw,thick,minimum width=8mm,minimum height=6mm,inner sep=1pt},
+  ar/.style={-{Stealth[length=2mm]},gray}]
+\node[sq] (A) at (2.58,0) {A};
+\node[ci] (B) at (1.77,-0.9) {B};
+\node[ci] (C) at (3.40,-0.97) {C};
+\node[sq] (D) at (1.18,-2.0) {D};
+\node[sq] (E) at (2.14,-2.0) {E};
+\node[sq] (F) at (3.05,-2.0) {F};
+\node[sq] (G) at (3.91,-2.0) {G};
+\foreach \x/\v [count=\i] in {0.90/4, 1.37/-5, 1.85/-5, 2.33/1, 2.83/-7, 3.29/2, 3.75/-3, 4.20/-8}{
+  \node[tr] (t\i) at (\x,-2.9) {};
+  \node[font=\small] at (\x,-3.3) {$\v$};
+}
+\draw[ar] (A) -- (B); \draw[ar] (A) -- (C);
+\draw[ar] (B) -- (D); \draw[ar] (B) -- (E);
+\draw[ar] (C) -- (F); \draw[ar] (C) -- (G);
+\draw[ar] (D) -- (t1.north); \draw[ar] (D) -- (t2.north);
+\draw[ar] (E) -- (t3.north); \draw[ar] (E) -- (t4.north);
+\draw[ar] (F) -- (t5.north); \draw[ar] (F) -- (t6.north);
+\draw[ar] (G) -- (t7.north); \draw[ar] (G) -- (t8.north);
+\node[lab] (L1) at (-0.6,0) {Max};
+\node[lab] (L2) at (-0.6,-0.9) {Min};
+\node[lab] (L3) at (-0.55,-2.0) {Max};
+\draw[-{Stealth}] (L1) -- (2.2,0);
+\draw[-{Stealth}] (L2) -- (1.45,-0.9);
+\draw[-{Stealth}] (L3) -- (0.9,-2.0);
+\node[tr] at (0.94,-4.2) {};
+\node[align=center,font=\footnotesize] at (0.94,-4.85) {Terminal\\Nodes};
+\node[draw,minimum width=8mm,minimum height=6mm] at (2.49,-4.2) {};
+\node[align=center,font=\footnotesize] at (2.49,-4.85) {Computer\\Move};
+\node[circle,draw,minimum size=8mm] at (3.97,-4.2) {};
+\node[align=center,font=\footnotesize] at (3.97,-4.85) {Opponent\\Move};
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 試用 Minimax procedure 求 root 的分數。（5 分）
+\item[㈡] 請問電腦一開始應該走那一步才會贏？（5 分）
+\item[㈢] 這種遊戲我們通常稱為 zero-sum game，請解釋 zero-sum 的意義。（5 分）
+\item[㈣] 如果我們寫一個程式，能很快地將某種遊戲的遊戲樹完全展開，並很快地用 Minimax procedure 求 root 的
+分數，那麼在這個情形下，是否電腦就能下出最好的走法？請說明之。（5 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+遊戲樹是一種狀態空間樹（資結書第~20.1~節）：每個節點是一個盤面，子節點是走一步之後的盤面。
+Minimax 從葉節點往上算：輪到電腦（Max 層，矩形）時取子節點的最大值，輪到對手（Min 層，圓形）時取
+最小值，因為對手會選對電腦最不利的走法。
+
+\textbf{㈠} 由下往上（後序）計算：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+層 & 節點 & 子節點的值 & 取 \\
+\midrule
+Max & D & $4, -5$ & $\max = 4$ \\
+Max & E & $-5, 1$ & $\max = 1$ \\
+Max & F & $-7, 2$ & $\max = 2$ \\
+Max & G & $-3, -8$ & $\max = -3$ \\
+\midrule
+Min & B & D $= 4$, E $= 1$ & $\min = 1$ \\
+Min & C & F $= 2$, G $= -3$ & $\min = -3$ \\
+\midrule
+Max & A & B $= 1$, C $= -3$ & $\max = 1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+root（A）的分數是 $1$。
+
+\textbf{㈡} 電腦第一步應該走到 \textbf{B}。 A 的值 $1$ 來自 B。 走到 B 之後，對手最好的回應是走到
+E（若走 D，電腦可得 $4$）；電腦再從 E 選分數 $1$ 的那一步，結果 $+1$，電腦贏。 若電腦一開始走 C，
+對手會走 G，電腦在 G 底下最好只有 $-3$，電腦輸。 所以走 B 才保證贏（至少得 $1$ 分），不論對手
+怎麼下：對手若不走 E 而走 D，電腦得 $4$，贏更多。
+
+\textbf{㈢} zero-sum（零和）是指：在每一個結局，所有玩家的得分加起來是 $0$（或固定的常數）。 兩人
+零和遊戲裡，一方贏多少，另一方就輸多少，利益完全對立，沒有「雙贏」或「雙輸」。 所以只要記錄一方（電腦）
+的得分就夠了：電腦得 $+1$ 就是對手得 $-1$。 也因為如此，對手讓自己得分最大，等於讓電腦得分最小，
+Min 層取最小值才說得通。
+
+\textbf{㈣} 是。 在遊戲樹完全展開、每個終端節點的分數都正確的前提下，Minimax 算出的 root 值是電腦
+「不論對手怎麼下都保證拿得到」的最佳分數，選擇達到這個值的那一步，就是最好的走法：
+\begin{itemize}
+\item 對手也下最佳走法時，沒有任何走法能比它得更多分（否則 root 值會更大）；
+\item 對手下得不好時，電腦得到的只會比 root 值更多，不會更少。
+\end{itemize}
+這是對樹高做歸納就能證明的結論（每一層 Max 取最大、Min 取最小，都是在「對方最佳回應」下的最佳）。
+但要注意兩點限制：(1) 「最好」是以「保證的結果」來衡量，若對手很弱，Minimax 不會刻意去冒險占對手的便宜；
+(2) 這個前提在實際遊戲裡幾乎做不到，例如西洋棋的遊戲樹節點數是天文數字，不可能完全展開，程式只能搜尋
+有限的深度、用評估函數估計盤面分數，這時算出的走法就不保證最好。 （用 alpha-beta 剪枝可以少算很多
+節點，但不改變 Minimax 的結果。）
+\end{pastsoln}

@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-115-is-18}]{中興資工所乙組 115 學年度 第 18 題}
+（單選；每題 2 分，答錯不倒扣）
+
+A compiler needs to detect whether an identifier (variable name) has been declared before. The
+lookup must be extremely fast, and order does not matter. Which structure is most suitable?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item A binary search tree sorted by variable names for quick in-order traversal.
+\item A hash table mapping identifiers to metadata for constant-time lookup.
+\item A stack containing all identifiers in the order they were declared.
+\item A queue that stores identifiers in the order they appear in the source file.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+只需要「查有沒有、拿到它的資料」，不需要順序，這正是雜湊表的強項：好的雜湊函數加上維持載入
+因子在常數以下，查詢、插入的期望時間都是 $O(1)$（資結書第~12.1、12.2~節）。 編譯器的符號表
+（symbol table）通常就是雜湊表。
+\begin{itemize}
+\item A：BST 查詢 $O(\log n)$（平衡時），能依名稱順序走訪；但題目明說不需要順序，這個長處用
+不到，查詢又比雜湊表慢。
+\item B 對。
+\item C、D 錯：堆疊、佇列只能存取一端，查某個名字在不在要全部掃過，$O(n)$。 （作用域巢狀時，
+編譯器會用「一個作用域一張雜湊表」再疊成堆疊，但查詢本身仍然靠雜湊表。）
+\end{itemize}
+\end{pastsoln}

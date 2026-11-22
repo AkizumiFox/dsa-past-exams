@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ncu-115-dsa-19}]{中央資工所 115 學年度 第 19 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+There are n online courses labeled from 1 to n. Each course i is described by courses[i] = [duration\_i, lastDay\_i], where the course must be taken continuously for duration\_i days and completed no later than lastDay\_i. You start on day 1 and may not take more than one course at a time. The goal is to determine the maximum number of courses that can be taken. Which of the following statements is/are true?
+\begin{enumerate}[label=\Alph*.]
+\item Time complexity is O(n log n).
+\item Let lastest start time of course i = lastDay\_i - duration\_i. The course with the minimum latest start time should be selected first.
+\item A min-heap-based greedy approach provides a suitable solution.
+\item The course with the earliest lastDay should be selected first.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、D。
+
+選項說得很簡短，先說明解讀。 A 指這個問題最好的已知解法的時間。 D 的「selected first」讀成「最先
+考慮」，也就是依截止日由早到晚處理（若讀成「截止日最早的課一定要選進答案」就不對，見 D 的說明）。
+C 的 min-heap 照字面讀成「以課程長度為鍵的最小堆積」；正確的做法需要的是最大堆積（若把長度取負號
+存進最小堆積，例如 Python 的 \texttt{heapq}，實質上就是最大堆積，那就另當別論）。
+
+\textbf{正確的做法}。 這是資結書第~19.4.2~節「有截止期限的工作排程」的變形：每個工作長度不同，
+目標是做完的工作數最多。 依截止日由早到晚考慮每一門課，先把它加進去；如果加進去之後總天數超過它的
+截止日，就從已選的課裡丟掉最長的那一門。 已選的課放在以長度為鍵的最大堆積裡（資結書第~8.3~節）。
+
+\begin{pseudo}{選最多門課}
+\Function{Max-Courses}{$\mathit{course}[1..n]$}
+    \State 依 $\mathit{lastDay}$ 由小到大排序 $\mathit{course}$
+    \State $H \gets$ 空的最大堆積（鍵是 $\mathit{duration}$）；$t \gets 0$ \Comment{$t$：已選課程的總天數}
+    \For{$i \gets 1$ \To $n$}
+        \State 把 $\mathit{course}[i]$ 插入 $H$；$t \gets t + \mathit{course}[i].\mathit{duration}$
+        \If{$t > \mathit{course}[i].\mathit{lastDay}$}
+            \State $c \gets$ \Call{Extract-Max}{$H$}；$t \gets t - c.\mathit{duration}$
+        \EndIf
+    \EndFor
+    \State \Return $H$ 裡的課程數
+\EndFunction
+\end{pseudo}
+
+正確性的兩個重點。 (1) 一組課程能全部上完，若且唯若依截止日由早到晚接連上課都趕得上（截止日
+早的排後面，和後面的對調只會更好，資結書第~19.4~節同樣的交換論證）；所以只要維持「$H$ 裡的課依
+截止日順序上，總天數 $t$ 不超過目前這門課的截止日」，$H$ 就是可行的。 (2) 加入第 $i$ 門後超時，
+表示前 $i$ 門課裡不可能選出比原來多一門的可行組合，課數最多就是原來的數目；這時丟掉最長的一門，
+課數不變、總天數 $t$ 降到最低，留給後面的課最多空間。 歸納下去，處理完每一門課時，$H$ 都是
+「前 $i$ 門課裡課數最多的可行組合中，總天數最少的一組」，最後的 $|H|$ 就是答案。
+
+\textbf{A 對}。 排序 $O(n \log n)$；每門課最多插入一次、取出一次，堆積操作各 $O(\log n)$，共
+$O(n \log n)$。
+
+\textbf{B 錯}。 依「最晚開始時間」排序不對。 反例：課程 $[5, 5]$、$[1, 2]$、$[1, 3]$，最晚開始時間
+分別是 $0, 1, 2$。 先選 $[5, 5]$，第 $1$ 到 $5$ 天都被佔掉，另外兩門都趕不上，只上 $1$ 門；但只上
+$[1, 2]$、$[1, 3]$ 可以上 $2$ 門。 最晚開始時間小的課，可能很長，會擋掉很多短課。
+
+\textbf{C 錯}。 超時的時候要丟掉的是最長的課，要的是能取出最大值的最大堆積。 用最小堆積丟掉最短的
+課，總天數降得最少：課程 $[1, 1]$、$[2, 2]$、$[1, 2]$（已依截止日排序），處理 $[2, 2]$ 時總天數 $3 > 2$，
+丟掉最短的 $[1, 1]$；處理 $[1, 2]$ 時總天數又是 $3 > 2$，丟掉 $[1, 2]$，結果只有 $1$ 門。 正確答案是
+$[1, 1]$、$[1, 2]$ 兩門，用最大堆積的做法在第二步就會丟掉 $[2, 2]$，得到 $2$ 門。
+
+\textbf{D 對}。 依截止日由早到晚考慮，正是上面演算法的第一步。 但要注意「截止日最早的那一門一定在
+最佳解裡」並不成立：課程 $[3, 3]$、$[2, 4]$、$[2, 4]$，選了 $[3, 3]$ 之後另外兩門都趕不上，只有
+$1$ 門；不選它，另外兩門排在第 $1$ 到 $4$ 天，有 $2$ 門。 所以截止日最早的課要先考慮，但之後可能被
+丟掉。
+\end{pastsoln}

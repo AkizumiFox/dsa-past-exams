@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ncku-115-prog-13}]{成大資訊聯招 115 學年度 演算法是非第 16 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+[2\%] Suppose a problem called ``Robot-Path-Planning'' is a known NP-Complete problem. To prove that a
+related new problem ``3-SAT'' is also NP-Complete, we must demonstrate that ``3-SAT'' is in NP, and we must
+construct a polynomial-time reduction from ``3-SAT'' to ``Robot-Path-Planning''\\
+(A) True \qquad (B) False
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) False。 歸約的方向反了。 要證新問題 \textsc{3-SAT} 是 NP 難的，要把\textbf{已知} NP 完備的
+Robot-Path-Planning 轉成 \textsc{3-SAT}，也就是證明 $\text{Robot-Path-Planning} \le_{\mathrm{p}}
+\textsc{3-SAT}$，再加上 $\textsc{3-SAT} \in \mathrm{NP}$（資結書引理~28.6）。 題目說的
+$\textsc{3-SAT} \le_{\mathrm{p}} \text{Robot-Path-Planning}$ 只說明 \textsc{3-SAT} 不比它難；而且
+Robot-Path-Planning 是 NP 完備的，NP 裡\textbf{每一個}問題都能歸約到它，所以這個歸約對任何 NP 問題都存在，
+什麼都證明不了。 \textsc{3-SAT} 本身確實是 NP 完備的（資結書定理~28.8），但題目問的是證明方法，
+方法是錯的。
+\end{pastsoln}

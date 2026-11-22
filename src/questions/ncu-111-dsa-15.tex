@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncu-111-dsa-15}]{中央資工所 111 學年度 問答題第 3 題}
+（問答）
+
+(12\%) For a set of variables $x_1, x_2, \ldots, x_n$, you are given some equality constraints, of
+the form ``$x_i = x_j$'' and some disequality constraints, of the form ``$x_i \neq x_j$''. Is it
+possible to satisfy all of them? For instance, the constraints :
+
+\quad $x_1 = x_2$,; $x_2 = x_3$; $x_3 = x_4$; $x_1 \neq x_4$;
+
+cannot be satisfied. Give an efficient algorithm that takes as input $m$ constraints over $n$
+variables and decides whether the constraints can be satisfied. Describe the data structure used
+by your algorithm, and analysis the time complexity of your algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+這裡假設變數可以取任意整數，值的種類不受限制。（如果每個變數只能取少數幾個值，例如只能
+是 $0$ 或 $1$，問題就變成圖的著色，不是這一題的範圍。）
+
+想法：等式有遞移性，$x_i = x_j$、$x_j = x_k$ 就推出 $x_i = x_k$，所以用等式把變數分組，同一
+組的值一定相同；接著檢查每個不等式的兩端是不是被分到同一組。 分組用互斥集合。
+
+\begin{pseudo}[unbreakable]{等式與不等式限制是否可以同時滿足}
+\Function{Satisfiable}{$n$, 限制 $c_1, \ldots, c_m$}
+    \For{$i \gets 1$ \To $n$}
+        \State \Call{Make-Set}{$i$}
+    \EndFor
+    \For{每個等式 $x_i = x_j$}
+        \State \Call{Union}{$i, j$}
+    \EndFor
+    \For{每個不等式 $x_i \ne x_j$}
+        \If{\Call{Find-Set}{$i$} $=$ \Call{Find-Set}{$j$}}
+            \State \Return \FALSE
+        \EndIf
+    \EndFor
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+等式要全部合併完（第 4--5 行）才能開始檢查不等式；如果一邊讀一邊檢查，後面的等式可能還會
+把已經檢查過的兩個變數併成一組。
+
+正確性。 第 5 行做完以後，$i$、$j$ 在同一個集合，恰好表示有一串等式
+$x_i = x_{a_1},\ x_{a_1} = x_{a_2},\ \ldots,\ x_{a_r} = x_j$ 把它們連起來。 換句話說，把變數當頂點、等式當邊，集合就是
+連通元件。
+\begin{itemize}
+\item 回傳 \FALSE：某個不等式 $x_i \ne x_j$ 的兩端在同一組。 任何滿足所有等式的設定，沿著
+那串等式一路相等，一定有 $x_i = x_j$，違反這個不等式，所以無解。
+\item 回傳 \TRUE：令每個 $x_i$ 等於 \proc{Find-Set}$(i)$（它所在集合的代表編號）。 每個等式
+的兩端在同一組，值相同；每個不等式的兩端在不同組，代表不同，值也不同。 所有限制都滿足。
+\end{itemize}
+題目的例子：三個等式把 $x_1, x_2, x_3, x_4$ 併成一組，檢查 $x_1 \ne x_4$ 時
+$\proc{Find-Set}(1) = \proc{Find-Set}(4)$，回傳 \FALSE，和題目說的一樣。
+
+資料結構與時間。 用資結書第~13.2~節的森林，依秩（或依大小）合併加路徑壓縮。 一共
+$n$ 次 \proc{Make-Set}、最多 $m$ 次 \proc{Union} 和 $2m$ 次 \proc{Find-Set}，操作數是
+$O(n + m)$，由資結書定理~13.4，總時間 $O((n + m)\,\alpha(n))$，空間 $O(n + m)$。 也
+可以把等式建成圖，用資結書第~21~章的 BFS 或 DFS 標出連通元件，時間 $O(n + m)$；互斥集合的寫法比
+較短，而且等式可以一條一條讀進來處理。
+\end{pastsoln}

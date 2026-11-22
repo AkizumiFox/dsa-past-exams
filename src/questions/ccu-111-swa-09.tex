@@ -1,0 +1,110 @@
+\begin{pastexam}[label={px:ccu-111-swa-09}]{中正資工所甲組 111 學年度 第 17 題}
+（單選）
+
+(4\%) Given the below directed graph, please answer the following questions.
+\begin{center}
+\begin{tikzpicture}[x=1.75cm,y=1.75cm,>={Stealth[length=2.2mm]},
+  ev/.style={circle,draw=gray!70!black,fill=gray!65,text=white,font=\sffamily\bfseries,minimum size=6.5mm,inner sep=0pt},
+  big/.style={ev,minimum size=12mm},
+  lab/.style={font=\sffamily\small,inner sep=1.5pt}]
+\node[big] (1) at (0.7,-1.75) {1};
+\node[ev] (2) at (1.85,-0.65) {2}; \node[ev] (3) at (1.85,-2.85) {3};
+\node[ev] (4) at (3.3,-0.65) {4}; \node[ev] (5) at (3.3,-2.85) {5};
+\node[ev] (6) at (6.05,-0.65) {6}; \node[ev] (7) at (4.45,-1.65) {7};
+\node[ev] (8) at (5.35,-2.85) {8}; \node[ev] (9) at (6.1,-1.65) {9};
+\node[big] (10) at (7.8,-1.65) {10};
+\draw[->] (1) -- node[lab,above left] {a1=5} (2);
+\draw[->] (1) -- node[lab,below left] {a2=6} (3);
+\draw[->] (2) -- node[lab,above=2pt] {a3=3} (4);
+\draw[->] (3) -- node[lab,left=3pt] {a4=6} (4);
+\draw[->] (3) -- node[lab,below=2pt] {a5=3} (5);
+\draw[->] (4) -- node[lab,above=2pt,pos=0.45] {a6=4} (6);
+\draw[->] (4) -- node[lab,pos=0.6,fill=white,inner sep=1pt] {a7=3} (5);
+\draw[->] (4) -- node[lab,above right,pos=0.4] {a8=5} (7);
+\draw[->] (5) -- node[lab,below right,pos=0.6] {a9=1} (7);
+\draw[->] (5) -- node[lab,below=2pt,pos=0.45] {a10=4} (8);
+\draw[->] (7) -- node[lab,above=2pt,pos=0.45] {a11=5} (9);
+\draw[->] (8) -- node[lab,right=3pt] {a12=2} (9);
+\draw[->] (6) -- node[lab,above right] {a13=4} (10);
+\draw[->] (9) -- node[lab,above=2pt,pos=0.4] {a14=2} (10);
+\end{tikzpicture}
+\end{center}
+
+17.1 (2\%) (\quad) In the directed graph, each node represents an event, and each edge represents an activity with the time required to perform the activity. What is the critical path?
+
+\quad a.~($1\to2\to4\to7\to9\to10$) \quad b.~($1\to2\to4\to5\to8\to9\to10$)\\
+\quad c.~($1\to3\to4\to7\to9\to10$) \quad d.~($1\to3\to4\to5\to7\to9\to10$) \quad e.~None of the above
+
+17.2 (2\%) (\quad) Please perform Dijkstra's algorithm running on the graph above. Use the cost on each edge as the weight and find the shortest path from vertex 1 to all vertices. What are the vertices in the order they are selected by Dijkstra's algorithm?
+
+\quad a.~(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) \quad b.~(1, 2, 3, 5, 6, 4, 7, 8, 9, 10) \quad c.~(1, 2, 3, 4, 5, 7, 6, 8, 9, 10)\\
+\quad d.~(1, 2, 5, 6, 3, 4, 7, 9, 8, 10) \quad e.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：17.1 選 c，17.2 選 c。 17.1 是 AOE 網路（資結書第~22.5~節），17.2 是 Dijkstra 演算法
+（資結書第~25.2~節，第~25~章的內容）。
+
+圖的活動（邊）：$1 \to 2$：$5$，$1 \to 3$：$6$，$2 \to 4$：$3$，$3 \to 4$：$6$，$3 \to 5$：$3$，$4 \to 6$：$4$，
+$4 \to 5$：$3$，$4 \to 7$：$5$，$5 \to 7$：$1$，$5 \to 8$：$4$，$7 \to 9$：$5$，$8 \to 9$：$2$，$6 \to 10$：$4$，
+$9 \to 10$：$2$。 事件編號已經是一個拓樸順序。
+
+\textbf{17.1 關鍵路徑。} 往前算事件的最早時間 $\mathit{ee}$（取所有進來的活動的最大值），再從 $\mathit{ee}[10]$
+往回算最晚時間 $\mathit{le}$（取所有出去的活動的最小值）：
+\begin{center}
+\small
+\begin{tabular}{clcl}
+\toprule
+事件 & $\mathit{ee}$ 的計算 & $\mathit{ee}$ & $\mathit{le}$ \\
+\midrule
+1 & 開始 & 0 & 0 \\
+2 & $0 + 5$ & 5 & $\mathit{le}[4] - 3 = 9$ \\
+3 & $0 + 6$ & 6 & $\min(12 - 6,\ 16 - 3) = 6$ \\
+4 & $\max(5 + 3,\ 6 + 6)$ & 12 & $\min(20 - 4,\ 16 - 3,\ 17 - 5) = 12$ \\
+5 & $\max(6 + 3,\ 12 + 3)$ & 15 & $\min(17 - 1,\ 20 - 4) = 16$ \\
+6 & $12 + 4$ & 16 & $24 - 4 = 20$ \\
+7 & $\max(12 + 5,\ 15 + 1)$ & 17 & $22 - 5 = 17$ \\
+8 & $15 + 4$ & 19 & $22 - 2 = 20$ \\
+9 & $\max(17 + 5,\ 19 + 2)$ & 22 & $24 - 2 = 22$ \\
+10 & $\max(16 + 4,\ 22 + 2)$ & 24 & 24 \\
+\bottomrule
+\end{tabular}
+\end{center}
+整個工程最少 $24$ 個時間單位。 活動 $\langle i, j \rangle$ 是關鍵活動若且唯若 $\mathit{ee}[i] + \text{時間} = \mathit{le}[j]$
+（最早開工就得剛好在最晚期限完成）：$1 \to 3$（$0 + 6 = 6$）、$3 \to 4$（$6 + 6 = 12$）、$4 \to 7$（$12 + 5 = 17$）、
+$7 \to 9$（$17 + 5 = 22$）、$9 \to 10$（$22 + 2 = 24$）。 其他活動都有餘裕，例如 $4 \to 5$：$12 + 3 = 15 < 16$。
+關鍵路徑是 $1 \to 3 \to 4 \to 7 \to 9 \to 10$，長 $6 + 6 + 5 + 5 + 2 = 24$，而且只有這一條，選 c。
+
+其他選項的長度：a 是 $5 + 3 + 5 + 5 + 2 = 20$；b 是 $5 + 3 + 3 + 4 + 2 + 2 = 19$；d 是 $6 + 6 + 3 + 1 + 5 + 2 = 23$。
+都比 $24$ 短，不是關鍵路徑。
+
+\textbf{17.2 Dijkstra。} 起點 $1$，每輪取出 $d$ 最小的未確定頂點，再放鬆它出去的邊。 表裡每一列是取出
+該頂點並放鬆之後的 $d$，粗體是這一輪取出的頂點，``---'' 表示已經確定。
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{cc*{10}{c}}
+\toprule
+輪 & 取出 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+1 & 1 & \textbf{0} & 5 & 6 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+2 & 2 & --- & \textbf{5} & 6 & 8 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+3 & 3 & --- & --- & \textbf{6} & 8 & 9 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+4 & 4 & --- & --- & --- & \textbf{8} & 9 & 12 & 13 & $\infty$ & $\infty$ & $\infty$ \\
+5 & 5 & --- & --- & --- & --- & \textbf{9} & 12 & 10 & 13 & $\infty$ & $\infty$ \\
+6 & 7 & --- & --- & --- & --- & --- & 12 & \textbf{10} & 13 & 15 & $\infty$ \\
+7 & 6 & --- & --- & --- & --- & --- & \textbf{12} & --- & 13 & 15 & 16 \\
+8 & 8 & --- & --- & --- & --- & --- & --- & --- & \textbf{13} & 15 & 16 \\
+9 & 9 & --- & --- & --- & --- & --- & --- & --- & --- & \textbf{15} & 16 \\
+10 & 10 & --- & --- & --- & --- & --- & --- & --- & --- & --- & \textbf{16} \\
+\bottomrule
+\end{tabular}
+\end{center}
+幾個要注意的地方：第 3 輪取出 $3$ 時，$6 + 6 = 12$ 沒有比 $d[4] = 8$ 小，不更新；第 4 輪取出 $4$ 時，
+$8 + 3 = 11$ 沒有比 $d[5] = 9$ 小；第 5 輪取出 $5$ 時 $d[7]$ 從 $13$ 降到 $9 + 1 = 10$，所以 $7$ 比 $6$
+（$12$）先取出；第 8 輪 $13 + 2 = 15$ 和 $d[9]$ 相等，不更新。 每一輪 $d$ 最小的頂點都只有一個，順序
+沒有平手的問題。 取出順序是 $1, 2, 3, 4, 5, 7, 6, 8, 9, 10$，選 c。
+
+其他選項：a 讓 $6$ 在 $7$ 之前，但取 $6$ 的時候 $d[7] = 10 < d[6] = 12$；b 在 $4$（$d = 8$）之前取了
+$5$（$9$）和 $6$；d 在 $3$（$d = 6$）之前就取 $5$，而那時 $5$ 還是 $\infty$。
+\end{pastsoln}

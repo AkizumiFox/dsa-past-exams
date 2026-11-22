@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ccu-114-csb-02}]{中正資工所乙組 114 學年度 第 2 題}
+（是非組合；單選）
+
+(5\%) Please answer the following \textbf{true-or-false} questions and select the correct set of answers from the provided options.
+\begin{enumerate}[label=\Roman*.]
+\item Linked lists are better than arrays for random access operations.
+\item In a queue, insertion occurs at the front and deletion occurs at the rear.
+\item A binary tree with $n$ nodes has exactly $n-1$ edges.
+\end{enumerate}
+
+A.~False, False, False \qquad B.~False, False, True \qquad C.~False, True, False\\
+D.~False, True, True \qquad E.~True, False, False \qquad F.~True, False, True\\
+G.~True, Ture, False \qquad H.~Ture, True, True
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（False, False, True）。 I 是資結書第~5~章、II 是第~6~章、III 是第~7~章的內容；歸在第~5~章。
+
+選項 G、H 的 ``Ture'' 是原卷的錯字，就是 True。
+\begin{itemize}
+\item \textbf{I：False。} 隨機存取（直接取第 $k$ 個）陣列是 $O(1)$，用位址計算就到；鏈結串列要從頭沿著指標走 $k$ 步，$O(k)$
+（資結書第~5.1~節）。 鏈結串列的優點在已知位置的插入、刪除，不在隨機存取。
+\item \textbf{II：False。} 佇列是先進先出：從尾端（rear）插入、從前端（front）刪除（資結書第~6.2~節），題目把兩端說反了。
+\item \textbf{III：True。} $n \ge 1$ 個節點的二元樹，除了根以外每個節點恰好有一條邊連到父節點，邊數是 $n - 1$（資結書第~7.1~節）。
+\end{itemize}
+三個依序是 False, False, True，選 B。
+\end{pastsoln}

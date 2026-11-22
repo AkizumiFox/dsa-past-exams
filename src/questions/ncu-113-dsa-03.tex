@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncu-113-dsa-03}]{中央資工所 113 學年度 第 3 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Which of the following statements are true? Let T(n) denote the time complexity of performing insertion in an
+n-element Binary Search Tree.
+\begin{enumerate}[label=(\Alph*)]
+\item T(n) = 2T(n/2) + O(1) and T(1) = T(0) = O(1) holds for best case only.
+\item T(n) = T(n-1) + O(1) and T(1) = T(0) = O(1) holds for worst case only
+\item T(n) = T(n/2) + O(1) and T(1) = T(0) = O(1) holds for best case.
+\item T(n) = T(n-2) + O(1) and T(1) = T(0) = O(1) holds for worst case.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)(C)。
+
+這裡的「best case／worst case」指的是樹的形狀：插入從根往下走一條路徑（資結書虛擬碼~9.6），每走一層
+做 $O(1)$ 的比較，再進到一棵子樹。 遞迴式描述的是「進到的那棵子樹有幾個節點」。
+
+\begin{itemize}
+\item (A) 錯。 $2T(n/2) + O(1)$ 表示兩棵子樹都要處理，這是走訪整棵樹的遞迴式，解是 $\Theta(n)$。 插入
+只會往左或往右其中一邊走，不會兩邊都走。
+\item (B) 對。 最壞情況是樹退化成一條鏈（例如鍵由小到大插入），每往下一層，剩下的子樹只少一個節點（根），
+$T(n) = T(n-1) + O(1)$，解是 $\Theta(n)$。 最好情況不是這個式子，所以「only」也成立。
+\item (C) 對。 最好情況是樹盡量平衡，每往下一層子樹大小減半，$T(n) = T(n/2) + O(1)$，解是
+$\Theta(\lg n)$，也就是樹高 $\lfloor\lg n\rfloor$（資結書第~9.3~節）。
+\item (D) 錯。 退化成鏈時進到的子樹有 $n - 1$ 個節點，不是 $n - 2$。 這個式子的解也是 $\Theta(n)$，但
+它不是插入的遞迴式；題目問的是哪個遞迴式成立，不是解的階。
+\end{itemize}
+\end{pastsoln}

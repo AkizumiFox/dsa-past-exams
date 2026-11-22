@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:gw3-098-ds-03}]{關務三等資訊處理 98 年 第三題}
+（申論；20 分）
+
+令 $N$ 為 2 的 $m$ 次方，$a$ 為任意正整數。
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請寫一使用 O($\log N$)次乘法運算的遞迴（recursive）程式計算 $a$ 的 $N$ 次方。（10 分）
+\item[㈡] 請寫一使用 O($\log N$)次乘法運算的疊代（iterative）程式計算 $a$ 的 $N$ 次方。（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+關鍵式子：$N$ 是偶數時 $a^N = \bigl(a^{N/2}\bigr)^2$，算出 $a^{N/2}$ 後只要再乘一次。 $N = 2^m$ 時每次減半都還是偶數，
+一路減到 $1$（資結書第~17.1.5~節快速冪的特例）。 以下用 C 寫（數值很快會超過 \texttt{long long}，題目的層次
+不考慮溢位；要處理大數可換成大數型別，乘法次數不變）。
+
+\textbf{㈠ 遞迴}：
+\begin{minted}[fontsize=\small]{c}
+/* 計算 a 的 N 次方，N 是 2 的冪次（N >= 1） */
+long long power_rec(long long a, long long N) {
+    if (N == 1)                         /* a^1 = a，不必乘 */
+        return a;
+    long long half = power_rec(a, N / 2);   /* 先算 a^(N/2) */
+    return half * half;                 /* 一次乘法：a^N = (a^(N/2))^2 */
+}
+\end{minted}
+注意要先把 $a^{N/2}$ 存在變數裡再自乘；寫成 \texttt{power\_rec(a, N/2) * power\_rec(a, N/2)} 會呼叫兩次，
+乘法次數變成 $N - 1$，就失去意義了。
+
+乘法次數：令 $M(N)$ 為 \texttt{power\_rec(a, N)} 做的乘法次數，$M(1) = 0$，$M(N) = M(N/2) + 1$。 以 $N = 2^m$
+代入展開：$M(2^m) = M(2^{m-1}) + 1 = \cdots = M(1) + m = m$，即 $M(N) = \lg N = O(\log N)$。 正確性對 $m$ 歸納：
+$m = 0$ 時回傳 $a = a^1$；若 \texttt{power\_rec(a, N/2)} 回傳 $a^{N/2}$，則回傳 $a^{N/2} \cdot a^{N/2} = a^N$。
+
+\textbf{㈡ 疊代}：從 $a = a^{2^0}$ 開始自乘 $m$ 次，依序得到 $a^{2^1}, a^{2^2}, \ldots, a^{2^m} = a^N$。
+\begin{minted}[fontsize=\small]{c}
+/* 計算 a 的 N 次方，N 是 2 的冪次（N >= 1） */
+long long power_iter(long long a, long long N) {
+    long long result = a;     /* 迴圈不變量：result = a^k */
+    long long k = 1;
+    while (k < N) {           /* k 依序是 1, 2, 4, ..., N */
+        result = result * result;   /* a^k 自乘得 a^(2k) */
+        k = k * 2;
+    }
+    return result;            /* 結束時 k = N，result = a^N */
+}
+\end{minted}
+迴圈不變量是 $\mathit{result} = a^k$ 且 $k$ 是 $2$ 的冪次：進迴圈前 $k = 1$ 成立；每輪 $\mathit{result}$ 自乘、$k$ 加倍，
+仍成立。 $N = 2^m$，所以 $k$ 會剛好等於 $N$ 時離開，回傳 $a^N$。 迴圈跑 $m = \lg N$ 次，每次做一次計算數值的乘法
+（$k = k \times 2$ 是計數用的，可以改成位移 \texttt{k <<= 1}，不算在內；就算算進去也是 $2\lg N$ 次），所以是
+$O(\log N)$ 次乘法。
+
+例如 $a = 3$、$N = 8$（$m = 3$）：$3 \to 3^2 = 9 \to 9^2 = 81 \to 81^2 = 6561 = 3^8$，三次乘法；直接連乘要 $7$ 次。
+$N$ 不是 $2$ 的冪次時，改用 $N$ 的二進位表示：遇到 $1$ 的位元再多乘一次 $a$ 的對應冪次，乘法次數仍是
+$O(\log N)$（資結書虛擬碼~17.3、17.4）。
+\end{pastsoln}

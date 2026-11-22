@@ -1,0 +1,13 @@
+paper: ccu-113-csb
+volume: 2
+school: 中正
+dept: 資工所乙組
+year: 113
+subject: 計算機概論（含程式設計）
+instructions: Multiple Choice (50\%)：Please choose the best one and explain why among the four choices for each question. Five points will be given for each correct answer. 全部答題均須在試卷（答案卷）作答區內完成。
+questions:
+  - {id: ccu-113-csb-01, label: 第 5 題, chapter: 21}
+  - {id: ccu-113-csb-02, label: 第 6 題, chapter: 7}
+  - {id: ccu-113-csb-03, label: 第 7 題, chapter: 10}
+  - {id: ccu-113-csb-04, label: 第 8 題, chapter: 10}
+  - {id: ccu-113-csb-05, label: 第 9 題, chapter: 8}

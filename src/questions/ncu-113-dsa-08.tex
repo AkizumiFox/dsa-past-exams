@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ncu-113-dsa-08}]{中央資工所 113 學年度 第 8 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Consider the following function that takes reference to head of a Doubly Linked List as parameter. Assume
+that a node of doubly linked list has previous pointer as prev and next pointer as next.
+\begin{minted}[fontsize=\small]{c}
+void fun(struct node **head_ref)
+{
+    struct node *temp = NULL;
+    struct node *current = *head_ref;
+
+    while (current != NULL)
+    {
+        temp = current->prev;
+        current->prev = current->next;
+        current->next = temp;
+        current = current->prev;
+    }
+
+    if(temp != NULL )
+        *head_ref = temp->prev;
+}
+\end{minted}
+Assume that reference of head of a doubly linked list L is passed to above function. What is the resulting
+linked list after the function call?
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{2 <--> 1 <--> 4 <--> 3 <--> 6 <-->5} when L is\\
+\texttt{2 <--> 1 <--> 4 <--> 3 <--> 6 <-->5}
+\item \texttt{5 <--> 4 <--> 3 <--> 2 <--> 1 <-->6} when L is\\
+\texttt{5 <-->4 <--> 3 <-->2 <--> 6<-->1}
+\item \texttt{6 <--> 5 <--> 4 <--> 3 <--> 2 <--> 1} when L is\\
+\texttt{1 <--> 2 <--> 3 <--> 4 <--> 5 <-->6}
+\item \texttt{6 <--> 5 <--> 4 <--> 3 <--> 1 <--> 2} when L is\\
+\texttt{1 <--> 2 <--> 3 <--> 4 <--> 5 <-->6}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+\texttt{fun} 對每個節點把 \texttt{prev}、\texttt{next} 兩個指標對調，然後讓 \texttt{current} 走到對調後的
+\texttt{prev}，也就是原本的下一個節點，所以每個節點都會被處理一次。 每個節點兩個方向都反過來，整條串列
+就反轉了。 迴圈結束時 \texttt{temp} 是最後處理的節點 $x_n$ 原本的 \texttt{prev}，也就是 $x_{n-1}$；
+$x_{n-1}$ 對調之後 \texttt{prev} 是原本的 \texttt{next}，也就是 $x_n$，所以
+\texttt{*head\_ref = temp->prev} 讓新的開頭是 $x_n$。
+
+用 L $= 1 \leftrightarrow 2 \leftrightarrow 3 \leftrightarrow 4 \leftrightarrow 5 \leftrightarrow 6$ 追蹤，
+每一列是迴圈的一輪（「之後」是對調後的值）：
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+\texttt{current} & \texttt{temp} & 之後的 \texttt{prev} & 之後的 \texttt{next} & 下一個 \texttt{current} \\
+\midrule
+1 & \NIL & 2 & \NIL & 2 \\
+2 & 1 & 3 & 1 & 3 \\
+3 & 2 & 4 & 2 & 4 \\
+4 & 3 & 5 & 3 & 5 \\
+5 & 4 & 6 & 4 & 6 \\
+6 & 5 & \NIL & 5 & \NIL \\
+\bottomrule
+\end{tabular}
+\end{center}
+迴圈結束時 \texttt{temp} 是節點 $5$，\texttt{temp->prev} 是 $6$，新的開頭是 $6$。 從 $6$ 沿著
+\texttt{next} 走：$6, 5, 4, 3, 2, 1$；沿著 \texttt{prev} 從 $1$ 往回走也是同樣的順序，兩個方向都接對了。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯。 \texttt{fun} 會把任何串列反轉，$2, 1, 4, 3, 6, 5$ 反轉是 $5, 6, 3, 4, 1, 2$，不是原樣。
+\item (B) 錯。 $5, 4, 3, 2, 6, 1$ 反轉是 $1, 6, 2, 3, 4, 5$。
+\item (C) 對，上面的追蹤。
+\item (D) 錯。 反轉後 $1$ 在最後，不會是 $\ldots 1, 2$。
+\end{itemize}
+
+邊界情況：只有一個節點時，迴圈跑一輪，\texttt{temp} 是 \texttt{NULL}，開頭不變，正確；空串列時迴圈
+不跑，也正確。 時間 $\Theta(n)$，額外空間 $\Theta(1)$。 和資結書第~5.5~節單向串列的反轉
+（資結書虛擬碼~5.12）比較：雙向串列每個節點本來就有兩個方向的指標，對調就好，不用另外記「已經反轉好的
+一段」。
+\end{pastsoln}

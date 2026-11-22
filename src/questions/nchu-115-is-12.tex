@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nchu-115-is-12}]{中興資工所乙組 115 學年度 第 12 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In merge sort, what is the primary reason that additional memory is usually required beyond the
+original array?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item The algorithm needs extra space to store pivot elements during partitioning.
+\item The algorithm uses a temporary array to merge two sorted halves into a single sorted
+segment.
+\item The algorithm keeps a complete copy of the original array to preserve the input order.
+\item The algorithm allocates a new array at each recursion level for random shuffling.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+合併排序的合併步驟（資結書虛擬碼~14.4）把 $A[p..q]$、$A[q+1..r]$ 兩段排好的數合成一段：
+兩邊各拿目前最小的比，小的先寫出去。 寫出去的位置會蓋到還沒比過的數，所以先把兩段複製到
+暫存陣列（或把結果先寫到暫存陣列再抄回來），這就是 $\Theta(n)$ 額外空間的來源（資結書
+第~14.4~節）。
+\begin{itemize}
+\item A 錯：基準（pivot）和分割是快速排序的東西，合併排序沒有。
+\item B 對。
+\item C 錯：合併排序不需要保留原始輸入；它的額外空間只是合併時的暫存。 它是穩定排序，靠的是
+合併時「相等時先拿左邊」，不是保留一份副本。
+\item D 錯：合併排序沒有隨機打亂。 隨機化是快速排序避開最壞情況的做法（資結書虛擬碼~14.12）。
+\end{itemize}
+\end{pastsoln}

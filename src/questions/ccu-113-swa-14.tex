@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ccu-113-swa-14}]{中正資工所甲組 113 學年度 第 19 題}
+（是非）
+
+(2\%) Determine if the following statement is true or false: "Both the subroutines `Merge' in Merge sort and `Partition' in Quicksort are linear time operations".
+\end{pastexam}
+
+\begin{pastsoln}
+答案：True。
+
+\begin{itemize}
+\item 合併排序的 \proc{Merge}（資結書虛擬碼~14.4）合併 $A[p..q]$ 和 $A[q+1..r]$：抄到暫存陣列一次、再放回一次，兩個迴圈各
+$m = r - p + 1$ 次，每次常數時間，共 $\Theta(m)$；比較次數最多 $m - 1$。
+\item 快速排序的分割（Lomuto 版資結書虛擬碼~14.8、Hoare 版虛擬碼~14.10）：Lomuto 用一個指標掃過 $A[p..r-1]$ 一次，每格比較
+一次、最多交換一次，$\Theta(m)$；Hoare 的兩個指標從兩端往中間走，相遇就停，兩者合計走過的格數是 $O(m)$，也是 $\Theta(m)$。
+\end{itemize}
+兩者都是處理的段長的線性時間。 正是因為這兩步是線性的，合併排序的遞迴式才是 $T(n) = 2T(n/2) + \Theta(n)$，快速排序才是
+$T(n) = T(q) + T(n - q) + \Theta(n)$。
+\end{pastsoln}

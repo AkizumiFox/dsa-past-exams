@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ccu-112-swa-05}]{中正資工所甲組 112 學年度 第 12 題}
+（問答）
+
+(6\%) What is the output when applying Ford-Fulkerson algorithm to the following graph? Write down
+your derivation.
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},
+  v/.style={circle,draw,minimum size=7mm,inner sep=0pt,font=\sffamily},lab/.style={font=\sffamily\small,inner sep=2pt}]
+\node[v] (s) at (0,2.2) {s}; \node[v] (u) at (2.5,2.2) {};
+\node[v] (w) at (0,0) {}; \node[v] (t) at (2.5,0) {t};
+\draw[->] (s) -- node[lab,above] {2} (u);
+\draw[->] (s) -- node[lab,left] {4} (w);
+\draw[->] (s) -- node[lab,below left,pos=0.82] {2} (t);
+\draw[->] (u) -- node[lab,above left,pos=0.82] {1} (w);
+\draw[->] (u) -- node[lab,right] {3} (t);
+\draw[->] (w) -- node[lab,below] {3} (t);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最大流量是 $7$。 一組最大流：$s \to t$ 送 $2$、$s \to x \to t$ 送 $2$、$s \to y \to t$ 送 $3$；
+最小割 $(\{s, y\}, \{x, t\})$，容量 $7$。
+
+題目的圖有兩個沒有名字的點，記右上的為 $x$、左下的為 $y$。 邊和容量：$s \to x$ $2$、$s \to y$ $4$、
+$s \to t$ $2$、$x \to y$ $1$、$x \to t$ $3$、$y \to t$ $3$。 Ford--Fulkerson 反覆在剩餘網路裡找一條
+$s$ 到 $t$ 的增廣路徑，沿路送出路徑上最小的剩餘容量，直到找不到為止（資結書第~26.3~節）；輸出的是
+最大流（和它的流量）。
+
+\textbf{增廣過程}（每次選一條路徑；選的順序不同，過程不同，但最後的流量一樣）：
+\begin{center}
+\small
+\begin{tabular}{clcc}
+\toprule
+次 & 增廣路徑 & 瓶頸 & 累計流量 \\
+\midrule
+1 & $s \to t$ & $c(s, t) = 2$ & 2 \\
+2 & $s \to x \to t$ & $\min(2, 3) = 2$ & 4 \\
+3 & $s \to y \to t$ & $\min(4, 3) = 3$ & 7 \\
+\bottomrule
+\end{tabular}
+\end{center}
+這時的剩餘網路：$s \to t$ 用完；$s \to x$ 用完；$y \to t$ 用完；還剩 $s \to y$ $1$、$x \to t$ $1$、
+$x \to y$ $1$，以及反向邊 $t \to s$、$x \to s$、$t \to x$、$y \to s$、$t \to y$。 從 $s$ 出發只走得到
+$y$（$s \to y$ 還剩 $1$），而 $y$ 出去的邊只有反向邊 $y \to s$；走不到 $t$，演算法停止。
+
+\textbf{確認是最大流。} 停止時從 $s$ 走得到的點是 $S = \{s, y\}$，其餘 $T = \{x, t\}$。 跨越這個割
+由 $S$ 到 $T$ 的邊是 $s \to x$ ($2$)、$s \to t$ ($2$)、$y \to t$ ($3$)，容量 $2 + 2 + 3 = 7$，等於
+目前的流量；由最大流最小割定理（資結書定理~26.6），流量 $7$ 是最大的。 （$x \to y$ 是由 $T$ 到
+$S$ 的邊，不算進割的容量。）
+
+另外檢查兩個明顯的上界：從 $s$ 出去的容量 $2 + 4 + 2 = 8$，進 $t$ 的容量 $2 + 3 + 3 = 8$，都比 $7$ 大，
+真正卡住的是 $x$ 只能從 $s$ 收到 $2$、$y$ 只能送出 $3$。
+\end{pastsoln}

@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:gw3-102-ds-01}]{關務三等資訊處理 102 年 第一題}
+（申論；30 分）
+
+關於時間複雜度（time complexity）：
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 下列那兩個敘述是錯的？（10 分）\\[2pt]
+{\small\begin{tabular}{@{}l@{\hspace{1.5em}}l@{\hspace{1.5em}}l@{}}
+(A)~$0.5n^2+100n=\mathrm{O}(n^2)$ & (B)~$1000=\mathrm{O}(1)$ & (C)~$0.5n+5\log n=\mathrm{O}(n^2)$ \\
+(D)~$2n^2+5^n=\mathrm{O}(2^n)$ & (E)~$n^7+1.5^n=\mathrm{O}(n^7)$ & (F)~$3n^2+n\log^4 n=\mathrm{O}(n\log^4 n)$
+\end{tabular}}
+\item[㈡] 承上，請把上題錯的敘述改正並且寫下。（20 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：照原卷印的式子，錯的有\textbf{三個}：(D)、(E)、(F)。 改正為 (D) $2n^2 + 5^n = O(5^n)$、
+(E) $n^7 + 1.5^n = O(1.5^n)$、(F) $3n^2 + n \log^4 n = O(n^2)$。
+
+\textbf{原題的問題}：題目說「那兩個敘述是錯的」，但 (D)、(E)、(F) 三個都錯（理由見下）。 原卷 (E) 的 $1.5^n$
+清楚印成上標；可能命題時把 (E) 想成多項式項（例如 $n^7 + 1.5n$，那就是對的），或把 (E) 誤判為對。 本書照
+印出來的式子作答，三個都指出來並改正；考場上遇到這種情形，也應該照實寫三個並註明理由。
+
+定義（資結書第~1.5~節）：$f(n) = O(g(n))$ 表示存在常數 $c > 0$ 和 $n_0$，使 $n \ge n_0$ 時
+$0 \le f(n) \le c\,g(n)$。 要證明\textbf{錯}，只要說明 $f(n)/g(n)$ 沒有上界（趨近無窮大）。 $\log^4 n$ 指
+$(\log n)^4$。
+
+\textbf{㈠ 逐項檢查}：
+\begin{itemize}
+\item (A) 對。 $n \ge 1$ 時 $100n \le 100n^2$，所以 $0.5n^2 + 100n \le 100.5\,n^2$，取 $c = 100.5$、$n_0 = 1$。
+\item (B) 對。 常數 $1000 \le 1000 \cdot 1$，取 $c = 1000$。
+\item (C) 對。 $n \ge 1$ 時 $\log n \le n \le n^2$，所以 $0.5n + 5\log n \le 5.5\,n^2$。 這個上界不緊（緊的是
+$\Theta(n)$），但 $O$ 只要求上界，敘述成立。
+\item (D) 錯。 $\dfrac{2n^2 + 5^n}{2^n} \ge \Bigl(\dfrac{5}{2}\Bigr)^n \to \infty$，找不到常數 $c$。 指數的底數不同就
+是不同的成長率，$5^n$ 不是 $O(2^n)$。
+\item (E) 錯。 $\dfrac{n^7 + 1.5^n}{n^7} \ge \dfrac{1.5^n}{n^7} \to \infty$：任何底數大於 $1$ 的指數函數最後都比
+任何多項式大（$\lim_{n\to\infty} n^k / a^n = 0$，$a > 1$）。 $n^7$ 在 $n$ 不大的時候比較大（例如 $n = 50$ 時
+$n^7 \approx 7.8 \times 10^{11}$，$1.5^{50} \approx 6.4 \times 10^{8}$），但從 $n = 75$ 起 $1.5^n$ 就一直比較大，漸近符號
+看的是 $n$ 夠大以後。
+\item (F) 錯。 $\dfrac{3n^2 + n\log^4 n}{n \log^4 n} \ge \dfrac{3n}{\log^4 n} \to \infty$：任何多項式 $n^{\epsilon}$
+（這裡 $\epsilon = 1$）最後都比 $\log$ 的任何次方大。 $3n^2$ 才是主項。
+\end{itemize}
+
+\textbf{㈡ 改正}：取每個式子的主項（成長最快的那一項），寫成緊的界：
+\begin{itemize}
+\item (D) $2n^2 + 5^n = O(5^n)$。 理由：$n \ge 1$ 時 $n^2 \le 5^n$，所以 $2n^2 + 5^n \le 3 \cdot 5^n$。
+\item (E) $n^7 + 1.5^n = O(1.5^n)$。 理由：$n \ge 75$ 時 $n^7 \le 1.5^n$，所以
+$n^7 + 1.5^n \le 2 \cdot 1.5^n$。
+\item (F) $3n^2 + n \log^4 n = O(n^2)$。 理由：$\log^4 n \le n$ 對夠大的 $n$ 成立（以 $\log_2$ 計，$n \ge 2^{16}$
+即可），此時 $n \log^4 n \le n^2$，整個式子 $\le 4n^2$。
+\end{itemize}
+三個改正後的界也都是 $\Theta$（緊的界），因為各自的主項本身就是下界。 另一種改法是保留右邊、改左邊（例如
+(D) 改成 $2n^2 + 2^n = O(2^n)$），但題目要的是把錯的敘述改對，改右邊的上界最自然。
+\end{pastsoln}

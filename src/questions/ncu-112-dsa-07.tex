@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncu-112-dsa-07}]{中央資工所 112 學年度 複選題第 7 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Given an undirected graph $G$, where n denotes the number of vertices and m denotes the number of edges
+(m >> n). Which of the following statement(s) is (are) true about the graph $G$?
+\begin{enumerate}[label=(\Alph*)]
+\item If G is represented by an adjacency matrix, the space complexity is O(n$^2$).
+\item If G is represented by an adjacency list, the space complexity is $\Theta$(m).
+\item If G is represented by an adjacency multilist, the space complexity is $\Theta$(m).
+\item If G is represented by an adjacency matrix, the time complexity of determining whether G is
+connected is O(m).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(C)。 各種表示法的空間見資結書第~21.2~節。
+\begin{itemize}
+\item (A) 對。 鄰接矩陣有 $n^2$ 格，空間 $\Theta(n^2)$，當然是 $O(n^2)$。
+\item (B) 對。 鄰接串列是陣列的 $n$ 格加上 $2m$ 個串列節點，$\Theta(n + m)$。 題目假設 $m$ 遠大於 $n$，
+這時 $n + m \le 2m$，$\Theta(n + m) = \Theta(m)$。 沒有這個假設時（例如很多孤立頂點）要寫
+$\Theta(n + m)$。
+\item (C) 對。 鄰接多重串列每條邊只有一個節點，加上 $n$ 個串列頭，也是 $\Theta(n + m) = \Theta(m)$。
+\item (D) 錯。 判斷連通要做一次 DFS 或 BFS（資結書第~21.6~節），用鄰接矩陣時每個頂點都要掃一整列找
+鄰居，是 $\Theta(n^2)$（資結書第~21.2~節的比較表）。 「$m$ 遠大於 $n$」不代表 $m = \Theta(n^2)$：例如
+$m = n^{1.5}$ 時，$n^2 / m = n^{0.5}$ 會無限變大，$n^2$ 不是 $O(m)$。 換一個角度看，只拿到矩陣的演算法，
+沒有讀過的格子都可能正好是連接兩群頂點的唯一一條邊，一般要讀 $\Theta(n^2)$ 格才能確定，不可能保證
+$O(m)$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ccu-113-csb-04}]{中正資工所乙組 113 學年度 第 8 題}
+（單選，並說明理由）
+
+(5\%) Which statement is \textbf{false}?
+\begin{enumerate}[label=(\alph*),itemsep=0pt]
+\item Converting a BST into an AVL tree can be done in $O(n)$ time.
+\item In an AVL tree, every subtree is also an AVL tree.
+\item In a balanced BST such as AVL or red-black tree, finding the element with the second smallest
+key requires $\Theta(n)$ time.
+\item The height of an AVL tree with $n$ nodes is $\Theta(\log n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)。
+\begin{itemize}
+\item (a) 對。 先中序走訪，$O(n)$ 得到由小到大的序列（資結書定理~9.1）；再遞迴地取中間的數當根、
+左半邊建左子樹、右半邊建右子樹，每個數處理一次，$O(n)$。 這樣建出來的樹，每個節點左右兩邊的
+節點數最多差 $1$，高度最多差 $1$，是 AVL 樹（還是最矮的那種）。 總共 $O(n)$。
+\item (b) 對。 AVL 樹的條件是「每個節點」左右子樹的高度差不超過 $1$（資結書第~10.2~節）。 任何
+子樹裡的節點，在原樹裡就滿足這個條件，子樹本身也是二元搜尋樹，所以也是 AVL 樹。
+\item (c) 錯。 最小的元素在從根一直往左走到底的節點，$O(h)$；第二小的就是它的後繼：它有右子樹
+時是右子樹的最小值，沒有時是它的父節點（最小值一定是某個節點的左子節點或根）。 都是 $O(h)$。
+平衡搜尋樹 $h = \Theta(\lg n)$，所以是 $\Theta(\log n)$，不是 $\Theta(n)$。 （如果每個節點另外
+記一個指向後繼的指標，甚至是 $O(1)$。）
+\item (d) 對。 $n$ 個節點的 AVL 樹高度 $h < 1.4405 \lg(n + 1)$（資結書定理~10.1），又任何二元樹
+都有 $h \ge \lg(n + 1)$，所以 $h = \Theta(\log n)$。
+\end{itemize}
+\end{pastsoln}

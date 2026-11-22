@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:nsysu-111-osds-04}]{中山資工所甲組 111 學年度 第 4 題}
+（問答）
+
+(a) (10\%) If we use the heap sort method to sort 14, 4, 19, 2, 18, 7, 17, 9, 16, 13 into
+increasing order, the first phase is to build a maximum heap. Please draw the heap tree after the
+first phase finishes.
+
+(b) (5\%) The second phase of the heap sort is to output the solution. Please draw the heap tree
+after the first maximum is output and the heap is restored.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 最大堆積的陣列（層序）是 $19, 18, 17, 16, 13, 7, 14, 9, 2, 4$；(b) 取出 $19$ 並恢復
+後是 $18, 16, 17, 9, 13, 7, 14, 4, 2$（$19$ 放在陣列最後一格，已經不屬於堆積）。 兩棵樹見下圖。
+
+堆積排序（資結書第~14.6~節）的第一階段用由下而上的建堆（資結書虛擬碼~8.3）：資料原樣放進
+陣列 $A[1..10]$，從最後一個內部節點 $\lfloor 10/2\rfloor = 5$ 往回到 $1$，每個位置做一次往下
+調整（sift-down）：和較大的子節點比，比子節點小就交換，一路往下直到不再需要。 節點 $i$ 的
+子節點是 $2i$、$2i + 1$。
+
+\textbf{(a) 建堆}。 初始陣列：
+\begin{center}
+\begin{tabular}{l*{10}{c}}
+\toprule
+位置 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+初始 & 14 & 4 & 19 & 2 & 18 & 7 & 17 & 9 & 16 & 13 \\
+$i = 5$ & 14 & 4 & 19 & 2 & 18 & 7 & 17 & 9 & 16 & 13 \\
+$i = 4$ & 14 & 4 & 19 & \textbf{16} & 18 & 7 & 17 & 9 & \textbf{2} & 13 \\
+$i = 3$ & 14 & 4 & 19 & 16 & 18 & 7 & 17 & 9 & 2 & 13 \\
+$i = 2$ & 14 & \textbf{18} & 19 & 16 & \textbf{13} & 7 & 17 & 9 & 2 & \textbf{4} \\
+$i = 1$ & \textbf{19} & 18 & \textbf{17} & 16 & 13 & 7 & \textbf{14} & 9 & 2 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item $i = 5$：$18$ 的子節點只有 $A[10] = 13$，$18 > 13$，不動。
+\item $i = 4$：$2$ 的子節點 $9$、$16$，和較大的 $16$ 交換；$2$ 到了位置 $9$，是葉子，停。
+\item $i = 3$：$19$ 比子節點 $7$、$17$ 都大，不動。
+\item $i = 2$：$4$ 的子節點 $16$、$18$，和 $18$ 交換，$4$ 到位置 $5$；位置 $5$ 的子節點是 $13$，
+$4 < 13$ 再交換，$4$ 到位置 $10$，停。
+\item $i = 1$：$14$ 的子節點 $18$、$19$，和 $19$ 交換，$14$ 到位置 $3$；位置 $3$ 的子節點 $7$、
+$17$，和 $17$ 交換，$14$ 到位置 $7$，停。
+\end{itemize}
+
+\textbf{(b) 取出第一個最大值}。 把根 $19$ 和最後一格 $A[10] = 4$ 交換，堆積大小變成 $9$，$19$
+留在 $A[10]$（這就是排序結果的最後一個）。 新的根 $4$ 往下調整：子節點 $18$、$17$，和 $18$ 交換，
+$4$ 到位置 $2$；子節點 $16$、$13$，和 $16$ 交換，$4$ 到位置 $4$；子節點 $9$、$2$，和 $9$ 交換，
+$4$ 到位置 $8$，沒有子節點（$16 > 9$），停。 結果 $A[1..9] = 18, 16, 17, 9, 13, 7, 14, 4, 2$。
+
+\begin{center}
+\begin{tikzpicture}[x=0.55cm,y=1.0cm,v/.style={circle,draw,inner sep=0pt,minimum size=6.5mm,font=\small}]
+\node at (4,0.8) {(a) 建好的最大堆積};
+\node[v] (n1) at (4,0) {19};
+\node[v] (n2) at (1.5,-1) {18}; \node[v] (n3) at (6.5,-1) {17};
+\node[v] (n4) at (0,-2) {16}; \node[v] (n5) at (3,-2) {13}; \node[v] (n6) at (5.5,-2) {7}; \node[v] (n7) at (7.5,-2) {14};
+\node[v] (n8) at (-0.8,-3) {9}; \node[v] (n9) at (0.8,-3) {2}; \node[v] (n10) at (2.2,-3) {4};
+\draw (n1)--(n2) (n1)--(n3) (n2)--(n4) (n2)--(n5) (n3)--(n6) (n3)--(n7) (n4)--(n8) (n4)--(n9) (n5)--(n10);
+\begin{scope}[xshift=6.3cm]
+\node at (4,0.8) {(b) 取出 $19$ 並恢復後};
+\node[v] (m1) at (4,0) {18};
+\node[v] (m2) at (1.5,-1) {16}; \node[v] (m3) at (6.5,-1) {17};
+\node[v] (m4) at (0,-2) {9}; \node[v] (m5) at (3,-2) {13}; \node[v] (m6) at (5.5,-2) {7}; \node[v] (m7) at (7.5,-2) {14};
+\node[v] (m8) at (-0.8,-3) {4}; \node[v] (m9) at (0.8,-3) {2};
+\draw (m1)--(m2) (m1)--(m3) (m2)--(m4) (m2)--(m5) (m3)--(m6) (m3)--(m7) (m4)--(m8) (m4)--(m9);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+核對：兩棵樹每個節點都不小於它的子節點。 如果第一階段改用「一個一個插入、往上調整」建堆，
+得到的是 $19, 18, 17, 16, 13, 7, 14, 2, 9, 4$（$2$、$9$ 的位置不同）；堆積排序的標準做法是上面
+由下而上的建堆，作答時寫出用的是哪一種。
+\end{pastsoln}

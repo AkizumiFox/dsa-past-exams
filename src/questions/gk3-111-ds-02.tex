@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:gk3-111-ds-02}]{高考三級資訊處理 111 年 第二題}
+（申論；25 分）
+
+利用鏈結串列（Linked list）實做佇列（Queues），給予如下鏈結串列節點及佇列定義，\texttt{front}
+指標指在串列第一個節點，rear 指標指在串列最後一個節點，請使用 C 語言完成 \texttt{insert(pq, x)}程序，
+將整數值 x 加入（\texttt{Insert}）到佇列，程式需檢查佇列加入前是否為空的鏈結串列，可使用函數
+getnode() 配置（Allocate）一新節點。（25 分）
+\begin{minted}[fontsize=\small, frame=single]{c}
+struct node{
+    int info;
+    struct node *next;
+};
+typedef struct node *NODEPTR;
+
+struct queue{
+    NODEPTR  front, rear;
+};
+struct queue q;
+
+NODEPTR  getnode()
+{
+   NODEPTR  p;
+   p = (NODEPTR)malloc(sizeof(struct node));
+   return(p);
+}
+
+insert(pq, x)
+struct queue *pq;
+int x;
+{
+     NODEPTR p;
+
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法。} 新節點一定接在串列尾端（佇列從尾端加入、從前端取出）。 分兩種情況：
+\begin{itemize}
+\item 加入前佇列是空的（\texttt{pq->rear == NULL}）：新節點是唯一的節點，\texttt{front} 和
+\texttt{rear} 都要指向它。
+\item 不是空的：把新節點接在目前最後一個節點後面（\texttt{pq->rear->next = p}），再讓
+\texttt{rear} 指向它；\texttt{front} 不變。
+\end{itemize}
+兩種情況最後都要做 \texttt{pq->rear = p}，新節點的 \texttt{next} 都設成 \texttt{NULL}。
+這就是資結書虛擬碼~6.5 的串列佇列加入。 題目給的是舊式（K\&R）的參數宣告寫法，照原樣補完：
+
+\begin{code}{c}{insert：把 x 加到佇列尾端}
+insert(pq, x)
+struct queue *pq;
+int x;
+{
+     NODEPTR p;
+
+     p = getnode();
+     if (p == NULL) {                 /* 配置失敗 */
+         printf("queue overflow\n");
+         exit(1);
+     }
+     p->info = x;
+     p->next = NULL;                  /* 新節點是最後一個 */
+     if (pq->rear == NULL)            /* 加入前是空佇列 */
+         pq->front = p;
+     else
+         pq->rear->next = p;          /* 接在原本最後一個後面 */
+     pq->rear = p;
+}
+\end{code}
+
+\textbf{說明。}
+\begin{itemize}
+\item 空佇列的判斷用 \texttt{rear == NULL}（也可以用 \texttt{front == NULL}），前提是佇列初始化
+和刪除最後一個節點時，\texttt{front}、\texttt{rear} 都設成 \texttt{NULL}。
+\item 順序很重要：要先把 \texttt{pq->rear->next} 指向新節點，再移動 \texttt{rear}。 先移動
+\texttt{rear} 就找不到原本的最後一個節點了。
+\item 空佇列時如果漏掉 \texttt{front = p}，之後取出會從 \texttt{NULL} 開始，佇列永遠是空的；
+如果沒判斷就直接寫 \texttt{pq->rear->next}，會對 \texttt{NULL} 取值。 這就是題目要求檢查的原因。
+\item \texttt{getnode()} 內用 \texttt{malloc}，可能回傳 \texttt{NULL}，所以先檢查。
+\end{itemize}
+
+\textbf{追蹤。} 空佇列依序加入 5、8：加入 5 時 \texttt{rear} 為 \texttt{NULL}，\texttt{front} 和
+\texttt{rear} 都指向 5；加入 8 時 5 的 \texttt{next} 指向 8，\texttt{rear} 改指 8，串列是
+$\texttt{front} \to 5 \to 8 \leftarrow \texttt{rear}$。
+
+\textbf{複雜度。} 只做固定幾個指標操作，不需要走過串列，時間 $\Theta(1)$。
+\end{pastsoln}

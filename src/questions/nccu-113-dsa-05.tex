@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nccu-113-dsa-05}]{政大資科所 113 學年度 第 5 題}
+（單選；不必說明理由）
+
+(4\%) Consider an undirected graph stored in an adjacency matrix. Given a vertex $v$ in the graph, what is
+the time complexity of computing $v$'s degree (i.e., the number of $v$'s neighbors in the graph)?
+\begin{enumerate}[label=\Alph*.]
+\item $O(1)$
+\item $\Theta(\log n)$
+\item $\Theta(n)$
+\item $\Theta(v\text{'s degree})$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。 $n$ 是頂點數。
+
+鄰接矩陣（資結書第~21.2~節）第 $v$ 列有 $n$ 格，$A[v][u] = 1$ 表示 $u$ 是 $v$ 的鄰居。 度數就是這一列 $1$ 的
+個數，要把 $n$ 格都看過：少看任何一格，那一格是 $0$ 還是 $1$ 都可能，答案就不確定。 所以是 $\Theta(n)$，不管
+$v$ 有幾個鄰居都一樣。
+
+\begin{itemize}
+\item[A.] $O(1)$：除非另外存一個「度數」陣列，否則做不到；題目只有鄰接矩陣。
+\item[B.] $\Theta(\log n)$：一列的 $1$ 沒有排序，不能二分搜尋。
+\item[D.] $\Theta(\deg v)$：這是鄰接串列的時間，串列只存真的鄰居。 矩陣連 $0$ 也要看，$\deg v = 0$ 時仍要
+$\Theta(n)$。
+\end{itemize}
+\end{pastsoln}

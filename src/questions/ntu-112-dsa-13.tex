@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-112-dsa-13}]{臺大資工所 112 學年度 第 13 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+\textbf{Properties of min. spanning tree (MST):} Let $T$ be a MST of a weighted graph $G$ with at
+least 3 vertices. Which of the following statements is/are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Given an edge $e$ in $G$ but not in $T$, we can form a cycle by putting $e$ to $T$. Then $e$
+has the largest weight among edges in $C$.
+\item If we partition $G$ into two subsets, and let $e$ be the smallest-weight edge across the
+partition. Then $e$ belongs to some MST in $G$.
+\item The edge with the smallest weight in $G$ must belong to some MST of $G$.
+\item The edge with the second smallest weight in $G$ must belong to some MST of $G$.
+\item The edge with the third smallest weight in $G$ must belong to some MST of $G$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)。
+
+\begin{itemize}
+\item \textbf{(A) 對。} 題目的 $C$ 指把 $e$ 加進 $T$ 形成的環。 $T$ 是最小生成樹，由資結書
+定理~24.10 的 $\Rightarrow$，每一條非樹邊 $e = (x, y)$ 都有 $w(e) \ge \mathit{max}_T(x, y)$，也就是
+$e$ 不比環上任何一條樹邊輕：$e$ 是環上最重的。 有平手時（例如環上另一條邊和 $e$ 一樣重），$e$ 是
+「最重的邊之一」，敘述仍成立。 理由直接寫出來：如果環上有一條樹邊 $f$ 比 $e$ 重，
+$T - \{f\} \cup \{e\}$ 仍是生成樹而且更輕，和 $T$ 最小矛盾。
+\item \textbf{(B) 對。} 「把 $G$ 分成兩個子集合」是把頂點分成兩個非空的部分，也就是一個切割；
+$e$ 是跨越這個切割的最輕的邊，也就是輕邊。 由資結書系理~24.2（切割性質取 $A = \emptyset$），它屬於
+某一棵最小生成樹。
+\item \textbf{(C) 對。} 權重最小的邊 $e = (u, v)$，取切割 $(\{u\}, V - \{u\})$，$e$ 跨越它，而且沒有
+比 $e$ 更輕的邊，所以 $e$ 是輕邊，同 (B)。 也可以這樣看：Kruskal 演算法第一條看的就是它，一定選，
+而 Kruskal 回傳一棵最小生成樹（資結書定理~24.6）。
+\item \textbf{(D) 對。} 把邊照權重（平手時照任何固定的規則）排序，第二條邊 $e_2$ 和第一條邊 $e_1$
+合起來不會形成環：簡單圖的環至少有三條邊。 所以 Kruskal 演算法依這個順序執行時，前兩條都會選，
+$e_2$ 屬於 Kruskal 求出的那棵最小生成樹。 注意這裡把「the edge with the second smallest weight」
+讀成「照權重排序後的第二條邊」。 如果讀成「權重是第二小的\textbf{數值}的邊」，就不一定對：三角形
+的邊權重 $1, 1, 2$，第二小的數值是 $2$，那條邊是環上唯一最重的，不在任何最小生成樹裡。 題目沒說
+權重互不相同，所以這一項有歧義；權重互不相同時兩種讀法一樣，(D) 對。
+\item \textbf{(E) 錯。} 反例：三個頂點的三角形，邊權重 $1, 2, 3$。 權重第三小的邊（$3$）是這個環上
+唯一最重的邊，由環性質（資結書定理~24.3）不在任何最小生成樹裡；唯一的最小生成樹是 $\{1, 2\}$。
+\end{itemize}
+\end{pastsoln}

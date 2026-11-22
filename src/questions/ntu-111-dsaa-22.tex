@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-22}]{臺大資工所 111 學年度 第 22 題}
+（單選）
+
+(5 points) Consider a fractional knapsack problem of 6 items. The $i$-th item is worth $v_i$ dollars
+and weights $w_i$ pounds.
+\begin{center}
+\begin{tabular}{lcccccc}
+item $i$ & 1 & 2 & 3 & 4 & 5 & 6\\
+ponds $w_i$ & 4 & 2 & 8 & 5 & 5 & 8\\
+dollors $v_i$ & 3 & 8 & 16 & 7 & 9 & 20
+\end{tabular}
+\end{center}
+Suppose that at most $W$=20 pounds can be carried in the knapsack. The sequence of picking the
+items is
+\begin{enumerate}[label=(\Alph*)]
+\item 2, 6, 3, 5
+\item 2, 6, 5, 3
+\item 2, 6, 5, 4, 3
+\item 6, 3, 5, 2, 4
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) 2, 6, 3, 5。 原卷的 ponds、dollors 是 pounds、dollars 的錯字。
+
+分數背包的貪心法（資結書第~19.2~節、虛擬碼~19.2）：依每磅的價值 $v_i / w_i$ 由大到小拿，整件放得下
+就整件拿，放不下就拿一部分把背包裝滿。 先算單價：
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+item $i$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+$v_i / w_i$ & $0.75$ & $4$ & $2$ & $1.4$ & $1.8$ & $2.5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+由大到小是 $2, 6, 3, 5, 4, 1$。
+\begin{center}
+\begin{tabular}{clcc}
+\toprule
+順序 & 拿 & 剩餘容量 & 累計價值 \\
+\midrule
+1 & 物品 2 全部（2 磅） & $18$ & $8$ \\
+2 & 物品 6 全部（8 磅） & $10$ & $28$ \\
+3 & 物品 3 全部（8 磅） & $2$ & $44$ \\
+4 & 物品 5 的 $2/5$（2 磅） & $0$ & $44 + 9 \cdot \frac{2}{5} = 47.6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+背包已滿，物品 4、1 不拿。 拿的順序是 $2, 6, 3, 5$，最大價值 $47.6$。
+
+(B) 把 5 放在 3 前面，但 5 的單價 $1.8$ 小於 3 的 $2$。 (C) 也是 5 在 3 前面，而且拿了 4：照 $2, 6, 5, 4$
+拿到第四件時已經 $2 + 8 + 5 + 5 = 20$ 磅，3 根本放不進去。 (D) 從 6 開始，但 2 的單價最高。
+\end{pastsoln}

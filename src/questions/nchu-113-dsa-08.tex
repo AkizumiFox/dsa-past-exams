@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:nchu-113-dsa-08}]{中興資工所甲組 113 學年度 選擇題第 8 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+\textit{The next three questions apply to the following tree T containing 14 nodes, where each node
+corresponds to an integer:}
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=7mm,inner sep=1pt,font=\small}]
+\node[v] (n9)  at (3.26,3.48) {9};
+\node[v] (n5)  at (1.57,2.44) {5};
+\node[v] (n20) at (4.90,2.44) {20};
+\node[v] (n3)  at (0.53,1.22) {3};
+\node[v] (n8)  at (2.42,1.22) {8};
+\node[v] (n12) at (3.90,1.22) {12};
+\node[v] (n30) at (5.87,1.22) {30};
+\node[v] (n1)  at (0.00,0) {1};
+\node[v] (n4)  at (1.00,0) {4};
+\node[v] (n6)  at (1.98,0) {6};
+\node[v] (n10) at (3.37,0) {10};
+\node[v] (n21) at (5.34,0) {21};
+\node[v] (n31) at (6.34,0) {31};
+\node[v] (n11) at (3.92,-1.09) {11};
+\draw (n9)--(n5) (n9)--(n20) (n5)--(n3) (n5)--(n8) (n20)--(n12) (n20)--(n30)
+  (n3)--(n1) (n3)--(n4) (n8)--(n6) (n12)--(n10) (n30)--(n21) (n30)--(n31) (n10)--(n11);
+\end{tikzpicture}
+\end{center}
+
+What is the sum of the order of 3\textsuperscript{rd}, 8\textsuperscript{th}, 10\textsuperscript{th} node if we apply the \textbf{post-order} traversal of \textit{T?}
+
+(A)~47 \qquad (B)~67 \qquad (C)~34 \qquad (D)~35 \qquad (E)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+$T$ 的結構：根 $9$，左子節點 $5$、右子節點 $20$；$5$ 的左右是 $3$、$8$，$3$ 的左右是 $1$、$4$，$8$ 只有左子節點 $6$；
+$20$ 的左右是 $12$、$30$，$12$ 只有左子節點 $10$，$10$ 只有右子節點 $11$，$30$ 的左右是 $21$、$31$。 （圖上 $6$
+在 $8$ 的左下、$10$ 在 $12$ 的左下、$11$ 在 $10$ 的右下。） 題目的「order of $k$th node」指走訪順序中第 $k$ 個
+節點的值。
+
+後序（左、右、根）：
+\begin{center}
+\small
+\begin{tabular}{l*{14}{c}}
+\toprule
+位置 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 \\
+\midrule
+節點 & 1 & 4 & \textbf{3} & 6 & 8 & 5 & 11 & \textbf{10} & 12 & \textbf{21} & 31 & 30 & 20 & 9 \\
+\bottomrule
+\end{tabular}
+\end{center}
+左子樹 $5$ 的部分是 $1, 4, 3, 6, 8, 5$；右子樹 $20$ 的部分先走 $12$ 的子樹（$11$ 是 $10$ 的子節點，所以
+$11, 10, 12$），再走 $30$ 的子樹 $21, 31, 30$，最後 $20$，根 $9$ 在最後。 第 3、8、10 個是 $3$、$10$、$21$，
+和是 $3 + 10 + 21 = 34$，選 (C)。
+\end{pastsoln}

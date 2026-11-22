@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ncku-113-prog-05}]{成大資訊聯招 113 學年度 第 5 題}
+（單選）
+
+\textbf{[3\%, 2\%]} Given the following bloom filter.
+\begin{center}
+\small
+\begin{tabular}{|*{15}{c|}}
+\hline
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] & [9] & [10] & [11] & [12] & [13] & [14] \\ \hline
+1 & 1 & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 1 & 0 \\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\roman*)]
+\item Assume that the bloom filter has 3 hash functions $f_1(k)$, $f_2(k)$, and $f_3(k)$:
+\[ f_1(k)=(3k) \bmod m,\qquad f_2(k)=(2k+1) \bmod m,\qquad f_3(k)=k^2 \bmod m, \]
+where $k$ represents the key and $m$ is the size of bit array for the bloom filter. Which of the
+following statements is true?
+\begin{enumerate}[label=(\Alph*)]
+\item When inserting $k$=12, the bits in the bloom filter are not changed.
+\item To delete $k$=2, the bits at indices 4, 5, and 6 are changed to 0.
+\item When querying the bloom filter for $k$=15, the answer is ``yes.''
+\item When querying the bloom filter for $k$=8, the answer is ``yes.''
+\item None of the above.
+\end{enumerate}
+\item Considering that the elements in the bloom filter is 5. To minimize the false positive
+probability, what is the ideal optimum number of hash functions?
+
+(A)~15 \qquad (B)~5 \qquad (C)~3*ln(2) \qquad (D)~5*ln(2) \qquad (E)~None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+位元陣列有 $15$ 格，所以 $m = 15$。 ii) 的「the elements in the bloom filter is 5」解讀成過濾器裡放了
+$n = 5$ 個元素。
+
+i) 答案是 (C)。 逐一算三個位置 $f_1(k) = 3k \bmod 15$、$f_2(k) = (2k + 1) \bmod 15$、
+$f_3(k) = k^2 \bmod 15$：
+\begin{center}
+\small
+\begin{tabular}{cccccl}
+\toprule
+$k$ & $f_1$ & $f_2$ & $f_3$ & 三格的位元 & 結論 \\
+\midrule
+12 & $36 \bmod 15 = 6$ & $25 \bmod 15 = 10$ & $144 \bmod 15 = 9$ & $1, 0, 1$ & 插入會把第 $10$ 格改成 $1$ \\
+2 & $6$ & $5$ & $4$ & $1, 1, 1$ & 位置確實是 $4, 5, 6$ \\
+15 & $45 \bmod 15 = 0$ & $31 \bmod 15 = 1$ & $225 \bmod 15 = 0$ & $1, 1, 1$ & 查詢回答 yes \\
+8 & $24 \bmod 15 = 9$ & $17 \bmod 15 = 2$ & $64 \bmod 15 = 4$ & $1, 0, 1$ & 查詢回答 no \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item (A) 錯。 第 $10$ 格原本是 $0$，插入 $12$ 會把它改成 $1$。
+\item (B) 錯。 $2$ 的三個位置雖然是 $4, 5, 6$，但布隆過濾器不能用清成 $0$ 的方式刪除：這三
+個位元可能也屬於別的鍵，清掉之後查那些鍵會答「不在」，變成偽陰性
+（資結書第~12.6~節）。
+\item (C) 對。 $15$ 的位置是第 $0$、$1$、$0$ 格（$f_1$ 和 $f_3$ 剛好相同），都是 $1$，回答
+yes。 至於 $15$ 是不是真的插入過，從過濾器看不出來，可能是偽陽性。
+\item (D) 錯。 $8$ 的第二個位置第 $2$ 格是 $0$，回答 no。
+\item (E) 錯，因為 (C) 正確。
+\end{itemize}
+
+ii) 答案是 (C)。 由資結書定理~12.10，最佳的雜湊函數個數是
+$k^{*} = \frac{m}{n}\ln 2$，這裡 $m = 15$ 個位元、$n = 5$ 個元素，$k^{*} = 3 \ln 2 \approx
+2.08$。 (A) 是 $m$，(B) 是 $n$，(D) 把 $m/n$ 錯寫成 $n$。 實際要取整數時比較 $k = 2$ 和
+$k = 3$：$(1 - e^{-2/3})^2 \approx 0.237$，$(1 - e^{-1})^3 \approx 0.253$，取 $k = 2$。
+\end{pastsoln}

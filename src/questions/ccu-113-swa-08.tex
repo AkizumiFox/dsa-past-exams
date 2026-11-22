@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ccu-113-swa-08}]{中正資工所甲組 113 學年度 第 8 題}
+（單選）
+
+Given the directed graph below, please answer the following questions from Q8 to Q9.
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\small,>={Stealth[length=2mm]}]
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (A) at (1.24,-3.49) {A};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (B) at (2.53,-1.85) {B};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (F) at (5.35,-1.12) {F};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (D) at (4.29,-3.49) {D};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (E) at (7.82,-3.49) {E};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (C) at (5.06,-5.47) {C};
+\draw[->] (A)--node[above left,inner sep=1pt]{10}(B);
+\draw[->] (B)--node[above,inner sep=2pt]{15}(F);
+\draw[->] (B)--node[below left,inner sep=1pt]{12}(D);
+\draw[->] (D)--node[right,inner sep=4pt]{1}(F);
+\draw[->] (D)--node[above,inner sep=2pt]{2}(E);
+\draw[->] (F)--node[above right,inner sep=1pt]{5}(E);
+\draw[->] (A)--node[below left,inner sep=1pt]{15}(C);
+\draw[->] (C)--node[below right,inner sep=1pt]{10}(E);
+\end{tikzpicture}
+\end{center}
+
+(2\%) Please use the cost on each edge as the weight and perform Dijkstra's algorithm starting from vertex A. What is the order in which the vertices are selected by Dijkstra's algorithm?
+\begin{enumerate}[label=\Alph*.]
+\item A$\to$B$\to$D$\to$F$\to$E$\to$C
+\item A$\to$C$\to$E$\to$B$\to$D$\to$F
+\item A$\to$B$\to$D$\to$E$\to$C$\to$F
+\item A$\to$B$\to$C$\to$D$\to$F$\to$E
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D（$A \to B \to C \to D \to F \to E$）。
+
+照資結書虛擬碼~25.3：起點 $A$ 的 $d = 0$，其他 $\infty$；每輪取出 $d$ 最小的未確定頂點，放鬆它出去的邊。 表裡每一列是取出該頂點
+並放鬆之後的 $d$，粗體是這一輪取出的頂點，``---'' 表示已確定。
+\begin{center}
+\begin{tabular}{cc*{6}{c}l}
+\toprule
+輪 & 取出 & $A$ & $B$ & $C$ & $D$ & $E$ & $F$ & 放鬆 \\
+\midrule
+1 & $A$ & \textbf{0} & 10 & 15 & $\infty$ & $\infty$ & $\infty$ & $A \to B$、$A \to C$ \\
+2 & $B$ & --- & \textbf{10} & 15 & 22 & $\infty$ & 25 & $B \to D$：$10 + 12$；$B \to F$：$10 + 15$ \\
+3 & $C$ & --- & --- & \textbf{15} & 22 & 25 & 25 & $C \to E$：$15 + 10$ \\
+4 & $D$ & --- & --- & --- & \textbf{22} & 24 & 23 & $D \to E$：$22 + 2$；$D \to F$：$22 + 1$ \\
+5 & $F$ & --- & --- & --- & --- & 24 & \textbf{23} & $F \to E$：$23 + 5 = 28$，不更新 \\
+6 & $E$ & --- & --- & --- & --- & \textbf{24} & --- & \\
+\bottomrule
+\end{tabular}
+\end{center}
+每輪最小的 $d$ 都只有一個，沒有平手。 取出順序 $A, B, C, D, F, E$，選 D。 最短距離是 $A{:}\,0$、$B{:}\,10$、$C{:}\,15$、
+$D{:}\,22$、$E{:}\,24$、$F{:}\,23$。
+
+逐項檢查：
+\begin{itemize}
+\item A：$B$ 之後取 $D$（$22$），但那時 $C$ 是 $15$ 比較小；$C$ 也不會最後才取。 錯。
+\item B：第二個取 $C$（$15$），但 $B$ 是 $10$。 錯。
+\item C：$D$ 之後取 $E$，但 $F$ 的 $23$ 比 $E$ 的 $24$ 小；而且 $C$ 排得太晚。 錯。
+\item D：上表的順序。 對。
+\item E：D 是對的。 錯。
+\end{itemize}
+\end{pastsoln}

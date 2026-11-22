@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncu-112-dsa-05}]{中央資工所 112 學年度 複選題第 5 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Which of the following statement(s) is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The time complexity of inserting an element to an n-node min-Heap is O(n).
+\item The time complexity of searching an element in an n-node max-Heap is O(n).
+\item Building the min-Heap by inserting these nodes one by one \{42, 9, 23, 37, 4, 34, 2\}. The level
+order traversal sequence of the min-Heap is \{2, 9, 4, 42, 37, 23, 34\}.
+\item The time complexity of deleting min in an n-node min-Heap is O(log n)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(D)。
+
+這類敘述題的 $O(\cdot)$ 指的是該操作的\textbf{緊的}複雜度（同一題 (B)、(D) 也是這樣用）。 (A) 若只當上界
+看，$O(\log n) \subseteq O(n)$，字面上也成立；但出題的意思顯然是「插入要 $O(n)$」，下面照這個意思判斷。
+
+\begin{itemize}
+\item (A) 錯。 插入是把新元素放在最後一格再往上調整，最多走樹高 $\lfloor \lg n \rfloor$ 層，
+$O(\log n)$（資結書第~8.1~節、虛擬碼~8.2）。
+\item (B) 對。 最大堆積只保證父節點不小於子節點，同一層、左右子樹之間沒有大小順序，找一個任意的值
+無法像二元搜尋樹那樣排除一半。 最壞情況（例如要找的值不在堆積裡，或比較小而藏在某片葉子）要看遍
+所有節點，$O(n)$。
+\item (C) 錯。 逐一插入、每次往上調整（陣列從 $1$ 開始，父節點是 $\lfloor i/2 \rfloor$）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+插入 & 往上調整 & 陣列（層序） \\
+\midrule
+42 & & 42 \\
+9 & $9 < 42$，交換 & 9, 42 \\
+23 & $23 > 9$，不動 & 9, 42, 23 \\
+37 & 放第 $4$ 格，父是 $42$，交換；再和 $9$ 比，不動 & 9, 37, 23, 42 \\
+4 & 放第 $5$ 格，父是 $37$，交換；再和 $9$ 比，交換 & 4, 9, 23, 42, 37 \\
+34 & 放第 $6$ 格，父是 $23$，不動 & 4, 9, 23, 42, 37, 34 \\
+2 & 放第 $7$ 格，父是 $23$，交換；再和 $4$ 比，交換 & 2, 9, 4, 42, 37, 34, 23 \\
+\bottomrule
+\end{tabular}
+\end{center}
+層序是 $\{2, 9, 4, 42, 37, 34, 23\}$，最後兩個和題目的 $\{\ldots, 23, 34\}$ 順序相反：$2$ 從第 $7$ 格
+（$23$ 的右子節點）往上換，$23$ 被換到第 $7$ 格，$34$ 一直留在第 $6$ 格。
+\item (D) 對。 刪除最小值是拿走根，把最後一格搬到根再往下調整，最多走樹高，$O(\log n)$。
+\end{itemize}
+\end{pastsoln}

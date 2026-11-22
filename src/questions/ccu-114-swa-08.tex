@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ccu-114-swa-08}]{中正資工所甲組 114 學年度 第 8 題}
+（複選）
+
+(5\%) (Select \underline{multiple} correct answers) Which of the following statements is (are) true?
+\begin{enumerate}[label=(\alph*)]
+\item The solution of the recurrence $T(n)=16T(n/4)+n^2$ is O($n^2$).
+\item The solution of the recurrence $T(n)=4T(n/5)+n^{4/3}$ is O($n^{4/3}$).
+\item The solution of the recurrence $T(n)=T(n/4)+T(n/2)+n^2$ is O($n\log n$).
+\item The solution of the recurrence $T(n)=2T(\sqrt[4]{n})+\sqrt{\log n}$ is O(($\log n$)($\log\log n$)).
+\item The solution of the recurrence $T(n)=T(n-1)+1/n$ is O($\log n$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(d)(e)。
+
+主定理照資結書定理~2.4（第~2.4~節）：$T(n) = aT(n/b) + f(n)$，比較 $f(n)$ 和 $n^{\log_b a}$。 $O$ 只要求
+上界，解比題目給的界小也算對。
+
+\textbf{(a) 錯}。 $a = 16$、$b = 4$，$n^{\log_4 16} = n^2$，$f(n) = n^2 = \Theta(n^{\log_b a})$，是第二種
+情形：$T(n) = \Theta(n^2 \log n)$。 它比 $n^2$ 多一個 $\log n$ 倍，不是 $O(n^2)$。
+
+\textbf{(b) 對}。 $a = 4$、$b = 5$，$\log_5 4 \approx 0.861 < 4/3$，$f(n) = n^{4/3} = \Omega(n^{\log_5 4 +
+\epsilon})$（取 $\epsilon = 0.4$）。 正則條件：$a f(n/b) = 4 (n/5)^{4/3} = \frac{4}{5^{4/3}} n^{4/3}$，
+$5^{4/3} = 5 \cdot 5^{1/3} > 5 \cdot 1.7 = 8.5$，所以係數 $c = 4/5^{4/3} < 4/8.5 < 1$。 第三種情形，
+$T(n) = \Theta(n^{4/3})$，當然是 $O(n^{4/3})$。
+
+\textbf{(c) 錯}。 兩個子問題大小不同，用遞迴樹（資結書第~2.3~節）。 第 $0$ 層的成本 $n^2$；第 $1$ 層是
+$(n/4)^2 + (n/2)^2 = \frac{5}{16} n^2$；每往下一層，每個節點的成本 $m^2$ 都變成
+$(m/4)^2 + (m/2)^2 = \frac{5}{16} m^2$，所以第 $i$ 層總成本 $\le (\frac{5}{16})^i n^2$。 加起來
+\[
+T(n) \le n^2 \sum_{i \ge 0} \left(\tfrac{5}{16}\right)^i = \tfrac{16}{11} n^2,
+\]
+又 $T(n) \ge n^2$，所以 $T(n) = \Theta(n^2)$。 $n^2$ 不是 $O(n \log n)$。
+
+\textbf{(d) 對}。 換變數（資結書第~2.5~節）：令 $m = \lg n$，$S(m) = T(2^m)$。 $\sqrt[4]{n} = 2^{m/4}$，
+$\sqrt{\log n} = \sqrt{m}$（對數的底只差常數倍，不影響階），遞迴式變成
+\[
+S(m) = 2S(m/4) + \sqrt{m}.
+\]
+$a = 2$、$b = 4$，$m^{\log_4 2} = m^{1/2}$，$f(m) = \sqrt{m} = \Theta(m^{\log_b a})$，第二種情形：
+$S(m) = \Theta(\sqrt{m} \log m)$。 換回來，$T(n) = \Theta(\sqrt{\log n}\, \log\log n)$。 它比
+$(\log n)(\log\log n)$ 小（差一個 $\sqrt{\log n}$ 倍），所以是 $O((\log n)(\log\log n))$。
+
+\textbf{(e) 對}。 展開：$T(n) = T(0) + \sum_{k=1}^{n} \frac{1}{k} = T(0) + H_n$。 調和數
+$H_n = \ln n + O(1)$（用積分夾：$\ln(n+1) \le H_n \le 1 + \ln n$），所以 $T(n) = \Theta(\log n)$，是
+$O(\log n)$。
+\end{pastsoln}

@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:nchu-111-is-02}]{中興資工所乙組 111 學年度 第 2 題}
+（單選）
+
+(3 pts) The following C function takes a single-linked list of integers as a parameter and rearranges the
+elements of the list. The function is called with the list containing the integers 1, 2, 3, 4, 5, 6, 7 in the
+given order. What will be the contents of the list after the function completes execution?
+\begin{minted}[fontsize=\small]{c}
+struct node
+{
+  int value;
+  struct node *next;
+};
+void rearrange(struct node *list)
+{
+  struct node *p, * q;
+  int temp;
+  if ((!list) || !list->next)
+    return;
+  p = list;
+  q = list->next;
+  while(q)
+  {
+    temp = p->value;
+    p->value = q->value;
+    q->value = temp;
+    p = q->next;
+    q = p?p->next:0;
+  }
+}
+\end{minted}
+(a).~1,2,3,4,5,6,7 \qquad (b).~2,1,4,3,6,5,7 \qquad (c).~1,3,2,5,4,7,6 \qquad (d).~2,3,4,5,6,7,1
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)。
+
+\texttt{p}、\texttt{q} 永遠是相鄰的兩個節點（\texttt{q} 是 \texttt{p} 的下一個）。 迴圈每一輪交換這兩個
+節點的值，然後 \texttt{p} 跳到 \texttt{q} 的下一個，\texttt{q} 再取 \texttt{p} 的下一個（\texttt{p} 是
+\texttt{NULL} 時 \texttt{q} 設成 $0$，迴圈結束）。 所以它把串列從頭開始兩兩一組交換值；節點和指標都沒動，
+只動了 \texttt{value}。
+
+追蹤 $1, 2, 3, 4, 5, 6, 7$（括號裡是 \texttt{p}、\texttt{q} 所在位置的值）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+輪 & 交換前的 \texttt{p}, \texttt{q} & 交換後的串列 & 下一輪的 \texttt{p}, \texttt{q} \\
+\midrule
+1 & 1, 2 & 2, 1, 3, 4, 5, 6, 7 & 3, 4 \\
+2 & 3, 4 & 2, 1, 4, 3, 5, 6, 7 & 5, 6 \\
+3 & 5, 6 & 2, 1, 4, 3, 6, 5, 7 & 7, \texttt{NULL} \\
+\bottomrule
+\end{tabular}
+\end{center}
+第三輪後 \texttt{p} 指向 $7$，$7$ 沒有下一個，\texttt{q} 是 $0$，迴圈結束。 $7$ 沒有配對，留在原處。
+結果是 $2, 1, 4, 3, 6, 5, 7$。
+
+(a) 是沒有改變；(c) 是從第二個開始兩兩交換；(d) 是把第一個移到最後（旋轉），都不是這個函式做的事。
+\end{pastsoln}

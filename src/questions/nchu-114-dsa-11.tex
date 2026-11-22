@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nchu-114-dsa-11}]{中興資工所甲組 114 學年度 單選題第 11 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Which of the following operations typically takes O(1) time in an array-based stack implementation?
+
+(A)~Pushing an element onto the stack\\
+(B)~Searching for a specific element in the stack\\
+(C)~Removing an element from the bottom of the stack\\
+(D)~Reversing the entire stack
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+陣列堆疊用 $S[1..\mathit{cap}]$ 存元素、$\mathit{top}$ 記頂端的位置（資結書第~6.1~節、虛擬碼~6.1）。
+\begin{itemize}
+\item (A) Push：$\mathit{top} \gets \mathit{top} + 1$，再把元素放進 $S[\mathit{top}]$，$O(1)$。 陣列滿了要換大
+陣列時單次是 $\Theta(n)$，但容量加倍時平攤仍是 $O(1)$（資結書第~3.4~節）。 對。
+\item (B) 找某個元素：堆疊沒有順序可以利用，最壞要看過全部 $n$ 個，$\Theta(n)$。 錯。
+\item (C) 拿掉最底下的元素：底部是 $S[1]$，拿掉後其餘 $n - 1$ 個都要往前挪一格，$\Theta(n)$。 錯。
+\item (D) 整個反轉：每個元素都要搬，$\Theta(n)$。 錯。
+\end{itemize}
+\end{pastsoln}

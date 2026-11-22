@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ccu-114-swa-07}]{中正資工所甲組 114 學年度 第 7 題}
+（複選）
+
+(5\%) (Select \underline{multiple} correct answers) Which of the following statements is (are) true?
+\begin{enumerate}[label=(\alph*)]
+\item Insertion sort performs in-place sorting operations.
+\item Finding the longest simple path from an unweighted graph can be solved by divided and conquer
+strategy.
+\item Recursion tree is a full binary tree.
+\item Quicksort is not an asymptotically optimal algorithm.
+\item An algorithm with fewer lines of codes has lower time complexity than the one with more lines of
+codes.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(d)。
+
+本題混合了排序（資結書第~14~章）、動態規劃的最佳子結構（第~18.1.4~節）和遞迴樹（第~2~章）。
+
+\begin{itemize}
+\item (a) 對。 插入排序只在原陣列裡把元素往後挪，額外只用 $O(1)$ 的變數（資結書第~1.3~節），是原地
+排序。
+\item (b) 錯。 分治要把問題切成獨立的子問題，各自的最佳解合起來就是整體的最佳解。 最長簡單路徑沒有
+這種最佳子結構（資結書第~18.1.4~節）：$q \to r \to t$ 是 $q$ 到 $t$ 的最長簡單路徑時，$q \to r$ 這段
+不一定是 $q$ 到 $r$ 的最長簡單路徑；兩段各自最長的路徑合起來，可能重複經過同一個頂點，就不是簡單路徑了。
+例如四個點的環 $q - r - t - s - q$：$q$ 到 $r$ 最長的簡單路徑是 $q, s, t, r$，$r$ 到 $t$ 最長的是
+$r, q, s, t$，接起來重複了。 這個問題是 NP 難的（判斷是否有 $n - 1$ 條邊的簡單路徑，就是漢米爾頓路徑
+問題），一般認為沒有多項式時間的演算法。
+\item (c) 錯。 遞迴樹每個節點的子節點數是遞迴式裡子問題的個數：$T(n) = 3T(n/4) + n^2$ 的遞迴樹每個節點
+有 $3$ 個子節點，$T(n) = T(n-1) + n$ 只有 $1$ 個。 不一定是二元樹，更不一定是 full binary tree。
+\item (d) 對。 「漸近最佳」指最壞情況的時間達到比較排序的下界 $\Omega(n \log n)$；合併排序、堆積排序
+是，快速排序最壞情況 $\Theta(n^2)$（資結書第~14.5~節），所以不是。 它的平均情況 $\Theta(n \log n)$
+是最佳的，但說一個演算法漸近最佳，看的是最壞情況。
+\item (e) 錯。 程式行數和時間複雜度無關。 例如氣泡排序的程式比合併排序短，卻是 $\Theta(n^2)$ 對
+$\Theta(n \log n)$。
+\end{itemize}
+\end{pastsoln}

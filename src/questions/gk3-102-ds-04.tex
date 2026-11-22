@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:gk3-102-ds-04}]{高考三級資訊處理 102 年 第四題}
+（申論；24 分）
+
+函數 $f(n)$ 定義如下，其中 $n$ 為非負整數。
+\[
+f(n) = \begin{cases}
+0, & \text{若 } n = 0 \\
+1, & \text{若 } n = 1 \\
+f(n-1) + f(n-2), & \text{若 } n > 1
+\end{cases}
+\]
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請設計遞迴演算法，輸入非負整數 $n$，輸出 $f(n)$ 數值。（7 分）
+\item[㈡] 請設計非遞迴演算法，輸入非負整數 $n$，輸出 $f(n)$ 數值。（7 分）
+\item[㈢] 請分別說明㈠與㈡所設計演算法的時間複雜度（time complexity）。（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+$f(n)$ 是費氏數列：$0, 1, 1, 2, 3, 5, 8, 13, \ldots$。 這題是資結書第~18.1.1~節「重疊的子問題」的
+標準例子：直接照定義遞迴會重算很多次，由小到大算就只要線性時間。
+
+\textbf{㈠ 遞迴}。 照定義寫：
+\begin{pseudo}{遞迴求費氏數}
+\Function{Fib-Rec}{$n$}
+    \If{$n \le 1$}
+        \State \Return $n$ \Comment{$f(0) = 0$，$f(1) = 1$}
+    \EndIf
+    \State \Return \Call{Fib-Rec}{$n - 1$} $+$ \Call{Fib-Rec}{$n - 2$}
+\EndFunction
+\end{pseudo}
+
+\textbf{㈡ 非遞迴}。 由小到大算，只記住最後兩項：
+\begin{pseudo}{迴圈求費氏數}
+\Function{Fib-Iter}{$n$}
+    \If{$n \le 1$}
+        \State \Return $n$
+    \EndIf
+    \State $\mathit{prev} \gets 0$, $\mathit{cur} \gets 1$ \Comment{$f(0)$、$f(1)$}
+    \For{$i \gets 2$ \textbf{to} $n$}
+        \State $\mathit{next} \gets \mathit{prev} + \mathit{cur}$ \Comment{$f(i)$}
+        \State $\mathit{prev} \gets \mathit{cur}$
+        \State $\mathit{cur} \gets \mathit{next}$
+    \EndFor
+    \State \Return $\mathit{cur}$
+\EndFunction
+\end{pseudo}
+迴圈不變量：第 $i$ 輪做完時 $\mathit{prev} = f(i-1)$、$\mathit{cur} = f(i)$。 進迴圈前（視為 $i = 1$）
+成立；第 $i$ 輪算出 $f(i-1) + f(i-2) = f(i)$ 後往前挪一格，仍成立。 迴圈結束時 $i = n$，回傳
+$f(n)$。
+
+\textbf{㈢ 時間複雜度}。 加法和比較都算常數時間（$f(n)$ 的位數會變大，題目的層次不考慮這一點）。
+
+\textbf{遞迴版}：令 $T(n)$ 為 \proc{Fib-Rec}$(n)$ 的呼叫次數（含自己）。 $T(0) = T(1) = 1$，
+$T(n) = 1 + T(n-1) + T(n-2)$。 令 $S(n) = T(n) + 1$，得 $S(n) = S(n-1) + S(n-2)$，$S(0) = S(1) = 2$，
+所以 $S(n) = 2f(n+1)$，
+\[
+T(n) = 2f(n+1) - 1 .
+\]
+例如 $T(5) = 2 \cdot 8 - 1 = 15$。 每次呼叫本身是常數時間，總時間 $\Theta(f(n+1))$。 費氏數成長是
+指數的：$f(n) = (\phi^n - \hat\phi^n)/\sqrt 5$，$\phi = (1 + \sqrt 5)/2 \approx 1.618$，所以遞迴版是
+$\Theta(\phi^n) \approx \Theta(1.618^n)$。 也可以只用簡單的上下界說明：$T(n) \le 2T(n-1) + 1$ 給
+$O(2^n)$；$T(n) \ge 2T(n-2)$ 給 $\Omega(2^{n/2})$。 慢的原因是同一個 $f(k)$ 被算了很多次，例如算
+$f(5)$ 時 $f(3)$ 算了 $2$ 次、$f(2)$ 算了 $3$ 次。
+
+\textbf{非遞迴版}：迴圈跑 $n - 1$ 次，每次常數時間，總時間 $\Theta(n)$，額外空間 $O(1)$。
+\end{pastsoln}

@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncku-111-prog-05}]{成大資訊聯招 111 學年度 第 5 題}
+（追蹤）
+
+\textbf{[2\%]} A B-tree is shown in the following. We remove the data items 70, 10, 60 and 95 in order over the B-tree. What is the resultant of B-tree after the deletions?
+
+\medskip
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2mm]},font=\small\sffamily]
+\draw (-0.7,0.3) rectangle (0.7,-0.3); \draw (0,0.3)--(0,-0.3);
+\node at (-0.35,0) {50}; \node at (0.35,0) {80};
+\draw (-2.9,-0.75)--(2.9,-0.75);
+\draw[->] (0,-0.3)--(0,-1.2);
+\foreach \cx/\a/\b in {-2.9/10/20,0/60/70,2.9/90/95}{
+  \draw (\cx-0.7,-1.2) rectangle (\cx+0.7,-1.8); \draw (\cx,-1.2)--(\cx,-1.8);
+  \node at (\cx-0.35,-1.5) {\a}; \node at (\cx+0.35,-1.5) {\b};
+  \draw[->] (\cx,-0.75)--(\cx,-1.2);
+  \foreach \dx in {-0.9,0,0.9} \draw (\cx+\dx-0.14,-2.5) rectangle (\cx+\dx+0.14,-2.78);
+  \draw[->] (\cx-0.7,-1.8)--(\cx-0.9,-2.5);
+  \draw[->] (\cx,-1.8)--(\cx,-2.5);
+  \draw[->] (\cx+0.7,-1.8)--(\cx+0.9,-2.5);
+}
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：根是 $[50]$，兩個子節點 $[20]$、$[80, 90]$。
+
+題目沒有寫 B 樹的階數。 圖中每個節點最多 $2$ 個鍵、$3$ 個子節點，採用 $3$ 階 B 樹（2-3 樹）的解讀：
+非根節點至少 $1$ 個鍵（資結書第~11.2~節）。 葉節點下面的小方框是空的子樹（失敗節點）。 刪除時照資結書
+第~11.2.7~節的約定：節點不足時先向右兄弟借，再向左兄弟借，都不能借就合併（有右兄弟就和右兄弟合併）。
+\begin{enumerate}
+\item \textbf{刪除 $70$}：在葉節點 $[60, 70]$，直接刪掉，剩 $[60]$，仍有 $1$ 個鍵。
+\item \textbf{刪除 $10$}：葉節點 $[10, 20]$ 變成 $[20]$。
+\item \textbf{刪除 $60$}：葉節點 $[60]$ 變空。 右兄弟 $[90, 95]$ 有 $2$ 個鍵，可以借：父節點的分隔鍵 $80$
+下來補到這個葉子，右兄弟最小的 $90$ 上去取代 $80$。 得到根 $[50, 90]$，葉子 $[20]$、$[80]$、$[95]$。
+\item \textbf{刪除 $95$}：葉節點 $[95]$ 變空。 它是最右邊的子節點，沒有右兄弟；左兄弟 $[80]$ 只有 $1$ 個
+鍵，不能借，所以合併：左兄弟 $80$ 加上父節點的分隔鍵 $90$，成為 $[80, 90]$。 父節點少了一個鍵，變成
+$[50]$，是根，$1$ 個鍵沒有問題。
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,rectangle,inner sep=2.5pt,minimum height=4.5mm,font=\small},lab/.style={font=\footnotesize}]
+\node[k] (r1) at (1.6,0) {$50 \mid 80$};
+\node[k] (a1) at (0,-1) {$20$}; \node[k] (b1) at (1.6,-1) {$60$}; \node[k] (c1) at (3.2,-1) {$90 \mid 95$};
+\draw (r1)--(a1) (r1)--(b1) (r1)--(c1);
+\node[lab] at (1.6,-1.7) {刪除 $70$、$10$ 後};
+\begin{scope}[xshift=5cm]
+\node[k] (r2) at (1.6,0) {$50 \mid 90$};
+\node[k] (a2) at (0,-1) {$20$}; \node[k] (b2) at (1.6,-1) {$80$}; \node[k] (c2) at (3.2,-1) {$95$};
+\draw (r2)--(a2) (r2)--(b2) (r2)--(c2);
+\node[lab] at (1.6,-1.7) {刪除 $60$（向右兄弟借）};
+\end{scope}
+\begin{scope}[xshift=10cm]
+\node[k] (r3) at (1,0) {$50$};
+\node[k] (a3) at (0.2,-1) {$20$}; \node[k] (b3) at (1.8,-1) {$80 \mid 90$};
+\draw (r3)--(a3) (r3)--(b3);
+\node[lab] at (1,-1.7) {刪除 $95$（和左兄弟合併）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+檢查：最後的樹所有葉子在同一層，中序是 $20, 50, 80, 90$，正是原本的 $8$ 個鍵去掉刪除的四個。 改用
+「先向左兄弟借」的約定，第 3 步的左兄弟 $[20]$ 也借不出來，還是向右兄弟借，結果相同。
+
+如果把它當成 $4$ 階 B 樹（2-3-4 樹，最多 $3$ 個鍵、非根至少 $1$ 個鍵），每一步的處理完全一樣，答案不變。
+\end{pastsoln}

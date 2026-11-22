@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nccu-113-dsa-06}]{政大資科所 113 學年度 第 6 題}
+（單選；不必說明理由）
+
+(4\%) Which of the following statements about binary search trees is correct?
+\begin{enumerate}[label=\Alph*.]
+\item Searching a data in a binary search tree can be done in $O(\log n)$ time, regardless of the tree
+height.
+\item Sorting all the data in a binary search tree can be done in $O(n)$ time, regardless of the tree height.
+\item Finding the smallest data in a binary search tree can be done in $O(\log n)$ time, regardless of the
+tree height.
+\item None of the above statements is correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+\begin{itemize}
+\item[A.] 錯。 搜尋沿一條從根往下的路徑走，時間是 $O(h)$（資結書第~9.1~節）。 依序插入
+$1, 2, \ldots, n$ 時樹是一條鏈，$h = n$，搜尋 $n$ 要比較 $n$ 次，是 $\Theta(n)$，不是
+$O(\log n)$（資結書第~9.3~節）。
+\item[B.] 對。 中序走訪會由小到大印出所有鍵值，每個節點進出常數次，時間 $\Theta(n)$，和樹高無關
+（資結書定理~9.1）。 已經建好的 BST 要排序只要做一次中序走訪。
+\item[C.] 錯。 最小值要從根一直往左走（資結書虛擬碼~9.3），時間 $O(h)$。 依序插入
+$n, n - 1, \ldots, 1$ 時樹是往左的鏈，要走 $n$ 個節點。
+\item[D.] B 正確，所以錯。
+\end{itemize}
+\end{pastsoln}

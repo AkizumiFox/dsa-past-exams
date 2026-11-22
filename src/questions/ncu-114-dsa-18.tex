@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-114-dsa-18}]{中央資工所 114 學年度 第 18 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Choose correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item If $f(n)=3n^4+8n-1666$, then we can say $f(n)=O(n^5)$
+\item If $f(n)=3n^4+8n-1666$, then we can say $f(n)=\Omega(n^3)$
+\item If $f(n)=3n^4+8n-1666$, then we can say $f(n)=O(2^n)$
+\item If $f(n)=3n^4+8n-1666$, then we can say $f(n)=O(n^4)$
+\item If $f(n)=3n^4+8n-1666$, then we can say $f(n)=\Omega(n^4)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(c)(d)(e)，全對。
+
+照資結書第~1.5~節的定義，找出常數 $c > 0$ 和 $n_0$ 就好。 先夾住 $f$：
+\begin{itemize}
+\item 上界：$n \ge 1$ 時 $8n \le 8n^4$，$-1666 < 0$，所以 $f(n) \le 3n^4 + 8n^4 = 11n^4$。
+\item 下界：$f(n) \ge 3n^4 - 1666$。 $n \ge 6$ 時 $n^4 \ge 1296$，$2n^4 \ge 2592 > 1666$，所以
+$f(n) \ge 3n^4 - 2n^4 = n^4$。
+\end{itemize}
+因此 $n \ge 6$ 時 $n^4 \le f(n) \le 11n^4$，$f(n) = \Theta(n^4)$。 由此：
+\begin{itemize}
+\item (d) $f(n) \le 11n^4$（$n \ge 1$），$O(n^4)$。 對。
+\item (e) $f(n) \ge n^4$（$n \ge 6$），$\Omega(n^4)$。 對。
+\item (a) $n^4 \le n^5$（$n \ge 1$），所以 $f(n) \le 11n^5$，$O(n^5)$。 $O$ 只是上界，不必是緊的。 對。
+\item (b) $n^4 \ge n^3$（$n \ge 1$），所以 $f(n) \ge n^3$（$n \ge 6$），$\Omega(n^3)$。 對。
+\item (c) $n \ge 16$ 時 $n^4 \le 2^n$（$n = 16$ 時兩邊都是 $2^{16}$；之後 $n$ 每加 $1$，$2^n$ 加倍，而
+$(n+1)^4/n^4 = (1 + 1/n)^4 \le (17/16)^4 < 2$），所以 $f(n) \le 11 \cdot 2^n$，$O(2^n)$。 對。
+\end{itemize}
+\end{pastsoln}

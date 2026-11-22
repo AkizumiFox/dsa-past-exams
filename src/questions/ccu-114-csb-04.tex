@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ccu-114-csb-04}]{中正資工所乙組 114 學年度 第 4 題}
+（是非組合；單選）
+
+(5\%) Please answer the following \textbf{true-or-false} questions and select the correct set of answers from the provided options.
+\begin{enumerate}[label=\Roman*.]
+\item The time complexity of bubble sort in the worst case is O($n\log n$).
+\item Quick sort as a worst-case time complexity of O($n^2$).
+\item In an AVL tree, the height difference between the left and right subtrees of any node cannot exceed 2.
+\end{enumerate}
+
+A.~False, False, False \qquad B.~False, False, True \qquad C.~False, True, False\\
+D.~False, True, True \qquad E.~True, False, False \qquad F.~True, False, True\\
+G.~True, Ture, False \qquad H.~Ture, True, True
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C（False, True, False）。 I、II 是資結書第~14~章、III 是第~10~章的內容；歸在第~14~章。
+
+II 的 ``as'' 是原卷的錯字，應為 has。 III 有兩種讀法，見下。
+\begin{itemize}
+\item \textbf{I：False。} 泡沫排序最壞情況（輸入由大到小）每一趟都要交換，比較 $n(n-1)/2$ 次，是 $\Theta(n^2)$（資結書第~14.2~節），
+不是 $O(n \log n)$。
+\item \textbf{II：True。} 快速排序每次都切成 $0$ 和 $n - 1$ 時（例如固定取第一個當基準、輸入已排好），
+$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$，最壞是 $O(n^2)$（資結書第~14.5~節）。
+\item \textbf{III：False（照命題本意）。} AVL 樹的條件是每個節點左右子樹的高度差\textbf{最多 $1$}（平衡因子只能是 $-1, 0, +1$，
+資結書第~10.2~節）。 題目寫「不能超過 $2$」，把界寫錯了，等於允許高度差 $2$，這不是 AVL 樹的定義，判 False。 嚴格照字面讀，
+「高度差 $\le 1$」當然也「不超過 $2$」，那 III 是 True、答案是 D；但這題考的是 AVL 的定義，這裡採用前一種讀法。
+\end{itemize}
+三個依序是 False, True, False，選 C。
+\end{pastsoln}

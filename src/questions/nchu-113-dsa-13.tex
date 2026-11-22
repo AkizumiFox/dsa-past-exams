@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nchu-113-dsa-13}]{中興資工所甲組 113 學年度 選擇題第 13 題}
+（單選；答錯不倒扣）
+
+Given an array of integers, which of the following algorithms would be the most efficient to find the kth
+smallest element in the array? The array is unsorted and 'k' is always smaller than the length of the
+array. (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item QuickSort the array and then return the element at index k-1.
+\item Use a Max Heap of size k to store the smallest k elements.
+\item Perform a linear search to find the kth smallest element.
+\item Implement a Binary Search on the array.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。 $n$ 是陣列長度。
+\begin{itemize}
+\item (A) 正確但慢：快速排序平均 $\Theta(n \log n)$、最壞 $\Theta(n^2)$，為了一個數把整個陣列排好，做了多餘
+的事。
+\item (B) 正確，而且最快：先把前 $k$ 個數建成大小 $k$ 的最大堆積（$O(k)$）；之後每看一個數 $x$，若 $x$ 比堆積
+頂端（目前 $k$ 個裡最大的）小，就取出頂端、放入 $x$，$O(\log k)$。 堆積裡始終是「看過的數中最小的 $k$
+個」，掃完時頂端就是第 $k$ 小。 總時間 $O(k + n \log k) = O(n \log k)$，$k < n$ 時不比 (A) 差，$k$ 小時好
+很多（資結書第~8.3~節）。
+\item (C) 「線性搜尋」只能一次找出一個極值；要找第 $k$ 小，得重複找最小值 $k$ 次（每次排除上一個），
+$\Theta(nk)$，$k$ 接近 $n$ 時是 $\Theta(n^2)$。 不是有效率的做法。
+\item (D) 二分搜尋需要陣列已經排好序，題目說陣列沒有排序，直接用是錯的。
+\end{itemize}
+所以四個選項裡 (B) 最好。 補充：選擇問題其實有平均 $\Theta(n)$ 的 randomized select 和最壞 $\Theta(n)$ 的
+median of medians（資結書第~16.2、16.3~節），比 (B) 還快，但不在選項裡。
+\end{pastsoln}

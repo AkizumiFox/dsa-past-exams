@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nccu-113-dsa-10}]{政大資科所 113 學年度 第 10 題}
+（單選；不必說明理由）
+
+(4\%) Which of the following problems is NP-hard?
+\begin{enumerate}[label=\Alph*.]
+\item Find the minimum spanning tree in a connected graph.
+\item Find the maximum spanning tree (i.e., the spanning tree that has the largest total edge weight) in a
+connected graph.
+\item Find the shortest cycle in a graph (assume that every edge has a positive weight).
+\item Find the longest cycle in a graph.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。 前三個都有多項式時間演算法；如果它們是 NP-hard，就會得到 P $=$ NP，目前沒有人相信。
+
+\begin{itemize}
+\item[A.] Kruskal、Prim 都是 $O(m \lg n)$（資結書第~24.2、24.3~節）。
+\item[B.] 把每條邊的權重改成負的（或用一個大常數減去它），最小生成樹就是原圖的最大生成樹；或者直接讓 Kruskal
+由大到小挑邊。 多項式時間。
+\item[C.] 權重都是正的。 無向圖：對每條邊 $(u, v)$，暫時拿掉它，用 Dijkstra 求 $u$ 到 $v$ 的最短路徑，再加回
+$w(u, v)$，就是經過這條邊的最短環；所有邊取最小。 共 $m$ 次 Dijkstra，多項式時間。 有向圖：對每個頂點 $s$
+求到其他點的最短距離 $d(s, v)$，最短環是 $\min_{(v, s) \in E} \bigl(d(s, v) + w(v, s)\bigr)$。
+\item[D.] NP-hard。 從哈密頓環（資結書定理~28.11，NP 完備）歸約：給一張 $n$ 個頂點的圖，每條邊權重設成 $1$。
+這張圖有哈密頓環，若且唯若最長的環長度是 $n$（環最多經過 $n$ 個頂點，長度 $n$ 的環正是經過每個頂點一次的環）。
+只要能求出最長的環，就能判斷哈密頓環，所以找最長環至少和哈密頓環一樣難。
+\end{itemize}
+\end{pastsoln}

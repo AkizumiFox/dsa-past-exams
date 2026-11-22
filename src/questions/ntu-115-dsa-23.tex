@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntu-115-dsa-23}]{臺大資工所 115 學年度 第 23 題}
+（單選）
+
+(4 points) Consider the linked-list representation of disjoint sets, where: (1) Each set is represented by a linked list; (2) Each element stores a pointer to the set's representative; (3) UNION$(x,\ y)$ appends the shorter list to the longer list (union by size); (4) FIND-SET$(x)$ runs in $O(1)$ time. Suppose we start with $n$ singleton sets and perform any sequence of $m$ operations consisting of UNION and FIND-SET, using union by size. Which of the following statements is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The total time for all UNION operations is $\Theta(n^2)$, regardless of how unions are ordered.
+\item The total running time of all operations is $O(m\log n)$, because FIND-SET dominates.
+\item Using union by size makes UNION amortized $O(1)$, yielding total time $O(m)$.
+\item The total time of all operations is $O(m+n)$, because each operation touches at most a constant number of elements.
+\item Each element's representative pointer can be updated at most $\log n$ times, so all UNION operations take $O(n\log n)$ time in total.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。 這一題就是資結書第~13.1~節的串列表示加上加權合併。
+\begin{itemize}
+\item (A) 錯。 由資結書定理~13.1 的論證，所有 UNION 加起來最多改
+$n \lg n$ 個代表指標，不可能是 $\Theta(n^2)$。 合併的順序也有影響：如果每次都把一個單一元素
+併進同一個大集合，每次只改 $1$ 個指標，$n - 1$ 次合併一共 $\Theta(n)$。
+\item (B) 錯。 $O(m \log n)$ 這個上界本身成立：$m$ 個操作裡最多 $m$ 次 UNION，被改過代表
+指標的元素最多 $2m$ 個，每個最多改 $\lg n$ 次。 但理由錯了：FIND-SET 每次 $O(1)$，
+$m$ 次合計只有 $O(m)$，花時間的是 UNION 改指標。 這個選項的「because」不成立，所以不是正
+確的敘述。
+\item (C) 錯。 設 $n = 2^k$，照資結書第~13.1~節最後的例子兩兩合併 $k$ 輪，每一輪改
+$n/2$ 個指標，$n - 1$ 次 UNION 一共改 $(n/2)\lg n$ 個。 平均每次 UNION 是 $\Theta(\lg n)$，
+不是平攤 $O(1)$；這時 $m = n - 1$，總時間 $\Theta(n \lg n)$，不是 $O(m)$。
+\item (D) 錯。 一次 UNION 可能要改很多指標：兩條各 $n/2$ 長的串列合併，要改 $n/2$ 個。 同
+一個例子的總時間是 $\Theta(n \lg n)$，不是 $O(m + n)$。
+\item (E) 對。 固定一個元素 $x$，它的代表指標被改的時候，$x$ 在比較短（或一樣長）的串列
+裡，合併後 $x$ 所在的集合至少變成兩倍大。 集合不超過 $n$ 個元素，所以 $x$ 最多被改
+$\lg n$ 次；$n$ 個元素合計最多 $n \lg n$ 次。 每次 UNION 除了改指標只花 $O(1)$，最多
+$n - 1$ 次，所以所有 UNION 的總時間是 $O(n \log n)$。
+\end{itemize}
+\end{pastsoln}

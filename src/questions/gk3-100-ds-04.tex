@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:gk3-100-ds-04}]{高考三級資訊處理 100 年 第四題}
+（申論；10 分）
+
+我們可以使用 KMP（Knuth, Morris, Pratt）快速字串比對演算法找出字串裡面是否包含有某子字串。輸入字串
+\texttt{datedadatete} 與子字串 \texttt{datdadatdatt}，請完成此演算法所需之 failure function F(i) 如下表格。
+（10 分）
+\begin{center}
+\begin{tabular}{|l|l|l}
+\hline
+i & 0 & \\ \hline
+F(i) & -1 & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{|c|*{12}{c|}}
+\hline
+i & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ \hline
+$p_i$ & d & a & t & d & a & d & a & t & d & a & t & t \\ \hline
+F(i) & $-1$ & $-1$ & $-1$ & $0$ & $1$ & $0$ & $1$ & $2$ & $3$ & $4$ & $2$ & $-1$ \\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{定義。} 表格給了 $F(0) = -1$，所以這是 Horowitz 等人課本的寫法（資結書第~27.3~節「不同課本的失敗
+函數」）：子字串 $p = p_0 p_1 \cdots p_{11}$ 從 $0$ 編號，
+\[
+F(j) = \text{最大的 } k < j \text{，使得 } p_0 \cdots p_k = p_{j-k} \cdots p_j\text{；沒有這樣的 } k \text{ 時 } F(j) = -1.
+\]
+也就是 $F(j) + 1$ 是 $p_0..p_j$ 最長的「既是真前綴又是後綴」的長度（資結書的 $\pi[j+1]$）。 失敗函數只跟
+子字串有關，和輸入字串 \texttt{datedadatete} 無關。
+
+\textbf{逐格計算。} 遞推：算 $F(j)$ 時令 $k = F(j-1)$，若 $p_{k+1} = p_j$ 則 $F(j) = k + 1$；否則
+$k \gets F(k)$ 再試，$k$ 退到 $-1$ 還對不上就是 $-1$。
+\begin{itemize}
+\item $j = 1, 2$：$p_1 = \mathtt{a}$、$p_2 = \mathtt{t}$ 都不等於 $p_0 = \mathtt{d}$，$F = -1$。
+\item $j = 3$：$p_3 = \mathtt{d} = p_0$，$F(3) = 0$。
+\item $j = 4$：$k = 0$，$p_1 = \mathtt{a} = p_4$，$F(4) = 1$（\texttt{da}）。
+\item $j = 5$：$k = 1$，$p_2 = \mathtt{t} \ne p_5 = \mathtt{d}$；$k \gets F(1) = -1$，$p_0 = \mathtt{d} = p_5$，$F(5) = 0$。
+\item $j = 6$：$k = 0$，$p_1 = \mathtt{a} = p_6$，$F(6) = 1$。
+\item $j = 7$：$k = 1$，$p_2 = \mathtt{t} = p_7$，$F(7) = 2$（\texttt{dat}）。
+\item $j = 8$：$k = 2$，$p_3 = \mathtt{d} = p_8$，$F(8) = 3$（\texttt{datd}）。
+\item $j = 9$：$k = 3$，$p_4 = \mathtt{a} = p_9$，$F(9) = 4$（\texttt{datda}）。
+\item $j = 10$：$k = 4$，$p_5 = \mathtt{d} \ne p_{10} = \mathtt{t}$；$k \gets F(4) = 1$，$p_2 = \mathtt{t} = p_{10}$，
+$F(10) = 2$（\texttt{dat}）。
+\item $j = 11$：$k = 2$，$p_3 = \mathtt{d} \ne \mathtt{t}$；$k \gets F(2) = -1$，$p_0 = \mathtt{d} \ne \mathtt{t}$，
+$F(11) = -1$。
+\end{itemize}
+
+\textbf{比對時怎麼用。} 在 $p_j$ 失配時（前面 $p_0..p_{j-1}$ 已對上），改拿 $p_{F(j-1)+1}$ 和同一個文字
+字元比，$j = 0$ 失配則文字往前一格。 順帶一提，題目的輸入字串和子字串都是 $12$ 個字元，只有一種對齊方式；
+比到位置 $3$（文字的 \texttt{e} 對子字串的 \texttt{d}）就失配，之後剩下的文字不到 $12$ 個字元，所以輸入字串
+\textbf{不包含}這個子字串。
+\end{pastsoln}

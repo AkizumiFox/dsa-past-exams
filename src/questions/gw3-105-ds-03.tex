@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:gw3-105-ds-03}]{關務三等資料處理 105 年 第三題}
+（申論；15 分）
+
+若欲於下列樹狀結構中，搜尋節點 $X$ 之位置，試分析深度優先（depth-first）搜尋與廣度優先（breadth-first）
+搜尋之搜尋時間。請由根節點（root node）開始進行節點值比較之次數來表達。令根節點之深度（depth）為 1。
+（每小題 5 分，共 15 分）
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] $X$ 為深度為 $D$ 之偏斜（skewed）二元樹之葉節點（leaf node）。
+\item[㈡] $X$ 為深度為 $D$ 之完美（perfect）二元樹之最右邊之葉節點。
+\item[㈢] $X$ 為深度為 $D$ 之完美 $k$ 元（$k$-ary）樹之最左邊之葉節點。
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}：每拜訪一個節點就和 $X$ 比較一次，比到 $X$ 就停；比較次數 $=$ 找到 $X$ 之前（含 $X$）
+拜訪過的節點數。 深度優先用前序（先根，再由左到右各子樹），廣度優先一層一層、每層由左到右（資結書
+第~7.3~節）。 題目的樹「深度為 $D$」指樹的最大深度是 $D$，根深度 $1$，所以共有 $D$ 層。
+
+\textbf{㈠ 偏斜二元樹}：每層只有一個節點，整棵樹就是一條長度 $D$ 的路徑，唯一的葉節點 $X$ 在第 $D$ 層。
+\begin{itemize}[nosep]
+\item 深度優先：沿著唯一的路徑往下，第 $D$ 次比較到 $X$，\textbf{$D$ 次}。
+\item 廣度優先：每層一個節點，依序比到第 $D$ 層，也是 \textbf{$D$ 次}。
+\end{itemize}
+兩者相同，都是 $\Theta(D) = \Theta(n)$，$n = D$ 是節點數。
+
+\textbf{㈡ 完美二元樹的最右葉}：第 $d$ 層有 $2^{d-1}$ 個節點，共 $n = 2^D - 1$ 個。
+\begin{itemize}[nosep]
+\item 深度優先（先左後右）：最右邊的葉節點是前序的\textbf{最後一個}，要把整棵樹都看完：
+\textbf{$2^D - 1$ 次}。
+\item 廣度優先：最右邊的葉節點是最後一層的最後一個，也是最後一個被拜訪的：\textbf{$2^D - 1$ 次}。
+\end{itemize}
+兩者都是全部 $n$ 個節點，$\Theta(2^D)$。 （若深度優先改成先右後左，就只要 $D$ 次。）
+例：$D = 3$，兩種都比 $7$ 次。
+
+\textbf{㈢ 完美 $k$ 元樹的最左葉}：第 $d$ 層有 $k^{d-1}$ 個節點。
+\begin{itemize}[nosep]
+\item 深度優先（先左）：從根一路走最左邊的子節點，第 $D$ 次就到最左葉：\textbf{$D$ 次}。
+\item 廣度優先：要先看完前 $D - 1$ 層的所有節點，再比到第 $D$ 層的第一個：
+\[
+\sum_{d=1}^{D-1} k^{d-1} + 1 = \frac{k^{D-1} - 1}{k - 1} + 1 \quad \text{次}.
+\]
+\end{itemize}
+例：$k = 3$、$D = 3$：深度優先 $3$ 次；廣度優先 $1 + 3 + 1 = 5$ 次，公式 $(9 - 1)/2 + 1 = 5$。 $k = 2$
+時廣度優先是 $2^{D-1}$ 次。 這一小題深度優先是 $\Theta(D) = \Theta(\log_k n)$，廣度優先是
+$\Theta(k^{D-1}) = \Theta(n)$，差距最大。
+
+\textbf{整理}：
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+情況 & 深度優先 & 廣度優先 \\
+\midrule
+㈠ 偏斜二元樹的葉 & $D$ & $D$ \\
+㈡ 完美二元樹最右葉 & $2^D - 1$ & $2^D - 1$ \\
+㈢ 完美 $k$ 元樹最左葉 & $D$ & $\dfrac{k^{D-1} - 1}{k - 1} + 1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+哪一種搜尋快，取決於目標在樹中的位置和走訪順序：目標在「深而偏左」時深度優先有利，目標在淺層時廣度
+優先有利。
+\end{pastsoln}

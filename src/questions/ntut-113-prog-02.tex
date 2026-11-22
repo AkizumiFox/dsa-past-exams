@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ntut-113-prog-02}]{北科大資工所 113 學年度 第 3 題（節錄第 (2) 小題）}
+（程式追蹤）
+
+\textbf{Problem 3 [25\%] [3-1 $\sim$ 3-7, each 3\%] [3-8, 2\%] [3-9, 3-10, each 1\%]}
+
+(2) Please trace the following Python program and answer the output of Line 07. And how to modify the code of
+line 06 -- [0, 1], so the outputs are: 1 1 21. \textbf{(\# problem 3-7)}
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{python}
+def h(data, n):
+      if data[n]==0:
+            data[n] = h(data, n-1) +h(data, n-2)
+      return data[n]
+
+data = [0, 1] + [0 for i in range(20)]
+print(h(data, 0), h(data, 1), h(data, 7))                    # problem 3-6
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：3-6：沒有輸出，程式在 \texttt{h} 的第 2 行（讀 \texttt{data[n]}）丟出 \texttt{IndexError: list index out of range}。 3-7：第 6 行的
+\texttt{[0, 1]} 改成 \texttt{[1, 1]}。
+
+\textbf{程式在做什麼}。 \texttt{h} 是費氏數的備忘錄寫法（資結書第~18.1.2~節）：\texttt{data[n]} 是 $0$ 表示
+「還沒算過」，就遞迴算 \texttt{h(n-1) + h(n-2)} 並存起來；不是 $0$ 就直接回傳存好的值。 它沒有寫基底情況，
+靠的是 \texttt{data} 一開始就放好的值：只要 \texttt{data[0]}、\texttt{data[1]} 都不是 $0$，遞迴到這兩格就
+會停。
+
+\textbf{3-6}。 \texttt{data} 有 $22$ 格：\texttt{data[0] = 0}、\texttt{data[1] = 1}，其餘都是 $0$。
+\texttt{print} 要先算出三個引數，第一個是 \texttt{h(data, 0)}：
+\begin{itemize}
+\item \texttt{data[0]} 是 $0$，被當成「還沒算過」，於是呼叫 \texttt{h(data, -1)}。
+\item Python 的負註標從尾端算：\texttt{data[-1]} 是最後一格，也是 $0$，再呼叫 \texttt{h(data, -2)}，……
+一路往下。 \texttt{data[-k]} 就是 \texttt{data[22 - k]}，從 \texttt{data[-1]} 到 \texttt{data[-20]}（即
+\texttt{data[21]} 到 \texttt{data[2]}）都是 $0$，繼續遞迴。
+\item \texttt{h(data, -21)}：\texttt{data[-21]} 是 \texttt{data[1] = 1}，回傳 $1$。
+\item 回到 \texttt{h(data, -20)}，它還要算 \texttt{h(data, -22)}：\texttt{data[-22]} 是 \texttt{data[0] = 0}，
+又要呼叫 \texttt{h(data, -23)}。 \texttt{data[-23]} 超出範圍（$22$ 格的串列，負註標最小是 $-22$），丟出
+\texttt{IndexError}。
+\end{itemize}
+例外發生在三個引數都還沒算完的時候，\texttt{print} 根本沒有執行，第 7 行沒有任何輸出，程式以
+\texttt{IndexError: list index out of range} 結束。 問題出在用 $0$ 同時表示「$F_0 = 0$」和「還沒算過」：
+\texttt{data[0]} 的真值剛好是 $0$，就被誤認為沒算過。
+
+\textbf{3-7}。 要輸出 \texttt{1 1 21}，\texttt{h(data, 0)} 和 \texttt{h(data, 1)} 必須直接回傳 $1$，所以
+\texttt{data[0]}、\texttt{data[1]} 都要是 $1$（不是 $0$ 才不會再遞迴）。 第 6 行改成
+\begin{minted}[fontsize=\small]{python}
+data = [1, 1] + [0 for i in range(20)]
+\end{minted}
+這時 \texttt{h(data, 7)} 依序填出 \texttt{data[2..7]} $= 2, 3, 5, 8, 13, 21$，回傳 $21$，輸出
+\texttt{1 1 21}。 每一格只算一次，\texttt{h(data, n)} 是 $O(n)$ 次呼叫，不是單純遞迴的指數次。 \texttt{data[0]}
+和 \texttt{data[1]} 只有一組值能同時讓前兩個輸出是 $1$，所以答案是唯一的。
+\end{pastsoln}

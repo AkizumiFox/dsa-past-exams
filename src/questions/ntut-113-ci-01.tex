@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntut-113-ci-01}]{北科大資工所 113 學年度 第一題}
+（是非；只寫答案）
+
+Mark by T(=true) or F(=false) each of following statements. You don't need to prove it. (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item The worst-case running time of quicksort algorithm is O($n$). (2 pts)
+\item If a problem that is in the class NP has a polynomial time solution, then P is equal to NP. (2 pts)
+\item $n^3 + 4n^2 = \Omega(n^2)$. (2 pts)
+\item The shortest path tree from a root $u$ for a positively weighted undirected graph $G$ does not change
+if the weight of every edge in $G$ is doubled (i.e., the new weight is twice the old weight). (2 pts)
+\item Let $T$ be a minimum spanning tree (MST) of graph $G$. Given a connected subgraph $H$ of $G$,
+$T\cap H$ is contained in some MST of $H$. (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) F　(2) F　(3) T　(4) T　(5) T。
+
+五個小題分屬資結書第~14、28、1、25、24~章；本題放在第~24~章。 題目說不必證明，下面仍寫出理由。
+
+\textbf{(1) F。} 快速排序每次都切成 $0$ 和 $m - 1$ 個時（例如取第一個當基準、輸入已排好），遞迴式
+$T(n) = T(n-1) + \Theta(n)$，最壞是 $\Theta(n^2)$（資結書第~14.5~節）。 而且任何比較排序的最壞情況都是
+$\Omega(n \log n)$，不可能是 $O(n)$。
+
+\textbf{(2) F。} P 裡的每個問題都在 NP 裡（資結書定理~28.1），它們本來就有多項式時間解，但不會因此推出
+$\mathrm{P} = \mathrm{NP}$。 例如排序、最短路徑的判定版本都在 NP 且有多項式解。 要推出 $\mathrm{P} =
+\mathrm{NP}$，必須是某個 \textbf{NP 完備}問題有多項式時間解（資結書定理~28.5）。
+
+\textbf{(3) T。} $n^3 + 4n^2 \ge 1 \cdot n^2$ 對所有 $n \ge 1$ 成立，取 $c = 1$、$n_0 = 1$ 就符合 $\Omega$ 的定義
+（資結書第~1.5~節）。 $\Omega$ 只是下界，不必是緊的。
+
+\textbf{(4) T。} 每條路徑的長度都變成原來的兩倍：$w'(P) = \sum_{e \in P} 2w(e) = 2w(P)$。 對任意兩條從 $u$ 到 $v$
+的路徑，$w(P_1) \le w(P_2)$ 若且唯若 $w'(P_1) \le w'(P_2)$，所以最短路徑還是同一些路徑，只是距離加倍。 用
+Dijkstra 演算法來看：每一步比較的 $d$ 值全部乘 $2$，大小順序（包括平手）完全不變，取出頂點的順序和每個
+頂點的 $\pi$ 都和原來一樣，得到同一棵最短路徑樹。
+
+\textbf{(5) T。} 令 $F = T \cap H$（$T$ 落在 $H$ 裡的邊）。 證明 $H$ 有一棵最小生成樹包含 $F$。
+
+\textbf{證明。} 對 $H$ 跑 Kruskal 演算法，權重相同時\textbf{先處理 $F$ 的邊}（Kruskal 不論怎麼打破平手都得到最小
+生成樹，資結書定理~24.6）。 只要證明 $F$ 的每條邊都被收下。 假設某條 $e = (u, v) \in F$ 被丟掉，也就是處理 $e$
+時，已收的邊裡有一條 $u$ 到 $v$ 的路徑 $P$。 $P$ 上的邊都比 $e$ 早處理，所以權重 $\le w(e)$，而且權重等於
+$w(e)$ 的那些一定屬於 $F$（平手時 $F$ 的邊排前面）。
+
+回到 $G$：從 $T$ 拿掉 $e$，$T$ 分成兩塊，$u$、$v$ 各在一塊。 $P$ 從 $u$ 走到 $v$，必有一條邊 $f \ne e$ 跨過這兩塊。
+\begin{itemize}
+\item 若 $f \in T$：$T - e$ 的兩塊之間沒有 $T$ 的邊，矛盾。
+\item 若 $f \notin T$：$T - e + f$ 是 $G$ 的生成樹，權重 $w(T) - w(e) + w(f)$。 $T$ 是最小生成樹，所以
+$w(f) \ge w(e)$；又 $w(f) \le w(e)$，得 $w(f) = w(e)$。 但權重等於 $w(e)$ 的 $P$ 上的邊都屬於 $F \subseteq T$，
+和 $f \notin T$ 矛盾。
+\end{itemize}
+兩種情況都矛盾，所以 $F$ 的邊全部被收下，Kruskal 得到的 $H$ 的最小生成樹包含 $F = T \cap H$。 （$H$ 連通，才有
+生成樹。）\hfill$\blacksquare$
+
+直觀地說，$T$ 的一條邊 $e$ 是拿掉它之後那個切割上最輕的邊（資結書定理~24.1 的反方向）；換到子圖 $H$，跨過
+對應切割的邊只會更少，$e$ 仍然是最輕的之一。
+\end{pastsoln}

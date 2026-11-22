@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-03}]{中山資工所資安組 113 學年度 第 3 題}
+（計算）
+
+\begin{enumerate}[label=(\alph*)]
+\item {[10\%]} In how many ways can Peter select $n$ candies from a large supply of four different kinds of
+candies (all of the same size) if the selection must include an even number of one specific type of candies?
+\item {[10\%]} In how many ways can Peter select $n$ candies from a large supply of three different kinds of
+candies (all of the same size) if the selection must include odd numbers of two specific types of candies?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+同一種糖果沒有分別，一種選法只看每一種各拿幾顆；「large supply」表示數量不受限制。 用普通生成函數：一種不限數量的
+糖果是 $1 + x + x^2 + \cdots = \frac{1}{1 - x}$，只能拿偶數顆是 $1 + x^2 + x^4 + \cdots = \frac{1}{1 - x^2}$，只能拿
+奇數顆是 $x + x^3 + \cdots = \frac{x}{1 - x^2}$。
+
+\textbf{(a)} 指定的那一種拿偶數顆，其他三種不限：
+\[
+f(x) = \frac{1}{1 - x^2} \cdot \frac{1}{(1 - x)^3} ,\qquad a_n = [x^n] f(x).
+\]
+直接數：指定那一種拿 $2k$ 顆，其他三種一共拿 $n - 2k$ 顆，有 $\binom{n - 2k + 2}{2}$ 種，所以
+\[
+a_n = \sum_{k=0}^{\lfloor n/2 \rfloor} \binom{n - 2k + 2}{2} .
+\]
+化成封閉式（部分分式，或對 $n$ 的奇偶分開把上面的和加起來）：
+\[
+a_n = \begin{cases}
+\dfrac{(n+2)(n+4)(2n+3)}{24}, & n \text{ 是偶數},\\[2ex]
+\dfrac{(n+1)(n+3)(2n+7)}{24}, & n \text{ 是奇數}.
+\end{cases}
+\]
+檢查：$n = 0, 1, 2, 3, 4$ 時是 $1, 3, 7, 13, 22$；例如 $n = 2$，指定那種拿 $0$ 顆時另外三種拿 $2$ 顆有
+$\binom{4}{2} = 6$ 種，拿 $2$ 顆時 $1$ 種，共 $7$。 部分分式的寫法是
+$a_n = \frac{1}{2}\binom{n+3}{3} + \frac{1}{4}\binom{n+2}{2} + \frac{n+1}{8} + \frac{1 + (-1)^n}{16}$，數值相同。
+
+\textbf{(b)} 三種糖果，指定的兩種都拿奇數顆，第三種不限：
+\[
+g(x) = \Bigl(\frac{x}{1 - x^2}\Bigr)^2 \cdot \frac{1}{1 - x} .
+\]
+直接數：兩種各拿 $2i + 1$、$2j + 1$ 顆（$i, j \ge 0$），第三種拿 $n - 2 - 2(i + j) \ge 0$ 顆，第三種的數量由 $i, j$
+決定。 所以方法數是滿足 $i + j \le \frac{n-2}{2}$ 的非負整數對 $(i, j)$ 個數。 令 $K = \lfloor n/2 \rfloor - 1$，
+$i + j \le K$ 的解有 $\binom{K + 2}{2}$ 個（$n \le 1$ 時沒有解）：
+\[
+b_n = \binom{\lfloor n/2 \rfloor + 1}{2} = \frac{\lfloor n/2 \rfloor \bigl(\lfloor n/2 \rfloor + 1\bigr)}{2} .
+\]
+檢查：$n = 2, 3, 4, 5, 6$ 時是 $1, 1, 3, 3, 6$。 例如 $n = 4$：$(1, 1, 2)$、$(1, 3, 0)$、$(3, 1, 0)$，共 $3$ 種。
+\end{pastsoln}

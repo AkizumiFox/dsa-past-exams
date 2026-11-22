@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-30}]{中興資工所乙組 115 學年度 第 30 題}
+（單選；每題 2 分，答錯不倒扣）
+
+For a balanced binary search tree with n nodes, what is the worst-case height?
+
+A.~O(n) \qquad B.~O($\sqrt{\ }$n) \qquad C.~O(log n) \qquad D.~O(1)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+「平衡」的二元搜尋樹，正是指用額外的規則把高度壓在 $O(\log n)$：AVL 樹的高度小於
+$1.4405\lg(n + 1)$（資結書定理~10.1），紅黑樹不超過 $2\lg(n + 1)$（資結書定理~10.4）。 另一方面，
+任何二元樹第 $h$ 層以內最多 $2^{h+1} - 1$ 個節點，所以高度至少 $\lfloor \lg n \rfloor$，
+$\Theta(\log n)$ 已經是最好的。
+\begin{itemize}
+\item A 錯：$O(n)$ 是不平衡的 BST 的最壞情況，例如依序插入排好的鍵，樹退化成一條鏈
+（資結書第~9.3~節）。 嚴格說平衡樹的高度也是 $O(n)$（大 $O$ 只是上界），但題目要的是平衡
+樹保證的那個緊的界。
+\item B 錯：平衡樹的界比 $\sqrt{n}$ 小得多。
+\item C 對。
+\item D 錯：$n$ 個節點的二元樹高度至少 $\lfloor \lg n \rfloor$，不可能是常數。
+\end{itemize}
+\end{pastsoln}

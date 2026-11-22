@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ncu-114-dsa-09}]{中央資工所 114 學年度 第 9 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+（第 8--10 題共用下面的說明和程式。）
+
+Consider a UAV (Unmanned Aerial Vehicle) with F unit of fuel travels from NCU to a destination
+``target'' km away. There are n gas stations along the way. When the UAV refuels at a gas station, all
+the fuel of the gas station is transferred into the UAV.
+
+Suppose that the UAV consumes one unit of fuel for every kilometer it travels. Let the position and fuel
+of a gas station indicate the distance between the gas station and NCU and its volume of fuel,
+respectively. Return the minimum number of refueling stops the UAV must make in order to reach its
+destination.
+\begin{minted}[fontsize=\small]{c}
+typedef struct {
+    int position;
+    int fuel;
+} stop_info;
+
+int Refuel(int target, int F, int n, stop_info s[]) {
+    int N_R = 0;   // number of refuel
+    int i;   //gas stations ID
+    stop_info X;
+
+    while (F < target) {
+        for (i=0;  L1  ; ++i)
+            Q.push(s[i].fuel);
+        if (Q.empty()) return -1;
+        X=Q.pop();
+        F += X.fuel
+        N_R++;
+    }
+    return N_R;
+}
+\end{minted}
+
+Consider Refuel algorithm above. Which of the following statements are true?
+\begin{enumerate}[label=(\alph*)]
+\item Q could be a stack
+\item Q could be a priority queue
+\item Q could be a max heap
+\item Q could be min heap
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(c)。
+
+程式的讀法見歷屆試題~\ref{px:ncu-114-dsa-08} 的詳解：\texttt{L1} 填 \texttt{(i<n) \&\& (s[i].position <=F)}，
+每次油不夠時，從已經經過的站裡挑\textbf{油最多}的那一站加油。 所以 \texttt{Q.pop()} 必須傳回最大值，
+\texttt{Q} 要是最大優先佇列（資結書第~8.3~節）。
+
+\begin{itemize}
+\item (a) 堆疊彈出的是最後推入的，也就是最遠的那一站，不一定油最多。 反例：$\mathit{target} = 100$、
+$F = 50$，兩站 $(\mathit{position}, \mathit{fuel}) = (10, 50)$、$(40, 10)$。 兩站都到得了，依序推入
+$50$、$10$。 最佳解只在第一站加油，$F = 100$，$1$ 次。 用堆疊時先彈出 $10$，$F = 60$ 不夠，再彈出
+$50$，共 $2$ 次。 錯。
+\item (b) 優先佇列以油量為優先權、每次取最大的，正是需要的操作。 對。
+\item (c) 最大堆積是最大優先佇列的標準實作，\texttt{pop} 取出最大值，$O(\log n)$。 對。
+\item (d) 最小堆積每次取油最少的站，同一個反例會先取 $10$，共 $2$ 次。 錯。
+\end{itemize}
+(b) 的「priority queue」沒有說是最大還是最小；這裡讀成以油量大的優先，所以算對。
+\end{pastsoln}

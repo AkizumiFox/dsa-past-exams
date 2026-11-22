@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntust-113-ice-06}]{臺科大資工所 113 學年度 第 I-7 題}
+（選擇；可能不只一個）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) Use operations push, pop, and no-op (i.e., forward the input to the output directly) to
+rearrange an input sequence. For six numbers 1, 2, 3, 4, 5, 6 entered in that order, which of the
+following rearrangements is/are not possible?\\
+(a)~235146, (b)~325641, (c)~154623
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)、(c) 不可能。
+
+no-op（輸入直接送到輸出）的效果和「push 之後馬上 pop」一樣，所以能做出的排列就是一般的堆疊排列
+（資結書第~6.1.5~節）。 判斷法有兩種：直接模擬，或用資結書定理~6.1：輸出 $p_1 \cdots p_n$ 做得到，
+若且唯若找不到 $i < j < k$ 使 $p_j < p_k < p_i$（「大、小、中」的樣式，也叫 312 樣式）。
+
+模擬的規則：要輸出 $x$ 時，若 $x$ 還沒進來，就把到 $x$ 為止的數依序 push，再 pop 出 $x$；若 $x$
+已經在堆疊裡，它必須在頂端才能 pop，否則做不到。
+\begin{itemize}
+\item \textbf{(a) 235146：不可能。} push 1、push 2、pop 2；3 直接輸出（no-op）；push 4、push 5、
+pop 5。 這時堆疊由底到頂是 $1, 4$，下一個要輸出 1，但頂端是 4，做不到。 樣式上，$5, 1, 4$ 就是
+「大、小、中」。
+\item \textbf{(b) 325641：可能。} push 1、push 2、push 3、pop 3、pop 2（輸出 3, 2）；push 4、
+push 5、pop 5（輸出 5）；6 直接輸出；pop 4、pop 1。 輸出 $3, 2, 5, 6, 4, 1$。
+\item \textbf{(c) 154623：不可能。} 1 直接輸出；push 2、3、4、5，pop 5、pop 4（輸出 5, 4）；6 直接
+輸出。 堆疊剩 $2, 3$（頂端是 3），下一個要 2，做不到。 樣式上，$5, 2, 3$（或 $4, 2, 3$、$6, 2, 3$）
+是「大、小、中」。
+\end{itemize}
+\end{pastsoln}

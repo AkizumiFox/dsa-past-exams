@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:ncu-111-dsa-01}]{中央資工所 111 學年度 複選題第 1 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Consider the convert the infix expression a*(b+c/d)*(e-f)+g to its postfix form. There are
+at most 4 tokens in this stack at any moment during the conversion.
+\item The postfix form of infix expression (a+b-c)*(d-e) is abc+-de-*
+\item The infix expression of postfix expression 3k-2m4+*+pab-*/ is ((3-k)+2(m+4))/(p*(a-b))
+\item Consider the convert the infix expression a*(b+c/d)*(e-f) to its postfix form. There are at
+most 3 tokens in this stack at any moment during the conversion.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(C)。 (C) 的「$2(m+4)$」照一般數學寫法讀成 $2 \times (m + 4)$。
+
+(A)、(D) 照資結書第~6.3.3~節的規則轉換。 (D) 的運算式是 (A) 去掉最後
+的 \texttt{+g}，兩者前面完全相同，所以一起追蹤（堆疊由底到頂寫，左括號也放進堆疊）：
+{\small
+\begin{longtable}{clcl}
+\toprule
+記號 & 動作 & 堆疊 & 輸出 \\
+\midrule
+\endfirsthead
+\toprule
+記號 & 動作 & 堆疊 & 輸出 \\
+\midrule
+\endhead
+a & 輸出 & & a \\
+$*$ & push & $*$ & a \\
+( & push & $*\;($ & a \\
+b & 輸出 & $*\;($ & a b \\
+$+$ & 頂端是 (，push & $*\;(\;+$ & a b \\
+c & 輸出 & $*\;(\;+$ & a b c \\
+$/$ & $/$ 比 $+$ 高，push & $*\;(\;+\;/$ & a b c \\
+d & 輸出 & $*\;(\;+\;/$ & a b c d \\
+) & pop $/$、$+$，丟掉 ( & $*$ & a b c d $/$ $+$ \\
+$*$ & pop $*$（一樣高、由左往右），push & $*$ & a b c d $/$ $+$ $*$ \\
+( & push & $*\;($ & \ldots{} $*$ \\
+e & 輸出 & $*\;($ & \ldots{} $*$ e \\
+$-$ & 頂端是 (，push & $*\;(\;-$ & \ldots{} $*$ e \\
+f & 輸出 & $*\;(\;-$ & \ldots{} $*$ e f \\
+) & pop $-$，丟掉 ( & $*$ & \ldots{} $*$ e f $-$ \\
+\midrule
+$+$（只有 (A)）& pop $*$，push & $+$ & \ldots{} e f $-$ $*$ \\
+g & 輸出 & $+$ & \ldots{} $*$ g \\
+結束 & pop $+$ & & \ldots{} g $+$ \\
+\bottomrule
+\end{longtable}}
+(A) 的後序是 \texttt{abcd/+*ef-*g+}，(D) 的後序是 \texttt{abcd/+*ef-*}。
+
+\begin{itemize}
+\item (A) 對。 堆疊最多的時候是讀到 $/$ 之後，$*\;(\;+\;/$ 共 $4$ 個記號，其他時候都
+不超過 $4$，所以「at most 4」成立。
+\item (B) 錯。 $(a + b - c)$ 由左往右結合，是 $((a + b) - c)$，後序是
+\texttt{ab+c-}，整個是 \texttt{ab+c-de-*}。 題目的 \texttt{abc+-} 是
+$a - (b + c)$，和 $a + b - c$ 不是同一個運算式（例如 $a = b = c = 1$ 時，前者是 $-1$、
+後者是 $1$）。
+\item (C) 對。 用資結書第~6.3.2~節的方法，堆疊裡放子運算式：
+\texttt{3 k -} 得 $(3 - k)$；\texttt{2 m 4 +} 得 $2$、$(m + 4)$，\texttt{*} 得
+$2 * (m + 4)$；\texttt{+} 得 $(3 - k) + 2 * (m + 4)$；\texttt{p a b -} 得 $p$、
+$(a - b)$，\texttt{*} 得 $p * (a - b)$；最後 \texttt{/} 得
+$((3 - k) + 2 * (m + 4)) / (p * (a - b))$，和選項相同（選項省略了乘號）。
+\item (D) 錯。 (D) 讀到 $/$ 時堆疊也有 $4$ 個記號（上表前八列和 (A) 一樣），超過 $3$。
+\end{itemize}
+
+補充：(D) 是否成立取決於左括號算不算「堆疊裡的記號」。 本書（以及一般課本）的演算
+法會把左括號 push 進堆疊，它佔一格，所以算；如果某個版本的作法不把左括號放進堆疊，
+最大值會變成 $3$（$*\;+\;/$），(D) 就對了。 作答時照題目用的演算法來數。
+\end{pastsoln}

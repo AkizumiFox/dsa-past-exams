@@ -1,0 +1,143 @@
+\begin{pastexam}[label={px:df3-112-ds-04}]{地方三等資訊處理 112 年 第四題}
+（申論；24 分）
+
+針對如下的有向圖（節點為走訪對象，連線上的數字為走訪的 cost），依如下 BFS（配合 queue）與
+DFS（配合 stack）演算法，進行所有節點的走訪，多個節點可以走訪時，以連線上 cost 較低者優先，
+結果請以迴圈內部的顯示要求，依下表形式填入（stack 垂直表示，開口在上方，queue 水平表示，出口
+在左，入口在右）。註：假設節點 S 為起始點。（24 分）
+
+\begin{center}
+\begin{tikzpicture}[x=1.05cm, y=1.05cm, >=Stealth,
+  v/.style={circle, draw, minimum size=5.5mm, inner sep=0pt, font=\small},
+  w/.style={font=\small, inner sep=1pt}]
+\node[font=\small] at (0.2,0.35) {Directed Graph};
+\node[v] (S) at (2,0) {S};
+\node[v] (A) at (0.5,-1.3) {A};
+\node[v] (B) at (2,-1.3) {B};
+\node[v] (C) at (3.5,-1.3) {C};
+\node[v] (X) at (0.5,-2.6) {X};
+\node[v] (Y) at (2,-2.6) {Y};
+\node[v] (Z) at (3.5,-2.6) {Z};
+\draw[->] (S) -- node[w, above left, pos=0.5] {21} (A);
+\draw[->] (S) -- node[w, left, pos=0.5] {11} (B);
+\draw[->] (S) -- node[w, above right, pos=0.5] {31} (C);
+\draw[->] (B) -- node[w, above] {1} (A);
+\draw[->] (B) -- node[w, above] {4} (C);
+\draw[->] (B) -- node[w, left, pos=0.4] {2} (X);
+\draw[->] (B) -- node[w, left] {3} (Y);
+\draw[->] (C) -- node[w, left] {5} (Z);
+\draw[->] (Z) to[out=0, in=0, looseness=1.6] node[w, right] {10} (C);
+\draw[->] (X) -- node[w, above] {6} (Y);
+\draw[->] (Y) -- node[w, above] {8} (Z);
+\draw[->] (X) to[out=-30, in=-150] node[w, fill=white] {7} (Z);
+\draw[->] (Z.south) .. controls (3.1,-4.3) and (-0.9,-3.9) .. node[w, below, pos=0.6] {9} (A.south west);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\small
+\begin{tabular}{|l|c|c|}
+\hline
+BFS 演算法 & Loop1 & $\cdots$ \\ \hline
+print node & & \\ \hline
+queue & \rule{0pt}{1.4cm} & \\ \hline
+processSet & & \\ \hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|c|c|}
+\hline
+DFS 演算法 & Loop1 & $\cdots$ \\ \hline
+print node & & \\ \hline
+Stack & \rule{0pt}{1.4cm} & \\ \hline
+processSet & & \\ \hline
+\end{tabular}
+\end{center}
+
+BFS/DFS 演算法（/前為 BFS 使用 queue, /後為 DFS 使用 stack）
+\begin{quote}
+Step1: set \fbox{\underline{queue/stack}} to empty\\
+\hspace*{3.2em}set \underline{processSet} to empty\\
+Step2: \fbox{enqueue/push} \underline{S} and add \underline{S} into \underline{processSet}\\
+Step3: while \fbox{\underline{queue/stack}} is not empty\\
+Step31: \fbox{dequeue/pop} and print it\\
+Step32: \fbox{enqueue/push} all one step neighbors which are not in \underline{processSet}\\
+\hspace*{3.6em}according to the cost of edges and add them into \underline{processSet}\\
+Step33: display content of \fbox{\underline{queue/stack}} and \underline{processSet}
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{先整理每個節點的出邊}，依 cost 由小到大：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+節點 & 出邊（cost 小的在前） \\
+\midrule
+S & B (11), A (21), C (31) \\
+B & A (1), X (2), Y (3), C (4) \\
+C & Z (5) \\
+X & Y (6), Z (7) \\
+Y & Z (8) \\
+Z & A (9), C (10) \\
+A & （沒有出邊） \\
+\bottomrule
+\end{tabular}
+\end{center}
+這個演算法在\textbf{放進} queue／stack 時就把節點加入 processSet，所以每個節點只會被放進去一次。
+「cost 較低者優先」對 queue 是依 cost 由小到大 enqueue（小的先出來）；對 stack 要讓 cost 小的
+先被 pop，所以依 cost \textbf{由大到小} push，cost 最小的在最上面。 下面把題目的表轉成一列一個
+Loop（欄位相同，只是轉置，方便排版）。 queue 左邊是出口；stack 照題目畫成直的，最上面是頂端
+（開口）；processSet 依加入的先後寫。
+
+\textbf{BFS（queue）}。 Step2 之後 queue $=$ S，processSet $= \{$S$\}$。
+\begin{center}
+\small
+\begin{tabular}{cclp{4.2cm}}
+\toprule
+Loop & print node & queue（出口 $\leftarrow$ \quad $\leftarrow$ 入口） & processSet \\
+\midrule
+1 & S & B\ A\ C & S, B, A, C \\
+2 & B & A\ C\ X\ Y & S, B, A, C, X, Y \\
+3 & A & C\ X\ Y & S, B, A, C, X, Y \\
+4 & C & X\ Y\ Z & S, B, A, C, X, Y, Z \\
+5 & X & Y\ Z & S, B, A, C, X, Y, Z \\
+6 & Y & Z & S, B, A, C, X, Y, Z \\
+7 & Z & （空） & S, B, A, C, X, Y, Z \\
+\bottomrule
+\end{tabular}
+\end{center}
+Loop 2：B 的鄰居 A、C 已在 processSet，只 enqueue X (2)、Y (3)。 Loop 4：C 的鄰居 Z 不在，
+enqueue。 Loop 5--7：X、Y、Z 的鄰居都已在 processSet。 \textbf{BFS 印出順序：S, B, A, C, X, Y, Z}。
+
+\textbf{DFS（stack）}。 Step2 之後 stack $=$ S，processSet $= \{$S$\}$。
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{cccp{4.2cm}}
+\toprule
+Loop & print node & stack（上面是頂端） & processSet \\
+\midrule
+1 & S & \begin{tabular}[c]{@{}c@{}}B\\A\\C\end{tabular} & S, C, A, B \\
+2 & B & \begin{tabular}[c]{@{}c@{}}X\\Y\\A\\C\end{tabular} & S, C, A, B, Y, X \\
+3 & X & \begin{tabular}[c]{@{}c@{}}Z\\Y\\A\\C\end{tabular} & S, C, A, B, Y, X, Z \\
+4 & Z & \begin{tabular}[c]{@{}c@{}}Y\\A\\C\end{tabular} & S, C, A, B, Y, X, Z \\
+5 & Y & \begin{tabular}[c]{@{}c@{}}A\\C\end{tabular} & S, C, A, B, Y, X, Z \\
+6 & A & C & S, C, A, B, Y, X, Z \\
+7 & C & （空） & S, C, A, B, Y, X, Z \\
+\bottomrule
+\end{tabular}
+\end{center}
+Loop 1：S 的鄰居依 cost 由大到小 push C (31)、A (21)、B (11)，B 在最上面。 Loop 2：pop B；
+B 的鄰居 A、C 已在 processSet，依 cost 由大到小 push Y (3)、X (2)。 Loop 3：pop X；Y 已在，
+push Z (7)。 Loop 4--7：Z、Y、A、C 的鄰居都已在 processSet，只有 pop。 \textbf{DFS 印出順序：
+S, B, X, Z, Y, A, C}。
+
+\textbf{另一種讀法}：若把 Step32 的「according to the cost」讀成 push 也依 cost 由小到大（cost
+最大的在頂端），stack 依序是 S $\to$ (B A C) $\to$ (B A Z) $\to$ (B A) $\to$ (B) $\to$ (X Y)
+$\to$ (X) $\to$ 空（頂端寫在右邊），印出 S, C, Z, A, B, Y, X；但這樣 cost 大的反而先走，和
+題目「cost 較低者優先」不合，所以採用上面的寫法。
+
+補充：題目的演算法在 push 時就標記，印出的順序不一定是真正的深度優先順序。 資結書第~21.4~節
+的 DFS 是在\textbf{拜訪}時才標記，同樣從 S、cost 小的先走，順序是 S, B, A, X, Y, Z, C。 考試時
+照題目給的步驟做即可。
+\end{pastsoln}

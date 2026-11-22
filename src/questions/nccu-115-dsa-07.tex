@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:nccu-115-dsa-07}]{政大資科所 115 學年度 第 7 題}
+（單選）
+
+(5\%) Which of the following statements regarding the characteristics of several common shortest path
+algorithms is incorrect?
+\begin{enumerate}[label=(\Alph*)]
+\item Dijkstra's algorithm: It is applicable to graphs where all edge weights are non-negative, and it is
+typically implemented using a priority queue to achieve a time complexity of $O((|V|+|E|)\lg|V|)$.
+\item Bellman-Ford algorithm: It can handle graphs with negative edge weights, but its time complexity is
+$O(|V||E|)$, making it slower than Dijkstra's Algorithm.
+\item Floyd-Warshall algorithm: It is a single-source shortest path algorithm, suitable for dense graphs,
+and solves the problem using the concept of Dynamic Programming.
+\item Negative weight cycles: If a graph contains a negative weight cycle, the shortest path is undefined,
+and the Bellman-Ford Algorithm can be used to detect the existence of such a cycle.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+\begin{itemize}
+\item (A) 正確。 Dijkstra 的正確性要求邊權非負（資結書第~25.2~節；有負邊時的反例在第~25.2.5~節）。
+用二元堆積當優先佇列，$|V|$ 次取出最小值、最多 $|E|$ 次減少鍵值，每次 $O(\lg|V|)$，總共
+$O((|V| + |E|)\lg|V|)$。
+\item (B) 正確。 Bellman--Ford（資結書第~25.3~節）不怕負邊，做 $|V| - 1$ 輪、每輪鬆弛全部 $|E|$ 條邊，
+$O(|V||E|)$。 $|E| \ge |V| - 1$ 的連通圖上，$|V||E|$ 比 $(|V| + |E|)\lg|V|$ 大，所以比 Dijkstra 慢。
+\item (C) 錯誤，就是要選的。 Floyd--Warshall（資結書第~25.6~節）是\textbf{全點對}最短路徑演算法，
+一次算出每一對點的距離，$\Theta(|V|^3)$，和邊數無關，所以適合稠密圖；它的確是動態規劃
+（子問題是「中間點只能用前 $k$ 個點」）。 錯的是「single-source」這幾個字。
+\item (D) 正確。 從起點走得到一個負環時，繞環一圈距離就變小，可以無限變小，最短路徑沒有定義。
+Bellman--Ford 做完 $|V| - 1$ 輪後再檢查一輪，若還有邊能鬆弛，就表示有從起點走得到的負環
+（資結書第~25.3.4~節）。
+\end{itemize}
+\end{pastsoln}

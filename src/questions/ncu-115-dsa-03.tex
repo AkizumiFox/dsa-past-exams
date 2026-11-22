@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-115-dsa-03}]{中央資工所 115 學年度 第 3 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Let dp[i][j] represent the length of the Longest Common Subsequence of strings X[1\ldots i] and Y[1\ldots j]. Which of the following statements are correct?
+\begin{enumerate}[label=\Alph*.]
+\item If X[i] == Y[j], then dp[i][j] = dp[i-1][j-1] + 1.
+\item If X[i] != Y[j], then dp[i][j] = dp[i-1][j-1].
+\item The time complexity of the standard DP solution for LCS is O($n\times m$), where m and n are the lengths of the two input sequences.
+\item The DP table can be optimized to use only two rows without affecting correctness.
+\item LCS can always be solved using a greedy strategy by matching characters as early as possible.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、C、D。
+
+\textbf{A 對}。 這是資結書定理~18.2 的第一種情形：$X[i] = Y[j]$ 時，把這個字元接在 $X[1..i-1]$、
+$Y[1..j-1]$ 的 LCS 後面，而且不會有更長的。
+
+\textbf{B 錯}。 $X[i] \ne Y[j]$ 時應該是 $\max(dp[i-1][j],\ dp[i][j-1])$。 反例：$X = \texttt{AB}$、
+$Y = \texttt{A}$，$i = 2$、$j = 1$。 $X[2] = \texttt{B} \ne \texttt{A}$，照 B 的式子
+$dp[2][1] = dp[1][0] = 0$，但 \texttt{AB} 和 \texttt{A} 的 LCS 是 \texttt{A}，長度 $1$。 B 的式子把
+$X[i]$ 和 $Y[j]$ 同時丟掉，漏掉了只丟其中一個的情形。
+
+\textbf{C 對}。 表有 $(m + 1)(n + 1)$ 格，每格 $O(1)$，時間 $\Theta(mn)$（資結書第~18.3~節）。
+
+\textbf{D 對}。 第 $i$ 列只用到第 $i - 1$ 列和自己左邊的格子，只留兩列，算出的 LCS 長度完全一樣
+（資結書第~18.3.6~節、虛擬碼~18.8）。 這裡把「correctness」讀成算出的長度正確。 要注意只留兩列就
+不能沿著表還原出 LCS 本身；題目如果要的是子序列，還要用 Hirschberg 的分治法或保留整張表。
+
+\textbf{E 錯}。 「依 $X$ 的順序，每個字元配到 $Y$ 裡上一個配對位置之後最早出現的同樣字元」：
+$X = \texttt{CAB}$、$Y = \texttt{ABC}$，\texttt{C} 先配到 $Y$ 的最後一個位置，之後的 \texttt{A}、
+\texttt{B} 都配不到，只得到長度 $1$；真正的 LCS 是 \texttt{AB}，長度 $2$。 改成依 $Y$ 的順序配，把
+兩個字串對調就是反例。 早配的字元可能擋住後面更多的配對，LCS 沒有貪心選擇的性質，要用動態規劃。
+\end{pastsoln}

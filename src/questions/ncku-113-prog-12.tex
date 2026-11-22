@@ -1,0 +1,90 @@
+\begin{pastexam}[label={px:ncku-113-prog-12}]{成大資訊聯招 113 學年度 第 12 題}
+（計算）
+
+(10\%) Consider a neural network with $n$ layers of fully connected layers, where the first layer
+is the input layer, the $n$th layer is the output layer, and the rest are hidden layers. The $i$th
+layer has $P_i$ neurons, where $1\le i\le n$. Each neuron in the $i$th layer is connected to every
+neuron in the $(i+1)$th layer, where $1\le i<n$. Let $w^i_{j,k}$ represent the weight of the
+connection from the $j$th neuron in the $i$th layer to the $k$th neuron in the $(i+1)$th layer.
+Let $[v^i_1\ v^i_2\ \cdots\ v^i_{P_i}]^T$ be the values of neurons in the $i$th layer, where
+$1\le i\le n$. Then, we can obtain $v^{i+1}_k=\sum_{j=1}^{P_i} w^i_{j,k}v^i_j$, where
+$1\le k\le P_{i+1}$. Given that $\langle P_1,P_2,P_3,P_4,P_5,P_6\rangle=\langle
+10,6,12,5,50,3\rangle$, we want to achieve the result from the input layer to the output layer in
+the fastest possible way. Please determine the minimum number of multiplications required for this
+neural network.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$1326$ 次乘法，順序是 $W^1\bigl(W^2\bigl(W^3(W^4 W^5)\bigr)\bigr)$。
+
+\textbf{解讀}。 把第 $i$ 層到第 $i + 1$ 層的權重排成 $P_i \times P_{i+1}$ 的矩陣
+$W^i = [w^i_{j,k}]$，題目的式子就是 $(v^{i+1})^T = (v^i)^T W^i$，所以
+\[
+(v^6)^T = (v^1)^T\, W^1 W^2 W^3 W^4 W^5 ,
+\]
+五個矩陣的維度依序是 $10 \times 6$、$6 \times 12$、$12 \times 5$、$5 \times 50$、$50 \times 3$。
+題目只給層的大小、問「最快」的做法，考的是矩陣鏈乘（資結書第~18.2~節）：選一個乘法順序，讓算出
+$W = W^1 W^2 W^3 W^4 W^5$（$10 \times 3$）的純量乘法次數最少；有了 $W$，輸入層到輸出層只要一次
+$10 \times 3$ 的乘法。 下面照這個解讀計算。 （另一種讀法是只算\textbf{一筆}輸入：把 $(v^1)^T$ 當成
+$1 \times 10$ 的矩陣放在鏈的最前面，最好的順序是由左往右一層一層算，共
+$10 \cdot 6 + 6 \cdot 12 + 12 \cdot 5 + 5 \cdot 50 + 50 \cdot 3 = 592$ 次。 作答時寫出自己用哪一種讀法。）
+
+\textbf{遞迴式}（資結書虛擬碼~18.4）。 維度 $p_0, \ldots, p_5 = 10, 6, 12, 5, 50, 3$，$W^i$ 是
+$p_{i-1} \times p_i$。 $m[i, j]$ 是算出 $W^i \cdots W^j$ 最少要幾次乘法：
+\[
+m[i, i] = 0, \qquad
+m[i, j] = \min_{i \le k < j} \bigl( m[i, k] + m[k + 1, j] + p_{i-1} p_k p_j \bigr).
+\]
+
+\textbf{長度 2}：
+$m[1,2] = 10 \cdot 6 \cdot 12 = 720$，
+$m[2,3] = 6 \cdot 12 \cdot 5 = 360$，
+$m[3,4] = 12 \cdot 5 \cdot 50 = 3000$，
+$m[4,5] = 5 \cdot 50 \cdot 3 = 750$。
+
+\textbf{長度 3}：
+\begin{align*}
+m[1,3] &= \min(m[1,2] + 10 \cdot 12 \cdot 5,\ m[2,3] + 10 \cdot 6 \cdot 5) = \min(1320, 660) = 660
+  \quad (k = 1), \\
+m[2,4] &= \min(m[3,4] + 6 \cdot 12 \cdot 50,\ m[2,3] + 6 \cdot 5 \cdot 50) = \min(6600, 1860) = 1860
+  \quad (k = 3), \\
+m[3,5] &= \min(m[4,5] + 12 \cdot 5 \cdot 3,\ m[3,4] + 12 \cdot 50 \cdot 3) = \min(930, 4800) = 930
+  \quad (k = 3).
+\end{align*}
+
+\textbf{長度 4}：
+\begin{align*}
+m[1,4] &= \min(m[2,4] + 3000,\ m[1,2] + m[3,4] + 6000,\ m[1,3] + 2500) \\
+  &= \min(4860,\ 9720,\ 3160) = 3160 \quad (k = 3), \\
+m[2,5] &= \min(m[3,5] + 216,\ m[2,3] + m[4,5] + 90,\ m[2,4] + 900) \\
+  &= \min(1146,\ 1200,\ 2760) = 1146 \quad (k = 2).
+\end{align*}
+（$k = 1, 2, 3$ 的 $p_0 p_k p_4$ 是 $10 \cdot 6 \cdot 50$、$10 \cdot 12 \cdot 50$、$10 \cdot 5 \cdot 50$；
+$k = 2, 3, 4$ 的 $p_1 p_k p_5$ 是 $6 \cdot 12 \cdot 3$、$6 \cdot 5 \cdot 3$、$6 \cdot 50 \cdot 3$。）
+
+\textbf{長度 5}：
+\begin{align*}
+m[1,5] &= \min\bigl(m[2,5] + 10 \cdot 6 \cdot 3,\ m[1,2] + m[3,5] + 10 \cdot 12 \cdot 3, \\
+  &\qquad\quad m[1,3] + m[4,5] + 10 \cdot 5 \cdot 3,\ m[1,4] + 10 \cdot 50 \cdot 3\bigr) \\
+  &= \min(1146 + 180,\ 720 + 930 + 360,\ 660 + 750 + 150,\ 3160 + 1500) \\
+  &= \min(1326,\ 2010,\ 1560,\ 4660) = 1326 \quad (k = 1).
+\end{align*}
+
+整理成表（上三角，格子裡是 $m[i, j]$，括號是最好的 $k$）：
+\begin{center}
+\small
+\begin{tabular}{c|ccccc}
+$i \backslash j$ & 1 & 2 & 3 & 4 & 5 \\
+\hline
+1 & 0 & 720 (1) & 660 (1) & 3160 (3) & 1326 (1) \\
+2 &   & 0 & 360 (2) & 1860 (3) & 1146 (2) \\
+3 &   &   & 0 & 3000 (3) & 930 (3) \\
+4 &   &   &   & 0 & 750 (4) \\
+5 &   &   &   &   & 0 \\
+\end{tabular}
+\end{center}
+從 $m[1,5]$ 的 $k = 1$ 往回找：$W^1 (W^2 \cdots W^5)$；$m[2,5]$ 的 $k = 2$：$W^2 (W^3 W^4 W^5)$；
+$m[3,5]$ 的 $k = 3$：$W^3 (W^4 W^5)$。 所以順序是 $W^1(W^2(W^3(W^4 W^5)))$，最少 $1326$ 次乘法。
+直覺上，從最右邊開始乘，結果一直是「幾列 $\times$ 3 行」的窄矩陣，每一步都便宜；若先算
+$W^3 W^4$，會產生 $12 \times 50$ 的大矩陣，光這一步就要 $3000$ 次。
+\end{pastsoln}

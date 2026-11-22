@@ -1,0 +1,160 @@
+\begin{pastexam}[label={px:df3-102-ds-01}]{地方三等資訊處理 102 年 第一題}
+（申論；20 分）
+
+請參考圖 1：
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 由 a 點出發，做 depth-first traversal（深度優先拜訪），請問那些節點（node）不會被訪問到？（3 分）
+\item[㈡] 由 a 點出發，做 breadth-first traversal（寬度優先拜訪），請問那些節點（node）不會被訪問到？（2 分）
+\item[㈢] 假設圖 1 代表 heap 上各個節點（node）及其相互指向的關係。p、q、r 三節點代表全域變數（global variables），
+其他的節點代表 heap 上的記憶體區塊。如果 p$\to$a 的指標被消除，那些節點會變成無用的垃圾節點？你必須詳細描述
+尋找垃圾節點的方法及所需之資料結構。你的演算法只能從 a 節點出發，它必須指出所有的垃圾節點，並且你的演算法
+只能在每一個節點儲存很少量的資料。請問你的演算法必須在每一個節點儲存那些資料？（15 分）
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+  e/.style={-{Latex[length=2mm]},semithick}]
+\node[v,minimum size=5mm] (p) at (0.5,-1.65) {p};
+\node[v] (a) at (1.7,-1.65) {a};
+\node[v] (b) at (3.1,-1.15) {b};
+\node[v] (c) at (2.7,-2.3) {c};
+\node[v] (d) at (4.3,-0.7) {d};
+\node[v] (e) at (5.55,-0.7) {e};
+\node[v] (f) at (6.7,-0.8) {f};
+\node[v] (h) at (7.85,-0.8) {h};
+\node[v] (g) at (6.0,-1.95) {g};
+\node[v] (j) at (4.2,-2.85) {j};
+\node[v] (r) at (5.1,-3.4) {r};
+\node[v] (x) at (2.25,-4.2) {x};
+\node[v] (k) at (4.0,-4.2) {k};
+\node[v] (l) at (5.65,-4.25) {l};
+\node[v] (m) at (6.9,-4.2) {m};
+\node[v] (n) at (8.1,-4.1) {n};
+\node[v] (q) at (2.7,-4.95) {q};
+\draw[e] (p) -- (a);
+\draw (1.0,-1.45) -- (1.2,-1.85) (1.0,-1.85) -- (1.2,-1.45);
+\draw[e] (a) -- (b);
+\draw[e] (b) -- (c);
+\draw[e] (c) -- (a);
+\draw[e] (b) -- (d);
+\draw[e] (a) -- (x);
+\draw[e] (x) -- (d);
+\draw[e] (d) -- (e);
+\draw[e] (d) to[bend left=35] (h);
+\draw[e] (e) -- (f);
+\draw[e] (f) -- (h);
+\draw[e] (h) -- (n);
+\draw[e] (j) -- (e);
+\draw[e] (j) -- (g);
+\draw[e] (g) -- (e);
+\draw[e] (g) -- (m);
+\draw[e] (r) -- (j);
+\draw[e] (x) -- (k);
+\draw[e] (q) -- (k);
+\draw[e] (k) -- (l);
+\draw[e] (l) -- (m);
+\draw[e] (m) -- (n);
+\node[font=\small] at (4.3,-5.6) {圖 1\quad 一個有向圖（a directed graph）};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ g、j、p、q、r。 ㈡ 同 ㈠：g、j、p、q、r。 ㈢ 垃圾節點是 a、b、c、d、x。 方法：引用計數加上從 a 出發的
+「試刪除」（trial deletion），每個節點存一個引用計數和一個 2 位元的顏色。
+
+圖 1 的邊（$u \to v$ 表示 $u$ 有指標指向 $v$）：
+$p\to a$，$a \to b$，$a \to x$，$b \to c$，$b \to d$，$c \to a$，$x \to d$，$x \to k$，$d \to e$，$d \to h$，$e \to f$，
+$f \to h$，$h \to n$，$g \to e$，$g \to m$，$j \to e$，$j \to g$，$r \to j$，$q \to k$，$k \to l$，$l \to m$，$m \to n$。
+
+\textbf{㈠} 深度優先（資結書第~21.4~節），出邊依圖上的順序（a 先走 b 再走 x）：
+\[
+a \to b \to c\ (\text{c 指回 a，已拜訪}) \to d \to e \to f \to h \to n,\ \text{退回到 a 再走}\ x \to k \to l \to m .
+\]
+拜訪到 a, b, c, d, e, f, h, n, x, k, l, m 共 $12$ 個。 \textbf{不會被訪問到的是 g、j、p、q、r}：沒有任何邊從
+已拜訪的節點指向它們（p、q、r 沒有入邊；j 只被 r 指；g 只被 j 指）。
+
+\textbf{㈡} 寬度優先（資結書第~21.3~節）的拜訪順序是 a; b, x; c, d, k; e, h, l; f, n, m，拜訪到的集合和 DFS 一樣，
+因為兩者拜訪的都是「從 a 走得到的所有節點」，只是順序不同。 不會被訪問到的仍是 \textbf{g、j、p、q、r}。
+
+\textbf{㈢ 哪些是垃圾。} 一個 heap 節點還有用，若且唯若從某個全域變數（根）沿指標走得到它。 p$\to$a 消除後，根只剩
+q、r（p 不再指向任何節點）：
+\begin{itemize}
+\item 從 q 走得到：k, l, m, n。
+\item 從 r 走得到：j, e, g, f, h, m, n。
+\end{itemize}
+heap 節點共 $14$ 個（a～h、j～n、x），扣掉上面這 $9$ 個（e, f, g, h, j, k, l, m, n），剩下的
+\textbf{a、b、c、d、x} 是垃圾。 注意 a、b、c 形成一個環（$a \to b \to c \to a$），彼此互相指著，所以單純的
+引用計數（計數變 $0$ 才回收）回收不了它們。
+
+\textbf{方法：試刪除。} 題目限制只能從 a 出發，不能從所有根做一般的標記--清除。 做法是每個節點平時就維護
+\textbf{引用計數} $\mathit{rc}$（有幾個指標指向它）。 p$\to$a 被消除時，a 的計數減 $1$ 但沒變成 $0$（c 還指著它），
+a 就成為「可能是垃圾」的候選。 從 a 出發做三趟 DFS：
+\begin{enumerate}
+\item \textbf{標灰（扣掉內部指標）}：從 a 做 DFS，把走到的節點都標成\textbf{灰}；每走一條邊 $u \to v$（$u$ 是灰色），
+就把 $\mathit{rc}[v]$ 減 $1$。 走完之後，灰色節點的 $\mathit{rc}$ 只剩下「從這群節點以外指進來的指標數」。
+\item \textbf{掃描}：再從 a 走一次灰色節點。 若 $\mathit{rc}[v] > 0$，表示有外面的指標指著它，它一定還活著：把它
+和它走得到的節點都標成\textbf{黑}，並沿途把剛才扣掉的計數加回來（每走一條邊 $v \to w$ 就 $\mathit{rc}[w]$ 加 $1$）。
+若 $\mathit{rc}[v] = 0$，暫時標成\textbf{白}，繼續往下掃。 （白的節點之後若被某個黑節點走到，會改成黑。）
+\item \textbf{收集}：最後仍是白色的節點就是垃圾，釋放它們。
+\end{enumerate}
+\begin{pseudo}{從候選節點 $s$ 出發的試刪除}
+\Procedure{MarkGray}{$u$}
+    \If{$u.\mathit{color} \ne \text{gray}$}
+        \State $u.\mathit{color} \gets \text{gray}$
+        \For{$u$ 的每個指標指向的 $v$}
+            \State $v.\mathit{rc} \gets v.\mathit{rc} - 1$
+            \State \Call{MarkGray}{$v$}
+        \EndFor
+    \EndIf
+\EndProcedure
+\Procedure{Scan}{$u$}
+    \If{$u.\mathit{color} = \text{gray}$}
+        \If{$u.\mathit{rc} > 0$}
+            \State \Call{ScanBlack}{$u$}
+        \Else
+            \State $u.\mathit{color} \gets \text{white}$
+            \For{$u$ 指向的每個 $v$} \State \Call{Scan}{$v$} \EndFor
+        \EndIf
+    \EndIf
+\EndProcedure
+\Procedure{ScanBlack}{$u$}
+    \State $u.\mathit{color} \gets \text{black}$
+    \For{$u$ 指向的每個 $v$}
+        \State $v.\mathit{rc} \gets v.\mathit{rc} + 1$
+        \If{$v.\mathit{color} \ne \text{black}$} \State \Call{ScanBlack}{$v$} \EndIf
+    \EndFor
+\EndProcedure
+\Statex
+\State \Call{MarkGray}{$s$};\ \Call{Scan}{$s$};\ 釋放所有白色節點
+\end{pseudo}
+
+\textbf{在圖 1 上執行}（$s = a$）。 p$\to$a 消除後各節點的 $\mathit{rc}$，以及標灰後的值：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{l*{12}{c}}
+\toprule
+節點 & a & b & c & x & d & e & f & h & n & k & l & m \\
+\midrule
+$\mathit{rc}$（原來） & 1 & 1 & 1 & 1 & 2 & 3 & 1 & 2 & 2 & 2 & 1 & 2 \\
+$\mathit{rc}$（標灰後） & 0 & 0 & 0 & 0 & 0 & 2 & 0 & 0 & 0 & 1 & 0 & 1 \\
+最後顏色 & 白 & 白 & 白 & 白 & 白 & 黑 & 黑 & 黑 & 黑 & 黑 & 黑 & 黑 \\
+\bottomrule
+\end{tabular}
+\end{center}
+標灰時扣掉的是這 $12$ 個節點之間的 $15$ 條邊。 e 還剩 $2$（g、j 指著它），k 剩 $1$（q），m 剩 $1$（g）——它們
+有外面的指標。 掃描時 a, b, c, d 的計數是 $0$，標白；到 e 時 $\mathit{rc} = 2 > 0$，e 和它走得到的 f, h, n 標黑並
+加回計數；x 標白；到 k 時 $\mathit{rc} = 1 > 0$，k, l, m 標黑。 最後白色的是 \textbf{a、b、c、d、x}，和前面的
+分析相同。 釋放它們之後，黑色節點加回來的計數正好扣掉了垃圾節點的指標（例如 e 剩 $2$、k 剩 $1$），和實際
+情況一致。
+
+\textbf{每個節點要存的資料}：
+\begin{itemize}
+\item \textbf{引用計數} $\mathit{rc}$：一個整數，記錄有幾個指標指向它。
+\item \textbf{顏色}：黑、灰、白三種，$2$ 個位元就夠，用來記錄這個節點在試刪除中的狀態，也兼做 DFS 的「已拜訪」標記。
+\end{itemize}
+三趟 DFS 都只走從 a 出發可達的節點和邊，時間和這部分的大小成正比。 DFS 的遞迴需要堆疊；若連堆疊空間都不能
+用，可以改用指標反轉（Deutsch--Schorr--Waite）在走訪時暫時把指標反過來記住回去的路，每個節點只要再多存幾個
+位元，記錄目前走到第幾個指標。 （如果允許從所有根出發，最簡單的是標記--清除：從 q、r 做 DFS 標記，沒被標到
+的就是垃圾，每節點只需 $1$ 個標記位元；但題目要求只從 a 出發。）
+\end{pastsoln}

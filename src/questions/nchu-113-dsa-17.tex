@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nchu-113-dsa-17}]{中興資工所甲組 113 學年度 選擇題第 17 題}
+（單選；答錯不倒扣）
+
+You are planning a promotional event in a city, where you need to hang banners at various locations. Each
+location has a specific time window during which the banner can be hung. Given a list of locations with
+their respective time windows represented as pairs (start\_time, end\_time), your task is to maximize the
+number of locations where the banners can be hung without overlapping time windows. What is the most
+appropriate algorithm for planning the banner placement? (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item A greedy algorithm that selects the location with the earliest start time first.
+\item A greedy algorithm that selects the location with the shortest available time window first.
+\item A greedy algorithm that selects the location with the earliest end time first.
+\item A dynamic programming approach that considers all possible combinations of locations.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+這就是活動選擇問題（資結書第~19.1~節）：選最多個兩兩不重疊的區間。 依結束時間排序，每次選「結束最早、
+而且和已選的不重疊」的區間，是最佳解（資結書第~19.1.5~節的交換論證：任何最佳解的第一個區間都可以換成
+結束最早的那個，不會變少）。 排序 $O(n \log n)$，掃一遍 $O(n)$。
+
+另外三個：
+\begin{itemize}
+\item (A) 最早開始：反例 $[0, 10)$、$[1, 2)$、$[3, 4)$。 先選 $[0, 10)$，後兩個都和它重疊，只得 $1$ 個；最佳是
+$[1, 2)$、$[3, 4)$ 兩個。
+\item (B) 最短區間：反例 $[0, 5)$、$[4, 7)$、$[6, 11)$。 最短的 $[4, 7)$ 和另外兩個都重疊，只得 $1$ 個；最佳是
+$[0, 5)$、$[6, 11)$ 兩個。
+\item (D) 列舉所有組合是 $2^n$ 種，雖然正確但是指數時間；這題不需要動態規劃（動態規劃用在帶權重的區間排程，
+資結書第~18.7.3~節）。
+\end{itemize}
+\end{pastsoln}

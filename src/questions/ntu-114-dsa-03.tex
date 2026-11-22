@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:ntu-114-dsa-03}]{臺大資網所 114 學年度 第 3 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Consider the following five DNA sequences:
+\begin{enumerate}[label=\texttt{\alph*)}]
+\item \texttt{ATCGTA}
+\item \texttt{ATCGTT}
+\item \texttt{GCATAG}
+\item \texttt{GCATAC}
+\item \texttt{TTAGCG}
+\end{enumerate}
+Which of the following statements is correct regarding the application of a c-means clustering algorithm to
+these sequences ($c=3$)?
+\begin{enumerate}[label=(\Alph*)]
+\item The algorithm will always halt with exactly three clusters regardless of the chosen distance metric.
+\item Using Hamming distance as the similarity measure, sequences \texttt{a} and \texttt{b} will always be in the
+same cluster.
+\item The algorithm guarantees finding the globally optimal clustering solution for these sequences.
+\item Using k-mer frequency vectors ($k=2$) as features, sequences \texttt{c} and \texttt{d} will never be in the
+same cluster.
+\item The time complexity of the k-means algorithm for clustering these sequences is $O(n)$, where $n$ is the
+number of sequences.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{說明}。 這題考的 $k$-means 分群（題目叫 c-means，$c = 3$）不在資結書的範圍，這裡先把演算法講清楚。
+$k$-means（Lloyd 演算法）是一種局部搜尋：
+\begin{enumerate}
+\item 選 $c$ 個初始中心（例如隨機挑 $c$ 個資料點）。
+\item \textbf{分配}：每個資料點分到距離最近的中心。
+\item \textbf{更新}：每一群的中心改成該群的平均（字串用 Hamming 距離時，改成每個位置的多數字元）。
+\item 重複 2、3 直到分配不再改變。
+\end{enumerate}
+用平方歐氏距離時，每一步都讓「每點到所屬中心的距離平方和」不增加，而分法只有有限多種，所以一定會停；但停下來的
+只是局部最佳，結果取決於初始中心。
+
+答案：(E)（說明見下，這題的選項都有可議之處，(E) 是唯一說得通的）。
+
+先算出 Hamming 距離（後面會用到）：
+\begin{center}
+\begin{tabular}{c|ccccc}
+ & a & b & c & d & e \\ \hline
+a & 0 & 1 & 6 & 6 & 4 \\
+b & 1 & 0 & 6 & 6 & 4 \\
+c & 6 & 6 & 0 & 1 & 4 \\
+d & 6 & 6 & 1 & 0 & 5 \\
+e & 4 & 4 & 4 & 5 & 0
+\end{tabular}
+\end{center}
+直覺的分法是 $\{a, b\}$、$\{c, d\}$、$\{e\}$。
+
+\begin{itemize}
+\item[(A)] 錯。 「不論距離怎麼定」都會停的保證不成立：更新步驟取平均，只有在平方歐氏距離下才是讓該群成本最小的
+中心；換成別的距離（例如 $L_1$ 或 Hamming 卻仍取平均），成本不一定下降，可能在幾種分法之間來回。 另外某一群
+在分配後可能沒有任何點，最後不一定剛好三群。
+\item[(B)] 錯。 初始中心選 $a$、$b$、$e$ 時：$a$、$b$ 各自到自己的中心距離 $0$，分在不同群；$c$ 到三個中心的距離是
+$6, 6, 4$，$d$ 是 $6, 6, 5$，都分給 $e$。 三群是 $\{a\}$、$\{b\}$、$\{c, d, e\}$。 更新後前兩群的中心不變，第三群
+每個位置取多數字元得 \texttt{GCATAG}（就是 $c$），再分配一次 $a$、$b$ 仍留在自己那群，演算法停止。 $a$、$b$ 不在
+同一群，所以「always」不成立。
+\item[(C)] 錯。 $k$-means 只保證收斂到局部最佳，上面 (B) 的結果就比 $\{a, b\}, \{c, d\}, \{e\}$ 差。 一般情況下
+找全域最佳的 $k$-means 分群是 NP-hard 問題。
+\item[(D)] 錯。 2-mer 次數向量：$c$ = \{GC, CA, AT, TA, AG\}、$d$ = \{GC, CA, AT, TA, AC\}，五個裡有四個相同，歐氏
+距離 $\sqrt{2}$，是所有向量對中最近的一類。 初始中心取 $a$、$c$、$e$ 時，$d$ 到 $c$ 的距離 $\sqrt 2$ 比到 $a$、$e$ 的
+$\sqrt 6$ 小，分到 $c$ 那群，所以「never」不成立。
+\item[(E)] 對（照一般的說法）。 每一輪對每個點算到 $c$ 個中心的距離，序列長度固定是 $6$，$c = 3$ 也固定，一輪是
+$O(n c L) = O(n)$；把迭代次數當成常數（實務上通常很少輪），總時間是 $O(n)$，也就是常說的「$k$-means 對資料筆數是
+線性的」。 嚴格說，Lloyd 演算法最壞要跑的輪數可以隨 $n$ 指數成長，所以 (E) 是在「輪數視為常數」的前提下才對。
+\end{itemize}
+\end{pastsoln}

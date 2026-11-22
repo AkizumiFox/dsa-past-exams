@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:df3-097-ds-04}]{地方三等資訊處理 97 年 第四題}
+（申論；10 分）
+
+佇列（queue）在實作時，可用一維陣列（one-dimensional array）或用單向鏈結串列（singly linked list）
+來儲存。
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 請說明此兩種資料結構在處理佇列（queue）元素的 insertion 及 deletion 時，有何差異。（5 分）
+\item[㈡] 請說明此兩種資料結構各自的優缺點。（5 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+佇列是先進先出：insertion（enqueue）加在尾端，deletion（dequeue）從前端取出（資結書第~6.2~節）。
+
+\textbf{㈠ insertion 與 deletion 的差異}。
+\begin{itemize}
+\item \textbf{陣列}：用大小為 $N$ 的陣列 $Q[0..N-1]$ 和兩個下標 $\mathit{front}$、$\mathit{rear}$。 插入時
+$\mathit{rear} \gets (\mathit{rear} + 1) \bmod N$ 再放入 $Q[\mathit{rear}]$；刪除時
+$\mathit{front} \gets (\mathit{front} + 1) \bmod N$ 再取出。 下標用取餘數繞回開頭（環狀陣列，資結書
+第~6.2.2~節），否則前面刪掉的空間用不回來，$\mathit{rear}$ 走到底就以為滿了。 插入前要檢查\textbf{是否已滿}
+（$(\mathit{rear} + 1) \bmod N = \mathit{front}$，這種寫法要空一格來區分空和滿；或另外記元素個數），
+滿了就不能插入（或要配置更大的陣列、整批搬過去）。 兩個操作都只改下標、不搬資料，$O(1)$。
+\item \textbf{單向鏈結串列}：保留指向第一個節點的 $\mathit{front}$ 和指向最後一個節點的 $\mathit{rear}$。
+插入時配置一個新節點，接在 $\mathit{rear}$ 後面，$\mathit{rear}$ 改指它；刪除時取出 $\mathit{front}$ 指的
+節點，$\mathit{front}$ 改指下一個，釋放舊節點。 刪到空時要把 $\mathit{rear}$ 也設成 \NIL；插入到空佇列時
+$\mathit{front}$ 也要指向新節點。 不會滿（只受限於可用記憶體），但每次插入、刪除都要配置、釋放記憶體。
+兩個操作也都是 $O(1)$。 注意方向：插在尾、刪在頭才是 $O(1)$；若反過來從尾端刪除，單向串列找不到
+尾端的前一個節點，要 $O(n)$。
+\end{itemize}
+
+\textbf{㈡ 優缺點}。
+\begin{center}
+\small
+\begin{tabular}{p{0.15\linewidth}p{0.38\linewidth}p{0.38\linewidth}}
+\toprule
+ & 陣列（環狀） & 單向鏈結串列 \\
+\midrule
+優點 & 不需要指標欄位，空間只放資料；存取快、記憶體連續，快取表現好；不必每次配置、釋放記憶體；
+可以用下標直接讀第 $k$ 個元素 & 大小動態，有多少元素用多少節點，不會滿；不必事先估計最大長度 \\
+\midrule
+缺點 & 大小要事先決定：估太大浪費空間，估太小會滿（擴充要整批搬移，$O(n)$）；環狀陣列要處理空與滿的判斷 &
+每個節點多一個指標欄位的空間；每次插入、刪除都要配置、釋放記憶體，常數較大；節點分散，快取表現差；
+要找第 $k$ 個元素得從頭走 \\
+\bottomrule
+\end{tabular}
+\end{center}
+簡單說：元素個數有明確上限、追求速度時用陣列；個數變化大、無法預估上限時用鏈結串列。
+\end{pastsoln}

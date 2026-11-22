@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:nchu-114-dsa-21}]{中興資工所甲組 114 學年度 計算題第 1 題}
+（計算）
+
+(5\%) You are given the following set of activities, where each activity has a start time and an end time. Your task is to select the maximum number of non-overlapping activities that can be scheduled.\\
+Here are the activities:
+\begin{center}
+\begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
+\hline
+Activity & Start Time & End Time \\ \hline
+A & 1 & 3 \\ \hline
+B & 2 & 5 \\ \hline
+C & 4 & 6 \\ \hline
+D & 6 & 8 \\ \hline
+E & 5 & 7 \\ \hline
+F & 8 & 9 \\ \hline
+\end{tabular}
+\end{center}
+Using a \textbf{greedy algorithm}, compute the maximum number of non-overlapping activities that can be selected.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$4$ 個（A、C、D、F）。
+
+題目沒有說一個活動結束的時刻、另一個活動剛好開始，算不算重疊。 一般的寫法（也是資結書第~19.1~節的
+寫法）把時段看成半開區間 $[s_i, f_i)$，首尾相接不算重疊；下面先照這個解讀做，最後再補閉區間的答案。
+
+用資結書虛擬碼~19.1 的貪心法：依結束時刻由小到大排好，是 A、B、C、E、D、F（沒有結束時刻相同的）。
+逐一檢查，$\mathit{last}$ 是檢查之前最後選進來那一個的結束時刻：
+\begin{center}
+\begin{tabular}{cccll}
+\toprule
+活動 & $[s, f)$ & $\mathit{last}$ & $s \ge \mathit{last}$？ & 結果 \\
+\midrule
+A & $[1, 3)$ & -- & -- & 選（第一個），$\mathit{last} \gets 3$ \\
+B & $[2, 5)$ & 3 & $2 < 3$ & 跳過 \\
+C & $[4, 6)$ & 3 & $4 \ge 3$ & 選，$\mathit{last} \gets 6$ \\
+E & $[5, 7)$ & 6 & $5 < 6$ & 跳過 \\
+D & $[6, 8)$ & 6 & $6 \ge 6$ & 選，$\mathit{last} \gets 8$ \\
+F & $[8, 9)$ & 8 & $8 \ge 8$ & 選，$\mathit{last} \gets 9$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+選到 A、C、D、F，最多 $\mathbf{4}$ 個。 為什麼「最早結束的先選」一定能選到最多個，見資結書第~19.1.5~節
+的證明：任何一組最佳解的第一個活動都可以換成最早結束的 A，不會和後面的衝突，再對剩下的活動歸納。
+
+如果把時段看成閉區間（時刻 $6$ 同時屬於 C 和 D，算重疊），相容的條件改成 $s > \mathit{last}$：選 A
+（$\mathit{last} = 3$），跳過 B，選 C（$4 > 3$，$\mathit{last} = 6$），跳過 E（$5 \le 6$）和 D（$6 \le 6$），
+選 F（$8 > 6$），答案是 $3$ 個（A、C、F）。 作答時寫一句你採用哪一種解讀。
+\end{pastsoln}

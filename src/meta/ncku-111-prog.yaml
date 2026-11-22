@@ -1,0 +1,25 @@
+paper: ncku-111-prog
+volume: 2
+school: 成大
+dept: 資訊聯招
+year: 111
+subject: 程式設計
+instructions: 本試題不可使用計算機。 請於答案卷(卡)作答，於本試題紙上作答者，不予計分。 Part I. 資料結構 (50\%)：第 1–12 題。Data Structures：There are 12 problem sets in the paper. You shall provide a “single” table in “1-page” to summarize your answers.（原卷附一張作答摘要表，列出各題各小題的格子。） Part II. 演算法 (50\%)：第 13–17 題。
+questions:
+  - {id: ncku-111-prog-01, label: 第 1 題, chapter: 6}
+  - {id: ncku-111-prog-02, label: 第 2 題, chapter: 13}
+  - {id: ncku-111-prog-03, label: 第 3 題, chapter: 10}
+  - {id: ncku-111-prog-04, label: 第 4 題, chapter: 12}
+  - {id: ncku-111-prog-05, label: 第 5 題, chapter: 11}
+  - {id: ncku-111-prog-06, label: 第 6 題, chapter: 11}
+  - {id: ncku-111-prog-07, label: 第 7 題, chapter: 21}
+  - {id: ncku-111-prog-08, label: 第 8 題, chapter: 12}
+  - {id: ncku-111-prog-09, label: 第 9 題, chapter: 14}
+  - {id: ncku-111-prog-10, label: 第 10 題, chapter: 7}
+  - {id: ncku-111-prog-11, label: 第 11 題, chapter: 8}
+  - {id: ncku-111-prog-12, label: 第 12 題, chapter: 8}
+  - {id: ncku-111-prog-13, label: 第 13 題, chapter: 2}
+  - {id: ncku-111-prog-14, label: 第 14 題, chapter: 18}
+  - {id: ncku-111-prog-15, label: 第 15 題, chapter: 21}
+  - {id: ncku-111-prog-16, label: 第 16 題, chapter: 25}
+  - {id: ncku-111-prog-17, label: 第 17 題, chapter: 29}

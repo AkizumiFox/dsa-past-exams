@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:gk3-114-ds-04}]{高考三級資訊處理 114 年 第四題}
+（申論；20 分）
+
+根據下列的虛擬碼，若 n = 21 則傳回的答案為何？請說明。其中 floor()為數學上的地板函數（floor function）。
+（20 分）
+
+\begin{quote}
+function splitSum(n: integer) returns integer\\
+\hspace*{1.5em}if n <= 1 then\\
+\hspace*{3em}return 1\\
+\hspace*{1.5em}a $\leftarrow$ floor(n / 2)\\
+\hspace*{1.5em}b $\leftarrow$ floor(n / 3)\\
+\hspace*{3em}return splitSum(a) + splitSum(b)
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\mathrm{splitSum}(21) = \mathbf{9}$。 本題要寫出遞迴式並展開計算，歸在第~2~章。
+
+原卷最後一行 \texttt{return splitSum(a) + splitSum(b)} 的縮排和 \texttt{return 1} 對齊，看起來像在
+\texttt{if} 裡面；但那樣的話 $n \ge 2$ 時函式不會回傳任何值，\texttt{a}、\texttt{b} 也白算了。 所以把它
+讀成函式的最後一行（$n \ge 2$ 時執行），縮排只是排版的問題。
+
+寫成數學式，令 $S(n) = \mathrm{splitSum}(n)$：
+\[
+S(n) = \begin{cases} 1, & n \le 1, \\ S(\lfloor n/2 \rfloor) + S(\lfloor n/3 \rfloor), & n \ge 2. \end{cases}
+\]
+由小往大算出用得到的值（每個值只算一次，算過的直接拿來用）：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$n$ & $\lfloor n/2 \rfloor$ & $\lfloor n/3 \rfloor$ & $S(n)$ \\
+\midrule
+$0$ & & & $1$（$n \le 1$） \\
+$1$ & & & $1$（$n \le 1$） \\
+$2$ & $1$ & $0$ & $S(1) + S(0) = 1 + 1 = 2$ \\
+$3$ & $1$ & $1$ & $S(1) + S(1) = 1 + 1 = 2$ \\
+$5$ & $2$ & $1$ & $S(2) + S(1) = 2 + 1 = 3$ \\
+$7$ & $3$ & $2$ & $S(3) + S(2) = 2 + 2 = 4$ \\
+$10$ & $5$ & $3$ & $S(5) + S(3) = 3 + 2 = 5$ \\
+$21$ & $10$ & $7$ & $S(10) + S(7) = 5 + 4 = 9$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以 $\mathrm{splitSum}(21) = 9$。
+
+另一種看法：每次呼叫要嘛回傳 $1$（$n \le 1$，遞迴樹的葉子），要嘛回傳兩個子呼叫的和，所以 $S(n)$ 就是
+遞迴樹的葉子數。 $S(21)$ 的遞迴樹：
+\begin{center}
+\begin{tikzpicture}[v/.style={font=\small,inner sep=1.5pt},
+    level distance=8.5mm, level 1/.style={sibling distance=44mm},
+    level 2/.style={sibling distance=22mm}, level 3/.style={sibling distance=11mm},
+    level 4/.style={sibling distance=7mm}]
+\node[v] {21}
+  child {node[v] {10}
+    child {node[v] {5} child {node[v] {2} child {node[v] {\textbf{1}}} child {node[v] {\textbf{0}}}} child {node[v] {\textbf{1}}}}
+    child {node[v] {3} child {node[v] {\textbf{1}}} child {node[v] {\textbf{1}}}}}
+  child {node[v] {7}
+    child {node[v] {3} child {node[v] {\textbf{1}}} child {node[v] {\textbf{1}}}}
+    child {node[v] {2} child {node[v] {\textbf{1}}} child {node[v] {\textbf{0}}}}};
+\end{tikzpicture}
+\end{center}
+粗體的葉子（$n \le 1$）有 $9$ 個，答案一樣是 $9$。 整棵樹共 $17$ 次呼叫（$9$ 個葉子、$8$ 個內部節點），
+內部節點各做一次加法，共 $8$ 次加法。
+\end{pastsoln}

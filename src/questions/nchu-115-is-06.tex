@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:nchu-115-is-06}]{中興資工所乙組 115 學年度 第 6 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Depth-first search uses which data structure?
+
+A.~Queue \qquad B.~Stack \qquad C.~Linked list \qquad D.~Array
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+深度優先搜尋每次往一個還沒走過的鄰居深入，走到底才退回最近一個還有路的頂點，「最後進來的先
+處理」正是堆疊的後進先出。 遞迴寫法用的是系統的呼叫堆疊；遞迴太深時，可以改用自己的堆疊
+（資結書第~21.4.6~節）。
+\begin{itemize}
+\item A 錯：佇列是先進先出，配上同樣的流程得到的是廣度優先搜尋（資結書第~21.3~節），一層一層
+往外擴。
+\item C、D 錯：鏈結串列、陣列是存資料的方式（鄰接串列、鄰接矩陣都用得到它們），不是決定
+「下一個拜訪誰」的那個結構。 堆疊本身可以用陣列或串列實作，但題目問的是 DFS 靠哪一種
+資料結構運作，答案是堆疊。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nchu-115-is-22}]{中興資工所乙組 115 學年度 第 22 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You have a sorted list of product prices and want to quickly find whether a given price exists.
+Which algorithm should you use?
+
+A.~Linear Search \qquad B.~Binary Search \qquad C.~DFS \qquad D.~BFS
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+資料已經排好序，而且要查的是「某個值在不在」，正是二分搜尋（資結書第~17.1~節，虛擬碼~17.1）：
+每次和中間的數比，相等就找到；比較小就只留左半、比較大就只留右半，每一步範圍減半，最多比
+$\lfloor \lg n \rfloor + 1$ 次，$O(\log n)$。 前提是 list 可以用索引直接取中間那一個（陣列）；
+如果是鏈結串列，走到中間就要 $O(n)$，二分搜尋就沒有好處了。
+\begin{itemize}
+\item A：線性搜尋也找得到，但 $O(n)$，沒有用到「已排序」這個條件。
+\item B 對。
+\item C、D 錯：DFS、BFS 是走訪圖的方法，用在一串排好的價格上，頂多退化成一個一個看，也就是
+線性搜尋。
+\end{itemize}
+\end{pastsoln}

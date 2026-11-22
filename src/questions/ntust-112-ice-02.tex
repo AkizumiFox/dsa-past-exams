@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntust-112-ice-02}]{臺科大資工所 112 學年度 第 2 題}
+（問答）
+
+(10\%) Consider the function \textbf{func} as shown below, where the two lists list1 and list2 are
+both ordered in ascending order.
+\begin{minted}[fontsize=\small]{c}
+struct item
+{
+   int value;
+   struct item *next;
+};
+
+int func(struct item *list1, struct item *list2)
+{
+   struct item *ptr1, *ptr2;
+   int count = 0;
+   ptr1 = list1;
+   ptr2 = list2;
+   while ((ptr1 != NULL)&&(ptr2 != NULL))
+   {
+      if (ptr1->value < ptr2->value)
+         ptr1 = ptr1 ->next;
+      else if (ptr1->value > ptr2->value)
+         ptr2 = ptr2->next;
+      else
+      {
+         ptr1 = ptr1->next;
+         ptr2 = ptr2->next;
+         count++;
+      }
+   }
+   return count;
+}
+\end{minted}
+If $m$ and $n$ are the number of items in list1 and list2 respectively, what is the worst-case time
+complexity of func(list1, list2)?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最壞情況 $\Theta(m + n)$（寫成 $O(m + n)$ 也可以）。
+
+\textbf{上界。} 迴圈每一輪做一次（或兩次）比較，每一輪至少讓 \texttt{ptr1}、\texttt{ptr2} 其中一個
+前進一格。 \texttt{ptr1} 最多前進 $m$ 次，\texttt{ptr2} 最多 $n$ 次。 設只動 \texttt{ptr1} 的有 $a$ 輪、
+只動 \texttt{ptr2} 的有 $b$ 輪、兩個都動的（值相等）有 $c$ 輪，則 $a + c \le m$、$b + c \le n$，輪數
+是 $a + b + c$。 迴圈在其中一個變成 \texttt{NULL} 時停：
+\begin{itemize}
+\item 若最後一輪是值相等、兩個同時變成 \texttt{NULL}，則 $c \ge 1$，輪數
+$a + b + c \le (m - c) + (n - c) + c = m + n - c \le m + n - 1$。
+\item 否則停下時只有一個走完，例如 \texttt{ptr1} 走完、\texttt{ptr2} 還沒，$b + c \le n - 1$，輪數
+$\le m + n - 1$。 反過來一樣。
+\end{itemize}
+所以最多 $m + n - 1$ 輪，每輪 $\Theta(1)$，時間 $O(m + n)$。
+
+\textbf{達得到。} 讓兩條串列沒有相同的值，而且全部裡最大和第二大的值分在兩條，例如 list1 是
+$1, 2, \ldots, m - 1, m + n$，list2 是 $m, m + 1, \ldots, m + n - 1$。 \texttt{ptr1} 先走過
+$1, \ldots, m - 1$（$m - 1$ 輪），停在 $m + n$；之後 \texttt{ptr2} 走過 list2 全部 $n$ 個才變成
+\texttt{NULL}。 共 $m + n - 1$ 輪，所以最壞情況是 $\Theta(m + n)$。
+
+函式算的是兩條串列共同的值有幾個（兩條各自沒有重複值時，就是交集的大小），走法和資結書第~5.5~節
+合併兩條排好的串列（資結書虛擬碼~5.13）一樣，只是不接節點。 最好的情況是一條串列的值全部比另一條
+小，$\min(m, n)$ 輪就停，$\Theta(\min(m, n))$。
+\end{pastsoln}

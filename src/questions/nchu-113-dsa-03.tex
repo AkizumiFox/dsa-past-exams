@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:nchu-113-dsa-03}]{中興資工所甲組 113 學年度 選擇題第 3 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+\textbf{Huffman Coding} is a technique of compressing data to reduce its size without losing any of the
+details. Let S= bcaadddccacacac'' be 15 characters to be encoded by the Huffman Code. Without the
+Huffman Coding, the total size of the string is 120 bits (8 bits for each character). Suppose the
+frequency of a character can be represented by the number of bits corresponding the frequency; for
+example, if a character has a frequency of 5, we need 5 bits to denote this frequency. Under this
+assumption, what is the size of the string after the Huffman encoding?
+
+(A)~75 \qquad (B)~76 \qquad (C)~85 \qquad (D)~87 \qquad (E)~None of these.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+題目說的「編碼後的大小」不只是編碼後的資料，還包含解碼端重建霍夫曼樹需要的表：每個字元本身（8 位元）
+和它的頻率。 題目那句奇怪的假設（頻率 $f$ 用 $f$ 個位元表示）就是在規定頻率那一欄怎麼算。
+
+\textbf{數頻率。} $S = \texttt{bcaadddccacacac}$：$a$ 出現 $5$ 次、$b$ $1$ 次、$c$ $6$ 次、$d$ $3$ 次，合計 $15$。
+
+\textbf{建霍夫曼樹}（資結書第~19.3~節，每次合併兩個最小的）：
+\begin{enumerate}
+\item 合併 $b(1)$、$d(3)$ 得 $4$；剩 $4, 5, 6$。
+\item 合併 $4$、$a(5)$ 得 $9$；剩 $6, 9$。
+\item 合併 $c(6)$、$9$ 得 $15$。
+\end{enumerate}
+每一步最小的兩個都唯一，沒有平手，所以碼長是確定的：$c$ 在根的下一層，碼長 $1$；$a$ 碼長 $2$；$b$、$d$
+碼長 $3$。 例如 $c = 0$、$a = 11$、$b = 100$、$d = 101$。
+
+\textbf{三部分加起來：}
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+字元 & 頻率 & 碼長 & 資料位元（頻率 $\times$ 碼長） & 頻率欄位元 \\
+\midrule
+$a$ & 5 & 2 & 10 & 5 \\
+$b$ & 1 & 3 & 3 & 1 \\
+$c$ & 6 & 1 & 6 & 6 \\
+$d$ & 3 & 3 & 9 & 3 \\
+\midrule
+合計 & 15 & & 28 & 15 \\
+\bottomrule
+\end{tabular}
+\end{center}
+字元表 $4 \times 8 = 32$ 位元，頻率欄 $1 + 6 + 5 + 3 = 15$ 位元，編碼後的資料 $28$ 位元，總共
+$32 + 15 + 28 = 75$ 位元，選 (A)。 只算資料的話是 $28$，不在選項裡；這也說明題目要的是含表的大小。
+\end{pastsoln}

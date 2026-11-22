@@ -1,0 +1,142 @@
+\begin{pastexam}[label={px:df3-099-ds-02}]{地方三等資訊處理 99 年 第二題}
+（申論；25 分）
+
+請用二元樹（binary tree）針對 10 筆資料：「陳、劉、王、蘇、高、胡、蔡、何、簡、莊」設計出以鏈結（link）表示的二元樹資料結構，10 筆資料的排序方式可自行決定（例如，依據筆劃數、注音符號、拼音或其他）。（每小題 5 分，共 25 分）
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請用任意程式語言寫出插入（insert）一個節點的演算法。
+\item[㈡] 請用任意程式語言寫出刪除（delete）一個節點的演算法。
+\item[㈢] 請用任意程式語言寫出中序（inorder）尋訪的演算法。
+\item[㈣] 請將「陳、劉、王、蘇、高、胡、蔡、何、簡、莊」及你決定並明確寫出的排序方式，用插入演算法逐一插入二元樹，請畫出最後的二元樹。
+\item[㈤] 請分析二元樹搜尋（searching）的 O（）時間複雜度。
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+題目要的是\textbf{二元搜尋樹}（資結書第~9~章）：需要一個排序方式來決定往左或往右。 筆劃數有「陳」算 $11$ 畫還是
+$16$ 畫（部首「阝」算 $3$ 畫或 $8$ 畫）的爭議，也可能同筆劃；這裡用\textbf{漢語拼音的字母順序}，每個字的拼音都不同，
+比較起來沒有歧義：
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\toprule
+陳 & 劉 & 王 & 蘇 & 高 & 胡 & 蔡 & 何 & 簡 & 莊 \\
+Chen & Liu & Wang & Su & Gao & Hu & Cai & He & Jian & Zhuang \\
+\bottomrule
+\end{tabular}
+\end{center}
+排序：Cai $<$ Chen $<$ Gao $<$ He $<$ Hu $<$ Jian $<$ Liu $<$ Su $<$ Wang $<$ Zhuang（逐字母比，例如 Cai 和 Chen 第二個
+字母 a $<$ h）。 程式用 C，鍵值存拼音字串，用 \texttt{strcmp} 比較。
+
+\textbf{節點結構}（鏈結表示）：
+\begin{minted}[fontsize=\small]{c}
+typedef struct node {
+    char name[8];             /* surname (UTF-8) */
+    char key[8];              /* pinyin, the sort key */
+    struct node *left, *right;
+} Node;
+\end{minted}
+
+\textbf{㈠ 插入}。 從根往下比，比目前節點小往左、大往右，走到空指標的位置接上新節點（資結書虛擬碼~9.6）。
+\begin{minted}[fontsize=\small]{c}
+Node *insert(Node *root, const char *name, const char *key) {
+    if (root == NULL) {                    /* empty spot: new node */
+        Node *p = malloc(sizeof(Node));
+        strcpy(p->name, name); strcpy(p->key, key);
+        p->left = p->right = NULL;
+        return p;
+    }
+    int c = strcmp(key, root->key);
+    if (c < 0)      root->left  = insert(root->left,  name, key);
+    else if (c > 0) root->right = insert(root->right, name, key);
+    /* c == 0: already in the tree */
+    return root;
+}
+\end{minted}
+呼叫方式 \texttt{root = insert(root, "陳", "Chen");}。 時間 $O(h)$，$h$ 是樹高。
+
+\textbf{㈡ 刪除}。 先找到要刪的節點，分三種情況（資結書虛擬碼~9.7）：沒有子節點，直接拿掉；只有一個子節點，讓子節點
+取代它；有兩個子節點，用右子樹的最小節點（中序後繼）的資料蓋過它，再到右子樹刪掉那個後繼（後繼沒有左子節點，屬於
+前兩種情況）。
+\begin{minted}[fontsize=\small]{c}
+Node *delete(Node *root, const char *key) {
+    if (root == NULL) return NULL;             /* not found */
+    int c = strcmp(key, root->key);
+    if (c < 0)      root->left  = delete(root->left,  key);
+    else if (c > 0) root->right = delete(root->right, key);
+    else if (root->left == NULL || root->right == NULL) {
+        Node *child = root->left ? root->left : root->right;
+        free(root);                            /* 0 or 1 child */
+        return child;
+    } else {                                   /* 2 children */
+        Node *s = root->right;
+        while (s->left != NULL) s = s->left;   /* min of right subtree */
+        strcpy(root->name, s->name); strcpy(root->key, s->key);
+        root->right = delete(root->right, s->key);
+    }
+    return root;
+}
+\end{minted}
+例：在 ㈣ 的樹刪除「劉」（Liu，有兩個子節點），右子樹最小的是「蘇」（Su），把 Su 搬到劉的位置，再從右子樹刪掉原本
+的 Su（葉節點）。 時間 $O(h)$。
+
+\textbf{㈢ 中序尋訪}。 左子樹、自己、右子樹（資結書虛擬碼~7.1）：
+\begin{minted}[fontsize=\small]{c}
+void inorder(Node *root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    printf("%s ", root->name);
+    inorder(root->right);
+}
+\end{minted}
+每個節點拜訪一次，$\Theta(n)$。 對二元搜尋樹做中序尋訪，會依鍵值由小到大輸出（資結書定理~9.1）。
+
+\textbf{㈣}。 依題目給的順序陳、劉、王、蘇、高、胡、蔡、何、簡、莊逐一插入：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+插入 & 比較路徑 & 位置 \\
+\midrule
+陳 Chen & & 根 \\
+劉 Liu & $>$ Chen & Chen 的右 \\
+王 Wang & $>$ Chen、$>$ Liu & Liu 的右 \\
+蘇 Su & $>$ Chen、$>$ Liu、$<$ Wang & Wang 的左 \\
+高 Gao & $>$ Chen、$<$ Liu & Liu 的左 \\
+胡 Hu & $>$ Chen、$<$ Liu、$>$ Gao & Gao 的右 \\
+蔡 Cai & $<$ Chen & Chen 的左 \\
+何 He & $>$ Chen、$<$ Liu、$>$ Gao、$<$ Hu & Hu 的左 \\
+簡 Jian & $>$ Chen、$<$ Liu、$>$ Gao、$>$ Hu & Hu 的右 \\
+莊 Zhuang & $>$ Chen、$>$ Liu、$>$ Wang & Wang 的右 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的二元搜尋樹：
+\begin{center}
+\begin{tikzpicture}[level distance=12mm,
+  level 1/.style={sibling distance=52mm},level 2/.style={sibling distance=32mm},
+  level 3/.style={sibling distance=18mm},level 4/.style={sibling distance=16mm},
+  every node/.style={draw,rounded corners=2pt,inner sep=2pt,font=\small,align=center}]
+\node {陳\\Chen}
+  child {node {蔡\\Cai}}
+  child {node {劉\\Liu}
+    child {node {高\\Gao}
+      child[missing]
+      child {node {胡\\Hu}
+        child {node {何\\He}}
+        child {node {簡\\Jian}}}}
+    child {node {王\\Wang}
+      child {node {蘇\\Su}}
+      child {node {莊\\Zhuang}}}};
+\end{tikzpicture}
+\end{center}
+中序尋訪輸出蔡、陳、高、何、胡、簡、劉、蘇、王、莊，正是拼音順序，可以用來檢查。 樹高 $5$（根算第 $1$ 層）。
+
+\textbf{㈤ 搜尋的時間複雜度}。 搜尋從根往下，每層比較一次，最多比較 $h$ 次（$h$ 是樹高），所以是 $O(h)$：
+\begin{itemize}
+\item \textbf{最好／平衡時}：樹接近完整二元樹，$h = \lfloor \log_2 n \rfloor + 1$，搜尋 $O(\log n)$。
+\item \textbf{最壞}：資料依排序順序插入（例如蔡、陳、高、何、……依拼音順序），每個新節點都接在右邊，樹退化成一條
+鏈，$h = n$，搜尋 $O(n)$。
+\item \textbf{平均}：$n$ 個鍵以隨機順序插入時，期望樹高 $O(\log n)$（資結書定理~9.2），平均搜尋 $O(\log n)$。
+\end{itemize}
+本題 $n = 10$、$h = 5$，最多比較 $5$ 次（例如找「何」或「簡」）。 要保證最壞情況 $O(\log n)$，要改用 AVL 樹、紅黑樹這類
+平衡搜尋樹（資結書第~10~章）。
+\end{pastsoln}

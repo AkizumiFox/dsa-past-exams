@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-112-dsa-03}]{臺大資工所 112 學年度 第 3 題}
+（複選；5 分，每個選項單獨計分，答對得 1 分、答錯倒扣 0.5 分）
+
+Please find the following table for the characters and their corresponding occurring
+probabilities. Please design a Huffman encoding tree and select the correct descriptions.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Symbol ($X$) & A & B & C & D & E & F & G \\ \hline
+Prob ($X$) & 0.15 & 0.06 & 0.24 & 0.21 & 0.09 & 0.21 & 0.03 \\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item The codeword length for symbol C is 3
+\item The codeword length for symbol G is 5
+\item The codeword length for symbol E is 5
+\item The codeword length for symbol A is 4
+\item none of above is correct
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+照資結書虛擬碼~19.3 的 \proc{Huffman}：每次取出機率最小的兩棵樹合併成一棵，新樹的機率是兩者之和。
+下表每一列是一次合併，「剩下」是合併後所有樹的機率（括號裡是樹含的字元）：
+\begin{center}
+\small
+\begin{tabular}{clp{0.5\linewidth}}
+\toprule
+步驟 & 合併 & 剩下 \\
+\midrule
+1 & G $0.03$ + B $0.06$ $= 0.09$ & A $0.15$, C $0.24$, D $0.21$, E $0.09$, F $0.21$, (GB) $0.09$ \\
+2 & E $0.09$ + (GB) $0.09$ $= 0.18$ & A $0.15$, C $0.24$, D $0.21$, F $0.21$, (EGB) $0.18$ \\
+3 & A $0.15$ + (EGB) $0.18$ $= 0.33$ & C $0.24$, D $0.21$, F $0.21$, (AEGB) $0.33$ \\
+4 & D $0.21$ + F $0.21$ $= 0.42$ & C $0.24$, (DF) $0.42$, (AEGB) $0.33$ \\
+5 & C $0.24$ + (AEGB) $0.33$ $= 0.57$ & (DF) $0.42$, (CAEGB) $0.57$ \\
+6 & (DF) $0.42$ + (CAEGB) $0.57$ $= 1$ & 一棵樹 \\
+\bottomrule
+\end{tabular}
+\end{center}
+過程中有兩次平手（第 2 步的 E 和 (GB) 都是 $0.09$、第 4 步的 D 和 F 都是 $0.21$），但平手的兩者
+本來就是那一步最小的兩個，一定被合併在一起，不管怎麼排，樹的形狀（各字元的深度）都一樣。
+
+字元的碼長就是它在樹裡的深度，也就是它被合併了幾次：
+\begin{center}
+\begin{tabular}{lccccccc}
+\toprule
+字元 & A & B & C & D & E & F & G \\
+\midrule
+碼長 & 3 & 5 & 2 & 2 & 4 & 2 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 G 參與了第 1、2、3、5、6 步的合併，深度 $5$；C 只參與第 5、6 步，深度 $2$。 檢查：
+$\sum 2^{-\ell} = 3 \cdot \frac14 + \frac18 + \frac1{16} + 2 \cdot \frac1{32} = 1$，是一棵滿的二元樹；
+平均碼長 $0.15 \cdot 3 + 0.06 \cdot 5 + 0.24 \cdot 2 + 0.21 \cdot 2 + 0.09 \cdot 4 + 0.21 \cdot 2 +
+0.03 \cdot 5 = 2.58$。
+
+逐項看：(A) C 的碼長是 $2$，不是 $3$，錯。 (B) G 是 $5$，對。 (C) E 是 $4$，不是 $5$，錯。
+(D) A 是 $3$，不是 $4$，錯。 (E) (B) 是對的，錯。
+\end{pastsoln}

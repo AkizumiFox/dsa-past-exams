@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:gk3-100-ds-03}]{高考三級資訊處理 100 年 第三題}
+（申論；10 分）
+
+輸入中序 (in-order) 表示之運算式 \texttt{A*(B+C)}，可以根據運算元優先次序關係，使用堆疊 (stack) 來產生其
+後序 (post-order) 表示之運算式。請依演算法追蹤其執行情形，完成如下表格。（10 分）
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+輸入 & 堆疊內容 & 輸出 \\ \hline
+A & & \\ \hline
+* & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：後序是 \texttt{A B C + *}，表格在下面。
+
+\textbf{規則}（資結書第~6.3~節、虛擬碼~6.8）：從左到右讀。
+\begin{itemize}
+\item 運算元直接輸出。
+\item 左括號一律推入；它在堆疊裡的優先權最低，之後任何運算子都可以疊在它上面。
+\item 右括號：一直彈出並輸出，直到遇到左括號，左括號彈掉但不輸出。
+\item 運算子：堆疊頂端是優先權大於或等於它的運算子（左結合）時先彈出輸出，再把它推入。
+\item 讀完後把堆疊剩下的運算子全部彈出輸出。
+\end{itemize}
+
+\textbf{追蹤}（堆疊內容左邊是底、右邊是頂）：
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+輸入 & 堆疊內容 & 輸出 & 說明 \\ \hline
+\texttt{A} & （空） & \texttt{A} & 運算元，直接輸出 \\ \hline
+\texttt{*} & \texttt{*} & \texttt{A} & 堆疊空，推入 \\ \hline
+\texttt{(} & \texttt{* (} & \texttt{A} & 左括號一律推入 \\ \hline
+\texttt{B} & \texttt{* (} & \texttt{A B} & 運算元 \\ \hline
+\texttt{+} & \texttt{* ( +} & \texttt{A B} & 頂端是左括號，直接推入 \\ \hline
+\texttt{C} & \texttt{* ( +} & \texttt{A B C} & 運算元 \\ \hline
+\texttt{)} & \texttt{*} & \texttt{A B C +} & 彈出 \texttt{+} 輸出，再彈掉左括號 \\ \hline
+（結束） & （空） & \texttt{A B C + *} & 彈出剩下的 \texttt{*} \\ \hline
+\end{tabular}
+\end{center}
+讀到 \texttt{+} 時，雖然 \texttt{*} 的優先權比 \texttt{+} 高，但中間隔著左括號，所以 \texttt{*} 不會被彈出——
+這就是括號讓 \texttt{B+C} 先算的方式。 結果 \texttt{A B C + *}：先算 $B + C$，再乘上 $A$，和原式一致。
+\end{pastsoln}

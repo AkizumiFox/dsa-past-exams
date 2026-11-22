@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:nchu-113-dsa-15}]{中興資工所甲組 113 學年度 選擇題第 15 題}
+（單選；答錯不倒扣）
+
+Consider the following pseudocode function:
+\begin{minted}[fontsize=\small, xleftmargin=2em]{text}
+function mysteryFunction(n):
+     if n <= 1:
+           return n
+     else:
+           return mysteryFunction(n-1) + mysteryFunction(n-2)
+\end{minted}
+What is the time complexity of the mysteryFunction in terms of Big O notation? (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item O(n)
+\item O(n\^{}2)
+\item O(2\^{}n)
+\item O(log n)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+這是直接照定義遞迴算費氏數。 令 $T(n)$ 是呼叫 \texttt{mysteryFunction(n)} 的時間，除了兩次遞迴呼叫只做常數
+的事：
+\[
+T(n) = T(n-1) + T(n-2) + c,\qquad T(0) = T(1) = c.
+\]
+\textbf{上界。} $T$ 是遞增的，$T(n) \le 2T(n-1) + c$，由歸納法得 $T(n) \le c(2^n - 1) = O(2^n)$（$n \ge 1$）。
+
+\textbf{下界（說明不是多項式）。} $T(n) \ge 2T(n-2)$，所以 $T(n) \ge c \cdot 2^{\lfloor n/2 \rfloor} =
+\Omega(\sqrt{2}^{\,n})$，成長是指數的，(A)(B)(D) 都不可能。
+
+精確地說，令 $S(n) = T(n) + c$，則 $S(n) = S(n-1) + S(n-2)$，$S$ 是費氏數的常數倍，$T(n) = \Theta(\phi^n)$，
+$\phi = (1 + \sqrt{5})/2 \approx 1.618$（資結書第~2.5~節的特徵方程式）。 $\phi < 2$，所以 $O(2^n)$ 是正確的
+上界（不是緊的），四個選項裡只有 (C) 對。 慢的原因是同樣的子問題被重複算很多次，改用記憶化或由下往上
+就是 $\Theta(n)$（資結書第~18.1~節）。
+\end{pastsoln}

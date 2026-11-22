@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncku-111-prog-16}]{成大資訊聯招 111 學年度 第 16 題}
+（計算）
+
+(10\%) Find a feasible solution or determine that no feasible solution exists for the following system of difference constraints:
+\[
+\begin{array}{l}
+x_1-x_3\le 1\\
+x_2-x_3\le -4\\
+x_4-x_5\le 2\\
+x_3-x_4\le 7\\
+x_5-x_1\le 5\\
+x_4-x_2\le 10\\
+x_1-x_2\le 2\\
+x_5-x_3\le -1
+\end{array}
+\]
+\end{pastexam}
+
+\begin{pastsoln}
+答案：有可行解，例如 $(x_1, x_2, x_3, x_4, x_5) = (-2, -4, 0, 0, -1)$。
+
+\textbf{化成最短路徑}（資結書第~25.4~節）。 每個變數 $x_i$ 一個頂點 $v_i$，另加一個起點 $v_0$。 每條限制
+$x_j - x_i \le b$ 對應一條邊 $v_i \to v_j$，權重 $b$；$v_0$ 到每個 $v_i$ 各一條權重 $0$ 的邊。 資結書定理~25.9：
+約束圖沒有負環時，$x_i = \delta(v_0, v_i)$ 就是一組解（最短路徑滿足 $\delta(v_j) \le \delta(v_i) + b$，正好是
+$x_j - x_i \le b$）；有負環時無解。
+
+八條限制對應的邊：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+限制 & 邊 & 限制 & 邊 \\
+\midrule
+$x_1 - x_3 \le 1$ & $v_3 \to v_1$，$1$ & $x_5 - x_1 \le 5$ & $v_1 \to v_5$，$5$ \\
+$x_2 - x_3 \le -4$ & $v_3 \to v_2$，$-4$ & $x_4 - x_2 \le 10$ & $v_2 \to v_4$，$10$ \\
+$x_4 - x_5 \le 2$ & $v_5 \to v_4$，$2$ & $x_1 - x_2 \le 2$ & $v_2 \to v_1$，$2$ \\
+$x_3 - x_4 \le 7$ & $v_4 \to v_3$，$7$ & $x_5 - x_3 \le -1$ & $v_3 \to v_5$，$-1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Bellman--Ford}（資結書虛擬碼~25.4）。 一開始 $d(v_0) = 0$，其餘 $\infty$。 第一輪先放鬆 $v_0$ 的
+五條邊，五個 $d$ 都變成 $0$；接著依上表的順序放鬆八條邊：
+\begin{itemize}
+\item $v_3 \to v_1$：$0 + 1 = 1$，不更新。 $v_3 \to v_2$：$0 - 4 = -4 < 0$，$d(v_2) = -4$。
+\item $v_5 \to v_4$：$0 + 2$，不更新。 $v_4 \to v_3$：$0 + 7$，不更新。 $v_1 \to v_5$：$0 + 5$，不更新。
+\item $v_2 \to v_4$：$-4 + 10 = 6$，不更新。 $v_2 \to v_1$：$-4 + 2 = -2 < 0$，$d(v_1) = -2$。
+\item $v_3 \to v_5$：$0 - 1 = -1 < 0$，$d(v_5) = -1$。
+\end{itemize}
+第一輪後 $d = (d(v_1), \ldots, d(v_5)) = (-2, -4, 0, 0, -1)$。 第二輪再放鬆每條邊都沒有變化（例如
+$v_1 \to v_5$：$-2 + 5 = 3 > -1$；$v_5 \to v_4$：$-1 + 2 = 1 > 0$；$v_4 \to v_3$：$0 + 7 > 0$），演算法提早結束，
+也沒有負環。 這些就是最短距離：$v_0 \to v_3 \to v_2$ 長 $-4$，$v_0 \to v_3 \to v_2 \to v_1$ 長 $-2$，
+$v_0 \to v_3 \to v_5$ 長 $-1$，$v_3$、$v_4$ 沒有更短的路，距離 $0$。
+
+\textbf{檢查}：$x = (-2, -4, 0, 0, -1)$ 代回八條限制：
+$x_1 - x_3 = -2 \le 1$、$x_2 - x_3 = -4 \le -4$、$x_4 - x_5 = 1 \le 2$、$x_3 - x_4 = 0 \le 7$、
+$x_5 - x_1 = 1 \le 5$、$x_4 - x_2 = 4 \le 10$、$x_1 - x_2 = 2 \le 2$、$x_5 - x_3 = -1 \le -1$，全部成立。
+任何解每個分量都加同一個常數仍然是解（例如 $(2, 0, 4, 4, 3)$），所以答案不唯一。
+\end{pastsoln}

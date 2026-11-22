@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:df3-100-ds-03}]{地方三等資訊處理 100 年 第三題}
+（申論；20 分）
+
+假設鏈結串列（linked list）資料結構的宣告如下：
+\begin{minted}[fontsize=\small]{c}
+struct node {
+  char info;
+  struct node *next;
+} *list;
+\end{minted}
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 試寫一函式（function）計算並回傳鏈結串列 list 內部節點（node）之數量。（10 分）
+\item[㈡] 試寫一函式（function）將鏈結串列 list 進行反轉（inverse）。（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+兩個函式都假設 \texttt{list} 指向第一個節點，最後一個節點的 \texttt{next} 是 \texttt{NULL}，空串列時
+\texttt{list} 是 \texttt{NULL}（沒有頭節點）。
+
+\textbf{㈠ 計算節點數。} 從頭沿著 \texttt{next} 走到 \texttt{NULL}，每經過一個節點就加一：
+\begin{minted}[fontsize=\small]{c}
+int count(struct node *p)
+{
+    int n = 0;
+    while (p != NULL) {
+        n++;
+        p = p->next;
+    }
+    return n;
+}
+\end{minted}
+呼叫 \texttt{count(list)}。 空串列時迴圈一次都不做，傳回 $0$。 每個節點經過一次，時間 $O(n)$，額外空間
+$O(1)$。 參數 \texttt{p} 是區域的複本，移動它不會改到外面的 \texttt{list}。
+
+\textbf{㈡ 反轉。} 用三個指標由前往後走，把每個節點的 \texttt{next} 改成指向前一個節點（資結書第~5.5~節、
+虛擬碼~5.12）：
+\begin{minted}[fontsize=\small]{c}
+struct node *reverse(struct node *list)
+{
+    struct node *prev = NULL, *cur = list, *nxt;
+    while (cur != NULL) {
+        nxt = cur->next;     /* 先記住後面那一段 */
+        cur->next = prev;    /* 反轉這一個指標 */
+        prev = cur;          /* prev、cur 各往後移一格 */
+        cur = nxt;
+    }
+    return prev;             /* 原本的最後一個節點，成為新的第一個 */
+}
+\end{minted}
+呼叫 \texttt{list = reverse(list);}。
+
+\textbf{正確性。} 迴圈每次開始時維持：\texttt{prev} 是「已經反轉好的前半段」的第一個節點，\texttt{cur} 是
+「還沒處理的後半段」的第一個節點，兩段合起來恰好是原來所有的節點（資結書定理~5.1）。 一開始前半段是空的
+（\texttt{prev = NULL}），每圈把 \texttt{cur} 從後半段搬到前半段的最前面；必須先用 \texttt{nxt} 記住
+\texttt{cur->next}，否則改掉指標後就找不到後半段了。 後半段變空時迴圈結束，\texttt{prev} 就是整條反轉後的
+第一個節點。
+
+例如 \texttt{list} 是 $a \to b \to c$：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+第幾圈結束 & 已反轉的前半段（\texttt{prev} 起） & 後半段（\texttt{cur} 起） \\
+\midrule
+開始 & 空 & $a \to b \to c$ \\
+1 & $a$ & $b \to c$ \\
+2 & $b \to a$ & $c$ \\
+3 & $c \to b \to a$ & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+空串列和只有一個節點的串列也正確（傳回原本的 \texttt{list}）。 時間 $O(n)$，額外空間 $O(1)$，不配置新節點。
+\end{pastsoln}

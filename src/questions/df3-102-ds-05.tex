@@ -1,0 +1,111 @@
+\begin{pastexam}[label={px:df3-102-ds-05}]{地方三等資訊處理 102 年 第五題}
+（申論；15 分）
+
+請參考圖 3。圖 3 是一個 activity-on-edge 網路。在 activity-on-edge 網路中，一項計畫可以分成很多件工作，每一件
+工作由一條線段代表，線段上的數字代表該工作所需的時間（以工作日為單位），線段的箭頭代表工作的先後關係。例如在
+圖 3 中，ab 及 db 線段代表的工作完成之後，bc、be、及 bf 線段代表的工作才可以開始進行，其他的先後關係依此類推。
+a 節點是起點，k 節點是全部工作的完成點。請找出 k 節點的最早完成時間及關鍵路線（critical path）。並請說明你的
+方法如何應用在非常大型的圖裡。（15 分）
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small},
+  w/.style={font=\small,inner sep=1.5pt}, e/.style={-{Latex[length=2mm]},semithick}]
+\node[v] (a) at (0.6,-2.27) {a};
+\node[v] (b) at (3.85,-0.6) {b};
+\node[v] (c) at (5.45,-0.45) {c};
+\node[v] (d) at (2.35,-2.15) {d};
+\node[v] (e) at (5.3,-2.6) {e};
+\node[v] (k) at (7.25,-2.5) {k};
+\node[v] (g) at (1.35,-3.8) {g};
+\node[v] (f) at (3.5,-3.6) {f};
+\node[v] (h) at (5.7,-3.6) {h};
+\draw[e] (a) -- node[w,above left,pos=0.5] {22} (b);
+\draw[e] (a) -- node[w,above,pos=0.45] {14} (d);
+\draw[e] (a) -- node[w,left] {5} (g);
+\draw[e] (g) -- node[w,right,pos=0.4] {3} (d);
+\draw[e] (d) -- node[w,right,pos=0.6] {21} (b);
+\draw[e] (d) -- node[w,right,pos=0.45] {13} (f);
+\draw[e] (b) -- node[w,above] {11} (c);
+\draw[e] (b) -- node[w,above right,pos=0.4] {11} (e);
+\draw[e] (b) -- node[w,right,pos=0.25] {19} (f);
+\draw[e] (g) -- node[w,above,pos=0.55] {12} (f);
+\draw[e] (g) to[bend right=12] node[w,below,pos=0.55] {13} (h);
+\draw[e] (f) -- node[w,above left,pos=0.55] {12} (e);
+\draw[e] (f) -- node[w,above,pos=0.6] {21} (h);
+\draw[e] (e) -- node[w,right,pos=0.4] {27} (c);
+\draw[e] (e) -- node[w,above] {21} (k);
+\draw[e] (e) -- node[w,right,pos=0.45] {7} (h);
+\draw[e] (c) -- node[w,above right] {23} (k);
+\draw[e] (h) -- node[w,below right] {23} (k);
+\node[font=\small] at (3.9,-4.75) {圖 3\quad Activity-on-edge 網路};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：k 的最早完成時間是第 $116$ 個工作日；關鍵路線是 a $\to$ d $\to$ b $\to$ f $\to$ e $\to$ c $\to$ k
+（$14 + 21 + 19 + 12 + 27 + 23 = 116$）。 大型圖用拓樸排序加兩趟線性掃描，$O(|V| + |E|)$。
+
+方法照資結書第~22.5~節：先求每個事件（節點）的最早發生時間 $\mathit{ee}$ 和最晚發生時間 $\mathit{le}$，再算每項
+工作的最早開始 $e$、最晚開始 $l$，$l = e$ 的工作就是關鍵工作。
+
+圖 3 的工作（邊）：ab 22、ad 14、ag 5、gd 3、db 21、df 13、gf 12、gh 13、bc 11、be 11、bf 19、fe 12、fh 21、ec 27、ek 21、
+eh 7、ck 23、hk 23。 一個拓樸順序：a, g, d, b, f, e, c, h, k。
+
+\textbf{前推求 $\mathit{ee}$}（依拓樸順序，$\mathit{ee}[v] = \max_{u \to v}\{\mathit{ee}[u] + w(u,v)\}$，$\mathit{ee}[a] = 0$）：
+\begin{align*}
+\mathit{ee}[g] &= 0 + 5 = 5, \\
+\mathit{ee}[d] &= \max(0 + 14,\ 5 + 3) = 14, \\
+\mathit{ee}[b] &= \max(0 + 22,\ 14 + 21) = 35, \\
+\mathit{ee}[f] &= \max(14 + 13,\ 5 + 12,\ 35 + 19) = 54, \\
+\mathit{ee}[e] &= \max(35 + 11,\ 54 + 12) = 66, \\
+\mathit{ee}[c] &= \max(35 + 11,\ 66 + 27) = 93, \\
+\mathit{ee}[h] &= \max(5 + 13,\ 54 + 21,\ 66 + 7) = 75, \\
+\mathit{ee}[k] &= \max(66 + 21,\ 93 + 23,\ 75 + 23) = 116.
+\end{align*}
+所以 k 的\textbf{最早完成時間是 $116$}。
+
+\textbf{後推求 $\mathit{le}$}（依拓樸順序反過來，$\mathit{le}[u] = \min_{u \to v}\{\mathit{le}[v] - w(u,v)\}$，
+$\mathit{le}[k] = 116$）：
+\begin{align*}
+\mathit{le}[h] &= 116 - 23 = 93, \qquad \mathit{le}[c] = 116 - 23 = 93, \\
+\mathit{le}[e] &= \min(116 - 21,\ 93 - 27,\ 93 - 7) = 66, \\
+\mathit{le}[f] &= \min(66 - 12,\ 93 - 21) = 54, \\
+\mathit{le}[b] &= \min(93 - 11,\ 66 - 11,\ 54 - 19) = 35, \\
+\mathit{le}[d] &= \min(35 - 21,\ 54 - 13) = 14, \\
+\mathit{le}[g] &= \min(14 - 3,\ 54 - 12,\ 93 - 13) = 11, \\
+\mathit{le}[a] &= \min(35 - 22,\ 14 - 14,\ 11 - 5) = 0.
+\end{align*}
+
+\textbf{每項工作}：工作 $u \to v$ 的 $e = \mathit{ee}[u]$、$l = \mathit{le}[v] - w$，寬裕時間 $l - e$。
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l*{18}{c}}
+\toprule
+工作 & ab & ad & ag & gd & db & df & gf & gh & bc & be & bf & fe & fh & ec & ek & eh & ck & hk \\
+\midrule
+$e$ & 0 & 0 & 0 & 5 & 14 & 14 & 5 & 5 & 35 & 35 & 35 & 54 & 54 & 66 & 66 & 66 & 93 & 75 \\
+$l$ & 13 & 0 & 6 & 11 & 14 & 41 & 42 & 80 & 82 & 55 & 35 & 54 & 72 & 66 & 95 & 86 & 93 & 93 \\
+$l - e$ & 13 & \textbf{0} & 6 & 6 & \textbf{0} & 27 & 37 & 75 & 47 & 20 & \textbf{0} & \textbf{0} & 18 & \textbf{0} & 29 & 20 & \textbf{0} & 18 \\
+\bottomrule
+\end{tabular}
+\end{center}
+寬裕時間為 $0$ 的工作是 ad、db、bf、fe、ec、ck，連起來就是\textbf{關鍵路線}
+\[
+a \xrightarrow{14} d \xrightarrow{21} b \xrightarrow{19} f \xrightarrow{12} e \xrightarrow{27} c \xrightarrow{23} k,
+\qquad 14 + 21 + 19 + 12 + 27 + 23 = 116 .
+\]
+這是 a 到 k 最長的一條路徑，關鍵路線只有這一條。 這條線上任何一項工作延誤，k 就跟著延誤；要提早完工，也只能從
+這些工作下手。
+
+\textbf{應用在非常大型的圖。} 上面的方法其實是「拓樸排序＋兩趟掃描」：
+\begin{itemize}
+\item 用相鄰串列存圖（同時存反向的串列，後推時用），空間 $O(|V| + |E|)$。
+\item 用 Kahn 的方法（資結書虛擬碼~22.1）以佇列做拓樸排序，同時順便做前推：每從佇列取出一個 $u$，就用它更新所有
+後繼的 $\mathit{ee}$；後推依拓樸順序倒過來做。 每個節點、每條邊各處理常數次，總時間 $O(|V| + |E|)$，和圖的大小
+成正比，百萬級的圖也能在線性時間內算完。
+\item 排序過程中若有節點的入分支度始終不為 $0$，表示圖中有環，計畫不可行，可以一併偵測。
+\item 圖大到放不進記憶體時，依拓樸順序把邊分批讀入，每批只需要用到「已算好的前驅事件時間」；也可以依拓樸層次
+平行計算同一層的節點。
+\end{itemize}
+\end{pastsoln}

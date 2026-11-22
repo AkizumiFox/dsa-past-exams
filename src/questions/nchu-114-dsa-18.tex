@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-114-dsa-18}]{中興資工所甲組 114 學年度 單選題第 18 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+After inserting a new node into a Red-Black Tree, which of the following operations might be performed to restore Red-Black properties?
+
+(A)~Rotations and recoloring of nodes\\
+(B)~Complete tree re-balancing from scratch\\
+(C)~Splitting and merging nodes, similar to B-Trees\\
+(D)~Directly moving the newly inserted node to the root
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+新節點塗成紅色，可能違反的只有「紅色節點的子節點必須是黑色」（新節點的父節點也是紅色），以及根是黑色。
+修補程序（資結書第~10.3.4~節）分三種情形：叔叔是紅色時，把父、叔塗黑、祖父塗紅，往上繼續檢查；叔叔
+是黑色時，做一次或兩次旋轉再改顏色就結束；最後把根塗黑。 用到的就是旋轉和改顏色。
+\begin{itemize}
+\item (B) 整棵樹重建要 $\Theta(n)$，紅黑樹的修補只沿著一條路徑往上，$O(\log n)$。 錯。
+\item (C) 分裂、合併節點是 B 樹（多路節點）的操作。 紅黑樹和 2-3-4 樹對應（資結書第~11.1.6~節），2-3-4 樹的
+分裂在紅黑樹上表現成改顏色，但紅黑樹本身的節點不會分裂或合併。 錯。
+\item (D) 把新節點移到根是伸展樹（splay）的做法，不是紅黑樹。 錯。
+\end{itemize}
+\end{pastsoln}

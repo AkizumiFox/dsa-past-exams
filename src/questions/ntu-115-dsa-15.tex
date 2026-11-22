@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-115-dsa-15}]{臺大資工所 115 學年度 第 15 題}
+（單選）
+
+(4 points) Most hash table implementations (such as Java's \texttt{HashMap}) resize the underlying array when the load factor $\alpha$ exceeds a certain threshold (typically 0.75). Why is this resizing operation necessary for a hash table that uses separate chaining?
+\begin{enumerate}[label=(\Alph*)]
+\item \textbf{Saturation:} To prevent the table from reaching a load factor of 1.0, at which point inserting a new element would be impossible.
+\item \textbf{Ordering:} To re-sort the keys alphabetically during the transfer, enabling the use of binary search for future lookups.
+\item \textbf{Complexity:} To prevent the average length of the linked lists (collision chains) from growing linearly with the number of elements, thereby maintaining $O(1)$ average access time.
+\item \textbf{Uniqueness:} To redistribute the keys across a larger range so that all existing collisions are permanently eliminated.
+\item \textbf{Memory contiguity:} To ensure that all elements in the linked lists are stored in adjacent memory addresses, minimizing CPU cache misses and memory fragmentation.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+\begin{itemize}
+\item (A) 錯。 鏈結法的載入因子可以超過 $1$（資結書第~12.2.1~節的例子就是
+$\alpha = 8/7$），串列只是變長，插入永遠做得到。 「$\alpha = 1$ 就插不進去」是開放定址的情形。
+\item (B) 錯。 雜湊表不維持任何順序，再雜湊時每個鍵用新的 $m$ 重算位置
+（資結書第~12.5~節），不會排序，之後的搜尋也不用二分搜尋。
+\item (C) 對。 在簡單均勻雜湊下，串列的期望長度是 $\alpha = n/m$，搜尋的期望時間是
+$\Theta(1 + \alpha)$（資結書定理~12.2）。 $m$ 固定不變時，$\alpha$ 隨 $n$ 線
+性成長，搜尋就變成 $\Theta(n)$；$\alpha$ 超過門檻就把表加倍，$\alpha$ 一直維持在常數以下，
+搜尋的期望時間是 $O(1)$。 搬動的成本平攤到插入上，每次仍是 $O(1)$。
+\item (D) 錯。 表變大只讓碰撞的期望次數變少，不能消除碰撞：任何固定的雜湊函數，鍵空間比
+表大時一定有鍵撞在一起（資結書第~12.1~節的鴿籠原理），擴表之後再插入的鍵也一樣會
+碰撞。
+\item (E) 錯。 擴表配置的是新的串列開頭陣列，串列的節點還是一個一個配置的，不保證放在
+相鄰的位置；減少快取失誤也不是擴表的目的。
+\end{itemize}
+\end{pastsoln}

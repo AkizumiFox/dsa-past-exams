@@ -1,0 +1,13 @@
+paper: nsysu-115-osds
+volume: 2
+school: 中山
+dept: 資工所甲組
+year: 115
+subject: 作業系統與資料結構
+instructions: 考試時間：100 分鐘。※本科目依簡章規定「不可以」使用計算機（問答申論題）。
+questions:
+  - {id: nsysu-115-osds-01, label: 第 5 題 (b), chapter: 6}
+  - {id: nsysu-115-osds-02, label: 第 6 題, chapter: 7}
+  - {id: nsysu-115-osds-03, label: 第 7 題, chapter: 12}
+  - {id: nsysu-115-osds-04, label: 第 8 題, chapter: 24}
+  - {id: nsysu-115-osds-05, label: 第 9 題, chapter: 14}

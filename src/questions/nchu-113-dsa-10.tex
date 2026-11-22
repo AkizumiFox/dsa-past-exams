@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:nchu-113-dsa-10}]{中興資工所甲組 113 學年度 選擇題第 10 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+Assuming no compilation errors, what is the output of the following C program with a recursive function?
+\begin{minted}[fontsize=\small, linenos, xleftmargin=2.5em]{c}
+#include<stdio.h>
+int FN(int n){
+   If (n <=3)
+      return n;
+   return FN(n-1)*FN(n-2)*FN(n-3);
+}
+
+int main(){
+  printf("%d", FN(6)<2>2);
+  return 0;
+}
+\end{minted}
+(A)~6 \qquad (B)~36 \qquad (C)~648 \qquad (D)~2592 \qquad (E)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+照字面讀，答案是 (E)（印出 \texttt{0}）；若第 9 行原意只是印出 \texttt{FN(6)}，答案是 (C) $648$。
+
+原卷第 3 行的 \texttt{If} 應為小寫 \texttt{if}，題目已說「假設沒有編譯錯誤」，照 \texttt{if} 讀。 第 9 行的
+\texttt{FN(6)<2>2} 是合法的 C 運算式，下面先算 \texttt{FN(6)}，再照字面求值。
+
+\textbf{算 \texttt{FN}。} $n \le 3$ 時 $\mathrm{FN}(n) = n$，否則 $\mathrm{FN}(n) = \mathrm{FN}(n-1)\cdot\mathrm{FN}(n-2)
+\cdot\mathrm{FN}(n-3)$。 由小往上算：
+\[
+\begin{aligned}
+\mathrm{FN}(1) &= 1,\quad \mathrm{FN}(2) = 2,\quad \mathrm{FN}(3) = 3,\\
+\mathrm{FN}(4) &= 3 \cdot 2 \cdot 1 = 6,\\
+\mathrm{FN}(5) &= 6 \cdot 3 \cdot 2 = 36,\\
+\mathrm{FN}(6) &= 36 \cdot 6 \cdot 3 = 648.
+\end{aligned}
+\]
+選項 (A)(B)(C) 正是 $\mathrm{FN}(4)$、$\mathrm{FN}(5)$、$\mathrm{FN}(6)$，(D) $2592 = 648 \times 4$。
+
+\textbf{照字面求值。} \texttt{<} 和 \texttt{>} 同一優先順序、由左往右結合，所以 \texttt{FN(6)<2>2} 是
+\texttt{(FN(6) < 2) > 2}。 \texttt{648 < 2} 不成立，值是 \texttt{0}；\texttt{0 > 2} 也不成立，值是 \texttt{0}。
+\texttt{printf} 印出 \texttt{0}，不在 (A)--(D) 裡，選 (E)。 C 的關係運算子結果只會是 $0$ 或 $1$，不管
+\texttt{FN(6)} 是多少，\texttt{(... < 2) > 2} 永遠是 $0$。
+
+\textbf{另一種讀法。} \texttt{<2>2} 看起來像排版殘留；若原意是 \texttt{printf("\%d", FN(6))}，輸出 $648$，選
+(C)。 （若是 \texttt{FN(6)<<2>>2}，先左移兩位再右移兩位，也是 $648$；只有 \texttt{FN(6)<<2} 才是 (D) 的
+$2592$。） 本書照原卷的字面作答，選 (E)。
+\end{pastsoln}

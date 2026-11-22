@@ -1,0 +1,110 @@
+\begin{pastexam}[label={px:gw3-115-ds-04}]{關務三等資訊處理 115 年 第四題}
+（申論；30 分）
+
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 從空集合開始，依下列數字串 1, 2, 3, 4, 5, 6, 7, 8 順序插入節點建立並繪出 Binary Search Tree。（5 分）
+\item[㈡] 從空集合開始，依下列數字串 1, 2, 3, 4, 5, 6, 7, 8 順序插入節點建立並繪出 Red Black Tree。（紅色節點請以雙線同心圓
+表示，例如將紅色節點 5 表示成
+\tikz[baseline=(x.base)]\node[circle,draw,double,double distance=0.6pt,inner sep=0pt,minimum size=4.2mm,font=\scriptsize] (x) {5};；
+黑色節點請以單線圓表示，例如將黑色節點 8 表示成
+\tikz[baseline=(x.base)]\node[circle,draw,inner sep=0pt,minimum size=4.2mm,font=\scriptsize] (x) {8};）。（13 分）
+\item[㈢] 請分別說明 Binary Search Tree 與 Red Black Tree 在插入、刪除與搜尋數字等三操作的時間複雜度。（12 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠} 每個新數都比樹裡所有的數大，一路往右走到底，接在最後一個節點的右邊。 結果是一條往右的鏈，高度 $8$：
+\begin{center}
+\begin{tikzpicture}[n/.style={circle,draw,inner sep=0pt,minimum size=6mm,font=\small}]
+\foreach \v in {1,...,8}{ \node[n] (n\v) at ({0.75*(\v-1)},{-0.55*(\v-1)}) {\v}; }
+\foreach \v [evaluate=\v as \w using int(\v+1)] in {1,...,7}{ \draw (n\v) -- (n\w); }
+\end{tikzpicture}
+\end{center}
+這是二元搜尋樹的最壞情況：依序插入已排序的資料，樹退化成串列。
+
+\textbf{㈡} 用資結書第~10.3.4~節的插入：新節點先照二元搜尋樹插入並塗紅；若它的父節點也是紅色，看「叔叔」（父節點的兄弟）：
+叔叔紅色就把父、叔塗黑、祖父塗紅，問題往上移兩層（情況 1）；叔叔黑色（含 NIL）就旋轉：新節點和父節點在同一側時對祖父做
+一次旋轉並交換父、祖父的顏色（情況 3），不同側時先對父節點旋轉轉成同一側（情況 2）。 最後把根塗黑。 下面的圖中雙線圓
+是紅色、單線圓是黑色。
+\begin{itemize}
+\item 插入 1：成為根，塗黑。
+\item 插入 2：放在 1 的右子，父節點 1 是黑色，不必調整。
+\item 插入 3：放在 2 的右子，父 2 紅、叔叔（1 的左子）是 NIL 黑；3 和 2 都是右子，同一側（情況 3）：對 1 左旋，2 塗黑、1 塗紅。
+\item 插入 4：放在 3 的右子，父 3 紅、叔叔 1 紅（情況 1）：1、3 塗黑，2 塗紅；2 是根，再塗回黑色。
+\item 插入 5：放在 4 的右子，父 4 紅、叔叔（3 的左子）NIL 黑，同一側（情況 3）：對 3 左旋，4 塗黑、3 塗紅。
+\item 插入 6：放在 5 的右子，父 5 紅、叔叔 3 紅（情況 1）：3、5 塗黑，4 塗紅；4 的父節點 2 是黑色，停止。
+\item 插入 7：放在 6 的右子，父 6 紅、叔叔 NIL 黑，同一側（情況 3）：對 5 左旋，6 塗黑、5 塗紅。
+\item 插入 8：放在 7 的右子，父 7 紅、叔叔 5 紅（情況 1）：5、7 塗黑，6 塗紅，問題移到 6。 6 的父節點 4 也是紅色，叔叔 1 是
+黑色，6 是 4 的右子、4 是 2 的右子，同一側（情況 3）：對 2 左旋，4 塗黑、2 塗紅。 4 成為新的根。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[b/.style={circle,draw,inner sep=0pt,minimum size=5.5mm,font=\footnotesize},
+  r/.style={b,double,double distance=0.7pt},
+  level distance=8mm, level 1/.style={sibling distance=12mm}, level 2/.style={sibling distance=8mm},
+  level 3/.style={sibling distance=7mm}, lab/.style={font=\small}]
+\begin{scope}
+\node[b] {1};
+\node[lab] at (0,-2.7) {插入 1};
+\end{scope}
+\begin{scope}[xshift=2.6cm]
+\node[b] {1} child[missing] child {node[r] {2}};
+\node[lab] at (0,-2.7) {插入 2};
+\end{scope}
+\begin{scope}[xshift=5.4cm]
+\node[b] {2} child {node[r] {1}} child {node[r] {3}};
+\node[lab] at (0,-2.7) {插入 3};
+\end{scope}
+\begin{scope}[xshift=8.4cm]
+\node[b] {2} child {node[b] {1}} child {node[b] {3} child[missing] child {node[r] {4}}};
+\node[lab] at (0,-2.7) {插入 4};
+\end{scope}
+\begin{scope}[xshift=11.6cm]
+\node[b] {2} child {node[b] {1}} child {node[b] {4} child {node[r] {3}} child {node[r] {5}}};
+\node[lab] at (0,-2.7) {插入 5};
+\end{scope}
+\end{tikzpicture}
+
+\medskip
+\begin{tikzpicture}[b/.style={circle,draw,inner sep=0pt,minimum size=5.5mm,font=\footnotesize},
+  r/.style={b,double,double distance=0.7pt},
+  level distance=8mm, level 1/.style={sibling distance=14mm}, level 2/.style={sibling distance=10mm},
+  level 3/.style={sibling distance=7.5mm}, lab/.style={font=\small}]
+\begin{scope}
+\node[b] {2} child {node[b] {1}} child {node[r] {4} child {node[b] {3}} child {node[b] {5} child[missing] child {node[r] {6}}}};
+\node[lab] at (0,-3.2) {插入 6};
+\end{scope}
+\begin{scope}[xshift=4.2cm]
+\node[b] {2} child {node[b] {1}} child {node[r] {4} child {node[b] {3}} child {node[b] {6} child {node[r] {5}} child {node[r] {7}}}};
+\node[lab] at (0,-3.2) {插入 7};
+\end{scope}
+\begin{scope}[xshift=9.4cm, level 1/.style={sibling distance=22mm}, level 2/.style={sibling distance=11mm}]
+\node[b] {4}
+  child {node[r] {2} child {node[b] {1}} child {node[b] {3}}}
+  child {node[r] {6} child {node[b] {5}} child {node[b] {7} child[missing] child {node[r] {8}}}};
+\node[lab] at (0,-3.2) {插入 8（最後結果）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+最後的紅黑樹：根 4（黑）；4 的左子 2（紅）、右子 6（紅）；2 的子 1、3（黑）；6 的子 5、7（黑）；7 的右子 8（紅）。 檢查：根
+黑；沒有紅節點有紅子；從根到每個 NIL 都經過 $2$ 個黑節點（例如 $4 \to 2 \to 1 \to$ NIL 經過 4、1；$4 \to 6 \to 7 \to 8 \to$ NIL 經過 4、7），黑高度一致。
+高度 $4$，比㈠的鏈矮一半。 這裡用的是資結書（也是 CLRS）的「由下往上修正」插入；若課本用由上而下分裂 4-節點的版本，中間
+過程可能不同，但都必須滿足紅黑樹的性質。
+
+\textbf{㈢ 時間複雜度}（$n$ 是節點數）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+ & 二元搜尋樹 & 紅黑樹 \\
+\midrule
+搜尋 & $O(h)$：平均 $O(\log n)$，最壞 $O(n)$ & $O(\log n)$（最壞也是） \\
+插入 & $O(h)$：平均 $O(\log n)$，最壞 $O(n)$ & $O(\log n)$，最多 $2$ 次旋轉 \\
+刪除 & $O(h)$：平均 $O(\log n)$，最壞 $O(n)$ & $O(\log n)$，最多 $3$ 次旋轉 \\
+\bottomrule
+\end{tabular}
+\end{center}
+二元搜尋樹三個操作都是沿一條從根往下的路徑走，時間和樹高 $h$ 成正比（資結書第~9.1、9.2~節）。 隨機順序插入時期望高度
+$O(\log n)$（資結書定理~9.2），但像㈠這樣依序插入會退化成鏈，$h = n$，三個操作最壞都是 $O(n)$。 紅黑樹的高度不超過
+$2\lg(n + 1)$（資結書定理~10.4），搜尋 $O(\log n)$；插入、刪除先花 $O(\log n)$ 找位置，再沿路往上修正顏色 $O(\log n)$ 次、
+旋轉最多 $2$ 次（插入）或 $3$ 次（刪除），所以三個操作的最壞情況都是 $O(\log n)$。
+\end{pastsoln}

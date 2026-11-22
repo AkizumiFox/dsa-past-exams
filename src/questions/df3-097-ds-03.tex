@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:df3-097-ds-03}]{地方三等資訊處理 97 年 第三題}
+（申論；15 分）
+
+假設有一個二元樹（binary tree）的節點結構如下圖所示。
+\begin{center}
+\begin{tikzpicture}[font=\small]
+\node[draw,minimum height=6mm,minimum width=14mm] (l) at (0,0) {LCHILD};
+\node[draw,minimum height=6mm,minimum width=12mm,anchor=west] (d) at (l.east) {DATA};
+\node[draw,minimum height=6mm,minimum width=14mm,anchor=west] (r) at (d.east) {RCHILD};
+\node[circle,draw,minimum size=13mm] (c) at (5.6,0) {DATA};
+\node (lc) at (4.6,-1.4) {LCHILD};
+\node (rc) at (6.6,-1.4) {RCHILD};
+\draw[-{Stealth}] (c) -- ($(lc.north)+(0.15,0.15)$);
+\draw[-{Stealth}] (c) -- ($(rc.north)+(-0.15,0.15)$);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[leftmargin=2.6em, labelsep=0.4em]
+\item[㈠] 試寫一段遞迴的（recursive）副程式，以計算一個二元樹（binary tree）的節點總數。（10 分）
+\item[㈡] 如果這個二元樹中共有 n 個節點，請問你在㈠所設計的副程式執行的時間複雜度（time complexity）為何？
+（5 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{㈠} 遞迴的想法：空樹有 $0$ 個節點；非空的樹，節點數是「根 $1$ 個＋左子樹的節點數＋右子樹的
+節點數」，左右子樹又是同樣的問題（資結書第~7.3~節的後序走訪型態）。 用 C 寫，節點結構照題目的三個
+欄位：
+\begin{minted}[fontsize=\small]{c}
+struct node {
+    struct node *lchild;   /* LCHILD：指向左子樹 */
+    int data;              /* DATA */
+    struct node *rchild;   /* RCHILD：指向右子樹 */
+};
+
+/* 傳回以 t 為根的二元樹的節點總數 */
+int count(struct node *t) {
+    if (t == NULL)          /* 空樹：0 個節點 */
+        return 0;
+    /* 根本身 1 個，加上左、右子樹各自的節點數 */
+    return 1 + count(t->lchild) + count(t->rchild);
+}
+\end{minted}
+正確性（對節點數歸納）：空樹回傳 $0$，對。 非空樹 $t$ 的節點恰好分成三部分：根、左子樹的節點、右子樹
+的節點，兩兩不重疊；左右子樹的節點數都比 $t$ 少，由歸納假設兩個遞迴呼叫回傳的是正確的節點數，相加再
+加 $1$ 就是 $t$ 的節點數。
+
+\textbf{㈡} $\Theta(n)$。 每個節點恰好被呼叫一次（從它的父節點，根則從最外層），另外每個空指標
+（\texttt{NULL}）也被呼叫一次。 $n$ 個節點的二元樹有 $2n$ 個指標欄位，其中 $n - 1$ 個指向子節點，所以
+空指標有 $2n - (n - 1) = n + 1$ 個。 呼叫總數是 $n + (n + 1) = 2n + 1$，每次呼叫除了遞迴以外只做常數
+的工作，總時間 $\Theta(n)$。 也可以寫遞迴式：左子樹 $k$ 個節點時 $T(n) = T(k) + T(n - 1 - k) + c$，
+$T(0) = c'$，用歸納法可證 $T(n) = (c + c')\,n + c'$。
+
+另外，遞迴的深度等於樹高 $h$，需要 $O(h)$ 的堆疊空間：平衡時 $O(\log n)$，退化成一條鏈時 $O(n)$。
+\end{pastsoln}

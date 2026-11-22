@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:nchu-113-dsa-14}]{中興資工所甲組 113 學年度 選擇題第 14 題}
+（單選；答錯不倒扣）
+
+Given a directed graph where each edge has a non-negative weight, which of the following algorithms is the
+most suitable for finding the shortest path from a single source to all other vertices in the graph? (5\%)
+\begin{enumerate}[label=(\Alph*)]
+\item Kruskal's Algorithm
+\item Floyd-Warshall Algorithm
+\item Bellman-Ford Algorithm
+\item Dijkstra's Algorithm
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。 $n = |V|$、$m = |E|$。
+\begin{itemize}
+\item (A) Kruskal 求的是無向圖的最小生成樹（資結書第~24.2~節），不是最短路徑。 最小生成樹上兩點間的路徑
+不一定最短。
+\item (B) Floyd--Warshall 求所有點對的最短路徑，$\Theta(n^3)$（資結書第~25.6~節）。 只要一個起點時做了太多
+事。
+\item (C) Bellman--Ford 能處理負權重的邊，$\Theta(nm)$（資結書第~25.3~節）。 正確，但比 Dijkstra 慢。
+\item (D) Dijkstra 正好是「單一起點、邊權非負」的演算法，用二元堆積是 $O((n + m)\log n)$，用陣列是
+$O(n^2)$（資結書第~25.2~節）。 非負權重保證每次取出的頂點距離已經確定，所以它正確，又是三個正確選項中
+最快的。
+\end{itemize}
+\end{pastsoln}

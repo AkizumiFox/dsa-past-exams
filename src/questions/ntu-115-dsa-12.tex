@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-115-dsa-12}]{臺大資工所 115 學年度 第 12 題}
+（單選）
+
+(4 points) Bucket sort has an expected linear runtime, $O(n)$, under which of the following fundamental conditions?
+\begin{enumerate}[label=(\Alph*)]
+\item The input values are uniformly distributed over the interval.
+\item The input array is already sorted.
+\item All elements are placed in a single bucket.
+\item The number of buckets is the same as the number of input elements.
+\item The number of buckets is smaller than the number of input elements.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+桶子排序（資結書第~15.2.5~節、虛擬碼~15.3）把 $[0, 1)$ 切成 $n$ 個等長的桶子，每個數丟進所在的桶子，桶內用
+插入排序，再依序串起來。 設桶子 $j$ 有 $n_j$ 個數，總時間是 $\Theta(n) + \sum_j O(n_j^2)$。 輸入\textbf{均勻分布}
+時，每個數獨立地以機率 $1/n$ 落進桶子 $j$，$n_j$ 是二項分布 $B(n, 1/n)$，
+$\mathrm{E}[n_j^2] = \mathrm{Var}[n_j] + (\mathrm{E}[n_j])^2 = (1 - 1/n) + 1 = 2 - 1/n$，總期望時間
+$\Theta(n) + n \cdot O(1) = \Theta(n)$。 這個期望是對輸入的分布取的，均勻分布是線性的根本前提。
+\begin{itemize}
+\item (B) 已經排好不是條件：桶子排序不利用輸入的順序；排好但全部擠在 $[0, 0.1)$ 時一樣很慢。
+\item (C) 全部落在同一個桶子：桶內插入排序變成 $\Theta(n^2)$，這是最壞情況。
+\item (D) 桶子數和元素個數相同：這是演算法的設計（桶子數取 $\Theta(n)$），但單靠它不夠：輸入不均勻時，
+例如全部擠在同一個桶子，還是 $\Theta(n^2)$。 題目問的是「fundamental」的條件，是輸入的分布。
+\item (E) 桶子比元素少：例如只有常數個桶子，每個桶子平均 $\Theta(n)$ 個數，插入排序要 $\Theta(n^2)$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:nchu-114-dsa-09}]{中興資工所甲組 114 學年度 單選題第 9 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Which of the following best describes how Depth-First Search (DFS) detects a cycle in such a graph?
+
+(A)~By checking if any vertex is visited more than once during traversal.\\
+(B)~By identifying back edges that point to an ancestor in the recursion stack.\\
+(C)~By verifying if any edge weight is negative during traversal.\\
+(D)~By counting the total number of strongly connected components.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+題目的「such a graph」前面沒有交代是哪種圖，原卷就是這樣。 從選項 (B)「recursion stack」和 (D)
+「strongly connected components」看，指的是有向圖，下面照有向圖回答（無向圖的情形最後補充）。
+
+DFS 把邊分成樹邊、後向邊、前向邊、交叉邊（資結書第~21.5~節）。 有向圖有環，若且唯若 DFS 會遇到後向邊（資結書定理~21.10）：
+沿著邊 $(u, v)$ 看到的 $v$ 是灰色（還在遞迴堆疊上，是 $u$ 的祖先），$v \leadsto u \to v$ 就是一個環；
+反過來，環上第一個被發現的頂點 $v$，由白色路徑定理（資結書定理~21.7），環上其他頂點都成為它的子孫，環上指回 $v$ 的那條
+邊就是後向邊。
+\begin{itemize}
+\item (A) 每個頂點在 DFS 裡只會被拜訪一次；如果意思是「沿著邊又碰到已拜訪的頂點」，那在有向圖不代表
+有環。 反例：$a \to b$、$a \to c$、$c \to b$ 沒有環，但從 $a$ 做 DFS，經由 $c$ 會再碰到已經拜訪過（黑色）的
+$b$，這是交叉邊。 錯。
+\item (B) 對，見上。
+\item (C) 邊權是否為負和有沒有環無關，DFS 也不看權重。 錯。
+\item (D) 有向圖沒有環，若且唯若每個強連通元件都只有一個頂點（且沒有自迴圈），所以強連通元件的個數
+確實能判斷有沒有環；但那是另一個演算法（兩次 DFS 求強連通元件），不是「DFS 怎麼偵測環」。 選項問的是
+最貼切的描述，(B) 才是。 錯。
+\end{itemize}
+無向圖：DFS 遇到一條連到「已拜訪、而且不是父節點」的頂點的邊就有環，那條邊同樣是後向邊（無向圖的 DFS
+沒有前向邊和交叉邊）。 兩種情形都是 (B)。
+\end{pastsoln}

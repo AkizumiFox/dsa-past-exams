@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:nchu-114-dsa-22}]{中興資工所甲組 114 學年度 計算題第 2 題}
+（計算）
+
+(5\%) Given the array [9, 3, 7, 1, 6, 5, 8], perform two passes of the Bubble Sort algorithm in ascending order (smallest number comes first). What is the resulting array after these two passes?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$[3, 1, 6, 5, 7, 8, 9]$。
+
+用資結書虛擬碼~14.1 的氣泡排序：每一趟從左到右比較相鄰的兩個，左邊比較大就交換，一趟做完，這一趟
+範圍內的最大值會被推到範圍的最右邊；第 $i$ 趟比較 $A[1..n - i + 1]$ 範圍內的 $n - i$ 對。 $n = 7$。
+
+\textbf{第一趟}（比較 $6$ 對）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+比較 & 結果 & 陣列 \\
+\midrule
+$9, 3$ & 交換 & $[3, 9, 7, 1, 6, 5, 8]$ \\
+$9, 7$ & 交換 & $[3, 7, 9, 1, 6, 5, 8]$ \\
+$9, 1$ & 交換 & $[3, 7, 1, 9, 6, 5, 8]$ \\
+$9, 6$ & 交換 & $[3, 7, 1, 6, 9, 5, 8]$ \\
+$9, 5$ & 交換 & $[3, 7, 1, 6, 5, 9, 8]$ \\
+$9, 8$ & 交換 & $[3, 7, 1, 6, 5, 8, 9]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最大值 $9$ 到了最後一格。
+
+\textbf{第二趟}（比較前 $6$ 個裡的 $5$ 對）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+比較 & 結果 & 陣列 \\
+\midrule
+$3, 7$ & 不換 & $[3, 7, 1, 6, 5, 8, 9]$ \\
+$7, 1$ & 交換 & $[3, 1, 7, 6, 5, 8, 9]$ \\
+$7, 6$ & 交換 & $[3, 1, 6, 7, 5, 8, 9]$ \\
+$7, 5$ & 交換 & $[3, 1, 6, 5, 7, 8, 9]$ \\
+$7, 8$ & 不換 & $[3, 1, 6, 5, 7, 8, 9]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+兩趟之後是 $[3, 1, 6, 5, 7, 8, 9]$，最後兩格 $8, 9$ 已經就定位。 第二趟有交換，所以還不能提早結束。
+
+注意方向：題目要由小到大，而且是常見的「把大的往右推」的版本。 如果用「從右往左、把小的往左推」的
+版本，兩趟後會是 $[1, 3, 9, 5, 7, 6, 8]$，答案不同；沒有特別說明時照課本的寫法即可。
+\end{pastsoln}

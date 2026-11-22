@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-113-dsa-12}]{中興資工所甲組 113 學年度 選擇題第 12 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+If we use \textit{merge-sort} to sort an array with $n$ elements, what is the \textbf{worst case} time required
+for the sort?
+
+(A)~$O(1)$ \qquad (B)~$O(\log n)$ \qquad (C)~$O(n)$ \qquad (D)~$O(n\log n)$ \qquad (E)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+合併排序把陣列切成兩半各自排序，再用 $\Theta(n)$ 的合併把兩段接起來（資結書第~14.4~節），不管輸入長怎樣，
+遞迴式都是
+\[
+T(n) = 2T(n/2) + \Theta(n).
+\]
+用主定理（$a = 2$、$b = 2$，$n^{\log_b a} = n$，和 $f(n) = \Theta(n)$ 同階），$T(n) = \Theta(n \log n)$。 從遞迴
+樹看：共 $\lceil \lg n \rceil$ 層，每一層合併的總長度是 $n$。 最好、平均、最壞都是 $\Theta(n \log n)$，所以最壞
+情況是 $O(n \log n)$，選 (D)。
+
+(A)(B) 連把 $n$ 個數讀一遍都不夠；(C) $O(n)$ 違反比較排序的 $\Omega(n \log n)$ 下界（資結書第~15.1~節），
+合併排序只靠比較，不可能在最壞情況下做到線性。
+\end{pastsoln}

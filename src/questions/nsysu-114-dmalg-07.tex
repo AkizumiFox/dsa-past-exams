@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:nsysu-114-dmalg-07}]{中山資工所資安組 114 學年度 第 8 題}
+（問答）
+
+(Algorithm Points) {[10\%]} Please describe the algorithm of Heap Sort and analyze its time
+complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：堆積排序先用 $O(n)$ 時間把陣列建成最大堆積，再做 $n - 1$ 次「把根（最大值）換到堆積
+最後一格、堆積縮小一格、新的根往下調整」，每次 $O(\log n)$。 總時間最壞、平均都是
+$\Theta(n \log n)$，額外空間 $O(1)$，不穩定。
+
+\textbf{演算法}（資結書第~14.6~節）。 陣列 $A[1..n]$ 當成完全二元樹：節點 $i$ 的子節點是 $2i$、
+$2i + 1$，父節點是 $\lfloor i/2 \rfloor$。 最大堆積的性質：每個節點不小於它的子節點，所以
+最大值在根 $A[1]$。
+\begin{pseudo}{堆積排序}
+\Procedure{Sift-Down}{$A, i, m$} \Comment{$A[1..m]$ 是堆積的範圍}
+    \While{$2i \le m$}
+        \State $j \gets 2i$
+        \If{$j + 1 \le m$ \AND $A[j + 1] > A[j]$}
+            \State $j \gets j + 1$ \Comment{$j$ 是較大的子節點}
+        \EndIf
+        \If{$A[i] \ge A[j]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$；$i \gets j$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Heapsort}{$A, n$}
+    \For{$i \gets \lfloor n/2 \rfloor$ \DownTo $1$} \Comment{第一階段：建堆}
+        \State \Call{Sift-Down}{$A, i, n$}
+    \EndFor
+    \For{$m \gets n$ \DownTo $2$} \Comment{第二階段：逐一取出最大值}
+        \State 交換 $A[1]$ 和 $A[m]$
+        \State \Call{Sift-Down}{$A, 1, m - 1$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 第一階段：由下往上處理，處理到 $i$ 時，$i$ 的兩棵子樹都已經是堆積（葉子本身
+就是堆積），\proc{Sift-Down} 把 $A[i]$ 放到正確位置後，以 $i$ 為根的子樹也成為堆積；做到 $i = 1$
+整個陣列就是堆積。 第二階段的迴圈不變量：每一輪開始時 $A[1..m]$ 是最大堆積，裝著最小的 $m$ 個數，
+$A[m+1..n]$ 是最大的 $n - m$ 個數且已排好。 交換把堆積裡最大的數放到 $A[m]$，它不大於
+$A[m+1..n]$ 的任何一個，所以 $A[m..n]$ 排好了；對 $A[1..m-1]$ 做 \proc{Sift-Down} 修回堆積。 迴圈
+結束時 $A[1..n]$ 由小到大排好。
+
+\textbf{時間分析}。 $n$ 個節點的完全二元樹高度 $h = \lfloor \lg n \rfloor$，\proc{Sift-Down}
+每走一層做常數次比較，從高度 $k$ 的節點開始最多走 $k$ 層，所以是 $O(k)$。
+\begin{itemize}
+\item \textbf{建堆 $O(n)$}（資結書定理~8.1）。 高度為 $k$ 的節點最多 $\lceil n / 2^{k+1} \rceil$ 個，
+總成本
+\[
+\sum_{k=0}^{h} \left\lceil \frac{n}{2^{k+1}} \right\rceil O(k)
+= O\!\left(n \sum_{k=0}^{\infty} \frac{k}{2^{k}}\right) = O(2n) = O(n),
+\]
+用到 $\sum_{k \ge 0} k/2^k = 2$。 直覺是：大部分節點都在底部，往下走的層數很少；只有少數接近根
+的節點要走 $\lg n$ 層。
+\item \textbf{第二階段 $O(n \log n)$}。 $n - 1$ 次交換各 $O(1)$，每次 \proc{Sift-Down} 從根開始，
+最多走 $\lfloor \lg (m-1) \rfloor \le \lg n$ 層，共 $O(n \log n)$。
+\item \textbf{總計} $O(n) + O(n \log n) = O(n \log n)$，和輸入的排列無關，所以最壞情況也是
+$O(n \log n)$。
+\end{itemize}
+這個上界是緊的：任何以比較為基礎的排序在最壞情況都要 $\Omega(n \log n)$ 次比較（資結書第~15~章），
+所以堆積排序的最壞情況是 $\Theta(n \log n)$。 實際上，即使所有數都不相同，第二階段的每次下沉
+多半都會走到接近底部，平均也是 $\Theta(n \log n)$。
+
+\textbf{其他性質}。 只在原陣列裡交換，額外空間 $O(1)$（原地排序）。 不穩定：例如
+$\langle 2_a, 2_b, 1\rangle$ 建堆不動，第一次交換把 $2_a$ 換到最後，結果是 $1, 2_b, 2_a$，兩個 $2$
+的相對順序顛倒了。
+\end{pastsoln}

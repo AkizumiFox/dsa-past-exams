@@ -1,0 +1,164 @@
+\begin{pastexam}[label={px:ntu-112-dsa-15}]{臺大資工所 112 學年度 第 15 題}
+（問答；只看最後答案，完全正確才給分）
+
+\textbf{(21 points)} Given $k$ singly linked lists, each of which has $n$ nodes. The numbers in the
+nodes of the $i$-th list are given by $a_{i,1},a_{i,2},\ldots,a_{i,n}$, as shown in the figure below.
+Each of the $k$ lists has the numbers sorted in non-decreasing order, \textit{i.e.},
+$a_{i,1}\le a_{i,2}\le\cdots\le a_{i,n}$, where $i$ is the index of the list. Professor Q asks the
+students to develop an algorithm to merge these k lists into one singly linked list sorted in
+non-decreasing order. Three students have come up with different algorithms, which are given below
+in pseudo code.
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\small,>={Stealth[length=1.8mm]},c/.style={draw,minimum width=6.5mm,minimum height=6mm,inner sep=0pt,font=\scriptsize}]
+\node[font=\sffamily\bfseries,anchor=east] at (-0.6,0.00) {list 1};
+\node[c] (d00) at (0.00,0.00) {$a_{1,1}$};
+\node[c,right=-\pgflinewidth of d00] (p00) {};
+\node[c] (d01) at (1.70,0.00) {$a_{1,2}$};
+\node[c,right=-\pgflinewidth of d01] (p01) {};
+\node[c] (d02) at (3.40,0.00) {$a_{1,3}$};
+\node[c,right=-\pgflinewidth of d02] (p02) {};
+\node[c] (d03) at (6.00,0.00) {$a_{1,n}$};
+\node[c,right=-\pgflinewidth of d03] (p03) {};
+\node[font=\sffamily\bfseries] (h0) at (0,0.95) {head};
+\draw[->] (h0.south)--(d00.north);
+\draw[->] (p00.center)--(d01.west);
+\draw[->] (p01.center)--(d02.west);
+\draw[->] (p02.center)--++(0.55,0);
+\node at (4.98,0.00) {$\cdots$};
+\draw[->] (5.32,0.00)--(d03.west);
+\draw (p03.south west)--(p03.north east);
+\node[font=\sffamily\bfseries,anchor=east] at (-0.6,-1.90) {list 2};
+\node[c] (d10) at (0.00,-1.90) {$a_{2,1}$};
+\node[c,right=-\pgflinewidth of d10] (p10) {};
+\node[c] (d11) at (1.70,-1.90) {$a_{2,2}$};
+\node[c,right=-\pgflinewidth of d11] (p11) {};
+\node[c] (d12) at (3.40,-1.90) {$a_{2,3}$};
+\node[c,right=-\pgflinewidth of d12] (p12) {};
+\node[c] (d13) at (6.00,-1.90) {$a_{2,n}$};
+\node[c,right=-\pgflinewidth of d13] (p13) {};
+\node[font=\sffamily\bfseries] (h1) at (0,-0.95) {head};
+\draw[->] (h1.south)--(d10.north);
+\draw[->] (p10.center)--(d11.west);
+\draw[->] (p11.center)--(d12.west);
+\draw[->] (p12.center)--++(0.55,0);
+\node at (4.98,-1.90) {$\cdots$};
+\draw[->] (5.32,-1.90)--(d13.west);
+\draw (p13.south west)--(p13.north east);
+\node[font=\sffamily\bfseries,anchor=east] at (-0.6,-4.30) {list k};
+\node[c] (d20) at (0.00,-4.30) {$a_{k,1}$};
+\node[c,right=-\pgflinewidth of d20] (p20) {};
+\node[c] (d21) at (1.70,-4.30) {$a_{k,2}$};
+\node[c,right=-\pgflinewidth of d21] (p21) {};
+\node[c] (d22) at (3.40,-4.30) {$a_{k,3}$};
+\node[c,right=-\pgflinewidth of d22] (p22) {};
+\node[c] (d23) at (6.00,-4.30) {$a_{k,n}$};
+\node[c,right=-\pgflinewidth of d23] (p23) {};
+\node[font=\sffamily\bfseries] (h2) at (0,-3.35) {head};
+\draw[->] (h2.south)--(d20.north);
+\draw[->] (p20.center)--(d21.west);
+\draw[->] (p21.center)--(d22.west);
+\draw[->] (p22.center)--++(0.55,0);
+\node at (4.98,-4.30) {$\cdots$};
+\draw[->] (5.32,-4.30)--(d23.west);
+\draw (p23.south west)--(p23.north east);
+\node[font=\sffamily\bfseries] at (-1.0,-3.0) {$\cdots$};
+\end{tikzpicture}
+\end{center}
+
+\noindent Student A:\\[2pt]
+\begin{tabular}{@{\hspace{1.5em}}l@{\hspace{1em}}p{0.8\linewidth}@{}}
+L1. & Create an empty singly linked list $S$ to collect the result. \\
+L2. & DO \\
+L3. & \quad Iterate over the numbers in the head nodes of the $k$ lists, and find the node with
+the smallest number, denoted as node $M$. \\
+L4. & \quad Remove node $M$ from the original list, and insert it into the result list $S$ from the
+tail. \\
+L5. & UNTIL all original $k$ lists are empty \\
+L6. & Return the result list $S$, which contains all nodes from the original $k$ lists and sorted
+in non-decreasing order.
+\end{tabular}
+
+\medskip
+\noindent Student B:\\[2pt]
+\begin{tabular}{@{\hspace{1.5em}}l@{\hspace{1em}}p{0.8\linewidth}@{}}
+L1. & Create an empty singly linked list $S$ to collect the result. \\
+L2. & Create an empty min heap $H$. \\
+L3. & Remove the $k$ head nodes from the $k$ lists and insert them into $H$. Each node in $H$ also
+contains the index number $i$ of the list where it is from. \\
+L4. & DO \\
+L5. & \quad Remove the min node $M$ from the heap. Insert this node into $S$ from the tail. Take note
+of the index number stored in $M$, denoted as $m$. \\
+L6. & \quad If list $m$ is not empty, remove the head node from list $m$ and insert it into $H$. \\
+L7. & WHILE $H$ is not empty \\
+L8. & Return the result list $S$, which contains all nodes from the original $k$ lists and sorted
+in non-decreasing order.
+\end{tabular}
+
+\medskip
+\noindent Student C:\\
+Call the recursive divide-and-conquer function MergeTwoGroupLists (\textit{k sorted linked lists}).
+The return value of the function is a list containing all nodes from the original $k$ lists and
+sorted in non-decreasing order.
+
+\smallskip
+\begin{tabular}{@{\hspace{1.5em}}l@{\hspace{1em}}p{0.8\linewidth}@{}}
+L1. & Function MergeTwoGroupLists ($m$ sorted linked lists) \\
+L2. & \quad If $m{=}{=}1$ then return the only list from the input. \\
+L3. & \quad Divide the input $m$ lists into two groups of lists, with $\lceil \frac{m}{2}\rceil$ and
+$\lfloor \frac{m}{2}\rfloor$ lists, respectively. \\
+L4. & \quad Recursively call MergeTwoGroupLists for each of these two groups of lists, merging the
+first group of the lists into one sorted list, $S_1$, and the second group of the lists into one
+sorted list, $S_2$. \\
+L5. & \quad Merge the two sorted lists $S_1$ and $S_2$ into one sorted list $S$. \\
+L6. & \quad Return $S$.
+\end{tabular}
+
+\medskip
+For each of these three algorithms, analyze and give their asymptotic worst-case running times with
+\textbf{the big-O notation} and \textbf{in terms of $k$ and $n$}.
+
+Note:
+\begin{itemize}
+\item Lower-order terms and constant factors (excluding $k$ and $n$) should be removed in the big-O
+notation in the answer.
+\item The bound in the answer needs to be tight.
+\item Only the final result will be graded and only fully correct answers will be given points.
+Please clearly mark your final result in the answer sheet.
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：學生 A $O(nk^2)$；學生 B $O(nk \log k)$；學生 C $O(nk \log k)$。
+
+三個演算法都是 $k$ 路合併，總共要輸出 $N = nk$ 個節點。 搬移一個節點（從原串列拿下、接到 $S$ 的
+尾端）只改幾個指標，$O(1)$；所以差別在「每次怎麼找出最小的那一個」。 以下假設 $k \ge 2$（$k = 1$
+時三個都是 $O(n)$）。
+
+\textbf{學生 A：$O(nk^2)$。} L3 每一輪要看 $k$ 條串列的開頭，$\Theta(k)$；L4 搬一個節點 $O(1)$。
+每一輪恰好輸出一個節點，所以共 $nk$ 輪，總時間 $nk \cdot \Theta(k) = \Theta(nk^2)$。 這是緊的：
+即使把已經空了的串列跳過，最壞情況也可以讓所有串列一起變短（例如第 $i$ 條串列是
+$i, i + k, i + 2k, \ldots$），前 $nk - k$ 輪每條串列都還有節點，每輪都真的要比 $k$ 個開頭。
+
+\textbf{學生 B：$O(nk \log k)$。} 這是資結書第~8.3~節「合併 $k$ 個排好的數列」的做法。
+\begin{itemize}
+\item L3：$k$ 次插入，$O(k \lg k)$（或用建堆積 $O(k)$）。
+\item L4--L7 的迴圈：每一輪取出一個節點輸出，所以共 $nk$ 輪。 每輪一次 \proc{Extract-Min}，最多一次
+插入。 堆積裡每條串列最多同時有一個節點，大小 $\le k$，每次操作 $O(\lg k)$。
+\end{itemize}
+總時間 $O(k \lg k) + nk \cdot O(\lg k) = O(nk \lg k)$。 緊的理由和 A 一樣：同樣的輸入下大部分時間
+堆積裡都有 $k$ 個節點，二元堆積每次操作 $\Theta(\lg k)$。
+
+\textbf{學生 C：$O(nk \log k)$。} 合併兩條總長 $L$ 的排好的串列（L5）是 $\Theta(L)$。 設 $T(m)$ 是
+合併 $m$ 條長 $n$ 的串列的時間：
+\[
+T(m) = T(\lceil m/2 \rceil) + T(\lfloor m/2 \rfloor) + \Theta(mn), \qquad T(1) = \Theta(1).
+\]
+用遞迴樹（資結書第~2~章）：第 $j$ 層把 $k$ 條串列分成 $2^j$ 組，每一組合併的總長加起來還是全部的
+$nk$ 個節點，所以每一層的合併共 $\Theta(nk)$。 每一層組數加倍，到每組只剩一條串列為止，共
+$\lceil \lg k \rceil$ 層。 總時間 $\Theta(nk) \cdot \lceil \lg k \rceil = \Theta(nk \lg k)$。 （另外每個
+遞迴呼叫本身 $O(1)$，共 $2k - 1$ 次呼叫，$O(k)$，被吸收。）
+
+三者的 big-O 寫法：A 是 $O(nk^2)$，B、C 都是 $O(nk \log k)$。 B 和 C 一樣快，而且都比 A 好
+$k / \lg k$ 倍。
+\end{pastsoln}

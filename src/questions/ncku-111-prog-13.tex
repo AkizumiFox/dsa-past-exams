@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncku-111-prog-13}]{成大資訊聯招 111 學年度 第 13 題}
+（計算）
+
+(10\%) Give asymptotic tight bound ($\Theta$) for $T(n)$ where $T(n)=2T\left(\frac{n}{4}\right)+\sqrt{n}\log(n)$. (Assume that $T(n)$ is a constant for sufficiently small $n$.)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(\sqrt{n}\,\log^2 n)$。
+
+\textbf{主定理的延伸情況}（資結書定理~2.5）。 $a = 2$、$b = 4$，$n^{\log_b a} = n^{\log_4 2} = n^{1/2}$。
+$f(n) = \sqrt{n}\log n = \Theta(n^{\log_b a} \lg^1 n)$（對數的底只差常數倍），符合 $k = 1$ 的情況，所以
+\[
+T(n) = \Theta(n^{\log_b a} \lg^{k+1} n) = \Theta(\sqrt{n}\,\lg^2 n).
+\]
+注意不能套原本主定理的情況 3：$f(n) = \sqrt{n}\lg n$ 只比 $n^{1/2}$ 大一個 $\lg n$ 的倍數，不是多項式地大
+（找不到 $\varepsilon > 0$ 使 $f(n) = \Omega(n^{1/2 + \varepsilon})$）。
+
+\textbf{用遞迴樹驗證}（資結書第~2.3~節）。 設 $n$ 是 $4$ 的次方，對數取以 $2$ 為底。 第 $i$ 層有 $2^i$ 個
+子問題，每個大小 $n/4^i$，成本 $\sqrt{n/4^i}\,\lg(n/4^i) = \frac{\sqrt{n}}{2^i}(\lg n - 2i)$，所以第 $i$ 層的
+總成本是
+\[
+2^i \cdot \frac{\sqrt{n}}{2^i}(\lg n - 2i) = \sqrt{n}\,(\lg n - 2i).
+\]
+內部節點的層 $i = 0, 1, \ldots, L - 1$，$L = \log_4 n = \frac{1}{2}\lg n$，$\lg n - 2i = 2(L - i)$：
+\[
+\sum_{i=0}^{L-1} \sqrt{n}\cdot 2(L - i) = 2\sqrt{n} \sum_{j=1}^{L} j = \sqrt{n}\, L(L + 1)
+= \sqrt{n}\left(\tfrac{1}{4}\lg^2 n + \tfrac{1}{2}\lg n\right).
+\]
+葉子有 $2^L = \sqrt{n}$ 個，每個 $\Theta(1)$，共 $\Theta(\sqrt{n})$。 加起來
+$T(n) = \frac{1}{4}\sqrt{n}\lg^2 n + O(\sqrt{n}\lg n) = \Theta(\sqrt{n}\lg^2 n)$，和主定理的結果相同。 每一層的
+成本隨深度線性遞減、層數 $\Theta(\lg n)$，所以總和是「單層最大成本 $\times$ 層數」的量級，比 $f(n)$ 多一個
+$\lg n$。
+\end{pastsoln}

@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncku-112-prog-04}]{成大資訊聯招 112 學年度 第 4 題}
+（複選）
+
+{[5\%]} Given an AVL tree as follows, we perform the operations (A), (B), (C), (D) and (E),
+independently. Which of these operations would result in the tree to be unbalanced, and shall be
+restructured?
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2mm]},every node/.style={circle,draw,inner sep=0pt,minimum size=7mm,font=\sffamily\small}]
+\node (a) at (0,0) {22};
+\node (b) at (-0.98,-1.1) {17};
+\node (c) at (0.84,-1.1) {35};
+\node (d) at (-0.29,-2.37) {20};
+\node (e) at (1.53,-2.37) {36};
+\draw[->] (a)--(b); \draw[->] (a)--(c); \draw[->] (b)--(d); \draw[->] (c)--(e);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item insert 18
+\item insert 33
+\item insert 38
+\item delete 35
+\item delete 22
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)。
+
+原樹：根 $22$；左子 $17$，$17$ 只有右子 $20$；右子 $35$，$35$ 只有右子 $36$。 高度用節點數算（資結書
+第~7.1~節），各節點的平衡因子（左高減右高）：$20$、$36$ 是 $0$，$17$、$35$ 是 $-1$，$22$ 是 $0$。 每個操作
+都從原樹獨立做，做完從變動處往上看有沒有平衡因子變成 $\pm 2$（資結書第~10.2~節）。
+
+\begin{itemize}
+\item (A) 插入 $18$：$18 < 22$、$> 17$、$< 20$，成為 $20$ 的左子。 $17$ 的左子樹高 $0$、右子樹（$20, 18$）
+高 $2$，平衡因子 $-2$，失衡，要調整（RL 型：先在 $20$ 右旋，再在 $17$ 左旋，$18$ 升上來）。 是。
+\item (B) 插入 $33$：成為 $35$ 的左子，$35$ 變成 $0$，$22$ 的右子樹高度不變。 不失衡。
+\item (C) 插入 $38$：成為 $36$ 的右子。 $35$ 的左子樹高 $0$、右子樹（$36, 38$）高 $2$，平衡因子 $-2$，失衡
+（RR 型，在 $35$ 左旋）。 是。
+\item (D) 刪除 $35$：$35$ 只有一個子節點 $36$，$36$ 接上來。 $22$ 的左子樹高 $2$、右子樹高 $1$，平衡因子
+$+1$。 不失衡。
+\item (E) 刪除 $22$：兩個子節點，用中序後繼 $35$ 取代（$35$ 的位置由 $36$ 接上），根 $35$ 的左子樹高 $2$、
+右子樹高 $1$，平衡。 若改用中序前驅 $20$ 取代，根 $20$ 的左子樹（$17$）高 $1$、右子樹（$35, 36$）高 $2$，
+也平衡。 不失衡。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nchu-113-dsa-02}]{中興資工所甲組 113 學年度 選擇題第 2 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+Let $N_H$ represent the minimal number of nodes in an \textbf{AVL tree} of height $\boldsymbol{H}$; for
+example, $N_2$ denotes the minimal number of nodes in an AVL tree of height 2. Which is the bit pattern of
+$(N_3-N_5)$ under an 8-bit two's complement representation.
+
+(A)~1111 0011 \qquad (B)~1110 0011 \qquad (C)~1111 1000 \qquad (D)~1101 0011 \qquad (E)~None of these.
+\end{pastexam}
+
+\begin{pastsoln}
+本書採用的答案是 (C)。
+
+答案取決於高度怎麼數，題目沒有定義。 資結書第~10~章（和第~7~章）的高度數\textbf{節點}：只有一個節點的
+樹高度是 $1$。 下面照這個定義算，最後再說數邊的情形。
+
+高度 $h$ 的 AVL 樹最少節點數滿足 $N_h = N_{h-1} + N_{h-2} + 1$（資結書第~10.2.2~節）：根的一棵子樹高度
+$h - 1$，另一棵至少 $h - 2$，兩棵都取最少。 由 $N_1 = 1$、$N_2 = 2$：
+\[
+N_3 = 2 + 1 + 1 = 4,\quad N_4 = 4 + 2 + 1 = 7,\quad N_5 = 7 + 4 + 1 = 12.
+\]
+$N_3 - N_5 = 4 - 12 = -8$。 8 位元二補數：$8 = 0000\,1000_2$，各位取反得 $1111\,0111$，再加 $1$ 得
+$1111\,1000$，選 (C)。 （核對：$1111\,1000_2$ 當成無號數是 $248 = 256 - 8$。）
+
+若高度改數\textbf{邊}（單一節點高度 $0$），$N_0 = 1$、$N_1 = 2$，$N_2 = 4$、$N_3 = 7$、$N_4 = 12$、
+$N_5 = 20$，$N_3 - N_5 = -13$，二補數是 $256 - 13 = 243 = 1111\,0011_2$，就是 (A)。 兩個定義各對應一個
+選項，作答時要寫明採用的高度定義；本書照資結書的定義選 (C)。
+
+(B) $1110\,0011 = 227 - 256 = -29$、(D) $1101\,0011 = 211 - 256 = -45$，兩種定義都對不上。
+\end{pastsoln}

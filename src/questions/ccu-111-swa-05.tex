@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:ccu-111-swa-05}]{中正資工所甲組 111 學年度 第 13 題}
+（單選）
+
+(2\%) (\quad) The following values are to be stored in a hash table. Use the division method of
+hashing with a table size of 11 (index starting at 0) and use the linear probing method of resolving
+collisions.
+\begin{center}25, 42, 96, 101, 102, 162, 197, 201\end{center}
+What does the table look like?
+
+{\small
+a.\\
+\begin{tabular}{|*{12}{c|}}
+\hline
+ &  &  & 25 & 42 & 162 & 162 & 197 & 201 & 96 & 101 & 102\\ \hline
+\multicolumn{1}{c}{\scriptsize 0} & \multicolumn{1}{c}{\scriptsize 1} & \multicolumn{1}{c}{\scriptsize 2} & \multicolumn{1}{c}{\scriptsize 3} & \multicolumn{1}{c}{\scriptsize 4} & \multicolumn{1}{c}{\scriptsize 5} & \multicolumn{1}{c}{\scriptsize 6} & \multicolumn{1}{c}{\scriptsize 7} & \multicolumn{1}{c}{\scriptsize 8} & \multicolumn{1}{c}{\scriptsize 9} & \multicolumn{1}{c}{\scriptsize 10} & \multicolumn{1}{c}{\scriptsize 11}
+\end{tabular}
+
+\smallskip
+b.\\
+\begin{tabular}{|*{12}{c|}}
+\hline
+ &  & 25 & 42 & 162 & 197 & 201 &  & 96 & 101 & 102 & \\ \hline
+\multicolumn{1}{c}{\scriptsize 0} & \multicolumn{1}{c}{\scriptsize 1} & \multicolumn{1}{c}{\scriptsize 2} & \multicolumn{1}{c}{\scriptsize 3} & \multicolumn{1}{c}{\scriptsize 4} & \multicolumn{1}{c}{\scriptsize 5} & \multicolumn{1}{c}{\scriptsize 6} & \multicolumn{1}{c}{\scriptsize 7} & \multicolumn{1}{c}{\scriptsize 8} & \multicolumn{1}{c}{\scriptsize 9} & \multicolumn{1}{c}{\scriptsize 10} & \multicolumn{1}{c}{\scriptsize 11}
+\end{tabular}
+
+\smallskip
+c.\\
+\begin{tabular}{|*{12}{c|}}
+\hline
+197 &  & 101 & 25 & 102 & 201 &  &  & 96 & 42 & 162 & \\ \hline
+\multicolumn{1}{c}{\scriptsize 0} & \multicolumn{1}{c}{\scriptsize 1} & \multicolumn{1}{c}{\scriptsize 2} & \multicolumn{1}{c}{\scriptsize 3} & \multicolumn{1}{c}{\scriptsize 4} & \multicolumn{1}{c}{\scriptsize 5} & \multicolumn{1}{c}{\scriptsize 6} & \multicolumn{1}{c}{\scriptsize 7} & \multicolumn{1}{c}{\scriptsize 8} & \multicolumn{1}{c}{\scriptsize 9} & \multicolumn{1}{c}{\scriptsize 10} & \multicolumn{1}{c}{\scriptsize 11}
+\end{tabular}
+
+\smallskip
+d.\\
+\begin{tabular}{|*{12}{c|}}
+\hline
+201 & 102 & 101 & 25 &  &  &  & 162 & 96 & 42 & 197 & \\ \hline
+\multicolumn{1}{c}{\scriptsize 0} & \multicolumn{1}{c}{\scriptsize 1} & \multicolumn{1}{c}{\scriptsize 2} & \multicolumn{1}{c}{\scriptsize 3} & \multicolumn{1}{c}{\scriptsize 4} & \multicolumn{1}{c}{\scriptsize 5} & \multicolumn{1}{c}{\scriptsize 6} & \multicolumn{1}{c}{\scriptsize 7} & \multicolumn{1}{c}{\scriptsize 8} & \multicolumn{1}{c}{\scriptsize 9} & \multicolumn{1}{c}{\scriptsize 10} & \multicolumn{1}{c}{\scriptsize 11}
+\end{tabular}
+}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c。
+
+除法雜湊（資結書第~12.1~節）$h(k) = k \bmod 11$，線性探測（資結書第~12.3~節）：位置被佔了就往後
+一格，超過第 $10$ 格繞回第 $0$ 格。 依題目順序插入：
+\begin{center}
+\begin{tabular}{rrl}
+\toprule
+$k$ & $k \bmod 11$ & 探測的位置 \\
+\midrule
+25 & 3 & 3 \\
+42 & 9 & 9 \\
+96 & 8 & 8 \\
+101 & 2 & 2 \\
+102 & 3 & 3（25）、\textbf{4} \\
+162 & 8 & 8（96）、9（42）、\textbf{10} \\
+197 & 10 & 10（162）、繞回 \textbf{0} \\
+201 & 3 & 3（25）、4（102）、\textbf{5} \\
+\bottomrule
+\end{tabular}
+\end{center}
+括號裡是那一格已經放的數。 最後的表是
+\[
+\begin{array}{c|ccccccccccc}
+\text{位置} & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+\text{鍵} & 197 & & 101 & 25 & 102 & 201 & & & 96 & 42 & 162
+\end{array}
+\]
+和 c 一樣。 四個選項的表都畫了第 $0$--$11$ 共 $12$ 格，但表的大小是 $11$，第 $11$ 格不存在；c 的第
+$11$ 格是空的，不影響。
+
+逐項檢查：
+\begin{itemize}
+\item a：$162$ 出現兩次（$9$ 格有數，鍵卻只有 $8$ 個）；$101$ 放在第 $10$ 格，但 $101 \bmod 11 = 2$，第 $2$ 格
+在表裡是空的，$101$ 應該直接放進第 $2$ 格。 錯。
+\item b：$25$ 放在第 $2$ 格，但 $25 \bmod 11 = 3$，第一次插入時第 $3$ 格是空的，應該放第 $3$ 格。 錯。
+\item c：和上面的表相同。 對。
+\item d：$42 \bmod 11 = 9$ 放第 $9$ 格沒錯，但 $102$ 放在第 $1$ 格：$102$ 的家是第 $3$ 格，線性探測往後找第
+$4$ 格就是空的，不會繞到第 $1$ 格。 錯。
+\end{itemize}
+\end{pastsoln}

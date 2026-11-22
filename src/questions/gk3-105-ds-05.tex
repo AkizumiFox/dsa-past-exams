@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:gk3-105-ds-05}]{高考三級資訊處理 105 年 第五題}
+（申論）
+
+對下列程式片段，請用 Big-O 符號（Big-O notation），分別估計最長執行時間（worst time）。注意：S 中沒有
+與 n 相關的迴圈（n-dependent loops）。（每小題 5 分，共 20 分）
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] \texttt{for (int i = 0; i * i < n; i++) S}
+\item[㈡] \texttt{for (int i = 1; i < n+1; i*=2) S}
+\item[㈢] \texttt{for (int i = 1; i < n+1; i*=2)}\\
+\texttt{\ \ \ \ for (int j = 0; j < n; j++) S}
+\item[㈣] \texttt{k=1; for (int i=0; i<n; i++)}\\
+\texttt{\ \ \ \ \{k*=3; for (int j=0; j<k; j++) S\}}
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $O(\sqrt{n})$；㈡ $O(\log n)$；㈢ $O(n \log n)$；㈣ $O(3^n)$。
+
+S 不含和 $n$ 有關的迴圈，執行一次是 $O(1)$，所以只要數 S 被執行幾次（資結書第~1.7~節）。
+
+\textbf{㈠} 迴圈在 $i^2 < n$ 時繼續，$i = 0, 1, \ldots$，最後一個符合的 $i$ 是 $\lceil \sqrt{n}\, \rceil - 1$，
+共執行 $\lceil \sqrt{n}\, \rceil$ 次。 例如 $n = 100$ 時 $i = 0 \sim 9$，$10$ 次。 時間 $O(\sqrt{n})$。
+
+\textbf{㈡} $i$ 依序是 $1, 2, 4, \ldots, 2^t$，條件 $i < n + 1$ 即 $i \le n$。 $2^t \le n$ 的最大 $t$ 是
+$\lfloor \lg n \rfloor$，共執行 $\lfloor \lg n \rfloor + 1$ 次（$n = 100$ 時 $i = 1, 2, \ldots, 64$，$7$ 次）。
+時間 $O(\log n)$。
+
+\textbf{㈢} 外層和㈡一樣跑 $\lfloor \lg n \rfloor + 1$ 次，內層和 $i$ 無關，每次固定 $n$ 次。 S 共執行
+$n(\lfloor \lg n \rfloor + 1)$ 次，時間 $O(n \log n)$。
+
+\textbf{㈣} 第 $i$ 圈（$i = 0, 1, \ldots, n - 1$）先把 $k$ 乘 $3$，這時 $k = 3^{i+1}$，內層跑 $3^{i+1}$ 次。
+S 總共執行
+\[
+\sum_{i=0}^{n-1} 3^{i+1} = 3 + 9 + \cdots + 3^n = \frac{3(3^n - 1)}{3 - 1} = \frac{3^{n+1} - 3}{2}
+\]
+次，再加上外層本身的 $n$ 次，時間 $O(3^n)$。 等比級數的和只是最後一項的常數倍（這裡約 $1.5$ 倍），
+所以答案是 $O(3^n)$，不是 $O(n \cdot 3^n)$。
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-114-prog-16}]{成大資訊聯招 114 學年度 第 16 題}
+（計算）
+
+(10\%) We aim to select courses from a pool of $n$ courses. Since this is still in the planning phase, each course has no specified start or finish times. Each course $i$ is characterized by its duration $p_i$ and weight $w_i$. The total available classroom time is $C$. We want to identify a subset of courses $S\subseteq\{1,\ldots,n\}$ such that the total duration of courses in $S$ does not exceed $C$ and the total weight of $S$ is maximized. To achieve this, we have developed a dynamic programming algorithm that uses a $(n+1)\times(C+1)$ table $T[0{:}n,0{:}C]$ to solve the problem. Here, $T[i,j]$ represents the maximum total weight achievable when considering only the subset of courses $\{1,\ldots,i\}$ and a classroom available for $j$ units of time. Write the recursive formula to compute $T[i,j]$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\[
+T[i, j] =
+\begin{cases}
+0, & i = 0, \\
+T[i-1, j], & i \ge 1,\ p_i > j, \\
+\max\bigl(T[i-1, j],\ T[i-1, j - p_i] + w_i\bigr), & i \ge 1,\ p_i \le j .
+\end{cases}
+\]
+
+這就是 0/1 背包（資結書第~18.5~節）：課程是物品，長度 $p_i$ 是重量，權重 $w_i$ 是價值，教室時間 $C$ 是背包容量，每門課選或不選。
+
+\textbf{推導}。 看最佳解裡有沒有課程 $i$：
+\begin{itemize}
+\item 沒選 $i$：只用課程 $1, \ldots, i-1$、時間仍是 $j$，最佳值 $T[i-1, j]$。
+\item 選了 $i$（需要 $p_i \le j$）：用掉 $p_i$ 單位時間，其餘課程是「課程 $1, \ldots, i-1$、時間 $j - p_i$」的一組可行解，而且必須是
+最佳的，否則換成更好的那組總權重更大。 最佳值 $T[i-1, j - p_i] + w_i$。
+\end{itemize}
+兩者取大；$p_i > j$ 時只能不選。 $T[0, j] = 0$（沒有課可選）。 依 $i = 0, 1, \ldots, n$ 一列一列填，每格 $O(1)$，表格
+$(n+1)(C+1)$ 格，時間 $\Theta(nC)$，答案是 $T[n, C]$。 要知道選了哪些課，從 $T[n, C]$ 往回看：$T[i, j] \ne T[i-1, j]$ 就表示選了
+課程 $i$，$j$ 減去 $p_i$ 再往上一列找。
+\end{pastsoln}

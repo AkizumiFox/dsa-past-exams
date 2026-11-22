@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntu-114-dsa-02}]{臺大資網所 114 學年度 第 2 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Which of the following statements about the Akra-Bazzi theorem is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item It can only be applied to recurrences where all subproblems have equal size.
+\item It requires that the function $g(n)$ in the recurrence satisfies a polynomial growth condition.
+\item It always produces a closed-form solution for the recurrence.
+\item It is less general than the Master Theorem for solving recurrences.
+\item The value of $p$ in the theorem must always be an integer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。 Akra--Bazzi 定理（資結書定理~2.8）處理 $T(n) = g(n) + \sum_{i=1}^{k} a_i T(b_i n)$ 這種形式
+（資結書寫成 $T(n/b_i)$，意思一樣），$a_i > 0$、$0 < b_i < 1$ 是常數。 取 $p$ 使 $\sum a_i b_i^{\,p} = 1$，則
+\[
+T(n) = \Theta\!\left(n^{p}\left(1 + \int_{1}^{n} \frac{g(u)}{u^{p+1}}\, du\right)\right).
+\]
+
+\begin{itemize}
+\item[(A)] 錯。 它正是為了子問題大小\textbf{不同}的情形設計的，例如 $T(n) = T(n/4) + T(3n/4) + n$。
+\item[(B)] 對。 定理要求 $g(n)$ 滿足多項式成長條件：$n$ 變成常數倍時 $g(n)$ 也只變成常數倍（$n^k$、$n^k \lg n$ 可以，
+$2^n$ 不行）。 Leighton 的版本把這個條件寫成「存在常數 $c_1, c_2$，對 $u \in [b_i n, n]$ 有
+$c_1 g(n) \le g(u) \le c_2 g(n)$」。
+\item[(C)] 錯。 結果是用積分表示的 $\Theta$ 式，積分不一定有封閉形式；$p$ 也常常只能數值求解（例如
+$T(n) = T(n/2) + T(n/3) + n$ 的 $p$ 滿足 $2^{-p} + 3^{-p} = 1$，$p \approx 0.788$）。 而且它給的是漸近階，不是精確解。
+\item[(D)] 錯。 Akra--Bazzi 比主定理\textbf{一般}：$k = 1$ 時就涵蓋主定理的大部分情形（資結書第~2.6~節）。
+\item[(E)] 錯。 $p$ 是方程式 $\sum a_i b_i^{\,p} = 1$ 的實數解，例如上面的 $0.788$；主定理對應的 $p = \log_b a$ 也常是
+無理數，如 $\log_2 3$。
+\end{itemize}
+\end{pastsoln}

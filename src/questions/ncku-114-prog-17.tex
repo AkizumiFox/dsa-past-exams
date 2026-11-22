@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ncku-114-prog-17}]{成大資訊聯招 114 學年度 第 17 題}
+（計算）
+
+(10\%) Assuming that the available time for the classroom is unlimited, we instead focus on the course completion time. We aim to schedule $n$ courses, where each course $i$ is characterized by its duration $p_i$ and weight $w_i$. In this schedule, the finish time of each course is the total duration of all courses scheduled before it, plus its duration. A schedule can be defined as a function $d(i)$, representing the order of course $i$ in the schedule. That is, if $d(i)<d(j)$, course $i$ is scheduled before course $j$. Therefore, the finish time of course $i$ is denoted as $f_i=\sum_{j\in\{1,\ldots,n\}:d(j)<d(i)}p_j$. This scheduling problem aims to minimize the total weighted finish time $\sum_{i\in\{1,\ldots,n\}}w_if_i$. Suppose we have 15 courses with corresponding durations [6, 6, 9, 83, 34, 44, 164, 38, 82, 180, 19, 128, 394, 512, 15] and weights [2, 4, 4, 6, 7, 7, 7, 10, 10, 10, 11, 12, 13, 13, 15]. What is the value of the optimal schedule, that is, the minimum total weighted finish time?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$63961$。
+
+\textbf{題目的式子和文字不一致}。 文字說完成時間是「排在它前面的課程長度總和，再加上它自己的長度」，但式子寫成
+$f_i = \sum_{j : d(j) < d(i)} p_j$，只加了前面的課，少了自己（那是開始時間）。 下面照文字（也就是 $d(j) \le d(i)$）計算完成時間。
+若照式子字面算，每門課少算 $w_i p_i$，總和少 $\sum_i w_i p_i = 19012$，最小值是 $63961 - 19012 = 44949$，最佳的順序不變。
+
+\textbf{最佳順序}（資結書第~19.4.1~節的加權版本）：依 $p_i / w_i$ 由小到大排（Smith 規則）。 理由是交換論證：設某個排程裡相鄰的
+兩門課 $i$ 在 $j$ 前面，前面所有課的長度和是 $t$。 這兩門課的貢獻是 $w_i(t + p_i) + w_j(t + p_i + p_j)$；交換成 $j$ 在前，貢獻是
+$w_j(t + p_j) + w_i(t + p_j + p_i)$，其他課程的完成時間都不變。 相減：
+\[
+\bigl[w_i(t + p_i) + w_j(t + p_i + p_j)\bigr] - \bigl[w_j(t + p_j) + w_i(t + p_i + p_j)\bigr] = w_j p_i - w_i p_j .
+\]
+若 $p_i / w_i > p_j / w_j$，即 $w_j p_i > w_i p_j$，交換會讓總和變小。 所以最佳排程裡相鄰兩門課一定滿足
+$p_i / w_i \le p_j / w_j$，也就是整體依比值由小到大。 這組資料的 $15$ 個比值兩兩不同，最佳順序只有一種。
+
+依比值排好，逐門算完成時間 $f_i$（前面所有課程的長度加上自己的）和 $w_i f_i$：
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+課程 $i$ & $p_i$ & $w_i$ & $p_i / w_i$ & $f_i$ & $w_i f_i$ & 累計 \\
+\midrule
+15 & 15 & 15 & 1.00 & 15 & 225 & 225 \\
+2 & 6 & 4 & 1.50 & 21 & 84 & 309 \\
+11 & 19 & 11 & 1.73 & 40 & 440 & 749 \\
+3 & 9 & 4 & 2.25 & 49 & 196 & 945 \\
+1 & 6 & 2 & 3.00 & 55 & 110 & 1055 \\
+8 & 38 & 10 & 3.80 & 93 & 930 & 1985 \\
+5 & 34 & 7 & 4.86 & 127 & 889 & 2874 \\
+6 & 44 & 7 & 6.29 & 171 & 1197 & 4071 \\
+9 & 82 & 10 & 8.20 & 253 & 2530 & 6601 \\
+12 & 128 & 12 & 10.67 & 381 & 4572 & 11173 \\
+4 & 83 & 6 & 13.83 & 464 & 2784 & 13957 \\
+10 & 180 & 10 & 18.00 & 644 & 6440 & 20397 \\
+7 & 164 & 7 & 23.43 & 808 & 5656 & 26053 \\
+13 & 394 & 13 & 30.31 & 1202 & 15626 & 41679 \\
+14 & 512 & 13 & 39.38 & 1714 & 22282 & 63961 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最小的總加權完成時間是 $\mathbf{63961}$。 （比值欄是四捨五入到小數兩位，排序時用交叉相乘比較才精確，例如 $6/4$ 和 $19/11$ 比的
+是 $6 \cdot 11 = 66 < 19 \cdot 4 = 76$。） 檢查：最後一門的完成時間 $1714$ 應該等於全部長度的和，
+$6 + 6 + 9 + 83 + 34 + 44 + 164 + 38 + 82 + 180 + 19 + 128 + 394 + 512 + 15 = 1714$。
+\end{pastsoln}

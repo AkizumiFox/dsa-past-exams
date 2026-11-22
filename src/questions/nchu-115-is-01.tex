@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-01}]{中興資工所乙組 115 學年度 第 1 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which operation has O(1) time complexity in arrays (assuming index known)?
+
+A.~Insertion \qquad B.~Deletion \qquad C.~Access \qquad D.~Search
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+陣列的元素在記憶體裡連續存放，第 $i$ 格的位址是「起始位址 $+$ $i \times$ 每格大小」（資結書
+第~4.1~節），一次乘法、一次加法就算得出來，和陣列多大無關，所以知道索引時讀寫第 $i$ 格是
+$O(1)$。
+\begin{itemize}
+\item A 錯：在第 $i$ 格插入，後面的 $n - i$ 個元素都要往後挪一格，最壞（插在最前面）是 $O(n)$。
+\item B 錯：刪掉第 $i$ 格，後面的元素要往前補，同樣最壞 $O(n)$。
+\item C 對：見上。
+\item D 錯：搜尋是「找某個值在哪一格」，題目給的索引幫不上忙。 沒排序時要一格一格比，$O(n)$；
+排好序也要二分搜尋 $O(\log n)$。
+\end{itemize}
+只在尾端插入或刪除時不用挪動，可以是 $O(1)$（容量夠的話），但題目問的是一般的插入、刪除，
+只有存取在任何位置都是 $O(1)$。
+\end{pastsoln}

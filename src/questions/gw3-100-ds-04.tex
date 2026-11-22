@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:gw3-100-ds-04}]{關務三等資訊處理 100 年 第四題}
+（申論；15 分）
+
+題組：請根據下圖回答第三至五題：
+
+圖中表示有 4 個朋友，名（name）叫張三（Chang San, CS）、李四（Lee Si, LS）、王五（Wang Wu, WW）及趙六（Chao Liu, CL），用兩個字母代表各人，如 CS 代表張三，並標示兩兩住家交通狀況及距離（distance），如張三家有 7 公里的路到李四家。
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={font=\small\bfseries,inner sep=2pt},>={Stealth[length=2.2mm]},w/.style={font=\small\bfseries,inner sep=2pt}]
+\node[v] (CS) at (0,0) {張三};
+\node[v] (LS) at (2.4,1.1) {李四};
+\node[v] (WW) at (5,0) {王五};
+\node[v] (CL) at (2.4,-1.1) {趙六};
+\draw[->,thick] (CS)--node[w,above left]{7}(LS);
+\draw[->,thick] (LS)--node[w,above right]{21}(WW);
+\draw[->,thick] (LS)--node[w,right]{33}(CL);
+\draw[->,thick] (CS)--node[w,below left]{20}(CL);
+\draw[->,thick] (CL)--node[w,below right]{6}(WW);
+\end{tikzpicture}
+\end{center}
+\begin{quote}
+hash function：h(name) = int (1\textsuperscript{st} char of name)*31+int(2\textsuperscript{nd} char of name)\\
+hash table size：11 \quad (index 0 – 10)\\
+index：h(name) mod 11\\
+int( “C” )=67, int( “S” )=83, int( “L” )=76, int( “W” )=87\\
+舉張三為例：\\
+index( “CS” )=(int( “C” )*31+int( “S” )) mod 11 = (67*31+83) mod 11 = 4
+\end{quote}
+
+找出張三到王五的 Dijkstra's Shortest Path，要畫出 3 個 data structures: 1. weight sum\quad 2. predecessor\quad 3. priority queue 的最後結果。（15 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最短路徑 張三 $\to$ 趙六 $\to$ 王五，長度 $26$ 公里。 weight sum：CS $0$、LS $7$、CL $20$、WW $26$；predecessor：LS$\gets$CS、
+CL$\gets$CS、WW$\gets$CL；priority queue 最後是空的。
+
+圖是有向圖，邊為 CS$\to$LS 7、CS$\to$CL 20、LS$\to$WW 21、LS$\to$CL 33、CL$\to$WW 6，權重都非負，可用 Dijkstra（資結書第~25.2~節）。
+三個資料結構：weight sum $d[v]$（目前已知從 CS 到 $v$ 的距離）、predecessor $\pi[v]$（那條路徑上 $v$ 的前一個人）、priority queue（還沒確定的點，
+以 $d$ 為鍵的最小優先佇列）。
+
+\textbf{追蹤}（$d/\pi$ 表示距離和前一個人，粗體表示已確定）：
+\begin{center}
+\small
+\begin{tabular}{lccccl}
+\toprule
+步驟 & CS & LS & CL & WW & priority queue（$d$ 由小到大） \\
+\midrule
+初始 & $0/-$ & $\infty$ & $\infty$ & $\infty$ & (CS, 0) \\
+取出 CS & $\mathbf{0}$ & $7/$CS & $20/$CS & $\infty$ & (LS, 7), (CL, 20) \\
+取出 LS & & $\mathbf{7}$ & $20/$CS & $28/$LS & (CL, 20), (WW, 28) \\
+取出 CL & & & $\mathbf{20}$ & $26/$CL & (WW, 26) \\
+取出 WW & & & & $\mathbf{26}$ & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+取出 LS 時，經 LS 到 CL 是 $7 + 33 = 40 > 20$，不更新；取出 CL 時，經 CL 到 WW 是 $20 + 6 = 26 < 28$，把 WW 的距離降為 $26$、前一個人
+改成 CL。
+
+\textbf{最後結果}：
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+ & CS 張三 & LS 李四 & CL 趙六 & WW 王五 \\
+\midrule
+1. weight sum $d$ & 0 & 7 & 20 & 26 \\
+2. predecessor $\pi$ & — & CS & CS & CL \\
+\bottomrule
+\end{tabular}
+\qquad 3. priority queue：空
+\end{center}
+從 WW 沿 predecessor 往回：WW $\gets$ CL $\gets$ CS，所以最短路徑是 張三 $\to$ 趙六 $\to$ 王五，長度 $20 + 6 = 26$ 公里；另一條
+張三 $\to$ 李四 $\to$ 王五 是 $7 + 21 = 28$ 公里，較長。
+
+若 priority queue 不支援「降低鍵值」（例如 Java 的 \texttt{PriorityQueue}），更新 WW 時是另外放入 (WW, 26)，舊的 (WW, 28) 還留在佇列裡；
+取出 WW 26 之後佇列剩 (WW, 28)，再取出時發現 WW 已確定就丟掉，最後同樣是空的。 若一取出終點 WW 就停止，這個版本的佇列最後剩下過時的
+(WW, 28)。
+\end{pastsoln}

@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:ncu-113-dsa-09}]{中央資工所 113 學年度 第 9 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+The following function reverse() is supposed to reverse a singly linked list. There is one line missing at
+the end of the function.
+\begin{minted}[fontsize=\small,breaklines]{c}
+/* Link list node */
+struct node
+{
+  int data;
+  struct node* next;
+};
+
+/* head_ref is a double pointer which points to head (or start) pointer of linked list */
+static void reverse(struct node** head_ref)
+{
+  struct node* prev   = NULL;
+  struct node* current = *head_ref;
+  struct node* next;
+  while (current != NULL)
+  {
+    next  = current->next;
+    current->next = prev;
+    prev = current;
+    current = next;
+  }
+  /*ADD A STATEMENT HERE*/
+}
+\end{minted}
+What should be added in place of ``/*ADD A STATEMENT HERE*/'', so that the function correctly reverses a
+linked list.
+
+(A)~\texttt{*head\_ref = prev;} \qquad (B)~\texttt{current = *head\_ref;} \qquad
+(C)~\texttt{next = *head\_ref;} \qquad (D)~\texttt{*head\_ref = NULL;}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+這是資結書虛擬碼~5.12 的三指標反轉。 迴圈不變式：每一輪開始時，\texttt{prev} 指向「已經反轉好的那一段」
+的開頭，\texttt{current} 指向「還沒處理的那一段」的開頭。 每一輪先用 \texttt{next} 記住
+\texttt{current} 的下一個，再把 \texttt{current->next} 改指向 \texttt{prev}，然後兩個指標各往前一步。
+
+以 $1 \to 2 \to 3$ 為例：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+時刻 & 反轉好的一段（從 \texttt{prev} 開始） & \texttt{current} \\
+\midrule
+開始 & 空 & $1$ \\
+第 1 輪後 & $1 \to \text{NULL}$ & $2$ \\
+第 2 輪後 & $2 \to 1 \to \text{NULL}$ & $3$ \\
+第 3 輪後 & $3 \to 2 \to 1 \to \text{NULL}$ & NULL \\
+\bottomrule
+\end{tabular}
+\end{center}
+迴圈結束時 \texttt{current} 是 \texttt{NULL}，整條串列都在「反轉好的一段」裡，開頭是 \texttt{prev}（原本的
+最後一個節點）。 但呼叫者手上的頭指標 \texttt{*head\_ref} 還指著原本的第一個節點 $1$，而 $1$ 現在是尾巴，
+\texttt{next} 是 \texttt{NULL}。 所以要補 \texttt{*head\_ref = prev;}，把頭指標改到新的開頭。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。
+\item (B) 錯。 只改了區域變數 \texttt{current}，函式結束就消失，\texttt{*head\_ref} 仍指向 $1$，呼叫者看到
+的串列只剩 $1$ 一個節點，其他節點都找不到了。
+\item (C) 錯。 理由同 (B)，\texttt{next} 也是區域變數。
+\item (D) 錯。 頭指標變成 \texttt{NULL}，串列看起來是空的，所有節點都遺失。
+\end{itemize}
+空串列時迴圈不跑，\texttt{prev} 是 \texttt{NULL}，(A) 讓頭指標維持 \texttt{NULL}，也正確。
+\end{pastsoln}

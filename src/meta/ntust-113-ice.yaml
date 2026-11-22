@@ -1,0 +1,17 @@
+paper: ntust-113-ice
+volume: 2
+school: 臺科大
+dept: 資工所
+year: 113
+subject: 資訊工程概論
+instructions: I. (35\%) Multiple choice questions.　II. (65\%) Fill in the following blanks.
+questions:
+  - {id: ntust-113-ice-01, label: 第 I-1 題, chapter: 1}
+  - {id: ntust-113-ice-02, label: 第 I-2 題, chapter: 24}
+  - {id: ntust-113-ice-03, label: 第 I-3 題, chapter: 25}
+  - {id: ntust-113-ice-04, label: 第 I-4 題, chapter: 21}
+  - {id: ntust-113-ice-05, label: 第 I-5 題, chapter: 14}
+  - {id: ntust-113-ice-06, label: 第 I-7 題, chapter: 6}
+  - {id: ntust-113-ice-07, label: 第 II-1 題, chapter: 4}
+  - {id: ntust-113-ice-08, label: 第 II-2 題, chapter: 7}
+  - {id: ntust-113-ice-09, label: 第 II-3 題, chapter: 21}

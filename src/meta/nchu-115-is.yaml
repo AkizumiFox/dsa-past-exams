@@ -1,0 +1,38 @@
+paper: nchu-115-is
+volume: 2
+school: 中興
+dept: 資工所乙組
+year: 115
+subject: 資訊系統
+instructions: ※本科目依簡章規定「不可以」使用計算機。50 題單選題，每題兩分，答錯不倒扣。
+questions:
+  - {id: nchu-115-is-01, label: 第 1 題, chapter: 4}
+  - {id: nchu-115-is-02, label: 第 2 題, chapter: 6}
+  - {id: nchu-115-is-03, label: 第 3 題, chapter: 5}
+  - {id: nchu-115-is-04, label: 第 4 題, chapter: 5}
+  - {id: nchu-115-is-05, label: 第 5 題, chapter: 9}
+  - {id: nchu-115-is-06, label: 第 6 題, chapter: 21}
+  - {id: nchu-115-is-07, label: 第 7 題, chapter: 20}
+  - {id: nchu-115-is-08, label: 第 8 題, chapter: 17}
+  - {id: nchu-115-is-09, label: 第 9 題, chapter: 19}
+  - {id: nchu-115-is-10, label: 第 10 題, chapter: 25}
+  - {id: nchu-115-is-11, label: 第 11 題, chapter: 18}
+  - {id: nchu-115-is-12, label: 第 12 題, chapter: 14}
+  - {id: nchu-115-is-13, label: 第 13 題, chapter: 28}
+  - {id: nchu-115-is-14, label: 第 14 題, chapter: 25}
+  - {id: nchu-115-is-15, label: 第 15 題, chapter: 11}
+  - {id: nchu-115-is-16, label: 第 16 題, chapter: 8}
+  - {id: nchu-115-is-17, label: 第 17 題, chapter: 25}
+  - {id: nchu-115-is-18, label: 第 18 題, chapter: 12}
+  - {id: nchu-115-is-19, label: 第 19 題, chapter: 6}
+  - {id: nchu-115-is-20, label: 第 20 題, chapter: 12}
+  - {id: nchu-115-is-21, label: 第 21 題, chapter: 10}
+  - {id: nchu-115-is-22, label: 第 22 題, chapter: 17}
+  - {id: nchu-115-is-23, label: 第 23 題, chapter: 6}
+  - {id: nchu-115-is-24, label: 第 24 題, chapter: 1}
+  - {id: nchu-115-is-25, label: 第 25 題, chapter: 17}
+  - {id: nchu-115-is-26, label: 第 26 題, chapter: 1}
+  - {id: nchu-115-is-27, label: 第 27 題, chapter: 1}
+  - {id: nchu-115-is-28, label: 第 28 題, chapter: 21}
+  - {id: nchu-115-is-29, label: 第 29 題, chapter: 12}
+  - {id: nchu-115-is-30, label: 第 30 題, chapter: 10}

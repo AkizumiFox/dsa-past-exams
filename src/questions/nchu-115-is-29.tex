@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nchu-115-is-29}]{中興資工所乙組 115 學年度 第 29 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which collision resolution method in a hash table may suffer from primary clustering?
+
+A.~Separate chaining \qquad B.~Linear probing\\
+C.~Quadratic probing \qquad D.~Double hashing
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+線性探測的探測序列是 $h(k), h(k) + 1, h(k) + 2, \ldots$（$\bmod m$）。 已經被占用的格子連成一段
+時，雜湊到這一段裡任何一格的鍵，都會一路往後找到這段的尾端，再把這段變長；長的段被打中的
+機會又比較大，越長越快。 這叫主要群聚（primary clustering，資結書第~12.3~節）。
+\begin{itemize}
+\item A 錯：鏈結法把同一格的鍵串在那一格自己的串列上，不會占用別的格子，沒有群聚的問題
+（資結書第~12.2~節）。
+\item B 對。
+\item C 錯：二次探測的位移是 $c_1 i + c_2 i^2$，起點不同的兩個鍵很快就跳開，不會沿著同一段
+走，所以沒有主要群聚；但起點相同的鍵探測序列完全一樣，仍有較輕的次要群聚（secondary
+clustering）。
+\item D 錯：雙重雜湊的間隔 $h_2(k)$ 也跟著鍵變，起點相同的鍵通常間隔也不同，兩種群聚都大幅減少。
+\end{itemize}
+\end{pastsoln}

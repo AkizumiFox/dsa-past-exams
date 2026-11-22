@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nccu-113-dsa-03}]{政大資科所 113 學年度 第 3 題}
+（單選；不必說明理由）
+
+(4\%) Compare singly linked lists and doubly linked lists, assuming both maintain pointers to the first and
+last nodes. Which of the following operations is faster on doubly linked lists?
+\begin{enumerate}[label=\Alph*.]
+\item Add a node to the front of the list (the new node becomes the first node).
+\item Add a node to the end of the list (the new node becomes the last node).
+\item Delete the first node on the list.
+\item Delete the last node on the list.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。 兩種串列都有 $\mathit{first}$、$\mathit{last}$ 兩個指標（資結書第~5.1、5.2~節）。
+
+\begin{itemize}
+\item[A.] 加到最前面：新節點的 $\mathit{next}$ 指向舊的第一個，$\mathit{first}$ 改成新節點。 單向、雙向都是
+$O(1)$（雙向多設一個 $\mathit{prev}$）。 不會比較快。
+\item[B.] 加到最後面：$\mathit{last.next}$ 指向新節點，$\mathit{last}$ 改成新節點。 有 $\mathit{last}$ 指標，兩種
+都是 $O(1)$。
+\item[C.] 刪第一個：$\mathit{first} \gets \mathit{first.next}$。 兩種都是 $O(1)$。
+\item[D.] 刪最後一個：刪掉之後 $\mathit{last}$ 要改成\textbf{倒數第二個}節點，而且要把它的 $\mathit{next}$ 設成
+空。 單向串列沒有往回的指標，只能從 $\mathit{first}$ 一路走到倒數第二個，$\Theta(n)$。 雙向串列直接用
+$\mathit{last.prev}$，$O(1)$。 只有這個操作雙向比較快。
+\end{itemize}
+\end{pastsoln}

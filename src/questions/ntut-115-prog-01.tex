@@ -1,0 +1,91 @@
+\begin{pastexam}[label={px:ntut-115-prog-01}]{北科大資工所 115 學年度 第 1 題（節錄 1-8、1-9、1-10、1-13 小題）}
+（程式追蹤）
+
+\textbf{Problem 1 [33\%] [1-1 $\sim$ 1-9 each 2\%, 1-10 $\sim$ 1-14 each 3\%]}
+
+(2) Please trace the following Python program and answer the output of each "print" statement for problems 1-7 $\sim$ 1-14.
+
+（原題第 (1) 部分 1-1 到 1-6 考 Python 的執行期錯誤；第 (2) 部分是一個有八個函式的程式，1-7 到 1-14 共八格。
+這裡只收和遞迴、記憶化、排列有關的 1-8、1-9、1-10、1-13，程式只列出它們用到的部分，其餘以
+\texttt{...} 表示。）
+\begin{minted}[fontsize=\small, breaklines]{python}
+def permu(data: list, n: int, got: int=0, result: list=[])->list:
+    if got == n:
+        result.append(data[:n])
+        return result
+    for i in range(got, len(data)):
+        data[i], data[got] = data[got], data[i]
+        permu(data, n, got + 1, result)
+        data[i], data[got] = data[got], data[i]
+    return result
+...
+def fib(n: int, r: list):
+    if n==0 or n==1: return n
+    r[0] += 1
+    return fib(n-1, r)+fib(n-2, r)
+def fibs(data: list, n: int, r: list):
+    if n<=1: data[n] = n
+    elif data[n]==0:
+        data[n] = fibs(data, n-1, r) + fibs(data, n-2, r)
+        r[0] += 1
+    return data[n]
+...
+m, n, num, record1, record2 = 5, 6, 7, [0], [0]
+data_f = [0 for i in range(num+1)]
+...
+print(fib(num, record1)-fibs(data_f, num, record2))    # Problem 1-8
+print(permu([2, 3],    2, 0, result=[])[1][1])         # Problem 1-9
+print(permu([3, 4, 5], 3, 0, result=[])[0][2])         # Problem 1-10
+...
+print(record1[0]-record2[0])                           # Problem 1-13
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1-8 印出 \texttt{0}；1-9 印出 \texttt{2}；1-10 印出 \texttt{5}；1-13 印出 \texttt{14}。
+
+1-8、1-13 考的是遞迴和記憶化（第~18~章），1-9、1-10 考的是用交換產生排列的回溯（第~20~章），
+放在第~18~章。 $\mathit{num} = 7$。
+
+\textbf{1-8}。 \texttt{fib} 是照定義寫的遞迴：$n = 0, 1$ 時回傳 $n$，否則回傳前兩項的和，所以
+\texttt{fib(7)} 是費氏數 $F_7$。 \texttt{fibs} 是記憶化的版本（資結書第~18.1.2~節）：\texttt{data[n]}
+等於 $0$ 表示還沒算過，算過就直接回傳。 $n \ge 1$ 時 $F_n \ge 1$，算過的格子不會是 $0$，所以用 $0$
+當「還沒算」的記號沒有問題，\texttt{fibs(data\_f, 7, ...)} 也是 $F_7$。 由小往上填：
+\begin{center}
+\small
+\begin{tabular}{c|cccccccc}
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+$F_n$ & 0 & 1 & 1 & 2 & 3 & 5 & 8 & 13 \\
+\end{tabular}
+\end{center}
+兩個都是 $13$，相減印出 \texttt{0}。 Python 由左往右計算，先算完 \texttt{fib}，再算 \texttt{fibs}，
+這兩個函式各自累加 \texttt{record1}、\texttt{record2}，1-13 要用。
+
+\textbf{1-13}。 \texttt{fib} 每一次 $n \ge 2$ 的呼叫讓 \texttt{r[0]} 加一。 令 $I(n)$ 是算 \texttt{fib(n)} 時
+這樣的呼叫次數：$I(0) = I(1) = 0$，$I(n) = 1 + I(n-1) + I(n-2)$。
+\begin{center}
+\small
+\begin{tabular}{c|cccccccc}
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+$I(n)$ & 0 & 0 & 1 & 2 & 4 & 7 & 12 & 20 \\
+\end{tabular}
+\end{center}
+（其實 $I(n) = F_{n+1} - 1$，$I(7) = 21 - 1 = 20$。）所以 \texttt{record1[0]} $= 20$。 \texttt{fibs} 只在
+\texttt{data[n]} 第一次被算出來時加一，$n = 2, 3, \ldots, 7$ 各一次，\texttt{record2[0]} $= 6$。 印出
+$20 - 6 = 14$。 兩個數字的差距正是記憶化省下來的重複計算；$n$ 變大時 $I(n)$ 以指數成長，記憶化版本
+只有 $n - 1$ 次（資結書第~18.1.1~節）。
+
+\textbf{1-9、1-10}。 \texttt{permu} 是用交換產生排列的回溯法（資結書第~20.1~節）：第 \texttt{got} 層
+輪流把 \texttt{data[got..]} 的每一個數換到第 \texttt{got} 格，遞迴處理下一格，回來後再換回去（恢復
+原狀），\texttt{got == n} 時把前 \texttt{n} 個存進 \texttt{result}。 呼叫時都傳了新的 \texttt{result=[]}，
+預設參數 \texttt{[]} 被共用的問題在這裡不會發生。
+\begin{itemize}
+\item \texttt{permu([2, 3], 2)}：第 $0$ 層 $i = 0$ 不動，得 $[2, 3]$；$i = 1$ 把 $3$ 換到前面，得 $[3, 2]$。
+\texttt{result} $= [[2, 3], [3, 2]]$，\texttt{[1][1]} 是第二個排列的第二個數，印出 \texttt{2}。
+\item \texttt{permu([3, 4, 5], 3)}：產生的順序是 $[3, 4, 5]$、$[3, 5, 4]$、$[4, 3, 5]$、$[4, 5, 3]$、
+$[5, 4, 3]$、$[5, 3, 4]$。 第一個排列是每一層都和自己交換（$i = \mathit{got}$）得到的，就是原陣列
+$[3, 4, 5]$，\texttt{[0][2]} 是 $5$，印出 \texttt{5}。
+\end{itemize}
+（第五個是 $[5, 4, 3]$ 而不是 $[5, 3, 4]$：第 $0$ 層把 $5$ 和 $3$ 對調得 $[5, 4, 3]$，後面兩格照原來的
+$4, 3$ 先輸出。 1-10 只用到第一個排列，不受影響。）
+\end{pastsoln}

@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ntu-114-dsa-11}]{臺大資網所 114 學年度 第 11 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Let $S$ be a collection of $n$ objects, each with a unique integer key $a_i\in\{0,1,2,\ldots,n^2-1\}$.
+Consider hashing all the objects in $S$ into an array $A[0..m-1]$ of $m=\lceil n^{1.5}\rceil$ buckets. Each
+bucket stores a (singly) linked list of all objects hashed into the same bucket. The hashing algorithm works as
+follows. The algorithm first picks a hash function $h$ uniformly at random from a hash family $\mathcal{H}$.
+Then, for each object $i\in S$, the algorithm computes $h(a_i)$ and inserts the object into the bucket
+$A[h(a_i)]$. The \textit{number of collisions} $\tau$ is defined to be the total number of (unordered) object
+pairs hashed into the same bucket. We focus on the choice of the hash family $\mathcal{H}$ and the worst-case
+expected number of collisions $\mathbf{E}[\tau]$. Note that the term worst-case refers to the choice of the
+input set $S$. Select all statement(s) that are correct for every sufficiently large $n$.
+\begin{enumerate}[label=(\Alph*)]
+\item If $\mathcal{H}$ is a uniform hash family, then $\mathbf{E}[\tau]=O(\sqrt{n})$.
+\item If $\mathcal{H}$ is a universal hash family, then $\mathbf{E}[\tau]=O(\sqrt{n})$.
+\item If $\mathcal{H}=\{h(x)=(ax+b)\bmod m\mid a,b\in\mathbb{Z}\text{ and }0\le a,b\le m-1\}$, then
+$\mathbf{E}[\tau]=O(\sqrt{n})$.
+\item If $\mathcal{H}=\{h(x)=(x^2+x+c)\bmod m\mid c\in\mathbb{Z}\text{ and }0\le c\le m-1\}$, then
+$\mathbf{E}[\tau]=O(\sqrt{n})$.
+\item The hash family described in (C) is a universal hash family.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+\textbf{名詞}。 從 $\mathcal{H}$ 隨機挑 $h$：
+\begin{itemize}
+\item \textbf{uniform}（均勻）：對每個鍵 $x$ 和每一格 $j$，$\Pr[h(x) = j] = 1/m$。 只講單一個鍵落在哪裡。
+\item \textbf{universal}（通用，資結書定義~12.3）：對任兩個不同的鍵 $x \ne y$，$\Pr[h(x) = h(y)] \le 1/m$。 講的是兩個鍵
+碰撞的機率。
+\end{itemize}
+
+\textbf{期望碰撞數}。 對每一對 $\{x, y\}$ 令 $I_{xy} = 1$ 表示 $h(x) = h(y)$，$\tau = \sum I_{xy}$，由期望值的線性
+（資結書定理~A.10），$\mathbf{E}[\tau] = \sum_{\{x, y\}} \Pr[h(x) = h(y)]$。 目標是 $O(\sqrt{n})$：
+$\binom{n}{2} / m \le \frac{n^2}{2 n^{1.5}} = \frac{\sqrt{n}}{2}$。
+
+\begin{itemize}
+\item[(B)] 對。 通用族每一對的碰撞機率 $\le 1/m$，對任何輸入 $S$ 都有 $\mathbf{E}[\tau] \le \binom{n}{2}/m \le \sqrt{n}/2$，
+最壞情況也一樣。
+\item[(A)] 錯。 均勻不夠。 反例：$\mathcal{H} = \{h_j : h_j(x) = j \text{ 對所有 } x,\ j = 0, \ldots, m - 1\}$，常數函數
+組成的族。 每個鍵都均勻落在 $m$ 格之一，所以是 uniform；但所有鍵永遠落在同一格，$\tau = \binom{n}{2} = \Theta(n^2)$。
+（如果把「uniform hash family」理解成「所有函數構成的族」，也就是完全隨機的雜湊函數，那它也是通用的，(A) 會成立；
+這題 (A)、(B) 分開列，顯然是要考「uniform 不等於 universal」。）
+\item[(C)] 錯。 $h(x) - h(y) \equiv a(x - y) \pmod m$。 若 $x \equiv y \pmod m$，不管挑到哪個 $a, b$ 都碰撞。 鍵的範圍
+$\{0, \ldots, n^2 - 1\}$ 裡，$m$ 的倍數有 $\lceil n^2/m \rceil \ge \sqrt{n} - 1$ 個（因為 $m \le n^{1.5} + 1$）。 最壞的
+輸入把這些數全放進 $S$，其他隨便補，光它們之間就有 $\binom{\sqrt{n} - 1}{2} = \Theta(n)$ 對必定碰撞，
+$\mathbf{E}[\tau] = \Omega(n)$，不是 $O(\sqrt{n})$。 （資結書第~12.5~節的通用族先對一個比所有鍵都大的質數取餘數，再對
+$m$ 取，就是為了避開這個問題。）
+\item[(D)] 錯。 $h(x) - h(y) \equiv (x^2 + x) - (y^2 + y) \pmod m$，和 $c$ 無關：兩個鍵碰不碰撞是固定的，隨機挑 $c$
+沒有幫助。 同 (C)，取 $\Theta(\sqrt{n})$ 個模 $m$ 同餘的鍵，它們兩兩必定碰撞，$\mathbf{E}[\tau] = \Omega(n)$。
+\item[(E)] 錯。 取 $x = 0$、$y = m$（$m < n^2$，$y$ 是合法的鍵），對所有 $a, b$ 都碰撞，$\Pr[h(x) = h(y)] = 1 > 1/m$。
+\end{itemize}
+\end{pastsoln}

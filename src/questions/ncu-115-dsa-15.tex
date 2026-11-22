@@ -1,0 +1,123 @@
+\begin{pastexam}[label={px:ncu-115-dsa-15}]{中央資工所 115 學年度 第 15 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Consider a red-black tree with level order 52, 33, 80, 100. Which of the following
+statements is (are) true?
+\begin{enumerate}[label=\Alph*.]
+\item node 33 is red.
+\item After inserting 65 and 55, node 100 in the resulting red-black tree is black.
+\item After inserting 65, 55, and 60, node 60 in the resulting red-black tree is black.
+\item After inserting 65, 55, and 60, the level order traversal of the resulting red-black
+tree is 52, 33, 80, 60, 100, 55, 65.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、C、D。
+
+題目只給層序，沒有給顏色，先推出顏色。 樹的形狀是根 $52$，左 $33$，右 $80$，$100$ 是
+$80$ 的右子節點。 從 $52$ 往下：$52 \to 33 \to \text{NIL}$ 和 $52 \to 80 \to \text{NIL}$
+（$80$ 的左邊）、$52 \to 80 \to 100 \to \text{NIL}$ 的黑色個數要相同（紅黑樹的第 5 條性質）。 $80$
+的兩條路徑只差 $100$，所以 $100$ 是紅的。 $100$ 紅，$80$ 就不能紅（第 4 條），$80$ 是
+黑的；$33$ 和 $80$ 要一樣，$33$ 也是黑的。 顏色是唯一的，下圖 (a)。
+
+插入用資結書第~10.3.4~節的方法（虛擬碼~10.6，和 CLRS 相同）：
+\begin{itemize}
+\item 插入 $65$：$52 \to 80$，接成 $80$ 的左子節點，紅色。 父節點 $80$ 是黑的，不用修 (b)。
+\item 插入 $55$：$52 \to 80 \to 65$，接成 $65$ 的左子節點。 父 $65$ 紅，叔叔 $100$ 紅，
+情況 1：$65$、$100$ 改黑，$80$ 改紅，$z$ 移到 $80$。 $80$ 的父節點 $52$ 是黑的，結束 (c)。
+\item 插入 $60$：$52 \to 80 \to 65 \to 55$，接成 $55$ 的右子節點 (d)。 父 $55$ 紅；$55$
+是 $65$ 的左子節點，叔叔是 $65$ 的右邊，NIL，黑的。 $60$ 是 $55$ 的右子節點（內側），
+情況 2：$z$ 移到 $55$，對 $55$ 左旋 (e)。 接著情況 3：$z = 55$ 的父節點 $60$ 改黑、
+祖父 $65$ 改紅，對 $65$ 右旋 (f)。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncua33) at (0,-1) {33};
+\node[tnB] (ncua52) at (1,0) {52};
+\node[tnB] (ncua80) at (2,-1) {80};
+\node[tnR] (ncua100) at (3,-2) {100};
+\draw[te] (ncua52) -- (ncua33);
+\draw[te] (ncua52) -- (ncua80);
+\draw[te] (ncua80) -- (ncua100);
+\node[plab] at (1.5,-4.75) {(a) 原本的樹};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncub33) at (0,-1) {33};
+\node[tnB] (ncub52) at (1,0) {52};
+\node[tnR] (ncub65) at (2,-2) {65};
+\node[tnB] (ncub80) at (3,-1) {80};
+\node[tnR] (ncub100) at (4,-2) {100};
+\draw[te] (ncub52) -- (ncub33);
+\draw[te] (ncub52) -- (ncub80);
+\draw[te] (ncub80) -- (ncub65);
+\draw[te] (ncub80) -- (ncub100);
+\node[plab] at (2.0,-4.75) {(b) 插入 65};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncuc33) at (0,-1) {33};
+\node[tnB] (ncuc52) at (1,0) {52};
+\node[tnR] (ncuc55) at (2,-3) {55};
+\node[tnB] (ncuc65) at (3,-2) {65};
+\node[tnR] (ncuc80) at (4,-1) {80};
+\node[tnB] (ncuc100) at (5,-2) {100};
+\draw[te] (ncuc52) -- (ncuc33);
+\draw[te] (ncuc52) -- (ncuc80);
+\draw[te] (ncuc80) -- (ncuc65);
+\draw[te] (ncuc65) -- (ncuc55);
+\draw[te] (ncuc80) -- (ncuc100);
+\node[plab] at (2.5,-4.75) {(c) 插入 55};
+\end{tikzpicture}\\*[0.6em]
+\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncud33) at (0,-1) {33};
+\node[tnB] (ncud52) at (1,0) {52};
+\node[tnR] (ncud55) at (2,-3) {55};
+\node[tnR] (ncud60) at (3,-4) {60};
+\node[tnB] (ncud65) at (4,-2) {65};
+\node[tnR] (ncud80) at (5,-1) {80};
+\node[tnB] (ncud100) at (6,-2) {100};
+\draw[te] (ncud52) -- (ncud33);
+\draw[te] (ncud52) -- (ncud80);
+\draw[te] (ncud80) -- (ncud65);
+\draw[te] (ncud65) -- (ncud55);
+\draw[te] (ncud55) -- (ncud60);
+\draw[te] (ncud80) -- (ncud100);
+\node[plab] at (3.0,-4.75) {(d) 60 接成葉節點};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncue33) at (0,-1) {33};
+\node[tnB] (ncue52) at (1,0) {52};
+\node[tnR] (ncue55) at (2,-4) {55};
+\node[tnR] (ncue60) at (3,-3) {60};
+\node[tnB] (ncue65) at (4,-2) {65};
+\node[tnR] (ncue80) at (5,-1) {80};
+\node[tnB] (ncue100) at (6,-2) {100};
+\draw[te] (ncue52) -- (ncue33);
+\draw[te] (ncue52) -- (ncue80);
+\draw[te] (ncue80) -- (ncue65);
+\draw[te] (ncue65) -- (ncue60);
+\draw[te] (ncue60) -- (ncue55);
+\draw[te] (ncue80) -- (ncue100);
+\node[plab] at (3.0,-4.75) {(e) 情況 2：左旋 55};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small}, tnB/.style={tn, draw=black, fill=black!85, text=white}, tnR/.style={tn, draw=examStroke, fill=examStroke, text=white}, te/.style={draw=black!60}, plab/.style={font=\small}, x=0.5cm,y=0.72cm,baseline=(current bounding box.north)]
+\node[tnB] (ncuf33) at (0,-1) {33};
+\node[tnB] (ncuf52) at (1,0) {52};
+\node[tnR] (ncuf55) at (2,-3) {55};
+\node[tnB] (ncuf60) at (3,-2) {60};
+\node[tnR] (ncuf65) at (4,-3) {65};
+\node[tnR] (ncuf80) at (5,-1) {80};
+\node[tnB] (ncuf100) at (6,-2) {100};
+\draw[te] (ncuf52) -- (ncuf33);
+\draw[te] (ncuf52) -- (ncuf80);
+\draw[te] (ncuf80) -- (ncuf60);
+\draw[te] (ncuf60) -- (ncuf55);
+\draw[te] (ncuf60) -- (ncuf65);
+\draw[te] (ncuf80) -- (ncuf100);
+\node[plab] at (3.0,-4.75) {(f) 情況 3：右旋 65};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item[\textbf{A}] 錯。 $33$ 是黑的；如果是紅的，$52 \to 33 \to \text{NIL}$ 只有 $1$ 個黑色，
+$52 \to 80 \to \text{NIL}$ 有 $2$ 個，違反第 5 條。
+\item[\textbf{B}] 對。 (c) 裡 $100$ 在情況 1 被改成黑色。
+\item[\textbf{C}] 對。 (f) 裡 $60$ 在情況 3 被改成黑色。
+\item[\textbf{D}] 對。 (f) 一層一層由左到右是 $52$；$33, 80$；$60, 100$；$55, 65$。
+\end{itemize}
+\end{pastsoln}

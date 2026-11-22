@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:nsysu-112-dmalg-07}]{中山資工所資安組 112 學年度 第 7 題}
+（設計、分析）
+
+(Algorithm points) [10\%] Please describe the algorithm of Tower of Hanoi using recursion and analyze its
+time complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{問題}。 三根柱子 $A, B, C$，$A$ 上有 $n$ 個大小不同的盤子，由下到上越來越小。 每次只能搬一個柱子
+最上面的盤子，而且大盤子不能放在小盤子上面。 要把全部盤子搬到 $C$。
+
+\textbf{遞迴的想法}（資結書虛擬碼~6.11）。 最大的盤子要搬到 $C$，當下它上面不能有東西、$C$ 也必須是空的，
+所以上面 $n - 1$ 個盤子那時一定全部在 $B$。 於是：
+\begin{enumerate}
+\item 借 $C$ 當暫存，把上面 $n - 1$ 個盤子從 $A$ 搬到 $B$（同一個問題，規模小 $1$）；
+\item 把最大的盤子從 $A$ 搬到 $C$；
+\item 借 $A$ 當暫存，把 $B$ 上的 $n - 1$ 個盤子搬到 $C$。
+\end{enumerate}
+步驟 1、3 搬動時，最大的盤子在最底下，任何盤子放在它上面都合法，所以它不會妨礙遞迴。
+\begin{pseudo}{河內塔}
+\Procedure{Hanoi}{$n, \mathit{from}, \mathit{via}, \mathit{to}$}
+    \If{$n \ge 1$}
+        \State \Call{Hanoi}{$n - 1, \mathit{from}, \mathit{to}, \mathit{via}$}
+        \State 把第 $n$ 號盤子從 $\mathit{from}$ 搬到 $\mathit{to}$
+        \State \Call{Hanoi}{$n - 1, \mathit{via}, \mathit{from}, \mathit{to}$}
+    \EndIf
+\EndProcedure
+\end{pseudo}
+呼叫 \proc{Hanoi}$(n, A, B, C)$。 正確性對 $n$ 歸納：$n = 0$ 不用搬；設 $n - 1$ 個盤子的遞迴呼叫正確，三個步驟
+依上面的理由都合法，最後全部在 $\mathit{to}$。
+
+\textbf{時間}。 每次呼叫除了兩個遞迴呼叫，只做 $O(1)$ 的工作（一次搬動和比較）。 令 $T(n)$ 為搬動次數：
+\[
+T(0) = 0, \qquad T(n) = 2T(n - 1) + 1 \quad (n \ge 1).
+\]
+反覆代入（資結書第~2.1~節）：
+\[
+T(n) = 2T(n-1) + 1 = 4T(n-2) + 2 + 1 = \cdots = 2^n T(0) + (2^{n-1} + \cdots + 2 + 1) = 2^n - 1.
+\]
+用歸納法驗證：$T(0) = 2^0 - 1 = 0$；若 $T(n-1) = 2^{n-1} - 1$，則 $T(n) = 2(2^{n-1} - 1) + 1 = 2^n - 1$。
+呼叫次數（含 $n = 0$ 的呼叫）也是同一個量級，所以總時間 $\Theta(2^n)$。 遞迴深度 $n + 1$，堆疊空間 $\Theta(n)$。
+
+\textbf{這是最少的步數}。 任何方法都至少要 $2^n - 1$ 步：最大的盤子至少要搬一次；第一次搬它之前，其他
+$n - 1$ 個盤子必須全部疊在第三根柱子上，至少 $T(n-1)$ 步；最後一次搬它之後，它們還要全部搬到它上面，又至少
+$T(n-1)$ 步。 所以最少步數滿足同一個遞迴式，河內塔本質上就需要指數時間。
+\end{pastsoln}

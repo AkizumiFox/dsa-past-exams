@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-115-is-16}]{中興資工所乙組 115 學年度 第 16 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You need to repeatedly extract the largest remaining job from a set of tasks, where tasks are
+frequently inserted and removed. Which structure best supports these operations efficiently?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item A doubly linked list sorted by priority, updated on each insertion.
+\item A max-heap providing O(log n) insertion and removal of the largest element.
+\item A hash map mapping job IDs to priorities, scanned fully on each extraction.
+\item A queue where all tasks are stored in arrival order.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+「反覆插入、反覆取出最大的」就是最大優先佇列（資結書第~8.3~節），標準的實作是二元最大堆積：
+插入時放在最後再往上調，取出時拿根、把最後一個搬到根再往下調，兩者都是 $O(\log n)$
+（資結書虛擬碼~8.2）。
+\begin{itemize}
+\item A：排好序的雙向串列，取最大只要拿頭，$O(1)$；但每次插入要從頭找位置，$O(n)$。 插入很頻繁
+時總成本是 $O(n)$ 一次，比堆積差。
+\item B 對：兩種操作都是 $O(\log n)$。
+\item C 錯：每次取出都要掃過全部，$O(n)$。
+\item D 錯：佇列依到達順序，先進先出，根本不看優先順序，拿出來的不一定是最大的。
+\end{itemize}
+\end{pastsoln}

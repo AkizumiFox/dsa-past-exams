@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:nccu-113-dsa-15}]{政大資科所 113 學年度 第 15 題}
+（問答）
+
+(15\%) A B-tree can be parameterized by the minimum degree $t$. Every node other than the root must store
+at least $t-1$ keys.
+\begin{enumerate}[label=\Alph*.]
+\item (5\%) Explain the advantage of B-trees over red-black trees when the parameter $t$ is set
+appropriately.
+\item (5\%) True or false: the height of a B-tree decreases as $t$ increases. Please explain your answer.
+\item (5\%) True or false: the time complexity of insertion decreases as $t$ increases. Please explain your
+answer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+下面的高度用資結書的定義（數節點）；改用 CLRS 數邊的高度，每個數字減 $1$，結論不變。 最小分支度 $t$ 等於資結書
+的 $m = 2t$ 階（資結書第~11.2~節）。
+
+\textbf{A.} 磁碟上的資料結構，成本幾乎只看讀了幾個區塊（資結書第~11.3.1~節）。 B 樹把一個節點做成一個區塊，$t$ 取
+到一個節點剛好填滿一個區塊（通常是幾十到幾百），樹高只有 $O(\log_t n)$，查一筆資料讀的區塊數就是樹高。 紅黑樹每
+個節點只有一個鍵，高度最多 $2\lg(n+1)$，每往下一層都可能讀一個不同的區塊。 舉個數字：區塊 $4096$ 位元組、鍵和
+指標各 $8$ 位元組時，一個節點可以有 $171$ 個子節點，$10^8$ 筆資料的 B 樹高度只有 $4$；紅黑樹的高度可能到 $53$。
+節點裡比較幾百個鍵是在記憶體裡做，比一次讀磁碟便宜得多。
+
+\textbf{B.} 錯（嚴格來說）。 有 $n$ 個鍵的 B 樹，由資結書定理~11.1（$m = 2t$，$c = t$），
+\[
+\log_{2t}(n + 1) \;\le\; h \;\le\; 1 + \log_t \frac{n + 1}{2}.
+\]
+兩邊都隨 $t$ 變大而變小或不變，所以「$t$ 越大，樹的高度範圍越低」是對的，這也是 A 的理由。 但「高度隨 $t$ 增加
+而減少」不對：
+\begin{itemize}
+\item 高度可以不變：$n = 3$ 時，$t = 3$ 和 $t = 4$ 的 B 樹都只能是一個放 $3$ 個鍵的根，高度都是 $1$。
+\item 對個別的樹，$t$ 大的甚至可能比較高。 $n = 53$：$t = 3$ 時，根放 $1$ 個鍵、其他節點都放 $2$ 個鍵、高度 $4$ 的
+B 樹剛好有 $1 + 2 \cdot 2 + 6 \cdot 2 + 18 \cdot 2 = 53$ 個鍵（這是定理下界 $2 \cdot 3^3 - 1 = 53$ 的情況）。
+$t = 2$ 時，高度 $3$ 的 B 樹可以放 $53$ 個鍵：根和第 $2$ 層的 $4$ 個節點都放 $3$ 個鍵，第 $3$ 層的 $16$ 片葉子裡
+$6$ 片放 $3$ 個、$10$ 片放 $2$ 個，共 $3 + 12 + 18 + 20 = 53$ 個。 $t$ 從 $2$ 變成 $3$，這兩棵樹的高度從 $3$ 變成
+$4$。
+\end{itemize}
+
+\textbf{C.} 錯。 插入要分兩種成本看（資結書第~11.2.4~節）：
+\begin{itemize}
+\item 讀寫磁碟的次數是 $O(h) = O(\log_t n)$，$t$ 越大越少。 這一項確實隨 $t$ 增加而減少。
+\item CPU 時間：路上每個節點要找位置、把鍵往後移、分裂時搬一半的鍵，每層 $O(t)$，共
+$O(t \log_t n) = O\!\left(\frac{t}{\lg t} \lg n\right)$。 節點裡改用二分搜尋找位置也一樣，因為移動鍵和分裂還是
+$O(t)$。 $\frac{t}{\lg t}$ 在 $t \ge 3$ 之後遞增（$t = 4$ 是 $2$，$t = 64$ 是 $10.7$，$t = 1024$ 是 $102.4$），所以
+$t$ 越大，CPU 時間越多。
+\end{itemize}
+所以「插入的時間複雜度隨 $t$ 增加而減少」不成立；減少的只有讀寫磁碟的次數。 實際選 $t$ 時看的是磁碟次數，CPU
+多花的時間比起讀一次磁碟很小。
+\end{pastsoln}

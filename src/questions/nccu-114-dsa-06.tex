@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:nccu-114-dsa-06}]{政大資科所 114 學年度 第 6 題}
+（單選；每題 4 分）
+
+(4\%) Given the following algorithm, which is likely to be the result if the input variable N is
+-1?
+\begin{minted}[fontsize=\small, xleftmargin=4.5cm]{text}
+Boolean Magic (int N)
+{   if (N==1)
+      Return True
+    else if (N==0)
+      Return False
+    else { N= N-2;
+      Return Magic(N);
+        };
+}
+\end{minted}
+A.~-3 \qquad B.~True \qquad C.~False \qquad D.~Stack Overflow \qquad E.~Syntax Error
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+追蹤呼叫：
+\[
+\proc{Magic}(-1) \to \proc{Magic}(-3) \to \proc{Magic}(-5) \to \cdots
+\]
+$N$ 從 $-1$ 開始每次減 $2$，永遠是負的奇數，不會等於 $1$ 也不會等於 $0$，兩個終止條件都碰不到。
+這個遞迴只有在 $N$ 是不小於 $0$ 的整數時才會停（偶數停在 $0$、奇數停在 $1$），負數輸入沒有被
+處理。
+
+每一次呼叫都要在呼叫堆疊上推一個活動記錄（參數 $N$、返回位址，資結書第~6.4~節），呼叫一直不
+返回，堆疊越長越深，很快就超過系統給的堆疊空間，程式以 stack overflow 終止。 （如果 \texttt{int}
+是 32 位元，理論上要減到超過 $2^{31}$ 才會溢位繞回正數，那需要大約 $10^9$ 層呼叫，堆疊早就爆了；
+何況有號整數溢位在 C 裡是未定義行為。）
+
+逐項檢查：
+\begin{itemize}
+\item A.~$-3$：函數回傳的是布林值，$-3$ 只是第二層呼叫的參數，錯。
+\item B.~True、C.~False：要碰到 $N = 1$ 或 $N = 0$ 才會回傳，負的奇數碰不到，錯。
+\item D.~Stack Overflow：無窮遞迴，對。
+\item E.~Syntax Error：題目是虛擬碼風格的演算法，問的是執行結果，語法沒有問題，錯。
+\end{itemize}
+\end{pastsoln}

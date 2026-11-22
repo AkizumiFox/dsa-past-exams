@@ -1,0 +1,138 @@
+\begin{pastexam}[label={px:ncku-115-prog-04}]{成大資訊聯招 115 學年度 資料結構單選題組 A（第 1--4 題）}
+（單選；每小題 3 分，答錯倒扣 1 分）
+
+A. A firewall uses a fast pre-check before running an exact check. All input integers are non-negative.
+You must answer \textbf{Questions 1--4} based on the program below.
+\begin{minted}[fontsize=\small]{c}
+static inline uint32_t f1(int x) { return (uint32_t)(x % 8); }
+static inline uint32_t f2(int x) { return (uint32_t)((x / 2) % 8); }
+static inline void set1(uint32_t *b, uint32_t p) { *b |= (1u << p); }
+static inline int get1(uint32_t b, uint32_t p) { return (b >> p) & 1u; }
+static int precheck(uint32_t bits, int x) {
+    return get1(bits, f1(x)) && get1(bits, f2(x));
+}
+static int exact_check(int x) {
+    return (x == 10) || (x == 22);
+}
+int main(void) {
+    int base[] = {10, 22};
+    uint32_t bits = 0;
+    for (int i = 0; i < (int)(sizeof(base)/sizeof(base[0])); i++) {
+        set1(&bits, f1(base[i]));
+        set1(&bits, f2(base[i]));
+    }
+    int n;
+    scanf("%d", &n);
+    int exact_checks = 0, blocked = 0;
+    for (int i = 0; i < n; i++) {
+        int x;
+        scanf("%d", &x);
+        if (precheck(bits, x)) {
+            exact_checks++;
+            if (exact_check(x)) blocked++;
+        }
+    }
+    printf("%d %d\n", exact_checks, blocked);
+    return 0;
+}
+\end{minted}
+\begin{enumerate}
+\item[1.] [3\%] What is \texttt{precheck(bits, x)} mainly used for?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item It is an exact membership test because checking two bit positions avoids collisions.
+\item It is a probabilistic membership test that may have false positives.
+\item It is a bitmask-based two-condition rule: it passes a value if either of the tested bit positions is 1.
+\item It is a compact counter test: the function treats the two bit checks as a ``count'' and passes
+\texttt{x} only if the count is at least 2.
+\item It is a direct index check: \texttt{f1(x)} and \texttt{f2(x)} map each value to two unique bit positions.
+\end{enumerate}
+
+\item[2.] [3\%] What is the program output for the following input?
+\begin{minted}[fontsize=\small]{text}
+Input:
+5
+10 14 22 6 30
+\end{minted}
+(A)~\texttt{2 2} \qquad (B)~\texttt{2 1} \qquad (C)~\texttt{3 2} \qquad (D)~\texttt{3 1}
+\qquad (E)~None of the above
+
+\item[3.] [3\%] For the current program (\texttt{base = \{10, 22\}}), what is the smallest integer x such
+that \texttt{precheck(bits, x)} returns 1 and \texttt{exact\_check(x)} returns 0?
+
+(A)~4 \qquad (B)~5 \qquad (C)~6 \qquad (D)~7 \qquad (E)~11
+
+\item[4.] [3\%] Assume the blacklist policy of the firewall changes and the blacklist becomes
+\texttt{\{10, 14, 22\}}. To correctly apply the new policy, which parts of the program must be updated?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item \texttt{base} and \texttt{exact\_check}
+\item \texttt{exact\_check} only
+\item \texttt{precheck} only
+\item \texttt{precheck} and \texttt{base}
+\item No change is needed.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1. (B)；2. (C)；3. (B)；4. (A)。
+
+\textbf{程式在做什麼。} \texttt{bits} 是一個位元陣列，只會用到第 $0$ 到 $7$ 位（兩個函數都 $\bmod 8$）。
+建表時，黑名單的每個值 $x$ 把第 $f_1(x) = x \bmod 8$ 和第 $f_2(x) = \lfloor x/2 \rfloor \bmod 8$ 位設成
+$1$：
+\[
+10:\; f_1 = 2,\; f_2 = 5; \qquad 22:\; f_1 = 6,\; f_2 = 11 \bmod 8 = 3 .
+\]
+所以 \texttt{bits} 的第 $2, 3, 5, 6$ 位是 $1$，其他是 $0$。 \texttt{precheck} 在 $x$ 的兩個位置
+\textbf{都}是 $1$ 時才放行，放行的再交給 \texttt{exact\_check} 確認。 這就是 $m = 8$ 個位元、$k = 2$
+個雜湊函數的布隆過濾器（資結書第~12.6~節）。
+
+\textbf{1. 答案 (B)。} 名單裡的值，它的兩個位置建表時就設成 $1$ 了，一定通過，不會有偽陰性
+（資結書定理~12.9）；不在名單裡的值，兩個位置也可能剛好都被別人設成 $1$，於是被誤放行，這是偽陽性
+（第 3 題的 $5$ 就是）。 所以它是「可能有偽陽性」的機率性成員測試，用來先擋掉大部分一定不在名單裡的
+值，省下精確檢查。
+\begin{itemize}
+\item (A) 錯：兩個位置仍會碰撞，例如 $5$ 的位置是 $(5, 2)$，和 $10$ 的 $(2, 5)$ 是同一組。
+\item (C) 錯：程式用 \texttt{\&\&}，要兩個位置都是 $1$，不是「任一個」。
+\item (D) 錯：\texttt{bits} 每一位只記「有沒有名單值落在這裡」，不是次數；說成計數器是誤解了資料
+結構的意義（真的要計數的是計數式布隆過濾器，為了支援刪除）。
+\item (E) 錯：位置不唯一，$6$ 和 $22$ 都對到 $(6, 3)$，$5$ 和 $10$ 對到同一組位置。
+\end{itemize}
+
+\textbf{2. 答案 (C)。}
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$x$ & $f_1(x)$ & $f_2(x)$ & \texttt{precheck} & \texttt{exact\_check} \\
+\midrule
+10 & 2 & 5 & 1 & 1 \\
+14 & 6 & 7 & 0（第 7 位是 0） & （不執行） \\
+22 & 6 & 3 & 1 & 1 \\
+6  & 6 & 3 & 1 & 0 \\
+30 & 6 & 7 & 0 & （不執行） \\
+\bottomrule
+\end{tabular}
+\end{center}
+通過預檢的有 $10, 22, 6$ 三個，\texttt{exact\_checks} $= 3$；其中真的在名單裡的是 $10, 22$，
+\texttt{blocked} $= 2$。 輸出 \texttt{3 2}。
+
+\textbf{3. 答案 (B)。} 要找最小的偽陽性：$x \bmod 8$ 和 $\lfloor x/2 \rfloor \bmod 8$ 都在
+$\{2, 3, 5, 6\}$ 裡，而且 $x \ne 10, 22$。 從 $0$ 開始試：
+\begin{itemize}
+\item $x = 0, 1, 4$：$f_1 = 0, 1, 4$，不在集合裡。
+\item $x = 2, 3$：$f_1$ 可以，但 $f_2 = 1$，不在集合裡。
+\item $x = 5$：$f_1 = 5$、$f_2 = 2$，都在。 $5$ 不是 $10$ 或 $22$，是偽陽性。
+\end{itemize}
+最小的是 $5$。 其他選項：(A) $4$ 不通過預檢；(C) $6$ 和 (E) $11$（位置 $(3, 5)$）也是偽陽性，但都
+比 $5$ 大；(D) $7$ 的 $f_1 = 7$，不通過預檢。
+
+\textbf{4. 答案 (A)。}
+\begin{itemize}
+\item \texttt{exact\_check} 寫死了 $10$ 和 $22$，不加上 $14$ 的話，$14$ 永遠不會被算成 blocked。 一定要改。
+\item \texttt{base} 也要加上 $14$。 否則 \texttt{bits} 裡沒有 $14$ 的位置：第 2 題算過 $14$ 的
+$f_2 = 7$，第 7 位是 $0$，預檢就把 $14$ 擋下，根本輪不到精確檢查。 這是偽陰性，破壞了「名單裡的值一定
+通過」的保證。 加入後 \texttt{bits} 多了第 $7$ 位。
+\item \texttt{precheck} 只是讀 \texttt{bits}，邏輯不用改。
+\end{itemize}
+所以要改 \texttt{base} 和 \texttt{exact\_check}，答案 (A)。 (B) 漏了 \texttt{base}；(C)(D) 改了不必改的
+\texttt{precheck}，而且 (C) 沒改 \texttt{exact\_check}；(E) 顯然不對。
+\end{pastsoln}

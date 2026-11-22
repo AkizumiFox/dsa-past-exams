@@ -1,0 +1,107 @@
+\begin{pastexam}[label={px:ncku-115-prog-01}]{成大資訊聯招 115 學年度 資料結構問答第 1、2 題}
+（問答；第 2 題接續第 1 題）
+
+\begin{enumerate}
+\item[1.] [3\%] A campus system stores device IDs. Each ID is a 6-bit binary string. Given the following
+seven 6-bit keys: 000001, 000010, 000011, 001111, 100000, 101011, 111110. Please insert the 7 keys into
+an empty digital search tree in the order given above. When searching for key 001111, list the keys
+visited on the search path, in order.\par\smallskip
+\fbox{Answer format: key1->key2->\dots}\par\smallskip
+
+\item[2.] [4\%] (Continue Question 1) Build the compressed binary trie for the same seven 6-bit keys.
+For each branch node, define its \textit{bitNumber} as the bit index used at that node to choose the
+left or right child. The leftmost bit is index 1 and the rightmost bit is index 6. Perform BFS starting
+from the root. When visiting a branch node, enqueue the left child before the right child. List the
+\textit{bitNumber} of each visited branch node in BFS order.\par\smallskip
+\fbox{Answer format: bitNum1, bitNum2, \dots}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1. \texttt{000001->000010->000011->001111}；2. \texttt{1, 3, 2, 5, 3, 6}。
+
+\textbf{1.} 數位搜尋樹的定義照資結書第~11.5.2~節：每個節點存一個鍵；根用第 $1$ 個位元，第 $\ell$ 層
+的節點用第 $\ell$ 個位元，$0$ 往左、$1$ 往右，走到空位就放進去。 依序插入：
+\begin{itemize}
+\item $000001$：成為根。
+\item $000010$：和根不同，第 $1$ 位 $0$，根的左邊是空的，放進去。
+\item $000011$：根，第 $1$ 位 $0$ 到 $000010$；不同，第 $2$ 位 $0$，放在 $000010$ 的左邊。
+\item $001111$：根，第 $1$ 位 $0$ 到 $000010$；第 $2$ 位 $0$ 到 $000011$；第 $3$ 位 $1$，放
+在 $000011$ 的右邊。
+\item $100000$：第 $1$ 位 $1$，放在根的右邊。
+\item $101011$：第 $1$ 位 $1$ 到 $100000$；第 $2$ 位 $0$，放在它的左邊。
+\item $111110$：第 $1$ 位 $1$ 到 $100000$；第 $2$ 位 $1$，放在它的右邊。
+\end{itemize}
+結果是下圖 (a)。 搜尋 $001111$ 走的就是插入它時的路，依序經過根、$000010$、$000011$，最後在
+$001111$ 比到相同。
+
+\textbf{2.} 壓縮二元 trie 的分支節點看的是它子樹裡所有的鍵第一個不全相同的位元（資結書
+第~11.5.3~節）。 由上往下分：
+\begin{itemize}
+\item 七個鍵第 $1$ 位就有 $0$ 有 $1$：根看第 $1$ 位。 左邊 $\{000001, 000010, 000011,
+001111\}$，右邊 $\{100000, 101011, 111110\}$。
+\item 左邊四個鍵前 $2$ 位都是 $00$，第 $3$ 位分成 $\{000001, 000010, 000011\}$ 和
+$\{001111\}$：看第 $3$ 位。
+\item 第一組的三個鍵前 $4$ 位都是 $0000$，第 $5$ 位分成 $\{000001\}$ 和
+$\{000010, 000011\}$：看第 $5$ 位。 後者第 $6$ 位分開：看第 $6$ 位。
+\item 右邊三個鍵第 $2$ 位分成 $\{100000, 101011\}$ 和 $\{111110\}$：看第 $2$ 位。 前者第
+$3$ 位分開：看第 $3$ 位。
+\end{itemize}
+結果是下圖 (b)，共 $6$ 個分支節點（$7$ 個鍵，$7 - 1 = 6$，符合）。 BFS 從根開始，先左後右：第 $1$
+層是根 $1$；第 $2$ 層是左子節點 $3$、右子節點 $2$；第 $3$ 層依序是 $3$ 的左子節點 $5$（右子節點
+$001111$ 是元素節點）、$2$ 的左子節點 $3$（右子節點 $111110$ 是元素節點）；第 $4$ 層是 $5$ 的右子
+節點 $6$。
+
+\begin{center}
+\begin{tikzpicture}[baseline=(current bounding box.north),
+    mwdn/.style={rectangle, draw=black!65, inner sep=2pt, minimum height=0.42cm, font=\footnotesize},
+    mwkN/.style={fill=coreFill}, mwe/.style={draw=black!60}, mwlab/.style={font=\footnotesize}]
+\node[mwdn,mwkN] (n0) at (1.150,-2.700) {001111};
+\node[mwdn,mwkN] (n1) at (0.750,-1.800) {000011};
+\node[mwdn,mwkN] (n2) at (1.150,-0.900) {000010};
+\node[mwdn] (n3) at (2.950,-1.800) {101011};
+\node[mwdn] (n4) at (4.250,-1.800) {111110};
+\node[mwdn] (n5) at (3.600,-0.900) {100000};
+\node[mwdn,mwkN] (n6) at (2.375,0.000) {000001};
+\node[mwlab] at (2.500,-3.300) {(a) 數位搜尋樹};
+\draw[mwe] (n1) -- (n0);
+\draw[mwe] (n2) -- (n1);
+\draw[mwe] (n5) -- (n3);
+\draw[mwe] (n5) -- (n4);
+\draw[mwe] (n6) -- (n2);
+\draw[mwe] (n6) -- (n5);
+\end{tikzpicture}\hspace{1cm}\begin{tikzpicture}[baseline=(current bounding box.north),
+    mwel/.style={rectangle, draw=black!65, fill=black!6, inner sep=2pt, minimum height=0.42cm, font=\footnotesize},
+    mwbn/.style={circle, draw=black!65, minimum size=0.46cm, inner sep=0pt, font=\footnotesize},
+    mwe/.style={draw=black!60}, mwlab/.style={font=\footnotesize}]
+\node[mwel] (n0) at (0.650,-2.700) {000001};
+\node[mwel] (n1) at (1.950,-3.600) {000010};
+\node[mwel] (n2) at (3.250,-3.600) {000011};
+\node[mwbn] (n3) at (2.600,-2.700) {6};
+\node[mwbn] (n4) at (1.625,-1.800) {5};
+\node[mwel] (n5) at (4.550,-1.800) {001111};
+\node[mwbn] (n6) at (3.088,-0.900) {3};
+\node[mwel] (n7) at (5.850,-2.700) {100000};
+\node[mwel] (n8) at (7.150,-2.700) {101011};
+\node[mwbn] (n9) at (6.500,-1.800) {3};
+\node[mwel] (n10) at (8.450,-1.800) {111110};
+\node[mwbn] (n11) at (7.475,-0.900) {2};
+\node[mwbn] (n12) at (5.281,0.000) {1};
+\node[mwlab] at (4.550,-4.200) {(b) 壓縮二元 trie};
+\draw[mwe] (n3) -- (n1);
+\draw[mwe] (n3) -- (n2);
+\draw[mwe] (n4) -- (n0);
+\draw[mwe] (n4) -- (n3);
+\draw[mwe] (n6) -- (n4);
+\draw[mwe] (n6) -- (n5);
+\draw[mwe] (n9) -- (n7);
+\draw[mwe] (n9) -- (n8);
+\draw[mwe] (n11) -- (n9);
+\draw[mwe] (n11) -- (n10);
+\draw[mwe] (n12) -- (n6);
+\draw[mwe] (n12) -- (n11);
+\end{tikzpicture}
+\diagcaption{(a) 數位搜尋樹，藍底是搜尋 $001111$ 經過的節點。 (b) 壓縮二元 trie，圓圈裡是分支
+節點的 bitNumber，方框是元素節點。}
+\end{center}
+\end{pastsoln}

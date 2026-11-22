@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nsysu-112-dmalg-03}]{中山資工所資安組 112 學年度 第 3 題}
+（計算）
+
+{[10\%]} There are 65 boxes in an office and the size of each box is different. Assume that no two boxes
+have the same size. How many boxes at least can be used together to pack a stuff that is smaller than the
+smallest box (a box of larger size can contain a smaller one)?
+\end{pastexam}
+
+\begin{pastsoln}
+答案（採用的讀法）：有 $2^{65} - 1$ 種用盒子包裝的方法。
+
+\textbf{題意}。 原題的問句「How many boxes at least can be used together」字面上是「至少可以一起用幾個
+盒子」，那答案只是 $1$（東西比最小的盒子還小，任何一個盒子都裝得下），不需要計算，不像是 $10$ 分的題目。
+本題放在離散數學的計數題裡，合理的讀法是：「用\textbf{至少一個}盒子把東西包起來（大盒套小盒），一共有
+幾種用法？」 下面照這個讀法作答。
+
+\textbf{計數}。 東西比最小的盒子小，所以放得進任何一個盒子。 盒子大小兩兩不同，挑出任何一組盒子，都能
+依大小排好、一個套一個，東西放在最小的那個裡面；而且套法只有一種（只能大的套小的）。 所以「一種用法」和
+「一個非空的盒子子集合」一一對應。 $65$ 個盒子的子集合有 $2^{65}$ 個，扣掉空集合（題目要求至少用一個），
+共
+\[
+2^{65} - 1 = 36\,893\,488\,147\,419\,103\,231
+\]
+種用法。 （每個盒子「用」或「不用」兩種選擇，$2^{65}$ 是乘法原理的結果。）
+\end{pastsoln}

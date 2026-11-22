@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ccu-112-swa-01}]{中正資工所甲組 112 學年度 第 8 題}
+（是非）
+
+(10\%) Please examine the five sentences and give your answer, true (T) or false (F), for each
+sentence. Two points are given for each correct answer.
+\begin{enumerate}[label=(\arabic*)]
+\item (2\%) The maximum number of nodes in a binary tree with nine levels is 511.
+\item (2\%) If $f_1(n)=O(g(n))$ and $f_2(n)=O(g(n))$, then $f_1(n)=f_2(n)$.
+\item (2\%) The lower bound of worst-case time complexity of comparison-based sorting algorithm is
+$\Omega(n\log n)$.
+\item (2\%) A bi-connected graph is a connected graph that has two articulation points.
+\item (2\%) Every binary tree can be uniquely defined by its pre-order and post-order sequences.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) T；(2) F；(3) T；(4) F；(5) F。
+
+五個小題分屬不同章：(1)(5) 是資結書第~7~章，(2) 第~1~章，(3) 第~15~章，(4) 第~23~章；放在
+第~7~章。
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{T。} 根在第 $1$ 層，第 $i$ 層最多 $2^{i-1}$ 個節點（資結書定理~7.1），九層最多
+$\sum_{i=1}^{9} 2^{i-1} = 2^9 - 1 = 511$ 個，就是九層的滿二元樹。
+\item \textbf{F。} $O$ 只是上界，兩個函數有同一個上界不代表相等。 反例：$f_1(n) = n$、$f_2(n) = 1$、
+$g(n) = n$，$f_1, f_2$ 都是 $O(n)$，但 $f_1 \ne f_2$（資結書第~1.5~節）。 寫法 $f(n) = O(g(n))$ 的
+「$=$」其實是「屬於」，不能像等號一樣遞移。
+\item \textbf{T。} 比較排序的決策樹至少有 $n!$ 片可到達的葉子，高度 $h$ 滿足 $2^h \ge n!$，
+$h \ge \lg(n!) = \Omega(n \lg n)$（資結書定理~15.1），最壞情況至少要比較 $\Omega(n \log n)$ 次。
+\item \textbf{F。} 雙連通圖是\textbf{沒有}割點的連通圖：拿掉任何一個頂點，剩下的圖仍然連通
+（資結書第~23.5~節、第~23.6~節）。 有割點的圖反而不是雙連通的。
+\item \textbf{F。} 只有一個子節點時，前序和後序看不出它在左邊還是右邊。 反例：根 A 只有一個子節點 B，
+B 在左或在右，前序都是 A B、後序都是 B A。 一般地，符合的樹有 $2^m$ 棵，$m$ 是只有一個子節點的
+節點數（資結書定理~7.5）；只有嚴格二元樹才能由前序和後序唯一決定。
+\end{enumerate}
+\end{pastsoln}

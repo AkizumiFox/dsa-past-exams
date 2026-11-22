@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncku-112-prog-01}]{成大資訊聯招 112 學年度 第 1 題}
+（複選）
+
+{[5\%]} Which of the following statements is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Searching a particular data item in a binary search tree with n nodes requires at most
+$\log_2(n+1)$ comparisons.
+\item A full binary tree of a given height h has $2^h$-1 nodes. (The root is at height of 1.)
+\item Represent a binary tree in an one-dimensional array (say, a[]). Assume the root is stored in a[1].
+Then, the index of node i's parent is floor(i/2).
+\item AVL, red-black tree and compressed trie are binary trees.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)(C)。
+
+\begin{itemize}
+\item (A) 錯。 一般的二元搜尋樹沒有平衡，搜尋次數等於樹高，最壞可以到 $n$（資結書第~9~章）。 例如依序
+插入 $1, 2, \ldots, n$ 得到一條往右的鏈，找 $n$ 要比 $n$ 次，遠大於 $\log_2(n+1)$。 $\lceil\log_2(n+1)\rceil$
+是\textbf{最好}的形狀（完全二元樹）才有的上界。
+\item (B) 對。 這裡的 full binary tree 是 Horowitz 的定義：每一層都滿（資結書第~7.1~節叫「滿二元樹」）。
+第 $i$ 層有 $2^{i-1}$ 個節點，高度 $h$ 共 $1 + 2 + \cdots + 2^{h-1} = 2^h - 1$ 個。 （若照 CLRS，
+full 指「每個節點有 $0$ 或 $2$ 個子節點」（資結書叫嚴格二元樹），節點數就不固定；題目附了根在第 $1$ 層的說明，看得出是前一種
+定義。）
+\item (C) 對。 根放在 $a[1]$ 時，節點 $i$ 的左、右子節點在 $2i$、$2i + 1$，所以父節點在
+$\lfloor i/2 \rfloor$（資結書第~7.2.1~節）。 （$i = 1$ 是根，沒有父節點。）
+\item (D) 錯。 AVL 樹、紅黑樹是二元搜尋樹；壓縮 trie（compressed trie）的分支節點依字元分支，一個節點
+可以有和字母表一樣多的子節點，不一定是二元樹（資結書第~11.5~節）。 只有壓縮\textbf{二元} trie 才是二元樹。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ncku-115-prog-12}]{成大資訊聯招 115 學年度 演算法是非第 15 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+[2\%] The 0/1 Knapsack Problem can be solved optimally by using a Greedy strategy that always selects
+the item with the highest value-to-weight ratio first.\\
+(A) True \qquad (B) False
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) False。
+
+依「價值／重量」由大到小、放得下就放的貪心，對\textbf{分數}背包是最佳的（資結書定理~19.2），因為最後
+一件可以切開，把容量剛好用完。 0/1 背包的物品不能切，前面的選擇可能浪費容量。 反例：容量 $W = 8$，
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+物品 & 1 & 2 & 3 \\
+\midrule
+重量 & 5 & 4 & 4 \\
+價值 & 60 & 44 & 44 \\
+價值／重量 & 12 & 11 & 11 \\
+\bottomrule
+\end{tabular}
+\end{center}
+貪心先拿比值最高的物品 1，剩下容量 $3$，物品 2、3 都放不進去，總價值 $60$；不拿物品 1、拿物品 2 和 3，
+總重 $8$、總價值 $88$。 貪心不是最佳解（資結書第~19.2、19.5~節）。 0/1 背包的最佳解要用動態規劃
+（資結書第~18.5~節），而且它的決策版本是 NP 完備的，不能期待有簡單的貪心法。
+\end{pastsoln}

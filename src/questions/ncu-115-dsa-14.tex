@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ncu-115-dsa-14}]{中央資工所 115 學年度 第 14 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Given list [9, 7, 15, 6, 11, 4, 22, 119]. Which of the following statements is (are) true?
+\begin{enumerate}[label=\Alph*.]
+\item The resulting sequence of the first phase of Quick Sort when the first element, i.e., 9, is chosen as pivot is 6, 7, 4, 9, 11, 15, 22, 119.
+\item The resulting sequence of the first phase of Quick Sort when the second element, i.e., 7, is chosen as pivot is 4, 6, 7, 15, 11, 9, 22, 119.
+\item At the end of the second pass of LSD Radix sort, the first element of the resulting chain is 11.
+\item At the end of the third pass of LSD Radix sort, the 7-th element of the resulting chain is 22.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、D。
+
+題目沒有指定分割的方法。 「第一個當基準」最常見的是下面這種國內課本常用的做法：和資結書
+虛擬碼~14.10 的 Hoare 分割一樣從兩頭往中間找，$i$ 從左往右找 $\ge x$ 的，$j$ 從右往左找 $\le x$
+的，兩者交換；差別是基準不參與交換，等 $i$、$j$ 交錯時，才把基準和 $A[j]$ 交換，放到中間。 基準不在第一格時（B），先把它和第一格
+交換，再用同一種分割。 基數排序用十進位，每一趟依一位數字分到 $10$ 個桶，桶內保持原來的順序
+（資結書第~15.2.2~節）。
+
+\begin{pseudo}{本題採用的分割}
+\Function{Partition-First}{$A, p, r$}
+    \State $x \gets A[p]$；$i \gets p + 1$；$j \gets r$ \Comment{基準是第一個}
+    \While{\TRUE}
+        \While{$i \le r$ \AND $A[i] < x$}
+            \State $i \gets i + 1$
+        \EndWhile
+        \While{$A[j] > x$}
+            \State $j \gets j - 1$
+        \EndWhile
+        \If{$i \ge j$}
+            \State 交換 $A[p]$ 和 $A[j]$；\Return $j$
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$；$i \gets i + 1$；$j \gets j - 1$
+    \EndWhile
+\EndFunction
+\end{pseudo}
+
+\textbf{A 對}。 位置從 $1$ 編號，$x = 9$：
+\begin{itemize}
+\item $i$ 從第 $2$ 格往右：$7 < 9$，停在第 $3$ 格的 $15$。 $j$ 從第 $8$ 格往左：$119$、$22$ 都 $> 9$，
+停在第 $6$ 格的 $4$。 交換，得 $\langle 9, 7, 4, 6, 11, 15, 22, 119\rangle$，$i = 4$、$j = 5$。
+\item $i$：$6 < 9$，停在第 $5$ 格的 $11$。 $j$：第 $5$ 格 $11 > 9$，停在第 $4$ 格的 $6$。
+\item $i = 5 \ge j = 4$，把基準和第 $4$ 格交換：$\langle 6, 7, 4, 9, 11, 15, 22, 119\rangle$。
+\end{itemize}
+和 A 完全相同。
+
+\textbf{B 錯}。 先把 $7$ 換到第一格：$\langle 7, 9, 15, 6, 11, 4, 22, 119\rangle$，$x = 7$。
+\begin{itemize}
+\item $i$ 停在第 $2$ 格的 $9$；$j$ 跳過 $119$、$22$，停在第 $6$ 格的 $4$。 交換：
+$\langle 7, 4, 15, 6, 11, 9, 22, 119\rangle$。
+\item $i$ 停在第 $3$ 格的 $15$；$j$ 跳過 $11$，停在第 $4$ 格的 $6$。 交換：
+$\langle 7, 4, 6, 15, 11, 9, 22, 119\rangle$。
+\item $i$ 停在第 $4$ 格的 $15$；$j$ 停在第 $3$ 格的 $6$。 $i \ge j$，基準和第 $3$ 格交換，得到
+$\langle 6, 4, 7, 15, 11, 9, 22, 119\rangle$。
+\end{itemize}
+右邊 $15, 11, 9, 22, 119$ 和 B 一樣，但左邊是 $6, 4$，不是 $4, 6$。 改用其他常見的分割也得不到 B 的
+序列：基準換到最後再用 Lomuto 分割（資結書虛擬碼~14.8），得 $\langle 6, 4, 7, 9, 11, 119, 22, 15\rangle$；
+基準留在第一格、由左往右只掃一次的 Lomuto 寫法，得 $\langle 4, 6, 7, 9, 11, 15, 22, 119\rangle$。
+所以 B 錯。
+
+\textbf{LSD 基數排序}。 最大的數 $119$ 有三位，做三趟（個位、十位、百位），每一趟依序收集
+$0$ 號到 $9$ 號桶：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+趟 & 非空的桶 & 收集後的串列 \\
+\midrule
+1（個位）& 1:\,11；2:\,22；4:\,4；5:\,15；6:\,6；7:\,7；9:\,9, 119 & 11, 22, 4, 15, 6, 7, 9, 119 \\
+2（十位）& 0:\,4, 6, 7, 9；1:\,11, 15, 119；2:\,22 & 4, 6, 7, 9, 11, 15, 119, 22 \\
+3（百位）& 0:\,4, 6, 7, 9, 11, 15, 22；1:\,119 & 4, 6, 7, 9, 11, 15, 22, 119 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第一趟 $9$ 號桶裡 $9$ 在 $119$ 前面，因為原串列裡 $9$ 先出現；第二趟 $119$ 的十位數是 $1$，和 $11$、
+$15$ 同桶，排在它們後面。
+
+\textbf{C 錯}。 第二趟結束時串列的第一個是 $4$，不是 $11$。
+
+\textbf{D 對}。 第三趟結束時已經排好，第 $7$ 個是 $22$。
+\end{pastsoln}

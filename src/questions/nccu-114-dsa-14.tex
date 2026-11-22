@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nccu-114-dsa-14}]{政大資科所 114 學年度 第 14 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following statements is \textbf{false}?
+\begin{enumerate}[label=\Alph*.]
+\item Every problem which can be solved in polynomial time by deterministic algorithms must be a NP
+problem.
+\item A problem is NP-hard if it is as least as hard as all NP problems.
+\item If any NP-Complete problem can be solved in polynomial time, then all NP-hard problems can be
+solved in polynomial time.
+\item Every NP-Complete problem must be NP.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。 B 的「as least」是「at least」的筆誤。
+
+逐項檢查：
+\begin{itemize}
+\item A.~對。 $\mathrm{P} \subseteq \mathrm{NP}$（資結書定理~28.1）：能在多項式時間解，驗證時直接
+重新解一遍、不看證據就好，所以也在 NP 裡。
+\item B.~對。 這是 NP 難的直觀說法：NP 裡的每個問題都能在多項式時間歸約到它。
+\item C.~錯，這是答案。 某個 NP 完備問題有多項式時間解，可以推出 $\mathrm{P} = \mathrm{NP}$
+（資結書定理~28.5），也就是所有 \textbf{NP} 裡的問題（包括全部 NP 完備問題）都有多項式時間解。 但
+NP 難的問題不一定在 NP 裡，可以難得多。 例子是停機問題：它是 NP 難的（SAT 可以歸約到它：給一個
+公式，造一個「窮舉所有賦值，找到滿足的就停、找不到就無窮迴圈」的程式），但停機問題根本不可判定，
+任何演算法都解不了，更不會有多項式時間解。
+\item D.~對。 NP 完備的定義就是「在 NP 裡，而且是 NP 難」。
+\end{itemize}
+\end{pastsoln}

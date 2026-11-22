@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:ntut-112-ci-03}]{北科大資工所 112 學年度 第 3 題}
+（計算）
+
+Please answer the following questions: (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item A certain integer $m\le1000$ has the following modular representations: (2 pts)
+\begin{enumerate}[label=\roman*.]
+\item $m\equiv1\pmod 8$;
+\item $m\equiv2\pmod{11}$; and
+\item $m\equiv7\pmod{15}$.
+\end{enumerate}
+\item Solve the recurrence relation and present $b_n$ in close form explicitly:
+\[b_n=3b_{n/2}+\left(\frac{n}{2}\right)^2-5\left(\frac{n}{2}\right)+7,\]
+where $n=2^k$, for some positive integer $k$, with the initial condition $b_1=0$. (2 pts)
+\item Please find the asymptotic upper bound for
+\[T(n)=3T\left(\frac{n}{2}\right)+n^2+\log_7 n\]
+with $T(0)=1$. (2 pts)
+\item The worst case running time of Randomized Quicksort on $n$ elements. (2 pts)
+\item Give the maximum profit of the continuous-knapsack problem with the following weights($w_i$), profits($p_i$), and knapsack capacity($M$): (2 pts)
+\begin{center}
+$w_1=24$, $w_2=30$, $w_3=27$, $w_4=16$, $w_5=18$;\\
+$p_1=10$, $p_2=12$, $p_3=9$, $p_4=6$, $p_5=8$;\\
+$M=80$.
+\end{center}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $m = 937$；(2) $b_n = n^2 + 5n - \dfrac{5 \cdot 3^k + 7}{2} = n^2 + 5n - \dfrac{5n^{\lg 3} + 7}{2}$；
+(3) $O(n^2)$（而且是 $\Theta(n^2)$）；(4) $\Theta(n^2)$；(5) $33$。
+
+(1) 原卷只列出條件，沒有寫要問什麼，照題意解讀成「求 $m$」，並把 $m$ 當成正整數。 五個小題分屬
+附錄~A、第~2、2、14、19~章，遞迴式的 (2)(3) 佔 $4$ 分，放在第~2~章。
+
+\textbf{(1)} 中國餘數定理。 $8$、$11$、$15$ 兩兩互質，$8 \cdot 11 \cdot 15 = 1320$，在 $0$ 到 $1319$ 之間
+恰有一個解；$1320 > 1000$，所以 $m \le 1000$ 的正整數解最多一個。 先合併 i 和 iii：$\equiv 7 \pmod{15}$
+的數是 $7, 22, 37, 52, 67, 82, 97, \ldots$，除以 $8$ 的餘數依序是 $7, 6, 5, 4, 3, 2, 1$，第一個餘 $1$ 的是
+$97$，所以 $m \equiv 97 \pmod{120}$。 再配上 ii：設 $m = 97 + 120t$。 $97 \equiv 9$、$120 \equiv -1
+\pmod{11}$，要 $9 - t \equiv 2$，$t \equiv 7 \pmod{11}$，取 $t = 7$：
+\[
+m = 97 + 120 \cdot 7 = 937 .
+\]
+檢查：$937 = 8 \cdot 117 + 1 = 11 \cdot 85 + 2 = 15 \cdot 62 + 7$。 下一個解是 $937 + 1320 > 1000$，所以
+$m = 937$。
+
+\textbf{(2)} 換變數（資結書第~2.2~節）：令 $a_k = b_{2^k}$，$\left(\frac n2\right)^2 = 4^{k-1}$，
+$\frac n2 = 2^{k-1}$，遞迴式變成
+\[
+a_k = 3a_{k-1} + 4^{k-1} - 5 \cdot 2^{k-1} + 7,\qquad a_0 = b_1 = 0 .
+\]
+這是一階非齊次的線性遞迴（資結書第~2.5~節）。 齊次部分 $a_k = 3a_{k-1}$ 的解是 $D \cdot 3^k$。 特解
+照右邊的三項各猜一項（$4$、$2$、$1$ 都不是特徵根 $3$），設 $p_k = A \cdot 4^k + B \cdot 2^k + C$，代入：
+\begin{itemize}
+\item $4^k$ 項：$A \cdot 4^k = 3A \cdot 4^{k-1} + 4^{k-1}$，兩邊除以 $4^{k-1}$：$4A = 3A + 1$，$A = 1$。
+\item $2^k$ 項：$B \cdot 2^k = 3B \cdot 2^{k-1} - 5 \cdot 2^{k-1}$，除以 $2^{k-1}$：$2B = 3B - 5$，$B = 5$。
+\item 常數項：$C = 3C + 7$，$C = -\frac72$。
+\end{itemize}
+所以 $a_k = D \cdot 3^k + 4^k + 5 \cdot 2^k - \frac72$。 最後才代初始值：$a_0 = D + 1 + 5 - \frac72 = 0$，
+$D = -\frac52$。 換回 $n = 2^k$（$4^k = n^2$，$3^k = n^{\lg 3}$）：
+\[
+b_n = n^2 + 5n - \frac{5}{2} \cdot 3^k - \frac{7}{2} = n^2 + 5n - \frac{5n^{\lg 3} + 7}{2}.
+\]
+檢查：$b_2 = 3 \cdot 0 + 1 - 5 + 7 = 3$，公式 $4 + 10 - \frac{15 + 7}{2} = 3$；$b_4 = 3 \cdot 3 + 4 - 10 + 7
+= 10$，公式 $16 + 20 - \frac{45 + 7}{2} = 10$。
+
+\textbf{(3)} 用主定理（資結書第~2.4~節）：$a = 3$、$b = 2$，$n^{\log_b a} = n^{\lg 3} \approx n^{1.585}$；
+$f(n) = n^2 + \log_7 n = \Theta(n^2)$，比 $n^{\lg 3}$ 多項式地大（$\varepsilon = 2 - \lg 3 > 0$）。 正則
+條件：$3f(n/2) = \frac34 n^2 + 3\log_7(n/2) \le 0.8\, f(n)$ 對夠大的 $n$ 成立。 第三種情形，
+$T(n) = \Theta(n^2)$，漸近上界是 $O(n^2)$。 （$T(0) = 1$ 這個初始條件對漸近界沒有影響。）
+
+\textbf{(4)} $\Theta(n^2)$。 隨機選基準只讓\textbf{期望}時間對任何輸入都是 $O(n \lg n)$；運氣最差時，
+每次選到的都是最小或最大的數，每層只少一個，$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$（資結書
+第~14.5~節）。
+
+\textbf{(5)} 連續（分數）背包：依單位利潤 $p_i/w_i$ 由大到小裝，最後一件裝一部分（資結書第~19.2~節）。
+\begin{center}
+\small
+\begin{tabular}{cccccc}
+\toprule
+物品 & $w_i$ & $p_i$ & $p_i / w_i$ & 裝入 & 累計重量／利潤 \\
+\midrule
+5 & 18 & 8 & $0.444$ & 全部 & $18$ ／ $8$ \\
+1 & 24 & 10 & $0.417$ & 全部 & $42$ ／ $18$ \\
+2 & 30 & 12 & $0.400$ & 全部 & $72$ ／ $30$ \\
+4 & 16 & 6 & $0.375$ & $8/16 = \frac12$ & $80$ ／ $33$ \\
+3 & 27 & 9 & $0.333$ & 不裝 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+裝了物品 $5, 1, 2$ 後剩 $80 - 72 = 8$ 的容量，物品 $4$ 裝一半，利潤 $6 \cdot \frac12 = 3$。 最大利潤是
+$8 + 10 + 12 + 3 = 33$。
+\end{pastsoln}

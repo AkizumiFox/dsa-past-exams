@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:df3-102-ds-03}]{地方三等資訊處理 102 年 第三題}
+（申論；15 分）
+
+Knuth，Morris 及 Pratt 發明了一個快速的字串比對方法（string pattern matching）。他們的方法採用一個失敗函數
+（failure function）。失敗函數其實就是一個輔助的資料結構，用來加速比對。請依他們的方法計算下列字串的失敗
+函數。你必須說明失敗函數的定義為何，以及失敗函數如何加速比對。（15 分）
+\begin{center}
+\begin{tabular}{|l|*{10}{c|}}
+\hline
+index & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+pattern & a & b & b & a & b & c & a & b & b & a \\ \hline
+failure & ? & ? & ? & ? & ? & ? & ? & ? & ? & ? \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：採用「索引從 $0$ 起算、沒有相同前後綴時記為 $-1$」的定義，failure 是 $-1, -1, -1, 0, 1, -1, 0, 1, 2, 3$。 若改用「最長
+相同前後綴的長度」的定義（資結書的 $\pi$），則是 $0, 0, 0, 1, 2, 0, 1, 2, 3, 4$，兩者差 $1$。
+
+\textbf{定義。} 樣式 $p = p_0 p_1 \cdots p_{m-1}$，題目的索引從 $0$ 開始，採用同樣從 $0$ 起算的寫法：
+\[
+f(j) = \begin{cases}
+\text{最大的 } i < j \text{，使得 } p_0 p_1 \cdots p_i = p_{j-i} p_{j-i+1} \cdots p_j, & \text{若這樣的 } i \ge 0 \text{ 存在},\\
+-1, & \text{否則}.
+\end{cases}
+\]
+白話說：看 $p_0 \cdots p_j$ 這一段，找它「既是前綴、又是後綴、但不是整段」的最長字串，$f(j)$ 是這個字串最後一個
+字元的索引（長度減 $1$）；找不到時是 $-1$。 資結書定義~27.2 的 $\pi[q]$ 記的是長度、索引從 $1$ 起算，兩者的關係
+是 $f(j) = \pi[j + 1] - 1$。
+
+\textbf{計算}（資結書虛擬碼~27.3 的做法，用已算好的值往後推）。 設已知 $f(j-1) = t$：若 $p_{t+1} = p_j$，則
+$f(j) = t + 1$；否則令 $t \gets f(t)$ 再試，直到 $t = -1$ 時比 $p_0$ 和 $p_j$。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$j$ & $p_j$ & $f(j)$ & 理由（相同的前後綴） \\
+\midrule
+0 & a & $-1$ & 只有一個字元，沒有真前綴 \\
+1 & b & $-1$ & ab：a $\ne$ b \\
+2 & b & $-1$ & abb：$p_0 = $ a $\ne$ b \\
+3 & a & $0$ & abba：前綴 a ＝ 後綴 a \\
+4 & b & $1$ & abbab：$f(3) = 0$，$p_1 = $ b $= p_4$，ab ＝ ab \\
+5 & c & $-1$ & abbabc：$p_2 = $ b $\ne$ c；退到 $f(1) = -1$，$p_0 = $ a $\ne$ c \\
+6 & a & $0$ & $p_0 = $ a $= p_6$ \\
+7 & b & $1$ & $f(6) = 0$，$p_1 = $ b $= p_7$，ab \\
+8 & b & $2$ & $f(7) = 1$，$p_2 = $ b $= p_8$，abb \\
+9 & a & $3$ & $f(8) = 2$，$p_3 = $ a $= p_9$，abba \\
+\bottomrule
+\end{tabular}
+\end{center}
+填回表格：
+\begin{center}
+\begin{tabular}{|l|*{10}{c|}}
+\hline
+index & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline
+pattern & a & b & b & a & b & c & a & b & b & a \\ \hline
+failure & $-1$ & $-1$ & $-1$ & $0$ & $1$ & $-1$ & $0$ & $1$ & $2$ & $3$ \\ \hline
+\end{tabular}
+\end{center}
+（例如 $j = 9$：abbabcabba 的前綴 abba 等於後綴 abba，長度 $4$，最後一個字元索引 $3$；更長的 abbab 對 cabba 不同。）
+
+\textbf{如何加速比對。} 樸素比對在 $p_j$ 和本文的 $t_s$ 不同時，樣式只往右移一格、本文指標退回去重比，最壞
+$O(nm)$（資結書第~27.1~節）。 KMP 的想法是：不同的時候，前面的 $p_0 \cdots p_{j-1}$ 已經和本文對上了，本文那一段
+是什麼完全由樣式決定，不必再看本文。 下一個可能成功的對齊，是讓樣式的某個前綴對齊這一段的尾巴；最長的那個前綴
+就是 $p_0 \cdots p_{f(j-1)}$。 所以：
+\begin{itemize}
+\item 本文指標 $s$ \textbf{永不後退}；
+\item 樣式指標從 $j$ 直接跳到 $f(j - 1) + 1$，接著拿 $p_{f(j-1)+1}$ 和同一個 $t_s$ 比（$j = 0$ 時不同，就把 $s$
+往前一格）。
+\end{itemize}
+例如本文中對上了 abbab、下一個字元不是 c 時，$f(4) = 1$，樣式直接從 $p_2$ 接著比，前面的 ab 不必重比。 本文每個
+字元最多讓 $s$ 前進一次，樣式指標的後退次數不超過前進次數，比對共 $O(n)$；算失敗函數同理 $O(m)$，全部
+$O(n + m)$（資結書定理~27.4）。
+\end{pastsoln}

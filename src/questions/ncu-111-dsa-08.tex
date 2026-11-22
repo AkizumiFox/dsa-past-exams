@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncu-111-dsa-08}]{中央資工所 111 學年度 複選題第 8 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Given an empty hash Table T of size 17 and a set \{23, 12, 34, 46, 28, 11, 6, 7, 0, 33, 13, 45\}
+to hash into the table. Suppose that the hash function \textbf{h}(k , i) = (\textbf{h}(k) + i) mod
+17, where i = 0 to 16. After deleting 46 from the hash table, which keys should modify their
+positions?\\
+(A) 11 \quad (B) 0 \quad (C) 33 \quad (D) 45 \quad (E) 13
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) 11、(D) 45、(E) 13。
+
+題目沒有寫出 $h(k)$，照最常見的 $h(k) = k \bmod 17$；鍵依集合裡列出的順序插入。 刪除的做法：如果用
+刪除標記（資結書第~12.3.4~節），刪掉 $46$ 以後沒有任何鍵要搬，題目就沒有意義；所以這題指的是「真的
+把格子清空」，這時後面同一群（cluster）裡的鍵，若原本是越過這一格才放進去的，就必須往前搬，否則以後
+找不到。
+
+\textbf{插入。} 各鍵的 $h(k)$：
+\[
+\begin{array}{cccccccccccc}
+23 & 12 & 34 & 46 & 28 & 11 & 6 & 7 & 0 & 33 & 13 & 45 \\
+\downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow & \downarrow \\
+6 & 12 & 0 & 12 & 11 & 11 & 6 & 7 & 0 & 16 & 13 & 11
+\end{array}
+\]
+線性探測：$46$ 撞 $12$，放 $13$；$11$ 撞 $11, 12, 13$，放 $14$；$6$ 放 $7$；$7$ 放 $8$；$0$ 放 $1$；
+$13$ 撞 $13, 14$，放 $15$；$45$ 從 $11$ 一路撞到 $16$、繞回 $0, 1$，放 $2$。
+\begin{center}
+\small
+\begin{tabular}{c|ccccccccc}
+格 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+刪除前 & 34 & 0 & 45 & & & & 23 & 6 & 7 \\
+刪除後 & 34 & 0 & & & & & 23 & 6 & 7 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|cccccccc}
+格 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 \\ \hline
+刪除前 & & & 28 & 12 & \textbf{46} & 11 & 13 & 33 \\
+刪除後 & & & 28 & 12 & 11 & 13 & 45 & 33 \\
+\end{tabular}
+\end{center}
+
+\textbf{刪除 $46$（第 $13$ 格）。} 清空第 $13$ 格以後，從第 $14$ 格往後檢查這一群，直到遇到空格（第 $3$ 格）
+為止。 空出來的洞在 $j_0$，檢查到第 $j$ 格的鍵 $k$：如果 $h(k)$ 在循環區間 $(j_0, j]$ 裡，它的探測序列
+不經過洞，不用動；否則它當初越過了洞，搬進洞裡，洞移到 $j$。
+\begin{itemize}
+\item 第 $14$ 格 $11$，$h = 11$，不在 $(13, 14]$：搬到 $13$，洞移到 $14$。
+\item 第 $15$ 格 $13$，$h = 13$，不在 $(14, 15]$：搬到 $14$，洞移到 $15$。
+\item 第 $16$ 格 $33$，$h = 16 \in (15, 16]$：不動。
+\item 第 $0$ 格 $34$、第 $1$ 格 $0$，$h = 0$，在循環區間 $(15, 1] = \{16, 0, 1\}$ 裡：不動。
+\item 第 $2$ 格 $45$，$h = 11$，不在 $(15, 2] = \{16, 0, 1, 2\}$：搬到 $15$，洞移到 $2$。
+\item 第 $3$ 格是空的，停。
+\end{itemize}
+搬動的是 $11$、$13$、$45$。 另一種做法是把 $46$ 後面整群的鍵拿出來依原順序重新插入，結果一樣。
+
+(B) $0$、(C) $33$ 都在自己的探測序列上、沒有越過第 $13$ 格（$0$ 從第 $0$ 格開始，$33$ 就在 $h = 16$），
+不需要搬。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ccu-112-swa-03}]{中正資工所甲組 112 學年度 第 10 題}
+（是非）
+
+(8\%) True or False
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) Quicksort is asymptotically optimal.
+\item (2\%) When sorting N numbers, if a series of pivot selections make the partitioning of
+Quicksort maximally unbalanced at every recursive level, the corresponding decision tree is a full
+binary tree.
+\item (2\%) Insertion sort is in-place but not stable.
+\item (2\%) Counting sort has both stable and in-place properties.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本書的答案：(a) F；(b) T；(c) F；(d) F。
+
+(a)(b) 是資結書第~15.1~節比較排序的下界，(c) 是第~14~章，(d) 是第~15.2.1~節。 這一題的用語是 CLRS
+的：「asymptotically optimal」指最壞情況的比較次數達到下界 $\Theta(n \lg n)$，「full binary tree」指
+每個節點有 $0$ 或 $2$ 個子節點（資結書稱為嚴格二元樹）。
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{F。} 比較排序的最壞情況下界是 $\Omega(n \lg n)$（資結書定理~15.1），達到這個界的
+（合併排序、堆積排序）才叫漸近最佳。 快速排序的平均是 $\Theta(n \lg n)$，但最壞情況是
+$\Theta(n^2)$（例如每次都選到最小值當基準），所以不是。
+\item \textbf{T。} 決策樹的每個內部節點是一次比較，比較的結果只有「$\le$」和「$>$」兩種，所以每個
+內部節點恰有兩個子節點，葉子是排序結果。 這和基準怎麼選、切得平不平衡無關，任何比較排序的
+決策樹都是 full binary tree（嚴格二元樹）。 切得最不平衡時，決策樹裡對應的那條路徑很長（高度
+$\Theta(n^2)$），但樹仍然是 full 的。 題目加上「maximally unbalanced」是干擾。 注意：如果把
+full binary tree 讀成「每一層都滿的滿二元樹」，這句就錯了，因為決策樹至少有 $n!$ 片葉子，$n \ge 3$
+時 $n!$ 不是 $2$ 的次方，不可能每層都滿；這裡照 CLRS 的定義。
+\item \textbf{F。} 插入排序只用常數個額外變數，是原地排序；它只在左邊的數比要插入的數\textbf{大}
+時才往右搬，相等的數不會越過去，所以是穩定的（資結書第~14.2~節）。 前半對、後半錯，整句錯。
+\item \textbf{F。} 計數排序是穩定的（由後往前把元素放進輸出陣列），但需要另外 $\Theta(n + k)$ 的空間
+（計數陣列 $C$ 和輸出陣列 $B$），不是原地排序（資結書第~15.2.1~節）。
+\end{enumerate}
+\end{pastsoln}

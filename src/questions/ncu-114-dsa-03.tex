@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncu-114-dsa-03}]{中央資工所 114 學年度 第 3 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Given the input list is L = [28, 203, 16, 37, 127, 521, 63, 528, 210, 216, 941, 45]. Which of the
+following statements is (are) correct?
+\begin{enumerate}[label=(\alph*)]
+\item At the end of second pass of LSD Radix sort, the 6-th element of the resulting chain is 45.
+\item At the end of second pass of LSD Radix sort, the 8-th element of the resulting chain is 528.
+\item At the end of second pass of LSD Radix sort, the 6-th element of the resulting chain is 127.
+\item At the end of first pass of LSD Radix sort, the 8-th element of the resulting chain is 216.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(c)(d)。
+
+LSD 基數排序（資結書第~15.2.2~節）以 $10$ 為基數：第一趟依個位數分到 $10$ 個桶子，第二趟依十位數，
+第三趟依百位數。 每一趟把數依目前串列的順序放進桶子的尾端（穩定），再把桶子 $0$ 到 $9$ 依序接成
+新的串列（chain）。 不足三位的數，前面補 $0$。
+
+\textbf{第一趟（個位數）}，依 $L$ 的順序放：
+\begin{center}
+\small
+\begin{tabular}{c*{10}{c}}
+\toprule
+桶 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+內容 & 210 & 521, 941 & & 203, 63 & & 45 & 16, 216 & 37, 127 & 28, 528 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+接起來：$210, 521, 941, 203, 63, 45, 16, \mathbf{216}, 37, 127, 28, 528$。 第 $8$ 個是 $216$。
+
+\textbf{第二趟（十位數）}，依第一趟的串列順序放：
+\begin{center}
+\small
+\begin{tabular}{c*{10}{c}}
+\toprule
+桶 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+內容 & 203 & 210, 16, 216 & 521, 127, 28, 528 & 37 & 941, 45 & & 63 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+接起來：$203, 210, 16, 216, 521, \mathbf{127}, 28, \mathbf{528}, 37, 941, 45, 63$。 第 $6$ 個是 $127$，
+第 $8$ 個是 $528$。
+
+逐項檢查：
+\begin{itemize}
+\item (a) 第二趟後第 $6$ 個是 $127$，不是 $45$（$45$ 是第 $11$ 個）。 錯。
+\item (b) 第二趟後第 $8$ 個是 $528$。 對。
+\item (c) 第二趟後第 $6$ 個是 $127$。 對。
+\item (d) 第一趟後第 $8$ 個是 $216$。 對。
+\end{itemize}
+\end{pastsoln}

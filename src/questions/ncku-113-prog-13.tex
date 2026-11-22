@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ncku-113-prog-13}]{成大資訊聯招 113 學年度 第 13 題}
+（問答）
+
+(10\%) Given two sequences $X=\langle x_1,x_2,\ldots,x_m\rangle$ and $Y=\langle
+y_1,y_2,\ldots,y_n\rangle$, define $c[i,j]$ to be the length of an LCS (longest common
+subsequence) of the sequences $X_i=\langle x_1,x_2,\ldots,x_i\rangle$ and $Y_j=\langle
+y_1,y_2,\ldots,y_j\rangle$. Write the recursive formula to compute $c[i,j]$.
+\end{pastexam}
+
+\begin{pastsoln}
+（資結書定理~18.2）
+\[
+c[i, j] = \begin{cases}
+0, & i = 0 \text{ 或 } j = 0, \\
+c[i - 1, j - 1] + 1, & i, j > 0 \text{ 且 } x_i = y_j, \\
+\max\bigl(c[i - 1, j],\ c[i, j - 1]\bigr), & i, j > 0 \text{ 且 } x_i \ne y_j .
+\end{cases}
+\]
+
+\textbf{為什麼}。 $X_0$ 或 $Y_0$ 是空序列，共同子序列只有空的，長度 $0$。 $i, j > 0$ 時，令
+$Z = \langle z_1, \ldots, z_k \rangle$ 是 $X_i$ 和 $Y_j$ 的一個 LCS，$k = c[i, j]$。
+\begin{itemize}
+\item $x_i = y_j$：$Z$ 一定可以以 $x_i$ 結尾。 如果 $z_k \ne x_i$，在 $Z$ 後面接上 $x_i$ 還是共同子
+序列，長度 $k + 1$，和 $Z$ 最長矛盾；所以 $z_k = x_i = y_j$。 拿掉這個字元，$Z_{k-1}$ 是 $X_{i-1}$ 和
+$Y_{j-1}$ 的共同子序列，而且必須是最長的：如果 $X_{i-1}$、$Y_{j-1}$ 有更長的共同子序列 $W$，$W$ 接上
+$x_i$ 就比 $Z$ 長。 所以 $c[i, j] = c[i - 1, j - 1] + 1$。
+\item $x_i \ne y_j$：$z_k$ 不能同時是 $x_i$ 和 $y_j$。 若 $z_k \ne x_i$，$Z$ 是 $X_{i-1}$ 和 $Y_j$ 的共同
+子序列，$k \le c[i - 1, j]$；若 $z_k \ne y_j$，$k \le c[i, j - 1]$。 反過來，$X_{i-1}$ 和 $Y_j$（或 $X_i$ 和
+$Y_{j-1}$）的共同子序列也都是 $X_i$ 和 $Y_j$ 的共同子序列，所以 $k \ge$ 兩者的最大值。 合起來
+$c[i, j] = \max(c[i - 1, j], c[i, j - 1])$。
+\end{itemize}
+
+依 $i$ 由小到大、每列 $j$ 由小到大填 $(m + 1) \times (n + 1)$ 的表，算 $c[i, j]$ 時需要的左上、上、左
+三格都已經填好，答案是 $c[m, n]$，時間和空間都是 $\Theta(mn)$（資結書虛擬碼~18.6）。 例如
+$X = \langle A, B, C, B \rangle$、$Y = \langle B, D, C, B \rangle$，最後一個字元都是 B，
+$c[4, 4] = c[3, 3] + 1$；$X_3 = ABC$、$Y_3 = BDC$ 的 LCS 是 BC，所以 $c[4, 4] = 3$（BCB）。
+\end{pastsoln}

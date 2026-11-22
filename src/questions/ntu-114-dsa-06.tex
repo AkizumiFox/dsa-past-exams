@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ntu-114-dsa-06}]{臺大資網所 114 學年度 第 6 題}
+（單選；答對 5 分，不答或答錯 0 分）
+
+(5 points) Consider a knapsack with capacity 17 and five types of items, each with its size and value listed
+below. All items are available in unlimited quantities and each item can be selected more than once. The goal is
+to maximize the total value of the items placed in the knapsack. If the maximum value of the knapsack is $10a+b$
+where $a$ and $b$ are integers in $\{0,1,2,\cdots,9\}$, what is the value of $a+b$?
+\begin{center}
+\begin{tabular}{c|ccccc}
+item & A & B & C & D & E \\ \hline
+size & 3 & 4 & 7 & 8 & 9 \\
+value & 4 & 5 & 10 & 11 & 12
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\Alph*)]
+\item 3
+\item 4
+\item 5
+\item 6
+\item 7
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。 最大價值 $24 = 10 \cdot 2 + 4$，$a + b = 6$。
+
+\textbf{無限量背包}（資結書第~18.7.1~節）。 令 $K[c]$ 是容量 $c$ 時的最大價值，最後放進去的那一件是哪一種都試試看：
+\[
+K[0] = 0, \qquad K[c] = \max\Bigl(0,\ \max_{s_i \le c} \bigl(K[c - s_i] + v_i\bigr)\Bigr).
+\]
+由 $c = 0$ 往上填（$s = 3, 4, 7, 8, 9$，$v = 4, 5, 10, 11, 12$）：
+\begin{center}
+\begin{tabular}{c|cccccccccccccccccc}
+$c$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 \\ \hline
+$K[c]$ & 0 & 0 & 0 & 4 & 5 & 5 & 8 & 10 & 11 & 12 & 14 & 15 & 16 & 18 & 20 & 21 & 22 & 24
+\end{tabular}
+\end{center}
+幾格的算法（依序試 A、B、C、D、E 當最後一件）：
+\begin{align*}
+K[7] &= \max(K[4] + 4,\ K[3] + 5,\ K[0] + 10) = \max(9, 9, 10) = 10,\\
+K[10] &= \max(K[7] + 4,\ K[6] + 5,\ K[3] + 10,\ K[2] + 11,\ K[1] + 12)\\
+ &= \max(14, 13, 14, 11, 12) = 14,\\
+K[14] &= \max(K[11] + 4,\ K[10] + 5,\ K[7] + 10,\ K[6] + 11,\ K[5] + 12)\\
+ &= \max(19, 19, 20, 19, 17) = 20,\\
+K[17] &= \max(K[14] + 4,\ K[13] + 5,\ K[10] + 10,\ K[9] + 11,\ K[8] + 12)\\
+ &= \max(24, 23, 24, 23, 23) = 24.
+\end{align*}
+最佳解是 A 一件加 C 兩件：大小 $3 + 7 + 7 = 17$，價值 $4 + 10 + 10 = 24$（枚舉所有組合，價值 $24$ 的只有這一種）。
+
+直觀檢查：每單位大小的價值，C 是 $10/7 \approx 1.43$ 最高，A 是 $1.33$，其他都更低。 兩件 C 用掉 $14$，剩 $3$ 剛好放一件 A。
+所以 $10a + b = 24$，$a = 2$、$b = 4$，$a + b = 6$。
+\end{pastsoln}

@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:gk3-100-ds-09}]{高考三級資訊處理 100 年 第九題}
+（申論；20 分）
+
+計畫中各項工作的關係如以下的 AOE（Activity On Edge）網路圖所示。
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 整個計畫至少需多少天才能完工？（10 分）
+\item[㈡] 找出會提前或延後工期的關鍵路徑（critical path）。（10 分）
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=8mm,inner sep=0pt}, >=latex,
+  lab/.style={font=\small}]
+\node[v] (V0) at (0,0) {V0};
+\node[v] (V1) at (3.0,1.4) {V1};
+\node[v] (V2) at (4.0,0) {V2};
+\node[v] (V3) at (3.0,-1.4) {V3};
+\node[v] (V5) at (6.8,1.4) {V5};
+\node[v] (V4) at (6.8,-1.4) {V4};
+\node[v] (V6) at (10.0,0) {V6};
+\draw[->] (V0) -- node[lab,above left] {E1=2天} (V1);
+\draw[->] (V0) -- node[lab,below left] {E2=4天} (V3);
+\draw[->] (V1) -- node[lab,below left] {E3=2天} (V2);
+\draw[->] (V1) -- node[lab,above] {E4=16天} (V5);
+\draw[->] (V2) -- node[lab,above right] {E5=8天} (V4);
+\draw[->] (V3) -- node[lab,above] {E6=6天} (V4);
+\draw[->] (V4) -- node[lab,right] {E7=6天} (V5);
+\draw[->] (V5) -- node[lab,above right] {E8=2天} (V6);
+\draw[->] (V4) -- node[lab,below right] {E9=10天} (V6);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ $22$ 天。 ㈡ 關鍵路徑 $V_0 \to V_1 \to V_2 \to V_4 \to V_6$（E1、E3、E5、E9）。
+
+\textbf{㈠ 最早發生時間}（資結書第~22.5~節）：依拓樸順序 $V_0, V_1, V_2, V_3, V_4, V_5, V_6$，
+$\mathit{ee}[v] = \max\{\mathit{ee}[u] + w(u,v)\}$。
+\begin{itemize}
+\item $\mathit{ee}[V_0] = 0$，$\mathit{ee}[V_1] = 2$，$\mathit{ee}[V_2] = 2 + 2 = 4$，$\mathit{ee}[V_3] = 4$。
+\item $\mathit{ee}[V_4] = \max(4 + 8,\ 4 + 6) = 12$（經 E5）。
+\item $\mathit{ee}[V_5] = \max(2 + 16,\ 12 + 6) = 18$（兩條都是 $18$）。
+\item $\mathit{ee}[V_6] = \max(18 + 2,\ 12 + 10) = 22$（經 E9）。
+\end{itemize}
+所以整個計畫至少要 $22$ 天。
+
+\textbf{㈡ 最晚發生時間}：反向，$\mathit{le}[V_6] = 22$，$\mathit{le}[u] = \min\{\mathit{le}[v] - w(u,v)\}$。
+\begin{itemize}
+\item $\mathit{le}[V_5] = 22 - 2 = 20$，$\mathit{le}[V_4] = \min(20 - 6,\ 22 - 10) = 12$。
+\item $\mathit{le}[V_2] = 12 - 8 = 4$，$\mathit{le}[V_3] = 12 - 6 = 6$。
+\item $\mathit{le}[V_1] = \min(20 - 16,\ 4 - 2) = 2$，$\mathit{le}[V_0] = \min(2 - 2,\ 6 - 4) = 0$。
+\end{itemize}
+活動 $\langle u, v\rangle$ 的最早開始 $e = \mathit{ee}[u]$、最晚開始 $l = \mathit{le}[v] - w$，$l - e = 0$ 的是
+關鍵活動：
+\begin{center}
+\begin{tabular}{lccccccccc}
+\toprule
+活動 & E1 & E2 & E3 & E4 & E5 & E6 & E7 & E8 & E9 \\
+\midrule
+$e$ & 0 & 0 & 2 & 2 & 4 & 4 & 12 & 18 & 12 \\
+$l$ & 0 & 2 & 2 & 4 & 4 & 6 & 14 & 20 & 12 \\
+$l - e$ & \textbf{0} & 2 & \textbf{0} & 2 & \textbf{0} & 2 & 2 & 2 & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+關鍵活動是 E1、E3、E5、E9，連成唯一的關鍵路徑 $V_0 \to V_1 \to V_2 \to V_4 \to V_6$，長度
+$2 + 2 + 8 + 10 = 22$。 這條路徑上任何活動提前或延後，整個工期就跟著提前或延後（資結書定理~22.6）；
+其他活動各有 $2$ 天的寬裕時間。 注意 $V_5$ 的兩條進來的路都是 $18$，但 $V_5$ 之後的 E8 不在關鍵路徑上，
+所以 E4、E7 也不是關鍵活動。
+\end{pastsoln}

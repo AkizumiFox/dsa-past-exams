@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ccu-113-swa-17}]{中正資工所甲組 113 學年度 第 22 題}
+（問答）
+
+(3\%) The following graph (graph on left-hand side with 6 vertices) describes a flow assignment in a flow network. The notation x/y describes x units of flow in an edge with capacity y. Determine if it reaches the maximum flow. If your answer is yes, demonstrate how to derive such flow assignment. If your answer is no, then calculate its maximum flow.
+
+
+\begin{center}
+\begin{tikzpicture}[font=\sffamily,>={Stealth[length=2mm]}]
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (s) at (0.57,-2.03) {s};
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (a) at (2.21,-0.76) {a};
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (c) at (4.39,-0.76) {c};
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (b) at (2.21,-3.32) {b};
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (d) at (4.39,-3.32) {d};
+\node[draw,circle,minimum size=7.5mm,inner sep=0pt,font=\sffamily\large] (t) at (5.89,-2.03) {t};
+\draw[->] (s)--node[above left,inner sep=1pt]{1/4}(a);
+\draw[->] (s)--node[below left,inner sep=1pt]{6/6}(b);
+\draw[->] (b)--node[left,inner sep=2pt]{3/7}(a);
+\draw[->] (a)--node[above]{4/5}(c);
+\draw[->] (c)--node[left,inner sep=2pt]{0/2}(b);
+\draw[->] (c)--node[left,inner sep=2pt]{1/4}(d);
+\draw[->] (c)--node[above right,inner sep=1pt]{3/6}(t);
+\draw[->] (d)--node[below right,inner sep=1pt]{4/4}(t);
+\draw[->] (b)--node[below]{3/3}(d);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：還不是最大流；最大流是 $8$。
+
+\textbf{先確認題目給的是一個流。} 容量都沒超過。 守恆：$a$ 進 $f(s, a) + f(b, a) = 1 + 3 = 4$，
+出 $f(a, c) = 4$；$b$ 進 $f(s, b) + f(c, b) = 6 + 0 = 6$，出 $f(b, a) + f(b, d) = 3 + 3 = 6$；
+$c$ 進 $4$，出 $0 + 1 + 3 = 4$；$d$ 進 $1 + 3 = 4$，出 $4$。 值 $|f| = 1 + 6 = 7$，等於流進 $t$ 的
+$3 + 4$。
+
+\textbf{剩餘網路}（資結書定義~26.3）。 順向邊（還沒滿的邊，容量 $c - f$）：
+$s \to a$：$3$、$b \to a$：$4$、$a \to c$：$1$、$c \to b$：$2$、$c \to d$：$3$、$c \to t$：$3$；
+$s \to b$、$b \to d$、$d \to t$ 已滿，沒有順向邊。 反向邊（容量 $f$）：$a \to s$：$1$、$b \to s$：
+$6$、$a \to b$：$3$、$c \to a$：$4$、$d \to c$：$1$、$t \to c$：$3$、$d \to b$：$3$、$t \to d$：$4$。
+
+\textbf{找增廣路徑。} 從 $s$ 做 BFS（鄰居依 $s, a, b, c, d, t$）：$s$ 發現 $a$；$a$ 發現 $b$（反向
+邊 $a \to b$）和 $c$；$c$ 發現 $d$ 和 $t$。 增廣路徑 $s \to a \to c \to t$，剩餘容量 $3, 1, 3$，
+瓶頸 $1$。 有增廣路徑，由最大流最小割定理（資結書定理~26.6），題目的流不是最大流。
+
+\textbf{增廣之後。} $f(s, a) = 2$、$f(a, c) = 5$、$f(c, t) = 4$，其他不變，值 $8$。 再做一次
+BFS：$s$ 只能走 $s \to a$（剩 $2$）；$a$ 的 $a \to c$ 滿了，只能走反向邊 $a \to b$ 和
+$a \to s$；$b$ 的 $b \to d$ 滿了，$b \to a$ 指回 $a$，$c \to b$ 上沒有流，沒有 $b \to c$ 的剩
+餘邊。 走得到的只有 $S = \{s, a, b\}$，沒有增廣路徑。
+
+\textbf{驗證。} 割 $S = \{s, a, b\}$、$T = \{c, d, t\}$：從 $S$ 到 $T$ 的邊是 $a \to c$（$5$）和
+$b \to d$（$3$），容量和 $8$；從 $T$ 指回 $S$ 的 $c \to b$ 不算進容量，它的流量是 $0$。
+$c(S, T) = 8 = |f|$，所以最大流是 $8$。
+\end{pastsoln}

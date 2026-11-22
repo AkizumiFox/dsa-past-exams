@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncku-111-prog-15}]{成大資訊聯招 111 學年度 第 15 題}
+（設計）
+
+(10\%) Given a directed and strongly connected graph $G=(V,E)$, please design an algorithm to determine whether it contains a (directed) cycle of odd length.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：任選一個頂點 $s$ 做 BFS（沿著邊的方向），得到距離 $d(v)$。 $G$ 有奇數長度的有向環，若且唯若存在
+一條邊 $(u, v)$ 使 $d(u)$ 和 $d(v)$ 同奇偶。 時間 $O(|V| + |E|)$。
+
+\textbf{想法}。 把每個頂點依 $d(v)$ 的奇偶分成兩組。 如果每條邊都連到不同奇偶的頂點，沿著任何一條有向環
+走，每走一條邊奇偶就翻一次，回到起點時翻了偶數次，環長一定是偶數。 反過來，只要有一條邊兩端同奇偶，
+利用強連通就能湊出奇數長度的封閉路徑，裡面一定有奇數長度的環。
+
+\begin{pseudo}{判斷強連通有向圖有沒有奇數環}
+\Function{Has-Odd-Cycle}{$G$}
+    \State 任選一個頂點 $s$
+    \State 從 $s$ 沿邊的方向做 BFS，得到距離 $d(v)$ \Comment{強連通，都走得到}
+    \For{每條邊 $(u, v) \in E$}
+        \If{$d(u) \bmod 2 = d(v) \bmod 2$}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。
+\begin{itemize}
+\item \textbf{回傳 \FALSE 時沒有奇數環}：每條邊 $(u, v)$ 都有 $d(v) \equiv d(u) + 1 \pmod 2$。 設
+$v_0 \to v_1 \to \cdots \to v_{\ell} = v_0$ 是一個有向環，則 $d(v_\ell) \equiv d(v_0) + \ell \pmod 2$，而
+$v_\ell = v_0$，所以 $\ell$ 是偶數。
+\item \textbf{回傳 \TRUE 時有奇數環}：有邊 $(u, v)$ 使 $d(u) \equiv d(v) \pmod 2$。 BFS 給出長度 $d(u)$ 的路徑
+$s \leadsto u$ 和長度 $d(v)$ 的路徑 $s \leadsto v$；$G$ 強連通，有某條從 $v$ 回到 $s$ 的路徑，長度設為 $m$。
+考慮兩條封閉路徑（closed walk）：
+\[
+W_1 : s \leadsto u \to v \leadsto s,\ \text{長度 } d(u) + 1 + m; \qquad
+W_2 : s \leadsto v \leadsto s,\ \text{長度 } d(v) + m .
+\]
+兩者長度相差 $d(u) + 1 - d(v)$，是奇數，所以其中一條的長度是奇數。 一條長度為奇數的有向封閉路徑一定含有
+長度為奇數的有向環：若它不是簡單環，就有某個頂點出現兩次，在那裡切開成兩條較短的封閉路徑，長度和是奇數，
+其中一條是奇數長；對它重複同樣的論證，長度嚴格變小，最後得到一個奇數長的簡單有向環。
+\end{itemize}
+
+\textbf{複雜度}。 BFS $O(|V| + |E|)$（資結書第~21.3~節），檢查每條邊 $O(|E|)$，總共 $O(|V| + |E|)$，用鄰接串列。
+如果題目還要找出那個環，可以把上面切 $W_1$ 或 $W_2$ 的過程實作出來，也是線性時間。
+
+說明兩點：
+\begin{itemize}
+\item 強連通這個條件是必要的。 不強連通時，同奇偶的邊可能根本不在任何環上，例如 $s \to a$、$s \to b$、
+$a \to b$ 三條邊：$d(a) = d(b) = 1$，但圖裡沒有環。
+\item 這裡的 $d$ 不一定要是最短距離，任何從 $s$ 出發的生成樹（例如 DFS 樹）上的深度都可以；用 BFS 只是方便
+說明路徑的長度。
+\end{itemize}
+\end{pastsoln}

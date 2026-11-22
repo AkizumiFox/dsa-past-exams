@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncu-115-dsa-10}]{中央資工所 115 學年度 第 10 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Consider the prune-and-search algorithm using the median of medians for finding the $k$-th smallest element in an unsorted array $A$ of $n$ distinct elements, where $1\le k\le n$, as described below:
+
+\begin{quote}
+Algorithm Select($A$, $k$):\\
+Input: An array $A$ of $n$ elements and an integer $k$, $1\le k\le |A|=n$\\
+Output: The $k$-th smallest element in $A$\\
+Step 1: If $|A|\le 5$, then sort array $A$ (with any method, e.g., insertion sort) and return the element with rank $k$ (i.e., the $k$-th element in the sorted array).\\
+Step 2: Divide the array $A$ into groups of five elements each (ignore the last group if it has fewer than five elements).\\
+Step 3: Find the median of each group.\\
+Step 4: Recursively compute the median of the found medians, denoted by $m$.\\
+Step 5: Partition the original array into the following three sets:\\
+$L=\{x\in A\mid x<m\}$\\
+$E=\{m\}$\\
+$R=\{x\in A\mid x>m\}$\\
+Step 6: If $k=|L|+1$ then return $m$\\
+\hspace*{3.2em}Else if $k\le|L|$ then return Select$(L,k)$\\
+\hspace*{3.2em}Else return Select$(R,k-|L|-1)$.
+\end{quote}
+
+Select one or more correct statements.
+\begin{enumerate}[label=\Alph*.]
+\item After grouping elements into blocks of five and choosing the median of medians as the pivot denoted $m$, at least $3n/10$ elements are guaranteed to be less than or equal to the pivot.
+\item The recurrence $\mathrm{T}(n)=\mathrm{T}(n/5)+\mathrm{T}(7n/10)+\mathrm{O}(n)$ implies that the algorithm runs in $\mathrm{O}(n\log n)$ time.
+\item Using groups of size 3 instead of 5 still guarantees linear worst-case running time.
+\item The correctness of the pruning step relies on the fact that the pivot is an approximate median of the entire array.
+\item The median-finding problem is a special case of the $k$-th smallest selection problem, where $k=\lceil n/2\rceil$, and both can be solved in worst-case linear time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、E。
+
+先說明解讀。 A 和 B 照字面嚴格讀，結論會和出題的本意相反：A 的 $3n/10$ 要扣掉一個常數才嚴格成立，
+B 的 $O(n \log n)$ 字面上也是對的上界。 這裡照出題的本意判斷（A 是課本常見的近似說法；B 問的是
+這個遞迴式給出的界），下面把嚴格的情況也寫出來。
+
+\textbf{A 對（照本意）}。 Step 2 只用滿的組，共 $g = \lfloor n/5 \rfloor$ 組。 中位數不大於 $m$ 的組
+至少 $\lceil g/2 \rceil$ 組（包括 $m$ 自己那組），每組的中位數和比它小的兩個數，共 $3$ 個都
+$\le m$，所以至少 $3\lceil g/2 \rceil \approx 3n/10$ 個數 $\le m$。 嚴格地說，這個數可能比
+$3n/10$ 少一點：$n = 11$，$A = \langle 1, 2, 3, 20, 21, 10, 11, 12, 22, 23, 30 \rangle$，最後的 $30$
+被忽略，兩組的中位數是 $3$、$12$，取下中位數 $m = 3$，$\le m$ 的只有 $3$ 個，比 $3n/10 = 3.3$ 少。
+一般來說 $3\lceil g/2 \rceil \ge \frac{3}{2}\lfloor \frac{n}{5} \rfloor \ge \frac{3(n-4)}{10}$，所以
+保證的是至少 $\frac{3n}{10} - \frac{6}{5}$ 個。
+
+\textbf{B 錯（照本意）}。 $\frac{1}{5} + \frac{7}{10} = \frac{9}{10} < 1$，這個遞迴式的解是 $O(n)$
+（資結書定理~16.6 的代換法，或第~16.3~節的遞迴樹：每一層的工作量是上一層的 $9/10$）。 演算法是
+線性時間，說它「是 $O(n \log n)$」沒有給出它推得出的界。 嚴格地說，$O(n)$ 的函數也是
+$O(n \log n)$，所以字面上這句話不算錯；作答時可以註明這一點。
+
+\textbf{C 錯}。 $3$ 個一組時，保證不大於 $m$ 的數只有大約 $2 \cdot \frac{g}{2} = \frac{n}{3}$ 個，
+往下遞迴的一邊可能有 $\frac{2n}{3}$ 個，遞迴式是 $T(n) = T(n/3) + T(2n/3) + O(n)$，比例加起來是
+$1$，解是 $\Theta(n \lg n)$（資結書第~16.3~節「為什麼是 5 個一組」）。 不能保證線性。
+
+\textbf{D 錯}。 正確性不需要 $m$ 接近中位數：Step 5 之後 $L$ 的數都比 $m$ 小、$R$ 的都比 $m$ 大，
+$m$ 是第 $|L| + 1$ 小；$k$ 落在哪一段、在那一段裡是第幾小都由此決定，不管 $m$ 是誰都對（和資結書
+第~16~章觀念題第~7~題的歸納法一樣）。 $m$ 接近中位數只影響\textbf{時間}：它保證 $L$、$R$ 都不超過
+大約 $7n/10$。
+
+\textbf{E 對}。 中位數就是第 $\lceil n/2 \rceil$ 小（$n$ 是偶數時是下中位數，和資結書的約定相同），
+是選擇問題 $k = \lceil n/2 \rceil$ 的特例；\proc{Select} 對任何 $k$ 的最壞時間都是 $O(n)$（資結書
+定理~16.6）。
+\end{pastsoln}

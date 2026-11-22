@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:nsysu-113-dmalg-01}]{中山資工所資安組 113 學年度 第 1 題}
+（計算）
+
+{[10\%]} In how many ways can Richard assign 22 students in four classrooms so that there are at least three
+students in a classroom? (a student assigned different seats is considered as different cases in a
+classroom)
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題意}。 22 個人分到 4 間教室，鴿籠原理保證一定有教室至少 $6$ 人，所以「at least three students in a
+classroom」只能讀成「每一間教室都至少 $3$ 人」。 學生是不同的人，教室也是不同的教室。 括號那句說「同一間教室裡
+坐不同的座位算不同的情形」，也就是教室裡的\textbf{座位順序}要算。 下面先照這個讀法算，再附上只看「誰在哪間教室」
+的答案。
+
+\textbf{讀法一：座位順序要算}。 把一種分法寫下來：依教室 $1, 2, 3, 4$ 的順序，每間教室裡依座位順序列出學生，得到
+$22$ 個學生的一個排列，再在排列上切三刀分成四段，第 $i$ 段就是第 $i$ 間教室。 反過來，一個排列加上一種切法也唯一
+決定一種分法。 所以
+\[
+\text{方法數} = 22! \times (\text{把 } 22 \text{ 切成 } 4 \text{ 段、每段至少 } 3 \text{ 的方法數}).
+\]
+後者是 $n_1 + n_2 + n_3 + n_4 = 22$、$n_i \ge 3$ 的整數解個數。 令 $m_i = n_i - 3 \ge 0$，得
+$m_1 + m_2 + m_3 + m_4 = 10$，非負整數解有 $\binom{10 + 3}{3} = \binom{13}{3} = 286$ 個（資結書第~A.3~節的
+重複組合）。 答案
+\[
+286 \times 22! .
+\]
+用指數生成函數寫也一樣：一間教室放 $k$ 個人、排座位有 $k!$ 種，生成函數是
+$\sum_{k \ge 3} k!\, \frac{x^k}{k!} = \frac{x^3}{1 - x}$；四間相乘取 $x^{22}$ 的係數再乘 $22!$：
+$22! \, [x^{22}] \frac{x^{12}}{(1-x)^4} = 22! \binom{13}{3}$。
+
+\textbf{讀法二：只看誰在哪間教室}。 如果括號只是要說明「學生是可以區分的」，座位不算，方法數是
+\[
+\sum_{\substack{n_1 + n_2 + n_3 + n_4 = 22 \\ n_i \ge 3}} \frac{22!}{n_1!\, n_2!\, n_3!\, n_4!}
+= 22! \, [x^{22}] \Bigl(e^x - 1 - x - \frac{x^2}{2}\Bigr)^4 = 13{,}428{,}815{,}507{,}184 .
+\]
+（每間教室的指數生成函數是 $\sum_{k \ge 3} \frac{x^k}{k!}$。）不能用計算機的考試，寫到上面的和式或生成函數係數就夠了。
+\end{pastsoln}

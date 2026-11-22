@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntut-115-ci-02}]{北科大資工所 115 學年度 第 2 題}
+（是非）
+
+Mark by \underline{True or False} each of the followings: (10\%)
+\begin{enumerate}[label=(\arabic*)]
+\item The operation insert on a priority queue realized by a sorted list can be done in linear
+time. (2\%)
+\item It is possible that the preorder traversal of a tree $T$ visits the nodes in the reverse
+order of the postorder traversal of $T$. (2\%)
+\item A subtree of a red-black tree is itself a red-black tree. (2\%)
+\item There is a unique red-black tree associated with a given (2, 4) tree. (2\%)
+\item If an undirected graph $G$ is connected with $n$-1 edges and $n$ nodes, then $G$ has no
+cycle. (2\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) T；(2) T；(3) F；(4) F；(5) T。
+
+五個小題分屬資結書第~8~章（(1)）、第~7~章（(2)）、第~10~章（(3)(4)）、第~21~章（(5)），紅黑樹佔兩題，
+放在第~10~章。
+
+\textbf{(1) T}。 用排好序的串列實作優先佇列（資結書第~8.3~節的比較表），插入時要從頭找到該放的
+位置，最多看過 $n$ 個元素，再花 $O(1)$ 接上去，共 $O(n)$，可以在線性時間內完成。 （代價是 $O(n)$，
+換來取出最小值只要 $O(1)$。）
+
+\textbf{(2) T}。 「可能」只要舉一個例子：每個節點最多一個子節點的樹（一條鏈）$a \to b \to c$，前序是
+$a, b, c$，後序是 $c, b, a$，正好相反。 只有一個節點的樹也成立。 （反過來，只要有某個節點有兩個以上
+的子節點 $x$、$y$，前序和後序都是先走 $x$ 的子樹再走 $y$ 的子樹，倒過來之後 $y$ 的子樹跑到前面，就
+不可能相反。 所以「前序是後序倒過來」若且唯若樹是一條鏈。）
+
+\textbf{(3) F}。 紅黑樹的定義要求根是黑色（資結書第~10.3~節）。 紅黑樹裡以紅節點為根的子樹，其他性質
+都滿足（沒有相連的紅節點，每條路徑黑節點數相同），但根是紅的，不是紅黑樹。 例如根黑、兩個子節點都
+紅的三個節點的樹，左子節點那棵子樹只有一個紅節點。 （把那個根塗黑就會變成紅黑樹，但題目問的是子樹
+「本身」。 如果用的是不要求根為黑的定義，這題會變成 T；照一般課本的定義答 F。）
+
+\textbf{(4) F}。 紅黑樹和 (2, 4) 樹（2-3-4 樹）的對應（資結書第~10.4~節）：一個 2-節點對應一個黑節點；
+一個 4-節點 $\{a, b, c\}$ 對應黑的 $b$ 帶兩個紅子節點 $a$、$c$；一個 3-節點 $\{a, b\}$ 卻有兩種畫法：黑的
+$a$ 帶紅的右子節點 $b$，或黑的 $b$ 帶紅的左子節點 $a$。 所以只要 (2, 4) 樹裡有 3-節點，就對應到不只一棵
+紅黑樹。 例如只有一個 3-節點 $\{1, 2\}$ 的 (2, 4) 樹，對應「黑 1、右子紅 2」和「黑 2、左子紅 1」兩棵紅黑樹。
+（反方向是唯一的：一棵紅黑樹把每個黑節點和它的紅子節點合併，得到唯一一棵 (2, 4) 樹。）
+
+\textbf{(5) T}。 設 $G$ 連通、有 $n$ 個頂點、$n - 1$ 條邊，假設它有環。 從環上拿掉一條邊，環上其他的
+邊仍然把這條邊的兩端連起來，圖還是連通的。 一直重複，直到沒有環為止，得到一棵生成樹，它有 $n - 1$
+條邊（$n$ 個頂點的樹恰有 $n - 1$ 條邊）。 可是至少拿掉了一條邊，剩下不到 $n - 1$ 條，
+矛盾。 所以 $G$ 沒有環，它就是一棵樹。
+\end{pastsoln}

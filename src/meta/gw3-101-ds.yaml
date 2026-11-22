@@ -1,0 +1,15 @@
+paper: gw3-101-ds
+volume: 4
+school: 關務三等
+dept: 資訊處理
+year: 101
+year_word: 年
+subject: 資料結構
+instructions: ㈠禁止使用電子計算器。㈡不必抄題，作答時請將試題題號及答案依照順序寫在試卷上，於本試題上作答者，不予計分。
+questions:
+  - {id: gw3-101-ds-01, label: 第一題, chapter: 6}
+  - {id: gw3-101-ds-02, label: 第二題, chapter: 8}
+  - {id: gw3-101-ds-03, label: 第三題, chapter: 8}
+  - {id: gw3-101-ds-04, label: 第四題, chapter: 24}
+  - {id: gw3-101-ds-05, label: 第五題, chapter: 19}
+  - {id: gw3-101-ds-06, label: 第六題, chapter: 10}

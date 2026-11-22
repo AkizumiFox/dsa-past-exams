@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ncu-113-dsa-17}]{中央資工所 113 學年度 第 17 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Consider a hash table of size 7, with hash function $H(k)=k\ \%\ 7$, and pseudo random $i=(i+5)\ \%\ 7$. We
+want to insert the following keys one by one from left to right.
+
+15, 11, 25, 16, 9, 8, 12
+
+If random probing is used, which of the following statements are incorrect?
+\begin{enumerate}[label=(\Alph*)]
+\item key 25 is at position 4.
+\item key 16 is at position 0.
+\item key 9 is at position 0.
+\item key 8 is at position 6.
+\item Some key has no place to store in the table.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目問的是\textbf{錯誤}的敘述。 答案：(A)(C)(E)。
+
+\textbf{探測方式}。 先試 $H(k)$；有人佔了，就用 $i \gets (i + 5) \bmod 7$ 算下一格，也就是每次往後跳
+$5$ 格（$i$ 當成位置）。 如果把 $i$ 當成加在 $H(k)$ 上的位移，位移依序是 $0, 5, 10 \bmod 7 = 3, 1, \ldots$，
+試的格子是 $H(k) + 5j \bmod 7$，和前一種讀法完全一樣。 $5$ 和 $7$ 互質，所以每個鍵的探測序列會走遍全部
+$7$ 格（資結書第~12.3~節），表沒滿就一定插得進去。
+
+\textbf{逐一插入}：
+\begin{center}
+\small
+\begin{tabular}{rcl}
+\toprule
+鍵 & $k \bmod 7$ & 試過的格子（最後一個是放進去的位置） \\
+\midrule
+15 & 1 & 1 \\
+11 & 4 & 4 \\
+25 & 4 & 4（有 11），$(4+5) \bmod 7 = 2$ \\
+16 & 2 & 2（有 25），$0$ \\
+9 & 2 & 2（有 25），0（有 16），$5$ \\
+8 & 1 & 1（有 15），$6$ \\
+12 & 5 & 5（有 9），$(5+5) \bmod 7 = 3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的表：
+\begin{center}
+\small
+\begin{tabular}{c*{7}{c}}
+\toprule
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+鍵 & 16 & 15 & 25 & 12 & 11 & 9 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯誤，要選。 $25$ 在第 $2$ 格；第 $4$ 格是 $11$。
+\item (B) 正確，不選。
+\item (C) 錯誤，要選。 $9$ 在第 $5$ 格；第 $0$ 格是 $16$。
+\item (D) 正確，不選。
+\item (E) 錯誤，要選。 七個鍵剛好填滿七格，每個鍵都放進去了。
+\end{itemize}
+\end{pastsoln}

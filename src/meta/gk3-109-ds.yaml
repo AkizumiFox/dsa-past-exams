@@ -1,0 +1,13 @@
+paper: gk3-109-ds
+volume: 4
+school: 高考三級
+dept: 資訊處理
+year: 109
+year_word: 年
+subject: 資料結構
+instructions: ㈠禁止使用電子計算器。㈡不必抄題，作答時請將試題題號及答案依照順序寫在試卷上，於本試題上作答者，不予計分。㈢本科目除專門名詞或數理公式外，應使用本國文字作答。
+questions:
+  - {id: gk3-109-ds-01, label: 第一題, chapter: 17}
+  - {id: gk3-109-ds-02, label: 第二題, chapter: 8}
+  - {id: gk3-109-ds-03, label: 第三題, chapter: 10}
+  - {id: gk3-109-ds-04, label: 第四題, chapter: 21}

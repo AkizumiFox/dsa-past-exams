@@ -1,0 +1,79 @@
+\begin{pastexam}[label={px:gk3-101-ds-01}]{高考三級資訊處理 101 年 第一題}
+（申論；25 分）
+
+假設我們有一個由 26 個英文字母所構成的文字檔。
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請說明如何建構一棵霍夫曼樹（Huffman tree）來壓縮該文字檔。（15 分）
+\item[㈡] 請說明如何利用你所述之方法建構的霍夫曼樹壓縮該文字檔。（5 分）
+\item[㈢] 請說明如何解壓縮利用你所述方法壓縮的文字檔。（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+想法：常出現的字母給短的編碼、少出現的給長的，而且任何一個編碼都不是另一個的開頭（前綴碼），
+這樣一串位元可以唯一地切回字母。 霍夫曼樹給出的前綴碼，使總位元數 $\sum_c f(c) \cdot
+\mathit{len}(c)$ 最小（資結書第~19.3~節、定理~19.5）。
+
+\textbf{㈠ 建構霍夫曼樹。}
+\begin{enumerate}[nosep]
+\item \textbf{統計頻率}：從頭到尾讀一次檔案，用陣列 $f[\texttt{A}..\texttt{Z}]$ 數每個字母出現的
+次數。 沒出現的字母（$f = 0$）可以不放進樹。
+\item \textbf{建立葉節點}：每個出現過的字母做一個葉節點，權重是它的次數，全部放進一個以權重為
+鍵的最小優先佇列 $Q$（例如最小堆積）。
+\item \textbf{反覆合併}：當 $Q$ 裡不只一個節點時，取出權重最小的兩個 $x$、$y$，做一個新的內部
+節點 $z$，左子 $x$、右子 $y$，權重 $f(z) = f(x) + f(y)$，把 $z$ 放回 $Q$。 $k$ 個字母要合併
+$k - 1$ 次（最多 $25$ 次）。
+\item 最後 $Q$ 裡剩下的節點就是樹根。 從根往下，往左記 $0$、往右記 $1$，走到某個葉節點的路徑
+就是那個字母的編碼。
+\end{enumerate}
+\begin{pseudo}{建構霍夫曼樹}
+\Function{Huffman}{$C, f$} \Comment{$C$：出現過的字母，$f$：次數}
+    \State $Q \gets$ 以 $f$ 為鍵、放入 $C$ 的所有葉節點的最小優先佇列
+    \For{$i \gets 1$ \To $|C| - 1$}
+        \State $x \gets$ \Call{Extract-Min}{$Q$}；$y \gets$ \Call{Extract-Min}{$Q$}
+        \State 新節點 $z$：$z.\mathit{left} \gets x$，$z.\mathit{right} \gets y$，$f(z) \gets f(x) + f(y)$
+        \State \Call{Insert}{$Q, z$}
+    \EndFor
+    \State \Return \Call{Extract-Min}{$Q$} \Comment{樹根}
+\EndFunction
+\end{pseudo}
+用堆積時每次取出、放入 $O(\lg k)$，建樹 $O(k \lg k)$，$k \le 26$，相對於讀檔的 $O(N)$（$N$ 是
+檔案的字元數）可以忽略。 只出現一種字母時（$k = 1$）沒有合併，可以規定它的編碼是 $0$。
+
+\textbf{例子}：檔案內容 \texttt{ABRACADABRA}，次數 A:5、B:2、R:2、C:1、D:1。
+\begin{itemize}[nosep]
+\item 合併 C(1)、D(1) $\to$ 2；剩 A5、B2、R2、(CD)2。
+\item 合併 B(2)、R(2) $\to$ 4（三個 2 平手，選哪兩個都得到最佳碼）；剩 A5、(CD)2、(BR)4。
+\item 合併 (CD)2、(BR)4 $\to$ 6；剩 A5、6。
+\item 合併 A(5)、6 $\to$ 11，是樹根。
+\end{itemize}
+編碼：A $= 0$、C $= 100$、D $= 101$、B $= 110$、R $= 111$。
+
+\textbf{㈡ 壓縮。}
+\begin{enumerate}[nosep]
+\item 依㈠建好樹後，走一次樹，把 $26$ 個字母的編碼存到表 $\mathit{code}[\texttt{A}..\texttt{Z}]$，
+之後編碼一個字母只要查表。
+\item 輸出檔先寫\textbf{檔頭}：解壓縮需要同一棵樹，所以寫入 $26$ 個字母的次數（或直接把樹的形狀
+寫進去），以及原檔的字元數 $N$。
+\item 再從頭讀一次原檔，每讀一個字母就把它的編碼逐位元輸出；位元湊滿 $8$ 個寫成一個位元組，
+最後不滿 $8$ 個時補 $0$。
+\end{enumerate}
+上例 \texttt{ABRACADABRA} 編成
+\[
+0\ 110\ 111\ 0\ 100\ 0\ 101\ 0\ 110\ 111\ 0,
+\]
+共 $5 \cdot 1 + 2 \cdot 3 + 2 \cdot 3 + 1 \cdot 3 + 1 \cdot 3 = 23$ 位元；用固定長度（$26$ 個字母要
+$5$ 位元）要 $55$ 位元，用 ASCII 要 $88$ 位元。 壓縮時間 $O(N)$ 加上輸出的位元數。
+
+\textbf{㈢ 解壓縮。}
+\begin{enumerate}[nosep]
+\item 讀檔頭，取得 $26$ 個字母的次數和 $N$，用\textbf{和壓縮時完全相同}的步驟（包括平手時選哪
+兩個的規則）重建同一棵霍夫曼樹；若檔頭存的是樹的形狀，就直接照著建。
+\item 指標 $p$ 從樹根開始，逐位元讀壓縮的資料：讀到 $0$ 往左、讀到 $1$ 往右。 走到葉節點就輸出
+那個字母，$p$ 回到樹根繼續。
+\item 輸出滿 $N$ 個字母就停，最後補的 $0$ 不會被誤當成字母。
+\end{enumerate}
+因為是前綴碼，每走到一個葉節點就能確定是哪個字母，不需要分隔符號。 上例從根讀 $0$ 到葉 A；
+讀 $1, 1, 0$ 到葉 B；讀 $1, 1, 1$ 到葉 R；依此類推，還原出 \texttt{ABRACADABRA}。 每個位元
+在樹上走一步，解壓縮時間和壓縮後的位元數成正比。
+\end{pastsoln}

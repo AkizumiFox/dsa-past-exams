@@ -1,0 +1,106 @@
+\begin{pastexam}[label={px:gw3-112-ds-03}]{關務三等資訊處理 112 年 第三題}
+（申論；25 分）
+
+給予一串資料 60, 70, 50, 10, 20, 80, 95, 90，依序畫出產生 2-3 樹（Order 3 的 B-Tree）的過程，之後依序畫出刪除 50、20
+與 80 的 2-3 樹。（25 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：插入完成後根 $[60]$，第二層 $[20]$、$[80]$，葉子 $[10]$、$[50]$、$[70]$、$[90, 95]$。 刪除 $50$ 後
+$[60, 80]$ / $[10, 20]$、$[70]$、$[90, 95]$；刪除 $20$ 後 $[60, 80]$ / $[10]$、$[70]$、$[90, 95]$；刪除 $80$ 後
+$[60, 90]$ / $[10]$、$[70]$、$[95]$。
+
+規則照資結書第~11.1~節：2-3 樹每個節點有 $1$ 或 $2$ 個鍵，所有葉子在同一層。 \textbf{插入}一律放進葉子；葉子變成
+$3$ 個鍵（溢位）就\textbf{分裂}：最小的留在原節點、最大的放進新節點、中間的鍵上升到父節點，父節點溢位就繼續往上分裂，
+根分裂時樹長高一層。 \textbf{刪除}內部節點的鍵時用\textbf{後繼}（右子樹最小的鍵）取代，改成刪葉子；葉子變空（不足）
+時，先看相鄰兄弟能不能\textbf{借}（先右後左），都不能就和兄弟\textbf{合併}（有右兄弟就和右兄弟併），合併使父節點少一個
+鍵，可能往上連鎖。
+
+\textbf{插入過程}（每張圖是插入該鍵之後的樹）：
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,minimum height=5.5mm,inner sep=2.5pt,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=14mm}, every node/.style={font=\small}]
+\node[k] at (0,0) {60};
+\node at (0,-0.7) {(a) 插入 60};
+\node[k] at (2.2,0) {60\,|\,70};
+\node at (2.2,-0.7) {(b) 插入 70};
+\begin{scope}[xshift=5cm]
+\node[k] {60} child {node[k] {50}} child {node[k] {70}};
+\node at (0,-1.75) {(c) 插入 50};
+\end{scope}
+\begin{scope}[xshift=8.6cm]
+\node[k] {60} child {node[k] {10\,|\,50}} child {node[k] {70}};
+\node at (0,-1.75) {(d) 插入 10};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (c) 插入 $50$：葉子變成 $50, 60, 70$，溢位。 分裂：$50$ 留下、$70$ 到新節點、$60$ 上升成為新的根。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,minimum height=5.5mm,inner sep=2.5pt,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=13mm}, every node/.style={font=\small}]
+\node[k] {20\,|\,60} child {node[k] {10}} child {node[k] {50}} child {node[k] {70}};
+\node at (0,-1.75) {(e) 插入 20};
+\begin{scope}[xshift=5cm]
+\node[k] {20\,|\,60} child {node[k] {10}} child {node[k] {50}} child {node[k] {70\,|\,80}};
+\node at (0,-1.75) {(f) 插入 80};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (e) 插入 $20$：葉子 $\{10, 50\}$ 變成 $10, 20, 50$，溢位。 $10$ 留下、$50$ 到新節點、$20$ 上升到根，根變成 $[20, 60]$。
+\item (f) 插入 $80$：放進葉子 $\{70\}$，成為 $[70, 80]$。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,minimum height=5.5mm,inner sep=2.5pt,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=30mm}, level 2/.style={sibling distance=14mm},
+  every node/.style={font=\small}]
+\node[k] {60}
+  child {node[k] {20} child {node[k] {10}} child {node[k] {50}}}
+  child {node[k] {80} child {node[k] {70}} child {node[k] {95}}};
+\node at (0,-2.75) {(g) 插入 95};
+\begin{scope}[xshift=7cm]
+\node[k] {60}
+  child {node[k] {20} child {node[k] {10}} child {node[k] {50}}}
+  child {node[k] {80} child {node[k] {70}} child {node[k] {90\,|\,95}}};
+\node at (0,-2.75) {(h) 插入 90};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (g) 插入 $95$：葉子 $\{70, 80\}$ 變成 $70, 80, 95$，溢位：$70$ 留下、$95$ 到新節點、$80$ 上升，根變成 $20, 60, 80$，
+又溢位。 根分裂：$20$ 留下（帶著子節點 $\{10\}$、$\{50\}$）、$80$ 到新節點（帶著 $\{70\}$、$\{95\}$）、$60$ 上升成為新的
+根，樹高變成 $3$。
+\item (h) 插入 $90$：$90 > 60$ 往右，$90 > 80$ 往右，放進葉子 $\{95\}$，成為 $[90, 95]$。
+\end{itemize}
+
+\textbf{刪除過程}（從 (h) 開始）：
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,minimum height=5.5mm,inner sep=2.5pt,font=\small},
+  level distance=10mm, level 1/.style={sibling distance=16mm}, every node/.style={font=\small}]
+\node[k] {60\,|\,80} child {node[k] {10\,|\,20}} child {node[k] {70}} child {node[k] {90\,|\,95}};
+\node at (0,-1.75) {(i) 刪除 50};
+\begin{scope}[xshift=5.2cm]
+\node[k] {60\,|\,80} child {node[k] {10}} child {node[k] {70}} child {node[k] {90\,|\,95}};
+\node at (0,-1.75) {(j) 刪除 20};
+\end{scope}
+\begin{scope}[xshift=10cm]
+\node[k] {60\,|\,90} child {node[k] {10}} child {node[k] {70}} child {node[k] {95}};
+\node at (0,-1.75) {(k) 刪除 80};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (i) 刪除 $50$：$50$ 在葉子，拿掉後葉子變空（不足）。 它是父節點 $[20]$ 的右子節點，沒有右兄弟；左兄弟 $\{10\}$ 只有
+$1$ 個鍵，不能借。 和左兄弟合併：$10$ 和分隔鍵 $20$ 合成 $[10, 20]$。 父節點 $[20]$ 因此變空，它的右兄弟 $[80]$ 也只有
+$1$ 個鍵，不能借，合併：空節點、根的分隔鍵 $60$、兄弟 $[80]$ 合成 $[60, 80]$，三個子節點 $[10, 20]$、$[70]$、$[90, 95]$。
+根變空，拿掉，樹高變回 $2$。
+\item (j) 刪除 $20$：葉子 $[10, 20]$ 拿掉 $20$ 還剩 $10$，結束。
+\item (k) 刪除 $80$：$80$ 在根（內部節點），用後繼取代：$80$ 右邊子樹最小的鍵是 $90$。 $90$ 上去取代 $80$，根成為
+$[60, 90]$；葉子 $[90, 95]$ 拿掉 $90$ 還剩 $95$，沒有不足，結束。
+\end{itemize}
+（刪除內部鍵也可以改用前導（左邊子樹最大的鍵）取代。 (k) 時前導是 $70$：根暫時成為 $[60, 70]$，葉子 $\{70\}$ 變空；
+右兄弟 $[90, 95]$ 可以借，分隔鍵 $70$ 下來、$90$ 上去，結果也是 $[60, 90]$ / $[10]$、$[70]$、$[95]$。 本題兩種做法
+結果相同，一般情況下可能不同，考試時寫明採用哪一種即可。）
+\end{pastsoln}

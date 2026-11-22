@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-114-prog-07}]{成大資訊聯招 114 學年度 第 7 題}
+（複選；至少有二個正確答案）
+
+{[4\%]} Given a tree containing $n$ nodes, which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item If the tree is a maximum cost spanning tree, the number of edges is $n$-1.
+\item If the tree is an AVL tree, the time complexity to delete an element is O(log $n$).
+\item If the tree is a compressed trie, the number of keys is $n$.
+\item If the tree is a red-black tree with $n$ internal nodes, the rank of the root is at most log$_2$($n$+1).
+\item If the tree is a binary search tree, its height is O(log $n$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(D)。
+
+\begin{itemize}
+\item (A) 對。 生成樹是樹，$n$ 個頂點的樹恰好 $n - 1$ 條邊；最大成本生成樹只是挑選的標準不同（資結書第~24~章），還是生成樹。
+\item (B) 對。 AVL 樹的高度是 $O(\log n)$（資結書定理~10.1），刪除沿一條路徑往下找、再往上修正，每層最多做一次旋轉，
+總共 $O(\log n)$（資結書第~10.2.6~節）。
+\item (C) 錯。 壓縮 trie（資結書第~11.5.3~節）的鍵只放在元素節點（葉節點），分支節點不放鍵。 壓縮二元 trie 有 $m$ 個鍵時有
+$m - 1$ 個分支節點，共 $2m - 1$ 個節點；所以 $n$ 個節點時只有 $(n + 1)/2$ 個鍵，不是 $n$ 個。 （題目的「compressed trie」若是
+多路的壓縮 trie，分支節點也不放鍵，鍵數同樣少於節點數。）
+\item (D) 對。 紅黑樹的 rank（黑高度）設為 $r$，從根往下前 $r$ 層全部是內部節點（每條往下的路徑都要經過 $r$ 個黑色指標才到外部
+節點），所以至少有 $2^r - 1$ 個內部節點（資結書第~10.3~節，引理~10.3）。 $n \ge 2^r - 1$，得 $r \le \log_2(n + 1)$。
+\item (E) 錯。 二元搜尋樹沒有平衡的保證，依序插入 $1, 2, \ldots, n$ 會得到一條鏈，高度 $n$（或 $n - 1$，看定義），是 $\Theta(n)$。
+只有平均情況（隨機插入順序）的高度才是 $O(\log n)$。
+\end{itemize}
+\end{pastsoln}

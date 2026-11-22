@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:gk3-103-ds-01}]{高考三級資訊處理 103 年 第一題}
+（申論；15 分）
+
+給一個排序好的陣列（Sorted Array）A[low...high]，當我們要搜尋一個元素 X 是否在此陣列 A 中，
+二元搜尋法（Binary Search）是檢查陣列的中間位置的元素 A[next], next=$\lceil$(low+high)/2$\rceil$，
+和 X 做比較，並依比較結果作下列更新。
+
+\hspace*{2em}Case：\\
+\hspace*{5em}A[next]＝X：return\\
+\hspace*{5em}A[next]＞X：high $\Leftarrow$ next $-$ 1\\
+\hspace*{5em}A[next]＜X：low $\Leftarrow$ next $+$ 1
+
+重複上述步驟搜尋更新的陣列 A[low...high]直到找到 X 或確認 X 不是在此陣列 A 中。
+若我們設計一個新的搜尋法來修改二元搜尋法，每次都是以下列方式選取 A[next]。\\
+next$\leftarrow$low+$\lceil$(high $-$ low) * (X $-$ A[low])／(A[high] $-$ A[low])$\rceil$\\
+其他步驟都和二元搜尋相同。請回答下列問題：（每小題 5 分，共 15 分）
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 新的搜尋法特色為何？請說明之。
+\item[㈡] 新的搜尋法在何種情形下，會比二元搜尋的搜尋速度為佳？請說明之。
+\item[㈢] 新的搜尋法，在最差的情況下，它的執行時間複雜度為多少？原因為何？假設陣列 A 中有 n 個元素。
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+新的方法叫\textbf{內插搜尋}（interpolation search）。 二元搜尋（資結書第~17.1~節）的二分點
+只看位置，不看值；內插搜尋假設 A[low..high] 的值大致是均勻遞增的，用 X 的值估計它「應該」
+在哪個位置。
+
+\textbf{㈠ 特色。}
+\begin{itemize}
+\item 下一個要比較的位置按比例算：X 比 A[low] 大多少、占整段值域 A[high]$-$A[low] 的幾成，
+next 就落在 low 往右同樣比例的地方。 X 靠近 A[low] 就從左邊附近查，靠近 A[high] 就從右邊附近查，
+很像翻字典找「張」會直接翻到後面。
+\item 和二元搜尋一樣只能用在排序好、能隨機存取的陣列上，比較之後同樣把範圍縮成一邊。
+\item 計算 next 要做乘除法，每一步的成本比二元搜尋高一點。
+\item 實作上要多處理兩件事：A[high]$=$A[low] 時分母是 $0$；X 不在 [A[low], A[high]] 之內時，
+算出來的 next 會落在範圍外，這時可以直接回報找不到。
+\end{itemize}
+
+\textbf{㈡ 什麼時候比二元搜尋快。} 資料的值\textbf{分布均勻}（例如接近等差）時，內插的估計很準，
+一次就落在 X 附近。 可以證明在均勻隨機的資料上，內插搜尋的期望比較次數是
+$O(\log\log n)$，比二元搜尋的 $\Theta(\log n)$ 少很多。 例如 A[$i$]$=i$，$i = 1, \dots, n$，
+找任何一個 X 都是第一次就算出 next$=$X 的位置，一次比較就找到。 資料量大、比較或存取的成本高
+（例如資料在磁碟上）時，這個差距更明顯。
+
+\textbf{㈢ 最差情況：$\Theta(n)$。} 值分布很不均勻時，估計會一直偏向同一邊，每次只能把範圍縮小
+一點點。 例如 A[$i$]$=i$（$1 \le i \le n-1$），而 A[$n$]$=M$ 是一個很大的數（$M \ge n^2$），
+找 X$=n-1$。 第一輪
+\[
+\text{next} = 1 + \left\lceil \frac{(n-1)(n-2)}{M - 1} \right\rceil = 1 + 1 = 2,
+\]
+因為分數大於 $0$ 又小於 $1$。 A[2]$=2<$X，low 變成 3；之後每一輪的分數也都在 $0$ 和 $1$ 之間，
+next$=$low$+1$，比較後 low 變成 next$+1$。 每一輪 low 只往右移 2 格，大約要 $n/2$ 輪才找到，所以是 $\Theta(n)$。 另一方面，每一輪至少把範圍縮小 1（next 在
+[low, high] 之內，比較後去掉 next 和一側），最多 $n$ 輪，所以最差就是 $\Theta(n)$。 二元搜尋不看值，
+最差仍然是 $\Theta(\log n)$。
+\end{pastsoln}

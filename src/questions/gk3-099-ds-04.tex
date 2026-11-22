@@ -1,0 +1,102 @@
+\begin{pastexam}[label={px:gk3-099-ds-04}]{高考三級資訊處理 99 年 第四題}
+（申論；20 分）
+
+一個有向圖形（directed graph），若圖形的任何路徑（path）沒有環路（cycle），則此圖形可找到拓樸排序
+（topological sorting），問：
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 說明什麼是拓樸排序？（5 分）
+\item[㈡] 舉出一種拓樸排序的應用。（3 分）
+\item[㈢] 於下圖中找出一種拓樸排序，要寫出產生的過程，最後畫出拓樸排序圖。（12 分）
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+  e/.style={-{Stealth[length=2mm]},semithick}]
+\node[v] (A) at (-1.7,1) {A};
+\node[v] (B) at (1.7,1) {B};
+\node[v] (C) at (-3.3,0) {C};
+\node[v] (D) at (0,0) {D};
+\node[v] (E) at (3.3,0) {E};
+\node[v] (F) at (-1.7,-1) {F};
+\node[v] (G) at (1.7,-1) {G};
+\draw[e] (A) -- (B);
+\draw[e] (A) -- (C);
+\draw[e] (D) -- (A);
+\draw[e] (D) -- (C);
+\draw[e] (D) -- (B);
+\draw[e] (D) -- (F);
+\draw[e] (D) -- (G);
+\draw[e] (B) -- (E);
+\draw[e] (B) -- (G);
+\draw[e] (G) -- (E);
+\draw[e] (G) -- (F);
+\draw[e] (F) -- (C);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 把頂點排成一列，使每一條邊 $(u, v)$ 的 $u$ 都排在 $v$ 前面。 ㈡ 例如排修課順序（先修科目要先修）。
+㈢ 一種拓樸排序是 D, A, B, G, E, F, C。
+
+\textbf{㈠} 有向無環圖（DAG）$G = (V, E)$ 的\textbf{拓樸排序}是所有頂點的一種線性排列，使得對每一條邊
+$(u, v) \in E$，$u$ 都排在 $v$ 前面（資結書第~22~章）。 把邊看成「$u$ 必須在 $v$ 之前完成」，拓樸排序就是
+一個不違反任何先後關係的做事順序。 圖有環時不存在拓樸排序（環上每個點都要排在自己前面）；沒有環時一定
+存在，但通常不唯一。
+
+\textbf{㈡ 應用。} 排課：頂點是科目，邊 $(u, v)$ 表示 $u$ 是 $v$ 的先修科目，拓樸排序就是一個可行的修課順序
+（資結書第~22.4~節的 AOV 網路）。 其他例子：程式建置時決定編譯順序（\texttt{make} 依相依關係）、工程計畫排
+工作順序、試算表依儲存格參照決定重算順序。
+
+\textbf{㈢} 用 Kahn 的方法（資結書虛擬碼~22.1）：反覆取出入分支度為 $0$ 的頂點輸出，並把它的出邊刪掉。
+同時有好幾個入分支度為 $0$ 的頂點時，取字母最小的。 圖的邊：
+\[
+\begin{gathered}
+A\to B,\quad A \to C,\quad B \to E,\quad B \to G,\quad D \to A,\quad D \to B, \\
+D \to C,\quad D \to F,\quad D \to G,\quad F \to C,\quad G \to E,\quad G \to F.
+\end{gathered}
+\]
+\begin{center}
+\small
+\begin{tabular}{c*{7}{c}l}
+\toprule
+步驟 & A & B & C & D & E & F & G & 輸出（入分支度為 $0$ 的候選） \\
+\midrule
+初始 & 1 & 2 & 3 & 0 & 2 & 2 & 2 & 候選 \{D\} \\
+1 & 0 & 1 & 2 & -- & 2 & 1 & 1 & 輸出 D；候選 \{A\} \\
+2 & -- & 0 & 1 & -- & 2 & 1 & 1 & 輸出 A；候選 \{B\} \\
+3 & -- & -- & 1 & -- & 1 & 1 & 0 & 輸出 B；候選 \{G\} \\
+4 & -- & -- & 1 & -- & 0 & 0 & -- & 輸出 G；候選 \{E, F\} \\
+5 & -- & -- & 1 & -- & -- & 0 & -- & 輸出 E；候選 \{F\} \\
+6 & -- & -- & 0 & -- & -- & -- & -- & 輸出 F；候選 \{C\} \\
+7 & -- & -- & -- & -- & -- & -- & -- & 輸出 C \\
+\bottomrule
+\end{tabular}
+\end{center}
+表中每一列是輸出那個頂點、刪掉它的出邊之後，各頂點剩下的入分支度（「--」表示已輸出）。 例如步驟 1 刪掉
+D 的五條出邊，A、B、C、F、G 各減 $1$。
+
+得到的拓樸排序是 \textbf{D, A, B, G, E, F, C}。 步驟 4 時 E、F 同時可選，選 F 會得到 D, A, B, G, F, C, E 或
+D, A, B, G, F, E, C，也都對；前四個 D, A, B, G 是唯一的。
+
+\textbf{拓樸排序圖}：把頂點依這個順序排成一列，原來的邊全部畫上，每一條都由左指向右。
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt,font=\small},
+  e/.style={-{Stealth[length=2mm]},semithick}]
+\foreach \n/\x in {D/0, A/1.5, B/3, G/4.5, E/6, F/7.5, C/9}
+  \node[v] (\n) at (\x,0) {\n};
+\draw[e] (D) -- (A);
+\draw[e] (A) -- (B);
+\draw[e] (B) -- (G);
+\draw[e] (G) -- (E);
+\draw[e] (F) -- (C);
+\draw[e] (D) to[bend left=40] (B);
+\draw[e] (D) to[bend left=45] (G);
+\draw[e] (D) to[bend right=35] (F);
+\draw[e] (D) to[bend right=45] (C);
+\draw[e] (A) to[bend left=40] (C);
+\draw[e] (B) to[bend right=40] (E);
+\draw[e] (G) to[bend left=40] (F);
+\end{tikzpicture}
+\end{center}
+所有箭頭都朝右，表示每條邊的起點都排在終點前面，這個順序確實是拓樸排序。
+\end{pastsoln}

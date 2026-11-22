@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ccu-115-swa-02}]{中正資工所甲組 115 學年度 第 12 題}
+（複選；全對才給分）
+
+(5\%) (\qquad) A stack supports operations push, pop, and multipop($k$) (which pops up to $k$
+elements).
+
+Let $S$ be the stack and $|S|$ be the stack size, consider the potential function:
+\[\Phi(S)=|S|\]
+Assume:
+\begin{itemize}
+\item push costs 2,
+\item pop costs 0,
+\item multipop($k$) costs the number of elements actually popped.
+\end{itemize}
+The amortized cost of multipop($k$) can be described as a function $g(k)$.
+
+Find the \textbf{true} statements below.\\
+(a)~$g(k)\in O(k)$ \qquad (b)~$g(k)\in\Theta(1)$ \qquad (c)~$g(k)\in\omega(\log k)$\\
+(d)~The amortized cost of multipop($k$) also depends on the current stack size $|S|$.\\
+(e)~none of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)。
+
+照資結書第~3.3~節的定義，平攤成本 $=$ 實際成本 $+$ 位能的變化，$\Phi = |S|$。 從空堆疊開始時
+$\Phi(D_0) = 0$，而且 $\Phi \ge 0$，這個位能可以用。 題目給的成本和資結書第~3.1~節的
+\proc{Multipop} 例子不同（push $2$、pop $0$），照題目的算：
+\begin{itemize}
+\item push：實際 $2$，$|S|$ 加 $1$，平攤 $3$。
+\item pop：實際 $0$，$|S|$ 減 $1$，平攤 $-1$。 平攤成本可以是負的。
+\item multipop$(k)$：實際拿掉 $k' = \min(k, |S|)$ 個，實際成本 $k'$，$|S|$ 減 $k'$，平攤
+$k' - k' = 0$。
+\end{itemize}
+所以 $g(k) = 0$，對每個 $k$、每個 $|S|$ 都是 $0$。
+\begin{itemize}
+\item (a) 對。 $0 \le 0 \le c \cdot k$，任何 $c > 0$ 都行（資結書定義~1.2）。
+\item (b) 錯。 $\Theta(1)$ 要求存在 $c_1 > 0$，$k$ 夠大時 $c_1 \cdot 1 \le g(k)$（資結書定義~1.1），
+$g(k) = 0$ 做不到。 $0$ 屬於 $O(1)$，但不屬於 $\Theta(1)$。 把 $\Theta(1)$ 粗略讀成「常數」的人
+會選 (b)；照定義不能選。
+\item (c) 錯。 $\omega(\log k)$ 要 $g(k)$ 終究比任何 $c\log k$ 大，$0$ 不會。
+\item (d) 錯。 multipop 的\textbf{實際}成本 $\min(k, |S|)$ 和 $|S|$ 有關，但平攤成本恆為 $0$，
+和 $|S|$ 無關。
+\item (e) 錯，因為 (a) 對。
+\end{itemize}
+\end{pastsoln}

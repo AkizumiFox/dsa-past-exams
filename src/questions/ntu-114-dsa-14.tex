@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-114-dsa-14}]{臺大資網所 114 學年度 第 14 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Let $G$ be an $n\times n$ grid graph, with each undirected edge having a certain weight.
+Specifically, the vertices of $G$ can be labeled as $(i,j)$ where $1\le i,j\le n$. There is an edge between
+$(i,j)$ and $(k,\ell)$ if and only if $|i-k|+|j-\ell|=1$. Suppose we want to compute the \textit{value} of a
+minimum cut that separates $(1,1)$ and $(n,n)$. The value of a cut is defined as the sum of weights to all edges
+crossing the cut.
+
+Four students proposed different ideas for solving this task. Let us examine their approaches and select all
+correct statement(s) below.
+\begin{enumerate}[label=(\Alph*)]
+\item Student A: Some minimum cut must cut through at most $2n$ edges. Since there are $2n(n-1)\le 2n^2$ edges in
+$G$, we can design a brute force algorithm that enumerates at most $\sum_{k=1}^{2n}\binom{2n^2}{k}$ subsets of
+edges and check: if the removal of those edges separates $(1,1)$ and $(n,n)$. Any such subset leads to a
+candidate for the minimum cut.
+\item Student B: For some minimum cut, the crossing edges must form a monotonic path from $(n,1)$ to $(1,n)$. In
+other words, those edges form a path of exactly $2n-2$ edges from $(n,1)$ to $(1,n)$. Thus, we can solve this
+problem via dynamic programming.
+\item Student C: Why don't we simply computes a maximum flow and then turning it to a minimum cut? First,
+construct a flow network by letting $(1,1)$ be the source and $(n,n)$ be the sink. For each undirected edge
+connecting $(i,j)$ and $(k,\ell)$, create two directed edges in opposite directions, both with capacities equal
+to that edge's weight. By using Dinitz's (Dinic's) algorithm, the maximum flow from $(1,1)$ to $(n,n)$ can be
+computed in $O(n^6)$. Using the Max-Flow Min-Cut Theorem, the returned maximum flow value equals the value of
+the minimum cut.
+\item Student D: To separate $(1,1)$ and $(n,n)$, for some minimum cut, the crossing edges must form a shortest
+path from the south-west border $WS:=\{(i,1)\mid 1<i\le n\}\cup\{(n,j)\mid 1\le j<n\}$ to the north-east border
+$NE:=\{(i,n)\mid 1\le i<n\}\cup\{(1,j)\mid 1<j\le n\}$. Thus, we can run the Bellman-Ford algorithm that seeks for
+any shortest path from a vertex in $WS$ to any vertex in $NE$. Finally, the length of the shortest path is the
+value of the minimum cut.
+\item None of the above choices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+\textbf{背景}。 網格是平面圖。 把每個格子（面）當成一個點、外面的區域沿 $(1,1)$ 和 $(n,n)$ 切成兩塊各當一個點，相鄰的面之間
+連一條「對偶邊」，權重等於它跨過的那條原邊。 分開 $(1,1)$ 和 $(n,n)$ 的割，恰好對應對偶圖中從一塊外部區域走到另一塊的
+路徑；最小割的值就是對偶圖的最短路徑長。 這是正確的快速解法，但它是在\textbf{對偶圖}上找最短路徑，路徑可以任意彎曲。
+
+\textbf{讓最小割很長的例子}。 選一條在格子之間蛇行的對偶路徑：從左邊界進入左下角的格子，沿最下一排格子往右，上一排往左，
+再上一排往右……走遍全部 $(n-1)^2$ 個格子，最後從上邊界出去。 它跨過的 $(n-1)^2 + 1$ 條原邊權重設 $1$，其他邊權重設
+$n^4$。 用到任何一條重邊的割都超過 $n^4$；只用輕邊的割必須包含整條蛇行路徑跨過的邊（缺一條就會留下一條連通
+$(1,1)$ 和 $(n,n)$ 的通道），所以最小割唯一，值是 $(n-1)^2 + 1$，用了 $(n-1)^2 + 1$ 條邊。 例如 $n = 5$ 時最小割是
+$17$ 條邊，而 $2n = 10$（用最大流驗算，$n = 4, \ldots, 7$ 都是這個結果）。
+
+\begin{itemize}
+\item[(A)] 錯。 前提「一定有某個最小割只用到至多 $2n$ 條邊」不成立：上面的例子 $n \ge 4$ 時 $(n-1)^2 + 1 > 2n$，最小割
+只有一個，邊數超過 $2n$。 所以只列舉至多 $2n$ 條邊的子集合會漏掉最小割。 （而且就算前提成立，$\sum_{k \le 2n}
+\binom{2n^2}{k}$ 也是指數級的。）
+\item[(B)] 錯。 同一個例子：最小割的邊不是長度 $2n - 2$ 的單調路徑。 割邊在對偶圖上是一條可以來回彎曲的路徑。
+\item[(C)] 對。 無向邊換成兩條反向、容量相同的有向邊，最大流等於無向圖的最小割（資結書定理~26.6，無向圖的處理見
+資結書第~26.1.2~節）。 Dinic 演算法的時間是 $O(V^2 E)$；這裡 $V = n^2$、$E = 2 \cdot 2n(n-1) = O(n^2)$，所以是
+$O(n^4 \cdot n^2) = O(n^6)$。 敘述完全正確。
+\item[(D)] 錯。 方向對了一半：最小割確實對應「從一邊界到另一邊界的最短路徑」，但那是\textbf{對偶圖}上的路徑；在原圖 $G$ 的
+頂點上跑 Bellman--Ford 算的是另一回事。 反例 $n = 2$：$WS = \{(2,1)\}$、$NE = \{(1,2)\}$。 四條邊權重：
+$(1,1)$--$(1,2)$ 是 $1$、$(2,1)$--$(2,2)$ 是 $1$、另外兩條是 $10$。 割掉兩條權重 $1$ 的邊就分開了 $(1,1)$ 和 $(2,2)$，
+最小割是 $2$；但 $G$ 上 $(2,1)$ 到 $(1,2)$ 的最短路徑，兩條路都要經過一條權重 $10$ 的邊，長度 $11$。
+\item[(E)] 錯，(C) 是對的。
+\end{itemize}
+\end{pastsoln}

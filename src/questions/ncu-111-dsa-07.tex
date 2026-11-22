@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncu-111-dsa-07}]{中央資工所 111 學年度 複選題第 7 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Given two devices, A and B, connected through a black box. When device A transmits 5 messages, m1,
+m2, m3, m4, and m5, to device B sequentially, which of the following statements are false?
+\begin{enumerate}[label=(\Alph*)]
+\item The black box must be a queue when device B receives m1, m2, m3, m4, and m5 sequentially.
+\item The black box could be a stack when device B receives m3, m2, m1, m4, and m5 sequentially.
+\item The black box could be a max heap when device B receives m3, m2, m5, m4, and m1
+sequentially.
+\item The black box neither a stack nor queue when device B receives m3, m2, m1, m4, and m5
+sequentially
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(D)（題目問的是\textbf{錯誤}的敘述）。
+
+讀法：A 依序把 m1--m5 放進黑盒子，B 在任何時候都可以從黑盒子取出一個（取出和放入可以交錯）。
+這和資結書第~6.1.5~節「堆疊可以產生哪些輸出順序」是同一個模型。 max heap 的鍵題目沒有給，「could be」
+表示存在某種鍵值讓它做得到。
+\begin{itemize}
+\item (A) 錯誤，要選。 收到 m1, m2, m3, m4, m5 時，堆疊也做得到：每放進一個就馬上取出
+（push m1, pop, push m2, pop, \ldots）。 所以「一定是佇列」不對。
+\item (B) 正確。 push m1, push m2, push m3, pop (m3), pop (m2), pop (m1), push m4, pop (m4), push m5,
+pop (m5)。
+\item (C) 正確。 鍵值取訊息的編號（m$i$ 的鍵是 $i$）：放入 m1, m2, m3，取出最大的 m3、再取 m2；
+放入 m4, m5，取出 m5、m4，最後取出 m1。 順序正是 m3, m2, m5, m4, m1。
+\item (D) 錯誤，要選。 (B) 已經說明這個順序可以用堆疊做到，所以「既不是堆疊也不是佇列」不對（它
+確實不可能是佇列，因為佇列只能照 m1, m2, \ldots 的順序送出）。
+\end{itemize}
+\end{pastsoln}

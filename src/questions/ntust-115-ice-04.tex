@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntust-115-ice-04}]{臺科大資工所 115 學年度 第 I-4 題}
+（複選）
+
+(5\%) Consider sorting an array of $n$ elements using common sorting algorithms. Select ALL statements that
+are always correct.
+\begin{enumerate}[label=(\alph*)]
+\item Any comparison-based sorting algorithm requires $\Omega(nlogn)$ comparisons in the worst case.
+\item Merge sort is stable and runs in $O(nlogn)$ time in the worst case.
+\item Heap sort is stable and runs in $O(nlogn)$ time in the worst case.
+\item Quick sort runs in $O(nlogn)$ time in the worst case if the pivot is chosen uniformly at random at
+each recursive call.
+\item Counting sort can run in $O(n+k)$ time, where $k$ is the range of key values.
+\item Insertion sort runs in $\Theta(n+I)$ time, where $I$ is the number of inversions in the input.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)、(b)、(e)、(f)。
+
+\begin{itemize}
+\item[(a)] 對。 比較排序的決策樹至少要有 $n!$ 片葉子，高度至少 $\lg(n!) = \Theta(n \lg n)$，最壞情況的比較次數
+就是樹高（資結書定理~15.1）。
+\item[(b)] 對。 合併時兩邊的鍵相等就先取左邊的，相等的鍵保持原來的先後，是穩定的；時間永遠是
+$\Theta(n \lg n)$（資結書第~14.4~節）。
+\item[(c)] 錯。 堆積排序最壞 $O(n \lg n)$ 沒錯，但它\textbf{不穩定}：把最大值和最後一格交換時，會把相等的鍵前後
+順序弄亂。 例：$\langle 2_a, 2_b, 1\rangle$ 已經是最大堆積，第一次交換 $2_a$ 和 $1$ 得
+$\langle 1, 2_b, 2_a\rangle$，$2_a$ 被放到最後；之後下沉 $1$、再交換，結果是 $\langle 1, 2_b, 2_a\rangle$，兩個
+$2$ 的順序反了（資結書第~14.6、14.7~節）。
+\item[(d)] 錯。 隨機選基準讓\textbf{期望}時間是 $O(n \lg n)$，對任何輸入都成立（資結書定理~14.3）；但每次都抽到
+最大或最小值的機率雖小，仍然不是零，那時就是 $\Theta(n^2)$。 最壞情況仍是 $\Theta(n^2)$。
+\item[(e)] 對。 計數排序數每個鍵出現幾次、做前綴和、再放回，時間 $\Theta(n + k)$（資結書虛擬碼~15.1）。
+\item[(f)] 對。 插入排序內層迴圈每往左挪一格，就消掉恰好一個逆序對；外層 $n - 1$ 輪各有常數的額外工作。 總時間
+$\Theta(n + I)$（資結書第~17.5~節也用到這個事實）。
+\end{itemize}
+\end{pastsoln}

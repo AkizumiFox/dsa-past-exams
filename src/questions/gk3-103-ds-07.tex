@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:gk3-103-ds-07}]{高考三級資訊處理 103 年 第七題}
+（申論；10 分）
+
+下面二小題各有一段程式，其執行的時間是以執行 sum++的次數計算，請用 $\Theta$-notation 表示其
+執行時間，並說明其理由。（每小題 5 分，共 10 分）
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] \texttt{sum=0}\\
+\texttt{for(i=0; i<2*n; i++)}\\
+\hspace*{1.5em}\texttt{for(j=0; j<i; j++)}\\
+\hspace*{3em}\texttt{sum++;}
+\item[㈡] \texttt{sum=0}\\
+\texttt{for(i=1; i<2*n; i++)}\\
+\hspace*{1.5em}\texttt{for(j=1; j<i*i; j++)}\\
+\hspace*{3em}\texttt{for(k=1; k<j; k++)}\\
+\hspace*{4.5em}\texttt{if(j\%i==1)}\\
+\hspace*{6em}\texttt{sum++;}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+兩小題都照題目的要求，只數 \texttt{sum++} 執行幾次（資結書第~1.7~節）。
+
+\textbf{㈠ $\Theta(n^2)$。} 外層 $i = 0, 1, \dots, 2n-1$；固定 $i$ 時內層 $j = 0, \dots, i-1$，
+\texttt{sum++} 做 $i$ 次。 總次數
+\[
+\sum_{i=0}^{2n-1} i = \frac{(2n-1)\cdot 2n}{2} = n(2n-1) = 2n^2 - n = \Theta(n^2).
+\]
+
+\textbf{㈡ $\Theta(n^4)$。} 最內層的 \texttt{if} 只看 $i$、$j$，和 $k$ 無關。 所以固定 $i$、$j$ 時：
+若 $j \bmod i = 1$，\texttt{sum++} 做 $j-1$ 次（$k = 1, \dots, j-1$）；否則一次都不做。
+
+固定 $i$，數有哪些 $j$（$1 \le j \le i^2 - 1$）滿足 $j \bmod i = 1$：
+\begin{itemize}
+\item $i = 1$：任何數除以 1 餘 0，沒有這種 $j$（而且 $j < 1$ 本來就沒有 $j$）。 貢獻 0。
+\item $i \ge 2$：$j = 1 + ti$，$t = 0, 1, \dots, i-1$。 最大的 $j = 1 + (i-1)i = i^2 - i + 1 \le i^2 - 1$
+（因為 $i \ge 2$），而 $t = i$ 時 $j = i^2 + 1$ 已經超出範圍。 每個這樣的 $j$ 貢獻
+$j - 1 = ti$ 次，合計
+\[
+\sum_{t=0}^{i-1} ti = i \cdot \frac{(i-1)i}{2} = \frac{i^2(i-1)}{2}.
+\]
+\end{itemize}
+外層 $i = 1, \dots, 2n-1$（$i = 1$ 貢獻 0，代進公式也是 0），總次數
+\[
+\sum_{i=1}^{2n-1} \frac{i^2(i-1)}{2} = \frac{n(n-1)(2n-1)(6n-1)}{6} = 2n^4 - \frac{10}{3}n^3 + \frac{3}{2}n^2 - \frac{n}{6}.
+\]
+例如 $n = 2$ 時是 $\frac{2 \cdot 1 \cdot 3 \cdot 11}{6} = 11$。 最高次項是 $2n^4$，所以是
+$\Theta(n^4)$。
+
+不想算精確值時也可以夾：每一項 $\frac{i^2(i-1)}{2} \le \frac{i^3}{2}$，共 $2n - 1$ 項、每項
+$\le \frac{(2n)^3}{2}$，總和 $\le 8n^4$；另一方面只看 $i \ge n$ 的那 $n$ 項，每項
+$\ge \frac{n^2(n-1)}{2} \ge \frac{n^3}{4}$（$n \ge 2$），總和 $\ge \frac{n^4}{4}$。 上下界都是
+$n^4$ 的常數倍，得到 $\Theta(n^4)$。
+
+注意：題目以 \texttt{sum++} 的次數當執行時間。 若改數 \texttt{if} 判斷的次數，那是
+$\sum_{i=1}^{2n-1} \sum_{j=1}^{i^2-1} (j-1) = \sum_{i=1}^{2n-1}\frac{(i^2-1)(i^2-2)}{2} = \Theta(n^5)$，兩者不一樣，作答時要寫清楚數的是哪一行。
+\end{pastsoln}

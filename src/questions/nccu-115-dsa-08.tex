@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:nccu-115-dsa-08}]{政大資科所 115 學年度 第 8 題}
+（單選）
+
+(5\%) A topological sort is possible if and only if the graph is a:
+
+(A)~Complete Graph \qquad (B)~Directed Acyclic Graph\\
+(C)~Bipartite Graph \qquad (D)~Connected Graph
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+資結書定理~22.2：有向圖有拓樸排序，若且唯若它沒有有向環。 兩個方向：
+\begin{itemize}
+\item 有環就沒有：環上的點 $v_1 \to v_2 \to \cdots \to v_k \to v_1$ 在拓樸順序裡要滿足
+$v_1$ 在 $v_2$ 前、……、$v_k$ 在 $v_1$ 前，繞一圈得到 $v_1$ 在 $v_1$ 前，矛盾。
+\item 沒有環就有：DAG 一定有入度 $0$ 的點（資結書引理~22.1），把它排第一個、從圖上拿掉，剩下的圖還是
+DAG，重複下去就排完了。 這正是 Kahn 演算法（資結書第~22.1~節）。
+\end{itemize}
+
+逐項檢查：
+\begin{itemize}
+\item (A) 完全圖：無向的完全圖談不上拓樸排序；有向的完全圖（每對點兩個方向都有邊）有 $u \to v \to u$
+這種環，排不出來。 而且很多 DAG 根本不是完全圖。 錯。
+\item (B) 有向無環圖，對。
+\item (C) 二分圖：兩個點 $u$、$v$ 分在兩邊，邊 $u \to v$、$v \to u$ 構成的圖是二分圖，但有環，沒有拓樸
+排序。 錯。
+\item (D) 連通圖：有向環 $1 \to 2 \to 3 \to 1$ 是連通的，排不出來；反過來，兩個互不相連的點也有拓樸
+排序。 連通和能否拓樸排序無關。 錯。
+\end{itemize}
+\end{pastsoln}

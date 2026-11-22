@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-13}]{臺大資工所 111 學年度 第 13 題}
+（單選）
+
+(5 points) Consider a hash table with $f(n)$ entries with a hash function that can uniformly
+dispatch items to those entries. Which property below ensures that a successful search can be
+done in $O(1)$?
+\begin{enumerate}[label=(\Alph*)]
+\item $f(n)=O(\sqrt{n})$
+\item $f(n)=O(n)$
+\item $f(n)=\Omega(\sqrt{n})$
+\item $f(n)=\Omega(n)$
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) $f(n) = \Omega(n)$。
+
+題目沒說碰撞怎麼處理。 「把項目均勻分到各個 entry」是鏈結法的說法，這裡照鏈結法（資結書
+第~12.2~節）來做，「$O(1)$」指期望時間。
+
+表裡有 $n$ 個項目、$f(n)$ 個位置，負載因子 $\alpha = n / f(n)$。 簡單均勻雜湊下，成功搜尋的期望
+比較次數是 $1 + \alpha/2 - \alpha/(2n)$，也就是 $\Theta(1 + \alpha)$（資結書第~12.2.2~節）。 所以
+\[
+\text{成功搜尋是 } O(1) \iff \alpha = \frac{n}{f(n)} = O(1) \iff f(n) = \Omega(n).
+\]
+\begin{itemize}
+\item (A) $f(n) = O(\sqrt{n})$：位置最多 $c\sqrt{n}$ 個，$\alpha \ge \sqrt{n}/c$，成功搜尋至少
+$\Omega(\sqrt{n})$。 錯。
+\item (B) $f(n) = O(n)$ 只限制了上界，$f(n) = 1$ 也符合，那時整張表是一條長 $n$ 的串列，搜尋
+$\Theta(n)$。 錯。
+\item (C) $f(n) = \Omega(\sqrt{n})$：$f(n) = \sqrt{n}$ 也符合，$\alpha = \sqrt{n}$，不是 $O(1)$。 錯。
+\item (D) $f(n) \ge cn$，$\alpha \le 1/c$ 是常數，期望 $O(1)$。 對。
+\end{itemize}
+
+補充：若改用開放定址，除了 $f(n) = \Omega(n)$ 還要求 $f(n) \ge n$ 且 $\alpha$ 離 $1$ 有一段距離
+（例如 $f(n) \ge 2n$），成功搜尋的期望 $\frac{1}{\alpha} \ln \frac{1}{1 - \alpha}$ 才是常數
+（資結書定理~12.7）；四個選項裡仍然只有 (D) 可能保證 $O(1)$。
+\end{pastsoln}

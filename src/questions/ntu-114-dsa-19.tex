@@ -1,0 +1,111 @@
+\begin{pastexam}[label={px:ntu-114-dsa-19}]{臺大資網所 114 學年度 第 19 題}
+（問答）
+
+(10 points) Consider the following decision problem \textsc{OddNumberSum}:
+\begin{center}
+\fbox{\begin{minipage}{0.9\linewidth}
+\textsc{OddNumberSum}\\
+\textbf{Input:} A set of positive odd numbers $S$. A target odd number $k$.\\
+\textbf{Question:} Is there an odd number of elements in $S$ whose sum is exactly $k$?
+\end{minipage}}
+\end{center}
+\begin{enumerate}[label=(\alph*)]
+\item (5 points) Prove that \textsc{OddNumberSum} is $\mathsf{NP}$-complete.
+\item (5 points) For any set of numbers $T$ we define sum($T$) to be the sum of all numbers in $T$. Let $S$ and $k$
+be the input from \textsc{OddNumberSum}. Define $k^*=\max\{\mathrm{sum}(T)\mid T\subseteq S\text{ and
+}\mathrm{sum}(T)\le k\}$ be the largest possible subset sum among all subsets whose sum does not exceed $k$.
+
+Let $\varepsilon>0$ be any sufficiently small constant. Give an algorithm that computes an
+$(1-\varepsilon)$-approximate solution to $k^*$. Specifically, your algorithm should output a value
+$k_{\mathrm{ALG}}$ such that $(1-\varepsilon)k^*\le k_{\mathrm{ALG}}\le k^*$. The running time of your algorithm
+should be a polynomial of $|S|$ and $1/\varepsilon$. State the algorithm as concisely and percisely as possible.
+You should \textbf{not} write anything besides the algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(a) 屬於資結書第~28~章（NP 完備的證明），(b) 屬於第~29~章（近似方案）；整題放在本章。
+
+\textbf{(a)} 先看一件事：$S$ 的數都是奇數，$r$ 個奇數的和和 $r$ 同奇偶。 $k$ 是奇數，所以和為 $k$ 的子集合一定有
+奇數個元素。 「奇數個」這個條件是自動成立的，問題的難度在於數都要是奇數、而且兩兩不同。 照
+資結書第~28.4~節作答提醒框的四步寫。
+
+\textbf{(1) 在 NP 裡}。 憑證是挑出的那些數。 驗證者檢查它們都在 $S$ 裡、個數是奇數、和是 $k$，時間是輸入
+位元數的多項式。
+
+\textbf{(2) 歸約}。 證明 $\textsf{SUBSET-SUM} \le_{\mathrm{p}} \textsc{OddNumberSum}$。 \textsf{SUBSET-SUM} 是 NP
+完備的（資結書定理~28.10）。
+
+\textbf{(3) 構造}。 給 \textsf{SUBSET-SUM} 的實例：正整數 $s_1, \ldots, s_m$（可以重複）和目標 $t$。
+\begin{itemize}
+\item 如果 $m$ 是偶數，先多加一個數 $s_{m+1} = t + 1$。 它比 $t$ 大，和為 $t$ 的子集合都不會用到它，答案
+不變。 以下假設 $m$ 是奇數。
+\item 令 $B = 4^m$、$L = 2m + 2$（偶數，而且 $L > 2m$）。 對每個 $i = 1, \ldots, m$ 造兩個數
+\[
+T_i = L\,(B s_i + 4^{i-1}) + 1, \qquad K_i = L \cdot 4^{i-1} + 1.
+\]
+$T_i$ 代表「選 $s_i$」，$K_i$ 代表「不選 $s_i$」。 目標
+\[
+k = L\Bigl(B t + \sum_{i=1}^{m} 4^{i-1}\Bigr) + m.
+\]
+\end{itemize}
+$L$ 是偶數，所以每個 $T_i$、$K_i$ 都是正奇數；$m$ 是奇數，所以 $k$ 是奇數。 $2m$ 個數兩兩不同：不同的
+$i$ 的 $4^{i-1}$ 那一位不同，同一個 $i$ 的 $T_i - K_i = L B s_i > 0$。 每個數的位元數是 $O(m + \lg s_i)$，
+$k$ 是 $O(m + \lg t)$，全部寫出來是輸入長度的多項式，$f$ 是多項式時間。
+
+\textbf{(4) 兩個方向}。
+($\Rightarrow$) 設 $A \subseteq \{1, \ldots, m\}$ 滿足 $\sum_{i \in A} s_i = t$。 對 $i \in A$ 挑
+$T_i$，否則挑 $K_i$，一共挑 $m$ 個（奇數個）。 每個數都寫成 $L \cdot X + 1$，挑出的 $X$ 加起來是
+$B \sum_{i \in A} s_i + \sum_{i=1}^{m} 4^{i-1} = Bt + \sum_{i=1}^{m} 4^{i-1}$，再加上 $m$ 個 $1$，和正好
+是 $k$。
+
+($\Leftarrow$) 設 $Y$ 是奇數個數、和為 $k$。 把 $Y$ 的數寫成 $L \cdot X_e + 1$，和是
+$L \sum_{e \in Y} X_e + |Y|$。 $Y$ 最多 $2m$ 個數，$0 \le |Y| \le 2m < L$；$k$ 也寫成 $L \cdot (\cdots) + m$，
+$0 < m < L$。 兩個數相等，除以 $L$ 的商和餘數都相同，所以
+\[
+\sum_{e \in Y} X_e = B t + \sum_{i=1}^{m} 4^{i-1}.
+\]
+左邊等於 $B \sum_{T_i \in Y} s_i + \sum_{i=1}^{m} c_i 4^{i-1}$，$c_i \in \{0, 1, 2\}$ 是 $T_i$、$K_i$ 被挑
+了幾個。 後一項最多 $2 \sum_{i=1}^{m} 4^{i-1} = \frac23(4^m - 1) < B$，右邊的 $\sum 4^{i-1}$ 也小於 $B$。
+再比一次除以 $B$ 的商，得到 $\sum_{T_i \in Y} s_i = t$。 令 $A = \{i : T_i \in Y\}$，它的和是 $t$；如果第一
+步加過 $s_{m+1} = t + 1$，它比 $t$ 大，不會在 $A$ 裡。 所以原來的實例是是實例。
+
+由 (1)～(4)，\textsc{OddNumberSum} 是 NP 完備的。
+
+\textbf{小例子}。 $s = 3, 5, 8$、$t = 13$（$m = 3$ 已是奇數）：$L = 8$、$B = 64$，造出
+$T_1 = 1545$、$T_2 = 2593$、$T_3 = 4225$、$K_1 = 9$、$K_2 = 33$、$K_3 = 129$，$k = 8 \cdot (64 \cdot 13 + 21) +
+3 = 6827$。 $5 + 8 = 13$ 對應 $K_1 + T_2 + T_3 = 9 + 2593 + 4225 = 6827$，三個數，奇數個。 這六個數的奇數個子集合
+裡，和為 $6827$ 的只有這一組。
+
+
+\textbf{(b)} 題目要求答案卷上只寫演算法；下面的正確性和時間分析是給讀者看的。 \proc{Knapsack-FPTAS} 是資結書虛擬碼~29.5：
+把每件物品的價值除以 $\varepsilon v_{\max}/n$ 取整數，再用「依價值」的動態規劃求出縮小後最好的組合。
+
+$k^*$ 是在所有子集合（不限奇數個）裡、和不超過 $k$ 的最大和，這正是 0/1 背包：每個數 $s$ 當成重量 $s$、
+價值 $s$ 的物品，容量 $k$。 用資結書第~29.5~節的 FPTAS：
+
+\begin{pseudo}{子集合和的近似方案}
+\Function{Subset-Sum-Approx}{$S, k, \varepsilon$}
+    \State 刪掉 $S$ 裡大於 $k$ 的數
+    \If{$S$ 是空的}
+        \State \Return $0$ \Comment{只有空集合的和不超過 $k$，$k^* = 0$}
+    \EndIf
+    \State 每個 $s \in S$ 當成重量 $s$、價值 $s$ 的物品
+    \State $T \gets$ \Call{Knapsack-FPTAS}{重量, 價值, $|S|$, $k$, $\varepsilon$}
+    \State \Return $\mathrm{sum}(T)$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 $T$ 是 \proc{Knapsack-FPTAS} 傳回的可行集合，總重 $\mathrm{sum}(T) \le k$，而
+$T \subseteq S$，由 $k^*$ 的定義，$k_{\mathrm{ALG}} = \mathrm{sum}(T) \le k^*$。 背包的最佳解 $S^*$ 是總重不超過
+$k$ 的子集合中價值最大的，價值等於重量，所以 $v(S^*) = k^*$。 由資結書定理~29.6，
+$k_{\mathrm{ALG}} = v(T) \ge (1 - \varepsilon)\, v(S^*) = (1 - \varepsilon) k^*$。 第 2 行刪掉的數本來就不在任何
+和不超過 $k$ 的子集合裡，不影響 $k^*$。
+
+\textbf{時間}。 $n = |S|$，第 2--5 行和第 7 行是 $O(n)$，第 6 行的 \proc{Knapsack-FPTAS} 是 $O(n^3/\varepsilon)$
+（資結書定理~29.6），總共 $O(n^3/\varepsilon)$，是 $|S|$ 和 $1/\varepsilon$ 的多項式。
+
+題目要的 $k_{\mathrm{ALG}}$ 是一個值，不是集合，所以最後傳回 $\mathrm{sum}(T)$。 CLRS 第 35.5 節用「修剪」
+一串部分和的方法，也能直接得到子集合和的 FPTAS，兩種做法都可以。 「奇數個」和「都是奇數」這兩個條件在
+這一小題用不到。
+\end{pastsoln}

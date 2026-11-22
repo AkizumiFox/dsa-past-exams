@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntu-111-dsaa-17}]{臺大資工所 111 學年度 第 17 題}
+（單選）
+
+(5 points) What is the time complexity of finding the minimum number of scalar multiplications
+needed for $A_1A_2\ldots A_n$ using dynamic programming?
+\begin{enumerate}[label=(\Alph*)]
+\item $O(n^{2.5})$
+\item $O(n^3)$
+\item $O(n^2)$
+\item $O(n)$
+\item none of the other choices
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) $O(n^3)$。
+
+動態規劃（資結書第~18.2~節、虛擬碼~18.4）要填 $1 \le i \le j \le n$ 的 $m[i, j]$，約 $n^2/2$ 格；
+長度為 $\ell$ 的格子有 $n - \ell + 1$ 個，每一格要試 $\ell - 1$ 個切點 $k$，每個 $O(1)$。 總共
+\[
+\sum_{\ell=2}^{n} (n - \ell + 1)(\ell - 1) = \frac{n^3 - n}{6} = \Theta(n^3).
+\]
+所以時間是 $\Theta(n^3)$，選 (B)。 $(n^3 - n)/6$ 是確切的次數，不只是上界，所以 (A)、(C)、(D) 都太小。
+
+補充：Hu 和 Shing 有 $O(n \lg n)$ 的演算法，但不是這種動態規劃；題目指定用動態規劃。
+\end{pastsoln}

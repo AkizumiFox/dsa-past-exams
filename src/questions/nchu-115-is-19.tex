@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nchu-115-is-19}]{中興資工所乙組 115 學年度 第 19 題}
+（單選；每題 2 分，答錯不倒扣）
+
+You are building an undo/redo system in a text editor where the most recent action must be
+undone first. Which data structure best matches this behavior?
+\begin{enumerate}[label=\Alph*.,nosep]
+\item A deque where operations are removed from both ends as needed.
+\item A max-heap storing actions by complexity.
+\item A stack, implementing Last-In, First-Out behavior for undo operations.
+\item A hash set storing all unique editor commands.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+「最近做的最先復原」就是後進先出，也就是堆疊（資結書第~6.1~節）。 每做一個動作就 push 進
+undo 堆疊；按復原時 pop 出來、反向執行，同時 push 進 redo 堆疊；按重做時從 redo 堆疊 pop。 有
+新動作時清空 redo 堆疊。 兩個堆疊就做完了 undo/redo。
+\begin{itemize}
+\item A：雙端佇列兩頭都能拿，可以模擬堆疊（只用一端），但題目要的行為只用到一端，四個選項裡
+最貼切的是堆疊。 實務上限制復原步數時，會用雙端佇列從另一端丟掉太舊的紀錄，不過那是額外的
+需求。
+\item B 錯：依「複雜度」排序和時間先後無關。
+\item C 對。
+\item D 錯：集合沒有順序，也不能存重複的動作。
+\end{itemize}
+\end{pastsoln}

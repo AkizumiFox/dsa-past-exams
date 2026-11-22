@@ -1,0 +1,109 @@
+\begin{pastexam}[label={px:ncku-111-prog-06}]{成大資訊聯招 111 學年度 第 6 題}
+（追蹤與作圖）
+
+\textbf{[2\%, 3\%]} You are given a Patricia as follows. We insert 1001, 1100, 0000 and 0001 in order into the Patricia. (i) Please show the resultant Patricia after the four data items are inserted. (ii) Please also depict its compressed binary trie counterpart.
+
+\medskip
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},font=\small\sffamily,
+  e/.style={ellipse,draw,inner sep=0pt,minimum width=2cm,minimum height=1.1cm}]
+\node[e] (h) at (0,0) {1000};
+\node[e] (n) at (-1,-1.85) {0010};
+\node at (-1.0,0.6) {0};
+\node at (-0.5,-1.05) {1};
+\draw[->] (h.218) to[out=-100,in=90] (n.north);
+\draw[->] (n.235) .. controls +(-1.5,0.1) and +(-1.7,0.25) .. (n.150);
+\draw[->] (n.-50) .. controls +(0.15,-0.3) and +(-0.3,0) .. (0.4,-2.5) .. controls +(0.35,0) and +(0,-0.35) .. (0.85,-2.05) -- (0.85,-0.31);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(i) Patricia 的往下指標：標頭 $1000$（位元 $0$）$\to$ $0010$（位元 $1$）；$0010$ 的左邊是 $0000$
+（位元 $3$）、右邊是 $1100$（位元 $2$）；$0000$ 的左邊是 $0001$（位元 $4$）；$1100$ 的左邊是 $1001$（位元
+$4$）。 往回的指標：$0000$ 的右指標 $\to 0010$；$0001$ 的左指標 $\to 0000$、右指標 $\to$ 自己；
+$1100$ 的右指標 $\to$ 自己；$1001$ 的左指標 $\to 1000$（標頭）、右指標 $\to$ 自己。 (ii) 壓縮二元 trie：
+根看第 $1$ 位；左子樹看第 $3$ 位（$0$ 邊是看第 $4$ 位、分開 $0000$ 和 $0001$ 的節點，$1$ 邊是 $0010$），
+右子樹看第 $2$ 位（$0$ 邊是看第 $4$ 位、分開 $1000$ 和 $1001$ 的節點，$1$ 邊是 $1100$）。 兩張圖見最後。
+
+\textbf{讀圖}。 題目的圖是資結書第~11.5.3~節的 Patricia：每個節點旁的數字是它比較的位元
+（\textit{bitNumber}），位元由左往右編號 $1$--$4$。 標頭 $1000$ 的位元是 $0$，只用左指標，指向真正的根
+$0010$。 $0010$ 比第 $1$ 位：$0$ 走左指標（指回自己），$1$ 走右指標（指回標頭 $1000$）。 從 $x$ 指到
+$y$ 時，$y$ 的位元比 $x$ 大是往下的指標，否則是往回的指標，搜尋走到往回的指標就停。
+
+\textbf{插入}照資結書虛擬碼~11.12：(1) 搜尋 $k$，停在 $y$；(2) 找 $k$ 和 $y$ 的鍵第一個不同的位元 $j$；
+(3) 從標頭重新往下走，遇到往回的指標或位元 $\ge j$ 的節點就停，在那個指標上插入新節點 $z$（位元 $j$），
+$z$ 在第 $j$ 位和 $k$ 相同的那一邊指向自己，另一邊接原本那個指標指的東西。
+\begin{enumerate}
+\item \textbf{插入 $1001$}。 搜尋：$0010$ 看第 $1$ 位是 $1$，走右指標回到標頭（往回），停在 $1000$。
+$1001$ 和 $1000$ 第一個不同的是第 $4$ 位，$j = 4$。 重走：$0010$ 的位元 $1 < 4$，往右走到標頭，是往回的
+指標，停在 $0010$ 的右指標。 新節點 $1001$（位元 $4$）：第 $4$ 位是 $1$，右指標指自己，左指標接原本的
+目標 $1000$。 $0010$ 的右指標改指 $1001$。
+\item \textbf{插入 $1100$}。 搜尋：$0010$ 第 $1$ 位 $1$ 往右到 $1001$（位元 $4$），$1100$ 的第 $4$ 位是
+$0$ 往左，回到 $1000$（往回），停。 $1100$ 和 $1000$ 第一個不同在第 $2$ 位，$j = 2$。 重走：$0010$（位元
+$1 < 2$）往右到 $1001$，它的位元 $4 \ge 2$，停在 $0010$ 的右指標。 新節點 $1100$（位元 $2$）：第 $2$ 位是
+$1$，右指標指自己，左指標接 $1001$（整棵子樹接過去）。 $0010$ 的右指標改指 $1100$。
+\item \textbf{插入 $0000$}。 搜尋：$0010$ 第 $1$ 位 $0$ 往左，指回自己（往回），停在 $0010$。 $0000$ 和
+$0010$ 第一個不同在第 $3$ 位，$j = 3$。 重走：$0010$ 往左是往回的指標，停在 $0010$ 的左指標。 新節點
+$0000$（位元 $3$）：第 $3$ 位是 $0$，左指標指自己，右指標接原本的目標 $0010$。 $0010$ 的左指標改指 $0000$。
+\item \textbf{插入 $0001$}。 搜尋：$0010$ 往左到 $0000$（位元 $3$），$0001$ 第 $3$ 位是 $0$，往左指回
+$0000$ 自己，停。 $0001$ 和 $0000$ 第一個不同在第 $4$ 位，$j = 4$。 重走：$0010 \to 0000$（位元 $3 < 4$），
+往左是往回的指標，停在 $0000$ 的左指標。 新節點 $0001$（位元 $4$）：第 $4$ 位是 $1$，右指標指自己，左指標
+接 $0000$。 $0000$ 的左指標改指 $0001$。
+\end{enumerate}
+
+下圖左邊是 (i) 的 Patricia：節點左上角的小圓圈是位元，黑色實線是往下的指標，紅色虛線是往回的指標，終點
+標的是它指向的節點的鍵（不再畫彎回去的線）。 右邊是 (ii) 的壓縮二元 trie：圓圈是分支節點，數字是它看的
+位元，左邊是 $0$、右邊是 $1$；方框是元素節點。 把 Patricia 每個紅色的終點換成元素節點、每個節點只保留
+它的位元，就是右邊的壓縮二元 trie。
+\begin{center}
+\begin{tikzpicture}[
+  pn/.style={rectangle,draw=black!65,inner sep=2pt,minimum height=0.42cm,font=\footnotesize},
+  bitl/.style={circle,draw=black!55,fill=white,inner sep=0.5pt,minimum size=0.3cm,font=\scriptsize},
+  bk/.style={font=\scriptsize,text=red!70!black,inner sep=1pt},
+  back/.style={-{Stealth[length=1.4mm]},draw=red!70!black,densely dashed},
+  dn/.style={draw=black!60}]
+\node[pn,label={[bitl]above left:0}] (h) at (2.3,0) {1000};
+\node[pn,label={[bitl]above left:1}] (a) at (2.3,-0.9) {0010};
+\node[pn,label={[bitl]above left:3}] (b) at (1.0,-1.8) {0000};
+\node[pn,label={[bitl]above left:2}] (c) at (3.6,-1.8) {1100};
+\node[pn,label={[bitl]above left:4}] (d) at (0.4,-2.7) {0001};
+\node[pn,label={[bitl]above left:4}] (e) at (3.0,-2.7) {1001};
+\node[bk] (b1) at (1.6,-2.7) {0010};
+\node[bk] (c1) at (4.2,-2.7) {1100};
+\node[bk] (d0) at (-0.15,-3.6) {0000};
+\node[bk] (d1) at (0.95,-3.6) {0001};
+\node[bk] (e0) at (2.45,-3.6) {1000};
+\node[bk] (e1) at (3.55,-3.6) {1001};
+\draw[dn] (h)--(a) (a)--(b) (a)--(c) (b)--(d) (c)--(e);
+\draw[back] (b)--(b1); \draw[back] (c)--(c1);
+\draw[back] (d)--(d0); \draw[back] (d)--(d1);
+\draw[back] (e)--(e0); \draw[back] (e)--(e1);
+\node[font=\footnotesize] at (2.0,-4.2) {(i) Patricia};
+\end{tikzpicture}\hspace{1.2cm}\begin{tikzpicture}[
+  bn/.style={circle,draw=black!65,minimum size=0.46cm,inner sep=0pt,font=\footnotesize},
+  el/.style={rectangle,draw=black!65,fill=black!6,inner sep=2pt,minimum height=0.42cm,font=\footnotesize},
+  e/.style={draw=black!60}]
+\node[bn] (r) at (2.6,0) {1};
+\node[bn] (l) at (1.2,-0.9) {3};
+\node[bn] (rr) at (4.0,-0.9) {2};
+\node[bn] (ll) at (0.6,-1.8) {4};
+\node[el] (lr) at (1.9,-1.8) {0010};
+\node[bn] (rl) at (3.4,-1.8) {4};
+\node[el] (rrr) at (4.7,-1.8) {1100};
+\node[el] (a) at (0.0,-2.7) {0000};
+\node[el] (b) at (1.1,-2.7) {0001};
+\node[el] (c) at (2.85,-2.7) {1000};
+\node[el] (d) at (3.95,-2.7) {1001};
+\draw[e] (r)--(l) (r)--(rr) (l)--(ll) (l)--(lr) (rr)--(rl) (rr)--(rrr) (ll)--(a) (ll)--(b) (rl)--(c) (rl)--(d);
+\node[font=\footnotesize] at (2.3,-3.3) {(ii) 壓縮二元 trie};
+\end{tikzpicture}
+\end{center}
+
+\textbf{核對}。 壓縮二元 trie 的形狀只由鍵的集合決定：六個鍵依第 $1$ 位分成 $\{0000, 0001, 0010\}$ 和
+$\{1000, 1001, 1100\}$；左邊三個前兩位都是 $00$，第一個不全相同的是第 $3$ 位（$0010$ 是 $1$），再用第
+$4$ 位分開 $0000$、$0001$；右邊三個第一個不全相同的是第 $2$ 位（$1100$ 是 $1$），再用第 $4$ 位分開
+$1000$、$1001$。 共 $5$ 個分支節點、$6$ 個元素節點，Patricia 正好是標頭加 $5$ 個節點放 $6$ 個鍵。 在
+最後的 Patricia 上搜尋每一個鍵，都會停在放著那個鍵的節點，例如搜尋 $1000$：$0010$ 第 $1$ 位 $1$ 往右到
+$1100$，第 $2$ 位 $0$ 往左到 $1001$，第 $4$ 位 $0$ 往左回到標頭 $1000$，找到。
+\end{pastsoln}

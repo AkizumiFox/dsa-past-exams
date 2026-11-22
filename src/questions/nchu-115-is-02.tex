@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nchu-115-is-02}]{中興資工所乙組 115 學年度 第 2 題}
+（單選；每題 2 分，答錯不倒扣）
+
+The term ``abstract data type (ADT)'' refers to
+
+A.~Implementation details \qquad B.~Logical model of data and operations\\
+C.~Programming language feature \qquad D.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+抽象資料型態（ADT）只規定一種資料有哪些操作、每個操作做什麼，不規定資料怎麼存
+（資結書第~6.1~節）。 例如堆疊這個 ADT 只說有 \proc{Push}、\proc{Pop}，後放進去的先拿出來；
+用陣列存或用鏈結串列存都是它的實作。
+\begin{itemize}
+\item A 錯：實作細節（用陣列還是串列、欄位怎麼安排）正是 ADT 刻意不管的部分。
+\item B 對：資料的邏輯模型加上可以對它做的操作，就是 ADT 的定義。
+\item C 錯：ADT 是設計上的觀念，和語言無關；C 沒有專門的語法，也一樣用標頭檔宣告操作、在
+\texttt{.c} 檔裡藏起實作來做。 C++ 的 class、Java 的 interface 只是方便寫 ADT 的工具。
+\item D 錯：B 是對的。
+\end{itemize}
+\end{pastsoln}

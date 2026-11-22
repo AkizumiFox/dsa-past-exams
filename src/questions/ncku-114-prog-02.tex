@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncku-114-prog-02}]{成大資訊聯招 114 學年度 第 2 題}
+（單選）
+
+{[3\%]} Given a node structure as shown below:
+\begin{minted}[fontsize=\small]{c}
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+\end{minted}
+What will the following function do when used on a singly linked list?
+\begin{minted}[fontsize=\small]{c}
+void unknownFunction(Node* node) {
+    if (node == NULL || node->next == NULL) {
+        return;
+    }
+    node->data = node->next->data;
+    Node* temp = node->next;
+    node->next = node->next->next;
+    free(temp);
+}
+\end{minted}
+\begin{enumerate}[label=(\Alph*)]
+\item The function will delete the specified node, including the last node in the list.
+\item The function will delete the specified node only if it is a middle node or any node except the last one.
+\item The function will produce a segmentation fault when applied to the last node in the list because it attempts to access node->next->data.
+\item The function will remove the node but corrupt the list structure if the deleted node has duplicate values in the list.
+\item None of the above is correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+函式做的事：把下一個節點的資料抄到 \texttt{node} 裡，再把下一個節點從串列上拿掉、釋放。 被釋放的其實是下一個
+節點，但串列上少掉的是 \texttt{node} 原本的那筆資料，看起來就像把 \texttt{node} 刪掉了（資結書第~5.5~節）。
+例如串列 $3 \to 8 \to 5$：
+\begin{itemize}
+\item 對存 $8$ 的節點呼叫：它的 \texttt{data} 變成 $5$，\texttt{next} 改成原本 $5$ 那個節點的 \texttt{next}
+（\texttt{NULL}），再釋放原本存 $5$ 的節點。 結果是 $3 \to 5$，正是「刪掉 $8$」。
+\item 對最後一個節點（存 $5$）呼叫：\texttt{node->next == NULL}，直接返回，串列不變。
+\end{itemize}
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯。 對最後一個節點，函式第一個 \texttt{if} 就返回了，什麼都沒刪。 這也不是寫法的疏忽：刪掉最後一個
+節點要把它前一個節點的 \texttt{next} 設成 \texttt{NULL}，函式只拿到 \texttt{node}，沒辦法找到前一個。
+\item (B) 對。 只要 \texttt{node} 不是最後一個，串列上就少了它的資料。
+\item (C) 錯。 函式一開始就檢查 \texttt{node->next == NULL}，最後一個節點在這裡就返回了，後面的
+\texttt{node->next->data} 根本沒有執行，不會 segmentation fault。
+\item (D) 錯。 函式沒有用資料值去找任何東西，串列裡有沒有重複的值都一樣；它改的兩個地方
+（\texttt{node->data}、\texttt{node->next}）都接得好好的，結構沒有壞。
+\item (E) 錯，因為 (B) 對。
+\end{itemize}
+
+補充：這個技巧在考卷上常出現，但實務上要小心。 真正被 \texttt{free} 的是下一個節點，如果程式別的地方還留著
+指向它的指標（例如串列另外記了 tail，而 \texttt{node} 正好是倒數第二個），那個指標就指到已經釋放的記憶體；
+指向 \texttt{node} 的指標也會發現它存的資料變了。
+\end{pastsoln}

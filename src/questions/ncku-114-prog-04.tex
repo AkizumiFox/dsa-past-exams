@@ -1,0 +1,127 @@
+\begin{pastexam}[label={px:ncku-114-prog-04}]{成大資訊聯招 114 學年度 第 4 題}
+（單選）
+
+{[3\%]} Consider the following two functions written in C language for the insertion into a hash table and the deletion from the table:
+\begin{minted}[fontsize=\small]{c}
+void insert(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i * i) % size;
+        if (table[index] == -1 || table[index] == -2) {
+            table[index] = key;
+            return;
+        }
+    }
+}
+void delete(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i * i) % size;
+        if (table[index] == key) {
+            table[index] = -2;
+            return;
+        }
+    }
+}
+\end{minted}
+Given that the keys are all non-negative integers and the keys to be deleted are always in the hash table. Which of the following implementations correctly searches for a specific key in the hash table, considering collision handling and the presence of deleted slots?
+\begin{enumerate}[label=(\Alph*)]
+\item \leavevmode
+\begin{minted}[fontsize=\small]{c}
+int search(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i) % size;
+        if (table[index] == -1) {
+            return -1;
+        }
+        if (table[index] == key) {
+            return index;
+        }
+    }
+    return -1;
+}
+\end{minted}
+\item \leavevmode
+\begin{minted}[fontsize=\small]{c}
+int search(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i * i) % size;
+        if (table[index] == key) {
+            return index;
+        }
+        if (table[index] == -1 || table[index] == -2) {
+            return -1;
+        }
+    }
+    return -1;
+}
+\end{minted}
+\item \leavevmode
+\begin{minted}[fontsize=\small]{c}
+int search(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i * i) % size;
+        if (table[index] == -1) {
+            return -1;
+        }
+        if (table[index] == key) {
+            return index;
+        }
+        if (table[index] == -2) {
+            continue;
+        }
+    }
+    return -1;
+}
+\end{minted}
+\item \leavevmode
+\begin{minted}[fontsize=\small]{c}
+int search(int table[], int size, int key) {
+    int index;
+    for (int i = 0; i < size; i++) {
+        index = (key % size + i * i) % size;
+        if (table[index] == -2) {
+            return -1;
+        }
+        if (table[index] == key) {
+            return index;
+        }
+    }
+    return -1;
+}
+\end{minted}
+\item None of the above is correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+\textbf{插入和刪除的約定}。 表格用 $-1$ 表示從來沒用過的空格，$-2$ 表示刪除標記（tombstone，資結書第~12.3.4~節）。
+探測序列是平方探測 $h_i(k) = (k \bmod \mathit{size} + i^2) \bmod \mathit{size}$，$i = 0, 1, \ldots$。 \texttt{insert}
+沿這個序列放進第一個 $-1$ 或 $-2$ 的格子；\texttt{delete} 找到 $k$ 後改成 $-2$，而不是 $-1$。
+
+正確的搜尋要做到三件事：
+\begin{enumerate}
+\item 用\textbf{同一個}探測序列（平方探測），否則走的格子和插入時不同。
+\item 遇到 $-2$ 要\textbf{繼續}往下找：$k$ 插入時，這一格可能還放著別的鍵，$k$ 被放到更後面；後來那個鍵被刪掉才變成 $-2$。
+\item 遇到 $-1$ 可以\textbf{停}：$k$ 若在表裡，插入時沿序列走到這一格就會放下來（$-1$ 從來沒被用過，之後也不會從別的值
+變回 $-1$），所以 $k$ 不可能在更後面。
+\end{enumerate}
+
+逐項檢查：
+\begin{itemize}
+\item (A) 錯。 探測序列寫成線性的 $(k \bmod \mathit{size} + i) \bmod \mathit{size}$，和插入用的平方探測不同。 例如
+$\mathit{size} = 7$，依序插入 $0$、$7$、$14$：$0$ 放第 $0$ 格，$7$ 放第 $1$ 格，$14$ 放 $(0 + 4) \bmod 7 = 4$。 (A) 搜尋 $14$
+走第 $0, 1, 2$ 格，第 $2$ 格是 $-1$，回報找不到。
+\item (B) 錯。 遇到 $-2$ 就回報找不到，違反第 2 點。 同上的例子刪除 $7$（第 $1$ 格變 $-2$），再搜尋 $14$：第 $0$ 格是 $0$，
+第 $1$ 格是 $-2$，(B) 直接回傳 $-1$，但 $14$ 明明在第 $4$ 格。
+\item (C) 對。 同樣的平方探測；遇到 $-1$ 停、遇到 $k$ 回傳、遇到 $-2$ 繼續（\texttt{continue} 其實可以省略，效果相同）。
+三點都符合。 走完 $\mathit{size}$ 次都沒遇到 $k$ 或 $-1$，表示插入時也不可能把 $k$ 放在這條序列上，回傳 $-1$ 也對。
+\item (D) 錯。 遇到 $-2$ 就停，和 (B) 一樣錯；而且遇到 $-1$ 不停，雖然不會答錯，但會多走。
+\item (E) 錯，因為 (C) 對。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:gw3-103-ds-01}]{關務三等資訊處理 103 年 第一題}
+（申論；20 分）
+
+有一整數數列 f(n)=2*f(n$-$1)$-$f(n$-$2)+f(n$-$3), 3$\le$n, f(0)=0, f(1)=1, f(2)=2。
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 請使用 C 或 Java 語言，寫一非遞迴（non-recursive）副程式，此副程式輸入為一整數參數 3$\le$i，回傳此數列
+f(i)的數值。（12 分）
+\item[㈡] 請計算 f(10)的數值。（8 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 用三個變數記住最近的三項，由小到大往上算，時間 $O(i)$、空間 $O(1)$。 ㈡ $f(10) = 151$。
+
+\textbf{㈠} 遞迴式每一項只用到前三項，所以從 $f(0), f(1), f(2)$ 開始，用迴圈一項一項往上推，只保留最近的三個值
+（資結書第~18.1.3~節「由下而上」的寫法）。 題目規定輸入 $i \ge 3$，程式也順便處理 $i < 3$。
+\begin{minted}[fontsize=\small]{c}
+long long f(int i) {
+    long long a = 0, b = 1, c = 2;   /* a = f(k-3), b = f(k-2), c = f(k-1)，初始 k = 3 */
+    if (i == 0) return a;
+    if (i == 1) return b;
+    if (i == 2) return c;
+    for (int k = 3; k <= i; k++) {
+        long long next = 2 * c - b + a;   /* f(k) = 2f(k-1) - f(k-2) + f(k-3) */
+        a = b;                            /* 三個變數往後移一格 */
+        b = c;
+        c = next;
+    }
+    return c;                             /* 迴圈結束時 c = f(i) */
+}
+\end{minted}
+\textbf{正確性}：迴圈不變式「每輪開始時 $a = f(k-3)$、$b = f(k-2)$、$c = f(k-1)$」。 $k = 3$ 時成立；一輪之中
+\texttt{next} 依定義算出 $f(k)$，再把三個變數往後移，下一輪（$k + 1$）時不變式仍成立。 迴圈在 $k = i + 1$ 時結束，
+此時 $c = f(i)$。 \textbf{複雜度}：迴圈 $i - 2$ 次，每次常數個運算，時間 $O(i)$，空間 $O(1)$。 （若直接照定義寫成
+遞迴，$f(n)$ 呼叫三次子問題，時間是指數級；這也是題目要求非遞迴的原因。）數列成長很快（約 $1.75^n$），用
+\texttt{long long} 可以算到 $i = 78$；Java 版本把型別改成 \texttt{long}，寫法相同。
+
+\textbf{㈡} 依定義逐項計算：
+\begin{center}
+\small
+\begin{tabular}{rll}
+\toprule
+$n$ & $2f(n-1) - f(n-2) + f(n-3)$ & $f(n)$ \\
+\midrule
+0 & （給定） & 0 \\
+1 & （給定） & 1 \\
+2 & （給定） & 2 \\
+3 & $2 \cdot 2 - 1 + 0$ & 3 \\
+4 & $2 \cdot 3 - 2 + 1$ & 5 \\
+5 & $2 \cdot 5 - 3 + 2$ & 9 \\
+6 & $2 \cdot 9 - 5 + 3$ & 16 \\
+7 & $2 \cdot 16 - 9 + 5$ & 28 \\
+8 & $2 \cdot 28 - 16 + 9$ & 49 \\
+9 & $2 \cdot 49 - 28 + 16$ & 86 \\
+10 & $2 \cdot 86 - 49 + 28$ & 151 \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以 $f(10) = \mathbf{151}$。 這也是程式在 $i = 10$ 時迴圈跑完 $8$ 輪後 $c$ 的值。
+\end{pastsoln}

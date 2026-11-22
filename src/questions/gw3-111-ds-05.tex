@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:gw3-111-ds-05}]{關務三等資訊處理 111 年 第五題}
+（申論；20 分）
+
+$\forall$m,n$\in$N ,已知三維陣列（three-dimensional array）A[1：8, 1：9, 1：4]每一個元素占用 2 個儲存單元，並且
+A[1,2,1]的儲存地址為 234，A[2,3,1]的儲存地址是 m，A[2,3,4]的儲存地址為 n。
+\begin{itemize}[leftmargin=2.2em]
+\item[㈠] 採用列序為主序（row major）方式儲存，則 m、n 分別為何？（10 分）
+\item[㈡] 採用行序為主序（column major）方式儲存，則 m、n 分別為何？（10 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 列為主：$m = 314$、$n = 320$；㈡ 行為主：$m = 252$、$n = 684$。
+
+題目開頭的「$\forall m, n \in \mathbb{N}$」只是說 $m$、$n$ 是自然數（位址），不影響計算。 三個下標的範圍是 $1..8$、
+$1..9$、$1..4$，每個元素 $2$ 個單位。 起始位址 $\alpha = \mathrm{loc}(A[1,1,1])$ 不知道，先用 $A[1,2,1] = 234$ 反推
+（資結書第~4.1~節）。
+
+\textbf{㈠ 列為主}（最右邊的下標變得最快）：$A[i, j, k]$ 前面有 $(i - 1)$ 個 $9 \times 4$ 的平面、$(j - 1)$ 列各 $4$ 個、
+再 $(k - 1)$ 個，
+\[
+\mathrm{loc}(A[i, j, k]) = \alpha + 2\bigl(36(i - 1) + 4(j - 1) + (k - 1)\bigr).
+\]
+\begin{itemize}
+\item $A[1, 2, 1]$：偏移 $36 \cdot 0 + 4 \cdot 1 + 0 = 4$ 個元素，$\alpha + 8 = 234$，$\alpha = 226$。
+\item $m = \mathrm{loc}(A[2, 3, 1])$：偏移 $36 \cdot 1 + 4 \cdot 2 + 0 = 44$，$m = 226 + 88 = \mathbf{314}$。
+\item $n = \mathrm{loc}(A[2, 3, 4])$：偏移 $36 + 8 + 3 = 47$，$n = 226 + 94 = \mathbf{320}$。
+\end{itemize}
+檢查：$A[2,3,1]$ 和 $A[2,3,4]$ 只差最後一個下標 $3$，列為主時相鄰，差 $3 \times 2 = 6$，$320 - 314 = 6$。
+
+\textbf{㈡ 行為主}（最左邊的下標變得最快）：$A[i, j, k]$ 前面有 $(k - 1)$ 個 $8 \times 9$ 的平面、$(j - 1)$ 行各 $8$ 個、
+再 $(i - 1)$ 個，
+\[
+\mathrm{loc}(A[i, j, k]) = \alpha + 2\bigl(72(k - 1) + 8(j - 1) + (i - 1)\bigr).
+\]
+\begin{itemize}
+\item $A[1, 2, 1]$：偏移 $0 + 8 \cdot 1 + 0 = 8$ 個元素，$\alpha + 16 = 234$，$\alpha = 218$。
+\item $m = \mathrm{loc}(A[2, 3, 1])$：偏移 $0 + 8 \cdot 2 + 1 = 17$，$m = 218 + 34 = \mathbf{252}$。
+\item $n = \mathrm{loc}(A[2, 3, 4])$：偏移 $72 \cdot 3 + 16 + 1 = 233$，$n = 218 + 466 = \mathbf{684}$。
+\end{itemize}
+檢查：行為主時 $k$ 每加 $1$ 跳過一整個 $8 \times 9 = 72$ 個元素的平面，$A[2,3,1]$ 到 $A[2,3,4]$ 差 $3 \times 72 \times 2 = 432$，
+$684 - 252 = 432$。
+
+注意兩種方式的起始位址 $\alpha$ 不同（$226$ 和 $218$），因為已知的是 $A[1,2,1]$ 而不是 $A[1,1,1]$ 的位址，兩小題都要
+各自反推一次。
+\end{pastsoln}

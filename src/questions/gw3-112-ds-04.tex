@@ -1,0 +1,77 @@
+\begin{pastexam}[label={px:gw3-112-ds-04}]{關務三等資訊處理 112 年 第四題}
+（申論；25 分）
+
+給予如下程式片段，假設 x[] = [25, 57, 48, 37, 12, 92, 86, 33]，請只用下述 C 語言宣告的變數及兩個 for 迴圈，完成下面的
+選擇排序（Selection Sort），假設有 n 個資料要由小排到大，每一外迴圈將最大值放在第 n-1 個位置，然後第二大的資料放在第
+n-2 個位置，依此類推，將資料放到適當的位置，執行後陣列 x[]內容由小排至大。（25 分）
+\begin{minted}[fontsize=\small]{c}
+Selectsort(x, n)
+int x[], n;
+{
+    int i, index, j, large;
+
+    for (i = n-1; i > 0; i--){
+
+        for (j = 1; j <= i; j++){
+
+        }
+    }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：外迴圈開始時令 \texttt{large = x[0]; index = 0;}，內迴圈遇到 \texttt{x[j] > large} 就更新 \texttt{large}、\texttt{index}，
+內迴圈結束後 \texttt{x[index] = x[i]; x[i] = large;}。 排序結果 $12, 25, 33, 37, 48, 57, 86, 92$。
+
+\textbf{想法}（資結書第~14.2~節的選擇排序，這裡是「每次選最大的放到後面」的版本）：第 $i$ 輪（$i = n-1, n-2, \ldots, 1$）
+在 $x[0..i]$ 中找最大值，記下它的值 \texttt{large} 和位置 \texttt{index}，再和 $x[i]$ 交換，$x[i..n-1]$ 就排好了。 內迴圈從
+$j = 1$ 開始，所以要先拿 $x[0]$ 當目前的最大值。 交換時 \texttt{large} 本身就存著最大值，不需要另外的暫存變數，正好只用
+題目宣告的四個變數。
+\begin{minted}[fontsize=\small]{c}
+Selectsort(x, n)
+int x[], n;
+{
+    int i, index, j, large;
+
+    for (i = n-1; i > 0; i--){
+        large = x[0];              /* 先假設 x[0] 是 x[0..i] 的最大值 */
+        index = 0;
+        for (j = 1; j <= i; j++){
+            if (x[j] > large) {    /* 找到更大的，記下值和位置 */
+                large = x[j];
+                index = j;
+            }
+        }
+        x[index] = x[i];           /* 最大值和 x[i] 交換：x[i] 搬到最大值原來的位置 */
+        x[i] = large;              /* 最大值放到 x[i] */
+    }
+}
+\end{minted}
+（\texttt{Selectsort(x, n)} 加上 \texttt{int x[], n;} 是舊式的 K\&R 函式定義，沒寫回傳型別時預設為 \texttt{int}；現代 C 寫成
+\texttt{void Selectsort(int x[], int n)}。）
+
+\textbf{追蹤} $x = [25, 57, 48, 37, 12, 92, 86, 33]$，$n = 8$：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$i$ & 最大值 large & index & 交換後的 $x[0..7]$ \\
+\midrule
+7 & 92 & 5 & 25, 57, 48, 37, 12, 33, 86, \textbf{92} \\
+6 & 86 & 6 & 25, 57, 48, 37, 12, 33, \textbf{86}, \textbf{92} \\
+5 & 57 & 1 & 25, 33, 48, 37, 12, \textbf{57}, \textbf{86}, \textbf{92} \\
+4 & 48 & 2 & 25, 33, 12, 37, \textbf{48}, \textbf{57}, \textbf{86}, \textbf{92} \\
+3 & 37 & 3 & 25, 33, 12, \textbf{37}, \textbf{48}, \textbf{57}, \textbf{86}, \textbf{92} \\
+2 & 33 & 1 & 25, 12, \textbf{33}, \textbf{37}, \textbf{48}, \textbf{57}, \textbf{86}, \textbf{92} \\
+1 & 25 & 0 & \textbf{12}, \textbf{25}, \textbf{33}, \textbf{37}, \textbf{48}, \textbf{57}, \textbf{86}, \textbf{92} \\
+\bottomrule
+\end{tabular}
+\end{center}
+（粗體是已經排好的部分。 $i = 6$、$i = 3$ 時最大值本來就在 $x[i]$，「交換」只是寫回原位，不影響結果。）最後
+$x = [12, 25, 33, 37, 48, 57, 86, 92]$，由小到大。
+
+\textbf{正確性與複雜度}：每輪結束後 $x[i]$ 是 $x[0..i]$ 的最大值，而 $x[i+1..n-1]$ 是更早幾輪放好的、比它們都大的值，
+所以 $x[i..n-1]$ 已排好；$i = 1$ 那輪結束後 $x[0] \le x[1]$，全部排好。 內迴圈比較 $i$ 次，總比較次數
+$\sum_{i=1}^{n-1} i = n(n-1)/2$，本例 $28$ 次；時間 $\Theta(n^2)$，交換最多 $n - 1$ 次，額外空間 $O(1)$。
+\end{pastsoln}

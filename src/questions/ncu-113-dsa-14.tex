@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncu-113-dsa-14}]{中央資工所 113 學年度 第 14 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Assume that the function value of each of the following functions is constant for $n\le 2$.
+\[
+t(n)=n+\sum_{k=1}^{n-1}[t(k)+t(n-k)],\qquad f(n)=2f(n/4)+\sqrt{n},
+\]
+\[
+g(n)=g(n/2)+\sqrt{n},\qquad h(n)=5h(n/2)+(n\lg n)^2,
+\]
+\[
+a(n)=a(n-1)+n^k\lg n.
+\]
+Choose the correct answers.
+
+(A)~$t(n)=\theta(2^n)$ \quad (B)~$f(n)=\theta(\sqrt{n})$ \quad (C)~$g(n)=\theta(\sqrt{n})$\\
+(D)~$h(n)=n^{\lg 5}$ \quad (E)~$a(n)=\theta(n^{k+1}\lg n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)(D)(E)。
+
+(D) 原卷沒有寫 $\theta$，照其他四項的寫法讀成 $h(n) = \theta(n^{\lg 5})$；$k$ 當成非負的常數。
+
+\textbf{(A) 錯}。 $\sum_{k=1}^{n-1} t(n-k) = \sum_{k=1}^{n-1} t(k)$，所以
+$t(n) = n + 2\sum_{k=1}^{n-1} t(k)$（$n \ge 3$）。 $n \ge 4$ 時把 $n$ 和 $n-1$ 的式子相減：
+\[
+t(n) - t(n-1) = 1 + 2t(n-1) \quad\Longrightarrow\quad t(n) = 3t(n-1) + 1 .
+\]
+展開得 $t(n) = \Theta(3^n)$（資結書第~2.5~節的線性遞迴）。 $3^n / 2^n \to \infty$，不是 $\Theta(2^n)$。
+
+\textbf{(B) 錯}。 主定理（資結書定理~2.4），$a = 2$、$b = 4$，$n^{\log_4 2} = n^{1/2}$，和 $f$ 的額外項
+$\sqrt n$ 同階，是情況 2：$f(n) = \Theta(\sqrt n\lg n)$，比 $\sqrt n$ 多一個 $\lg n$。
+
+\textbf{(C) 對}。 $a = 1$、$b = 2$，$n^{\log_2 1} = n^0 = 1$，$\sqrt n = \Omega(n^{0 + 1/2})$ 多項式地較大，
+正則條件 $1 \cdot \sqrt{n/2} = \tfrac{1}{\sqrt 2}\sqrt n$ 成立（$c = 1/\sqrt2 < 1$），情況 3：
+$g(n) = \Theta(\sqrt n)$。 直接展開也一樣：$\sqrt n(1 + 2^{-1/2} + 2^{-1} + \cdots)$ 是公比
+$1/\sqrt2$ 的等比級數，和是常數倍的 $\sqrt n$。
+
+\textbf{(D) 對}。 $a = 5$、$b = 2$，$n^{\lg 5} \approx n^{2.32}$。 額外項 $(n\lg n)^2 = n^2\lg^2 n =
+O(n^{\lg 5 - \varepsilon})$，取 $\varepsilon = 0.1$ 即可（$\lg^2 n$ 比任何 $n^{0.22}$ 小），情況 1：
+$h(n) = \Theta(n^{\lg 5})$。
+
+\textbf{(E) 對}。 展開 $a(n) = a(2) + \sum_{i=3}^{n} i^k\lg i$。 上界：每一項 $\le n^k\lg n$，共不到 $n$ 項，
+和 $\le n^{k+1}\lg n$。 下界：只取後一半 $i \ge n/2$，每一項 $\ge (n/2)^k\lg(n/2)$，共約 $n/2$ 項，和
+$\ge (n/2)^{k+1}(\lg n - 1) = \Omega(n^{k+1}\lg n)$。 所以 $a(n) = \Theta(n^{k+1}\lg n)$。
+\end{pastsoln}

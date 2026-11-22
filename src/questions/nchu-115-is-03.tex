@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:nchu-115-is-03}]{中興資工所乙組 115 學年度 第 3 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which is not an advantage of linked lists over arrays?
+
+A.~Dynamic size \qquad B.~Ease of insertion/deletion\\
+C.~Random access \qquad D.~No memory waste
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+\begin{itemize}
+\item A 是優點：串列需要一個節點才配置一個，大小跟著資料變；陣列的大小要事先決定，放不下就要
+另外配置一塊、整個搬過去。
+\item B 是優點：手上已經有前一個節點的指標時，插入或刪除只改兩三個指標，$O(1)$（資結書
+第~5.1~節）；陣列要挪動後面所有元素，$O(n)$。
+\item C 不是優點：串列沒有隨機存取，要拿第 $i$ 個只能從頭沿著 $\mathit{next}$ 走 $i$ 步，
+$O(i)$；陣列用位址公式一步算到，$O(1)$。 隨機存取是陣列勝過串列的地方，所以選 C。
+\item D：意思是串列不會像陣列那樣預留一大塊用不到的空間，題目把它當成串列的優點。 嚴格說
+串列每個節點多存一個指標，也是額外的空間，所以「完全不浪費」並不精確；但和 C 相比，C 是明明
+白白說反了，單選要選 C。
+\end{itemize}
+\end{pastsoln}

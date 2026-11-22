@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ncku-115-prog-10}]{成大資訊聯招 115 學年度 演算法是非第 13 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+[2\%] Consider the famous ``Halting Problem'', which has been mathematically proven to be undecidable.
+Because the Halting Problem is strictly harder than any problem in NP, it satisfies the definition of
+being NP-Hard. Since the Halting Problem satisfies the NP-Hard property, it is therefore correctly
+classified as an NP-Complete (NPC) problem.\\
+(A) True \qquad (B) False
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) False。
+
+NP 完備要同時滿足兩個條件（資結書第~28.4~節）：(1) 問題本身在 NP 裡；(2) 是 NP 難的，也就是 NP 裡每個
+問題都能在多項式時間歸約到它。 停機問題滿足 (2)：給一個 \textsc{SAT} 的式子，造一個程式「試遍所有賦值，
+找到滿足的就停，找不到就無窮迴圈」，這個程式會停若且唯若式子可滿足，轉換只花多項式時間。 但它不滿足
+(1)：NP 裡的問題都能用指數時間的窮舉解決，一定可判定；停機問題不可判定，所以不在 NP 裡。 只有 NP 難、
+不在 NP 裡，不是 NP 完備。
+
+另外「strictly harder than any problem in NP」也不是 NP 難的定義；NP 難的定義是上面的歸約條件，不是
+「比 NP 難」。
+\end{pastsoln}

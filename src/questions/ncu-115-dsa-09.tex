@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncu-115-dsa-09}]{中央資工所 115 學年度 第 9 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Consider the branch-and-bound algorithm and the A* algorithm used for solving optimization problems. Select one or more correct statements.
+\begin{enumerate}[label=\Alph*.]
+\item The branch-and-bound algorithm systematically explores a search tree while using bounds to prune suboptimal branches.
+\item The A* algorithm can be viewed as a special case of the branch-and-bound algorithm.
+\item If the heuristic function used in the A* algorithm never overestimates the true remaining cost to reach the goal, then the A* algorithm is guaranteed to find an optimal solution.
+\item The A* algorithm does not guarantee a lower worst-case time complexity than an exhaustive search of the entire solution space.
+\item The branch-and-bound algorithm does not guarantee polynomial-time performance in the worst case.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、C、D、E（全部都對）。
+
+A* 不在資結書的範圍，先簡單說明。 求最小成本時，A* 對搜尋樹的每個節點 $v$ 算
+$f(v) = g(v) + h(v)$：$g(v)$ 是從起點走到 $v$ 已經花的成本，$h(v)$ 是估計從 $v$ 到目標還要多少
+（啟發函數）。 每次展開 $f$ 最小的節點，第一次取出目標節點時停止。
+
+\textbf{A 對}。 這正是分支限界的定義（資結書第~20.2~節）：有系統地展開狀態空間樹，每個節點算一個
+界（求最小值時是下界），界已經不比目前找到的最好解好的分支整個剪掉。
+
+\textbf{B 對}。 $h$ 不高估時，$f(v) = g(v) + h(v)$ 不超過經過 $v$ 的任何解的成本，就是一個下界；A*
+每次展開下界最小的節點，正是「最小成本優先」的分支限界（資結書第~20.2~節用的也是這種展開順序）。
+這也是許多演算法課本的說法：A* 是分支限界的一個特例。
+
+\textbf{C 對}。 設最佳解的成本是 $C^*$。 $h$ 不高估時，最佳解路徑上還沒展開的節點 $v$ 都有
+$f(v) \le g(v) + (\text{從 } v \text{ 到目標的真正成本}) = C^*$。 如果某個成本 $C > C^*$ 的目標節點
+先被取出，那時候最佳路徑上一定還有一個節點 $v$ 在待展開的集合裡，$f(v) \le C^* < C$，應該先取出
+$v$，矛盾。 所以取出的第一個目標就是最佳解。 （這是在搜尋樹上的情形；在圖上搜尋、展開過的頂點不再
+重開時，還需要 $h$ 滿足一致性，這題問的是最佳化問題的搜尋樹，不用考慮。）
+
+\textbf{D 對}。 A* 能省多少要看 $h$ 估得多準。 最差的情形 $h \equiv 0$ 仍然是不高估的，這時 A* 就是
+依 $g$ 的均勻成本搜尋，可能把整個解空間都展開；對 NP 難的問題，最壞情況仍是指數時間。
+
+\textbf{E 對}。 剪枝只在界夠好時才有效，最壞情況下可能什麼都剪不掉，要走遍整棵狀態空間樹，例如
+0/1 背包、旅行推銷員問題的分支限界（資結書第~20.2.2、20.2.3~節）都是指數時間。 這些問題是 NP
+難的，除非 $\mathrm{P} = \mathrm{NP}$，任何方法都不可能保證多項式時間。
+\end{pastsoln}

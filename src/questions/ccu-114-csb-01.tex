@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ccu-114-csb-01}]{中正資工所乙組 114 學年度 第 1 題}
+（是非組合；單選）
+
+(5\%) Please answer the following \textbf{true-or-false} questions and select the correct set of answers from the provided options.
+\begin{enumerate}[label=\Roman*.]
+\item If the height of a tree equals to the number of nodes, the tree is a complete binary tree.
+\item In a singly linked list, each node has a pointer to both its next and previous nodes.
+\item The minimum number of nodes in a binary tree of depth 10 is only 10.
+\end{enumerate}
+
+A.~False, False, False \qquad B.~False, False, True \qquad C.~False, True, False\\
+D.~False, True, True \qquad E.~True, False, False \qquad F.~True, False, True\\
+G.~True, Ture, False \qquad H.~Ture, True, True
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（False, False, True）。 I、III 是資結書第~7~章的樹的名詞，II 是第~5~章的鏈結串列；歸在第~7~章。
+
+選項 G、H 的 ``Ture'' 是原卷的錯字，就是 True。 III 的「depth」照題意是樹的層數（根在第 $1$ 層），這是 Horowitz 等書的用法，
+也就是資結書所說的高度（數節點）；見下面的說明。
+
+\begin{itemize}
+\item \textbf{I：False。} 高度等於節點數，表示每一層只有一個節點，整棵樹是一條鏈（歪斜樹）。 complete binary tree（資結書叫完整二元樹，第~7.1~節）要求除了
+最後一層都填滿、最後一層靠左。 三個節點的鏈第 $2$ 層只有一個節點、沒填滿，第 $3$ 層卻已經有節點，不是 complete binary tree；
+換成「每一層都滿」的定義（有些書的 complete）也一樣不是。
+（$n \le 2$ 時剛好是，但敘述要對所有情況成立，所以是 False。）
+\item \textbf{II：False。} 單向鏈結串列每個節點只有指向下一個節點的指標（資結書第~5.1~節）；同時有前後兩個指標的是雙向鏈結串列。
+\item \textbf{III：True。} 深度（層數）為 $10$ 的二元樹，每一層至少要有一個節點，最少 $10$ 個，一條長 $10$ 的鏈就達到。 若把深度
+解讀成邊數（根的深度是 $0$），深度 $10$ 要 $11$ 層，最少 $11$ 個節點，III 變成 False、答案變成 A；但題目寫「only 10」，配的是
+層數的定義。
+\end{itemize}
+三個依序是 False, False, True，選 B。
+\end{pastsoln}

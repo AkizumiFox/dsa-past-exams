@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nchu-114-dsa-03}]{中興資工所甲組 114 學年度 單選題第 3 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+You are designing a program to compute the maximum achievable value from a limited set of resources with constraints. Which of the following techniques would you use to solve this problem most efficiently?
+
+(A)~Greedy approach\\
+(B)~Graph traversal algorithms\\
+(C)~Divide and conquer\\
+(D)~Dynamic programming
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+「資源有限、在限制下讓總價值最大」是 0/1 背包這一類最佳化問題（資結書第~18.5~節）。 它有最佳子結構
+（拿或不拿最後一件東西之後，剩下的是同樣的問題、容量變小），而且子問題大量重疊，正是動態規劃的
+兩個條件（資結書第~18.1~節）：以「前 $i$ 件、容量 $c$」為狀態填表，$\Theta(nW)$ 時間。
+\begin{itemize}
+\item (A) 貪心：對 0/1 背包不保證最佳。 例如容量 $50$，物品（重量, 價值）為 $(10, 60)$、$(20, 100)$、
+$(30, 120)$，照價值密度先拿 $60$、$100$，總價值 $160$，最佳是後兩件的 $220$。 貪心只對分數背包
+（物品可以切開）是最佳的。 錯。
+\item (B) 圖的走訪：BFS、DFS 解決的是可達性，和最大化價值無關。 錯。
+\item (C) 分治：分治的子問題互不重疊；背包的子問題重疊，直接遞迴會重複計算，指數時間。 錯。
+\item (D) 動態規劃：見上。 對。
+\end{itemize}
+本卷單選題第 8 題就是一個背包問題的實例（歷屆試題~\ref{px:nchu-114-dsa-08}）。
+\end{pastsoln}

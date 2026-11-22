@@ -1,0 +1,79 @@
+\begin{pastexam}[label={px:ntut-113-ci-02}]{北科大資工所 113 學年度 第二題}
+（是非；只寫答案）
+
+Given a set $S$ of characters ($A$, $B$, $C$, $D$, $E$, $F$, $G$, $H$, $I$) with relative frequencies (10, 5,
+23, 18, 7, 12, 15, 4, 6). Let $T$ be an optimal Huffman code tree for $S$. Mark by T(=true) or F(=false) each
+of the following: (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item $T$ is unique. (2 pts)
+\item Characters $B$ and $H$ have the same path length from the root in $T$. (2 pts)
+\item Recall that the \textit{weighted path length} (WPL) is defined as $\sum(f_i\times p_i)$ where $f_i$ is
+the frequency of character $i$ and $p_i$ is the length of the path in $T$ from the root to the character $i$.
+Then, the weighted path length of $T$ is 249. (2 pts)
+\item The path length of character $C$ is 2. (2 pts)
+\item Consider another set $S'$ of characters ($A$, $B$, $C$, $D$, $E$, $F$, $G$, $H$) with relative
+frequencies (10, 5, 23, 18, 13, 12, 15, 4). Let $T'$ be an optimal Huffman code tree for $S'$. Then,
+WPL($T$) and WPL($T'$) differ by 13. (2 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) F　(2) T　(3) F　(4) T　(5) T。
+
+\textbf{建樹。} 照資結書第~19.3~節，每次取出最小的兩個合併（總頻率 $100$）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 合併 & 新節點 & 剩下的權重 \\
+\midrule
+1 & $H(4) + B(5)$ & 9 & 6, 7, 9, 10, 12, 15, 18, 23 \\
+2 & $I(6) + E(7)$ & 13 & 9, 10, 12, 13, 15, 18, 23 \\
+3 & $9 + A(10)$ & 19 & 12, 13, 15, 18, 19, 23 \\
+4 & $F(12) + 13$ & 25 & 15, 18, 19, 23, 25 \\
+5 & $G(15) + D(18)$ & 33 & 19, 23, 25, 33 \\
+6 & $19 + C(23)$ & 42 & 25, 33, 42 \\
+7 & $25 + 33$ & 58 & 42, 58 \\
+8 & $42 + 58$ & 100 & 100 \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步最小的兩個都唯一，沒有平手。 由合併關係讀出每個字元的深度（根到它的路徑長）：根的兩邊是 $42$、$58$；
+$42 = 19 + C$，$19 = 9 + A$，$9 = H + B$；$58 = 25 + 33$，$25 = F + 13$，$13 = I + E$，$33 = G + D$。
+\begin{center}
+\begin{tabular}{l*{9}{c}}
+\toprule
+字元 & $A$ & $B$ & $C$ & $D$ & $E$ & $F$ & $G$ & $H$ & $I$ \\
+頻率 & 10 & 5 & 23 & 18 & 7 & 12 & 15 & 4 & 6 \\
+深度 & 3 & 4 & 2 & 3 & 4 & 3 & 3 & 4 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(1) F。} 建樹過程雖然沒有平手（每個字元的深度因此是唯一確定的），但每個內部節點的左右子樹都可以對調，
+得到不同的樹（不同的編碼），WPL 完全一樣，所以最佳的霍夫曼樹不唯一。 一般來說，頻率有平手時連各字元的深度
+都可能不同（資結書第~19.3~節）。
+
+\textbf{(2) T。} $H$、$B$ 在第 1 步合併成兄弟，深度都是 $4$。
+
+\textbf{(3) F。}
+\[
+\mathrm{WPL}(T) = 10 \cdot 3 + 5 \cdot 4 + 23 \cdot 2 + 18 \cdot 3 + 7 \cdot 4 + 12 \cdot 3 + 15 \cdot 3 + 4 \cdot 4
++ 6 \cdot 4 = 299,
+\]
+不是 $249$。 另一種算法：WPL 等於所有內部節點的權重和（每個字元的頻率在它的每個祖先都被算一次），
+$9 + 13 + 19 + 25 + 33 + 42 + 58 + 100 = 299$，一致。
+
+\textbf{(4) T。} $C$ 是 $42$ 的子節點，$42$ 是根的子節點，深度 $2$。
+
+\textbf{(5) T。} $S'$ 就是把 $S$ 的 $E(7)$、$I(6)$ 換成一個頻率 $13$ 的字元 $E$。 $S'$ 的霍夫曼樹：
+$H + B = 9$，$9 + A = 19$，$F(12) + E(13) = 25$，$G + D = 33$，$19 + C = 42$，$25 + 33 = 58$，$42 + 58 = 100$。
+內部節點權重和是 $9 + 19 + 25 + 33 + 42 + 58 + 100 = 286$。 它正好是 $T$ 拿掉內部節點 $13$（$I$、$E$ 的父節點）
+的樣子，所以
+\[
+\mathrm{WPL}(T) - \mathrm{WPL}(T') = 299 - 286 = 13.
+\]
+$I$、$E$ 不是頻率最小的兩個，差剛好是 $13$ 是因為 $S'$ 的合併過程和 $S$ 一步對一步相同，只少了「$I + E$」那一步
+（在 $S$ 裡 $13$ 被造出來之後，和 $S'$ 的 $E(13)$ 扮演同樣的角色）；不能直接套資結書引理~19.4，那條引理講的是
+合併\textbf{最小}的兩個。
+\end{pastsoln}

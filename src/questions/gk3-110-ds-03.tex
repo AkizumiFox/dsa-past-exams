@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:gk3-110-ds-03}]{高考三級資訊處理 110 年 第三題}
+（申論；25 分）
+
+二元搜尋法（binary search）使用 divide-and-conquer（分而治之）演算法技巧，對一個已排序的（sorted）
+且長度為 n 的陣列 A[0:n$-$1]，以二元化方式進行資料值 x 的搜尋，其最差時間複雜度（worst case time
+complexity）可降到 $\Theta$(log n)。㈠請使用 C++或 Python 語言，修改此二元搜尋法，使其能對未排序的
+（unsorted）且長度為 n 的陣列 A[0:n$-$1]，進行三元化搜尋，即以 divide-and-conquer 技巧將此陣列切成
+三個子陣列，並在可能包含資料值 x 的子陣列繼續進行 divide-and-conquer 技巧的搜尋，如果找到則回傳 1，
+如果找不到則回傳 0。（17 分）（注意：請寫一個 searching 類別，內含一個 search 功能）㈡請分析修改後的
+三元化搜尋法其最差時間複雜度（worst case time complexity）以 order 的方式表示。（8 分）（注意：不可
+將此陣列數值進行排序，請加註解說明程式碼作法。）
+\end{pastexam}
+
+\begin{pastsoln}
+先講關鍵：二元搜尋能丟掉一半，是因為陣列排好序，看中間一個數就知道 $x$ 不可能在哪一邊。 陣列
+\textbf{沒有排序}時，看任何一個數都無法排除其他位置，三個子陣列\textbf{都可能}含有 $x$，所以「在可能
+包含 $x$ 的子陣列繼續搜尋」就是三段都要找。 分治仍然成立（大問題拆成三個同類的小問題），只是
+省不了時間。
+
+\textbf{㈠ 程式（C++）}。 用 \texttt{||} 的短路求值：前面一段找到就不再找後面的段。
+\begin{minted}[fontsize=\small]{cpp}
+#include <vector>
+using namespace std;
+
+class searching {
+public:
+    // 在 A[0..n-1] 裡找 x：找到回傳 1，找不到回傳 0
+    int search(const vector<int>& A, int x) {
+        return search(A, 0, (int)A.size() - 1, x);
+    }
+
+private:
+    // 在 A[lo..hi] 裡找 x
+    int search(const vector<int>& A, int lo, int hi, int x) {
+        int n = hi - lo + 1;              // 這一段的長度
+        if (n <= 0) return 0;             // 空的一段：找不到
+        if (n <= 2)                       // 只剩一、兩個：直接比
+            return (A[lo] == x || A[hi] == x) ? 1 : 0;
+        int a = lo + n / 3;               // 第二段的開頭
+        int b = lo + 2 * n / 3;           // 第三段的開頭
+        // 陣列沒有排序，三段都可能有 x，只能三段都找；
+        // 用 || 短路：前面一段找到就不再找後面的
+        return search(A, lo, a - 1, x)    // A[lo..a-1]
+            || search(A, a, b - 1, x)     // A[a..b-1]
+            || search(A, b, hi, x);       // A[b..hi]
+    }
+};
+\end{minted}
+切點的說明：$n \ge 3$ 時 $\lfloor n/3 \rfloor \ge 1$，三段的長度 $\lfloor n/3 \rfloor$、
+$\lfloor 2n/3 \rfloor - \lfloor n/3 \rfloor$、$n - \lfloor 2n/3 \rfloor$ 都至少是 $1$，加起來是
+$n$，所以三段不重疊、蓋住整段，而且每段都比原來短，遞迴一定會結束。 $n \le 2$ 時直接比較
+（$n = 1$ 時 \texttt{lo == hi}，同一格比兩次無妨）。 用法：\texttt{searching s; s.search(A, x);}。
+
+正確性（對長度 $n$ 歸納）：$n \le 2$ 時逐一比較，顯然對。 $n \ge 3$ 時，$x$ 在 $A[lo..hi]$ 裡
+當且僅當 $x$ 在三段的其中一段裡；由歸納假設三個遞迴呼叫各自回答正確，取「或」就是答案。
+
+\textbf{㈡ 最差時間複雜度}。 最差情況是 $x$ 不在陣列裡（或在最後一段的最後），三段都要找到底。
+令 $T(n)$ 為長度 $n$ 時最差的時間：
+\[
+T(n) = 3\,T(n/3) + \Theta(1), \qquad T(1) = \Theta(1)
+\]
+（忽略地板）。 用主定理（資結書第~2.4~節）：$a = 3$，$b = 3$，$n^{\log_b a} = n$，$f(n) = \Theta(1) =
+O(n^{1 - \epsilon})$，屬於第一種情況，$T(n) = \Theta(n)$。 直接看遞迴樹也一樣：每個葉節點負責一或兩格，
+葉節點介於 $n/2$ 和 $n$ 個之間；每個內部節點有三個孩子，內部節點數是 $(\text{葉節點數} - 1)/2$。
+所以呼叫次數是 $\Theta(n)$，每次呼叫做常數的工作。
+
+所以三元化搜尋在未排序陣列上的最差時間是 $\Theta(n)$，和從頭掃到尾的循序搜尋一樣，而且這已經是
+最好的：任何演算法在未排序陣列裡判定「$x$ 不在」，都必須看過每一格，因為沒看的那一格可能就是
+$x$，所以最差至少要 $n$ 次比較。 要做到 $\Theta(\log n)$，陣列必須先排好序（題目不允許）。
+\end{pastsoln}

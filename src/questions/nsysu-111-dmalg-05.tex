@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:nsysu-111-dmalg-05}]{中山資工所資安組 111 學年度 第 8 題}
+（設計、分析）
+
+(Algorithm points) {[10\%]} Please express heapsort algorithm and analyze its time complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{演算法}（資結書第~14.6~節）。 把陣列 $A[1..n]$ 看成完整二元樹，$A[i]$ 的子節點是 $A[2i]$、
+$A[2i+1]$。 先建成最大堆積，再反覆把根（最大值）換到最後面、堆積縮小一格、把新的根下沉。
+\begin{pseudo}[unbreakable]{堆積排序}
+\Procedure{Sift-Down}{$A, i$}
+    \While{$2i \le A.\mathit{size}$}
+        \State $j \gets 2i$
+        \If{$j + 1 \le A.\mathit{size}$ \AND $A[j + 1] > A[j]$}
+            \State $j \gets j + 1$ \Comment{$j$ 是比較大的子節點}
+        \EndIf
+        \If{$A[i] \ge A[j]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$；$i \gets j$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Build-Max-Heap}{$A, n$}
+    \State $A.\mathit{size} \gets n$
+    \For{$i \gets \lfloor n/2 \rfloor$ \DownTo $1$}
+        \State \Call{Sift-Down}{$A, i$}
+    \EndFor
+\EndProcedure
+\Statex
+\Procedure{Heapsort}{$A, n$}
+    \State \Call{Build-Max-Heap}{$A, n$}
+    \For{$i \gets n$ \DownTo $2$}
+        \State 交換 $A[1]$ 和 $A[i]$ \Comment{目前的最大值放到 $A[i]$}
+        \State $A.\mathit{size} \gets A.\mathit{size} - 1$
+        \State \Call{Sift-Down}{$A, 1$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+\textbf{正確性。} \proc{Sift-Down}$(A, i)$ 的前提是 $i$ 的兩棵子樹已經是堆積；做完以 $i$ 為根的
+子樹就是堆積。 \proc{Build-Max-Heap} 由後往前做，處理 $i$ 時，比 $i$ 大的位置都處理過了，前提成立，
+做完整棵樹是堆積。 \proc{Heapsort} 的迴圈不變量：每一輪開始時，$A[1..i]$ 是最大堆積，裝著最小的
+$i$ 個數；$A[i+1..n]$ 是最大的 $n - i$ 個數，已經排好。 換出去的 $A[1]$ 是堆積裡最大的，不大於
+$A[i+1..n]$ 的每一個，所以 $A[i..n]$ 排好；堆積縮小後根的兩棵子樹仍是堆積，下沉一次就修好。
+迴圈結束時 $i = 1$，整個陣列排好。
+
+\textbf{小例子} $\langle 4, 10, 3, 5, 1\rangle$：建堆積得 $\langle 10, 5, 3, 4, 1\rangle$；
+之後每一輪（直線右邊是已排好的部分）：
+$\langle 5, 4, 3, 1 \mid 10\rangle$，$\langle 4, 1, 3 \mid 5, 10\rangle$，
+$\langle 3, 1 \mid 4, 5, 10\rangle$，$\langle 1 \mid 3, 4, 5, 10\rangle$。
+
+\textbf{時間分析。}
+\begin{itemize}
+\item \proc{Sift-Down}：每一輪往下一層，最多走堆積的高度 $\lfloor \lg n \rfloor$ 輪，每輪比較兩次，
+$O(\lg n)$。
+\item \proc{Build-Max-Heap}：粗估是 $n/2$ 次下沉、每次 $O(\lg n)$，得 $O(n \lg n)$，但可以更緊。
+高度為 $h$（以層數計，葉子 $h = 1$）的節點最多 $\lceil n / 2^h \rceil$ 個，從它下沉最多 $h - 1$ 層：
+\begin{align*}
+\sum_{h=1}^{\lfloor \lg n \rfloor + 1} \left\lceil \frac{n}{2^h} \right\rceil (h - 1)
+&\le \sum_{h=1}^{\lfloor \lg n \rfloor + 1} \left(\frac{n}{2^h} + 1\right)(h - 1) \\
+&\le n \sum_{h \ge 1} \frac{h - 1}{2^h} + O(\lg^2 n)
+= n + O(\lg^2 n) = O(n),
+\end{align*}
+其中 $\sum_{h \ge 1} (h-1)/2^h = \sum_{k \ge 0} k / 2^{k+1} = 1$。 資結書定理~8.1 給出更精確的
+「交換次數小於 $2n$」。 建堆積是 $\Theta(n)$。
+\item 主迴圈跑 $n - 1$ 輪，每輪交換 $O(1)$ 加一次下沉 $O(\lg n)$，合計 $O(n \lg n)$。
+\end{itemize}
+總時間 $T(n) = \Theta(n) + O(n \lg n) = O(n \lg n)$，而且最壞情況就是 $\Theta(n \lg n)$：堆積排序
+是比較排序，任何比較排序最壞都要 $\Omega(n \lg n)$ 次比較（資結書定理~15.1）。 對大多數輸入，換到
+根的 $A[i]$ 本來在最底層，下沉幾乎每次都走到底，平均也是 $\Theta(n \lg n)$；只有像「全部相等」這種
+輸入，每次下沉第一輪就停，才是 $\Theta(n)$。
+
+其他性質：原地排序，額外空間 $O(1)$（\proc{Sift-Down} 用迴圈寫，沒有遞迴堆疊）；不穩定，相等的數
+會因為和根交換而改變相對順序，例如 $\langle 2_a, 2_b, 1\rangle$ 排完是 $\langle 1, 2_b, 2_a\rangle$。
+\end{pastsoln}

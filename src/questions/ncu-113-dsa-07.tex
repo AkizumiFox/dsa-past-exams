@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncu-113-dsa-07}]{中央資工所 113 學年度 第 7 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣一分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item AB+DE*F/-BC*+ is the postfix expression of A+B-D*E/F+B*C
+\item AB+DE*F/*BC-+ is the postfix expression of A+B-D*E/F+B*C
+\item AB*DE*F/+BC*+ is the postfix expression of A+B*D*E/F+B*C
+\item ABD*E*F/+BC*+ is the postfix expression of A+B*D*E/F+B*C
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。
+
+做法：先依優先順序（$*$、$/$ 高於 $+$、$-$）和左結合補上括號，再把每個運算子移到它那對括號的右括號
+位置（資結書第~6.3~節）。
+
+\textbf{第一個式子}。
+\[
+A+B-D*E/F+B*C = \Bigl(\bigl((A+B) - ((D*E)/F)\bigr) + (B*C)\Bigr).
+\]
+由內往外：$A+B \to AB+$；$(D*E)/F \to DE*F/$；相減 $\to AB+DE*F/-$；$B*C \to BC*$；最後相加
+$\to AB+DE*F/-BC*+$。 也可以用資結書虛擬碼~6.8 的堆疊做法逐字轉換，結果相同。
+
+\textbf{第二個式子}。
+\[
+A+B*D*E/F+B*C = \Bigl(\bigl(A + (((B*D)*E)/F)\bigr) + (B*C)\Bigr).
+\]
+$((B*D)*E)/F \to BD*E*F/$；加上 $A$ $\to ABD*E*F/+$；最後 $\to ABD*E*F/+BC*+$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對，和上面第一個結果相同。
+\item (B) 錯。 把 AB+DE*F/*BC-+ 還原：$AB+$ 是 $A+B$，$DE*F/$ 是 $D*E/F$，接著的 $*$ 把兩者相乘，
+$BC-$ 是 $B-C$，最後相加，得到 $(A+B)*(D*E/F) + (B-C)$，不是原式。
+\item (C) 錯。 AB*DE*F/+BC*+ 還原是 $(A*B) + (D*E/F) + (B*C)$，原式的 $A$ 是加上去的、$B$ 是和 $D$
+相乘，不一樣。
+\item (D) 對，和上面第二個結果相同。
+\end{itemize}
+\end{pastsoln}

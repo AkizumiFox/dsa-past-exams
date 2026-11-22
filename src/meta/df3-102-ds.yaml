@@ -1,0 +1,15 @@
+paper: df3-102-ds
+volume: 4
+school: 地方三等
+dept: 資訊處理
+year: 102
+year_word: 年
+subject: 資料結構
+instructions: ㈠禁止使用電子計算器。㈡不必抄題，作答時請將試題題號及答案依照順序寫在試卷上，於本試題上作答者，不予計分。
+questions:
+  - {id: df3-102-ds-01, label: 第一題, chapter: 21}
+  - {id: df3-102-ds-02, label: 第二題, chapter: A}
+  - {id: df3-102-ds-03, label: 第三題, chapter: 27}
+  - {id: df3-102-ds-04, label: 第四題, chapter: 25}
+  - {id: df3-102-ds-05, label: 第五題, chapter: 22}
+  - {id: df3-102-ds-06, label: 第六題, chapter: 7}

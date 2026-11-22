@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntu-114-dsa-09}]{臺大資網所 114 學年度 第 9 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Select all the correct statement(s) from the following statements regarding recurrence.
+\begin{enumerate}[label=(\Alph*)]
+\item The solution to the recurrence $T(n)=2T(n/2)+\Theta(n)$ is $\Theta(n^2)$.
+\item The solution to the recurrence $T(n)=7T(n/2)+\Theta(n^2)$ is $\Theta(n^{\lg 7})$.
+\item The solution to the recurrence $T(n)=\log n+T(\sqrt{n})$ is $\Theta(\log n)$.
+\item The solution to the recurrence $T(n)=2^nT(n-1)$ is $\Theta((\sqrt{2})^{n^2+n})$. (Assume $T(n)=1$ for $n$
+smaller than some constant $c$).
+\item The solution to the recurrence $T(n)=T(n/6)+T(7n/9)+O(n)$ is $O(n)$. (Assume $T(n)=1$ for $n$ smaller than
+some constant $c$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(C)、(D)、(E)。
+
+(A) 錯。 $a = 2$、$b = 2$，$n^{\log_2 2} = n$，$f(n) = \Theta(n)$，主定理情況 2，
+$T(n) = \Theta(n \lg n)$。 $n \lg n = o(n^2)$，不是同一級。
+
+(B) 對。 $a = 7$、$b = 2$，$\log_2 7 \approx 2.807$；$f(n) = \Theta(n^2) =
+O(n^{\log_2 7 - 0.8})$，情況 1，$T(n) = \Theta(n^{\lg 7})$。
+
+(C) 對。 $\log$ 以 $2$ 為底（換底只差常數倍）。 換變數（資結書第~2.2~節）：
+令 $m = \lg n$、$S(m) = T(2^m)$，$\sqrt{n} = 2^{m/2}$，得到 $S(m) = S(m/2) + m$。
+$a = 1$、$b = 2$，$m^{\log_2 1} = 1$，$f(m) = m = \Omega(m^{0 + 1})$，正則條件
+$1 \cdot (m/2) \le \frac{1}{2} m$，情況 3，$S(m) = \Theta(m)$，所以
+$T(n) = \Theta(\log n)$。 直接展開也看得出來：
+$\lg n + \frac{1}{2}\lg n + \frac{1}{4}\lg n + \cdots < 2\lg n$，第一項就是
+$\lg n$。
+
+(D) 對。 一直展開到基礎情況（資結書第~2.5~節「每次減一」的做法）：
+\[
+T(n) = 2^n \cdot 2^{n-1} \cdots 2^{c} \cdot T(c - 1) = 2^{\,n + (n-1) + \cdots + c}
+= 2^{\frac{n(n+1)}{2} - \frac{c(c-1)}{2}} .
+\]
+而 $(\sqrt{2})^{n^2 + n} = 2^{\frac{n(n+1)}{2}}$。 兩者的比是 $2^{-c(c-1)/2}$，一個
+和 $n$ 無關的正常數，所以 $\Theta$ 成立。 指數上的常數「倍」不能丟，但這裡指數上差的
+是常數「加減」，等於整個函數乘上一個常數。 （例如 $c = 3$ 時比值是 $1/8 = 2^{-3}$。）
+
+(E) 對。 $\frac{1}{6} + \frac{7}{9} = \frac{17}{18} < 1$，每一層的規模加起來是上一層
+的 $17/18$ 倍，和資結書第~2.6~節 $T(n/2) + T(n/3) + n$ 的例子同一型，根的工
+作最大。 用代換法：設 $O(n)$ 那一項不超過 $an$，假設比 $n$ 小的都有 $T(k) \le dk$，
+\[
+T(n) \le d\,\frac{n}{6} + d\,\frac{7n}{9} + an = \left(\frac{17}{18}d + a\right) n
+\le dn ,
+\]
+只要 $d \ge 18a$；$d$ 再取得不小於 $1$，基礎情況 $T(n) = 1 \le dn$ 也成立。 所以
+$T(n) = O(n)$。
+\end{pastsoln}

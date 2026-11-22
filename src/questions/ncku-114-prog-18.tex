@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-114-prog-18}]{成大資訊聯招 114 學年度 第 18 題}
+（填空）
+
+(10\%) The Floyd-Warshall algorithm can solve the all-pairs shortest-paths problem on a directed graph $G=(V,E)$. Let $d_{ij}^{(k)}$ be the weight of a shortest path from vertex $i$ to vertex $j$ for which all intermediate vertices are in the set $\{1,2,\ldots,k\}$ and $D^{(k)}=\left(d_{ij}^{(k)}\right)$ be a $n\times n$ matrix. Floyd-Warshall algorithm computes $D^{(k)}$ from $D^{(k-1)}$ as the following formula.
+
+$d_{ij}^{(k)}=$\underline{\hspace{5cm}}
+
+Please complete the above formula.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\[
+d_{ij}^{(k)} = \min\bigl(d_{ij}^{(k-1)},\ d_{ik}^{(k-1)} + d_{kj}^{(k-1)}\bigr) \quad (k \ge 1), \qquad d_{ij}^{(0)} = w_{ij}.
+\]
+
+\textbf{推導}（資結書第~25.6~節、虛擬碼~25.8）。 考慮從 $i$ 到 $j$、中間頂點都在 $\{1, \ldots, k\}$ 的最短路徑 $P$（沒有負環時可以取
+簡單路徑）：
+\begin{itemize}
+\item $k$ 不在 $P$ 的中間：$P$ 的中間頂點都在 $\{1, \ldots, k-1\}$，長度 $d_{ij}^{(k-1)}$。
+\item $k$ 在 $P$ 的中間：$P$ 是簡單路徑，$k$ 只出現一次，把 $P$ 在 $k$ 切成 $i \leadsto k$ 和 $k \leadsto j$ 兩段，兩段的中間頂點都在
+$\{1, \ldots, k-1\}$，而且各自都必須是最短的，長度 $d_{ik}^{(k-1)} + d_{kj}^{(k-1)}$。
+\end{itemize}
+兩者取小就是上式。 $k = 0$ 時不允許任何中間頂點，只能直接走邊：$d_{ij}^{(0)} = w_{ij}$（$i = j$ 時為 $0$，沒有邊時為 $\infty$）。
+從 $D^{(0)}$ 算到 $D^{(n)}$，每個矩陣 $n^2$ 格、每格 $O(1)$，總時間 $\Theta(n^3)$，$D^{(n)}$ 就是所有點對的最短距離。
+\end{pastsoln}

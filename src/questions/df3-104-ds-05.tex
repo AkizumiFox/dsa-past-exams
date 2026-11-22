@@ -1,0 +1,140 @@
+\begin{pastexam}[label={px:df3-104-ds-05}]{地方三等資訊處理 104 年 第五題}
+（申論；20 分）
+
+一個圖形（Graph）包含五個頂點（vertex），$V_1, V_2, \ldots, V_5$，其相鄰矩陣（adjacency
+matrix）
+\[
+A = \begin{bmatrix}
+0 & 3 & 1 & \infty & \infty \\
+3 & 0 & 1 & 7 & 6 \\
+1 & 1 & 0 & 5 & 2 \\
+\infty & 1 & 5 & 0 & 4 \\
+\infty & 6 & 2 & 4 & 0
+\end{bmatrix}\text{。}
+\]
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請使用 Floyd 的方法，計算此圖形的最短路徑長度矩陣（shortest path length matrix），
+表示任兩頂點間最短路徑長度。請依序列出最短路徑長度矩陣變化過程。（15 分）
+\item[㈡] 請使用 Kruskal 的方法，依序繪出加入此圖形的最小成本擴張樹（minimum cost spanning
+tree）每一邊的過程。（5 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{題目的矩陣不對稱}：$A[2][4] = 7$，但 $A[4][2] = 1$；其餘位置都對稱。 Floyd 方法對有向圖
+也適用，㈠就照矩陣原樣算，把 $A[i][j]$ 當成 $V_i \to V_j$ 的邊長。 Kruskal 方法只對無向圖有
+意義，㈡把 $V_2$--$V_4$ 這條邊的長度分成 $1$ 和 $7$ 兩種讀法都做（結果不同），其他邊照矩陣。
+
+\textbf{㈠ Floyd 方法}（資結書第~25.6~節）。 $D^{(0)} = A$，第 $k$ 輪允許經過 $V_k$：
+\[
+D^{(k)}[i][j] = \min\bigl(D^{(k-1)}[i][j],\ D^{(k-1)}[i][k] + D^{(k-1)}[k][j]\bigr).
+\]
+下面粗體是該輪變小的格子。
+
+$k = 1$（經過 $V_1$）：$V_1$ 只有往 $V_2$（$3$）、$V_3$（$1$）的邊，例如
+$D[2][3] = 1 < D[2][1] + D[1][3] = 4$，都不會變小，$D^{(1)} = D^{(0)}$。
+
+$k = 2$（經過 $V_2$）：$D[1][4] = 3 + 7 = 10$，$D[1][5] = 3 + 6 = 9$，$D[4][1] = 1 + 3 = 4$，
+$D[4][3] = \min(5, 1 + 1) = 2$，$D[5][1] = 6 + 3 = 9$。
+
+$k = 3$（經過 $V_3$）：$D[1][2] = \min(3, 1 + 1) = 2$，$D[1][4] = \min(10, 1 + 5) = 6$，
+$D[1][5] = \min(9, 1 + 2) = 3$，$D[2][1] = \min(3, 1 + 1) = 2$，$D[2][4] = \min(7, 1 + 5) = 6$，
+$D[2][5] = \min(6, 1 + 2) = 3$，$D[4][1] = \min(4, 2 + 1) = 3$，$D[5][1] = \min(9, 2 + 1) = 3$，
+$D[5][2] = \min(6, 2 + 1) = 3$。
+\[
+D^{(1)} = \begin{bmatrix}
+0 & 3 & 1 & \infty & \infty \\
+3 & 0 & 1 & 7 & 6 \\
+1 & 1 & 0 & 5 & 2 \\
+\infty & 1 & 5 & 0 & 4 \\
+\infty & 6 & 2 & 4 & 0
+\end{bmatrix}
+\quad
+D^{(2)} = \begin{bmatrix}
+0 & 3 & 1 & \mathbf{10} & \mathbf{9} \\
+3 & 0 & 1 & 7 & 6 \\
+1 & 1 & 0 & 5 & 2 \\
+\mathbf{4} & 1 & \mathbf{2} & 0 & 4 \\
+\mathbf{9} & 6 & 2 & 4 & 0
+\end{bmatrix}
+\quad
+D^{(3)} = \begin{bmatrix}
+0 & \mathbf{2} & 1 & \mathbf{6} & \mathbf{3} \\
+\mathbf{2} & 0 & 1 & \mathbf{6} & \mathbf{3} \\
+1 & 1 & 0 & 5 & 2 \\
+\mathbf{3} & 1 & 2 & 0 & 4 \\
+\mathbf{3} & \mathbf{3} & 2 & 4 & 0
+\end{bmatrix}
+\]
+$k = 4$（經過 $V_4$）：$V_4$ 出去的邊是 $V_4 \to V_2$（$1$）、$V_4 \to V_3$ 和 $V_4 \to V_5$，但
+進入 $V_4$ 的路徑都至少 $D[i][4] \ge 4$，逐格檢查都不會變小，例如 $D[1][2] = 2 < D[1][4] + D[4][2]
+= 7$。 $k = 5$（經過 $V_5$）：$D[i][5] + D[5][j]$ 也都不比現值小，例如 $D[1][4] = 6 <
+D[1][5] + D[5][4] = 3 + 4 = 7$。 所以 $D^{(5)} = D^{(4)} = D^{(3)}$，最短路徑長度矩陣是
+\[
+D^{(5)} = \begin{bmatrix}
+0 & 2 & 1 & 6 & 3 \\
+2 & 0 & 1 & 6 & 3 \\
+1 & 1 & 0 & 5 & 2 \\
+3 & 1 & 2 & 0 & 4 \\
+3 & 3 & 2 & 4 & 0
+\end{bmatrix}.
+\]
+例如 $V_1$ 到 $V_4$ 最短是 $V_1 \to V_3 \to V_4$（$1 + 5 = 6$），而 $V_4$ 到 $V_1$ 是
+$V_4 \to V_2 \to V_3 \to V_1$（$1 + 1 + 1 = 3$），兩個方向不同，正是因為 $A[2][4] \ne A[4][2]$。
+（若把矩陣改成對稱的，$V_2$--$V_4$ 取 $1$ 時最後一列是 $3, 1, 2, 0, 4$、$D[1][4] = 3$；取 $7$
+時 $D[1][4] = D[4][1] = 6$。）
+
+\textbf{㈡ Kruskal 方法}（資結書第~24.2~節）。 無向邊依長度排序，由小到大檢查，兩端已經連通（會
+成環）就跳過，加滿 $5 - 1 = 4$ 條為止。 長度相同的邊不論先看哪一條，結果都一樣。
+
+\textbf{讀法一：$V_2$--$V_4$ 長度 $1$。}
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 邊（長度） & 結果 & 加入後的連通塊 \\
+\midrule
+1 & $V_1$--$V_3$ (1) & 加入 & $\{V_1, V_3\}$ \\
+2 & $V_2$--$V_3$ (1) & 加入 & $\{V_1, V_2, V_3\}$ \\
+3 & $V_2$--$V_4$ (1) & 加入 & $\{V_1, V_2, V_3, V_4\}$ \\
+4 & $V_3$--$V_5$ (2) & 加入，共 4 條，結束 & 全部 \\
+\bottomrule
+\end{tabular}
+\end{center}
+總成本 $1 + 1 + 1 + 2 = 5$。
+
+\textbf{讀法二：$V_2$--$V_4$ 長度 $7$。}
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 邊（長度） & 結果 & 加入後的連通塊 \\
+\midrule
+1 & $V_1$--$V_3$ (1) & 加入 & $\{V_1, V_3\}$ \\
+2 & $V_2$--$V_3$ (1) & 加入 & $\{V_1, V_2, V_3\}$ \\
+3 & $V_3$--$V_5$ (2) & 加入 & $\{V_1, V_2, V_3, V_5\}$ \\
+4 & $V_1$--$V_2$ (3) & 跳過（$V_1$、$V_2$ 已連通） & \\
+5 & $V_4$--$V_5$ (4) & 加入，共 4 條，結束 & 全部 \\
+\bottomrule
+\end{tabular}
+\end{center}
+總成本 $1 + 1 + 2 + 4 = 8$。
+\begin{center}
+\begin{tikzpicture}[x=1.2cm, y=1.2cm,
+  v/.style={circle, draw, minimum size=7mm, inner sep=0pt, font=\small},
+  w/.style={fill=white, inner sep=1pt, font=\footnotesize}]
+\begin{scope}
+\node at (1.5,1.25) {讀法一};
+\node[v] (1) at (0,0) {$V_1$}; \node[v] (3) at (1.5,0) {$V_3$}; \node[v] (2) at (3,0) {$V_2$};
+\node[v] (5) at (1.5,-1.2) {$V_5$}; \node[v] (4) at (3,-1.2) {$V_4$};
+\draw[line width=1.4pt] (1)--node[w]{1}(3) (3)--node[w]{1}(2) (2)--node[w]{1}(4) (3)--node[w]{2}(5);
+\end{scope}
+\begin{scope}[xshift=5.5cm]
+\node at (1.5,1.25) {讀法二};
+\node[v] (1) at (0,0) {$V_1$}; \node[v] (3) at (1.5,0) {$V_3$}; \node[v] (2) at (3,0) {$V_2$};
+\node[v] (5) at (1.5,-1.2) {$V_5$}; \node[v] (4) at (3,-1.2) {$V_4$};
+\draw[line width=1.4pt] (1)--node[w]{1}(3) (3)--node[w]{1}(2) (3)--node[w]{2}(5) (5)--node[w]{4}(4);
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\end{pastsoln}

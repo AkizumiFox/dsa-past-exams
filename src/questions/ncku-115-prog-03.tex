@@ -1,0 +1,123 @@
+\begin{pastexam}[label={px:ncku-115-prog-03}]{成大資訊聯招 115 學年度 資料結構問答第 4 題}
+（問答）
+
+[4\%] For the number of nodes $n = 15$, what is the maximum possible height of an AVL
+tree, and what is the maximum possible height of a red-black tree? Note that the root is
+at level 1.\\
+\fbox{Answer format: AVL max possible height=?, Red-black tree max possible height =?}
+\end{pastexam}
+
+\begin{pastsoln}
+答：AVL max possible height=5, Red-black tree max possible height=6。
+
+題目說根在第 $1$ 層，高度數的是節點，和資結書的定義相同。
+
+\textbf{AVL 樹。} 由資結書第~10.2.2~節，高度 $h$ 的 AVL 樹最少有 $N(h)$
+個節點，$N(5) = 12 \le 15 < 20 = N(6)$。 高度 $6$ 至少要 $20$ 個節點，所以 $15$ 個節
+點的 AVL 樹高度最多 $5$。 高度 $5$ 做得到：根的左子樹用 $7$ 個節點的費氏樹
+（資結書圖~10.4 的 $h = 4$），右子樹用高度 $3$ 的滿二元樹（$7$ 個節點），共
+$15$ 個節點，根的平衡因子 $4 - 3 = +1$，下圖 (a)。
+
+\textbf{紅黑樹。} 資結書定理~10.4 只給出 $h \le 2\lg 16 = 8$，不夠精確，要
+直接算高度 $h$ 的紅黑樹最少有幾個節點。 取一條最長的路徑，從根往下經過 $v_1$（根）、
+$v_2$、……、$v_h$ 這 $h$ 個內部節點。 $v_h$ 的兩個子節點都是 NIL（否則路徑可以更長），
+所以 $\mathrm{bh}(v_h) = 1$。 記 $b_i = \mathrm{bh}(v_i)$，往上走時每經過一個黑色的
+$v_{i+1}$，黑高加 $1$：
+\[
+b_i = 1 + (v_{i+1}, \ldots, v_h \text{ 裡黑色節點的個數}).
+\]
+紅黑樹的第 4 條性質說紅色節點的子節點都是黑色（紅色不相連），所以 $v_{i+1}, \ldots, v_h$ 這 $h - i$ 個節點裡至少有
+$\lfloor (h - i)/2 \rfloor$ 個黑色，$b_i \ge 1 + \lfloor (h-i)/2 \rfloor$。
+
+$v_i$ 不在路徑上的那個子節點 $c_i$：是黑色時 $\mathrm{bh}(c_i) = b_i - 1$，是紅色時
+$\mathrm{bh}(c_i) = b_i$。 由資結書引理~10.3，以 $c_i$ 為根的子樹至少有
+$2^{b_i - 1} - 1$ 個內部節點（$c_i$ 是 NIL 時 $b_i = 1$，這個數是 $0$，也對）。 這些子
+樹互不重疊，也不含路徑上的節點，所以
+\[
+n \ge h + \sum_{i=1}^{h} \bigl(2^{b_i - 1} - 1\bigr).
+\]
+\begin{itemize}
+\item $h = 7$：$b_1, \ldots, b_7$ 至少是 $4, 3, 3, 2, 2, 1, 1$，
+$n \ge 7 + (7 + 3 + 3 + 1 + 1 + 0 + 0) = 22 > 15$。 所以 $15$ 個節點的紅黑樹高度不
+到 $7$。 高度 $h \ge 8$ 時，只看 $v_1, \ldots, v_7$ 這七項，$b_i \ge 1 + \lfloor (h-i)/2 \rfloor$ 只會更大，所以同樣 $n \ge 22$。
+\item $h = 6$：$b_i$ 至少是 $3, 3, 2, 2, 1, 1$，$n \ge 6 + (3 + 3 + 1 + 1) = 14$。 路徑
+取黑、紅、黑、紅、黑、紅，每個 $c_i$ 都取黑色而且節點最少，剛好 $14$ 個節點；再
+在路徑上第五個節點（黑色）空著的那一邊加一個紅色葉節點，不改變任何黑高，得到
+$15$ 個節點、高度 $6$ 的紅黑樹，下圖 (b)。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[x=0.42cm,y=0.62cm,baseline=(current bounding box.north),
+    tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small},
+    tnB/.style={tn, draw=black, fill=black!85, text=white},
+    tnR/.style={tn, draw={rgb,255:red,200;green,16;blue,46}, fill={rgb,255:red,200;green,16;blue,46}, text=white},
+    te/.style={draw=black!60}, plab/.style={font=\small}]
+\node[tn] (nka1) at (0,-4) {1};
+\node[tn] (nka2) at (1,-3) {2};
+\node[tn] (nka3) at (2,-2) {3};
+\node[tn] (nka4) at (3,-3) {4};
+\node[tn] (nka5) at (4,-1) {5};
+\node[tn] (nka6) at (5,-3) {6};
+\node[tn] (nka7) at (6,-2) {7};
+\node[tn] (nka8) at (7,0) {8};
+\node[tn] (nka9) at (8,-3) {9};
+\node[tn] (nka10) at (9,-2) {10};
+\node[tn] (nka11) at (10,-3) {11};
+\node[tn] (nka12) at (11,-1) {12};
+\node[tn] (nka13) at (12,-3) {13};
+\node[tn] (nka14) at (13,-2) {14};
+\node[tn] (nka15) at (14,-3) {15};
+\draw[te] (nka8) -- (nka5);
+\draw[te] (nka5) -- (nka3);
+\draw[te] (nka3) -- (nka2);
+\draw[te] (nka2) -- (nka1);
+\draw[te] (nka3) -- (nka4);
+\draw[te] (nka5) -- (nka7);
+\draw[te] (nka7) -- (nka6);
+\draw[te] (nka8) -- (nka12);
+\draw[te] (nka12) -- (nka10);
+\draw[te] (nka10) -- (nka9);
+\draw[te] (nka10) -- (nka11);
+\draw[te] (nka12) -- (nka14);
+\draw[te] (nka14) -- (nka13);
+\draw[te] (nka14) -- (nka15);
+\node[plab] at (7.0,-4.75) {(a) AVL 樹，高度 $5$};
+\end{tikzpicture}\hspace{1cm}\begin{tikzpicture}[x=0.42cm,y=0.62cm,baseline=(current bounding box.north),
+    tn/.style={circle, draw=black!65, minimum size=0.56cm, inner sep=0pt, font=\small},
+    tnB/.style={tn, draw=black, fill=black!85, text=white},
+    tnR/.style={tn, draw={rgb,255:red,200;green,16;blue,46}, fill={rgb,255:red,200;green,16;blue,46}, text=white},
+    te/.style={draw=black!60}, plab/.style={font=\small}]
+\node[tnR] (nkr1) at (0,-5) {1};
+\node[tnB] (nkr2) at (1,-4) {2};
+\node[tnR] (nkr3) at (2,-5) {3};
+\node[tnR] (nkr4) at (3,-3) {4};
+\node[tnB] (nkr5) at (4,-4) {5};
+\node[tnB] (nkr6) at (5,-2) {6};
+\node[tnB] (nkr7) at (6,-3) {7};
+\node[tnR] (nkr8) at (7,-1) {8};
+\node[tnB] (nkr9) at (8,-3) {9};
+\node[tnB] (nkr10) at (9,-2) {10};
+\node[tnB] (nkr11) at (10,-3) {11};
+\node[tnB] (nkr12) at (11,0) {12};
+\node[tnB] (nkr13) at (12,-2) {13};
+\node[tnB] (nkr14) at (13,-1) {14};
+\node[tnB] (nkr15) at (14,-2) {15};
+\draw[te] (nkr12) -- (nkr8);
+\draw[te] (nkr8) -- (nkr6);
+\draw[te] (nkr6) -- (nkr4);
+\draw[te] (nkr4) -- (nkr2);
+\draw[te] (nkr2) -- (nkr1);
+\draw[te] (nkr2) -- (nkr3);
+\draw[te] (nkr4) -- (nkr5);
+\draw[te] (nkr6) -- (nkr7);
+\draw[te] (nkr8) -- (nkr10);
+\draw[te] (nkr10) -- (nkr9);
+\draw[te] (nkr10) -- (nkr11);
+\draw[te] (nkr12) -- (nkr14);
+\draw[te] (nkr14) -- (nkr13);
+\draw[te] (nkr14) -- (nkr15);
+\node[plab] at (7.0,-5.75) {(b) 紅黑樹，高度 $6$};
+\end{tikzpicture}
+\end{center}
+(b) 從根到任何 NIL 都經過 $3$ 個黑色（不算根、算 NIL），沒有紅色節點相連。 高度 $1$ 到 $7$ 的紅黑樹最少依序有 $1, 2, 4, 6, 10, 14, 22$ 個節點，和上面的
+推導一致。
+\end{pastsoln}

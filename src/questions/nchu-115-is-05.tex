@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:nchu-115-is-05}]{中興資工所乙組 115 學年度 第 5 題}
+（單選；每題 2 分，答錯不倒扣）
+
+The inorder traversal of a binary search tree gives --
+
+A.~Random order \qquad B.~Descending order \qquad C.~Sorted order \qquad D.~None of above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+二元搜尋樹的性質：每個節點左子樹的鍵都不大於它、右子樹的鍵都不小於它。 中序走訪先走左子樹、
+再印自己、再走右子樹，所以印出的順序由小到大（資結書定理~9.1，第~9.1~節）。 用對子樹大小的
+歸納法：左子樹印出的是比根小的那些鍵、已經排好；接著印根；再印比根大的那些、也已經排好，
+整串就是排好的。
+\begin{itemize}
+\item A 錯：順序完全由 BST 性質決定，不是隨機的。
+\item B 錯：一般的中序（左、根、右）是由小到大。 由大到小要把順序反過來走（右、根、左）。
+\item C 對。 題目的 sorted order 指由小到大，也就是 B 以外的那個方向。
+\item D 錯：C 是對的。
+\end{itemize}
+\end{pastsoln}

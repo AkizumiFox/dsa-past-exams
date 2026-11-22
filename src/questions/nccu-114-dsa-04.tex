@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:nccu-114-dsa-04}]{政大資科所 114 學年度 第 4 題}
+（單選；每題 4 分）
+
+(4\%) Which of the following statement concerning hashing is false?
+\begin{enumerate}[label=\Alph*.]
+\item While hash function is designed based on arithmetic operation, hashing is also suitable for
+strings.
+\item If there is no collision, the worst time complexity for searching an element in a hash table
+is O(1).
+\item A good hash function should produce the same hash value for similar keys.
+\item Hashing is typically used for symbol tables in compilers.
+\item The size of the hash table should ideally be a prime number to reduce the likelihood of
+collisions.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+逐項檢查：
+\begin{itemize}
+\item A.~對。 字串先轉成整數再雜湊，例如把字元當成某個底數的各位數字，用 Horner 法則算
+$\sum c_i \cdot b^{k-1-i} \bmod m$（資結書第~12.1~節）。 雜湊函數是算術運算，但輸入可以是字串。
+\item B.~對。 沒有碰撞時，每個鍵算出的位置裡只有它自己，搜尋就是算一次雜湊值、看一格，
+$O(1)$（假設算雜湊值本身是 $O(1)$）。
+\item C.~錯，這就是答案。 好的雜湊函數要讓鍵\textbf{均勻分散}到各個位置（簡單均勻雜湊的假設，資結書
+第~12.1~節）。 實際的鍵常常很像，例如變數名稱 \texttt{x1}、\texttt{x2}、\texttt{x3}，如果相似的鍵
+算出相同的雜湊值，它們全部擠在同一格，搜尋退化成線性。 好的雜湊函數應該讓相似的鍵得到\textbf{不同}的
+雜湊值。
+\item D.~對。 編譯器的符號表要用名稱快速查出變數的型別、位址等資料，插入和查詢都很頻繁、幾乎
+不需要依序走訪，是雜湊表的典型用途。
+\item E.~對。 除法雜湊 $h(k) = k \bmod m$ 時，$m$ 取質數（而且不要太靠近 $2$ 的次方），鍵的規律
+（例如都是偶數、都是某個數的倍數）比較不會讓它們集中在少數幾格。 這是教科書的標準建議。
+\end{itemize}
+\end{pastsoln}

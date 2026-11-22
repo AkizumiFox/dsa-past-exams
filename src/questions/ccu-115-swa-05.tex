@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ccu-115-swa-05}]{中正資工所甲組 115 學年度 第 15 題}
+（複選；全對才給分）
+
+(2\%) (\qquad) Assume a hash table with 9 slots that uses linear probing and the hash function
+$h(k)$=$k$ mod 9. Insert the keys 8, 17, 26, 35, 44, 0, 9 into the table in this order. Show the
+resulting array representation of the hash table (use ``--'' for empty slots).\\
+(a)~[0, 9, 35, 44, --, 17, 26, --, 8] \qquad (b)~[17, 9, 0, 26, 35, 44, --, --, 8]\\
+(c)~[0, 17, 26, 35, 44, 9, --, --, 8] \qquad (d)~[17, 26, 35, 44, 0, 9, --, --, 8]\\
+(e)~none of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(d)。
+
+線性探測（資結書第~12.3~節）：先試 $h(k) = k \bmod 9$，被占了就試下一格，到第 $8$ 格再繞回第 $0$ 格。
+前五個鍵 $8, 17, 26, 35, 44$ 除以 $9$ 都餘 $8$，全部從第 $8$ 格開始排隊。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+鍵 & $h(k)$ & 探測的格子 & 放進 \\
+\midrule
+8 & 8 & 8 & 8 \\
+17 & 8 & 8（占）, 0 & 0 \\
+26 & 8 & 8, 0（占）, 1 & 1 \\
+35 & 8 & 8, 0, 1（占）, 2 & 2 \\
+44 & 8 & 8, 0, 1, 2（占）, 3 & 3 \\
+0 & 0 & 0, 1, 2, 3（占）, 4 & 4 \\
+9 & 0 & 0, 1, 2, 3, 4（占）, 5 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果（第 $0$ 到第 $8$ 格）是 $[17, 26, 35, 44, 0, 9, -, -, 8]$，就是 (d)。 這題正好示範主要群聚：
+$0$、$9$ 本來雜湊到第 $0$ 格，卻被前面那一長串擠到第 $4$、$5$ 格。
+\begin{itemize}
+\item (a) 錯：把 $0, 9$ 放在第 $0, 1$ 格，等於先放了它們，順序不對；$17$、$26$ 的位置也錯。
+\item (b) 錯：$9$ 不會在第 $1$ 格，那時第 $1$ 格已經是 $26$。
+\item (c) 錯：$17$ 繞回後放在第 $0$ 格，不是第 $1$ 格；$0$ 不會在第 $0$ 格。
+\item (e) 錯，(d) 對。
+\end{itemize}
+\end{pastsoln}

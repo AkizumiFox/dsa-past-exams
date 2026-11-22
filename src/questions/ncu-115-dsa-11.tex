@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:ncu-115-dsa-11}]{中央資工所 115 學年度 第 11 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1 分）
+
+Given a weighted directed graph G (V, E) below.
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,thick,minimum size=6.5mm,inner sep=0pt,font=\footnotesize\sffamily\bfseries},>=Stealth,x=1.15cm,y=1.15cm]
+\node[v] (A) at (0,1.91) {A};
+\node[v] (E) at (2.35,2.29) {E};
+\node[v] (C) at (1.69,1.35) {C};
+\node[v] (B) at (0.59,0.38) {B};
+\node[v] (D) at (2.64,0) {D};
+\node[v] (G) at (3.66,1.22) {G};
+\node[v] (F) at (5.28,1.98) {F};
+\node[left=1.5mm of A,font=\sffamily] {Start};
+\node[right=1.5mm of F,font=\sffamily] {Finish};
+\foreach \u/\w in {A/E,A/C,A/B,B/C,B/D,C/G,C/D,E/F,E/G,D/G,G/F}
+  \draw[->,thick] (\u) -- (\w);
+\end{tikzpicture}
+\end{center}
+Which of the following statement(s) about G is (are) true?
+\begin{enumerate}[label=\Alph*.]
+\item ACEGFBD is a possible topological order of the network if G is an activity-on-vertex (AOV) network.
+\item ABECGFD is a possible topological order of the network if G is an AOV network.
+\item Suppose G is an AOE network. If each task takes exactly one day, then ABCDGF is a critical path.
+\item Suppose G is an AOE network. If each activity takes one day except the activity on the directed edge (A, E), which takes three days, then AEGF is a critical path.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：C、D。
+
+圖上沒有標權重，A、B 只用到邊的方向；C、D 自己給了每個活動的天數。 C 的「task」照 AOE 網路的
+用語讀成活動，也就是每條邊。 圖有 $11$ 條邊：
+$A \to B$、$A \to C$、$A \to E$、$B \to C$、$B \to D$、$C \to D$、$C \to G$、$D \to G$、$E \to F$、
+$E \to G$、$G \to F$。
+
+\textbf{A 錯}。 拓樸順序要求每條邊 $u \to v$ 的 $u$ 都排在 $v$ 前面（資結書第~22.4~節）。
+ACEGFBD 裡 $C$ 排在 $B$ 前面，但有邊 $B \to C$；$G$ 排在 $D$ 前面，但有邊 $D \to G$。 不是拓樸順序。
+
+\textbf{B 錯}。 ABECGFD 把 $D$ 排在最後，但有邊 $D \to G$，$D$ 必須在 $G$ 前面。 不是拓樸順序。
+
+\textbf{C 對}。 照資結書第~22.5~節，先依拓樸順序 $A, B, C, D, E, G, F$ 往前算每個事件的最早時間
+$\mathit{ee}$（取所有進來的邊的最大值），再從終點 $F$ 倒著算最晚時間 $\mathit{le}$（取所有出去的邊
+的最小值）。 每條邊 $1$ 天：
+\begin{center}
+\small
+\begin{tabular}{c|ccccccc}
+事件 & $A$ & $B$ & $C$ & $D$ & $E$ & $G$ & $F$ \\ \hline
+$\mathit{ee}$ & 0 & 1 & 2 & 3 & 1 & 4 & 5 \\
+$\mathit{le}$ & 0 & 1 & 2 & 3 & 3 & 4 & 5 \\
+\end{tabular}
+\end{center}
+例如 $\mathit{ee}[C] = \max(\mathit{ee}[A] + 1,\ \mathit{ee}[B] + 1) = 2$，
+$\mathit{ee}[G] = \max(\mathit{ee}[C] + 1,\ \mathit{ee}[D] + 1,\ \mathit{ee}[E] + 1) = 4$；
+$\mathit{le}[E] = \min(\mathit{le}[F] - 1,\ \mathit{le}[G] - 1) = 3$，
+$\mathit{le}[A] = \min(\mathit{le}[B] - 1,\ \mathit{le}[C] - 1,\ \mathit{le}[E] - 1) = 0$。
+活動 $u \to v$ 是關鍵活動若且唯若 $\mathit{ee}[u] = \mathit{le}[v] - (\text{天數})$，也就是沒有寬裕時間。
+逐邊檢查，關鍵活動是 $A \to B$、$B \to C$、$C \to D$、$D \to G$、$G \to F$，其他六條都有寬裕
+（例如 $A \to C$：$\mathit{le}[C] - 1 - \mathit{ee}[A] = 1$；$A \to E$：$3 - 1 - 0 = 2$）。 關鍵路徑只有
+一條：ABCDGF，長度 $5$ 天，也就是整個工程最短要 $5$ 天。
+
+\textbf{D 對}。 把 $A \to E$ 改成 $3$ 天，其他不變：
+\begin{center}
+\small
+\begin{tabular}{c|ccccccc}
+事件 & $A$ & $B$ & $C$ & $D$ & $E$ & $G$ & $F$ \\ \hline
+$\mathit{ee}$ & 0 & 1 & 2 & 3 & 3 & 4 & 5 \\
+$\mathit{le}$ & 0 & 1 & 2 & 3 & 3 & 4 & 5 \\
+\end{tabular}
+\end{center}
+$\mathit{ee}[E] = 0 + 3 = 3$，$\mathit{ee}[G] = \max(2 + 1, 3 + 1, 3 + 1) = 4$，$\mathit{ee}[F] =
+\max(3 + 1, 4 + 1) = 5$，總工期仍是 $5$ 天。 $A \to E$：$\mathit{le}[E] - 3 - \mathit{ee}[A] = 0$；
+$E \to G$：$4 - 1 - 3 = 0$；$G \to F$：$5 - 1 - 4 = 0$，三條都是關鍵活動，AEGF 長
+$3 + 1 + 1 = 5$，是一條關鍵路徑（ABCDGF 也還是，$E \to F$ 有 $1$ 天寬裕）。 關鍵路徑可以不只一條，
+題目說「a critical path」，成立。
+\end{pastsoln}

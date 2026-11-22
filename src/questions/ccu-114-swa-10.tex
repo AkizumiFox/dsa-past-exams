@@ -1,0 +1,76 @@
+\begin{pastexam}[label={px:ccu-114-swa-10}]{中正資工所甲組 114 學年度 第 10 題}
+（複選）
+
+(5\%) (Select \underline{multiple} correct answers) Given a graph at the right side, which of the
+following statements is (are) true?
+
+\begin{center}
+\begin{tikzpicture}[x=0.01cm,y=-0.01cm,v/.style={circle,draw,minimum size=8mm,inner sep=0pt,font=\sffamily},>={Latex[length=2.6mm]},every node/.style={font=\sffamily\small}]
+\node[v] (A) at (105,335) {A}; \node[v] (B) at (405,95) {B}; \node[v] (C) at (745,165) {C};
+\node[v] (D) at (905,400) {D}; \node[v] (E) at (655,635) {E}; \node[v] (F) at (285,635) {F};
+\draw[->] (A)--node[above left=-2pt]{16}(B);
+\draw[->] (A)--node[left]{13}(F);
+\draw[->] (B)--node[above]{12}(C);
+\draw[->] (B.258)--node[left,pos=0.42]{10}(F.98);
+\draw[->] (F.62)--node[right,pos=0.4]{4}(B.290);
+\draw[->] (C)--node[above left]{9}(F);
+\draw[->] (C)--node[right=2pt,pos=0.4]{20}(D);
+\draw[->] (E)--node[right,pos=0.52]{7}(C);
+\draw[->] (E)--node[below right=-2pt]{4}(D);
+\draw[->] (F)--node[below]{14}(E);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=(\alph*)]
+\item Kruskal algorithm is applicable to find a correct answer.
+\item Given the necessary inputs, executing Floyd-Warshall algorithm on this graph takes more time than
+executing Bellman-Ford algorithm.
+\item If specifying node A as the source and node D as the sink, executing Edmonds-Karp algorithm will
+return us `24' as an answer.
+\item Topological sort is applicable to find a correct answer.
+\item Node B, C, E, F form a strongly connected component.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(e)。
+
+原卷的圖在選項右邊，這裡排在上面。 圖有 $V = 6$ 個頂點、$E = 10$ 條有向邊：$A \to B$ (16)、$A \to F$ (13)、
+$B \to C$ (12)、$B \to F$ (10)、$F \to B$ (4)、$C \to F$ (9)、$C \to D$ (20)、$E \to C$ (7)、$E \to D$ (4)、
+$F \to E$ (14)。 (a)(d) 說的「a correct answer」沒有說是什麼問題的答案，由 (c) 看來是這張圖上的最大流，
+不過不論指哪個問題，下面的理由都成立。 本題混合了第~22~到~26~章的內容，計算量最大的是 (c) 的最大流，
+所以放在第~26~章。
+
+\textbf{(c) 錯：最大流是 $23$}。 Edmonds--Karp（資結書第~26.4~節）每次在剩餘網路上用 BFS 找邊數最少的
+增廣路徑（同一層的鄰點依字母順序）：
+\begin{center}
+\small
+\begin{tabular}{llcc}
+\toprule
+次 & 增廣路徑 & 瓶頸 & 累計流量 \\
+\midrule
+1 & $A \to B \to C \to D$ & $\min(16, 12, 20) = 12$ & $12$ \\
+2 & $A \to F \to E \to D$ & $\min(13, 14, 4) = 4$ & $16$ \\
+3 & $A \to F \to E \to C \to D$ & $\min(9, 10, 7, 8) = 7$ & $23$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 $3$ 次時 $A \to F$ 剩 $13 - 4 = 9$，$F \to E$ 剩 $14 - 4 = 10$，$C \to D$ 剩 $20 - 12 = 8$。 之後剩餘網路
+裡從 $A$ 走得到的點是 $\{A, B, E, F\}$（$B \to C$ 已滿，$E \to C$、$E \to D$ 已滿），走不到 $D$，演算法
+停止。 對應的割 $(\{A, B, E, F\}, \{C, D\})$ 的容量是 $c(B, C) + c(E, C) + c(E, D) = 12 + 7 + 4 = 23$
+（$C \to F$ 是從右往左的邊，不算），和流量相等，由最大流最小割定理（資結書第~26.5~節），最大流是 $23$，
+不是 $24$。 （這張圖就是 CLRS 流網路一章的範例，答案 $23$。）
+
+\textbf{(e) 對}。 $B \to C \to F \to B$ 是一個環，$F \to E \to C$ 又把 $E$ 接進來：$B$、$C$、$E$、$F$ 兩兩
+互相走得到。 $A$ 沒有進來的邊、$D$ 沒有出去的邊，都各自是一個強連通元件。 所以 $\{B, C, E, F\}$ 是一個
+強連通元件（資結書第~23~章）。
+
+\textbf{(a) 錯}。 Kruskal 求的是\textbf{無向}圖的最小生成樹（資結書第~24.2~節），解決不了有向圖的最大流
+或最短路徑問題。
+
+\textbf{(b) 對}。 Floyd--Warshall 的時間是 $\Theta(V^3) = 6^3 = 216$ 個單位，Bellman--Ford 是
+$\Theta(VE)$，約 $6 \times 10 = 60$ 個單位（資結書第~25.3、25.6~節）。 這張圖 $E < V^2$，前者花的時間
+較多。 （前者求所有點對、後者只求單一源點，題目比的是執行時間，不是能力。）
+
+\textbf{(d) 錯}。 拓樸排序只適用於沒有環的有向圖（資結書第~22~章）；這張圖有環 $B \to F \to B$、
+$B \to C \to F \to B$，排不出拓樸順序。
+\end{pastsoln}

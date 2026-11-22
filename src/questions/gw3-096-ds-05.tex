@@ -1,0 +1,77 @@
+\begin{pastexam}[label={px:gw3-096-ds-05}]{關務三等資訊處理 96 年 第五題}
+（申論；25 分）
+
+下列為一個環狀串列（Circular Queue）中加入與刪除一個元素的演算法：
+\begin{quote}
+\begin{tabbing}
+\hspace*{1.5em}\=\kill
+Procedure ADDQ(item,Q,n,front,rear)\\
+\> rear$\leftarrow$(rear+1) mod n\\
+\> if front=rear then call QUEUE\_FULL\\
+\> Q(rear)$\leftarrow$item\\
+end ADDQ\\
+Procedure DELETEQ(item,Q,n,front,rear)\\
+\> if front=rear then call QUEUE\_EMPTY\\
+\> front$\leftarrow$(front+1) mod n\\
+\> item$\leftarrow$Q(front)\\
+end DELETEQ
+\end{tabbing}
+\end{quote}
+\begin{itemize}[leftmargin=2.2em, nosep]
+\item[㈠] 在演算法 ADDQ 中當 front=rear 時發生溢位（Overflow），實際上還有一個空間，請說明為何不使用呢？（5 分）
+\item[㈡] 若欲使用此一空間，則 ADDQ 及 DELETEQ 應如何改寫，試寫出他們修改後的 ADDQ 及 DELETEQ 演算法。（20 分）
+\end{itemize}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：㈠ 因為空佇列的條件就是 $\mathit{front} = \mathit{rear}$，把最後一格也填滿會使滿佇列同樣是 $\mathit{front} = \mathit{rear}$，
+分不出空還是滿。 ㈡ 多用一個旗標 $\mathit{tag}$ 記錄「上一次讓兩者相等的是加入還是刪除」，演算法在下面。
+
+\textbf{題目演算法的約定。} $Q(0..n-1)$，$\mathit{front}$ 指向第一個元素的\textbf{前一格}，$\mathit{rear}$ 指向最後一個
+元素，開始時 $\mathit{front} = \mathit{rear} = 0$。 刪除時先把 $\mathit{front}$ 前進一格再取值。 元素個數是
+$(\mathit{rear} - \mathit{front}) \bmod n$（資結書第~6.2~節）。
+
+\textbf{㈠} 空佇列的判斷是 $\mathit{front} = \mathit{rear}$。 假設允許放滿 $n$ 個：從空佇列（$\mathit{front} = \mathit{rear}$）
+連續加入 $n$ 個，$\mathit{rear}$ 前進 $n$ 格繞了一整圈，又回到 $\mathit{front}$，滿的時候也是 $\mathit{front} = \mathit{rear}$。
+兩個指標只有 $n$ 種相對位置（差 $0, 1, \dots, n - 1$），卻要表示 $0$ 到 $n$ 共 $n + 1$ 種元素個數，一定有兩種撞在一起。
+所以 ADDQ 在 $\mathit{rear}$ 前進後碰到 $\mathit{front}$ 就宣告溢位，犧牲 $\mathit{front}$ 那一格，最多只放 $n - 1$ 個，
+空和滿才分得開。 （順帶一提，原來的 ADDQ 在宣告溢位前已經把 $\mathit{rear}$ 往前移了，QUEUE\_FULL 處理時應該把它退回
+原位，否則佇列狀態被破壞；下面的寫法先判斷再移動，沒有這個問題。）
+
+\textbf{㈡ 改寫。} 加一個變數 $\mathit{tag}$：$\mathit{front} = \mathit{rear}$ 時，$\mathit{tag} = 1$ 表示滿、$\mathit{tag} = 0$ 表示空。
+開始時 $\mathit{front} = \mathit{rear} = 0$、$\mathit{tag} = 0$。
+\begin{pseudo}{使用全部 $n$ 格的環狀佇列}
+\Procedure{AddQ}{$\mathit{item}, Q, n, \mathit{front}, \mathit{rear}, \mathit{tag}$}
+    \If{$\mathit{front} = \mathit{rear}$ 且 $\mathit{tag} = 1$}
+        \State \Call{Queue-Full}{} \Comment{$n$ 格都滿了}
+    \EndIf
+    \State $\mathit{rear} \gets (\mathit{rear} + 1) \bmod n$
+    \State $Q(\mathit{rear}) \gets \mathit{item}$
+    \If{$\mathit{front} = \mathit{rear}$}
+        \State $\mathit{tag} \gets 1$ \Comment{加入後追上 front：滿}
+    \EndIf
+\EndProcedure
+\Statex
+\Procedure{DeleteQ}{$\mathit{item}, Q, n, \mathit{front}, \mathit{rear}, \mathit{tag}$}
+    \If{$\mathit{front} = \mathit{rear}$ 且 $\mathit{tag} = 0$}
+        \State \Call{Queue-Empty}{}
+    \EndIf
+    \State $\mathit{front} \gets (\mathit{front} + 1) \bmod n$
+    \State $\mathit{item} \gets Q(\mathit{front})$
+    \State $\mathit{tag} \gets 0$ \Comment{刪除後一定不滿}
+\EndProcedure
+\end{pseudo}
+（QUEUE\_FULL、QUEUE\_EMPTY 和原題一樣，處理錯誤後不再往下執行。）
+
+\textbf{正確性。} 維持的性質是：$\mathit{front} = \mathit{rear}$ 時，$\mathit{tag} = 1$ 恰好表示佇列有 $n$ 個元素，
+$\mathit{tag} = 0$ 恰好表示 $0$ 個；$\mathit{front} \ne \mathit{rear}$ 時 $\mathit{tag} = 0$。
+\begin{itemize}
+\item 開始時空佇列，$\mathit{tag} = 0$，成立。
+\item AddQ 只在不滿時執行。 加入後元素個數變成 $k + 1$；$\mathit{rear}$ 追上 $\mathit{front}$ 正好表示 $k + 1 = n$，此時設
+$\mathit{tag} = 1$；否則 $\mathit{front} \ne \mathit{rear}$，$\mathit{tag}$ 原本是 $0$（不滿），維持 $0$。
+\item DeleteQ 只在不空時執行。 刪除後個數 $\le n - 1$，不可能滿，設 $\mathit{tag} = 0$；若此時 $\mathit{front} = \mathit{rear}$，
+就表示剛好刪成空佇列，和 $\mathit{tag} = 0$ 的意思一致。
+\end{itemize}
+於是 $n$ 格都能用。 每個操作仍是 $O(1)$，代價是每次多一個判斷和指定。 另一種做法是用一個計數器 $\mathit{count}$ 記錄
+元素個數，$\mathit{count} = 0$ 為空、$\mathit{count} = n$ 為滿，效果相同。
+\end{pastsoln}

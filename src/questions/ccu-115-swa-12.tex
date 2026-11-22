@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ccu-115-swa-12}]{中正資工所甲組 115 學年度 第 22 題}
+（複選；全對才給分）
+
+(3\%) (\qquad) Given the following failure function in the KMP string-matching algorithm and a
+string ``AAABAAAABAAAB'' with 13 characters, what are the values of the failure function for the
+entire string?
+\[
+f(j)=\begin{cases}\text{largest } k<j,\text{ such that } p_0p_1\ldots p_k=p_{j-k}p_{j-k+1}\ldots p_j,
+\text{ if such a } k\ge 0 \text{ exists}\\
+\qquad -1,\quad \text{otherwise}\end{cases}
+\]
+(a)~-1, 0, 1, -1, 0, 1, 2, 0, -1, 0, 1, 2, 3 \qquad (b)~-1, 0, 1, 0, 1, 2, 2, 2, 3, 4, 5, 6, -1\\
+(c)~-1, 0, 1, -1, 0, 1, 2, 2, 3, 4, 5, 6, 3 \qquad (d)~-1, -1, 0, -1, -1, 0, 1, 2, 3, 4, 5, 6, 3\\
+(e)~none of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)。
+
+題目的 $f$ 從 $0$ 編號：$p_0 \cdots p_k$ 是長度 $k + 1$ 的前綴，$k < j$ 表示它是 $p_0 \cdots p_j$
+的真前綴，所以 $f(j) + 1$ 就是 $p_0 \cdots p_j$ 最長邊界（既是前綴又是後綴的真子字串）的長度。
+這是 Horowitz 課本的寫法，和資結書的 $\pi$ 的關係是 $f(j) = \pi[j + 1] - 1$（資結書第~27.3~節）。
+先用資結書虛擬碼~27.3 的 \proc{Compute-Failure} 算 $\pi[1..13]$（$P[1..13] = \mathtt{AAABAAAABAAAB}$），
+再整排減 $1$。 每一列的 $k$ 是處理第 $q$ 個字元之前目前的邊界長度：
+\begin{center}
+\small
+\begin{tabular}{ccc>{\raggedright\arraybackslash}p{0.56\linewidth}c}
+\toprule
+$q$ & $P[q]$ & 開始的 $k$ & 比較 & $\pi[q]$ \\
+\midrule
+1 & \texttt{A} & & 定義 & 0 \\
+2 & \texttt{A} & 0 & $P[1]=\mathtt{A}$ 相同，$k\gets1$ & 1 \\
+3 & \texttt{A} & 1 & $P[2]=\mathtt{A}$ 相同，$k\gets2$ & 2 \\
+4 & \texttt{B} & 2 & $P[3]=\mathtt{A}\ne\mathtt{B}$，$k\gets\pi[2]=1$；$P[2]=\mathtt{A}\ne\mathtt{B}$，$k\gets\pi[1]=0$；$P[1]=\mathtt{A}\ne\mathtt{B}$ & 0 \\
+5 & \texttt{A} & 0 & $P[1]=\mathtt{A}$ 相同，$k\gets1$ & 1 \\
+6 & \texttt{A} & 1 & $P[2]=\mathtt{A}$ 相同，$k\gets2$ & 2 \\
+7 & \texttt{A} & 2 & $P[3]=\mathtt{A}$ 相同，$k\gets3$ & 3 \\
+8 & \texttt{A} & 3 & $P[4]=\mathtt{B}\ne\mathtt{A}$，$k\gets\pi[3]=2$；$P[3]=\mathtt{A}$ 相同，$k\gets3$ & 3 \\
+9 & \texttt{B} & 3 & $P[4]=\mathtt{B}$ 相同，$k\gets4$ & 4 \\
+10 & \texttt{A} & 4 & $P[5]=\mathtt{A}$ 相同，$k\gets5$ & 5 \\
+11 & \texttt{A} & 5 & $P[6]=\mathtt{A}$ 相同，$k\gets6$ & 6 \\
+12 & \texttt{A} & 6 & $P[7]=\mathtt{A}$ 相同，$k\gets7$ & 7 \\
+13 & \texttt{B} & 7 & $P[8]=\mathtt{A}\ne\mathtt{B}$，$k\gets\pi[7]=3$；$P[4]=\mathtt{B}$ 相同，$k\gets4$ & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$\pi = 0, 1, 2, 0, 1, 2, 3, 3, 4, 5, 6, 7, 4$，減 $1$ 得
+$f = -1, 0, 1, -1, 0, 1, 2, 2, 3, 4, 5, 6, 3$，正是 (c)。 其他選項（$j$ 從 $0$ 數）：
+\begin{itemize}
+\item (a) 從 $f(7)$ 起就錯。 $p_0 \cdots p_7 = \mathtt{AAABAAAA}$，結尾的 \texttt{AAA} 也是開頭，
+$f(7) = 2$，不是 $0$；$f(8)$ 到 $f(11)$ 也都不對。
+\item (b) $f(3) = 0$ 錯：$p_0 \cdots p_3 = \mathtt{AAAB}$ 以 \texttt{B} 結尾，而長度不到 $4$ 的前綴都
+不含 \texttt{B}，沒有非空的邊界，$f(3) = -1$。 $f(12) = -1$ 也錯：\texttt{AAAB} 同時是整個字串的
+前綴和後綴，$f(12) = 3$。
+\item (d) $f(1) = -1$ 錯：$p_0 = p_1 = \mathtt{A}$，$f(1) = 0$。
+\item (e) 錯，因為 (c) 對。
+\end{itemize}
+\end{pastsoln}

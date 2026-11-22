@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntust-114-ice-13}]{臺科大資工所 114 學年度 第 13 題}
+（填空；每格 5 分）
+
+(5\%) Consider a binary min-heap of height $h$, where the root node is at height 1. Let $\alpha$ be
+the minimum number of elements in such a heap and $\beta$ be the maximum number of elements. What
+is the value of $\alpha-\beta$? \blank{D}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D) $\alpha - \beta = 1 - 2^{h-1}$。
+
+二元堆積是完全二元樹（資結書第~8.1~節）：除了最下面一層，每層都是滿的，最下面一層從左邊開始放。 根在
+第 $1$ 層，高度 $h$ 表示有 $h$ 層，第 $k$ 層最多 $2^{k-1}$ 個節點。
+\begin{itemize}
+\item 最少：前 $h - 1$ 層全滿，第 $h$ 層只有 $1$ 個，
+$\alpha = (1 + 2 + \cdots + 2^{h-2}) + 1 = (2^{h-1} - 1) + 1 = 2^{h-1}$。
+\item 最多：$h$ 層全滿，$\beta = 1 + 2 + \cdots + 2^{h-1} = 2^h - 1$。
+\end{itemize}
+\[
+\alpha - \beta = 2^{h-1} - (2^h - 1) = 1 - 2^{h-1}.
+\]
+例如 $h = 3$：最少 $4$ 個、最多 $7$ 個，差 $-3 = 1 - 2^2$。 是最小堆積還是最大堆積不影響，只和完全二元樹的
+形狀有關。
+\end{pastsoln}

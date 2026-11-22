@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncku-113-prog-14}]{成大資訊聯招 113 學年度 第 14 題}
+（問答）
+
+(10\%) Given a sequence of $n$ numbers, what is the lower bound for sorting algorithms employing
+comparison and exchange operations?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\Omega(n \log n)$；更精確地說，最壞情況至少要做 $\lceil \lg(n!) \rceil$ 次比較（資結書定理~15.1）。
+
+「只用比較和交換」就是比較排序：演算法能得到的關於輸入的資訊，只有「$a_i < a_j$ 是否成立」這類
+比較的結果。
+
+\textbf{決策樹}。 固定 $n$，把演算法對所有輸入做的比較畫成一棵二元樹：每個內部節點是一次比較，
+左右兩支是兩種結果；走到葉節點時演算法停下，輸出一個排列。 設 $n$ 個數互不相同。 $n!$ 種輸入順序
+需要的「把它排好的排列」都不一樣，而一個葉節點只能輸出一種排列，所以至少要有 $n!$ 個葉節點。
+高度 $h$ 的二元樹最多 $2^h$ 個葉節點，
+\[
+2^h \ge n! \quad\Longrightarrow\quad h \ge \lg(n!) .
+\]
+$h$ 是從根到最深的葉節點的比較次數，也就是最壞情況的比較次數。
+
+\textbf{估計 $\lg(n!)$}。 $n!$ 的後一半因子 $n, n - 1, \ldots, \lceil n/2 \rceil$ 都 $\ge n/2$，
+至少有 $n/2$ 個，所以
+\[
+\lg(n!) \ge \frac{n}{2} \lg \frac{n}{2} = \frac{n}{2}\lg n - \frac{n}{2} = \Omega(n \lg n).
+\]
+（用 Stirling 公式更精確：$\lg(n!) = n \lg n - n \lg e + O(\lg n)$。）
+
+所以任何比較排序的最壞情況都要 $\Omega(n \log n)$ 次比較，時間是 $\Omega(n \log n)$。 這個下界是緊的：
+合併排序、堆積排序的最壞情況都是 $O(n \log n)$。 平均情況也有同樣的下界（資結書第~15.1~節）。 計數
+排序、基數排序能做到線性時間，是因為它們不只用比較，還利用了鍵的數值，不受這個下界限制。
+\end{pastsoln}

@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncu-115-dsa-04}]{中央資工所 115 學年度 第 4 題}
+（多選；每題 5 分，每個選項單獨計分，答錯每個選項倒扣 1 分）
+
+Which of the following statements about greedy algorithms are true?
+\begin{enumerate}[label=\Alph*.]
+\item A greedy algorithm is correct only if the problem satisfies both the greedy-choice property and optimal substructure.
+\item The fractional knapsack problem can be optimally solved using a greedy strategy, whereas the 0/1 knapsack problem cannot.
+\item Dijkstra's shortest-path algorithm fails to produce correct results if the graph contains edges with negative weights.
+\item Every problem that can be solved using dynamic programming can also be solved optimally using a greedy algorithm.
+\item Prim's and Kruskal's algorithms are greedy algorithms for finding a minimum spanning tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、E。
+
+C 的「fails to produce correct results if the graph contains edges with negative weights」照字面是說
+「只要有負邊就一定算錯」，本解照字面判斷為錯。 如果把它讀成「有負邊時不保證正確」，C 就是對的
+（那是第 8 題 A 選項的說法）；作答時可以註明。
+
+\textbf{A 對}。 資結書第~19.1.6~節：貪心法正確要靠兩個性質。 貪心選擇性質：第一步做的貪心選擇，
+包含在某個最佳解裡；最佳子結構：做了這個選擇之後，剩下的子問題的最佳解和這個選擇合起來，就是
+原問題的最佳解。 反過來說，貪心法對所有輸入都正確時，它的第一步一定落在某個最佳解裡，剩下的
+各步又是在剩下的子問題上照同樣規則做，這兩個性質都成立。 證明貪心法正確，就是證明這兩件事。
+
+\textbf{B 對}。 分數背包依「價值／重量」由大到小裝，最後一件裝一部分，得到最佳解（資結書定理~19.2）。
+0/1 背包同樣的策略不對：容量 $50$，物品（重量, 價值）為 $(10, 60)$、$(20, 100)$、$(30, 120)$，
+單位價值 $6, 5, 4$。 貪心先拿前兩件，總重 $30$，第三件放不下，價值 $160$；最佳是拿後兩件，總重
+$50$，價值 $220$。 不論依哪一種標準排序，都有類似的反例，0/1 背包要用動態規劃。
+
+\textbf{C 錯（照字面）}。 有負邊時 Dijkstra 演算法\textbf{可能}算錯（資結書第~25.2.5~節的例子），
+但不是一定算錯。 例如只有一條邊 $s \to v$、權重 $-1$ 的圖，Dijkstra 演算法算出 $d[v] = -1$，
+完全正確。 正確的說法是「有負邊時，Dijkstra 演算法不保證正確」。
+
+\textbf{D 錯}。 0/1 背包可以用動態規劃求最佳解，貪心法不行（B 的反例）。 LCS、矩陣鏈乘也一樣。
+能用動態規劃解的問題，多半只有最佳子結構，沒有貪心選擇性質。
+
+\textbf{E 對}。 Kruskal 每一步選「不會形成環的最輕的邊」，Prim 每一步選「跨過目前的樹和其他頂點
+之間最輕的邊」，都是只看眼前最好的選擇、選了不改，是貪心法；正確性來自切割性質（資結書第~24~章）。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-111-dsa-11}]{中央資工所 111 學年度 多選題第 11 題}
+（多選；每題 5 分，每個選項答對得 1 分，答錯倒扣 1 分）
+
+Choose the correct statement(s):
+\begin{enumerate}[label=(\Alph*)]
+\item The insertion sort algorithm has the worst-case time complexity O($n^2$), the average-case
+time complexity O($n^2$), and the best-case time complexity O($n$).
+\item The merge sort algorithm has the worst-case time complexity O($n\log n$), the average-case
+time complexity O($n\log n$), the best-case time complexity O($n\log n$), and the space complexity
+O($n$).
+\item The quick sort algorithm has the worst-case time complexity O($n\log n$), the average-case
+time complexity O($n\log n$), and the best-case time complexity O($n\log n$).
+\item The heap sort algorithm has the worst-case time complexity O($n\log n$), the average-case time
+complexity O($n\log n$), the best-case time complexity O($n\log n$), and the space complexity O($n$).
+\item The bubble sort algorithm has the worst-case time complexity O($n^2$), the average-case time
+complexity O($n^2$), and the space complexity O(1).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(E)。
+
+「space complexity」照一般課本的用法，指輸入陣列以外的額外空間（資結書第~14.1~節的「原地」就是這樣
+定義的）；各排序的複雜度見資結書第~14.7~節的比較表。
+\begin{itemize}
+\item (A) 對。 插入排序：反序的輸入 $\Theta(n^2)$；平均的逆序數是 $n(n-1)/4$，也是 $\Theta(n^2)$；已經
+排好時每個數只比一次，$\Theta(n)$。
+\item (B) 對。 合併排序不管輸入如何都是 $\Theta(n \log n)$；陣列版合併時要長度 $n$ 的輔助陣列，額外空間
+$\Theta(n)$。
+\item (C) 錯。 快速排序的最壞情況是 $\Theta(n^2)$（例如固定取第一個當基準、輸入已排好），不是
+$O(n \log n)$。 平均和最好的 $O(n \log n)$ 是對的，錯在最壞情況。
+\item (D) 錯。 時間的三個 $O(n \log n)$ 沒問題，但堆積排序在原陣列裡建堆積、交換，是原地排序，額外空間
+$O(1)$。 寫成 $O(n)$ 是把它和合併排序弄混了；照 (B) 同樣的意思（額外空間）來讀，這句是錯的。
+\item (E) 對。 氣泡排序最壞、平均都是 $\Theta(n^2)$，只交換相鄰兩格，額外空間 $O(1)$。
+\end{itemize}
+\end{pastsoln}

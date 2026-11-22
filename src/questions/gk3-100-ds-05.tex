@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:gk3-100-ds-05}]{高考三級資訊處理 100 年 第五題}
+（申論；10 分）
+
+外部排序（external sorting）最常使用的是 2-way 合併排序法（merge sorting）。假設檔案裡面包含 18000 筆
+資料，而記憶體最多只能容許 3000 筆資料。假設每次 I/O block 大小為 1000 筆資料，則需讀多少次 I/O block
+才能完成排序？（10 分）
+\end{pastexam}
+
+\begin{pastsoln}
+答案：讀 $66$ 次 block（如果連寫出也算，共 $132$ 次 block I/O）。
+
+題目問的是「讀」。 外部排序每讀進一個 block 也要寫出一個 block，所以讀、寫次數相同，下面兩個數字都列出來。
+檔案共 $18000 / 1000 = 18$ 個 block，記憶體一次放得下 $3000 / 1000 = 3$ 個 block（資結書第~15.3~節）。
+
+\textbf{第一階段：產生 run。} 每次讀進 $3$ 個 block（$3000$ 筆），在記憶體裡排好，寫出成一個 run。
+共得到 $18000 / 3000 = 6$ 個 run $R_1, \dots, R_6$，每個 $3$ 個 block。 讀 $18$ 次、寫 $18$ 次。
+
+\textbf{第二階段：2-way 合併。} 每次合併兩個 run，記憶體的 $3$ 個 block 剛好當兩個輸入緩衝區和一個輸出
+緩衝區。
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+回合 & 做的事 & 讀 & 寫 \\
+\midrule
+產生 run & $6$ 個 run，各 $3$ block & $18$ & $18$ \\
+合併第 1 回合 & $(R_1,R_2)$、$(R_3,R_4)$、$(R_5,R_6)$ 各合成 $6$ block 的 run，共 $3$ 個 & $18$ & $18$ \\
+合併第 2 回合 & 前兩個合成 $12$ block，第三個 run 不動 & $12$ & $12$ \\
+合併第 3 回合 & $12$ block 和 $6$ block 合成 $18$ block，排序完成 & $18$ & $18$ \\
+\midrule
+合計 & & $66$ & $66$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以要讀 $66$ 次 block，讀寫合計 $132$ 次。 合併的回合數是 $\lceil \lg 6 \rceil = 3$；第 2 回合只有
+$3$ 個 run，落單的那個不必讀寫。 如果把落單的 run 也照樣複製一次（每一回合都把整個檔讀寫一遍），
+讀的次數會變成 $18 \times 4 = 72$，那是多做的工。
+\end{pastsoln}

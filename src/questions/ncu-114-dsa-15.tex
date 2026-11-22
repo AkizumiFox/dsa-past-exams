@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-114-dsa-15}]{中央資工所 114 學年度 第 15 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Which of the following statements about Single-Source Shortest Paths problem are incorrect?
+\begin{enumerate}[label=(\alph*)]
+\item If a graph $G$ contains a negative-weight cycle, then all shortest paths do not exist.
+\item A subpath of a shortest path is a shortest path.
+\item Dijkstra's algorithm finds single-source shortest paths in graphs with nonnegative-weight cycle.
+\item If binary heap is used, the worst-case time complexity of Dijkstra's algorithm is
+$O(E+V\log V)$, where $E$ represents the number of edges and $V$ the number of vertices.
+\item If the weight of all edges is the same, there is a faster algorithm than Dijkstra's algorithm to
+compute single-source shortest paths.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(c)(d)。 題目問的是\textbf{錯誤}的敘述。
+
+\begin{itemize}
+\item (a) 錯誤。 負環只會讓「從源點走得到這個負環、再從負環走得到的那些頂點」沒有最短路徑（可以繞負環
+任意變短，資結書第~25.1~節）。 其他頂點的最短路徑照樣存在。 例：源點 $s$ 到 $a$ 有一條權重 $2$ 的邊，
+另外 $b \to c$ 權重 $1$、$c \to b$ 權重 $-3$ 構成負環，但 $s$ 走不到 $b$、$c$；$\delta(s, a) = 2$ 仍然有定義。
+\item (b) 正確。 最短路徑的子路徑也是最短路徑（最佳子結構）：若子路徑 $u \leadsto v$ 有更短的走法，
+換掉之後整條路徑變短，矛盾。
+\item (c) 錯誤。 Dijkstra 演算法要求\textbf{每條邊}的權重非負（資結書第~25.2~節），不是只要求環的權重
+非負。 反例：$s \to a$ 權重 $2$、$s \to b$ 權重 $3$、$b \to a$ 權重 $-2$、$a \to c$ 權重 $1$，這張圖
+沒有環，當然沒有負環。 Dijkstra 依序確定 $s$（$0$）、$a$（$2$），用 $a$ 算出 $c$ 的距離 $3$，接著確定
+$b$（$3$）和 $c$（$3$）；但真正的 $\delta(s, c) = 3 + (-2) + 1 = 2$（資結書
+第~25.2.5~節）。
+\item (d) 錯誤。 二元堆積的 \textsc{Decrease-Key} 是 $O(\log V)$，最多做 $E$ 次，總時間是
+$O((V + E) \log V)$。 $O(E + V \log V)$ 要用費氏堆積（\textsc{Decrease-Key} 平攤 $O(1)$）。
+\item (e) 正確。 權重全部相同（且為正）時，最短路徑就是邊數最少的路徑，用 BFS（資結書第~21.3~節）
+$O(V + E)$ 就算得出來，比 Dijkstra 的 $O((V + E) \log V)$ 快。
+\end{itemize}
+\end{pastsoln}

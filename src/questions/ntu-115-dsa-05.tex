@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-115-dsa-05}]{臺大資工所 115 學年度 第 5 題}
+（單選）
+
+(4 points) Which of the following statements is known to be true?
+\begin{enumerate}[label=(\Alph*)]
+\item Every NP-hard problem is polynomial-time reducible to every problem in NP.
+\item Every NP-complete problem is polynomial-time reducible to every problem in NP.
+\item Every problem solvable in polynomial time is polynomial-time reducible to every problem in NP.
+\item Every problem solvable in exponential time is polynomial-time reducible to every problem in NP.
+\item None of the other choices.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+照資結書定義~28.3，$X \le_{\mathrm{p}} Y$ 要求對 $X$ 的\textbf{每一個}實例 $x$，$x$ 是「是」實例 $\iff$ $f(x)$ 是
+$Y$ 的「是」實例。 關鍵是 NP 裡有\textbf{沒有任何「是」實例的問題}，例如 $Y_\emptyset$：「不管輸入是什麼都回答
+否」。 它一行就解完，在 P 裡，當然也在 NP 裡。 只要 $X$ 有一個「是」實例 $x$，$f(x)$ 就必須是 $Y_\emptyset$ 的
+「是」實例，不可能；所以\textbf{只要 $X$ 至少有一個「是」實例，$X$ 就不能歸約到 $Y_\emptyset$}。 四個敘述都說
+「歸約到 NP 裡的每一個問題」，其中包括 $Y_\emptyset$：
+\begin{itemize}
+\item (A) 錯。 例如 SAT 是 NP 難的（資結書定理~28.7），它有「是」實例，不能歸約到 $Y_\emptyset$。 另一個理由：
+NP 難的問題可以是不可判定的（例如停機問題，見資結書第~28.4~節），它不可能歸約到任何 NP 裡的問題，否則就能
+用那個問題的演算法解它。
+\item (B) 錯。 NP 完備問題（例如 SAT）有「是」實例，不能歸約到 $Y_\emptyset$。
+\item (C) 錯。 例如「給一個整數，問它是不是偶數」在 P 裡，也不能歸約到 $Y_\emptyset$。 （排除 $Y_\emptyset$ 和
+「永遠回答是」這兩種平凡的問題後，(C) 倒是對的：$X \in \mathrm{P}$ 時，歸約可以先自己把 $x$ 解掉，答案是「是」
+就輸出 $Y$ 的某個固定的是實例，否則輸出某個固定的否實例。）
+\item (D) 錯。 理由同 (C)：「是不是偶數」當然也可以在指數時間內解，它不能歸約到 $Y_\emptyset$。
+\end{itemize}
+四個都不是「已知為真」，所以選 (E)。
+\end{pastsoln}

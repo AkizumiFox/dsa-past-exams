@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntust-113-ice-04}]{臺科大資工所 113 學年度 第 I-4 題}
+（複選）
+
+I.\quad \underline{(35\%) Multiple choice questions.}
+
+(5\%) Select all the correct statements about graphs with the depth-first search (DFS) algorithm and
+the breadth-first search (BFS) algorithm.
+\begin{enumerate}[label=(\alph*)]
+\item No directed graph has the same BFS and DFS traversals.
+\item Given the BFS and the DFS traversals of a directed graph, we can derive the original direct
+graph.
+\item The DFS algorithm is usually implemented with a stack.
+\item The BFS algorithm uses a queue to maintain the nodes that need to be visited.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c)、(d)。
+
+\begin{itemize}
+\item \textbf{(a) 錯。} 反例：一條有向路徑 $1 \to 2 \to 3$。 從 $1$ 出發，BFS 依序拜訪
+$1, 2, 3$（每一層只有一個點），DFS 也是一路走下去 $1, 2, 3$，兩者相同。
+\item \textbf{(b) 錯。} 兩個走訪順序只記錄「先後」，看不出所有的邊。 反例：$G_1$ 是
+$1 \to 2 \to 3$，$G_2$ 是 $G_1$ 再加一條 $3 \to 1$。 從 $1$ 出發，兩張圖的 BFS 都是 $1, 2, 3$、DFS
+都是 $1, 2, 3$（$3 \to 1$ 指向已經拜訪過的點，不影響順序），但圖不同。
+\item \textbf{(c) 對。} DFS 遇到新的點就往下走，走不下去才退回最近的分岔點，「最後進、最先出」，
+用堆疊實作：遞迴版用的是系統的呼叫堆疊（資結書第~21.4~節），非遞迴版用明確的堆疊（資結書
+第~21.4.6~節）。
+\item \textbf{(d) 對。} BFS 先拜訪離起點近的點，「先發現、先處理」，用佇列存放已發現但還沒處理
+的點（資結書第~21.3~節、資結書虛擬碼~21.1）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:nchu-115-is-26}]{中興資工所乙組 115 學年度 第 26 題}
+（單選；每題 2 分，答錯不倒扣）
+
+What does this code compute?
+\begin{minted}[fontsize=\small]{python}
+def f(s):
+    l = 0
+    chars = set()
+    best = 0
+    for r in range(len(s)):
+        while s[r] in chars:
+            chars.remove(s[l])
+            l += 1
+        chars.add(s[r])
+        best = max(best, r - l + 1)
+    return best
+\end{minted}
+A.~Number of unique characters \qquad B.~Length of longest substring without repetition\\
+C.~Lexicographically smallest substring \qquad D.~Palindrome check
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+這是滑動視窗（雙指標）。 \texttt{s[l..r]} 是目前的視窗，\texttt{chars} 是視窗裡的字元集合。
+每一輪把右端 \texttt{r} 往右一格；如果新字元 \texttt{s[r]} 已經在視窗裡，就從左邊一個一個丟掉，
+直到那個重複的字元被丟掉為止，再把 \texttt{s[r]} 加進來。 這樣每一輪結束時，視窗裡的字元都
+不重複，而且 \texttt{l} 是「讓 \texttt{s[l..r]} 不重複」的最小位置，所以 \texttt{r - l + 1} 是以
+\texttt{r} 結尾、沒有重複字元的最長子字串的長度。 \texttt{best} 取所有 \texttt{r} 的最大值。
+
+用 \texttt{"pwwkew"} 追蹤（視窗是這一輪結束時的 \texttt{s[l..r]}）：
+\begin{center}
+\small
+\begin{tabular}{ccccccc}
+\toprule
+\texttt{r} & 0 & 1 & 2 & 3 & 4 & 5 \\
+\texttt{s[r]} & p & w & w & k & e & w \\
+丟掉的字元 & & & p, w & & & w \\
+視窗 & p & pw & w & wk & wke & kew \\
+\texttt{best} & 1 & 2 & 2 & 2 & 3 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $3$（\texttt{"wke"} 或 \texttt{"kew"}）。 時間：\texttt{l}、\texttt{r} 都只往右走，各最多走
+$n$ 步，所以內層 while 的總次數不超過 $n$（資結書第~3.1~節聚合法的想法），集合操作期望
+$O(1)$，總共期望 $O(n)$。
+\begin{itemize}
+\item A 錯：不同字元的個數是 \texttt{len(set(s))}。 上面的例子有 p、w、k、e 四種字元，程式卻回傳
+$3$，兩者不同。
+\item B 對。
+\item C 錯：程式回傳的是一個整數長度，不是子字串，也沒有比較字典序。
+\item D 錯：判斷回文要比較頭尾對稱的字元，程式沒有這種比較，回傳的也不是是非值。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-115-dsa-06}]{臺大資工所 115 學年度 第 6 題}
+（單選）
+
+(4 points) How many of the statements below are known to be true?
+\begin{itemize}
+\item Every problem in NP is polynomial-time reducible to some NP-hard problem.
+\item Every problem in NP is polynomial-time reducible to some NP-complete problem.
+\item Every problem in NP is polynomial-time reducible to some problem solvable within polynomial time.
+\item Every problem in NP is polynomial-time reducible to some problem solvable within exponential time.
+\end{itemize}
+
+
+(A)~0 \qquad (B)~1 \qquad (C)~2 \qquad (D)~3 \qquad (E)~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)：第 1、2、4 句已知為真，第 3 句不是已知的。
+
+\begin{itemize}
+\item 第 1 句：對。 SAT 是 NP 難的（Cook--Levin 定理，資結書定理~28.7），由定義，NP 裡每個問題都能多項式時間
+歸約到 SAT（資結書定義~28.4）。
+\item 第 2 句：對。 SAT 也在 NP 裡，是 NP 完備的，同樣用 SAT。
+\item 第 3 句：不是已知的。 若 $X \le_{\mathrm{p}} Y$ 而 $Y \in \mathrm{P}$，則 $X \in \mathrm{P}$（資結書引理~28.2）。
+所以這句話等於說「NP 裡每個問題都在 P 裡」，也就是 $\mathrm{NP} \subseteq \mathrm{P}$，即 $\mathrm{P} = \mathrm{NP}$，
+這是還沒解決的問題。
+\item 第 4 句：對。 讓 $X$ 歸約到它自己（$f(x) = x$，顯然是多項式時間）。 $X \in \mathrm{NP}$ 可以在指數時間內解：
+把所有長度不超過 $p(|x|)$ 的字串都當憑證，用驗證程式試一次，共 $2^{O(p(|x|))}$ 個，每個多項式時間
+（資結書第~28.2~節）。 所以 $X$ 本身就是「可以在指數時間內解的問題」。
+\end{itemize}
+三句已知為真，選 (D)。
+\end{pastsoln}

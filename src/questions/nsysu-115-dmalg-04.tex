@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-04}]{中山資工所資安組 115 學年度 第 5 題}
+（計算）
+
+Two boxes of chocolate bars, 36 bars of one brand and 36 bars of another, are distributed among six surveyors who are conducting taste tests. In how many ways can the 72 bars be distributed so that each surveyor gets
+\begin{enumerate}[label=(\alph*)]
+\item {[}10\%{]} at least four chocolate bars of each brand?
+\item {[}10\%{]} at least three bars of one particular brand and at least one of the other?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $\binom{17}{5}^2 = 6188^2 = 38{,}291{,}344$；(b) $\binom{23}{5}\binom{35}{5} = 33{,}649 \times 324{,}632 = 10{,}923{,}542{,}168$。
+
+\textbf{模型}。 同一品牌的巧克力棒彼此沒有分別，六位調查員有分別，所以「分法」就是每位調查員拿到每種品牌各幾根。
+兩種品牌各自獨立地分，總數是兩種品牌分法數的乘積。 把 $m$ 根相同的東西分給 $k$ 個人（每人可以拿 $0$ 根），是
+方程式 $x_1 + \cdots + x_k = m$ 的非負整數解個數，用隔板法（$m$ 顆球和 $k - 1$ 根隔板排成一列）得
+$\binom{m + k - 1}{k - 1}$（資結書附錄~A.3 的組合數）。 每人至少拿 $c$ 根時，先發給每人 $c$ 根，剩下的再隨便分。
+
+\textbf{(a)}。 每人每種品牌至少 $4$ 根。 一種品牌先發 $6 \times 4 = 24$ 根，剩下 $36 - 24 = 12$ 根分給 $6$ 人：
+\[
+\binom{12 + 5}{5} = \binom{17}{5} = \frac{17 \cdot 16 \cdot 15 \cdot 14 \cdot 13}{120} = 6188 .
+\]
+另一種品牌也一樣，答案 $6188^2 = 38{,}291{,}344$。
+
+\textbf{(b)}。 「one particular brand」指事先指定的某一種品牌（例如第一種），每人至少 $3$ 根；另一種品牌每人至少 $1$ 根。
+\begin{itemize}
+\item 指定的品牌：先發 $18$ 根，剩 $18$ 根，$\binom{18 + 5}{5} = \binom{23}{5} = 33{,}649$。
+\item 另一種品牌：先發 $6$ 根，剩 $30$ 根，$\binom{30 + 5}{5} = \binom{35}{5} = 324{,}632$。
+\end{itemize}
+答案 $33{,}649 \times 324{,}632 = 10{,}923{,}542{,}168$。
+
+如果把 (b) 讀成「每人至少有某一種品牌 $3$ 根、另一種 $1$ 根，但哪一種品牌是 $3$ 根可以因人而異」，計算會複雜很多（要用
+排容），不是這一題的本意；題目寫「one particular brand」，就是指定了品牌。
+\end{pastsoln}

@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:gw3-099-ds-02}]{關務三等資訊處理 99 年 第二題}
+（申論；20 分）
+
+依序輸入下列 6 筆資料：L，C，E，P，S，A（英文字母代表的是 key value，而字母 A 的值是小於字母 B 的值）
+\begin{enumerate}[leftmargin=2.2em]
+\item[㈠] 排成最大二元堆（max binary heap）後的堆積為何？（10 分）
+\item[㈡] 刪除（delete）根節點（root）後，再加入新的值 M 後的堆積為何？（10 分）
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+字母依字母順序比大小：A $<$ C $<$ E $<$ L $<$ M $<$ P $<$ S。 「依序輸入」照逐一插入的方式建堆積：每個新元素
+放在最後一個位置，再和父節點比較，比父節點大就交換，一路往上（sift-up，資結書第~8.1~節）。 陣列從 1 開始，
+A[$i$] 的父節點是 A[$\lfloor i/2 \rfloor$]。
+
+\textbf{㈠ 逐一插入。}
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+插入 & 調整過程 & 陣列 \\
+\midrule
+L & 第一個，當根 & L \\
+C & 放 A[2]，C $<$ L，不動 & L, C \\
+E & 放 A[3]，E $<$ L，不動 & L, C, E \\
+P & 放 A[4]，P $>$ C 交換到 A[2]；P $>$ L 交換到 A[1] & P, L, E, C \\
+S & 放 A[5]，S $>$ L 交換到 A[2]；S $>$ P 交換到 A[1] & S, P, E, C, L \\
+A & 放 A[6]，A $<$ E，不動 & S, P, E, C, L, A \\
+\bottomrule
+\end{tabular}
+\end{center}
+最大堆積是 \textbf{S, P, E, C, L, A}（陣列表示），樹形見下圖左。
+
+\textbf{㈡ 刪除根，再加入 M。}
+\begin{itemize}
+\item 刪除根 S：把最後一個元素 A 搬到根，陣列變成 A, P, E, C, L。 往下調整（sift-down）：A 的子節點
+P、E 中較大的是 P，A $<$ P，交換：P, A, E, C, L。 A 現在在 A[2]，子節點 C、L 中較大的是 L，A $<$ L，
+交換：P, L, E, C, A。 A 到了葉節點，停。
+\item 加入 M：放在 A[6]，父節點是 A[3]$=$E，M $>$ E 交換到 A[3]；父節點 A[1]$=$P，M $<$ P，停。
+\end{itemize}
+結果是 \textbf{P, L, M, C, A, E}。
+\begin{center}
+\begin{tikzpicture}[
+    every node/.style={circle, draw, minimum size=7mm, inner sep=0pt, font=\small},
+    lab/.style={draw=none, rectangle, font=\small},
+    level distance=10mm,
+    level 1/.style={sibling distance=24mm},
+    level 2/.style={sibling distance=12mm}]
+\node {S} child {node {P} child {node {C}} child {node {L}}} child {node {E} child {node {A}} child[missing]};
+\node[lab] at (0,-3) {㈠ 建好的最大堆積};
+\begin{scope}[xshift=5.5cm]
+\node {P} child {node {L} child {node {C}} child {node {A}}} child {node {E}};
+\node[lab] at (0,-3) {刪除 S 之後};
+\end{scope}
+\begin{scope}[xshift=11cm]
+\node {P} child {node {L} child {node {C}} child {node {A}}} child {node {M} child {node {E}} child[missing]};
+\node[lab] at (0,-3) {㈡ 再加入 M};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+如果㈠ 改用 Build-Max-Heap（先照輸入順序放進陣列 L, C, E, P, S, A，再從 A[3] 往回逐一往下調整，資結書
+第~8.2~節），得到的是 S, P, E, L, C, A，和逐一插入的結果不同（C、L 的位置對調），兩者都是合法的最大堆積。
+題目說「依序輸入」，所以採逐一插入；作答時寫明用的是哪一種建法。
+\end{pastsoln}

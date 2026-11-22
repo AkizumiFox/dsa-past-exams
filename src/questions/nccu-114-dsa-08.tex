@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nccu-114-dsa-08}]{政大資科所 114 學年度 第 8 題}
+（單選；每題 4 分）
+
+(4\%) If an array is used to implement a max-heap, where index 1 (the first position) of the array
+stores the root, what is the maximal index $i$ that stores the 3rd ranked element?
+
+A.~3 \qquad B.~4 \qquad C.~5 \qquad D.~6 \qquad E.~7
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E。 「3rd ranked element」指第 $3$ 大的元素，假設元素互不相同、堆積至少有 $7$ 個元素。
+
+最大堆積（資結書第~8.1~節）裡，每個節點都比它的子孫大。 所以一個節點的每一個祖先
+都比它大。 由此：
+\begin{itemize}
+\item 第 $3$ 大的元素最多只有 $2$ 個元素比它大，所以它最多有 $2$ 個祖先，深度 $\le 2$（根的深度
+是 $0$）。 深度 $\le 2$ 的節點索引是 $1$ 到 $7$，所以索引 $\le 7$。
+\item 索引 $7$ 做得到：讓第 $2$ 大的放在索引 $3$（根的右子節點），第 $3$ 大的放在索引 $7$（索引
+$3$ 的右子節點）。 例如
+\[
+A[1..7] = \langle 10, 5, 9, 1, 2, 3, 8 \rangle ,
+\]
+每個父節點都比子節點大，是合法的最大堆積，第 $3$ 大的 $8$ 在索引 $7$。
+\end{itemize}
+所以最大索引是 $7$。 （$n < 7$ 時答案是 $n$，例如 $n = 4$ 時第 $3$ 大可以在索引 $4$；選項是以
+堆積夠大為前提。）
+
+逐項檢查：A、B、C、D 的索引都放得下第 $3$ 大的元素，但都不是最大的；E 的 $7$ 是深度 $2$ 的最後
+一個位置，上面已經證明不可能更大，也舉出了做得到的例子。 答案 E。
+\end{pastsoln}

@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ccu-115-swa-01}]{中正資工所甲組 115 學年度 第 11 題}
+（複選；全對才給分）
+
+(5\%) (\qquad) You are using a dynamic array (table) that doubles when full and halves when it is
+$\le\frac{1}{4}$ full.
+
+Which sequence results in the \textbf{highest amortized cost per operation}?
+\begin{enumerate}[label=(\alph*)]
+\item $\boldsymbol{n}$ insertions into an empty table
+\item $2n$ insertions followed by $\boldsymbol{n}$ deletions
+\item Alternate insert/delete: insert, delete, insert, delete\ldots\ for $\boldsymbol{n}$ times
+($\boldsymbol{n}$ insertions, $\boldsymbol{n}$ deletions)
+\item Insert $\boldsymbol{n}$ times, delete all, insert $\boldsymbol{n}$ times again
+\item none of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(e)。
+
+先說採用的解讀。 平攤成本是分析給每一種操作訂的「價錢」，不是某一串操作實際花的平均；題目問
+「哪一串的平攤成本最高」，要比的是各串操作每次的平攤成本在 $n$ 變大時的量級。 這張表的規則
+（滿了加倍、剩不到四分之一減半）正是資結書第~3.4~節的動態陣列，在這個規則下每一種操作的平攤
+成本都是常數，所以四種序列一樣是 $\Theta(1)$，沒有哪一串比較高。
+
+\textbf{證明}。 成本照資結書第~3.4~節計：寫入或刪除一個元素算 $1$，換容量時每搬一個元素算 $1$。
+取位能 $\Phi = |2 \cdot \mathit{num} - \mathit{cap}|$，一開始是 $0$、永遠 $\ge 0$。 逐種情況代
+（資結書定理~3.3 的證明）：
+\begin{itemize}
+\item 加入、不擴充：$c_i = 1$，$\Phi$ 最多加 $2$，$\hat{c}_i \le 3$。
+\item 加入、擴充（原本 $\mathit{num} = \mathit{cap} = m \ge 1$）：$c_i = m + 1$，$\Phi$ 從 $m$ 變成 $2$，
+$\hat{c}_i = (m + 1) + 2 - m = 3$。
+\item 刪除、不縮小：$c_i = 1$，$\Phi$ 最多加 $2$，$\hat{c}_i \le 3$。
+\item 刪除、縮小（刪完剩 $r$ 個、原容量 $m > 4r$）：$c_i = 1 + r$，
+$\hat{c}_i = (1 + r) + (m/2 - 2r) - (m - 2r - 2) = 3 + r - m/2 < 3$。
+\end{itemize}
+所以任何一串 $N$ 次操作的實際總成本都不超過 $3N$，每次操作的平攤成本不超過 $3$，和操作的先後
+順序無關。 四個序列的操作次數分別是 $n$、$3n$、$2n$、$3n$，總成本分別不超過 $3n$、$9n$、$6n$、
+$9n$，平均每次都是 $O(1)$；而每次操作至少花 $1$，平均也至少是 $1$。 四個都是 $\Theta(1)$。
+
+\textbf{逐項看}。
+\begin{itemize}
+\item (a) 只有加入，標準的加倍分析，平攤 $3$。 錯。
+\item (b) 先加入 $2n$ 個，再刪 $n$ 個。 剩下 $n$ 個時容量最多 $4n$ 左右，還不到四分之一以下，
+通常一次都不會縮；就算縮，也被上面的位能付掉。 錯。
+\item (c) 這是設計來誘答的選項。 如果規則是「少於一半就減半」，在容量邊界上加一個、刪一個
+來回，每一兩次操作就換一次容量，平攤成本會變成 $\Theta(n)$（資結書第~3.4~節的反例）。 但這裡
+縮小的門檻是四分之一：剛加倍完陣列大約半滿，要再刪掉大約容量的四分之一才會縮；剛縮完也大約
+半滿，要再加大約一半才會擴充。 來回加刪不會連續觸發換容量。 從空表開始交錯做時，表的大小
+只在 $0$ 和 $1$ 之間跳，每次的成本是 $1$。 錯。
+\item (d) 加入 $n$、全部刪掉、再加入 $n$。 中間的縮小每次搬的元素數，都被之前的刪除累積的位能
+付掉，仍然是常數。 錯。
+\item (e) 對：沒有哪一個序列的平攤成本比較高。
+\end{itemize}
+
+補充：如果硬要比實際平均成本的常數，(a) 會在 $2$ 到 $3$ 之間（看 $n$ 和 $2$ 的次方的相對位置），
+其他三個因為摻了不必搬東西的刪除，常數略小。 這種常數差距不是平攤分析在問的東西，而且會隨
+成本模型改變；題目考的是「縮到四分之一才減半」能不能擋住 (c) 那種來回震盪。
+\end{pastsoln}

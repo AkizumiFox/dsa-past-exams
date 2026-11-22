@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:nsysu-112-dmalg-09}]{中山資工所資安組 112 學年度 第 9 題}
+（設計、分析）
+
+(Algorithm points) [10\%] Please describe the Dijkstra algorithm and analyze its time complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{問題}。 有向圖 $G = (V, E)$，每條邊權重 $w(u, v) \ge 0$，給定源點 $s$，求 $s$ 到每個頂點的最短距離
+$\delta(s, v)$。 以下 $n = |V|$、$m = |E|$。
+
+\textbf{演算法}（資結書第~25.2~節、虛擬碼~25.3）。 每個頂點有估計值 $d[v]$（目前找到的最短路徑長）和前驅
+$\pi[v]$。 維護一個集合 $S$，裡面的頂點距離已經確定。 每一輪從還沒確定的頂點中挑 $d$ 最小的 $u$ 放進 $S$，
+再對 $u$ 的每條出邊做鬆弛（relax）：若 $d[u] + w(u, v) < d[v]$，就把 $d[v]$ 改小、$\pi[v] \gets u$。
+\begin{pseudo}{Dijkstra 演算法}
+\Function{Dijkstra}{$G, w, s$}
+    \For{每個頂點 $v$}
+        \State $d[v] \gets \infty$；$\pi[v] \gets \NIL$
+    \EndFor
+    \State $d[s] \gets 0$；$S \gets \emptyset$
+    \State $Q \gets$ 以 $d$ 為鍵、含所有頂點的最小優先佇列
+    \While{$Q$ 不是空的}
+        \State $u \gets \Call{Extract-Min}{Q}$；$S \gets S \cup \{u\}$
+        \For{每條邊 $(u, v)$}
+            \If{$d[u] + w(u, v) < d[v]$} \Comment{鬆弛}
+                \State $d[v] \gets d[u] + w(u, v)$；$\pi[v] \gets u$
+                \State \Call{Decrease-Key}{$Q, v, d[v]$}
+            \EndIf
+        \EndFor
+    \EndWhile
+    \State \Return $d, \pi$
+\EndFunction
+\end{pseudo}
+結束時 $d[v] = \delta(s, v)$，沿 $\pi$ 往回走就是最短路徑。
+
+\textbf{為什麼對}（資結書定理~25.6）。 證明「每個 $u$ 被取出時 $d[u] = \delta(s, u)$」。 假設 $u$ 是第一個取出
+時 $d[u] > \delta(s, u)$ 的頂點。 看一條 $s$ 到 $u$ 的最短路徑，它從 $S$ 裡的 $s$ 出發，最後走到 $S$ 外的 $u$，
+設 $y$ 是路徑上第一個不在 $S$ 的頂點、$x$ 是它的前一個（在 $S$ 裡）。 $x$ 放進 $S$ 時 $d[x] = \delta(s, x)$，
+當時鬆弛過 $(x, y)$，所以 $d[y] = \delta(s, y)$。 權重非負，$\delta(s, y) \le \delta(s, u)$。 於是
+$d[y] = \delta(s, y) \le \delta(s, u) < d[u]$，但 $u$ 是 $d$ 最小的才被取出，$d[u] \le d[y]$，矛盾。 這裡用到
+權重非負；有負邊時這一步不成立，演算法可能出錯。
+
+\textbf{時間}。 初始化 $\Theta(n)$。 每個頂點進出佇列一次：$n$ 次 \textsc{Insert}（或一次建堆積）和 $n$ 次
+\textsc{Extract-Min}。 每條邊在它的起點被取出時檢查一次，共 $m$ 次鬆弛，每次最多一次 \textsc{Decrease-Key}。
+總時間 $= n \cdot T_{\text{extract}} + m \cdot T_{\text{decrease}} + \Theta(n + m)$，看優先佇列怎麼做：
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+優先佇列 & \textsc{Extract-Min} & \textsc{Decrease-Key} & 總時間 \\
+\midrule
+無序陣列（線性找最小） & $O(n)$ & $O(1)$ & $O(n^2 + m) = O(n^2)$ \\
+二元堆積 & $O(\log n)$ & $O(\log n)$ & $O((n + m)\log n)$ \\
+費氏堆積 & $O(\log n)$ 平攤 & $O(1)$ 平攤 & $O(m + n \log n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+稠密的圖（$m = \Theta(n^2)$）用陣列版 $O(n^2)$ 就是最好的；稀疏的圖（$m = O(n)$）用二元堆積是 $O(n \log n)$。
+費氏堆積版理論上最快。 鄰接串列下，所有頂點的出邊總共掃一次，是 $\Theta(m)$；用鄰接矩陣則每個頂點要掃一整
+列，額外 $\Theta(n^2)$。
+\end{pastsoln}

@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:gk3-108-ds-03}]{高考三級資訊處理 108 年 第三題}
+（申論；25 分）
+
+給予如下程式，假設 \texttt{x[] = [30, 75, 53, 47, 21, 94, 88, 39]}，\texttt{lb = 0}，\texttt{ub = 7}，
+請問執行完下列程式後，\texttt{x[]} 的內容為何？（25 分）
+\begin{minted}[fontsize=\small,frame=single]{c}
+void divide&conquer(int x[], int lb, int ub, int *pj)
+{
+   int a, down, temp, up;
+   a = x[lb];
+   up = ub;
+   down = lb;
+   while(down < up){
+      while(x[down] <= a && down < ub)
+        down++;
+      while(x[up] > a)
+        up--;
+      if(down < up){
+         temp = x[down];
+         x[down] = x[up];
+         x[up] = temp;
+      }
+   }
+   x[lb] = x[up];
+   x[up] = a;
+   *pj = up;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：\texttt{x[] = [21, 30, 53, 47, 75, 94, 88, 39]}（\texttt{*pj = 1}）。
+
+函式名稱 \texttt{divide\&conquer} 含有 \texttt{\&}，在 C 裡不是合法的名稱，編譯不會過；照題意把它當成一般
+名稱（例如 \texttt{partition}）來追蹤。
+
+\textbf{這是什麼。} 這是快速排序的分割（partition）：以第一個元素 $a = x[\mathit{lb}]$ 為樞紐，
+\texttt{down} 從左往右找第一個 $> a$ 的，\texttt{up} 從右往左找第一個 $\le a$ 的，兩者沒交錯就交換；
+交錯後把樞紐換到 \texttt{up} 的位置。 結束時樞紐左邊都 $\le a$、右邊都 $> a$（資結書第~14.5~節，和
+虛擬碼~14.10 的 Hoare 分割同一類）。
+
+\textbf{追蹤。} $a = 30$，\texttt{down} $= 0$，\texttt{up} $= 7$。
+\begin{enumerate}
+\item 外圈第 1 次：\texttt{down} 從 $0$ 開始，$30 \le 30$ 往右，停在 $x[1] = 75$；\texttt{up} 從 $7$ 開始，
+$39, 88, 94$ 都 $> 30$ 往左，停在 $x[4] = 21$。 $1 < 4$，交換 $x[1]$、$x[4]$：
+\[
+30,\ 21,\ 53,\ 47,\ 75,\ 94,\ 88,\ 39.
+\]
+\item 外圈第 2 次：\texttt{down} 從 $1$ 開始，$21 \le 30$ 往右，停在 $x[2] = 53$；\texttt{up} 從 $4$ 開始，
+$75, 47, 53$ 都 $> 30$ 往左，停在 $x[1] = 21$。 $2 < 1$ 不成立，不交換；外圈條件 $2 < 1$ 也不成立，離開迴圈。
+\item 收尾：$x[0] \gets x[1] = 21$，$x[1] \gets a = 30$，\texttt{*pj} $= 1$：
+\[
+21,\ 30,\ 53,\ 47,\ 75,\ 94,\ 88,\ 39.
+\]
+\end{enumerate}
+樞紐 $30$ 落在索引 $1$，左邊的 $21 \le 30$，右邊 $53, 47, 75, 94, 88, 39$ 都 $> 30$，分割正確。 右邊那段
+還沒排序，快速排序接下來會對 $x[2..7]$ 遞迴（題目只問這一次呼叫之後的內容）。
+
+順帶一提，內層 \texttt{while(x[up] > a)} 沒有檢查邊界也不會跑出陣列：$x[\mathit{lb}] = a$ 不滿足 $> a$，
+\texttt{up} 最多停在 \texttt{lb}。 \texttt{down} 那一圈則需要 \texttt{down < ub} 擋住，否則全部元素都
+$\le a$ 時會跑出右界。
+\end{pastsoln}

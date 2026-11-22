@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:nsysu-115-dmalg-06}]{中山資工所資安組 115 學年度 第 7 題}
+（設計、分析）
+
+(Algorithm points) {[}10\%{]} Please describe the algorithm of Binary Search Tree and analyze its time complexity in detail with mathematical derivation.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{定義}。 二元搜尋樹（BST）是一棵二元樹，每個節點 $x$ 存一個鍵值，滿足：$x$ 左子樹裡的鍵值都 $< x.\mathit{key}$，
+右子樹裡的鍵值都 $> x.\mathit{key}$（資結書第~9~章，這裡假設鍵值相異）。 因此中序走訪會由小到大印出所有鍵值。
+主要的操作是搜尋、插入、刪除，都從根往下走一條路徑。
+
+\begin{pseudo}{BST 的搜尋與插入}
+\Function{Tree-Search}{$x, k$}
+    \While{$x \ne \NIL$ \AND $k \ne x.\mathit{key}$}
+        \If{$k < x.\mathit{key}$}
+            \State $x \gets x.\mathit{left}$
+        \Else
+            \State $x \gets x.\mathit{right}$
+        \EndIf
+    \EndWhile
+    \State \Return $x$ \Comment{找不到時是 \NIL}
+\EndFunction
+\Statex
+\Function{Tree-Insert}{$x, k$} \Comment{回傳插入後這棵子樹的根}
+    \If{$x = \NIL$}
+        \State \Return 新節點（鍵值 $k$，左右都是 \NIL）
+    \EndIf
+    \If{$k < x.\mathit{key}$}
+        \State $x.\mathit{left} \gets \Call{Tree-Insert}{x.\mathit{left}, k}$
+    \Else
+        \State $x.\mathit{right} \gets \Call{Tree-Insert}{x.\mathit{right}, k}$
+    \EndIf
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+\textbf{刪除}（資結書第~9.2~節、虛擬碼~9.7）分三種情形：要刪的節點沒有子節點，直接拿掉；只有一個子節點，讓子節點
+接到它的位置；有兩個子節點，找它的中序後繼 $s$（右子樹的最小值，一路往左走到底），把 $s$ 的鍵值複製過來，再到右子樹
+刪掉 $s$（$s$ 沒有左子節點，屬於前兩種情形）。
+
+\textbf{正確性}（簡述）。 搜尋：$k < x.\mathit{key}$ 時 $k$ 只可能在左子樹，否則只可能在右子樹，每一步都排除了不可能的部分。
+插入：沿著搜尋 $k$ 的路徑走到 \NIL，那個位置正是 $k$ 應該在的地方，接上去後 BST 性質不變。 刪除的第三種情形：後繼 $s$
+大於左子樹的所有鍵值、小於右子樹其餘的鍵值，放到原位置仍滿足 BST 性質。
+
+\textbf{時間複雜度}。 三個操作都只沿著一條從根往下的路徑走，每個節點做 $O(1)$ 的事，時間是 $O(h)$，$h$ 是樹高。
+關鍵在於 $h$ 和節點數 $n$ 的關係。
+\begin{itemize}
+\item \textbf{最好}：高度 $h$ 的二元樹最多 $1 + 2 + \cdots + 2^h = 2^{h+1} - 1$ 個節點，所以 $n \le 2^{h+1} - 1$，
+$h \ge \lceil \lg(n + 1) \rceil - 1 = \lfloor \lg n \rfloor$。 樹完全平衡時達到，操作是 $\Theta(\log n)$。
+\item \textbf{最壞}：依序插入已經排好的 $1, 2, \ldots, n$，每個新鍵值都接在最右邊，樹退化成一條鏈，$h = n - 1$。 這時
+搜尋最大值要比較 $n$ 次，插入第 $i$ 個鍵值要比較 $i - 1$ 次，建整棵樹要 $\sum_{i=1}^{n} (i - 1) = \frac{n(n - 1)}{2} = \Theta(n^2)$，
+單一操作最壞 $\Theta(n)$。
+\item \textbf{平均}：$n$ 個相異鍵值以隨機順序（$n!$ 種順序機會相等）插入。 令 $D(n)$ 是所有節點深度總和（內部路徑長）的期望值，
+$D(0) = D(1) = 0$。 第一個插入的鍵值成為根，它是第 $i + 1$ 小的機率是 $1/n$（$i = 0, \ldots, n - 1$）；這時左子樹有 $i$ 個、
+右子樹有 $n - 1 - i$ 個鍵值，而且各自仍是隨機順序。 根以外的 $n - 1$ 個節點，深度都比在子樹裡多 $1$，所以
+\[
+D(n) = (n - 1) + \frac{1}{n} \sum_{i=0}^{n-1} \bigl(D(i) + D(n - 1 - i)\bigr) = (n - 1) + \frac{2}{n} \sum_{i=0}^{n-1} D(i).
+\]
+兩邊乘 $n$，再減去 $n - 1$ 時的同一式子：
+\[
+nD(n) - (n - 1)D(n - 1) = n(n - 1) - (n - 1)(n - 2) + 2D(n - 1) = 2(n - 1) + 2D(n - 1),
+\]
+即 $nD(n) = (n + 1)D(n - 1) + 2(n - 1)$。 兩邊除以 $n(n + 1)$，並用 $\frac{2(n-1)}{n(n+1)} = \frac{4}{n+1} - \frac{2}{n}$：
+\[
+\frac{D(n)}{n + 1} = \frac{D(n - 1)}{n} + \frac{4}{n + 1} - \frac{2}{n}.
+\]
+從 $D(0)/1 = 0$ 一路加到 $n$：
+\[
+\frac{D(n)}{n + 1} = \sum_{k=1}^{n} \left(\frac{4}{k + 1} - \frac{2}{k}\right) = 4\left(H_{n+1} - 1\right) - 2H_n = 2H_n + \frac{4}{n + 1} - 4,
+\]
+其中 $H_n = 1 + \frac{1}{2} + \cdots + \frac{1}{n} = \ln n + O(1)$。 所以
+\[
+D(n) = 2(n + 1)H_n - 4n = 2n \ln n + O(n) \approx 1.39\, n \lg n .
+\]
+（例如 $n = 3$：$D(3) = 2 \cdot 4 \cdot \frac{11}{6} - 12 = \frac{8}{3}$；直接算，$6$ 種順序裡有 $2$ 種得到平衡樹、深度和 $2$，
+$4$ 種得到鏈、深度和 $3$，平均 $\frac{2 \cdot 2 + 4 \cdot 3}{6} = \frac{8}{3}$，相符。） 找到一個隨機選的鍵值平均要比較
+$1 + D(n)/n \approx 2\ln n \approx 1.39 \lg n$ 次，是 $\Theta(\log n)$。 期望樹高也是 $O(\log n)$（資結書定理~9.2，約
+$4.311 \ln n$）。
+\end{itemize}
+
+\textbf{結論}。 搜尋、插入、刪除都是 $\Theta(h)$：平均（隨機插入順序）$\Theta(\log n)$，最壞 $\Theta(n)$。 要保證最壞也是
+$O(\log n)$，就得用 AVL 樹、紅黑樹這類平衡搜尋樹（資結書第~10~章）。 中序走訪全部 $n$ 個節點是 $\Theta(n)$（資結書定理~9.1）。
+空間：每個節點 $O(1)$，共 $\Theta(n)$。
+\end{pastsoln}

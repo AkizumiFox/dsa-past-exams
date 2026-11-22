@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ntut-113-ci-04}]{北科大資工所 113 學年度 第四題}
+（問答）
+
+Please answer the following questions: (12 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item Let $G$ be an undirected, connected graph with at least one vertex of odd degree. Show that $G$ contains
+no \textit{Eulerian walk}. An Eulerian walk is a cycle in which each edge in $G$ is passed exactly once.
+(4 pts)
+\item Consider the following recurrence and derive the asymptotic upper bound using the ``big oh'' notation
+with T(1) = $d$ for some constant $d$. (4 pts)
+\[ T(n) = 35T\left(\frac{n}{3}\right) + 7n^3. \]
+\item Given two sets $A$ and $B$ represented as sorted sequences, describe an efficient algorithm for
+computing $A\oplus B$, which is the set of elements that are in $A$ or $B$, but not in both. Please write the
+pseudo-code and give the time complexity of your algorithm. (4 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(1) 屬資結書第~21~章（歐拉迴路），(2) 屬第~2~章（主定理），(3) 屬第~14~章（合併）；本題放在第~21~章。
+
+\textbf{(1)} 題目說的 Eulerian walk 是「每條邊恰好走一次、回到起點」的走法，就是資結書第~21.7~節的歐拉迴路；它說的
+cycle 允許重複經過頂點，不是資結書定義~21.2 的環。 這題就是資結書定理~21.11 必要性的一半，寫完整如下。
+
+\textbf{證明。} 設 $G$ 有一條歐拉迴路 $W = \langle v_0, v_1, \ldots, v_m \rangle$，$v_m = v_0$，第 $i$ 段用的邊是
+$e_i = \{v_{i-1}, v_i\}$，$e_1, \ldots, e_m$ 恰好是 $G$ 的 $m$ 條邊，各一次。 任取一個頂點 $v$，數「$W$ 在 $v$ 用掉
+幾條邊」：
+\begin{itemize}
+\item 每個 $0 < i < m$ 而 $v_i = v$ 的位置，$W$ 從 $e_i$ 進來、從 $e_{i+1}$ 出去，用掉兩條和 $v$ 關聯的邊；
+\item $v = v_0 = v_m$ 時，起點出去的 $e_1$ 和終點進來的 $e_m$ 也湊成兩條。
+\end{itemize}
+$G$ 沒有自環，每條和 $v$ 關聯的邊在上面剛好被數到一次（它在 $W$ 裡出現恰好一次，而且只有一端是 $v$）；和 $v$
+不關聯的邊不會被數到。 所以 $\deg(v) = 2 \times$（$v$ 在 $W$ 上出現的次數，起點和終點算一次），是偶數。 每個
+頂點的度數都是偶數，和「至少有一個頂點的度數是奇數」矛盾。 所以 $G$ 沒有 Eulerian walk。\hfill$\blacksquare$
+
+證明沒有用到「連通」這個條件；連通是反方向（全部偶數就一定有歐拉迴路）才需要的，見資結書定理~21.11。
+
+\textbf{(2)} 答案：$T(n) = O(n^{\log_3 35})$，$\log_3 35 \approx 3.236$。
+
+套主定理（資結書定理~2.4）：$a = 35$、$b = 3$、$f(n) = 7n^3$。 $n^{\log_b a} = n^{\log_3 35}$，因為 $3^3 = 27 < 35$，
+$\log_3 35 > 3$。 取 $\epsilon = 0.2$：$\log_3 35 - 0.2 \approx 3.036 > 3$，所以 $f(n) = 7n^3 = O(n^{\log_3 35 - \epsilon})$，
+是第一種情況，
+\[
+T(n) = \Theta(n^{\log_3 35}),\qquad \text{所以 } T(n) = O(n^{\log_3 35}) \approx O(n^{3.24}).
+\]
+直觀地看，遞迴樹第 $i$ 層的總成本是 $35^i \cdot 7(n/3^i)^3 = 7n^3 (35/27)^i$，每往下一層乘上 $35/27 > 1$，成本由最底層的
+$35^{\log_3 n} = n^{\log_3 35}$ 片葉子主導。 （$T(1) = d$ 只影響常數。）
+
+\textbf{(3)} \textbf{想法。} 和合併排序的合併一樣（資結書第~14.4~節），用兩個指標同時由小到大掃 $A$、$B$：較小的那個
+不可能出現在另一個序列裡（另一邊目前的數已經比它大，後面只會更大），所以它屬於 $A \oplus B$；兩邊相等就是共同
+元素，兩個都跳過。 $A$、$B$ 是集合，各自沒有重複元素。
+
+\begin{pseudo}{有序集合的對稱差}
+\Function{Sym-Diff}{$A[1..m], B[1..n]$}
+    \State $i \gets 1$；$j \gets 1$；$C \gets$ 空序列
+    \While{$i \le m$ \AND $j \le n$}
+        \If{$A[i] < B[j]$}
+            \State 把 $A[i]$ 接到 $C$ 的尾端；$i \gets i + 1$
+        \ElsIf{$A[i] > B[j]$}
+            \State 把 $B[j]$ 接到 $C$ 的尾端；$j \gets j + 1$
+        \Else
+            \State $i \gets i + 1$；$j \gets j + 1$ \Comment{共同元素，兩邊都不要}
+        \EndIf
+    \EndWhile
+    \State 把 $A[i..m]$ 和 $B[j..n]$ 剩下的部分依序接到 $C$ 的尾端
+    \State \Return $C$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 迴圈不變量：$C$ 恰好是 $A[1..i-1] \cup B[1..j-1]$ 中屬於 $A \oplus B$ 的元素，由小到大排列，而且這些
+已處理的元素都小於 $\min(A[i], B[j])$。 $A[i] < B[j]$ 時，$B$ 裡比 $A[i]$ 小的都已處理過、且沒有一個等於 $A[i]$（等
+於的話早就在「相等」那一支一起跳過了），$B[j..n]$ 又都比它大，所以 $A[i] \notin B$，應該放進 $C$；$A[i] > B[j]$ 對稱；
+相等時是共同元素，兩邊都不放。 迴圈結束時一邊已經用完，另一邊剩下的元素都比用完那一邊的所有元素大，不可能出現在
+那一邊，全部屬於 $A \oplus B$。 結果 $C$ 也是排好序的。
+
+\textbf{時間。} 每一輪迴圈 $i$ 或 $j$ 至少加一，最多 $m + n$ 輪，加上最後接上剩餘部分，總共 $\Theta(m + n)$。 比起對每個
+元素在另一個序列裡做二分搜尋的 $O(m \log n + n \log m)$ 更好；而輸出本身最多 $m + n$ 個，讀輸入也要 $\Theta(m + n)$，
+所以這已經是最佳的。
+\end{pastsoln}

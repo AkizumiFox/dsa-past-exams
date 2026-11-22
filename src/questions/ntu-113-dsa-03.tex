@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ntu-113-dsa-03}]{臺大資工所 113 學年度 第 3 題}
+（單選；答錯倒扣 1 分）
+
+(5 points) A Dynamic Array (abbreviated as DArray) is a type of array that permits the insertion and
+deletion of elements at the end to dynamically adjust its size. DArray $D$ maintains three crucial
+attributes, including the underlying array $D$.data, the logical data size $D$.size, and the actual
+array capacity $D$.capacity. The invariant $D$.size $\le$ $D$.capacity holds at any given moment.
+The Insert($D$, $x$) operation appends the element $x$ to the end of $D$.data. In case $D$.size $=$
+$D$.capacity, it triggers a call to Resize($D$) before appending $x$, where Resize($D$) allocates a
+new and larger array, moves all the data to it, increases the value of $D$.capacity, sets up
+$D$.data, and finally frees the old array. Two implementations of Resize($D$) are provided:
+ResizeA($D$) increases $D$.capacity by a constant (e.g., 10) while ResizeB($D$) doubles
+$D$.capacity each time.
+
+To initialize DArray $D$, we set $D$.size to 0, $D$.capacity to 1, and allocate a size 1 array to
+$D$.data. Assuming that both allocating and freeing arrays of length $n$ take $O(n)$ time, and moving
+a single element takes $O(1)$ time, please select the correct description(s) below.
+\begin{enumerate}[label=\Alph*.]
+\item DArray is not suitable for random access because its memory may be relocated.
+\item DArray can only be allocated in the heap memory due to its dynamic memory nature.
+\item If ResizeA($D$) is considered, the amortized time complexity of Insert($D$, $x$) is $O(1)$.
+\item If ResizeB($D$) is considered, the amortized time complexity of Insert($D$, $x$) is $O(1)$.
+\item In the Delete($D$) operation, if $D$.size $>0$, $D$.size is decreased by one. If, at this
+stage, $D$.size $<\lceil D.\text{capacity}/2\rceil$, we create a new array $d'$ with a size of
+$\lceil D.\text{capacity}/2\rceil$, transfer the data to $d'$, set up $d'$ as the new data array for
+$D$.data, and subsequently free the old array. Then, the amortized time complexity of mixed Insert
+and Delete operations can be $O(1)$, where Resize($D$) can be either ResizeA($D$) or ResizeB($D$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+這是資結書第~3.4~節動態陣列的內容。 Resize 一次的成本是「配置新陣列 $+$ 搬 $\mathit{size}$ 個
+元素 $+$ 釋放舊陣列」，都和容量同一級，以下記成 $\Theta(\mathit{capacity})$。
+\begin{itemize}
+\item A 錯。 動態陣列的元素仍然放在一塊連續的陣列裡，取第 $i$ 個是 $D.\mathit{data}[i]$，
+$O(1)$。 搬家只是換了 $D.\mathit{data}$ 指到的位置，透過 $D.\mathit{data}$ 用索引存取不受影響；
+會失效的只是「事先記下來、直接指向舊陣列某一格的指標」。 C++ 的 \texttt{vector} 就是這種結構，
+它的賣點正是隨機存取。
+\item B 錯。 題目只要求 Resize 能「配置一塊新陣列、釋放舊陣列」，這可以由任何配置器提供：
+一般用 \texttt{malloc} 從堆積（heap）拿，但也可以從事先保留好的靜態記憶體池切一塊，嵌入式系統
+常這樣做。 何況 $D$ 本身（三個欄位）可以是函式裡的區域變數，放在堆疊上。 「只能放在 heap」
+這個「只能」不成立。
+\item C 錯。 每次只加 $10$，容量依序是 $1, 11, 21, 31, \ldots$。 連續插入 $n$ 個時，第
+$t$ 次搬家發生在 $\mathit{size} = 10t - 9$ 的時候（$t = 1, 2, \ldots$），大約有 $n/10$ 次，成本合計
+\[
+\sum_{t=1}^{\approx n/10} \Theta(10t) = \Theta\Bigl(10 \cdot \frac{(n/10)^2}{2}\Bigr) = \Theta(n^2),
+\]
+平攤到 $n$ 次插入，每次 $\Theta(n)$，不是 $O(1)$（資結書第~3.4~節「為什麼要乘以倍數，不能加固定
+的量」）。
+\item D 對。 容量依序是 $1, 2, 4, \ldots$，連續插入 $n$ 個時搬家發生在 $\mathit{size} = 1, 2, 4,
+\ldots, 2^{\lfloor \lg (n-1) \rfloor}$，成本合計 $\Theta(1 + 2 + 4 + \cdots + 2^{\lfloor \lg (n-1)
+\rfloor}) = \Theta(n)$（等比級數，最多是最後一項的兩倍）。 加上 $n$ 次放入元素的 $\Theta(n)$，總成
+本 $\Theta(n)$，平攤 $O(1)$（聚集分析，資結書第~3.4.1~節）。
+\item E 錯。 「少於一半就減半」會在邊界來回搬家，這正是資結書第~3.4.2~節說「要縮到 $1/4$ 才減半」
+的原因。 用 ResizeB 舉例：設容量 $m$（$m \ge 2$ 是 $2$ 的次方）而且放滿 $m$ 個。
+  \begin{enumerate}[label=(\arabic*)]
+  \item Insert：放滿了，先加倍成 $2m$、搬 $m$ 個，之後 $\mathit{size} = m + 1$。
+  \item Delete：$\mathit{size} = m$，$m < \lceil 2m/2 \rceil = m$ 不成立，不縮。
+  \item Delete：$\mathit{size} = m - 1 < m$，縮成容量 $m$、搬 $m - 1$ 個。
+  \item Insert：$\mathit{size} = m$，容量 $m$，又是放滿的狀態。
+  \end{enumerate}
+回到一開始的狀態，每 $4$ 次操作就要花 $\Theta(m)$。 先插入 $n/2$ 個讓 $m$ 和 $n$ 同一級，剩下的
+操作都照這四步循環，總成本 $\Theta(n^2)$，平攤 $\Theta(n)$。 題目說「ResizeA 或 ResizeB 都可以」，
+光 ResizeB 就不行；ResizeA 連只做 Insert 都不是 $O(1)$（見 C）。
+\end{itemize}
+本題是單選題，只有 D 對。
+\end{pastsoln}

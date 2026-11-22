@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nchu-113-dsa-09}]{中興資工所甲組 113 學年度 選擇題第 9 題}
+（單選；每題 2 分，答錯倒扣 0.5 分）
+
+Suppose that we have numbers between 1 and 100 in a \textbf{binary search tree} and want to search for the
+number 46. Which of the following sequence could be the sequence of nodes examined?
+
+(A)~5, 2, 1, 10, 39, 34, 77, 63. \qquad (B)~9, 8, 63, 0, 4, 3, 2, 1. \qquad (C)~8, 7, 6, 5, 4, 3, 2, 1.\\
+(D)~50, 25, 26, 27, 40, 44, 42. \qquad (E)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+搜尋 $46$ 時，每經過一個節點 $x$：$46 < x$ 就往左，之後看到的數都要 $< x$；$46 > x$ 就往右，之後看到的數
+都要 $> x$（資結書第~9.1~節）。 所以把每一步的結論累積成一個區間 $(\mathit{lo}, \mathit{hi})$，下一個節點必須
+落在區間裡。 搜尋可以在任何地方以失敗結束，所以序列不必以 $46$ 結尾，只要每一步都合法。
+\begin{itemize}
+\item (A) $5$：$46 > 5$，往右，區間 $(5, \infty)$。 下一個 $2 < 5$，不在區間裡。 不可能。
+\item (B) $9$：往右，區間 $(9, \infty)$。 下一個 $8 < 9$。 不可能。
+\item (C) $8$：往右，區間 $(8, \infty)$。 下一個 $7 < 8$。 不可能。 （這個序列一路變小，像是在找比 $1$ 還小
+的數。）
+\item (D) 逐步檢查：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+節點 & 在區間裡？ & $46$ 和它比 & 新的區間 \\
+\midrule
+50 & 是 & 小，往左 & $(-\infty, 50)$ \\
+25 & 是 & 大，往右 & $(25, 50)$ \\
+26 & 是 & 大，往右 & $(26, 50)$ \\
+27 & 是 & 大，往右 & $(27, 50)$ \\
+40 & 是 & 大，往右 & $(40, 50)$ \\
+44 & 是 & 大，往右 & $(44, 50)$ \\
+42 & \textbf{否}：$42 < 44$ & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+在 $44$ 已經往右走，後面的節點都應該大於 $44$，$42$ 不可能出現。 不可能。
+\end{itemize}
+四個序列都不合法，選 (E)。
+\end{pastsoln}

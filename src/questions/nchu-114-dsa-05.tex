@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:nchu-114-dsa-05}]{中興資工所甲組 114 學年度 單選題第 5 題}
+（單選；每題 3 分，未答題得 0 分，答錯不倒扣）
+
+Consider the following statements about NP-complete problems:
+\begin{enumerate}[label=\arabic*.]
+\item Every NP-complete problem is also in NP.
+\item If an NP-hard problem is in NP, it is NP-complete.
+\item All NP problems can be reduced to an NP-complete problem in polynomial time.
+\item The Halting Problem is an NP-complete problem.
+\end{enumerate}
+Which of the above statements are true?
+
+(A)~1 and 3 only \qquad (B)~1, 2, and 3 only \qquad (C)~2, 3, and 4 only \qquad (D)~All of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+定義（資結書第~28.2、28.4~節）：問題 $X$ 是 NP-hard，指每個 NP 問題都能在多項式時間歸約到 $X$；
+$X$ 是 NP-complete，指 $X \in \mathrm{NP}$ 而且 $X$ 是 NP-hard。
+\begin{enumerate}
+\item 對。 NP-complete 的定義第一個條件就是屬於 NP。
+\item 對。 NP-hard 再加上屬於 NP，正好是 NP-complete 的定義。
+\item 對。 NP-complete 問題是 NP-hard，所以每個 NP 問題都能多項式時間歸約到它。
+\item 錯。 停機問題是不可判定的（沒有任何演算法能對所有輸入在有限時間內回答），NP 裡的問題都可以用
+窮舉所有證書的方式判定，所以停機問題不屬於 NP，不可能是 NP-complete。 它是 NP-hard（SAT 可以
+歸約到它），但不是 NP-complete。
+\end{enumerate}
+1、2、3 對，4 錯，選 (B)。 (A) 漏了 2；(C)、(D) 含錯的 4。
+\end{pastsoln}

@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-112-dsa-03}]{中央資工所 112 學年度 複選題第 3 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+A leftist tree is a min tree satisfying that dist(RChild(i)) <= dist(LChild(i)), where dist(j)
+denotes the number of edges on the shortest path from node j to a leaf node, RChild(i) and LChild(i)
+denote the right child and left child of node i, respectively. Which of the following statements about
+leftist trees are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The length of path to rightmost leaf is O(log n) for a leftist tree with n nodes.
+\item Merging two leftist trees is to merge the right subtree of one tree with the other.
+\item Delete min takes O(log n) time.
+\item If the path to leftmost leaf has x nodes, then the leftist tree has at least $2^x-1$ nodes.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(C)。
+
+題目的 dist 數的是邊；資結書第~8.5~節的 $s(x)$ 數的是節點，空位 $s(\NIL) = 0$。 兩者差 $1$：
+$\mathrm{dist}(x) = s(x) - 1$（空的子樹 dist 當成 $-1$），左傾的條件 $\mathrm{dist}(\text{右}) \le
+\mathrm{dist}(\text{左})$ 和 $s(\text{右}) \le s(\text{左})$ 是同一件事。 下面用 $s$ 和資結書定理~8.2：
+以 $x$ 為根的子樹至少有 $2^{s(x)} - 1$ 個節點，且從 $x$ 一路往右走到空位剛好經過 $s(x)$ 個節點。
+\begin{itemize}
+\item (A) 對。 由定理~8.2，$n \ge 2^{s(\text{根})} - 1$，最右邊的路徑有 $s(\text{根}) \le \lg(n + 1)$ 個
+節點，長度 $O(\log n)$。
+\item (B) 對。 合併兩棵最小左傾樹 $a$、$b$ 時，取根比較小的那棵（設為 $a$）當新的根，把 $a$ 的右子樹和
+$b$ 遞迴合併，結果接回 $a$ 的右邊，必要時左右對調（資結書虛擬碼~8.9）。 敘述說的就是這個步驟，
+「one tree」指根比較小的那棵。 遞迴只沿兩棵樹的右邊路徑走，由 (A) 是 $O(\log n)$。
+\item (C) 對。 刪除最小值就是拿掉根，再把左、右兩棵子樹合併，一次合併 $O(\log n)$。
+\item (D) 錯。 定理~8.2 講的是\textbf{最右邊}的路徑，最左邊的路徑可以很長。 反例：三個節點
+$1, 2, 3$，$2$ 是 $1$ 的左子節點、$3$ 是 $2$ 的左子節點，都沒有右子節點。 每個節點的右邊是空的
+（$s = 0$），左邊 $s \ge 0$，滿足左傾條件，也是最小樹。 最左邊的路徑有 $x = 3$ 個節點，整棵樹卻只有
+$3 < 2^3 - 1 = 7$ 個節點。 一般地，一條往左的鏈有 $x$ 個節點、總數只有 $x$。
+\end{itemize}
+\end{pastsoln}

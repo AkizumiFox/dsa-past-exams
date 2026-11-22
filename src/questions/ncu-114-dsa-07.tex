@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncu-114-dsa-07}]{中央資工所 114 學年度 第 7 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Given a directed weighted graph G=(V, E), where each edge (i,j) $\in E$ has weight w(i,j). The adjacency
+matrix W is defined as below
+\[
+W(i,j)=\begin{cases} w(i,j), & (i,j)\in E\\ \infty, & (i,j)\notin E\end{cases}
+\]
+Below is an algorithm for finding shortest paths of all vertex pairs in a directed weighted graph.
+\begin{quote}
+F (G,W)\\
+\{\quad n=$|$V$|$\\
+\hspace*{2em}D$^{(0)}$=W\\
+\hspace*{2em}for (k = 1; i<= n; k=k+1)\\
+\hspace*{3em}for (i = 1; i<=n; i=i+1)\\
+\hspace*{4em}for (j = 1; j<= n; j=j+1)\\
+\hspace*{5em}if D$^{(k-1)}$[i,j]>D$^{(k-1)}$[i,k] + D$^{(k-1)}$[k,j]\\
+\hspace*{5em}then D$^{(k)}$[i,j]=D$^{(k-1)}$[i,k] + D$^{(k-1)}$[k,j]\\
+\hspace*{5em}else D$^{(k)}$[i,j]=D$^{(k-1)}$[i,j]\\
+\hspace*{2em}return D$^{(n)}$\\
+\}
+\end{quote}
+Which of the following statements are true?
+\begin{enumerate}[label=(\alph*)]
+\item k is on the shortest path if D$^{(k)}$[i,j] = D$^{(k-1)}$[i,k] + D$^{(k-1)}$[k,j]
+\item if k is on the shortest path then D$^{(k)}$[i,j] = D$^{(k-1)}$[i,k] + D$^{(k-1)}$[k,j]
+\item if k is on the shortest path then D$^{(k-1)}$[i,j] > D$^{(k-1)}$[i,k]+D$^{(k-1)}$[k,j]
+\item k is on the shortest path if D$^{(k-1)}$[i,j] > D$^{(k-1)}$[i,k]+D$^{(k-1)}$[k,j]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(d)。
+
+先說明讀法。 第一層迴圈的 \texttt{i<= n} 是原卷的筆誤，應為 \texttt{k<= n}。 這是 Floyd--Warshall
+演算法（資結書第~25.6~節），照慣例假設圖沒有負環。 $D^{(k)}[i, j]$ 是「中間點只用 $1, \ldots, k$」
+的 $i \leadsto j$ 最短路徑長，所以題目在第 $k$ 輪說的「the shortest path」指的是這種限制下的最短
+路徑；最短路徑可能不只一條，「$k$ is on the shortest path」讀成「有一條這樣的最短路徑經過 $k$」。
+（若讀成整張圖最後的最短路徑，四個選項都不成立：第 $k$ 輪還沒考慮編號大於 $k$ 的中間點。）
+
+關鍵是遞迴式
+\[
+D^{(k)}[i, j] = \min\bigl(D^{(k-1)}[i, j],\; D^{(k-1)}[i, k] + D^{(k-1)}[k, j]\bigr).
+\]
+中間點在 $\{1, \ldots, k\}$ 的 $i \leadsto j$ 路徑分兩類：不經過 $k$ 的，最短是 $D^{(k-1)}[i, j]$；經過
+$k$ 的，拆成 $i \leadsto k$ 和 $k \leadsto j$ 兩段，兩段的中間點都在 $\{1, \ldots, k-1\}$，最短是
+$D^{(k-1)}[i, k] + D^{(k-1)}[k, j]$。 記 $A = D^{(k-1)}[i, j]$（不經過 $k$ 的最佳），
+$B = D^{(k-1)}[i, k] + D^{(k-1)}[k, j]$（經過 $k$ 的最佳），$D^{(k)}[i, j] = \min(A, B)$。
+「有一條最短路徑經過 $k$」等價於 $B = \min(A, B)$，也就是 $B \le A$。
+
+\begin{itemize}
+\item (a) $D^{(k)}[i, j] = B$ 就是 $\min(A, B) = B$，經過 $k$ 的最佳路徑達到最短，所以有一條最短路徑
+經過 $k$。 對。
+\item (b) 有一條最短路徑經過 $k$，它的長度至少是 $B$（經過 $k$ 的路徑裡 $B$ 最短），又等於
+$D^{(k)}[i, j] = \min(A, B) \le B$，所以 $D^{(k)}[i, j] = B$。 對。
+\item (c) 錯。 平手時 $A = B$：經過 $k$ 的最短路徑存在，但 $A > B$ 不成立，演算法走 else，保留原值。
+反例：三個頂點，邊 $1 \to 3$ 權重 $2$、$1 \to 2$ 權重 $1$、$2 \to 3$ 權重 $1$，看 $k = 2$、$i = 1$、
+$j = 3$。 $D^{(1)}[1, 3] = 2$，$D^{(1)}[1, 2] + D^{(1)}[2, 3] = 1 + 1 = 2$。 路徑 $1 \to 2 \to 3$ 經過
+$2$，長度 $2$，是最短的；但 $2 > 2$ 不成立。
+\item (d) $A > B$ 表示不經過 $k$ 的路徑都比 $B$ 長，最短路徑只能經過 $k$。 對（而且這時每一條最短
+路徑都經過 $k$）。
+\end{itemize}
+(c) 和 (d) 是一對逆命題：嚴格的 $>$ 是「經過 $k$」的充分條件，不是必要條件；(a)(b) 用的等號則是
+充分必要條件。
+\end{pastsoln}

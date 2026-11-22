@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntust-115-ice-07}]{臺科大資工所 115 學年度 第 I-7 題}
+（複選）
+
+(5\%) Assume a B-tree and a B+ tree have the same order $m$, where $m$ is the maximum number of children
+an internal node can have (i.e., each internal node has at most $m$ children and thus at most $m-1$ keys;
+the root is allowed to have fewer children). Select ALL statements that are correct.
+\begin{enumerate}[label=(\alph*)]
+\item In a B-tree, all actual records (data pointers) are stored only in the leaf nodes.
+\item In a B-tree, searching for a key always ends at a leaf node.
+\item For point lookups (exact-match search), a B-tree is always faster than a B+ tree because it can stop
+at an internal node.
+\item In a B+ tree, all actual records are stored only in the leaf nodes, and internal nodes store only keys
+(and child pointers).
+\item In a B+ tree, leaf nodes are typically linked together to support efficient range queries and
+sequential scans.
+\item Compared with a B-tree of the same order $m$, internal nodes in a B+ tree typically have a higher
+branching factor (i.e., more children), which often reduces tree height.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(d)、(e)。 (f) 有爭議，見下面的說明。 B 樹和 B$^{+}$ 樹的差別見資結書第~11.2、11.3~節的比較表。
+
+\begin{itemize}
+\item[(a)] 錯。 B 樹的每個鍵只出現一次，可能在任何一層，記錄（或記錄指標）就跟著鍵放，內部節點也有。 「記錄只在
+葉子」是 B$^{+}$ 樹的特徵。
+\item[(b)] 錯。 B 樹搜尋時在某個內部節點找到鍵就停了，不一定走到葉子。
+\item[(c)] 錯。 B 樹有時能在內部節點提早停，但不是「一定」比較快：要找的鍵在葉子時，B 樹也要走到底；而且同樣的區塊
+大小，B 樹的內部節點要放記錄指標，分支較少，樹可能比較高，要讀的區塊反而較多。
+\item[(d)] 對。 B$^{+}$ 樹的記錄都在葉子，內部節點只放分隔鍵（葉子裡某些鍵的複本）和子指標。
+\item[(e)] 對。 葉子由左到右串成串列，範圍查詢找到起點後沿著葉子往右讀即可。
+\item[(f)] 照題目的設定是錯的。 題目把階數 $m$ 定義成「一個內部節點最多 $m$ 個孩子」，而且兩種樹的 $m$ 相同，
+所以兩種樹內部節點的孩子數上限都是 $m$，B$^{+}$ 樹不會有更多孩子。 課本說「B$^{+}$ 樹分支較多、樹較矮」，是在
+\textbf{區塊大小相同}的前提下比較：內部節點不放記錄指標，同一個區塊放得下更多鍵，$m$ 可以開得比較大（資結書
+第~11.3.1~節的例子：$4096$ 位元組的區塊，B 樹 $m = 171$，B$^{+}$ 樹 $m = 256$）。 階數已經固定成同一個 $m$，
+這個優勢就不存在了，所以本書不選 (f)。 如果命題者想的是課本那句話，答案會是 (d)(e)(f)；作答時可以在答案旁寫一句
+「同階時分支上限相同」說明理由。
+\end{itemize}
+\end{pastsoln}

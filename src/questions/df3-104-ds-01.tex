@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:df3-104-ds-01}]{地方三等資訊處理 104 年 第一題}
+（申論；20 分）
+
+二元搜尋法（binary search）使用 divide-and-conquer（分而治之）演算法技巧，對一個已排序
+（sorted）且長度為 n 的陣列 A[0:n$-$1]，進行資料搜尋，其最差時間複雜度（worst case time
+complexity）可降到 $\Theta$(log n)。
+\begin{itemize}[leftmargin=2em, labelsep=0.3em, itemsep=2pt]
+\item[㈠] 請使用 C 或 Java 語言，修改此二元搜尋法，使其能對未排序（unsorted）且長度為 n 的陣列
+A[0:n$-$1]，以 divide-and-conquer 技巧，進行二元化搜尋。（15 分）
+\item[㈡] 請分析修改後的二元搜尋法其最差時間複雜度（worst case time complexity）以 order
+$\Theta$ 的方式表示。（5 分）
+\end{itemize}
+（注意：不可將此陣列數值進行排序，請加註解說明程式碼作法）
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法。} 已排序時，看中間的 $A[\mathit{mid}]$ 就知道答案只可能在左半或右半，丟掉另一
+半，所以只遞迴一邊（資結書第~17.1~節）。 未排序時，$A[\mathit{mid}] \ne x$ 不能告訴我們
+$x$ 在哪一半，兩半都可能有，所以\textbf{兩半都要找}：先比中間，再遞迴找左半，左半沒找到才找
+右半。 切法和二元搜尋一樣，只是「治」的部分變成兩個子問題。
+
+\textbf{㈠ 程式（C）。} 找到時傳回註標，找不到傳回 $-1$。
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+/* 在未排序的 A[lo..hi] 中找 x，用分而治之：比中間、再分別找左右兩半 */
+int dc_search(int A[], int lo, int hi, int x)
+{
+    if (lo > hi)                 /* 空區間：這一段沒有 x */
+        return -1;
+    int mid = lo + (hi - lo) / 2;          /* 和二元搜尋一樣取中間，避免溢位 */
+    if (A[mid] == x)             /* 中間就是要找的 */
+        return mid;
+    int r = dc_search(A, lo, mid - 1, x);  /* 未排序，不能丟掉任一半：先找左半 */
+    if (r != -1)                 /* 左半找到了，不必再找右半 */
+        return r;
+    return dc_search(A, mid + 1, hi, x);   /* 左半沒有，再找右半 */
+}
+
+/* 呼叫方式：dc_search(A, 0, n - 1, x) */
+\end{minted}
+\textbf{正確性}（對區間長度 $m = \mathit{hi} - \mathit{lo} + 1$ 歸納）：$m = 0$ 時區間是空的，
+傳回 $-1$ 正確。 $m \ge 1$ 時，$A[\mathit{lo}..\mathit{hi}]$ 被分成 $A[\mathit{lo}..\mathit{mid}-1]$、
+$A[\mathit{mid}]$、$A[\mathit{mid}+1..\mathit{hi}]$ 三塊，沒有遺漏也沒有重疊。 兩塊子區間都比
+$m$ 短，由歸納假設，遞迴呼叫在該區間有 $x$ 時傳回它的一個位置，沒有時傳回 $-1$。 程式依序檢查
+三塊，任何一塊找到就傳回，三塊都沒有才傳回 $-1$，所以結果正確。 程式沒有寫入陣列，符合「不可
+排序」的要求。
+
+追蹤一次：$A = \langle 7, 3, 9, 1, 5, 8, 2 \rangle$ 找 $8$。 $[0, 6]$ 的中間 $A[3] = 1$，不是；
+找左半 $[0, 2]$：中間 $A[1] = 3$，再找 $[0, 0]$（$7$）、$[2, 2]$（$9$），都沒有，傳回 $-1$；
+再找右半 $[4, 6]$：中間 $A[5] = 8$，找到，傳回 $5$。
+
+\textbf{㈡ 最差時間複雜度。} 最差的情況是 $x$ 不在陣列裡（或在最後才被看到的位置），每一層
+兩半都要找完。 每次呼叫除了遞迴只做常數時間的工作，所以
+\[
+T(n) = T\Bigl(\Bigl\lceil \frac{n-1}{2} \Bigr\rceil\Bigr) + T\Bigl(\Bigl\lfloor \frac{n-1}{2} \Bigr\rfloor\Bigr) + \Theta(1),
+\qquad T(0) = \Theta(1).
+\]
+用主定理看近似式 $T(n) = 2T(n/2) + \Theta(1)$：$a = 2$、$b = 2$，$n^{\log_b a} = n$，
+$f(n) = \Theta(1) = O(n^{1 - \varepsilon})$，屬於情況一，$T(n) = \Theta(n)$（資結書第~2.4~節）。
+也可以直接數：每個元素恰好當一次某個呼叫的 $A[\mathit{mid}]$，所以 $x$ 不在陣列時和 $x$ 比較
+剛好 $n$ 次；呼叫次數是 $n$ 次有元素的呼叫加上 $n + 1$ 次空區間的呼叫，共 $2n + 1$ 次。 所以
+\[
+T_{\text{worst}}(n) = \Theta(n).
+\]
+這和由左到右的循序搜尋一樣。 原因是未排序的陣列裡，沒看過的元素都可能是 $x$，任何正確的
+演算法在最壞情況都必須看過全部 $n$ 個元素，$\Theta(n)$ 已經是最好的；分而治之在這裡省不了
+時間，二元搜尋的 $\Theta(\log n)$ 靠的是「已排序」這個條件。
+\end{pastsoln}

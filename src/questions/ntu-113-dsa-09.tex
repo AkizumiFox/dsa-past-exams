@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-113-dsa-09}]{臺大資工所 113 學年度 第 9 題}
+（複選；每個選項單獨計分）
+
+（本題沿用第 8 題的定義：樹的高度是從根到葉節點的最大邊數；$l(v)$ 是以 $v$ 為根的子樹的高度。）
+
+(5 points) We have a binary tree $T$ and for every node $v\in T$, we want to compute the new height
+if we select $v$ as the new root.
+
+We consider the effect of making $v$ the new root. First, the height of the subtree of $v$ is still
+$l(v)$. Second, since $v$ is now the new root, it could go up to its parent and then to the farthest
+leaf. We define this distance as $r(v)$.
+\begin{enumerate}[label=\Alph*.]
+\item The new tree after selecting a new root is always a binary tree.
+\item The height of the tree after making $v$ the new root is $\max(l(v),r(v))$.
+\item We can compute $r(v)$ for all tree node $v$'s in a top-down manner. We assume that the $r$
+value of $v$'s parent in $T$ is known, so $v$ only needs to consider the $r$ value of its parent and
+the $l$ value of its sibling in $T$, in order to compute its own $r$.
+\item The $r$ value of the root of $T$ is 1.
+\item We can compute the $r$ values for all nodes in $O(n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：B、C、E。
+
+把 $T$ 看成無向的樹，以 $v$ 為新的根，新樹的高度就是「離 $v$ 最遠的節點的距離」（最遠的節點一定是
+新樹的葉節點）。 從 $v$ 出發的路徑分兩種：一直往下，留在原本 $v$ 的子樹裡，最遠是 $l(v)$；第一步往
+上走到父節點 $p$，最遠是 $r(v)$。 根沒有父節點，記 $r(\text{根}) = 0$（只有自己）。
+\begin{itemize}
+\item A 錯。 $v$ 有兩個子節點又有父節點時，換成根以後有三個子節點。 例如根 $a$ 的子節點是 $b, c$，
+$b$ 的子節點是 $d, e$；以 $b$ 為根時，$b$ 的子節點是 $a, d, e$，不是二元樹。
+\item B 對。 由上面的分類，最遠距離是兩種路徑的最大值 $\max(l(v), r(v))$。
+\item C 對。 從 $v$ 走到父節點 $p$（一步）以後，接著有兩種走法：繼續往上，最遠 $r(p)$；或往下走進
+$v$ 的兄弟 $s$ 的子樹，最遠 $1 + l(s)$（往下不能走回 $v$）。 所以
+\[
+r(v) = 1 + \max\bigl(r(p),\ 1 + l(s)\bigr),
+\]
+沒有兄弟時省略第二項。 二元樹最多一個兄弟，只需要 $r(p)$ 和 $l(s)$；由根往下（前序）算，算 $v$ 時
+$r(p)$ 已經知道。 例如 $p$ 是根、$p$ 只有 $v$ 這個子節點：$r(v) = 1 + r(p) = 1$，就是走到 $p$ 為止。
+\item D 錯。 根沒有父節點，「往上走」的距離是 $0$，不是 $1$。 若設 $r(\text{根}) = 1$，上一個例子會算出
+$r(v) = 2$，但 $v$ 往上只能走到 $p$，距離是 $1$。
+\item E 對。 先用第 8 題的 DFS 在 $O(n)$ 算出所有 $l$；再由上往下用 C 的公式，每個節點 $O(1)$，
+共 $O(n)$。 這就是「換根」的兩趟做法，是資結書第~18.8~節樹上動態規劃的延伸。
+\end{itemize}
+\end{pastsoln}

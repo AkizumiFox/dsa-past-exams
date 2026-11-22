@@ -1,0 +1,118 @@
+\begin{pastexam}[label={px:ncu-114-dsa-05}]{中央資工所 114 學年度 第 5 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Consider the code fragment below.
+\begin{center}
+\begin{minipage}{5cm}
+\begin{minted}[fontsize=\small]{text}
+container.push('I');
+container.push('L');
+container.push('O');
+container.push('V');
+container.pop();
+container.push('E');
+container.pop();
+container.push('N');
+container.pop();
+container.push('C');
+container.push('U');
+\end{minted}
+\end{minipage}
+\end{center}
+Which of the following statements is (are) true?
+\begin{enumerate}[label=(\alph*)]
+\item If the ``container'' is an \textbf{empty standard stack.} The sequence of elements inside the
+``container'' \textbf{from its top to the bottom} is ILOCU
+\item If the ``container'' is an \textbf{empty standard queue.} The sequence of elements inside the
+``container'' \textbf{from its front to its rear} is VENCU
+\item If the ``container'' is an \textbf{empty min heap}, the level order traversal of the heap is CNOVU
+\item If the ``container'' is an \textbf{empty max heap}, the level order traversal of the heap is ULEIC
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(c)。
+
+本題的 (a)(b) 屬資結書第~6~章（堆疊、佇列），(c)(d) 屬第~8~章（二元堆積）。 字母依字母順序比較
+（C $<$ E $<$ I $<$ L $<$ N $<$ O $<$ U $<$ V）。 堆積用陣列存，層序就是陣列順序；插入是放到最後再
+往上調（sift-up），刪除是把最後一個移到根再往下調（sift-down），照資結書第~8.1~節。
+
+\textbf{(a) 堆疊}。 \texttt{pop} 拿走最後推入的：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+操作 & 堆疊（底 $\to$ 頂） \\
+\midrule
+push I, L, O, V & I L O V \\
+pop（V） & I L O \\
+push E；pop（E） & I L O \\
+push N；pop（N） & I L O \\
+push C, U & I L O C U \\
+\bottomrule
+\end{tabular}
+\end{center}
+從頂到底是 \texttt{UCOLI}；\texttt{ILOCU} 是從底到頂。 錯。
+
+\textbf{(b) 佇列}。 \texttt{pop} 拿走最前面的：
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+操作 & 佇列（前 $\to$ 後） \\
+\midrule
+push I, L, O, V & I L O V \\
+pop（I） & L O V \\
+push E；pop（L） & O V E \\
+push N；pop（O） & V E N \\
+push C, U & V E N C U \\
+\bottomrule
+\end{tabular}
+\end{center}
+從前到後是 \texttt{VENCU}。 對。
+
+\textbf{(c) 最小堆積}（陣列 $[1..n]$，層序）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+操作 & 過程 & 陣列 \\
+\midrule
+push I & & I \\
+push L & L $>$ I，不動 & I L \\
+push O & O $>$ I，不動 & I L O \\
+push V & V 在第 $4$ 格，父 L，不動 & I L O V \\
+pop（I） & V 移到根，和較小的子 L 換 & L V O \\
+push E & E 在第 $4$ 格，比父 V 小，換；比父 L 小，換 & E L O V \\
+pop（E） & V 移到根，和 L 換 & L V O \\
+push N & N 在第 $4$ 格，比父 V 小，換；比父 L 大，停 & L N O V \\
+pop（L） & V 移到根，和 N 換 & N V O \\
+push C & C 在第 $4$ 格，換上 V、再換上 N & C N O V \\
+push U & U 在第 $5$ 格，父 N，不動 & C N O V U \\
+\bottomrule
+\end{tabular}
+\end{center}
+層序 \texttt{CNOVU}。 對。
+
+\textbf{(d) 最大堆積}：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+操作 & 過程 & 陣列 \\
+\midrule
+push I, L & L 比父 I 大，換 & L I \\
+push O & O 比父 L 大，換 & O I L \\
+push V & V 在第 $4$ 格，換上 I、再換上 O & V O L I \\
+pop（V） & I 移到根，和較大的子 O 換 & O I L \\
+push E & E 在第 $4$ 格，父 I，不動 & O I L E \\
+pop（O） & E 移到根，和較大的子 L 換 & L I E \\
+push N & N 在第 $4$ 格，換上 I、再換上 L & N L E I \\
+pop（N） & I 移到根，和較大的子 L 換 & L I E \\
+push C & C 在第 $4$ 格，父 I，不動 & L I E C \\
+push U & U 在第 $5$ 格，換上 I、再換上 L & U L E C I \\
+\bottomrule
+\end{tabular}
+\end{center}
+層序 \texttt{ULECI}，不是 \texttt{ULEIC}。 錯。
+\end{pastsoln}

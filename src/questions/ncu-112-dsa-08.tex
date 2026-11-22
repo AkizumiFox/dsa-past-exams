@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncu-112-dsa-08}]{中央資工所 112 學年度 複選題第 8 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Given an n-node undirected graph. Which of the following statements are correct?
+\begin{enumerate}[label=(\Alph*)]
+\item Single source single destination shortest path algorithm takes O(n$^2$) time complexity.
+\item Single source multiple destination shortest path algorithm takes O(n$^2$) time complexity.
+\item All pair shortest path algorithm takes O(n$^3$) time complexity.
+\item All pair shortest path algorithm takes O(n$^2$) time complexity.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(C)。
+
+題目沒有說邊的權重，照課本的設定當成非負權重。 （無向圖若有一條負權重的邊，沿著它來回走就是負環，
+最短路徑沒有定義，所以無向圖的最短路徑本來就只談非負權重。） $n$ 個頂點的圖最多 $n(n - 1)/2$ 條邊，
+用鄰接矩陣存。
+\begin{itemize}
+\item (A) 對。 單一起點、單一終點沒有比單一起點、所有終點更快的一般做法，直接跑 Dijkstra（到終點被
+取出時就可以停）。 用陣列找最小的 $d$ 值，每次 $O(n)$、共 $n$ 次，加上掃描每個頂點的那一列，總共
+$O(n^2)$（資結書第~25.2~節）。
+\item (B) 對。 同上，Dijkstra 用陣列實作，一次算出起點到所有頂點的最短距離，$O(n^2)$。
+\item (C) 對。 Floyd--Warshall 三層迴圈，$\Theta(n^3)$（資結書第~25.6~節）；或對每個起點跑一次 (B)，
+$n \cdot O(n^2) = O(n^3)$。
+\item (D) 錯。 光是輸出就有 $n^2$ 個距離，而上面兩種做法都是 $\Theta(n^3)$；一般的非負權重圖，沒有
+已知的 $O(n^2)$ 全點對最短路徑演算法。
+\end{itemize}
+\end{pastsoln}

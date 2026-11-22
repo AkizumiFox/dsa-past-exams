@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ncku-114-prog-06}]{成大資訊聯招 114 學年度 第 6 題}
+（複選；至少有二個正確答案）
+
+{[4\%]} Please successively insert the data pairs containing the following keys into an empty min binomial heap (B-heap): 10, 20, 30, 40, 50, 60, 70, 5, 4, 15, 16. For each insertion of a single key, min-tree joining (pairwise combine) is performed. Which of the following descriptions are correct for the resultant B-heap?
+
+\textbf{Note: In a tree, each step from top to bottom is called the level of a tree. The level count starts with 1 and increments by 1 at each level or step.}
+\begin{enumerate}[label=(\Alph*)]
+\item In the resultant B-heap, the maximum degree of binomial tree is 0.
+\item The number of singly linked circular lists in the B-heap to maintain siblings and roots is 7.
+\item After performing the delete-min operation on the B-heap once, the minimum degree of binomial tree is 0.
+\item After performing the delete-min operation on the B-heap twice, the root list of min trees contains nodes with keys as 10 and 20.
+\item After performing the delete-min operation on the B-heap three times, the node containing key=50 is at the 2nd level of a min tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：照題目的字面（每次插入都做合併），只有 (E) 正確；但題目說每題至少有兩個正確答案，可見出題者心中的是 Horowitz
+課本的 B-heap（插入只把單一節點放進根串列，合併留到 delete-min 才做），那樣 (A)、(E) 正確。 作答時建議寫 (A)(E)，並註明
+這個前提。
+
+二項堆積（資結書第~8.5~節）由若干棵二項樹 $B_k$ 組成，$B_k$ 有 $2^k$ 個節點、根的度數 $k$；兩棵 $B_k$ 合併（link）時，根比較
+大的那棵成為另一棵根的子樹，得到 $B_{k+1}$（資結書虛擬碼~8.10）。 同一個度數只留一棵，就像二進位加法的進位。
+
+\textbf{(一) 照字面：每次插入都合併}。 插入 $11$ 個鍵的過程：
+\begin{center}
+\small
+\begin{tabular}{rp{11.5cm}}
+\toprule
+插入 & 根串列（依度數，括號內是子樹） \\
+\midrule
+10, 20 & $B_1$：$10[20]$ \\
+30, 40 & $30$ 先單獨；$40$ 和 $30$ 合成 $30[40]$，再和 $10[20]$ 合成 $B_2$：$10[30[40], 20]$ \\
+50, 60, 70 & $B_0$：$70$；$B_1$：$50[60]$；$B_2$：$10[30[40], 20]$ \\
+5 & $5$、$70$ 合成 $5[70]$；再和 $50[60]$ 合成 $5[50[60], 70]$；再和 $B_2$ 合成 $B_3$：$5[10[30[40], 20], 50[60], 70]$ \\
+4, 15, 16 & $B_0$：$16$；$B_1$：$4[15]$；$B_3$：$5[\ldots]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$11 = 1011_2$，所以是 $B_0$、$B_1$、$B_3$ 三棵。
+\begin{itemize}
+\item (A) 錯：最大度數是 $3$。
+\item (B) 錯：資結書用的表示法裡，根串列是一個環狀串列，每個有子節點的節點，它的子節點們又是一個環狀串列。 有子節點的
+是 $5$、$10$、$30$、$50$、$4$ 五個（$B_k$ 的內部節點有 $2^{k-1}$ 個：$4 + 1 + 0$），加上根串列共 $6$ 個串列，不是 $7$。
+\item (C) 錯：delete-min 取出 $4$，它的子節點 $15$ 回到根串列，和 $16$ 合成 $15[16]$。 剩 $10 = 1010_2$ 個節點，是 $B_1$、$B_3$
+兩棵，最小度數是 $1$。 （不論合併的順序，$n$ 個節點的二項堆積合併完一定是 $n$ 的二進位表示，所以只看節點數就能判斷。）
+\item (D) 錯：第二次取出 $5$，它的子樹 $10[\ldots]$（$B_2$）、$50[60]$（$B_1$）、$70$（$B_0$）回到根串列。 $50[60]$ 和
+$15[16]$ 合成 $15[50[60], \allowbreak 16]$，再和 $10[30[40], 20]$ 合成 $10[15[50[60], \allowbreak 16], 30[40], 20]$；剩下 $B_0$：$70$。 根串列是
+$\{70, 10\}$；$20$ 一直是 $10$ 的子節點，不在根串列裡。
+\item (E) 對：第三次取出 $10$，子樹 $15[50[60], \allowbreak 16]$、$30[40]$、$20$ 和根 $70$ 一起合併：$20$、$70$ 合成 $20[70]$；
+再和 $30[40]$ 合成 $20[30[40], 70]$；再和 $15[\ldots]$ 合成 $15[20[30[40], 70], 50[60], \allowbreak 16]$。 $50$ 是根 $15$ 的子節點，在第 $2$ 層。
+\end{itemize}
+這樣只有 (E) 一個正確，和「至少兩個正確」矛盾。
+
+\textbf{(二) Horowitz 的 B-heap：插入不合併}。 插入只把新節點放進根串列（必要時更新最小值指標），$11$ 次插入後是 $11$ 棵
+$B_0$，最大度數 $0$，(A) 對；串列只有根串列一個，(B) 錯。 第一次 delete-min 取出 $4$ 後才把其餘 $10$ 棵兩兩合併，節點數
+$10 = 1010_2$，(C) 仍錯；第二次取出後根串列一樣是 $\{70, 10\}$（$20$ 早在第一次合併時就成了 $10$ 的子節點），(D) 錯。 (E)
+要看合併的順序：照插入順序依序合併時，三次 delete-min 後的樹和 (一) 一樣是 $15[20[30[40], 70], 50[60], \allowbreak 16]$，$50$ 在第 $2$ 層，
+(E) 對。 這個讀法正好兩個正確，符合題目的設定。
+\end{pastsoln}

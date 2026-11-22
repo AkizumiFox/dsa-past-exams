@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-114-dsa-17}]{臺大資網所 114 學年度 第 17 題}
+（複選；每個選項單獨計分，答對 1 分，答錯 0 分）
+
+(5 points) Let $A,B,C,D,E$ be decision problems. We denote a polynomial time reduction with the symbol
+``$\le_p$''. Suppose that $A\le_p B$, $B\le_p C$, $C\le_p D$, and $C\le_p E$. We also assume $A\in\mathsf{P}$ and
+$B\in\mathsf{NP}$. Select all correct statement(s) below.
+\begin{enumerate}[label=(\Alph*)]
+\item If $A$ is $\mathsf{NP}$-hard, then $B\in\mathsf{P}$.
+\item If $B$ is $\mathsf{NP}$-hard and $E\le_p B$, then $C$ is $\mathsf{NP}$-complete and $D$ is $\mathsf{NP}$-hard.
+\item If $C$ is $\mathsf{NP}$-complete, then both $D$ and $E$ are $\mathsf{NP}$-complete.
+\item If $D\in\mathsf{NP}$, then $C\in\mathsf{NP}$.
+\item If $E$ is $\mathsf{NP}$-hard, then $C$ is $\mathsf{NP}$-hard.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(D)。
+
+用到的事實（資結書第~28.3、28.4~節）：
+\begin{itemize}
+\item 歸約可以遞移：$X \le_p Y$、$Y \le_p Z$ 推得 $X \le_p Z$（資結書引理~28.3）。
+\item $X \le_p Y$ 而 $Y \in \mathsf{P}$（或 $\mathsf{NP}$），則 $X \in \mathsf{P}$（或 $\mathsf{NP}$）：先把 $X$ 的輸入轉成 $Y$ 的
+輸入，再用 $Y$ 的演算法（或驗證者）。
+\item $X$ 是 NP-hard、$X \le_p Y$，則 $Y$ 是 NP-hard：任何 NP 問題先歸約到 $X$ 再歸約到 $Y$。
+\item 某個 NP-hard 問題屬於 $\mathsf{P}$，則 $\mathsf{P} = \mathsf{NP}$（資結書定理~28.5）。
+\end{itemize}
+
+\begin{itemize}
+\item[(A)] 對。 $A$ 是 NP-hard 又 $A \in \mathsf{P}$，所以 $\mathsf{P} = \mathsf{NP}$；$B \in \mathsf{NP} = \mathsf{P}$。
+\item[(B)] 對。 $B$ 是 NP-hard，$B \le_p C$，所以 $C$ 是 NP-hard；再由 $C \le_p D$，$D$ 是 NP-hard。 另外 $C \le_p E \le_p B$，
+遞移得 $C \le_p B$，而 $B \in \mathsf{NP}$，所以 $C \in \mathsf{NP}$。 $C$ 既在 NP 又是 NP-hard，是 NP 完備的。
+\item[(C)] 錯。 $C$ 是 NP 完備，$D$、$E$ 確實都是 NP-hard，但不一定在 NP 裡。 例：$A$ 取 P 裡某個非平凡的問題
+（例如「圖是否連通」）、$B = C = $ 3-SAT、$D = E = $ 停機問題。 所有假設都成立（$A$ 可以歸約到 3-SAT，任何 NP 問題
+都能歸約到停機問題），$C$ 是 NP 完備，但停機問題不可判定，不在 NP 裡。
+\item[(D)] 對。 $C \le_p D$ 而 $D \in \mathsf{NP}$，所以 $C \in \mathsf{NP}$。
+\item[(E)] 錯。 歸約的方向反了：$C \le_p E$ 只說 $C$ 不比 $E$ 難，$E$ 很難不代表 $C$ 很難。 例：$A = B = C$ 都取同一個
+P 裡的非平凡問題（例如「圖是否連通」），$D = E =$ 3-SAT；所有假設都成立（P 裡的問題可以歸約到任何非平凡問題），$E$ 是
+NP-hard，但 $C \in \mathsf{P}$，除非 $\mathsf{P} = \mathsf{NP}$，否則 $C$ 不是 NP-hard。
+\end{itemize}
+\end{pastsoln}

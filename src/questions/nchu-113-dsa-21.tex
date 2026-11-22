@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nchu-113-dsa-21}]{中興資工所甲組 113 學年度 申論題 PART 1 第 3 題}
+（問答）
+
+(4\%) Report the result if we use a \textbf{stack} to evaluate the sequence \textbf{P} under binary arithmetic
+operators performing addition (+), subtraction (-), multiplication (*), division (/), and modulo (\%).\\
+\textbf{P}=10 , 7 , 9 , - , / , 6 , 8 , 5 , + , * , \%
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $-5$（照 C 語言的 \texttt{\%}；若用數學上取非負餘數的 mod，答案是 $73$）。
+
+$\mathbf{P}$ 是後序式。 照資結書第~6.3.2~節：運算元推入堆疊；遇到運算子就彈出兩個，\textbf{先彈出的是右運算元}，
+算完把結果推回去。
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） \\
+\midrule
+10, 7, 9 & 推入 & 10, 7, 9 \\
+$-$ & $7 - 9 = -2$ & 10, $-2$ \\
+$/$ & $10 / (-2) = -5$ & $-5$ \\
+6, 8, 5 & 推入 & $-5$, 6, 8, 5 \\
+$+$ & $8 + 5 = 13$ & $-5$, 6, 13 \\
+$*$ & $6 \times 13 = 78$ & $-5$, 78 \\
+$\%$ & $(-5) \,\%\, 78$ & $-5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+對應的中序式是 $\bigl(10 / (7 - 9)\bigr) \,\%\, \bigl(6 \times (8 + 5)\bigr)$。 $10 / (-2)$ 剛好整除，不必擔心
+整數除法往哪邊捨去。
+
+最後一步的被除數是負數，結果和取餘數的定義有關。 C 語言（C99 起）的整數除法向 $0$ 捨去，
+\texttt{a \% b} 的正負號跟著被除數，$(-5) \,\%\, 78 = -5$（$-5 = 0 \times 78 + (-5)$）。 數學上（或 Python）
+取 $0$ 到 $77$ 的餘數，$-5 = (-1) \times 78 + 73$，得 $73$。 題目沒有指定，本書照 C 的定義答 $-5$，作答時
+最好註明採用哪一種。
+\end{pastsoln}

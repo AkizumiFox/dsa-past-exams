@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:nccu-111-dsa-01}]{政大資科所 111 學年度 第 1 題}
+（計算）
+
+(10\%) Give the tight asymptotic bound of the following recurrence: $T(n)=\frac{4}{9}T\left(\frac{3n}{2}\right)+n$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n^2)$。
+
+\textbf{先說題目的特別之處}。 一般的遞迴式是用比較小的 $T(\cdot)$ 表示 $T(n)$，這一題右邊的
+$T(3n/2)$ 反而比較大，$a = 4/9 < 1$，也就是寫成 $aT(n/b) + f(n)$ 時 $b = 2/3 < 1$。 主定理
+（資結書第~2.4~節）要求 $a \ge 1$、$b > 1$，不能直接套；硬套會算出
+$n^{\log_b a} = n^{\log_{2/3}(4/9)} = n^2$，答案碰巧對，但理由不成立。 題目也沒有給初始條件。
+下面把它改寫成「往小的方向」的遞迴式，再用代入法（資結書第~2.2~節）求出所有的解。 我們採用的
+解讀是：$T$ 是執行時間，對所有夠大的 $n$ 都是正的。
+
+\textbf{改寫}。 令 $m = 3n/2$，也就是 $n = 2m/3$，代入原式再移項：
+\[
+\frac{4}{9}T(m) = T\!\left(\frac{2m}{3}\right) - \frac{2m}{3}
+\quad\Longrightarrow\quad
+T(m) = \frac{9}{4}T\!\left(\frac{2m}{3}\right) - \frac{3}{2}m .
+\]
+現在是 $a = 9/4$、$b = 3/2$ 的一般形式，$n^{\log_b a} = n^{\log_{3/2}(9/4)} = n^2$，但
+$f(m) = -\frac{3}{2}m$ 是負的，主定理還是不適用。 改成直接解。
+
+\textbf{一個特解}。 猜 $T(n) = dn$，代入原式：
+$\frac{4}{9} \cdot d \cdot \frac{3n}{2} + n = \frac{2d}{3}n + n$，要等於 $dn$，得 $d = 3$。 所以
+$T(n) = 3n$ 是一個解。
+
+\textbf{齊次部分}。 設 $T(n) = 3n + H(n)$，代入後 $3n$ 那部分互相抵消，剩下
+$H(n) = \frac{4}{9}H\!\left(\frac{3n}{2}\right)$。 令 $H(n) = n^2 p(n)$：
+\[
+n^2 p(n) = \frac{4}{9} \cdot \frac{9n^2}{4}\, p\!\left(\frac{3n}{2}\right) = n^2 p\!\left(\frac{3n}{2}\right),
+\]
+也就是 $p(3n/2) = p(n)$：$p$ 在 $n, \frac{3}{2}n, \frac{9}{4}n, \ldots$ 上取同一個值。 反過來，任何
+滿足 $p(3n/2) = p(n)$ 的 $p$ 都讓 $3n + n^2 p(n)$ 滿足原式，所以全部的解是
+\[
+T(n) = n^2 p(n) + 3n, \qquad p\!\left(\tfrac{3n}{2}\right) = p(n).
+\]
+$p$ 由初始條件決定：給定 $T$ 在 $[1, 3/2)$ 上的值，改寫後的式子就一路決定 $[3/2, 9/4)$、
+$[9/4, 27/8)$、…… 上的值，而 $p(x) = (T(x_0) - 3x_0)/x_0^2$，$x_0$ 是 $x$ 除以 $3/2$ 若干次後落在
+$[1, 3/2)$ 的那個數。 例如 $p$ 是常數 $c$ 時 $T(n) = cn^2 + 3n$，代回去驗證：
+$\frac{4}{9}\left(c \cdot \frac{9n^2}{4} + 3 \cdot \frac{3n}{2}\right) + n = cn^2 + 2n + n = cn^2 + 3n$。
+
+\textbf{求緊界}。
+\begin{itemize}
+\item $p \ge 0$：如果某個 $x_0$ 有 $p(x_0) = -\delta < 0$，那麼在 $x = x_0(3/2)^k$ 上
+$T(x) = 3x - \delta x^2$，$k$ 夠大時是負的，不可能是執行時間。
+\item $p$ 有上界：$p$ 的值全部來自 $[1, 3/2)$ 上的初始值，初始值有界，$p$ 就有界，
+$T(n) \le (\max p)\, n^2 + 3n = O(n^2)$。
+\item 一般的初始值（不恰好等於 $3x_0$）使 $p$ 有正的下界，$T(n) \ge (\min p)\, n^2 = \Omega(n^2)$。
+\end{itemize}
+所以 $T(n) = \Theta(n^2)$。 唯一的例外是初始值剛好是 $T(x_0) = 3x_0$，這時 $p \equiv 0$、
+$T(n) = 3n$；題目問的是一般情形的緊界，答 $\Theta(n^2)$。
+
+直觀的理解：這一題等於問「哪個函數放大 $3/2$ 倍時，主要那一項剛好放大 $9/4$ 倍」，答案是
+$n^2$；附加的 $+n$ 只貢獻低階的 $3n$。
+\end{pastsoln}

@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ntut-111-prog-01}]{北科大資工所 111 學年度 第 1 題（節錄 1-1-I 小題）}
+（程式追蹤；3 分）
+
+\textbf{Problem 1 [25\%, each 2\%, except 1-1-I 3\%]}
+
+(1) Write the output of the following Python code (1-1-I)$\sim$(1-1-III).
+
+（原題的程式有 26 行，定義了 \texttt{B}、\texttt{CF}、\texttt{A}、\texttt{M}、\texttt{K} 五個函式，
+1-1-II、1-1-III 和第 (2)(3) 部分考的是 Python 語法。 這裡只收 1-1-I，程式只列出和它有關的部分，
+其餘以 \texttt{...} 表示。）
+\begin{minted}[fontsize=\small]{python}
+...
+def K(perm):
+    if len(perm)<=1:return [perm]
+    r = []
+    for i in range(len(perm)):
+        others = K(perm[:i]+perm[i+1:])
+        for s in others:
+            r = r + [perm[i] + s]
+    return r
+
+print(K('XYZ'))                      #(Problem 1-1-I)
+...
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：印出 \texttt{['XYZ', 'XZY', 'YXZ', 'YZX', 'ZXY', 'ZYX']}。
+
+\texttt{K(perm)} 回傳字串 \texttt{perm} 的所有排列：長度 $\le 1$ 時只有它自己一種；否則輪流讓第
+\texttt{i} 個字元當開頭（\texttt{perm[i]}），把其餘字元（\texttt{perm[:i]+perm[i+1:]}，也就是拿掉第
+\texttt{i} 個）的每一種排列接在它後面。 這正是排列的狀態空間樹（資結書第~20.1~節）：第一層決定
+第一個字元，第二層決定第二個，走到葉節點就得到一個排列。 列出的順序是這棵樹的葉節點由左到右
+的順序。
+
+追蹤 \texttt{K('XYZ')}：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+\texttt{i} & \texttt{perm[i]} & 其餘字元 & \texttt{K(其餘)} 與接上後的結果 \\
+\midrule
+0 & \texttt{X} & \texttt{'YZ'} & \texttt{['YZ', 'ZY']} $\Rightarrow$ \texttt{'XYZ', 'XZY'} \\
+1 & \texttt{Y} & \texttt{'XZ'} & \texttt{['XZ', 'ZX']} $\Rightarrow$ \texttt{'YXZ', 'YZX'} \\
+2 & \texttt{Z} & \texttt{'XY'} & \texttt{['XY', 'YX']} $\Rightarrow$ \texttt{'ZXY', 'ZYX'} \\
+\bottomrule
+\end{tabular}
+\end{center}
+其中 \texttt{K('YZ')}：\texttt{i = 0} 時 \texttt{'Y'} 接上 \texttt{K('Z') = ['Z']} 得 \texttt{'YZ'}；
+\texttt{i = 1} 時 \texttt{'Z'} 接上 \texttt{K('Y') = ['Y']} 得 \texttt{'ZY'}。 另外兩個同理。
+\texttt{r = r + [...]} 每次把新的字串接在串列最後，所以順序就是上表由上到下。
+
+\texttt{print} 印出 Python 串列的寫法：方括號、元素之間用逗號加一個空白、字串用單引號，所以輸出是
+\begin{center}
+\texttt{['XYZ', 'XZY', 'YXZ', 'YZX', 'ZXY', 'ZYX']}
+\end{center}
+長度 $n$ 的字串有 $n!$ 種排列，這裡 $3! = 6$ 種，而且因為輸入的字元已經依字母排好，輸出也剛好依
+字典序排列。
+\end{pastsoln}

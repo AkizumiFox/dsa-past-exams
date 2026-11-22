@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:nsysu-115-osds-03}]{中山資工所甲組 115 學年度 第 7 題}
+（問答；10 分）
+
+(10\%) Consider a hash table of size $M=11$, where each bucket can hold only one key. The table
+uses double hashing. The primary hash function is $h_1(k)=(k \bmod 11)$, and the secondary hash
+function is $h_2(k)=7-(k \bmod 7)$. Insert the keys 11, 33, 66, 7, 77 (in this order) into the
+empty hash table. Show the final state of the hash table after all insertions.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：第 $0$、$2$、$3$、$4$、$7$ 格分別是 $11, 33, 77, 66, 7$，其他格是空的。
+
+雙重雜湊（資結書第~12.3~節）第 $i$ 次探測的位置是
+\[
+h(k, i) = \bigl(h_1(k) + i \cdot h_2(k)\bigr) \bmod 11, \qquad i = 0, 1, 2, \ldots
+\]
+$h_2(k) = 7 - (k \bmod 7)$ 的值在 $1$ 到 $7$ 之間，不會是 $0$；$11$ 是質數，和任何步長都互質，所以
+探測序列會走遍全部 $11$ 格（資結書定理~12.4），只要表沒滿一定放得進去。
+\begin{center}
+\small
+\begin{tabular}{ccccl}
+\toprule
+鍵 $k$ & $h_1(k)$ & $k \bmod 7$ & $h_2(k)$ & 探測 \\
+\midrule
+11 & 0 & 4 & 3 & 第 $0$ 格空，放入 \\
+33 & 0 & 5 & 2 & 第 $0$ 格（11）占；$0 + 2 = 2$ 空，放入 \\
+66 & 0 & 3 & 4 & 第 $0$ 格占；$0 + 4 = 4$ 空，放入 \\
+7 & 7 & 0 & 7 & 第 $7$ 格空，放入 \\
+77 & 0 & 0 & 7 & 第 $0$ 格占；$7$ 占（7）；$14 \bmod 11 = 3$ 空，放入 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的表：
+\begin{center}
+\small
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+格 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+鍵 & 11 & & 33 & 77 & 66 & & & 7 & & & \\ \hline
+\end{tabular}
+\end{center}
+這組鍵除了 $7$ 以外都是 $11$ 的倍數，$h_1$ 全部是 $0$；線性探測的話它們會在第 $0$ 格後面排成一長
+串，雙重雜湊用各自不同的步長（$2, 4, 7$）把它們分散開來。 注意 $77$ 的第二次探測撞到的是
+$7$，不是和它同一個 $h_1$ 的鍵。
+\end{pastsoln}

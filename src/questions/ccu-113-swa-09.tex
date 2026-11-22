@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ccu-113-swa-09}]{中正資工所甲組 113 學年度 第 9 題}
+（單選）
+
+Given the directed graph below, please answer the following questions from Q8 to Q9.
+\begin{center}
+\begin{tikzpicture}[font=\sffamily\small,>={Stealth[length=2mm]}]
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (A) at (1.24,-3.49) {A};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (B) at (2.53,-1.85) {B};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (F) at (5.35,-1.12) {F};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (D) at (4.29,-3.49) {D};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (E) at (7.82,-3.49) {E};
+\node[draw,circle,minimum size=8mm,inner sep=0pt,font=\sffamily\bfseries] (C) at (5.06,-5.47) {C};
+\draw[->] (A)--node[above left,inner sep=1pt]{10}(B);
+\draw[->] (B)--node[above,inner sep=2pt]{15}(F);
+\draw[->] (B)--node[below left,inner sep=1pt]{12}(D);
+\draw[->] (D)--node[right,inner sep=4pt]{1}(F);
+\draw[->] (D)--node[above,inner sep=2pt]{2}(E);
+\draw[->] (F)--node[above right,inner sep=1pt]{5}(E);
+\draw[->] (A)--node[below left,inner sep=1pt]{15}(C);
+\draw[->] (C)--node[below right,inner sep=1pt]{10}(E);
+\end{tikzpicture}
+\end{center}
+
+(2\%) What is the topological ordering of the graph? You must choose the node with the label that has the smallest alphabetical order first, when finding the topological order.
+\begin{enumerate}[label=\Alph*.]
+\item A$\to$B$\to$D$\to$F$\to$E$\to$C
+\item A$\to$C$\to$E$\to$B$\to$D$\to$F
+\item A$\to$B$\to$D$\to$E$\to$C$\to$F
+\item A$\to$B$\to$C$\to$D$\to$F$\to$E
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D（$A \to B \to C \to D \to F \to E$）。 邊上的數字是第 8 題 Dijkstra 用的成本，拓樸排序用不到。
+
+「每次挑字母最小的」就是資結書第~22.1.3~節用最小優先佇列的 Kahn 演算法：每次從入度為 $0$ 的頂點中取字母最小的輸出，
+再把它出去的邊拿掉。 一開始的入度是 $A{:}\,0$、$B{:}\,1$、$C{:}\,1$、$D{:}\,1$、$E{:}\,3$、$F{:}\,2$。 表中「--」表示已經輸出。
+\begin{center}
+\small
+\begin{tabular}{cc*{6}{c}l}
+\toprule
+步驟 & 取出 & $A$ & $B$ & $C$ & $D$ & $E$ & $F$ & 可取的頂點 \\
+\midrule
+開始 & & 0 & 1 & 1 & 1 & 3 & 2 & $\{A\}$ \\
+1 & $A$ & -- & 0 & 0 & 1 & 3 & 2 & $\{B, C\}$ \\
+2 & $B$ & -- & -- & 0 & 0 & 3 & 1 & $\{C, D\}$ \\
+3 & $C$ & -- & -- & -- & 0 & 2 & 1 & $\{D\}$ \\
+4 & $D$ & -- & -- & -- & -- & 1 & 0 & $\{F\}$ \\
+5 & $F$ & -- & -- & -- & -- & 0 & -- & $\{E\}$ \\
+6 & $E$ & -- & -- & -- & -- & -- & -- & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+其他選項：
+\begin{itemize}
+\item A：$A, B, D, F, E, C$ 違反邊 $C \to E$（$E$ 排在 $C$ 前面），根本不是拓樸順序。 第 3 步時 $C$、$D$ 都可以取，照規則也
+該先取 $C$。
+\item B：$E$ 排在 $B$、$D$、$F$ 前面，違反 $D \to E$、$F \to E$。
+\item C：$E$ 排在 $C$、$F$ 前面，違反 $C \to E$、$F \to E$。
+\item E：D 是對的，所以不選。
+\end{itemize}
+第 8、9 題的答案剛好都是 D：這張圖的 Dijkstra 取出順序本身也是一個拓樸順序（每條邊都從先取出的指向後取出的），但這是巧合，
+兩個問題一般沒有關係。
+\end{pastsoln}

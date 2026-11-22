@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ncu-112-dsa-06}]{中央資工所 112 學年度 複選題第 6 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+In a stack structure, let X denote a push operation and let Y denote a pop operation. After 8 stack
+operations, consisting of 4 pushes and 4 pops, an input sequence 1234 may change its order. For example,
+after XYXXYYXY is performed, 1234 will become 1324. Which of the following is (are) possible output
+sequences?
+
+(A)~1243 \qquad (B)~4123 \qquad (C)~2134 \qquad (D)~4321
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(C)、(D)。
+
+輸入依 $1, 2, 3, 4$ 的順序推入，判斷方法照資結書第~6.1.5~節：要輸出下一個數 $v$ 時，若 $v$ 還沒推入，就把
+它和它之前還沒推入的數全部推入，再彈出；若 $v$ 已經在堆疊裡，它必須正好在頂端。
+
+\begin{itemize}
+\item (A) 1243 可以：XYXYXXYY。 推 $1$ 彈 $1$；推 $2$ 彈 $2$；推 $3$、推 $4$，彈 $4$、彈 $3$。
+\item (B) 4123 不行。 要先輸出 $4$，得把 $1, 2, 3, 4$ 全部推入再彈出 $4$，這時堆疊由底到頂是
+$1, 2, 3$，頂端是 $3$。 下一個要輸出 $1$，但 $1$ 壓在最底下，彈不出來。
+\item (C) 2134 可以：XXYYXYXY。 推 $1$、推 $2$，彈 $2$、彈 $1$；推 $3$ 彈 $3$；推 $4$ 彈 $4$。
+\item (D) 4321 可以：XXXXYYYY。 全部推入再全部彈出。
+\end{itemize}
+也可以直接用資結書定理~6.1 檢查：輸出順序做得到，若且唯若沒有「大、小、中」的樣子（不存在
+$i < j < k$ 使 $p_j < p_k < p_i$）。 $4123$ 的 $4, 1, 2$ 正是「大、小、中」，其他三個都沒有。
+\end{pastsoln}

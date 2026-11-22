@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncu-112-dsa-01}]{中央資工所 112 學年度 複選題第 1 題}
+（複選；每題 5 分，答錯 1 題倒扣 1 分）
+
+Which of the following isn't open addressing overflow handling?
+
+(A)~Linear probing \qquad (B)~dynamic hashing \qquad (C)~rehashing \qquad (D)~quadratic probing
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+開放定址（open addressing）是指碰撞時不另外開串列，而是在\textbf{同一張表}裡照某個規則找下一個空格
+（資結書第~12.3~節）。 逐項看：
+\begin{itemize}
+\item (A) Linear probing：依序試 $h(k), h(k) + 1, h(k) + 2, \ldots$（模 $m$），是開放定址。
+\item (B) dynamic hashing：動態雜湊（可延伸雜湊等）是讓表的大小隨資料量改變的整套做法，用目錄和桶子
+（bucket）把滿出來的桶子分裂（資結書第~12.5~節），不是在同一張表裡探測下一格的溢位處理，所以它
+\textbf{不是}開放定址。
+\item (C) rehashing：這裡的 rehashing 是 Horowitz 等資料結構課本的用法：碰撞時改用第二個、第三個雜湊函數
+$h_2, h_3, \ldots$ 算下一個位置，仍然在同一張表裡找空格，屬於開放定址（雙重雜湊是它的特例）。
+資結書第~12.5~節提醒過，「再雜湊」另有「擴表後全部重新插入」的意思；那個意思是擴表的手段，不是溢位
+處理方式。 題目把它和 linear probing、quadratic probing 並列成溢位處理，應該照前一種意思讀。
+\item (D) quadratic probing：依序試 $h(k), h(k) + 1^2, h(k) + 2^2, \ldots$（或正負交替），是開放定址。
+\end{itemize}
+所以只有 (B) 不是開放定址的溢位處理方式。
+\end{pastsoln}

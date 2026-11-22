@@ -1,0 +1,57 @@
+\begin{pastexam}[label={px:ncu-114-dsa-02}]{中央資工所 114 學年度 第 2 題}
+（複選；每題 5 分，全部答對才給分，答錯倒扣 1 分）
+
+Which of the following statements are correct?
+\begin{enumerate}[label=(\alph*)]
+\item The postfix of (a+b)/(c-d)+e is ab+cd-/+e.
+\item The postfix of infix expression b+a/c*d is bac+d/*.
+\item The infix of the postfix expression ab+c*d/ef-/ is (((a+b)*c)/d)/(e-f).
+\item The prefix of the postfix expression abc+d/* is *a/+bcd.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(c)(d)。
+
+中序轉後序照資結書第~6.3.3~節：括號和優先順序決定運算的先後，同優先順序由左往右結合；後序式
+裡每個運算子緊接在它的兩個運算元後面。 後序轉回中序或前序，用一個堆疊由左往右掃（資結書
+第~6.3.5~節）：遇到運算元就推入；遇到運算子就彈出兩個（先彈出的是右運算元），組合後推回去。
+
+\textbf{(a) 錯}。 $(a+b)/(c-d)+e$ 的運算順序：$a+b$、$c-d$、兩者相除、最後加 $e$。 最後一個運算是
+$+$，所以後序要以 $+$ 結尾：
+\[
+(a+b) \to \texttt{ab+},\quad (c-d) \to \texttt{cd-},\quad \div \to \texttt{ab+cd-/},\quad
++e \to \texttt{ab+cd-/e+}.
+\]
+題目的 \texttt{ab+cd-/+e} 把 $+$ 放在 $e$ 前面，$+$ 的運算元變成 \texttt{ab+cd-/} 底下的東西，
+而且最後剩下 $e$ 沒有運算子可用，不是合法的後序式。
+
+\textbf{(b) 錯}。 $b+a/c*d$：$/$ 和 $*$ 優先於 $+$，而 $/$、$*$ 同級，由左往右，所以是
+$b + ((a/c)*d)$：
+\[
+a/c \to \texttt{ac/},\quad *d \to \texttt{ac/d*},\quad b+ \to \texttt{bac/d*+}.
+\]
+題目的 \texttt{bac+d/*} 對應的是 $b*((a+c)/d)$，運算子全錯。
+
+\textbf{(c) 對}。 掃 \texttt{ab+c*d/ef-/}：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+讀到 & 堆疊（底 $\to$ 頂） \\
+\midrule
+\texttt{a}、\texttt{b} & $a$, $b$ \\
+\texttt{+} & $(a+b)$ \\
+\texttt{c}、\texttt{*} & $((a+b)*c)$ \\
+\texttt{d}、\texttt{/} & $(((a+b)*c)/d)$ \\
+\texttt{e}、\texttt{f}、\texttt{-} & $(((a+b)*c)/d)$, $(e-f)$ \\
+\texttt{/} & $(((a+b)*c)/d)/(e-f)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+和題目寫的一樣。
+
+\textbf{(d) 對}。 掃 \texttt{abc+d/*}，這次組合成前序（運算子放前面）：\texttt{b}、\texttt{c}、
+\texttt{+} 得 \texttt{+bc}；\texttt{d}、\texttt{/} 得 \texttt{/+bcd}；最後 \texttt{*} 的左運算元是
+\texttt{a}、右運算元是 \texttt{/+bcd}，得 \texttt{*a/+bcd}。 對應的中序是 $a*((b+c)/d)$。 和題目一樣。
+\end{pastsoln}
