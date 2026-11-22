@@ -1,0 +1,18 @@
+paper: ncku-107-prog
+volume: 1
+school: 成大
+dept: 資訊聯招
+year: 107
+subject: 程式設計
+instructions: 本試題不可使用計算機。 請於答案卷（卡）作答，於本試題紙上作答者，不予計分。
+questions:
+  - {id: ncku-107-prog-01, label: 第 1 題, chapter: 9}
+  - {id: ncku-107-prog-02, label: 第 2 題, chapter: 24}
+  - {id: ncku-107-prog-03, label: 第 3 題, chapter: 21}
+  - {id: ncku-107-prog-04, label: 第 4 題, chapter: 3}
+  - {id: ncku-107-prog-05, label: 第 5 題, chapter: 8}
+  - {id: ncku-107-prog-06, label: 第 6 題, chapter: 28}
+  - {id: ncku-107-prog-07, label: 第 7 題, chapter: 15}
+  - {id: ncku-107-prog-08, label: 第 8 題, chapter: 26}
+  - {id: ncku-107-prog-09, label: 第 9 題, chapter: 2}
+  - {id: ncku-107-prog-10, label: 第 10 題, chapter: 29}

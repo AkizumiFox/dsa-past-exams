@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntut-109-ci-03}]{北科大資工所 109 學年度 第 2 題}
+（是非，只寫答案）
+
+\textbf{True or False}. Just state the answer - you do \textbf{NOT} need to justify them. (9 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item Let $T$ be a \textbf{minimum spanning tree} (MST) of graph $G$. Given a connected subgraph $H$
+of $G$, $T\cap H$ is contained in some MST of $H$. (3 pts)
+\item Are there graphs for which Prim's algorithm is faster than Kruskal's algorithm? (3 pts)
+\item Dijkstra's algorithm for shortest path problem allows the edges having negative weight in the
+input graph? (3 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) True；(2) True（有）；(3) False（不允許）。
+
+題目只要答案，下面寫出理由。
+
+\textbf{(1) True。} $T \cap H$ 指 $T$ 裡同時也在 $H$ 裡的邊，記作 $F$。 $F$ 是 $T$ 的一部分，
+沒有環。 在 $H$ 的所有最小生成樹裡，取一棵和 $F$ 共用的邊最多的，叫 $T_H$。 只要證明
+$F \subseteq T_H$。
+
+假設不是，有一條邊 $e = (u, v) \in F$ 不在 $T_H$ 裡。
+\begin{itemize}
+\item 把 $e$ 加進 $T_H$，在 $H$ 裡形成一個環 $C$。
+\item 把 $e$ 從 $T$ 拿掉，$T$ 分成兩塊，$u$ 在一塊、$v$ 在另一塊，得到 $G$ 的一個切割。 $T$ 的邊裡
+只有 $e$ 跨過這個切割。
+\item 環 $C$ 從 $u$ 繞回 $v$，除了 $e$ 以外，至少還有一條邊 $f$ 跨過這個切割。 $f \ne e$，所以
+$f \notin T$，當然也 $f \notin F$；$f$ 在環 $C$ 上而不是 $e$，所以 $f \in T_H$。
+\item $w(e) \le w(f)$：否則 $T - e + f$ 是 $G$ 的生成樹，總權重比 $T$ 小，和 $T$ 是最小生成樹矛盾。
+\item $T_H - f + e$ 仍是 $H$ 的生成樹（拿掉環上的一條邊、加上環上的另一條），總權重
+$w(T_H) - w(f) + w(e) \le w(T_H)$，所以也是 $H$ 的最小生成樹。 它和 $F$ 共用的邊比 $T_H$ 多一條
+（多了 $e$，拿掉的 $f$ 本來就不在 $F$ 裡），和 $T_H$ 的選法矛盾。
+\end{itemize}
+所以 $F = T \cap H$ 包含在 $H$ 的最小生成樹 $T_H$ 裡。 這和資結書第~24.1~節切割性質、環性質
+用的是同一種交換論證。 注意結論是「某一棵」：$H$ 的最小生成樹不一定只有一棵，$T \cap H$ 也不一定
+自己就是 $H$ 的生成樹（它可能不連通）。
+
+\textbf{(2) True。} 有。 資結書第~24.3~節的比較：Kruskal 要先排序 $m$ 條邊，$O(m \lg m) = O(m \lg n)$；
+Prim 用陣列存每個頂點的 key，不用堆積，是 $\Theta(n^2)$。 在稠密的圖（例如完全圖，$m = \Theta(n^2)$）
+上，Kruskal 是 $\Theta(n^2 \lg n)$，Prim 陣列版是 $\Theta(n^2)$，Prim 比較快。 Prim 用費氏堆積時是
+$O(m + n \lg n)$，只要 $m$ 比 $n$ 多一個超過常數的因子，例如 $m = n \lg n$，也比 Kruskal 的排序快。
+反過來在稀疏的圖上兩者差不多，所以答案是「有這樣的圖」。
+
+\textbf{(3) False。} Dijkstra 的正確性靠「從佇列取出的頂點，距離已經確定」，這要求邊的權重都不是負的
+（資結書第~25.2.5~節）。 反例（就是資結書那一節的圖）：起點 $1$，邊 $1 \to 2$ 權重 $3$、$1 \to 3$ 權重 $5$、
+$3 \to 2$ 權重 $-4$、$2 \to 4$ 權重 $2$，沒有負環。 Dijkstra 取出 $1$ 後 $d[2] = 3$、$d[3] = 5$；
+接著取出 $2$，認定它的距離是 $3$，並由 $2 \to 4$ 得 $d[4] = 5$；剩下的 $3$、$4$ 距離都是 $5$，誰先取出都一樣。
+取出 $3$、鬆弛 $3 \to 2$ 時才發現 $5 - 4 = 1 < 3$，但 $2$ 已經取出過，不會再拿 $2 \to 4$ 去更新，
+$d[4]$ 停在 $5$。 真正的最短距離
+是 $\delta(1, 4) = 5 - 4 + 2 = 3$（$1 \to 3 \to 2 \to 4$），答案錯了。 有負邊時要用 Bellman--Ford
+（資結書第~25.3~節）。
+\end{pastsoln}

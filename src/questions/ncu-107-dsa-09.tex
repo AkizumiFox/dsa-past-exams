@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:ncu-107-dsa-09}]{中央資工所 107 學年度 第 9 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+Suppose that array A[1:n] maintains a binary tree. For a binary tree node stored in A[i], its two
+children (if exist) are stored in A[2i] and A[2i+1], respectively. the program below aims to
+complete the following two tasks
+\begin{enumerate}[label=(\arabic*)]
+\item adjust array A to establish a max heap, and
+\item apply heap sort on the max heap built in (1) in nondecreasing order.
+\end{enumerate}
+\begin{minted}[fontsize=\small,breaklines]{c}
+void adjust (int A[], int root, int n)
+{
+  int child, rootkey;
+  int temp;
+  temp = A[root];
+  rootkey = A[root];
+  child = 2* root;
+  while ( child <=n ) {
+     if (( child <=n ) && ( A[child] < A[child+1] ))
+        child ++;
+     if ( rootkey > A[child] )
+        break;
+     else {
+        ____(B1)____;
+        child *=2; }
+  }
+    ____(B2)____;
+}
+
+void heapsort (int A[], int n)
+{ /* perform a heap sort on A[1:n] */
+   int i, j;
+   int temp;
+   for ( ___(B3)___; i>0; i++)  /* adjust the binary tree to establish the max heap */
+      adjust (A, i, n);
+   for (1=n-1; i>0; i--) {      /* heap sort */
+      swap( A[1], A[i+1], temp);  /* exchange A[i] and A[i+1] */
+      adjust(A, 1, i); }
+}
+\end{minted}
+
+Blank (B2) in the program above should be\\
+(a)~\texttt{A[child] = temp}\\
+(b)~\texttt{A[root] = A[child]}\\
+(c)~\texttt{A[child] = A[child/2]}\\
+(d)~\texttt{A[child/2] = temp}\\
+(e)~\texttt{A[root] = temp}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d) \texttt{A[child/2] = temp}。
+
+上一題（歷屆試題~\ref{px:ncu-107-dsa-08}）說明了 \texttt{adjust} 是挖洞的寫法：原來的
+\texttt{A[root]} 存在 \texttt{temp}，迴圈裡洞的位置一直是 \texttt{child/2}。 迴圈結束有兩種情形：
+\begin{itemize}
+\item \texttt{break}：\texttt{rootkey > A[child]}，\texttt{temp} 比洞底下較大的子節點還大，就放在洞裡。
+\item \texttt{child > n}：洞已經是葉節點，沒有子節點可比，\texttt{temp} 也放在洞裡。
+\end{itemize}
+兩種情形洞都在 \texttt{child/2}，所以 (B2) 是 \texttt{A[child/2] = temp}。 上一題的追蹤最後
+\texttt{child = 8}，\texttt{A[4] = temp = 2}。
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{A[child] = temp}：\texttt{child} 是洞的子節點，可能已經超過 $n$（上一題的例子是 $8 > 6$），
+寫到堆積外面，洞也沒填，錯。
+\item (b) \texttt{A[root] = A[child]}：\texttt{temp} 不見了，錯。
+\item (c) \texttt{A[child] = A[child/2]}：洞裡的值是已經往上搬走的舊值，往下抄沒有意義，\texttt{temp} 也
+不見了，錯。
+\item (d) 對。
+\item (e) \texttt{A[root] = temp}：只有第一輪就 \texttt{break} 時（洞還在 \texttt{root}）才對；洞往下移過時，
+會蓋掉搬上來的最大值，錯。 上一題的例子會變成 $2, 6, 7, 6, 5, 8$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:nccu-110-dsa-05}]{政大資科所 110 學年度 第 5 題}
+（問答）
+
+(15\%) An independent set $I$ of an undirected graph $G=(V,E)$ is a subset of $V$ such that for any
+two vertices $u$ and $v$ in $I$, $u$ and $v$ are not adjacent, i.e., $(u,v)\notin E$.\\
+Design a dynamic program to find the largest independent set in a tree.\\
+***Please explain the high-level idea of your answer in English or Chinese.***
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{高階想法}。 把樹任選一點 $r$ 當根。 每個點 $v$ 只有「選」和「不選」兩種狀態；$v$ 的狀態定了以後，$v$ 的
+各個子樹之間互不相鄰，可以各自求最好的答案再加起來。 所以對每個點算兩個數，由葉往根（後序）算上去
+（資結書第~18.8.2~節）。
+
+\textbf{子問題}。 $T_v$ 是以 $v$ 為根的子樹。
+\begin{itemize}
+\item $\mathit{in}[v]$：$T_v$ 裡\textbf{包含} $v$ 的獨立集最大有幾個點。
+\item $\mathit{out}[v]$：$T_v$ 裡\textbf{不含} $v$ 的獨立集最大有幾個點。
+\end{itemize}
+
+\textbf{遞迴式}。 選了 $v$，它的子節點都不能選；不選 $v$，每個子節點選不選都可以，取大的：
+\[
+\mathit{in}[v] = 1 + \sum_{u} \mathit{out}[u], \qquad
+\mathit{out}[v] = \sum_{u} \max\bigl(\mathit{in}[u], \mathit{out}[u]\bigr),
+\]
+$u$ 跑過 $v$ 的所有子節點；葉節點 $\mathit{in} = 1$、$\mathit{out} = 0$。 答案是 $\max(\mathit{in}[r], \mathit{out}[r])$。
+
+\textbf{正確性}。 $T_v$ 的獨立集 $I$ 限制在子樹 $T_u$ 上仍是 $T_u$ 的獨立集。 $v \in I$ 時，$I$ 不能含 $v$ 的子節點，
+所以 $I \cap T_u$ 是不含 $u$ 的獨立集，大小 $\le \mathit{out}[u]$，總共 $\le 1 + \sum \mathit{out}[u]$；反過來把各子樹裡
+不含 $u$ 的最大獨立集合起來再加上 $v$，仍然獨立（$v$ 只和子節點相鄰，不同子樹之間沒有邊），達到這個值。
+$v \notin I$ 的情形一樣，只是每個子樹沒有限制。 對子樹大小歸納，兩個式子都對。
+
+\begin{pseudo}{樹的最大獨立集}
+\Procedure{Tree-IS}{$v, p$} \Comment{$p$ 是 $v$ 的父節點}
+    \State $\mathit{in}[v] \gets 1$；$\mathit{out}[v] \gets 0$
+    \For{每個 $u \in \mathit{Adj}[v]$，$u \ne p$}
+        \State \Call{Tree-IS}{$u, v$}
+        \State $\mathit{in}[v] \gets \mathit{in}[v] + \mathit{out}[u]$
+        \State $\mathit{out}[v] \gets \mathit{out}[v] + \max(\mathit{in}[u], \mathit{out}[u])$
+    \EndFor
+\EndProcedure
+\Statex
+\Procedure{Pick}{$v, p, \mathit{parentIn}$} \Comment{印出最大獨立集}
+    \If{$\mathit{parentIn} = \FALSE$ \AND $\mathit{in}[v] > \mathit{out}[v]$}
+        \State 印出 $v$；$c \gets \TRUE$
+    \Else
+        \State $c \gets \FALSE$
+    \EndIf
+    \For{每個 $u \in \mathit{Adj}[v]$，$u \ne p$}
+        \State \Call{Pick}{$u, v, c$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+先呼叫 $\proc{Tree-IS}(r, \NIL)$，再呼叫 $\proc{Pick}(r, \NIL, \FALSE)$。 \proc{Pick} 照遞迴式的取法還原：父節點選了，$v$ 就不能選；
+父節點沒選，$v$ 選 $\mathit{in}$、$\mathit{out}$ 裡大的那個（平手不選）。
+
+\textbf{時間}。 每個點處理一次，每條邊在兩端各看一次，$\Theta(n)$。 $n$ 很大時把遞迴改成依 BFS 順序倒著算，避免遞迴太深。
+
+\textbf{例子}。 歷屆試題~\ref{px:nccu-108-dsa-03}（政大 108 學年度第 3 題）的樹（A--B、B--C、A--E、E--D、E--F、F--G），以 A 為根，後序 C、B、D、G、F、E、A：
+\begin{center}
+\small
+\begin{tabular}{ccll}
+\toprule
+$v$ & 子節點 & $\mathit{in}[v]$ & $\mathit{out}[v]$ \\
+\midrule
+C、D、G & -- & $1$ & $0$ \\
+B & C & $1 + 0 = 1$ & $\max(1, 0) = 1$ \\
+F & G & $1 + 0 = 1$ & $\max(1, 0) = 1$ \\
+E & D、F & $1 + 0 + 1 = 2$ & $1 + 1 = 2$ \\
+A & B、E & $1 + 1 + 2 = 4$ & $1 + 2 = 3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最大獨立集有 $\max(4, 3) = 4$ 個點。 還原：A 選（$4 > 3$）；B、E 不能選；C 的 $1 > 0$，選；D 選；F 平手不選；G 選。 得到
+$\{\mathrm{A, C, D, G}\}$。 （$\{\mathrm{A, C, D, F}\}$ 也是大小 $4$ 的獨立集。）
+
+\textbf{不能用的貪心}：「每次選度數最大的點」在這題會出錯（例如星狀樹選了中心只得到 $1$ 個點，選全部葉子才是最大）。
+不過樹上「每次選一片葉子、刪掉它和它的父節點」的貪心是對的，也是一個 $O(n)$ 的寫法；題目指定動態規劃，就照上面寫。
+\end{pastsoln}

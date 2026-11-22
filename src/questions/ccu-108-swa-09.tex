@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ccu-108-swa-09}]{中正資工所甲組 108 學年度 第 10 題}
+（問答）
+
+(1\%) What is the name of such representation when a directed graph with edges ($u\to v$) is
+defined as follows?
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}\hline
+$v \backslash u$ & 1 & 2 & 3\\\hline
+1 & 0 & 0 & 0\\\hline
+2 & 20 & 0 & -30\\\hline
+3 & 40 & 0 & 0\\\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：（加權的）鄰接矩陣（adjacency matrix），也有書叫成本矩陣（cost matrix）。
+
+$n$ 個頂點的圖用一個 $n \times n$ 的矩陣表示，格子存那條邊的權重，沒有邊的格子存一個代表「沒有邊」
+的值，這就是加權圖的鄰接矩陣（資結書第~21.2~節）。 讀這張表要注意兩件事：
+\begin{itemize}
+\item 左上角寫 $v \backslash u$：\textbf{列}是終點 $v$、\textbf{行}是起點 $u$，格子 $(v, u)$ 是
+$u \to v$ 的權重。 這和常見的「第 $u$ 列第 $v$ 行存 $u \to v$」正好轉置。 所以第 $2$ 列第 $1$ 行的
+$20$ 是邊 $1 \to 2$，不是 $2 \to 1$。
+\item 這張表用 $0$ 表示沒有邊（對角線也是 $0$）。 所以圖只有三條邊：$1 \to 2$（$20$）、
+$1 \to 3$（$40$）、$3 \to 2$（$-30$）。 其中有一條負邊，這是下一題（第 11 題）的伏筆。
+\end{itemize}
+\end{pastsoln}

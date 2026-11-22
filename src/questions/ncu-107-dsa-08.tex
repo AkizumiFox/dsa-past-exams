@@ -1,0 +1,104 @@
+\begin{pastexam}[label={px:ncu-107-dsa-08}]{中央資工所 107 學年度 第 8 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+Suppose that array A[1:n] maintains a binary tree. For a binary tree node stored in A[i], its two
+children (if exist) are stored in A[2i] and A[2i+1], respectively. the program below aims to
+complete the following two tasks
+\begin{enumerate}[label=(\arabic*)]
+\item adjust array A to establish a max heap, and
+\item apply heap sort on the max heap built in (1) in nondecreasing order.
+\end{enumerate}
+\begin{minted}[fontsize=\small,breaklines]{c}
+void adjust (int A[], int root, int n)
+{
+  int child, rootkey;
+  int temp;
+  temp = A[root];
+  rootkey = A[root];
+  child = 2* root;
+  while ( child <=n ) {
+     if (( child <=n ) && ( A[child] < A[child+1] ))
+        child ++;
+     if ( rootkey > A[child] )
+        break;
+     else {
+        ____(B1)____;
+        child *=2; }
+  }
+    ____(B2)____;
+}
+
+void heapsort (int A[], int n)
+{ /* perform a heap sort on A[1:n] */
+   int i, j;
+   int temp;
+   for ( ___(B3)___; i>0; i++)  /* adjust the binary tree to establish the max heap */
+      adjust (A, i, n);
+   for (1=n-1; i>0; i--) {      /* heap sort */
+      swap( A[1], A[i+1], temp);  /* exchange A[i] and A[i+1] */
+      adjust(A, 1, i); }
+}
+\end{minted}
+
+Blank (B1) in the program above should be\\
+(a)~\texttt{A[child] = A[root]}\\
+(b)~\texttt{A[child/2] = A[root]}\\
+(c)~\texttt{A[child/2] = A[child]}\\
+(d)~\texttt{A[root] = A[root*2]}\\
+(e)~\texttt{A[root] = A[child]}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c) \texttt{A[child/2] = A[child]}。
+
+\textbf{原卷程式的錯}。 這段程式有幾處筆誤，不影響三個空格的答案，但照抄會跑錯：
+\begin{itemize}
+\item \texttt{adjust} 裡 \texttt{if} 的第一個條件應該是 \texttt{child < n}：要有右子節點
+\texttt{A[child+1]} 才能比。 寫成 \texttt{child <= n}，\texttt{child == n} 時會讀到 \texttt{A[n+1]}。
+建堆積時 \texttt{A[n+1]} 在陣列外面；排序時 \texttt{A[i+1]} 正是剛換到後面、已經排好的最大值，
+\texttt{adjust(A, 1, i)} 會把它拉回堆積裡。 例如 $A = 3, 1, 2$，照原樣跑完得到 $1, 3, 2$，沒排好；改成
+\texttt{child < n} 才對。
+\item \texttt{heapsort} 第一個迴圈的 \texttt{i++} 應該是 \texttt{i--}（見第 10 題）；第二個迴圈的
+\texttt{1=n-1} 應該是 \texttt{i=n-1}；註解「exchange A[i] and A[i+1]」應該是 A[1] 和 A[i+1]，
+程式本身的 \texttt{swap(A[1], A[i+1], temp)} 是對的。
+\end{itemize}
+
+\textbf{\texttt{adjust} 在做什麼}。 \texttt{adjust(A, root, n)} 是資結書第~8.1~節的下沉（虛擬碼~8.1），
+前提是 \texttt{root} 的兩棵子樹都已經是最大堆積。 它不是一路交換，而是「挖洞」的寫法：先把
+\texttt{A[root]} 存進 \texttt{temp}（\texttt{rootkey} 是同一個值），\texttt{root} 那一格就當成空洞；
+每一輪找出洞的較大子節點 \texttt{child}，如果 \texttt{rootkey} 比它大就停，否則把子節點往上搬進洞裡，
+洞就往下移到 \texttt{child}。 迴圈裡洞的位置永遠是 \texttt{child/2}：一開始 \texttt{child = 2*root}，
+洞在 \texttt{root = child/2}；每次 \texttt{child *= 2} 之前，洞移到了舊的 \texttt{child}，正好是新
+\texttt{child} 的一半。
+
+所以 (B1) 是「把較大的子節點搬進洞裡」：\texttt{A[child/2] = A[child]}。
+
+\textbf{追蹤}。 $A[1..6] = 2, 9, 7, 6, 5, 8$，兩棵子樹（$9, 6, 5$ 和 $7, 8$）都是最大堆積，呼叫
+\texttt{adjust(A, 1, 6)}：
+\begin{center}
+\small
+\begin{tabular}{ccll}
+\toprule
+\texttt{child} & 洞 & 比較 & 動作 \\
+\midrule
+$2$ & $1$ & $A[2] = 9 \ge A[3] = 7$；$2 > 9$ 不成立 & $A[1] \gets 9$ \\
+$4$ & $2$ & $A[4] = 6 \ge A[5] = 5$；$2 > 6$ 不成立 & $A[2] \gets 6$ \\
+$8$ & $4$ & $8 > 6$，離開迴圈 & (B2)：$A[4] \gets \mathit{temp} = 2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 $9, 6, 7, 2, 5, 8$，是最大堆積。
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{A[child] = A[root]}：方向反了，把上面的值往下抄；而且 \texttt{root} 在迴圈裡不會變，
+往下第二層以後抄的還是最上面那格，錯。
+\item (b) \texttt{A[child/2] = A[root]}：洞裡放的是 \texttt{root} 那一格的值，不是子節點，較大的子節點
+沒有上來，錯。
+\item (c) 對，見上。
+\item (d) \texttt{A[root] = A[root*2]}：永遠只動 \texttt{root} 和它的左子節點，不管 \texttt{child} 走到哪裡，
+也不管較大的是不是右子節點，錯。
+\item (e) \texttt{A[root] = A[child]}：第一輪剛好對（洞就在 \texttt{root}），但第二輪以後洞已經往下移，
+還寫進 \texttt{A[root]} 會蓋掉剛搬上來的值，錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:nccu-107-dsa-05}]{政大資科所 107 學年度 第 5 題}
+（問答）
+
+(10\%) Often there are multiple shortest paths between two vertices of a graph. Design a
+polynomial-time algorithm for the following task:\\
+Input: An undirected graph $G$, where all edges have the same length, and vertices $v$ and $w$ in
+$G$.\\
+Output: The number of distinct shortest paths from $v$ to $w$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}。 邊長都一樣，最短路徑就是邊數最少的路徑，用 BFS（資結書第~21.3~節）從 $v$ 出發算出
+每個點的距離 $d[x]$。 一條從 $v$ 到 $x$ 的最短路徑，最後一條邊一定是從某個 $d[y] = d[x] - 1$ 的
+鄰居 $y$ 走過來，前面那段是 $v$ 到 $y$ 的最短路徑。 所以令 $c[x]$ 是 $v$ 到 $x$ 的最短路徑條數，
+\[
+c[v] = 1, \qquad c[x] = \sum_{y \in \mathit{Adj}[x],\; d[y] = d[x] - 1} c[y].
+\]
+BFS 依距離由小到大取出頂點，取出 $y$ 時 $c[y]$ 已經算完，可以一邊做 BFS 一邊累加。
+
+\begin{pseudo}{數最短路徑的條數}
+\Function{Count-Shortest-Paths}{$G, v, w$}
+    \For{每個頂點 $x$}
+        \State $d[x] \gets \infty$；$c[x] \gets 0$
+    \EndFor
+    \State $d[v] \gets 0$；$c[v] \gets 1$
+    \State $Q \gets \langle v \rangle$
+    \While{$Q$ 不是空的}
+        \State $y \gets$ \Call{Dequeue}{$Q$}
+        \For{每個 $x \in \mathit{Adj}[y]$}
+            \If{$d[x] = \infty$} \Comment{第一次看到 $x$}
+                \State $d[x] \gets d[y] + 1$；$c[x] \gets c[y]$
+                \State \Call{Enqueue}{$Q, x$}
+            \ElsIf{$d[x] = d[y] + 1$} \Comment{又一個上一層的鄰居}
+                \State $c[x] \gets c[x] + c[y]$
+            \EndIf
+        \EndFor
+    \EndWhile
+    \State \Return $c[w]$ \Comment{$w$ 走不到時是 $0$}
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 BFS 依距離由小到大取出頂點，$d$ 是正確的最短距離（資結書定理~21.4）。 證明：頂點
+$x \ne v$ 被取出之前，$c[x]$ 已經等於所有 $d[y] = d[x] - 1$ 的鄰居 $y$ 的 $c[y]$ 之和。 這些 $y$ 都比
+$x$ 早進佇列、早取出；取出 $y$ 時看到 $x$，不是第一次看到（第 10 行設 $c[x] \gets c[y]$）就是
+$d[x] = d[y] + 1$（第 13 行加上 $c[y]$），恰好加一次。 距離 $\le d[x] - 1$ 的頂點都在 $x$ 之前
+取出完畢，所以取出 $x$ 時加總已經完整；距離 $d[x]$ 或更遠的鄰居不會加進來。 對距離做歸納，
+$c[y]$ 加進去時已經是正確的條數，因此 $c[x]$ 符合上面的遞迴式。
+
+遞迴式本身的正確性：$v$ 到 $x$ 的最短路徑依「倒數第二個頂點 $y$」分類，不同的 $y$ 給出不同的路徑，
+每一類恰好是「$v$ 到 $y$ 的一條最短路徑接上邊 $\{y, x\}$」，而 $v$ 到 $y$ 的那段必須是最短的（否則
+整條就不是最短），$d[y] = d[x] - 1$。 所以總條數是各類條數的和。
+
+\textbf{例子}。 $4$ 個點的環 $v$--$a$--$w$--$b$--$v$：$d[a] = d[b] = 1$，$c[a] = c[b] = 1$；$w$ 的兩個
+鄰居都在距離 $1$，$c[w] = 1 + 1 = 2$，兩條最短路徑 $v, a, w$ 和 $v, b, w$。
+
+\textbf{時間}。 和 BFS 一樣，每個頂點進出佇列一次，每條邊在兩端各看一次，$O(|V| + |E|)$，是多項式
+時間。 條數本身可能是指數大（例如一串菱形接起來，$k$ 個菱形有 $2^k$ 條），要用大整數存，每次加法
+$O(|V|)$ 個位元，時間仍是多項式。 不能列舉所有路徑再數，那是指數時間。
+\end{pastsoln}

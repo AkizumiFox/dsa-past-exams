@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ncu-108-dsa-11}]{中央資工所 108 學年度 第 11 題}
+（複選；每題 5 分，答錯倒扣 1 分。 第 10--12 題共用同一張圖）
+
+（第 10 題的題幹：）Given a weighted undirected graph $G = (V, E)$, let $\delta[u, v]$ denote the distance (the length
+of a shortest path) from vertex $u$ to vertex $v$. A path $[v_1, v_2, \ldots, v_k]$ is said to be a
+\textit{progress path}, if $\delta[v_i, v_k] > \delta[v_{i+1}, v_k]$ for $1 \le i < k$. For example,
+consider the graph with vertex set \{1, 2, 3, 4\} and edge set: (1,2,2), (2,4,1), (3,1,2), (3,4,2),
+(1,4,3), where each triple $(i, j, t)$ represents there is an undirected edge between $i$ and $j$
+with weight $t$. Then, in this graph, there are totally 2 shortest paths from 1 to 4 (i.e. [1,2,4]
+and [1,4]) and there are 3 progress paths from 1 to 4 (they are [1,2,4], [1,4] and [1,3,4]). Now
+consider another graph with vertex set \{a, b, c, d, e, f, g, h\} and edge set: (a,b,3), (a,c,1),
+(b,c,1), (b,e,5), (b,f,4), (c,d,9), (d,e,5), (d,g,3), (e,f,2), (e,g,2), (f,h,7), (g,h,4).
+
+Follow the previous question. Choose the correct item(s):
+\begin{enumerate}[label=(\Alph*)]
+\item [b,c,d,g,h] is a progress path.
+\item [b,e,d,g,h] is a progress path.
+\item [b,e,f,h] is a progress path.
+\item [a,b,f,h] is a progress path.
+\item ([a,b,e,g,h] is a progress path.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)(E)。
+
+(E) 開頭多一個左括號，是原卷的筆誤。 五條路徑的終點都是 h，用第~10~題算出的到 h 的距離
+\[
+\delta[\cdot, h]:\quad a = 13,\ b = 11,\ c = 12,\ d = 7,\ e = 6,\ f = 7,\ g = 4,\ h = 0 .
+\]
+progress path 要求每往前走一步，到終點的距離都嚴格變小（當然每一步也要是圖上的邊）。 五條路徑相鄰兩點都有邊，
+只要看距離序列是不是嚴格遞減：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+選項 & 到 h 的距離 & 結果 \\
+\midrule
+(A) [b,c,d,g,h] & $11, 12, 7, 4, 0$ & b$\to$c 變大，不是 \\
+(B) [b,e,d,g,h] & $11, 6, 7, 4, 0$ & e$\to$d 變大，不是 \\
+(C) [b,e,f,h] & $11, 6, 7, 0$ & e$\to$f 變大，不是 \\
+(D) [a,b,f,h] & $13, 11, 7, 0$ & 嚴格遞減，是 \\
+(E) [a,b,e,g,h] & $13, 11, 6, 4, 0$ & 嚴格遞減，是 \\
+\bottomrule
+\end{tabular}
+\end{center}
+注意 progress path 不必是最短路徑：(D) 的長度是 $3 + 4 + 7 = 14 > 13 = \delta[a, h]$，仍然是 progress path。
+題目的例子 [1,3,4] 也是這樣（長度 $4 > 3$）。
+\end{pastsoln}

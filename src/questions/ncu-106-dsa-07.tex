@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ncu-106-dsa-07}]{中央資工所 106 學年度 第 7 題}
+（問答）
+
+Below is the famous Dijkstra Shortest Path Algorithm (DSPA). The input of DSPA is a weighted
+directed graph $G=(V, E)$ and a specific source node $s$, where $V$ is the node set and $E$ is the
+edge set and every edge in $E$ has a positive weight. (Note that the weight of the edge $(u, v)$ is
+stored in $ew[u, v]$). For every node $u$ in $V$-$\{s\}$, DSPA can derive the shortest path from
+$s$ to $u$. However, DSPA does not consider node weights. If we now consider node weight and
+include node weights in the total weight of every path, we need to extend the original DSAP.
+Please extend DSAP to consider the node weights. Note that we assume the weight of a node $u$ is
+stored in $nw[u]$ and the weight of the destination node is not included in the total weight of
+the path. Note that DSPA uses indentation to represent the block structure. So please use
+indentation properly when writing down the extended DSPA algorithm. You should write down the
+complete algorithm including the input, the output and all steps. (10\%)
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm}: DSPA (Dijkstra Shortest Path Algorithm)\\ \hline
+\textbf{Input}: $G=(V, E)$, $ew$, $s$ //$G=(V, E)$ is a graph with edge weights stored in $ew$, and $s$ is the source\\
+\textbf{Output}: $SP$ //$SP$ is the set of shortest paths from $s$ to all other nodes\\ \hline
+1:\ \ $dist[s]\leftarrow 0$; $dist[u]\leftarrow\infty$, for each $u\neq s$, $u\in V$\\
+2:\ \ \textbf{insert} $u$ with key $dist[u]$ into priority queue $Q$, for each $u\in V$\\
+3:\ \ \textbf{while} ($Q\neq\varnothing$)\\
+4:\ \ \hspace*{1.5em}$u\leftarrow$Extract-Min($Q$)\\
+5:\ \ \hspace*{1.5em}\textbf{for} each $v$ adjacent to $u$\\
+6:\ \ \hspace*{3em}\textbf{if} $dist[v] > dist[u]+ew[u,v]$ \textbf{then}\\
+7:\ \ \hspace*{4.5em}$dist[v]\leftarrow dist[u]+ew[u,v]$\\
+8:\ \ \hspace*{4.5em}$pred[v]\leftarrow u$\quad //$v$'s predecessor in the shortest path is $u$\\
+9:\ \ \textbf{calculate} the shortest path from $s$ to $u$ to add into set $SP$ according to $pred[u]$, for each $u\in V$, $u\neq s$\\
+10: \textbf{return} $SP$\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目裡的 DSAP 是 DSPA 的筆誤。 題目沒有說節點權重的正負，這裡假設 $nw[u] \ge 0$（理由見最後）。
+
+\textbf{路徑的權重}。 路徑 $P = \langle s = v_0, v_1, \ldots, v_k = t\rangle$ 的總權重是
+\[
+w(P) = \sum_{i=0}^{k-1} ew[v_i, v_{i+1}] + \sum_{i=0}^{k-1} nw[v_i],
+\]
+節點權重算到 $v_{k-1}$，終點 $t$ 不算，起點 $s$ 要算。 把兩個和併在一起：
+\[
+w(P) = \sum_{i=0}^{k-1} \bigl(ew[v_i, v_{i+1}] + nw[v_i]\bigr).
+\]
+每一條邊 $(v_i, v_{i+1})$ 正好帶著它\textbf{起點}的節點權重，而路徑上除了終點以外的每個節點，都恰好是
+一條路徑邊的起點。 所以只要把每條邊的權重改成
+\[
+ew'[u, v] = ew[u, v] + nw[u],
+\]
+新定義下的最短路徑，就是邊權重為 $ew'$ 的圖上原本意義的最短路徑。 Dijkstra 本身不用改，只要鬆弛時
+多加 $nw[u]$。
+
+\textbf{擴充後的演算法}（改動的是 Input、第 6、7 行，另外補上第 9 行；$dist[v]$ 變小時要更新它在
+$Q$ 裡的鍵，原題省略了這一步，這裡寫出來）：
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm}: Extended DSPA（考慮節點權重）\\ \hline
+\textbf{Input}: $G=(V, E)$, $ew$, $nw$, $s$ \quad // 邊權重在 $ew$，節點權重在 $nw$，$s$ 是起點\\
+\textbf{Output}: $SP$ \quad // 從 $s$ 到其他每個節點的最短路徑（終點的節點權重不計）\\ \hline
+1:\ \ $dist[s]\leftarrow 0$; $dist[u]\leftarrow\infty$, for each $u\neq s$, $u\in V$\\
+2:\ \ \textbf{insert} $u$ with key $dist[u]$ into priority queue $Q$, for each $u\in V$\\
+3:\ \ \textbf{while} ($Q\neq\varnothing$)\\
+4:\ \ \hspace*{1.5em}$u\leftarrow$Extract-Min($Q$)\\
+5:\ \ \hspace*{1.5em}\textbf{for} each $v$ adjacent to $u$\\
+6:\ \ \hspace*{3em}\textbf{if} $dist[v] > dist[u]+nw[u]+ew[u,v]$ \textbf{then}\\
+7:\ \ \hspace*{4.5em}$dist[v]\leftarrow dist[u]+nw[u]+ew[u,v]$\\
+8:\ \ \hspace*{4.5em}$pred[v]\leftarrow u$\quad // $v$ 在最短路徑上的前一個節點是 $u$\\
+9:\ \ \hspace*{4.5em}Decrease-Key($Q$, $v$, $dist[v]$)\\
+10: \textbf{calculate} the shortest path from $s$ to $u$ to add into set $SP$ according to $pred[u]$, for each $u\in V$, $u\neq s$\\
+11: \textbf{return} $SP$\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{正確性}。 上面說明了新的路徑權重等於邊權重 $ew'$ 下的路徑權重，第 6、7 行正是用 $ew'$ 做
+鬆弛。 Dijkstra 的正確性只需要邊權重非負（資結書定理~25.6）：$ew[u, v] > 0$、$nw[u] \ge 0$，
+所以 $ew'[u, v] > 0$，結論照樣成立，$dist[t]$ 就是新定義下 $s$ 到 $t$ 的最短距離，$pred$ 記下的
+是對應的最短路徑。 $dist[s] = 0$ 也對：$s$ 到 $s$ 的路徑只有終點 $s$，不計權重。
+
+如果節點權重可以是負的，只要每條邊都滿足 $ew[u, v] + nw[u] \ge 0$，上面的論證一樣成立；否則
+$ew'$ 有負邊，Dijkstra 可能算錯（資結書第~25.2.5~節），要改用 Bellman--Ford。
+
+\textbf{複雜度}。 每次鬆弛只多一次加法，和原來的 Dijkstra 一樣：用二元堆積是
+$O((|V| + |E|) \lg |V|)$（資結書第~25.2~節）。
+
+\textbf{小例子}。 $s \to a$ 權重 $1$、$a \to t$ 權重 $1$、$s \to t$ 權重 $5$，$nw[s] = 0$、
+$nw[a] = 10$。 不算節點權重時最短路徑是 $s \to a \to t$，長 $2$；算進節點權重後它變成
+$1 + 1 + 0 + 10 = 12$，最短路徑改成直接 $s \to t$，長 $5 + 0 = 5$。 擴充後的演算法：$s$ 取出時
+$dist[a] = 1$、$dist[t] = 5$；$a$ 取出時檢查 $1 + 10 + 1 = 12 > 5$，不更新，$dist[t] = 5$，
+$pred[t] = s$，正確。
+\end{pastsoln}

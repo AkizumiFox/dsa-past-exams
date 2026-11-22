@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:nccu-109-dsa-05}]{政大資科所 109 學年度 第 5 題}
+（問答）
+
+(20 points) Given a string $s$ consisting of $n$ characters and a dictionary $D$ consisting of $m$
+words, provide an algorithm for checking if $s$ is completely composed of the words in $D$. That
+is, $s$ can be segmented into $k$ fragments, and all the $k$ fragments are listed in $D$. Describe
+your algorithm in C or pseudo code and show its time complexity.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}。 $s = s_1 s_2 \cdots s_n$，$D = \{w_1, \ldots, w_m\}$，字典裡所有字的總長度是 $L = \sum_j |w_j|$。
+同一個字可以用很多次。 $s[i..j]$ 表示 $s_i \cdots s_j$。
+
+\textbf{子問題}（資結書第~18.1.5~節的步驟）。 令
+\[
+W[i] = \TRUE \iff \text{前綴 } s[1..i] \text{ 可以切成 } D \text{ 裡的字} \qquad (0 \le i \le n),
+\]
+$W[0] = \TRUE$（空字串切成 $0$ 段）。 答案是 $W[n]$。
+
+\textbf{遞迴式}。 $s[1..i]$ 切得開時，最後一段是某個字 $w \in D$，它恰好是 $s$ 的結尾 $s[i - |w| + 1..i]$，
+而前面的 $s[1..i - |w|]$ 也要切得開。 反過來，這樣的 $w$ 存在就切得開。 所以
+\[
+W[i] = \TRUE \iff \text{有某個 } w \in D,\ |w| \le i,\ W[i - |w|] = \TRUE \text{ 而且 } s[i-|w|+1..i] = w.
+\]
+$W[i]$ 只用到比 $i$ 小的位置，由 $i = 1$ 往上填。
+
+\begin{pseudo}{字串能否切成字典裡的字}
+\Function{Word-Break}{$s, n, D$}
+    \State $W[0] \gets \TRUE$
+    \For{$i \gets 1$ \To $n$}
+        \State $W[i] \gets \FALSE$
+        \For{每個字 $w \in D$}
+            \State $\ell \gets |w|$
+            \If{$\ell \le i$ \AND $W[i - \ell]$ \AND $s[i - \ell + 1..i] = w$} \Comment{逐字比對}
+                \State $W[i] \gets \TRUE$；$\mathit{last}[i] \gets \ell$
+                \State \Break
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return $W[n]$
+\EndFunction
+\end{pseudo}
+
+要輸出切法時，從 $i = n$ 開始，最後一段是 $s[i - \mathit{last}[i] + 1..i]$，再令 $i \gets i - \mathit{last}[i]$，
+直到 $i = 0$。
+
+\textbf{正確性}。 對 $i$ 歸納。 $W[0]$ 正確。 設 $W[0..i-1]$ 都正確。 若 $s[1..i]$ 切得開，取最後一段 $w$，
+$s[1..i - |w|]$ 切得開，$W[i - |w|] = \TRUE$，第 5 行的迴圈跑到 $w$（或更早的另一個字）時會把 $W[i]$ 設成
+\TRUE；反過來第 8 行設成 \TRUE 時，$s[1..i-\ell]$ 的切法再接上 $w$ 就是 $s[1..i]$ 的切法。
+
+\textbf{時間}。 外層 $n$ 輪；每一輪對每個字 $w$ 最多逐字比對 $|w|$ 個字元，共 $O(L)$。 總時間 $O(nL)$，
+$L \le m \cdot \ell_{\max}$（$\ell_{\max}$ 是最長的字的長度），也可以寫成 $O(nm\,\ell_{\max})$。 空間 $O(n)$。
+
+\textbf{改進：用 trie}。 先把 $D$ 建成一棵 trie（資結書第~11.5~節），$O(L)$。 對每個 $W[i] = \TRUE$ 的
+位置 $i$（由小到大），從 trie 的根開始，沿著 $s_{i+1}, s_{i+2}, \ldots$ 往下走；走到一個字的結尾節點
+（代表 $s[i+1..j] \in D$）就設 $W[j] \gets \TRUE$，走不下去就停。 每個起點最多走 $\min(\ell_{\max}, n - i)$
+步，總時間 $O(L + n\,\ell_{\max}) = O(L + n^2)$，和字典有幾個字無關。
+
+\textbf{例子}。 $s = \texttt{applepenapple}$（$n = 13$），$D = \{\texttt{apple}, \texttt{pen}\}$：$W[5]$
+（$\texttt{apple}$）、$W[8]$（$W[5]$ 加上 $\texttt{pen}$）、$W[13]$（$W[8]$ 加上 $\texttt{apple}$）是 \TRUE，
+其他都是 \FALSE，答案是可以，切法 $\texttt{apple}\mid\texttt{pen}\mid\texttt{apple}$。 $s = \texttt{catsandog}$，
+$D = \{\texttt{cats}, \texttt{dog}, \texttt{sand}, \texttt{and}, \texttt{cat}\}$：$W[3]$、$W[4]$、$W[7]$ 是 \TRUE，
+但 $W[9]$ 要 $W[6]$ 加上 $\texttt{dog}$，$W[6]$ 是 \FALSE，答案是不行。
+
+不能用貪心（每次切最長或最短的字）：$s = \texttt{aab}$、$D = \{\texttt{a}, \texttt{aa}, \texttt{ab}\}$，先切最長的
+$\texttt{aa}$ 會剩下切不開的 $\texttt{b}$，但 $\texttt{a}\mid\texttt{ab}$ 是對的。 單純的遞迴（試每個字再遞迴）
+會重複算同一個後綴，最壞是指數時間，DP 把每個前綴只算一次。
+\end{pastsoln}

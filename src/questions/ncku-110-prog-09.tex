@@ -1,0 +1,128 @@
+\begin{pastexam}[label={px:ncku-110-prog-09}]{成大資訊聯招 110 學年度 第 9 題}
+（問答）
+
+(10\%) Consider the given directed graph.
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2.4mm]},
+  v/.style={circle,draw,minimum size=9mm,inner sep=0pt},lab/.style={inner sep=2pt}]
+\node[v] (1) at (0,3.2) {1}; \node[v] (2) at (2.6,3.2) {2}; \node[v] (3) at (5.2,3.2) {3};
+\node[v] (4) at (0,0) {4}; \node[v] (5) at (2.6,0) {5}; \node[v] (6) at (5.2,0) {6};
+\draw[->] (2) -- node[lab,above] {1} (1);
+\draw[->] (3) -- node[lab,above] {2} (2);
+\draw[->] (4) -- node[lab,left] {$-4$} (1);
+\draw[->] (4) -- node[lab,below] {3} (5);
+\draw[->] (5) -- node[lab,right] {7} (2);
+\draw[->] (1) -- node[lab,below left,pos=0.78] {$-1$} (5);
+\draw[->] (2) -- node[lab,above left,pos=0.78] {2} (4);
+\draw[->] (6) -- node[lab,below left,pos=0.3] {5} (2);
+\draw[->] ([xshift=-3.5pt]6.north) -- node[lab,left] {10} ([xshift=-3.5pt]3.south);
+\draw[->] ([xshift=3.5pt]3.south) -- node[lab,right] {$-8$} ([xshift=3.5pt]6.north);
+\end{tikzpicture}
+\end{center}
+The Floyd-Warshall algorithm can solve the all-pairs shortest-paths problem on a directed graph
+$G=(V,E)$. Answer the following questions.
+\begin{enumerate}[label=(\arabic*),itemsep=2pt,topsep=2pt]
+\item (2\%) What is the time complexity of Floyd-Warshall algorithm?
+\item (3\%) Let $d_{ij}^{(k)}$ be the weight of a shortest path from vertex $i$ to vertex $j$ for
+which all intermediate vertices are in the set $\{1,2,\ldots,k\}$ and $D^{(k)}=\left(d_{ij}^{(k)}\right)$
+be a $n\times n$ matrix. Floyd-Warshall algorithm computes $D^{(k)}$ from $D^{(k-1)}$ as the
+following formula.
+
+$d_{ij}^{(k)}=$\underline{\hspace{4cm}}
+
+Please complete the above formula.
+\item (5\%) Let $dist(i,j)$ be the length of the shortest path from node $i$ to node $j$. What is
+$dist(1,5)+dist(2,5)+dist(3,5)+dist(4,5)+dist(6,5)$?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $\Theta(n^3)$，$n = |V|$；(2) $d_{ij}^{(k)} = \min\bigl(d_{ij}^{(k-1)},\; d_{ik}^{(k-1)} + d_{kj}^{(k-1)}\bigr)$
+（$k \ge 1$）；(3) $-13$。
+
+\textbf{(1)} Floyd--Warshall（資結書虛擬碼~25.8）是三層迴圈：$k$、$i$、$j$ 各從 $1$ 跑到 $n$，
+最內層一次比較和一次加法是 $O(1)$，總共 $\Theta(n^3) = \Theta(|V|^3)$，和邊數無關。 空間用一個
+$n \times n$ 矩陣原地更新即可，$\Theta(n^2)$。
+
+\textbf{(2)} 完整的式子（資結書第~25.6~節）：
+\[
+d_{ij}^{(k)} =
+\begin{cases}
+w_{ij} & k = 0,\\
+\min\bigl(d_{ij}^{(k-1)},\; d_{ik}^{(k-1)} + d_{kj}^{(k-1)}\bigr) & k \ge 1,
+\end{cases}
+\]
+$w_{ij}$ 是邊 $(i, j)$ 的權重（$i = j$ 時是 $0$，沒有邊時是 $\infty$）。 理由：中間點都在
+$\{1, \ldots, k\}$ 裡的最短路徑，要嘛不經過 $k$，長度就是 $d_{ij}^{(k-1)}$；要嘛經過 $k$ 恰好
+一次（沒有負環時，最短路徑可以取簡單路徑），拆成 $i \leadsto k$ 和 $k \leadsto j$ 兩段，兩段的
+中間點都在 $\{1, \ldots, k-1\}$ 裡，長度是 $d_{ik}^{(k-1)} + d_{kj}^{(k-1)}$。 取兩者較小的。
+
+\textbf{(3)} 圖有負權重的邊，先確認沒有負環。 有向環只有這幾種：$1 \to 5 \to 2 \to 1$
+（$-1 + 7 + 1 = 7$）、$1 \to 5 \to 2 \to 4 \to 1$（$-1 + 7 + 2 - 4 = 4$）、$2 \to 4 \to 5 \to 2$
+（$2 + 3 + 7 = 12$）、$3 \to 6 \to 3$（$-8 + 10 = 2$），都是正的，最短路徑有定義。 下面跑
+Floyd--Warshall。 起始矩陣 $D^{(0)}$ 就是邊的權重：
+\begin{center}
+\small
+\begin{tabular}{c|rrrrrr}
+$D^{(0)}$ & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+1 & 0 & $\infty$ & $\infty$ & $\infty$ & $-1$ & $\infty$ \\
+2 & 1 & 0 & $\infty$ & 2 & $\infty$ & $\infty$ \\
+3 & $\infty$ & 2 & 0 & $\infty$ & $\infty$ & $-8$ \\
+4 & $-4$ & $\infty$ & $\infty$ & 0 & 3 & $\infty$ \\
+5 & $\infty$ & 7 & $\infty$ & $\infty$ & 0 & $\infty$ \\
+6 & $\infty$ & 5 & 10 & $\infty$ & $\infty$ & 0 \\
+\end{tabular}
+\end{center}
+題目只問到頂點 $5$ 的距離，下表追蹤第 $5$ 行（$d_{i5}$）在每一輪 $k$ 的變化，寫出用到的式子：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+$k$ & 第 $5$ 行的變化 \\
+\midrule
+1 & $d_{25} = d_{21} + d_{15} = 1 + (-1) = 0$；$d_{45} = \min(3,\; d_{41} + d_{15} = -4 - 1) = -5$ \\
+2 & $d_{35} = d_{32} + d_{25} = 2 + 0 = 2$；$d_{65} = d_{62} + d_{25} = 5 + 0 = 5$ \\
+3 & $d_{65} = \min(5,\; d_{63} + d_{35} = 10 + 2 = 12) = 5$，不變 \\
+4 & $d_{24} = 2$：$d_{25} = \min(0,\; 2 + (-5)) = -3$ \\
+  & $d_{34} = d_{32} + d_{24} = 4$（$k = 2$ 時得到）：$d_{35} = \min(2,\; 4 + (-5)) = -1$ \\
+  & $d_{64} = d_{62} + d_{24} = 7$（$k = 2$ 時得到）：$d_{65} = \min(5,\; 7 + (-5)) = 2$ \\
+5 & $d_{55} = 0$，第 $5$ 行不會再變 \\
+6 & $d_{36} = -8$：$d_{35} = \min(-1,\; -8 + 2) = -6$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的矩陣 $D^{(6)}$：
+\begin{center}
+\small
+\begin{tabular}{c|rrrrrr}
+$D^{(6)}$ & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+1 & 0 & 6 & $\infty$ & 8 & $-1$ & $\infty$ \\
+2 & $-2$ & 0 & $\infty$ & 2 & $-3$ & $\infty$ \\
+3 & $-5$ & $-3$ & 0 & $-1$ & $-6$ & $-8$ \\
+4 & $-4$ & 2 & $\infty$ & 0 & $-5$ & $\infty$ \\
+5 & 5 & 7 & $\infty$ & 9 & 0 & $\infty$ \\
+6 & 3 & 5 & 10 & 7 & 2 & 0 \\
+\end{tabular}
+\end{center}
+對角線都是 $0$，也印證沒有負環。 到 $5$ 的最短路徑和長度：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+起點 & 最短路徑 & 長度 \\
+\midrule
+1 & $1 \to 5$ & $-1$ \\
+2 & $2 \to 4 \to 1 \to 5$ & $2 - 4 - 1 = -3$ \\
+3 & $3 \to 6 \to 2 \to 4 \to 1 \to 5$ & $-8 + 5 + 2 - 4 - 1 = -6$ \\
+4 & $4 \to 1 \to 5$ & $-4 - 1 = -5$ \\
+6 & $6 \to 2 \to 4 \to 1 \to 5$ & $5 + 2 - 4 - 1 = 2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+總和
+\[
+(-1) + (-3) + (-6) + (-5) + 2 = -13.
+\]
+常見的錯：$3$ 到 $5$ 只看 $3 \to 2 \to \cdots$（得 $-1$），漏了先走 $3 \to 6$（$-8$）再從 $6$ 回到 $2$
+的路；$4$ 到 $5$ 直接走邊 $4 \to 5$（$3$），沒注意繞 $1$ 反而是 $-5$。
+\end{pastsoln}

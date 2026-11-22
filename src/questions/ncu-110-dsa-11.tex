@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ncu-110-dsa-11}]{中央資工所 110 學年度 問答題第 1 題}
+（問答）
+
+We have the following definitions and theorem related to NP-completeness.
+
+\textbf{Definition 1.} Let X$_1$ and X$_2$ be tow problems. X$_1$ polynomially reduces to X$_2$
+(written as X$_1\propto$ X$_2$) if and only if X$_1$ can be solved in polynomial time, by using a
+polynomial time algorithm which solves X$_2$.\\
+\textbf{Definition 2.} A problem is said to be a P (resp., NP) problem if it can be solved in
+polynomial time by a deterministic (resp., non-deterministic) algorithm.\\
+\textbf{Definition 3.} NP (resp., P) is the set of all NP (resp., P) problems.\\
+\textbf{Definition 4.} A problem X is an NP-complete (NPC) problem if X$\in$NP and every NP problem
+reduces to X.\\
+\textbf{Cook's Theorem.} NP=P if and only if the satisfiability (SAT) problem is a P problem.\\
+(This implies that every NP problem polynomially reduces to SAT.)
+\begin{enumerate}[label=(\Alph*)]
+\item (15\%) Assume that SAT $\propto$ B, B $\propto$ C, C $\propto$ D and D$\in$NP. By the
+assumptions and above definitions and theorem, prove that D is NP-complete.
+\item (5\%) By the above definitions and theorem, show the following statement is true or false.
+You should also show your reasons. If the reasons are incorrect, then you get no point.
+
+Statement: An NPC problem can polynomially reduce to any NPC problem.
+\item (5\%) By the above definitions and theorem, show the following statement is true or false.
+You should also show your reasons. If the reasons are incorrect, then you get no point.
+
+Statement: If an NPC problem can be solved in polynomial time by a deterministic algorithm, then
+all NP problems can also be solved in polynomial time by a deterministic algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 證明如下；(B) 對；(C) 對。
+
+原卷 Definition~1 的「tow」是 two 的筆誤。 這題的歸約（Definition~1）是「拿 $X_2$ 的演算法當副程式，在
+多項式時間內解 $X_1$」，和資結書定義~28.3 的多項式時間歸約（把實例轉換成實例，只呼叫一次）不完全
+一樣，範圍比較寬。 題目要求用它給的定義證明，下面就照這個定義寫；「reduces to」都指 $\propto$。
+
+\textbf{先證一個引理：$\propto$ 有遞移性}。 若 $X_1 \propto X_2$、$X_2 \propto X_3$，則 $X_1 \propto X_3$。
+
+證明。 由 $X_1 \propto X_2$，有一個演算法 $A_1$ 解 $X_1$，它把解 $X_2$ 的演算法當副程式呼叫；只要那個
+副程式是多項式時間，$A_1$ 就是多項式時間。 同樣，由 $X_2 \propto X_3$，有演算法 $A_2$ 呼叫解 $X_3$ 的
+副程式來解 $X_2$。 現在給定任何一個解 $X_3$ 的多項式時間演算法 $A_3$：
+\begin{itemize}
+\item $A_2$ 搭配 $A_3$ 是解 $X_2$ 的多項式時間演算法。 設 $A_2$ 在輸入長度 $m$ 時自己的步數是 $q(m)$，
+它最多呼叫 $q(m)$ 次 $A_3$，每次的輸入長度不超過 $q(m)$（寫出輸入就要花那麼多步），$A_3$ 每次最多
+$r(q(m))$ 步；總步數不超過 $q(m) + q(m)\,r(q(m))$，是 $m$ 的多項式。
+\item 把 $A_1$ 裡呼叫 $X_2$ 副程式的地方換成「$A_2$ 搭配 $A_3$」，由 $X_1 \propto X_2$，得到的是解 $X_1$
+的多項式時間演算法（計算方式和上一點相同：多項式套多項式還是多項式）。
+\end{itemize}
+所以 $X_1$ 可以利用 $X_3$ 的多項式時間演算法在多項式時間內解出，$X_1 \propto X_3$。 \qed
+
+\textbf{(A)} 依 Definition~4，要證兩件事：$D \in \mathrm{NP}$，以及每個 NP 問題都歸約到 $D$。
+\begin{enumerate}[label=(\arabic*)]
+\item $D \in \mathrm{NP}$ 是題目的假設。
+\item 任取一個 NP 問題 $X$。 由 Cook's Theorem 後面的說明，$X \propto \mathrm{SAT}$。 再由假設
+$\mathrm{SAT} \propto B$、$B \propto C$、$C \propto D$，連用三次引理：
+\[
+\begin{aligned}
+X \propto \mathrm{SAT} \text{ 且 } \mathrm{SAT} \propto B &\Rightarrow X \propto B,\\
+X \propto B \text{ 且 } B \propto C &\Rightarrow X \propto C,\\
+X \propto C \text{ 且 } C \propto D &\Rightarrow X \propto D.
+\end{aligned}
+\]
+$X$ 是任意的 NP 問題，所以每個 NP 問題都歸約到 $D$。
+\end{enumerate}
+兩個條件都成立，由 Definition~4，$D$ 是 NP-complete。 \qed
+
+證明的重點有兩個：一是方向，要從 SAT \textbf{往} $D$ 歸約（已知難的問題歸約到新問題），反過來的
+$D \propto \mathrm{SAT}$ 只說明 $D$ 不比 SAT 難；二是 $D \in \mathrm{NP}$ 不能省，少了它只能說 $D$ 是
+NP-hard（資結書第~28.4~節）。
+
+\textbf{(B) 對}。 設 $X$、$Y$ 都是 NPC 問題。 由 Definition~4，$X \in \mathrm{NP}$；又因為 $Y$ 是 NPC，
+每個 NP 問題都歸約到 $Y$，$X$ 是 NP 問題，所以 $X \propto Y$。 $X$、$Y$ 是任意兩個 NPC 問題，所以
+任何 NPC 問題都能多項式歸約到任何 NPC 問題（$X = Y$ 時也成立）。
+
+\textbf{(C) 對}。 設 NPC 問題 $X$ 有確定性的多項式時間演算法，也就是 $X \in \mathrm{P}$
+（Definition~2）。 SAT 是 NP 問題（它是 Cook's Theorem 談的對象，可以用非確定性演算法先猜一組
+真假值、再在多項式時間內檢查），由 Definition~4，$\mathrm{SAT} \propto X$。 依 Definition~1，用 $X$
+的多項式時間確定性演算法當副程式，可以在多項式時間內解 SAT，而整個過程沒有用到非確定性，
+所以 $\mathrm{SAT} \in \mathrm{P}$。 由 Cook's Theorem，$\mathrm{NP} = \mathrm{P}$：每個 NP 問題都有
+確定性的多項式時間演算法。
+
+也可以不經過 SAT：任取 NP 問題 $Y$，由 $X$ 是 NPC 得 $Y \propto X$，把 $X$ 的確定性多項式演算法代進去，
+$Y$ 就能在確定性多項式時間內解出。 這就是資結書定理~28.5 的內容：只要有一個 NPC 問題屬於 P，
+就有 $\mathrm{P} = \mathrm{NP}$。
+\end{pastsoln}

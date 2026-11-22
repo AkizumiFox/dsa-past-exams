@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nccu-107-dsa-09}]{政大資科所 107 學年度 第 9 題}
+（問答）
+
+(10\%) Answer the following questions about balanced binary search trees.
+\begin{enumerate}[label=\alph*.]
+\item (5\%) What is a balanced binary search tree?
+\item (5\%) Give one advantage of balanced binary search trees over binary search trees.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{a.} 平衡二元搜尋樹是一種二元搜尋樹（每個節點左子樹的鍵都比它小、右子樹的鍵都比它大），而且
+在插入、刪除之後會用旋轉等調整，讓樹的高度一直保持在 $O(\log n)$（$n$ 是節點數）。 常見的有：
+\begin{itemize}
+\item \textbf{AVL 樹}（資結書第~10.2~節）：每個節點左右子樹的高度最多差 $1$，高度小於 $1.4405 \lg(n + 1)$（資結書定理~10.1）。
+\item \textbf{紅黑樹}（資結書第~10.3~節）：節點塗紅黑兩色，根是黑的、紅節點的孩子是黑的、每條從節點到
+\NIL 的路徑黑節點數一樣，高度不超過 $2\lg(n + 1)$（資結書定理~10.4）。
+\end{itemize}
+調整用的是旋轉（資結書第~10.1~節）：只改常數個指標，不破壞「中序是由小到大」的性質。
+
+\textbf{b.} 最壞情況的效率。 一般的二元搜尋樹，搜尋、插入、刪除的時間是 $O(h)$，$h$ 是高度，而 $h$
+可能到 $n - 1$：例如依序插入 $1, 2, \ldots, n$，每個新的鍵都接在最右邊，樹變成一條鏈，搜尋 $n$ 要比
+$n$ 次，最壞 $\Theta(n)$。 平衡二元搜尋樹保證 $h = O(\log n)$，所以不管插入的順序是什麼，搜尋、插入、
+刪除最壞都是 $O(\log n)$。 例如 $n = 10^6$ 時，鏈狀的樹最壞要比一百萬次，AVL 樹不超過大約 $29$ 次。
+\end{pastsoln}

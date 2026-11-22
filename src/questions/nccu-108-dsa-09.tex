@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:nccu-108-dsa-09}]{政大資科所 108 學年度 第 9 題}
+（問答）
+
+(15\%) Design an algorithm for the following task.
+
+\quad Input: a linked list.\\
+\quad Task: determine whether the linked list contains a cycle.\\
+\quad For example, the following linked list contains a cycle.
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},thick,b/.style={draw,minimum size=6mm}]
+\foreach \i in {1,...,5} \node[b] (n\i) at (1.2*\i,0) {};
+\foreach \i/\j in {1/2,2/3,3/4,4/5} \draw[->] (n\i) -- (n\j);
+\draw[->] (n5.south) to[out=-130,in=-50] (n1.south);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+約定：輸入是串列第一個節點的指標 $h$，每個節點有 $\mathit{next}$；輸出 \TRUE（有環）或 \FALSE。 用
+Floyd 的快慢指標（資結書第~5.6~節）：
+
+\begin{pseudo}[unbreakable]{判斷串列有沒有環}
+\Function{Has-Cycle}{$h$}
+    \State $s \gets h$；$f \gets h$ \Comment{慢指標、快指標}
+    \While{$f \ne \NIL$ \AND $f.\mathit{next} \ne \NIL$}
+        \State $s \gets s.\mathit{next}$ \Comment{走一步}
+        \State $f \gets f.\mathit{next}.\mathit{next}$ \Comment{走兩步}
+        \If{$s = f$}
+            \State \Return \TRUE
+        \EndIf
+    \EndWhile
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 做完 $k$ 輪後，$s$ 是從 $h$ 走 $k$ 步到的節點，$f$ 是走 $2k$ 步到的節點。
+\begin{itemize}
+\item 沒有環：串列有 $n$ 個節點，$f$ 一直在 $s$ 前面（$2k > k$），兩者是不同的節點，第 7 行不會執行；
+$f$ 每輪前進兩格，最多 $\lfloor n/2 \rfloor$ 輪就使 $f$ 或 $f.\mathit{next}$ 變成 \NIL，迴圈停下，回傳
+\FALSE。
+\item 有環：串列上沒有 \NIL，迴圈只會從第 7 行離開。 設尾巴（環之前的部分）長 $\mu$、環長 $\lambda$。
+第 $\mu$ 輪 $s$ 走到環上，這時 $f$ 早已在環上，沿著環的方向還要追 $g$ 步才碰到 $s$（$0 \le g < \lambda$）。
+之後每輪 $f$ 比 $s$ 多走一步，$g$ 恰好減 $1$，不會跳過 $0$，所以再 $g$ 輪內相遇（$\mu = 0$ 時第 $\lambda$
+輪相遇），回傳 \TRUE。 完整的證明見資結書定理~5.4。
+\end{itemize}
+
+\textbf{複雜度}。 沒有環時跑 $\lfloor n/2 \rfloor$ 輪；有環時跑的輪數不超過 $\mu + \lambda = n$。 每輪
+$\Theta(1)$，時間 $O(n)$；只用兩個指標，額外空間 $\Theta(1)$，也不改動串列。 題目圖上的串列是整個環
+（$\mu = 0$、$\lambda = 5$）：$s$ 在第 $k$ 輪後位於第 $1 + (k \bmod 5)$ 個節點，$f$ 位於第
+$1 + (2k \bmod 5)$ 個，第 $5$ 輪兩個指標在第一個節點相遇。
+
+另一種寫法是用雜湊表（資結書第~12~章）記錄走過的節點的位址，走到記錄過的節點就有環，走到 \NIL 就沒有；
+時間是期望 $\Theta(n)$，但要 $\Theta(n)$ 的空間。 題目沒有限制空間時這也是正確答案，Floyd 的方法比較好。
+如果還要求環的起點，用資結書虛擬碼~5.15 的 \proc{Cycle-Start}。
+\end{pastsoln}

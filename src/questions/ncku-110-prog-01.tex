@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncku-110-prog-01}]{成大資訊聯招 110 學年度 第 1 題}
+（問答）
+
+(10\%) Please show the level of the binary search tree which constructed from given preorder
+traversal. The preorder traversal: 50, 15, 11, 3, 2, 22, 84, 80, 77, 90, 95.
+
+\textbf{Note: In a tree, each step from top to bottom is called as level of a tree. The level
+count starts with 1 and increments by 1 at each level or step.}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：這棵二元搜尋樹共有 $5$ 層。 第 1 層 50；第 2 層 15、84；第 3 層 11、22、80、90；
+第 4 層 3、77、95；第 5 層 2。
+
+題目的「show the level」可以讀成「樹有幾層」或「每個節點在第幾層」，兩個都寫出來。 層數照
+題目的定義，根在第 $1$ 層。
+
+\textbf{還原樹}。 二元搜尋樹的中序是由小到大，所以前序加上「中序 = 排序」就能唯一決定這棵樹
+（資結書第~7.4~節）。 更直接的做法：照前序的順序一個一個插入空的二元搜尋樹（資結書虛擬碼~9.6），
+得到的樹前序正好就是原序列，因為插入時每個鍵都接在它的祖先下面，而祖先在前序裡都排在它前面。
+\begin{itemize}
+\item $50$ 是根。 $15 < 50$ 放左邊；$11 < 15$ 放 $15$ 的左邊；$3$、$2$ 依序一路往左。
+\item $22$：$22 < 50$ 往左，$22 > 15$ 放 $15$ 的右邊。
+\item $84 > 50$ 放根的右邊；$80 < 84$ 放 $84$ 的左邊；$77 < 80$ 放 $80$ 的左邊。
+\item $90$：$> 50$、$> 84$，放 $84$ 的右邊；$95 > 90$ 放 $90$ 的右邊。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[
+    btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=7mm, inner sep=0pt, font=\small},
+    level distance=10mm, edge from parent/.style={draw=black!60, thick},
+    level 1/.style={sibling distance=48mm}, level 2/.style={sibling distance=24mm},
+    level 3/.style={sibling distance=12mm}, level 4/.style={sibling distance=10mm}]
+\node[btn] {50}
+    child {node[btn] {15}
+        child {node[btn] {11}
+            child {node[btn] {3} child {node[btn] {2}} child[missing]}
+            child[missing]}
+        child {node[btn] {22}}}
+    child {node[btn] {84}
+        child {node[btn] {80}
+            child {node[btn] {77}}
+            child[missing]}
+        child {node[btn] {90}
+            child[missing]
+            child {node[btn] {95}}}};
+\node[font=\small, anchor=west] at (5.6,0) {第 1 層};
+\node[font=\small, anchor=west] at (5.6,-1) {第 2 層};
+\node[font=\small, anchor=west] at (5.6,-2) {第 3 層};
+\node[font=\small, anchor=west] at (5.6,-3) {第 4 層};
+\node[font=\small, anchor=west] at (5.6,-4) {第 5 層};
+\end{tikzpicture}
+\end{center}
+
+核對：這棵樹的前序是 $50, 15, 11, 3, 2, 22, 84, 80, 77, 90, 95$，和題目相同；中序是
+$2, 3, 11, 15, 22, 50, 77, 80, 84, 90, 95$，由小到大，確實是二元搜尋樹。
+
+\textbf{各節點的層}：
+\begin{center}
+\begin{tabular}{l*{11}{c}}
+\toprule
+節點 & 50 & 15 & 11 & 3 & 2 & 22 & 84 & 80 & 77 & 90 & 95 \\
+層 & 1 & 2 & 3 & 4 & 5 & 3 & 2 & 3 & 4 & 3 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最深的是 $2$，在第 $5$ 層，所以樹的層數（照題目的定義，也就是樹高）是 $5$。
+\end{pastsoln}

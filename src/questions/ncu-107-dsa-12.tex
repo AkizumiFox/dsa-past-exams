@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncu-107-dsa-12}]{中央資工所 107 學年度 第 12 題}
+（單選；每題 5 分，答錯倒扣一分）
+
+Program quickSort below aim to apply quick sort to A[left: right] into non-decreasing order.
+\begin{minted}[fontsize=\small,breaklines]{c}
+void quickSort ( int A[], int left, int right )
+{
+  int pivot, i, j;
+  int temp;
+  if ( left < right ) {
+     i = left-1; j = right;
+     pivot = A[right];
+     do {
+          do i++; while ( A[i] < pivot );
+          do j--; while ( A[j] > pivot );
+          If ( __(B4)__ ) swap(A[i], A[j], temp);   /* exchange A[i] and A[j] */
+     } while ( __(B5)__ );
+     swap ( __(B6)__ );
+     quickSort( A, left, j-1 );
+     quickSort( A, j+1, right ); }
+}
+\end{minted}
+
+Blank (B5) in the algorithm above should be
+
+(a)~\texttt{i>right-1} \qquad (b)~\texttt{j<left+1} \qquad (c)~\texttt{i>j} \qquad (d)~\texttt{i>=j} \qquad (e)~\texttt{i<j}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (e) \texttt{i<j}。
+
+分割的過程見上一題（歷屆試題~\ref{px:ncu-107-dsa-11}）。 (B5) 是外層 \texttt{do}--\texttt{while} 繼續的
+條件：$i$、$j$ 還沒交錯（$i < j$），表示中間還有沒看過的數，要再掃一回；一旦 $i \ge j$，左邊
+$A[\mathit{left}..i-1]$ 都 $\le \mathit{pivot}$、$A[j+1..\mathit{right}-1]$ 都 $\ge \mathit{pivot}$，而
+$i \ge j$ 使這兩段蓋住整個範圍，分割完成，離開迴圈。 上一題的追蹤：第 1 回合後 $i = 1 < j = 4$，繼續；
+第 2 回合後 $i = 3 > j = 2$，停。
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{i>right-1}：一開始 $i$ 很小，條件不成立，第 1 回合做完就離開，中間還沒掃完。 上面的例子
+第 1 回合後就停（$i = 1$），接著把基準換到 $A[1]$，得 $4, 5, 2, 7, 9, 1$，$5$ 的右邊還有 $2$ 和 $1$，錯。
+\item (b) \texttt{j<left+1}：同樣在第 1 回合後通常不成立，太早離開，錯。
+\item (c) \texttt{i>j}、(d) \texttt{i>=j}：方向相反。 沒交錯時反而離開；交錯了還繼續掃，$i$、$j$ 會越過彼此
+繼續走，甚至跑出範圍，錯。
+\item (e) \texttt{i<j}：對。
+\end{itemize}
+\end{pastsoln}

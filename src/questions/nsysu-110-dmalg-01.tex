@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nsysu-110-dmalg-01}]{中山資工所資安組 110 學年度 第 1 題}
+（證明）
+
+Prove each of the following for all $n\ge 1$ by the Principle of Mathematical Induction.
+\begin{enumerate}[label=(\alph*)]
+\item {[10\%]} $1\cdot 3+2\cdot 4+3\cdot 5+\cdots+n(n+2)=\frac{n(n+1)(2n+7)}{6}$.
+\item {[10\%]} $\sum_{i=1}^{n}\frac{1}{i(i+1)}=\frac{n}{n+1}$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+兩題都照資結書附錄~A.4~節的格式：寫出命題 $P(n)$、驗證基底、寫出歸納假設、用假設證明 $P(n+1)$。
+
+\textbf{(a)} 令 $P(n)$：$\sum_{i=1}^{n} i(i+2) = \dfrac{n(n+1)(2n+7)}{6}$。
+
+\textbf{基底} $n = 1$：左邊 $1 \cdot 3 = 3$，右邊 $\frac{1 \cdot 2 \cdot 9}{6} = 3$。 成立。
+
+\textbf{歸納}：設 $P(k)$ 成立（$k \ge 1$），證 $P(k+1)$。 左邊多加第 $k + 1$ 項 $(k+1)(k+3)$：
+\begin{align*}
+\sum_{i=1}^{k+1} i(i+2) &= \frac{k(k+1)(2k+7)}{6} + (k+1)(k+3) \qquad \text{（歸納假設）}\\
+&= \frac{(k+1)\bigl[k(2k+7) + 6(k+3)\bigr]}{6} = \frac{(k+1)(2k^2 + 13k + 18)}{6}\\
+&= \frac{(k+1)(k+2)(2k+9)}{6}.
+\end{align*}
+$2k^2 + 13k + 18 = (k+2)(2k+9)$（展開：$2k^2 + 9k + 4k + 18$）。 而 $P(k+1)$ 的右邊是
+$\frac{(k+1)(k+2)(2(k+1)+7)}{6} = \frac{(k+1)(k+2)(2k+9)}{6}$，相等。 由數學歸納法，$P(n)$ 對所有 $n \ge 1$ 成立。
+
+（不用歸納也能檢查：$\sum i(i+2) = \sum i^2 + 2\sum i = \frac{n(n+1)(2n+1)}{6} + n(n+1) = \frac{n(n+1)(2n+7)}{6}$。
+但題目要求用歸納法，答案要寫成上面的格式。）
+
+\textbf{(b)} 令 $Q(n)$：$\sum_{i=1}^{n} \dfrac{1}{i(i+1)} = \dfrac{n}{n+1}$。
+
+\textbf{基底} $n = 1$：左邊 $\frac{1}{1 \cdot 2} = \frac12$，右邊 $\frac{1}{2}$。 成立。
+
+\textbf{歸納}：設 $Q(k)$ 成立，則
+\[
+\sum_{i=1}^{k+1} \frac{1}{i(i+1)} = \frac{k}{k+1} + \frac{1}{(k+1)(k+2)} = \frac{k(k+2) + 1}{(k+1)(k+2)}
+= \frac{(k+1)^2}{(k+1)(k+2)} = \frac{k+1}{k+2},
+\]
+正是 $Q(k+1)$。 由數學歸納法，$Q(n)$ 對所有 $n \ge 1$ 成立。
+
+（直接看：$\frac{1}{i(i+1)} = \frac{1}{i} - \frac{1}{i+1}$，相加時中間項互相抵消，剩 $1 - \frac{1}{n+1} = \frac{n}{n+1}$。）
+\end{pastsoln}

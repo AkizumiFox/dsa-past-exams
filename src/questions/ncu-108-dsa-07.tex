@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-108-dsa-07}]{中央資工所 108 學年度 第 7 題}
+（複選；每題 5 分，答錯倒扣 1 分）
+
+A hash function maps a key into a bucket in the hash table. Which of the following statements is true?
+\begin{enumerate}[label=(\Alph*)]
+\item A division hash function with divisor D = $7^r$, where $r$ is an integer, may result in serious collision.
+\item Compared with hash chaining, open addressing requires fewer bucket accesses (in average)
+\item When hash chaining is used to resolve overflows, the search for a key involves comparison with
+keys that have different hash values.
+\item In dynamic hashing, data buckets grows or shrinks (added or removed dynamically) as the records
+increases or decreases.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。
+
+\begin{itemize}
+\item \textbf{(A) 對}。 除法 $h(k) = k \bmod D$ 的除數要避開小的質因數（資結書第~12.1~節）。 $D = 7^r$ 只有質因數
+$7$；由資結書引理~12.1，鍵都是 $7$ 的倍數時，$k \bmod 7^r$ 也都是 $7$ 的倍數，只會用到 $D/7$ 個桶。 例如
+$D = 49$，鍵 $7, 14, 21, \ldots$ 只落在 $0, 7, 14, \ldots, 42$ 這 $7$ 個桶。 實際資料常有這種規律（例如以 $7$ 為
+週期的日期編號），所以會造成大量碰撞。 一般選不含小質因數的 $D$，最好是質數。
+\item \textbf{(B) 錯}。 在同樣的載入因子 $\alpha$ 下，鏈結法平均看的比較少，不是比較多。 鏈結法失敗搜尋平均要
+比較 $\alpha$ 次、成功搜尋約 $1 + \alpha/2$ 次（資結書第~12.2.2~節）；開放定址就算在最理想的均勻雜湊下，
+失敗搜尋也要約 $1/(1 - \alpha) \ge 1 + \alpha$ 次，成功搜尋約
+$\frac{1}{\alpha}\ln\frac{1}{1 - \alpha} = 1 + \frac{\alpha}{2} + \frac{\alpha^2}{3} + \cdots \ge 1 + \frac{\alpha}{2}$ 次（資結書
+定理~12.5、12.7），線性探測更多。 開放定址的探測序列會經過別的鍵的家（home bucket），鏈結法只看自己那條串列。
+\item \textbf{(C) 錯}。 鏈結法裡第 $i$ 條串列只放 $h(k) = i$ 的鍵，搜尋 $k$ 時只走 $h(k)$ 那一條，比較到的鍵雜湊值都
+和 $k$ 相同。 會和雜湊值不同的鍵比較的是開放定址（例如線性探測走進別人的群聚裡）。
+\item \textbf{(D) 對}。 動態雜湊（例如可延伸雜湊，資結書第~12.5~節）就是為了讓表跟著資料量變：桶滿了就拆成兩個，
+資料變少時把相鄰的桶合併，不必整張表重建。
+\item \textbf{(E)} (A)、(D) 對，所以錯。
+\end{itemize}
+\end{pastsoln}

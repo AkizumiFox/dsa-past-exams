@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ccu-108-swa-07}]{中正資工所甲組 108 學年度 第 8 題}
+（複選）
+
+(5\%, 1 extra point deduction for an incorrect answer until 5 points) Which of the following
+sorting algorithms are stable in nature?
+
+(a)~Counting sort; \qquad (b)~Quicksort; \qquad (c)~Mergesort;\\
+(d)~Insertion sort; \qquad (e)~Heapsort.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)、(c)、(d)。
+
+\textbf{穩定}是說鍵相同的兩筆資料，排序後的前後順序和排序前一樣（資結書第~14.1~節）。 題目說
+「in nature」，指的是課本上的標準寫法；穩定與否看實作，下面每一個都指出是哪一步決定的。 下面用
+$2_a$、$2_b$ 表示鍵都是 $2$、原本 $2_a$ 在前的兩筆。
+
+\begin{itemize}
+\item (a) Counting sort：\textbf{穩定}。 算完每個鍵的累計個數 $C[k]$ 之後，從輸入的\textbf{最後
+一筆往前}掃，每筆放到 $C[k]$ 的位置再把 $C[k]$ 減 $1$（資結書第~15.2.1~節）。 同鍵的資料裡，後面的
+先放、放在後面，所以相對順序不變。 （改成由前往後掃就會把同鍵的順序整個顛倒，這也是 LSD 基數
+排序必須用穩定版本的原因。）
+\item (b) Quicksort：\textbf{不穩定}。 分割時的交換會把元素跨過一段距離搬走。 例：
+$\langle 2_a, 2_b, 1\rangle$ 用 Lomuto 分割（基準取最後一個 $1$），$2_a$、$2_b$ 都不 $\le 1$，最後把
+基準和 $A[1]$ 交換，得 $\langle 1, 2_b, 2_a\rangle$，兩個 $2$ 的順序顛倒，之後的遞迴不會再換回來。
+\item (c) Mergesort：\textbf{穩定}。 合併時兩邊的鍵相等，先取\textbf{左半邊}的（比較寫成 $L[i] \le
+R[j]$），左半邊的資料原本就在前面（資結書第~14.4~節）。
+\item (d) Insertion sort：\textbf{穩定}。 插入 $A[j]$ 時，只把比它\textbf{大}的往右移（條件
+$A[i] > \mathit{key}$），遇到相等的就停，所以 $A[j]$ 不會越過鍵相同、原本在它前面的資料。
+\item (e) Heapsort：\textbf{不穩定}。 每回合把堆積頂端和最後一格交換，會把資料遠距離搬動。 例：
+$\langle 1_a, 1_b\rangle$ 本身已是最大堆積，第一回合把 $A[1] = 1_a$ 和 $A[2] = 1_b$ 交換，結果
+$\langle 1_b, 1_a\rangle$，順序顛倒。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntust-109-ice-05}]{臺科大資工所 109 學年度 第 5 題}
+（問答）
+
+Assume that $L_1$ and $L_2$ are both nonempty circular lists with access pointers pointing to the
+last nodes of the lists. Let $m$ and $n$ represent the lengths of $L_1$ and $L_2$, respectively. If
+we concatenate these two circular lists, what is the time complexity of the concatenation operation
+(in terms of $m$ and $n$ using $O(\ )$ notation)? (4\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$O(1)$，和 $m$、$n$ 都無關。
+
+環狀串列記的是最後一個節點（資結書第~5.2~節），第一個節點就是最後一個節點的 $\mathit{next}$，
+所以兩個串列的頭和尾都能在常數時間拿到。 設 $a$、$b$ 分別指向 $L_1$、$L_2$ 的最後一個節點，
+把 $L_2$ 接在 $L_1$ 後面：
+\begin{pseudo}{串接兩個環狀串列（$a$、$b$ 指向各自的最後一個節點）}
+\Function{Ring-Concat}{$a, b$}
+    \State $h \gets a.\mathit{next}$ \Comment{$L_1$ 的第一個節點}
+    \State $a.\mathit{next} \gets b.\mathit{next}$ \Comment{$L_1$ 的尾接到 $L_2$ 的頭}
+    \State $b.\mathit{next} \gets h$ \Comment{$L_2$ 的尾接回 $L_1$ 的頭，圍成一圈}
+    \State \Return $b$ \Comment{新串列的最後一個節點}
+\EndFunction
+\end{pseudo}
+只改兩個指標，沒有任何迴圈，時間 $O(1)$。 接完以後從 $b.\mathit{next} = h$ 開始走，依序是
+$L_1$ 的 $m$ 個節點、$L_2$ 的 $n$ 個節點，再回到 $h$，順序正確。 第 2 行要先把 $a.\mathit{next}$
+存起來，否則第 3 行一改就找不到 $L_1$ 的頭了。 資結書虛擬碼~5.11 把一整個環還給可用空間串列，
+用的也是同樣的接法。
+
+如果存取指標指的是\textbf{第一個}節點，要找 $L_1$ 的最後一個節點就得繞一圈，變成 $O(m)$（接回
+$L_2$ 的頭也要找 $L_2$ 的尾，共 $O(m + n)$）。 題目特地說指標指向最後一個節點，就是為了 $O(1)$。
+\end{pastsoln}

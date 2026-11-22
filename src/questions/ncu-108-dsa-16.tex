@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:ncu-108-dsa-16}]{中央資工所 108 學年度 問答題第 4 題}
+（問答）
+
+Suppose that array $A[1{:}n]$ maintains a binary tree. For a binary tree node stored in $A[i]$, its
+two children (if exist) are stored in $A[2i]$ and $A[2i+1]$, respectively. The program below aims to
+complete the following two tasks
+\begin{enumerate}[label=\roman*.]
+\item adjust array A to establish a max heap, and
+\item apply heap sort on the max heap built in (1) in nondecreasing order.
+\end{enumerate}
+\begin{enumerate}[label=(\alph*)]
+\item Blank (B6) in the program below should be\underline{\hspace{4em}} (4\%)
+\item Blank (B7) in the program below should be \underline{\hspace{4em}} (4\%)
+\end{enumerate}
+\begin{minted}[fontsize=\small]{c}
+void adjust (int A[], int root, int n)
+{
+  int child, rootkey;
+  int temp;
+  temp = A[root];
+  rootkey = A[root];
+  child = 2* root;
+  while ( child <=n ) {
+    if (( child <=n ) && ( A[child] < A[child+1] ))
+          child ++;
+    if ( rootkey > A[child] )
+          break;
+    else {
+          ___(B6)___;
+          child *=2; }
+  }
+   ___(B7)___;
+}
+
+void heapsort (int A[], int n)
+{ /* perform a heap sort on A[1:n] */
+   int i, j;
+   int temp;
+   for (i=n/2; i>0; i++)  /* adjust the binary tree to establish the max heap */
+      adjust (A, i, n);
+   for (1=n-1; i>0; i--) {  /* heap sort */
+      swap( A[1], A[i+1], temp);  /* exchange A[i] and A[i+1] */
+      adjust(A, 1, i); }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B6) 是 \texttt{A[child/2] = A[child]}，(B7) 是 \texttt{A[child/2] = temp}。
+
+\textbf{原卷的筆誤}。 程式有幾處和題意不合，下面照改正後的版本解：
+\begin{itemize}
+\item \texttt{adjust} 迴圈裡的 \texttt{if ((child <= n) \&\& ...)} 應為 \texttt{child < n}：要先確定右子 \texttt{child+1}
+存在，才能拿來比較。 寫成 \texttt{<=} 時，\texttt{child == n} 會讀到 \texttt{A[n+1]}，在建堆積時是陣列外面，
+在排序階段則是剛放到後面、已經排好的最大值，會被誤拉回堆積裡，結果就錯了。
+\item \texttt{heapsort} 第一個迴圈 \texttt{for (i=n/2; i>0; i++)} 應為 \texttt{i--}（由下而上建堆積），
+第二個迴圈的 \texttt{1=n-1} 應為 \texttt{i=n-1}；註解 \texttt{exchange A[i] and A[i+1]} 應為 \texttt{A[1]} 和
+\texttt{A[i+1]}。 \texttt{j} 沒有用到。
+\end{itemize}
+
+\textbf{\texttt{adjust} 在做什麼}。 它是最大堆積的下沉（資結書虛擬碼~8.1 的 \proc{Sift-Down}），用「挖洞」的寫法：
+先把根的值存進 \texttt{temp}（比較時用 \texttt{rootkey}，值一樣），把 \texttt{A[root]} 看成一個洞。 每一輪
+\texttt{child} 是洞的子節點裡較大的那個（\texttt{child++} 改指右子），洞的位置是 \texttt{child/2}：
+\begin{itemize}
+\item 若 \texttt{rootkey > A[child]}，\texttt{temp} 放在洞裡就滿足堆積性質，跳出。
+\item 否則較大的子節點往上搬進洞裡，洞往下移到 \texttt{child} 的位置，所以 (B6) 是
+\texttt{A[child/2] = A[child]}；接著 \texttt{child *= 2} 指向新洞的左子，新洞的位置又是 \texttt{child/2}。
+\end{itemize}
+迴圈結束時（跳出，或洞已經沒有子節點），洞在 \texttt{child/2}，把存起來的值放進去：(B7) 是
+\texttt{A[child/2] = temp}。 這樣每一層只搬一次，不必每層都交換。
+
+\textbf{追蹤}。 \texttt{A[1..5]} $= 2, 9, 7, 5, 8$，呼叫 \texttt{adjust(A, 1, 5)}：\texttt{temp = rootkey = 2}。
+\begin{center}
+\small
+\begin{tabular}{cccll}
+\toprule
+\texttt{child} & 洞 & 較大的子 & 動作 & \texttt{A[1..5]} \\
+\midrule
+2 & 1 & $A[2] = 9$（$9 > 7$） & $2 > 9$ 不成立，\texttt{A[1] = 9}，\texttt{child = 4} & $9, 9, 7, 5, 8$ \\
+4 & 2 & $A[5] = 8$（$5 < 8$，\texttt{child++}） & $2 > 8$ 不成立，\texttt{A[2] = 8}，\texttt{child = 10} & $9, 8, 7, 5, 8$ \\
+10 & 5 & & $10 > 5$，迴圈結束，\texttt{A[5] = temp} & $9, 8, 7, 5, 2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 $9, 8, 7, 5, 2$ 是最大堆積。
+
+\textbf{整個程式}（資結書第~14.6~節）。 第一個迴圈對 $i = \lfloor n/2 \rfloor, \ldots, 1$ 呼叫 \texttt{adjust(A, i, n)}，
+由下而上建堆積，$O(n)$（資結書定理~8.1）。 第二個迴圈 $i = n-1, \ldots, 1$：此時 \texttt{A[1..i+1]} 是堆積，
+把最大的 \texttt{A[1]} 和最後一個 \texttt{A[i+1]} 交換，最大值就定位在 \texttt{A[i+1]}；剩下的 \texttt{A[1..i]}
+只有根可能違反堆積性質，\texttt{adjust(A, 1, i)} 修好。 每次 $O(\lg n)$，共 $O(n \lg n)$，排成由小到大
+（nondecreasing）。
+\end{pastsoln}

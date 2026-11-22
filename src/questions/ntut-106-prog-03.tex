@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ntut-106-prog-03}]{北科大資工所 106 學年度 第 3 題}
+（設計）
+
+\textbf{Problem 3 [8\%, each 4\%]}\\
+Answer the following questions about heap-based priority queues. Assume a maximum-oriented
+priority queue.
+\begin{enumerate}[label=(\arabic*)]
+\item Please give the two major algorithms to fix the heap: top-down and bottom-up
+\textit{heapifying}. Your algorithms should run in O(log n) time.
+\item Give the algorithms that implement the two major operations of a heap-based priority queue:
+insert, and remove the maximum.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+堆積存在陣列 $A[1..n]$ 裡，$n = A.\mathit{size}$；位置 $i$ 的父節點是 $\lfloor i/2 \rfloor$，子節點是
+$2i$、$2i + 1$。 最大堆積的性質：每個節點都不小於它的子節點，所以最大值在 $A[1]$。 寫法照資結書
+虛擬碼~8.1、8.2。
+
+\textbf{(1) 兩個修補動作}。 「由下往上」（bottom-up heapify，又叫 swim、上浮）用在某個位置的鍵變大、
+可能比父節點大的時候；「由上往下」（top-down heapify，又叫 sink、下沉）用在某個位置的鍵變小、
+可能比子節點小的時候。 這裡的 bottom-up 指一個鍵往上修，不要和「由下而上建堆積」（bottom-up
+heap construction）搞混。
+
+\begin{pseudo}{最大堆積的兩個修補動作}
+\Procedure{Heapify-Up}{$A, i$} \Comment{bottom-up：$A[i]$ 可能比父節點大}
+    \While{$i > 1$ \AND $A[\lfloor i/2 \rfloor] < A[i]$}
+        \State 交換 $A[i]$ 和 $A[\lfloor i/2 \rfloor]$
+        \State $i \gets \lfloor i/2 \rfloor$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Heapify-Down}{$A, i$} \Comment{top-down：$A[i]$ 可能比子節點小}
+    \While{$2i \le A.\mathit{size}$}
+        \State $j \gets 2i$ \Comment{左子節點}
+        \If{$j + 1 \le A.\mathit{size}$ \AND $A[j + 1] > A[j]$}
+            \State $j \gets j + 1$ \Comment{右子節點比較大}
+        \EndIf
+        \If{$A[i] \ge A[j]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$
+        \State $i \gets j$
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 \proc{Heapify-Up} 的前提是：除了 $A[i]$ 和父節點之間，其他地方都滿足堆積性質。
+交換時 $A[i]$ 比父節點大，換上去以後它比原來的父節點和原來的兄弟都大；被換下來的父節點原本就不小於
+它的其他子孫，換到位置 $i$ 以後仍然是那棵子樹的最大值。 唯一可能出問題的地方往上移了一層，迴圈繼續。 停下來時
+不是到了根，就是 $A[i]$ 不大於父節點，整個陣列都是堆積。 \proc{Heapify-Down} 的前提是 $i$ 的兩棵
+子樹本身都是堆積。 一定要和\textbf{較大}的子節點交換：換上來的數要當另一個子節點的父節點，只有
+較大的那個才不比另一個小。 換完之後 $i$ 是三個數裡最大的，沒換到的那棵子樹沒有動過，唯一可能
+出問題的是被換下去的數，它的兩棵子樹仍然是堆積，正好是下一輪的前提。
+
+\textbf{時間}。 $n$ 個元素的完整二元樹高度是 $\lfloor \lg n \rfloor + 1$（高度數層數）。 兩個程序每一輪
+都往上或往下移一層，每輪 $O(1)$（上浮比較一次，下沉比較兩次），最多 $\lfloor \lg n \rfloor$ 輪，都是
+$O(\log n)$。
+
+\textbf{(2) 插入與取出最大值}。
+\begin{pseudo}{最大優先佇列的插入與取出最大值}
+\Procedure{Insert}{$A, x$} \Comment{假設陣列還有空間}
+    \State $A.\mathit{size} \gets A.\mathit{size} + 1$
+    \State $A[A.\mathit{size}] \gets x$
+    \State \Call{Heapify-Up}{$A, A.\mathit{size}$}
+\EndProcedure
+\Statex
+\Function{Remove-Max}{$A$}
+    \If{$A.\mathit{size} = 0$}
+        \State \Error{佇列是空的}
+    \EndIf
+    \State $\mathit{max} \gets A[1]$
+    \State $A[1] \gets A[A.\mathit{size}]$
+    \State $A.\mathit{size} \gets A.\mathit{size} - 1$
+    \State \Call{Heapify-Down}{$A, 1$}
+    \State \Return $\mathit{max}$
+\EndFunction
+\end{pseudo}
+
+\textbf{插入}：新元素放在最後一格，形狀仍是完整二元樹；唯一可能違反堆積性質的是新元素和它的父節點，
+做一次 \proc{Heapify-Up}。 \textbf{取出最大值}：最大值在 $A[1]$。 把最後一個元素搬到 $A[1]$、大小減一，
+形狀仍是完整二元樹；根的兩棵子樹沒有動過，仍然是堆積，唯一可能違反的是新的根，做一次
+\proc{Heapify-Down}。 兩個操作除了一次修補以外都是 $O(1)$，所以都是 $O(\log n)$。
+
+\textbf{小例子}。 堆積 $\langle 9, 7, 8, 3, 5\rangle$ 插入 $10$：放在 $A[6]$，父節點 $A[3] = 8 < 10$，交換；
+父節點 $A[1] = 9 < 10$，交換，得 $\langle 10, 7, 9, 3, 5, 8\rangle$。 再取出最大值 $10$：$A[6] = 8$ 搬到
+根，大小變 $5$；子節點 $7$、$9$ 較大的是 $9$，交換得 $\langle 9, 7, 8, 3, 5\rangle$；$8$ 到了位置 $3$，
+沒有子節點，停。
+\end{pastsoln}

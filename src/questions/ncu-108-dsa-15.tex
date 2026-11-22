@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ncu-108-dsa-15}]{中央資工所 108 學年度 問答題第 3 題}
+（問答）
+
+Below is the algorithm AllPairCost which computes the shortest distances between all pairs of
+vertices $i$, $j$, where i $\neq$ j. Formally, given distances of edges in graph G, determine the
+shortest distances between all pairs of vertices in G. Note that the distance of an arbitrary edge
+in G is non-negative.
+\begin{enumerate}[label=(\alph*)]
+\item Blanks (B3) and (B4) in the algorithm below should be \underline{\hspace{3em}}(4\%)
+\item Blank (B5) in the algorithm below should be \underline{\hspace{3em}}(3\%)
+\end{enumerate}
+
+\textbf{Algorithm} AllPairCost\\
+\textbf{Input:} a two dimensional array $C$, where $C[i][j]$ denotes the distance of directed edge
+$(i, j)$ (i.e., the edge from vertex $i$ to vertex $j$) .\\
+\textbf{Output:} a two dimensional array $D$, where $D[i][j]$ denotes the shortest distance from
+vertex $i$ to vertex $j$.
+\begin{minted}[fontsize=\small,linenos,xleftmargin=2em,numbersep=6pt]{c}
+int i, j, k;
+for ( i=0; i<n; i++ )
+   for (j=0; j<n; j++ )
+      ___(B5)___;
+for ( k=0; k<n; k++ )
+   for ( i=0; i<n; j++ )
+       for (j=0; j<n; j++ )
+           if( ___(B3)___ )
+               ___(B4)___;
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) (B3) 是 \texttt{D[i][k] + D[k][j] < D[i][j]}，(B4) 是 \texttt{D[i][j] = D[i][k] + D[k][j]}；
+(b) (B5) 是 \texttt{D[i][j] = C[i][j]}。
+
+原卷第 6 行 \texttt{for ( i=0; i<n; j++ )} 的 \texttt{j++} 是筆誤，應為 \texttt{i++}（否則 $i$ 永遠是 $0$，第 6 行
+這層迴圈停不下來）。 另外照慣例假設 \texttt{C[i][i] = 0}，沒有邊時 \texttt{C[i][j]} 是一個很大的數 \texttt{INF}；
+在 C 裡 \texttt{INF} 要取得夠小，讓 \texttt{INF + INF} 不會溢位（例如 \texttt{INT\_MAX / 2}），否則第 8 行的
+加法會溢位變成負數。
+
+這是 Floyd--Warshall 演算法（資結書第~25.6~節，虛擬碼~25.8），程式和它一行對一行：
+\begin{itemize}
+\item \textbf{(B5) 初始化}：還不允許經過任何中間點時，$i$ 到 $j$ 的最短距離就是邊的長度，
+\texttt{D[i][j] = C[i][j]}。
+\item \textbf{(B3)(B4) 鬆弛}：第 $k$ 輪考慮「可以經過頂點 $k$」。 如果先從 $i$ 走到 $k$、再從 $k$ 走到 $j$
+比目前的 \texttt{D[i][j]} 短，就更新：
+\begin{center}
+\texttt{if (D[i][k] + D[k][j] < D[i][j]) D[i][j] = D[i][k] + D[k][j];}
+\end{center}
+\end{itemize}
+
+\textbf{正確性}。 不變量：第 $k$ 輪（$k = 0, 1, \ldots$）結束時，\texttt{D[i][j]} 是「中間點只用 $0..k$」的
+$i \to j$ 最短路徑長度。 這種最短路徑若不經過 $k$，長度是上一輪的 \texttt{D[i][j]}；若經過 $k$，邊長非負，
+最短的走法不必重複經過 $k$，拆成 $i \to k$ 和 $k \to j$ 兩段，各段的中間點都在 $0..k-1$，長度是上一輪的
+\texttt{D[i][k] + D[k][j]}。 兩者取小的就是 (B3)(B4) 做的事。 原地更新沒有問題：第 $k$ 輪裡
+\texttt{D[i][k]} 和 \texttt{D[k][j]} 不會被改小（例如 \texttt{D[i][k]} 只可能被換成
+\texttt{D[i][k] + D[k][k]}，而 \texttt{D[k][k] = 0}）。 $n$ 輪之後所有頂點都可以當中間點，\texttt{D} 就是
+所有點對的最短距離。
+
+\textbf{時間}。 初始化 $\Theta(n^2)$，三層迴圈 $\Theta(n^3)$，共 $\Theta(n^3)$。
+
+常見的錯誤填法：(B3) 寫成 \texttt{D[i][k] + D[k][j] > D[i][j]}（方向反了，會把距離改大），或 (B4) 寫成
+\texttt{D[i][j] = C[i][k] + C[k][j]}（用了原始的邊長，只考慮恰好經過一個中間點的路徑）。
+\end{pastsoln}

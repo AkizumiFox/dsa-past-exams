@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nsysu-109-osds-04}]{中山資工所甲組 109 學年度 第 10 題}
+（計算）
+
+(10\%) The Ackermann function $A(m, n)$ is defined recursively for non-negative integers $m$ and $n$
+as follows:
+\[
+A(m, n) = \begin{cases}
+n + 1 & \text{if } m = 0,\\
+A(m-1, 1) & \text{if } m > 0 \text{ and } n = 0,\\
+A(m-1, A(m, n-1)) & \text{if } m > 0 \text{ and } n > 0.
+\end{cases}
+\]
+Its value grows very quickly, even for small values of $m$ and $n$. For instance, $A(4, 1) = 65533$.
+What would be the values of $A(3, 2)$ and $A(2, 4)$?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$A(3, 2) = 29$，$A(2, 4) = 11$。
+
+直接照定義展開，$A(3, 2)$ 要呼叫 $541$ 次函式，手算一定會錯。 做法是先對小的 $m$ 求封閉式，每一個都是對 $n$ 的
+一階遞迴式（資結書第~2~章）。
+
+\textbf{$m = 1$}。 $A(1, 0) = A(0, 1) = 2$；$n > 0$ 時 $A(1, n) = A(0, A(1, n-1)) = A(1, n-1) + 1$。 所以
+$A(1, n) = n + 2$。
+
+\textbf{$m = 2$}。 $A(2, 0) = A(1, 1) = 3$；$n > 0$ 時 $A(2, n) = A(1, A(2, n-1)) = A(2, n-1) + 2$。 所以
+$A(2, n) = 2n + 3$。
+
+\textbf{$m = 3$}。 $A(3, 0) = A(2, 1) = 5$；$n > 0$ 時 $A(3, n) = A(2, A(3, n-1)) = 2A(3, n-1) + 3$。 令
+$b_n = A(3, n) + 3$，則 $b_n = 2b_{n-1}$、$b_0 = 8$，所以 $b_n = 2^{n+3}$，$A(3, n) = 2^{n+3} - 3$。
+（三個封閉式都可以用歸納法直接驗證：基底對，代進遞迴式也對。）
+
+\textbf{求值}：
+\begin{itemize}
+\item $A(2, 4) = 2 \cdot 4 + 3 = 11$。 逐步：$A(2, 0) = 3$，$A(2, 1) = A(1, 3) = 5$，$A(2, 2) = A(1, 5) = 7$，
+$A(2, 3) = A(1, 7) = 9$，$A(2, 4) = A(1, 9) = 11$。
+\item $A(3, 2) = 2^5 - 3 = 29$。 逐步：$A(3, 0) = A(2, 1) = 5$，$A(3, 1) = A(2, A(3, 0)) = A(2, 5) = 13$，
+$A(3, 2) = A(2, A(3, 1)) = A(2, 13) = 29$。
+\end{itemize}
+
+題目的例子也對得上：$A(4, 0) = A(3, 1) = 13$，$A(4, 1) = A(3, A(4, 0)) = A(3, 13) = 2^{16} - 3 = 65533$。
+\end{pastsoln}

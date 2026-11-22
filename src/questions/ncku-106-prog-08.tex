@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-106-prog-08}]{成大資訊聯招 106 學年度 第 8 題}
+（問答）
+
+(10\%) Use the master method to give tight asymptotic bounds for the following recursive
+$T(n)=7T(\frac{n}{2})+\Theta(n^2)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n^{\lg 7}) \approx \Theta(n^{2.81})$。
+
+原題的 recursive 應是 recurrence。 套主定理（資結書定理~2.4）：$a = 7$、$b = 2$、$f(n) = \Theta(n^2)$，
+\[
+n^{\log_b a} = n^{\log_2 7} = n^{\lg 7}, \qquad \lg 7 \approx 2.807 .
+\]
+$\lg 7 > \lg 4 = 2$，所以 $f(n)$ 比 $n^{\lg 7}$ 小。 要確定是\textbf{多項式地}小：取 $\varepsilon = \lg 7 - 2
+\approx 0.807 > 0$（取 $\varepsilon = 0.8$ 也可以），$f(n) = \Theta(n^2) = O(n^{\lg 7 - \varepsilon})$。 這是
+情況 1，
+\[
+T(n) = \Theta(n^{\lg 7}).
+\]
+
+直觀地看遞迴樹：第 $i$ 層有 $7^i$ 個大小 $n/2^i$ 的子問題，這一層的工作量約 $7^i (n/2^i)^2 = n^2 (7/4)^i$，
+往下一層乘 $7/4 > 1$，越下層越多，總和由最底層的 $7^{\lg n} = n^{\lg 7}$ 個葉子決定。
+
+這是 Strassen 矩陣乘法的遞迴式：七次 $n/2$ 階的乘法加上 $\Theta(n^2)$ 的加減，比直接乘的 $\Theta(n^3)$ 快。
+\end{pastsoln}

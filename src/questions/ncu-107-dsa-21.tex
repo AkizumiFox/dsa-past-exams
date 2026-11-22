@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ncu-107-dsa-21}]{中央資工所 107 學年度 第 21 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is the algorithm AllPairCost which computes the shortest distances between all pairs of
+vertices i, j, where i $\ne$ j. Formally, given distances of edges in graph G, determine the
+shortest distances between all pairs of vertices in G. Note that the distance of an arbitrary edge
+in G is non-negative.
+\begin{quote}
+\textbf{Algorithm} AllPairCost\\
+\textbf{Input:} a two dimensional array C, where C[i][j]$>$0 denotes the distance of directed edge
+(i, j) (i.e., the edge from vertex i to vertex j).\\
+\textbf{Output:} a two dimensional array D, where D[i][j] denotes the shortest distance from
+vertex i to vertex j.
+\end{quote}
+\begin{minted}[fontsize=\small,breaklines]{c}
+1:  int i, j, k;
+2:  for ( i=0; i<n; i++ )
+3:     for ( j=0; j<n; j++ )
+4:          D[i][j] = C[i][j];
+5:  for ( k=0; k<n; k++ )
+6:     for ( i=0; i<n; j++ )
+7:          for ( j=0; j<n; j++ )
+8:              if ( ___(B7)___ )
+9:                    ____(B8)____;
+\end{minted}
+
+Blank (B8) in the algorithm above should be\\
+(a)~\texttt{D[i][j] = D[i-1][k]+D[k][j-1]}\\
+(b)~\texttt{D[i][j] = D[i][k]+D[k][j]}\\
+(c)~\texttt{D[i][j] = D[i][k+1]+D[k+1][j]}\\
+(d)~\texttt{D[i][j] = D[i][k] +D[j][k]}\\
+(e)~\texttt{D[i][j] = D[i-1][j-1]}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b) \texttt{D[i][j] = D[i][k]+D[k][j]}。
+
+上一題（歷屆試題~\ref{px:ncu-107-dsa-20}）說明了第 $k$ 輪的更新：經過 $k$ 的路徑 $i \leadsto k \leadsto j$ 長
+\texttt{D[i][k] + D[k][j]}，比目前的 \texttt{D[i][j]} 短（(B7) 應為 \texttt{D[i][j] > D[i][k]+D[k][j]}）時，
+把 \texttt{D[i][j]} 改成它。 (B8) 和 (B7) 要用同一個式子，選 (b)。
+
+小例子：三個頂點，$C[0][1] = 4$、$C[1][2] = 1$、$C[0][2] = 9$，其他非對角線是 $\infty$。 $k = 1$ 時
+$D[0][2] = 9 > D[0][1] + D[1][2] = 4 + 1 = 5$，(B8) 把 $D[0][2]$ 改成 $5$，就是路徑 $0 \to 1 \to 2$。
+
+逐項檢查：(a)(c)(d)(e) 的錯誤和上一題對應的選項相同：(a)(e) 用 $i - 1$、$j - 1$，和這一對頂點無關，
+$i = 0$ 或 $j = 0$ 時超出陣列；(c) 用 $k + 1$ 當中間點，和這一輪不合，$k = n - 1$ 時超出範圍；(d) 把
+$k \to j$ 寫成 $j \to k$，有向圖上方向不能反。
+\end{pastsoln}

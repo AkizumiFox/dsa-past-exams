@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ncu-108-dsa-04}]{中央資工所 108 學年度 第 4 題}
+（單選；每題 5 分，答錯倒扣 1 分。 第 4、5 題共用下面的程式）
+
+The following procedure recursively generates all the permutations of list[$i$] to list[$n$].
+\begin{minted}[fontsize=\small]{c}
+void perm(char *list, int i, int n)
+{
+ int j, temp;
+ if (i==n) { /* print the newly generated permutation */
+    for (j=0; j<=n; j++)
+        printf("%c", list[j]);
+    printf("     ");
+}
+else { /* generate permutations recursively */
+      for (j=i; j<=n; j++) {
+          ___(B1)___
+          ___(B2)___
+          swap(list[i], list[j], temp);}}}
+\end{minted}
+
+Blank (B1) in the algorithm above should be
+\begin{enumerate}[label=(\Alph*)]
+\item swap(\textit{list}[$i$+1], \textit{list}[$j$], \textit{temp})
+\item swap(list[$i$], list[$j$], \textit{temp})
+\item swap(\textit{list}[$i$], \textit{list}[$j$+1], \textit{temp})
+\item swap(\textit{list}[$i$+1], \textit{list}[$j$+1], \textit{temp})
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+印出時印的是 \texttt{list[0..n]}，所以整個串列存在 \texttt{list[0..n]}，一開始呼叫 \texttt{perm(list, 0, n)}。
+這是資結書第~20.1~節開頭提到的「用交換產生所有排列」：\texttt{perm(list, i, n)} 決定第 $i$ 格放誰，讓
+\texttt{list[i..n]} 的每一個元素輪流換到第 $i$ 格（$j = i$ 時是和自己交換，原來的元素留在原地），遞迴處理
+後面的格子，回來再換回去。 迴圈最後一行 \texttt{swap(list[i], list[j], temp)} 是「換回去」，所以 (B1)
+必須是同樣兩格的交換 \texttt{swap(list[i], list[j], temp)}，(B2) 是遞迴處理下一格（見第~5~題）。
+
+\textbf{為什麼正確}。 對 $n - i$ 歸納可證：\texttt{perm(list, i, n)} 把 \texttt{list[i..n]} 的每一種排列各印
+一次，而且返回時 \texttt{list} 和呼叫時相同。 $i = n$ 時只有一種，印一次。 $i < n$ 時，每一輪開始前
+\texttt{list} 都已還原，第 $j$ 輪把原來的 \texttt{list[j]} 放到第 $i$ 格，$n - i + 1$ 輪放到第 $i$ 格的元素
+互不相同，每一輪再由歸納假設印出其餘元素的所有排列；合起來每種排列恰好一次。 \texttt{list} 是
+a, b, c 時印出 abc、acb、bac、bca、cba、cab。
+
+\textbf{其他選項}（(B2) 都填正確的 \texttt{perm(list, i+1, n)}）：
+\begin{itemize}
+\item (A) 換的是第 $i + 1$ 格，第 $i$ 格的元素從來沒被換走，最後一行又和 (B1) 換的不是同兩格，陣列還原不了。
+\texttt{list} 是 abc 時印出 bca、bca、bca、bca、abc、abc，有重複也有漏掉。
+\item (C)、(D) $j = n$ 時會存取 \texttt{list[n+1]}，超出範圍；而且和最後一行換的也不是同兩格。
+\item (E) (B) 是對的，所以錯。
+\end{itemize}
+\end{pastsoln}

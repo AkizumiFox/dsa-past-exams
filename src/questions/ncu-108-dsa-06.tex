@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:ncu-108-dsa-06}]{中央資工所 108 學年度 第 6 題}
+（複選；每題 5 分，答錯倒扣 1 分）
+
+Consider an empty hash table with 10 buckets and each bucket has 2 slots. Suppose that the hash
+function is h(n) = n \% 10, and the following numbers, 6 \ 16 \ 22 \ 45 \ 54 \ 25 \ 7 \ 75 \ 5 \ 108,
+are sequentially inserted into the hash table. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item if linear probing is adopted to handle overflow, the summation of the numbers in the full
+buckets of the hash table is 287.
+\item if linear probing is adopted to handle overflow, the summation of the numbers in the full
+buckets of the hash table is 172.
+\item if quadratic probing is adopted to handle overflow, the summation of the numbers in the full
+buckets of the hash table is 221.
+\item Compared with quadratic probing, linear probing requires fewer bucket accesses (in average).
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)。
+
+每個桶有兩格，裝得下兩個鍵；「full bucket」是兩格都滿的桶。 探測以桶為單位：$h(n)$ 號桶滿了才照探測
+序列試下一個桶。 雜湊值就是個位數：
+\begin{center}
+\small
+\begin{tabular}{c*{10}{c}}
+\toprule
+$n$ & 6 & 16 & 22 & 45 & 54 & 25 & 7 & 75 & 5 & 108 \\
+$h(n)$ & 6 & 6 & 2 & 5 & 4 & 5 & 7 & 5 & 5 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+前七個數都直接放進自己的桶：$6$ 號桶放 $6, 16$（滿），$5$ 號桶放 $45, 25$（滿），$2, 4, 7$ 號桶各一個。
+差別在後面三個。
+
+\textbf{線性探測}（依序試 $h, h+1, h+2, \ldots$）：
+\begin{itemize}
+\item $75$：$5$ 號滿、$6$ 號滿，放進 $7$ 號（和 $7$ 一起，滿）。
+\item $5$：$5, 6, 7$ 號都滿，放進 $8$ 號。
+\item $108$：$8$ 號還有一格，放進去（滿）。
+\end{itemize}
+滿的桶是 $5$ 號 $\{45, 25\}$、$6$ 號 $\{6, 16\}$、$7$ 號 $\{7, 75\}$、$8$ 號 $\{5, 108\}$，總和
+$70 + 22 + 82 + 113 = 287$。 (A) 對，(B) 錯。
+
+\textbf{二次探測}。 資結書第~12.3~節的二次探測是 $h + i^2$（試 $h, h+1, h+4, h+9, \ldots$）；另一種常見的
+寫法是正負交替 $h, h+1^2, h-1^2, h+2^2, h-2^2, \ldots$（都取 $\bmod 10$）。 兩種的結果不同：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+ & $h + i^2$ & $h \pm i^2$ \\
+\midrule
+$75$（$h = 5$） & $5$ 滿、$6$ 滿、$9$：放進 $9$ 號 & $5$ 滿、$6$ 滿、$4$：放進 $4$ 號（和 $54$，滿） \\
+$5$（$h = 5$） & $5$ 滿、$6$ 滿、$9$：放進 $9$ 號（滿） & $5$、$6$、$4$ 都滿，$5 + 4 = 9$：放進 $9$ 號 \\
+$108$（$h = 8$） & 放進 $8$ 號 & 放進 $8$ 號 \\
+\midrule
+滿的桶 & $5, 6, 9$ 號 & $4, 5, 6$ 號 \\
+總和 & $70 + 22 + 80 = 172$ & $129 + 70 + 22 = 221$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+（正負交替時先試 $h - 1^2$ 也一樣：$75$ 進 $4$ 號，$5$ 改進 $5 - 4 = 1$ 號，滿的桶仍是 $4, 5, 6$ 號，$221$。）
+選項 (C) 的 $221$ 只有正負交替的版本算得出來，出題者用的是這個版本，(C) 對。 若照 $h + i^2$ 算，總和
+是 $172$，(C) 就是錯的；作答時最好寫出採用的探測序列。
+
+\textbf{(D)}。 錯。 線性探測有主要群聚：連成一段的滿格越長，越容易被接上而變得更長，平均要看的桶比較多
+（資結書第~12.3、12.4~節；失敗搜尋約 $\frac12\bigl(1 + 1/(1-\alpha)^2\bigr)$ 次，比均勻雜湊的
+$1/(1 - \alpha)$ 多）。 二次探測的跳距越來越大，沒有主要群聚，平均存取次數比線性探測少，不是多。
+
+\textbf{(E)} (A)、(C) 對，所以錯。
+\end{pastsoln}

@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncu-110-dsa-01}]{中央資工所 110 學年度 複選題第 1 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item When converting the infix expression a*(b+c/d)*(e-f)+g to its postfix form, there are at
+most 4 tokens in the stack at any moment.
+\item The postfix form of infix expression (a+b-c)*(d-e) is abc-+de-*
+\item The infix expression of postfix expression 3k-2m4+*+pab-*/ is ((3-k)+2(m+4))/(p*(a-b))
+\item When converting the infix expression a*(b+c/d)*(e-f) to its postfix form, there are at most
+3 tokens in the stack at any moment.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(C)。
+
+(C) 的中序式寫成 $2(m+4)$，省略了乘號；下面把它讀成 $2*(m+4)$。 (A)、(D) 的「堆疊裡的記號」
+包含左括號，這是資結書虛擬碼~6.8 的做法：左括號要推入堆疊，等右括號來時才彈出。
+
+\textbf{(A) 對}。 用資結書第~6.3.3~節的規則轉換：運算元直接輸出；左括號推入；右括號一直彈出到
+左括號；運算子先彈出堆疊頂端優先順序\textbf{大於或等於}自己的（遇到左括號停），再推入自己。
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） & 輸出 \\
+\midrule
+$a$ & 輸出 & & $a$ \\
+$*$ & 推入 & $*$ & $a$ \\
+$($ & 推入 & $*\ ($ & $a$ \\
+$b$ & 輸出 & $*\ ($ & $ab$ \\
+$+$ & 頂端是左括號，推入 & $*\ (\ +$ & $ab$ \\
+$c$ & 輸出 & $*\ (\ +$ & $abc$ \\
+$/$ & $/$ 比 $+$ 高，推入 & $*\ (\ +\ /$ \quad（$4$ 個） & $abc$ \\
+$d$ & 輸出 & $*\ (\ +\ /$ & $abcd$ \\
+$)$ & 彈出 $/$、$+$，丟掉左括號 & $*$ & $abcd/+$ \\
+$*$ & 彈出同級的 $*$，推入 & $*$ & $abcd/+*$ \\
+$($ & 推入 & $*\ ($ & $abcd/+*$ \\
+$e$ & 輸出 & $*\ ($ & $abcd/+*e$ \\
+$-$ & 推入 & $*\ (\ -$ & $abcd/+*e$ \\
+$f$ & 輸出 & $*\ (\ -$ & $abcd/+*ef$ \\
+$)$ & 彈出 $-$，丟掉左括號 & $*$ & $abcd/+*ef-$ \\
+$+$ & 彈出 $*$，推入 & $+$ & $abcd/+*ef-*$ \\
+$g$ & 輸出 & $+$ & $abcd/+*ef-*g$ \\
+結束 & 彈出剩下的 & & $abcd/+*ef-*g+$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+最多的時候是讀到 $/$ 之後的 $4$ 個（$*$、$($、$+$、$/$），所以「最多 $4$ 個」成立。
+
+\textbf{(B) 錯}。 $+$、$-$ 同級、由左往右結合，$a+b-c$ 是 $(a+b)-c$，後序是 $ab+c-$；整個式子是
+$ab+c-de-*$。 題目的 $abc-+$ 是 $a+(b-c)$，值雖然一樣，但不是這個中序式的後序形式。
+
+\textbf{(C) 對}。 照資結書虛擬碼~6.7 從左到右掃描，堆疊裡放子運算式：
+$3\,k\,-$ 得 $(3-k)$；$2$、$m\,4\,+$ 得 $(m+4)$；$*$ 得 $2*(m+4)$；$+$ 得 $(3-k)+2*(m+4)$；
+$p$、$a\,b\,-$ 得 $(a-b)$；$*$ 得 $p*(a-b)$；最後 $/$ 得
+\[
+\bigl((3-k)+2*(m+4)\bigr)/\bigl(p*(a-b)\bigr),
+\]
+和題目的式子一樣（只差省略的乘號）。
+
+\textbf{(D) 錯}。 這個式子就是 (A) 去掉最後的 $+g$，前面的步驟完全一樣，讀到 $/$ 時堆疊裡一樣
+有 $4$ 個記號，所以「最多 $3$ 個」不成立。
+\end{pastsoln}

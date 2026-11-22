@@ -1,0 +1,93 @@
+\begin{pastexam}[label={px:ntu-106-dsa-02}]{臺大資工所 106 學年度 第 2 題}
+（問答）
+
+(15 points) Suppose that we have numbers between 1 and 1000 in a binary search tree and want to
+search for the number 400. Determine whether the following sequences could be or could not be
+the sequence of nodes examined and explain why or why not.
+\begin{enumerate}[label=(\alph*)]
+\item (5 points) 32 500 300 350 400
+\item (5 points) 900 800 200 699 355 385 412 372 400
+\item (5 points) 515 1 500 200 480 251 320 362 453 380 400
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 可能；(b) 不可能；(c) 可能。
+
+\textbf{判斷的方法}。 搜尋 $400$ 時（資結書虛擬碼~9.1），每經過一個節點 $x$：$400 < x$ 就往左，
+之後經過的節點都在 $x$ 的左子樹，鍵都 $< x$；$400 > x$ 就往右，之後的鍵都 $> x$。 所以走到某一步時，
+下一個鍵一定落在一個開區間 $(lo, hi)$ 裡：$lo$ 是目前為止往右轉時經過的最大鍵，$hi$ 是往左轉時
+經過的最小鍵。 一開始 $(lo, hi) = (-\infty, \infty)$，每經過 $x$，$400 > x$ 就把 $lo$ 改成 $x$，
+$400 < x$ 就把 $hi$ 改成 $x$。 序列可能出現，若且唯若每個鍵都落在當時的區間裡，而且最後一個是
+$400$。
+
+反過來，只要每一步都落在區間裡，把序列依序插入一棵空的二元搜尋樹，每個新的鍵都會接在前一個鍵的
+下面（往左或往右正好和搜尋 $400$ 的方向一致），搜尋 $400$ 走的就是這條路徑；其他的數（$1$ 到
+$1000$ 裡剩下的）再插到不在這條路徑上的位置就好。 所以這個條件也是充分的。
+
+\textbf{(a) 32 500 300 350 400}：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+經過的鍵 & 在區間裡嗎 & 方向 & 之後的區間 \\
+\midrule
+32 & $(-\infty, \infty)$ $\checkmark$ & $400 > 32$，往右 & $(32, \infty)$ \\
+500 & $\checkmark$ & $400 < 500$，往左 & $(32, 500)$ \\
+300 & $\checkmark$ & 往右 & $(300, 500)$ \\
+350 & $\checkmark$ & 往右 & $(350, 500)$ \\
+400 & $\checkmark$ & 找到 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步都在區間裡，可能。 例如依序插入 $32, 500, 300, 350, 400$ 就是這樣一條路徑：$32$ 的右子節點
+$500$，$500$ 的左子節點 $300$，$300$ 的右子節點 $350$，$350$ 的右子節點 $400$。
+
+\textbf{(b) 900 800 200 699 355 385 412 372 400}：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+經過的鍵 & 在區間裡嗎 & 方向 & 之後的區間 \\
+\midrule
+900 & $\checkmark$ & 往左 & $(-\infty, 900)$ \\
+800 & $\checkmark$ & 往左 & $(-\infty, 800)$ \\
+200 & $\checkmark$ & 往右 & $(200, 800)$ \\
+699 & $\checkmark$ & 往左 & $(200, 699)$ \\
+355 & $\checkmark$ & 往右 & $(355, 699)$ \\
+385 & $\checkmark$ & 往右 & $(385, 699)$ \\
+412 & $\checkmark$ & 往左 & $(385, 412)$ \\
+372 & $\times$ & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+在 $385$ 往右走了，之後的節點都在 $385$ 的右子樹，鍵必須 $> 385$；$372 < 385$，不可能出現。 所以
+這個序列不可能。
+
+\textbf{(c) 515 1 500 200 480 251 320 362 453 380 400}：
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\toprule
+經過的鍵 & 在區間裡嗎 & 方向 & 之後的區間 \\
+\midrule
+515 & $\checkmark$ & 往左 & $(-\infty, 515)$ \\
+1 & $\checkmark$ & 往右 & $(1, 515)$ \\
+500 & $\checkmark$ & 往左 & $(1, 500)$ \\
+200 & $\checkmark$ & 往右 & $(200, 500)$ \\
+480 & $\checkmark$ & 往左 & $(200, 480)$ \\
+251 & $\checkmark$ & 往右 & $(251, 480)$ \\
+320 & $\checkmark$ & 往右 & $(320, 480)$ \\
+362 & $\checkmark$ & 往右 & $(362, 480)$ \\
+453 & $\checkmark$ & 往左 & $(362, 453)$ \\
+380 & $\checkmark$ & 往右 & $(380, 453)$ \\
+400 & $\checkmark$ & 找到 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步都在區間裡，可能。 路徑左右來回很多次，看起來怪，但依序插入這 $11$ 個數得到的樹，搜尋
+$400$ 正好走這條路。
+
+這題常見的錯是只檢查相鄰兩個數的大小關係。 (b) 的 $412 \to 372$ 是往左，$372 < 412$ 沒問題；
+錯的是 $372$ 和更早的 $385$ 的關係，要一路記著區間才看得出來。
+\end{pastsoln}

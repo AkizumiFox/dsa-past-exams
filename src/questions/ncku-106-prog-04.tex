@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncku-106-prog-04}]{成大資訊聯招 106 學年度 第 4 題}
+（設計）
+
+(10\%) Given an $O(n\lg k)$-time algorithm to merge $k$ sorted lists into one sorted list, where
+$n$ is the total number of elements in all the input lists.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 Given 應是 Give（設計一個演算法）。 假設每個串列由小到大排好，而且都不是空的（空的串列直接丟掉），
+所以 $2 \le k \le n$（$k = 1$ 時不用合併）。
+
+\textbf{想法。} 合併兩個串列時，每次比較兩個串列的第一個元素；$k$ 個串列時要從 $k$ 個「目前的第一個元素」
+裡找最小的。 每次掃一遍要 $\Theta(k)$，總共 $\Theta(nk)$。 把這 $k$ 個元素放在最小堆積裡，找最小值、補上
+下一個都只要 $O(\lg k)$（資結書第~8.3~節）。
+
+\begin{pseudo}{用最小堆積合併 $k$ 個排好的串列}
+\Function{Merge-K-Lists}{$L_1, L_2, \ldots, L_k$}
+    \State $H \gets$ 空的最小堆積 \Comment{元素是 $(x, i)$：鍵 $x$ 來自 $L_i$，依 $x$ 比大小}
+    \For{$i \gets 1$ \To $k$}
+        \State 從 $L_i$ 拿下第一個元素 $x$，\Call{Heap-Insert}{$H, (x, i)$}
+    \EndFor
+    \State $R \gets$ 空串列
+    \While{$H$ 不是空的}
+        \State $(x, i) \gets \Call{Heap-Extract-Min}{H}$
+        \State 把 $x$ 接到 $R$ 的尾端
+        \If{$L_i$ 還有元素}
+            \State 從 $L_i$ 拿下第一個元素 $y$，\Call{Heap-Insert}{$H, (y, i)$}
+        \EndIf
+    \EndWhile
+    \State \Return $R$
+\EndFunction
+\end{pseudo}
+
+\proc{Heap-Insert}、\proc{Heap-Extract-Min} 是資結書虛擬碼~8.2 的最小堆積版本（比較的方向反過來）。
+
+\textbf{正確性。} 第 6 行的迴圈每次開始時，下面兩件事成立：
+\begin{enumerate}
+\item 對每個還有元素沒輸出的串列 $L_i$，$H$ 裡恰好有一個 $(x, i)$，而且 $x$ 是 $L_i$ 裡還沒輸出的元素中最小的
+（$L_i$ 排好了，剩下的都 $\ge x$）。
+\item $R$ 依序是全部元素裡最小的 $|R|$ 個，由小到大。
+\end{enumerate}
+一開始 $R$ 是空的，$H$ 放了每個串列的第一個元素，成立。 某次取出 $H$ 的最小值 $(x, i)$ 時，任何還沒輸出的
+元素 $z$ 不是在 $H$ 裡（$z \ge x$，因為 $x$ 是 $H$ 的最小值），就是還留在某個 $L_j$ 裡，而 $z$ 大於等於 $H$
+裡代表 $L_j$ 的那個元素，又 $\ge x$。 所以 $x$ 是還沒輸出的元素中最小的，接到 $R$ 後面，第 2 點仍成立；
+第 9--10 行替 $L_i$ 補上它的下一個元素，第 1 點也仍成立。 每圈輸出一個元素，跑完 $n$ 圈 $H$ 才會空，
+這時 $R$ 是全部 $n$ 個元素由小到大。
+
+\textbf{時間。} $H$ 裡每個串列最多一個元素，大小不超過 $k$，\proc{Heap-Insert} 和 \proc{Heap-Extract-Min}
+都是 $O(\lg k)$。 每個元素恰好被放進 $H$ 一次、取出一次，共 $2n$ 次堆積操作，$O(n \lg k)$。 接到 $R$
+的尾端、檢查 $L_i$ 是否還有元素都是 $O(1)$（串列記著尾端指標）。 總時間 $O(n \lg k)$；第 2--4 行也可以改用
+\proc{Build-Min-Heap} 在 $O(k)$ 時間建好，不影響總時間。 額外空間是堆積的 $O(k)$。
+
+另一種做法是兩兩合併：每一輪把串列兩兩配對合併，每輪 $O(n)$，串列數減半，$\lceil \lg k \rceil$ 輪，也是
+$O(n \lg k)$。
+\end{pastsoln}

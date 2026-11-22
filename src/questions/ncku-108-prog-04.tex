@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-108-prog-04}]{成大資訊聯招 108 學年度 第 4 題}
+（問答）
+
+(10\%) How can we prove the given problem is NP-complete?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：要證兩件事，設給定的決策問題是 $B$：
+\begin{enumerate}
+\item $B \in \mathrm{NP}$；
+\item $B$ 是 NP 難的。 通常不直接證（那要對 NP 裡的每個問題都做），而是挑一個\textbf{已知} NP 完備的問題 $A$，
+證明 $A \le_{\mathrm{p}} B$。
+\end{enumerate}
+兩件都成立，$B$ 就是 NP 完備的（資結書引理~28.6）。
+
+\textbf{為什麼這樣就夠。} 任取 $C \in \mathrm{NP}$。 $A$ 是 NP 完備的，所以 $C \le_{\mathrm{p}} A$；再接上
+$A \le_{\mathrm{p}} B$，兩個多項式時間的轉換接起來還是多項式時間，所以 $C \le_{\mathrm{p}} B$。 每個 NP 問題都能
+歸約到 $B$，$B$ 是 NP 難的；加上 $B \in \mathrm{NP}$，$B$ 是 NP 完備的（資結書定義~28.4）。
+
+\textbf{實際寫的四步}（資結書第~28.4~節）：
+\begin{enumerate}
+\item \textbf{$B \in \mathrm{NP}$}：說出憑證是什麼（例如頂點覆蓋的憑證是那 $k$ 個頂點），驗證者怎麼檢查，為什麼
+是多項式時間。
+\item \textbf{選 $A$}：挑一個已知 NP 完備、結構和 $B$ 相近的問題，例如 SAT、3-SAT、團、獨立集、頂點覆蓋、
+哈密頓環、子集合和。 寫出「證明 $A \le_{\mathrm{p}} B$」。
+\item \textbf{構造}：給一個轉換 $f$，把 $A$ 的任何輸入 $x$ 變成 $B$ 的輸入 $f(x)$，說明 $f$ 是多項式時間（輸出的
+大小也是多項式）。
+\item \textbf{兩個方向}：證明 $x$ 的答案是「是」$\Rightarrow$ $f(x)$ 的答案是「是」，以及 $f(x)$ 的答案是「是」
+$\Rightarrow$ $x$ 的答案是「是」。
+\end{enumerate}
+
+\textbf{例子：頂點覆蓋是 NP 完備的。} (1) 憑證是 $k$ 個頂點，逐條邊檢查是否有一端在裡面，$O(n + m)$。 (2) 用獨立集
+（已知 NP 完備）。 (3) $f(G, k) = (G, n - k)$，$n$ 是頂點數，只是改一個數字。 (4) $S$ 是獨立集若且唯若 $V - S$ 是
+頂點覆蓋：$S$ 裡任兩點沒有邊，等於每條邊至少一端不在 $S$、也就是在 $V - S$ 裡。 所以 $G$ 有大小 $k$ 的獨立集
+若且唯若有大小 $n - k$ 的頂點覆蓋。
+
+\textbf{常見的錯誤}：
+\begin{itemize}
+\item 方向弄反，證成 $B \le_{\mathrm{p}} A$。 那只說明 $B$ 不比 $A$ 難，對證明 $B$ 難沒有幫助。
+\item 只證第 2--4 步，漏了 $B \in \mathrm{NP}$：這樣只得到 NP 難，不能說 NP 完備。
+\item 轉換只證了一個方向。 兩個方向都要，否則 $B$ 的答案不能拿來回答 $A$。
+\item 題目是最佳化問題（例如「求最小頂點覆蓋」）時，要先改成決策版本（「有沒有大小不超過 $k$ 的頂點覆蓋」）
+再談 NP 完備。
+\end{itemize}
+\end{pastsoln}

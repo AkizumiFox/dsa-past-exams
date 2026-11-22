@@ -1,0 +1,139 @@
+\begin{pastexam}[label={px:nsysu-108-osds-01}]{中山資工所甲組 108 學年度 第 1 題}
+（問答）
+
+\textbf{[Basic Data Structures: 20\%]}
+\begin{enumerate}[label=(\arabic*)]
+\item Given a prefix expression ``+ + (18) $\times$ (17) (16) $\times$ + $\times$ (15) (14) (13)
+(12)'', convert it to an infix expression and calculate the result. (4\%)
+\item What is simple uniform hashing? Given a hash table with $m$ slots that stores $n$ elements,
+what is the expected time spent by a failed search if hash collisions are solved by chaining?
+(4\%)
+\item Except that every node is either red or black, how do you make a binary search tree become a
+red-black tree? (4\%)
+\item Given $n$ objects to be sorted, show the average-case running time of the following
+algorithms: Heap sort, insertion sort, bubble sort, and quick sort. (4\%)
+\item Given the adjacency matrix of an undirected graph:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+ & A & B & C & D & E & F & S \\ \hline
+A & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\ \hline
+B & 1 & 0 & 1 & 1 & 0 & 0 & 0 \\ \hline
+C & 1 & 1 & 0 & 1 & 1 & 1 & 0 \\ \hline
+D & 0 & 1 & 1 & 0 & 0 & 1 & 0 \\ \hline
+E & 0 & 0 & 1 & 0 & 0 & 1 & 1 \\ \hline
+F & 0 & 0 & 1 & 1 & 1 & 0 & 1 \\ \hline
+S & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+\end{center}
+Show the sequence of nodes that you visit by using breadth-first search and depth-first search.
+If there are multiple choices to select nodes, just follow the alphabetical order. (4\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+五個小題分屬不同章：(1) 前序式（資結書第~6.3~節）、(2) 雜湊（第~12.2~節）、(3) 紅黑樹（第~10.3~節）、
+(4) 排序（第~14~章）、(5) BFS 與 DFS（第~21~章）。 本書把整題放在第~21~章。
+
+\textbf{(1)} 括號只是把多位數的運算元框起來。 前序式是「運算子、左運算式、右運算式」，從左邊讀，每遇到
+一個運算子就往下找它的兩個運算式（資結書第~6.3~節的遞迴讀法）：
+\begin{itemize}
+\item 第一個 $+$ 的左運算式從第二個 $+$ 開始：$+\ 18\ (\times\ 17\ 16)$，就是 $18 + 17 \times 16$。
+\item 第一個 $+$ 的右運算式是剩下的 $\times\ (+\ (\times\ 15\ 14)\ 13)\ 12$，就是
+$(15 \times 14 + 13) \times 12$。
+\end{itemize}
+中序式（加上必要的括號）：
+\[
+\bigl(18 + 17 \times 16\bigr) + \bigl(15 \times 14 + 13\bigr) \times 12 .
+\]
+求值：$17 \times 16 = 272$，$18 + 272 = 290$；$15 \times 14 = 210$，$210 + 13 = 223$，$223 \times 12 = 2676$；
+$290 + 2676 = 2966$。 答案是 $2966$。
+
+也可以由右往左讀、用堆疊求值（先彈出的是左運算元）：推入 $12, 13, 14, 15$；$\times$ 得
+$15 \times 14 = 210$；$+$ 得 $210 + 13 = 223$；$\times$ 得 $223 \times 12 = 2676$；推入 $16, 17$；$\times$ 得
+$17 \times 16 = 272$；推入 $18$；$+$ 得 $18 + 272 = 290$；$+$ 得 $290 + 2676 = 2966$。
+
+\textbf{(2)} 簡單均勻雜湊（simple uniform hashing）：每個鍵的雜湊值等可能是 $0, 1, \ldots, m-1$ 之中的任何
+一個，而且不同鍵的雜湊值互相獨立（資結書定義~12.1）。
+
+失敗的搜尋（要找的鍵不在表裡）期望時間是 $\Theta(1 + \alpha)$，$\alpha = n/m$ 是負載因子。 理由：要找的
+鍵 $k$ 雜湊到第 $h(k)$ 格，等可能是任何一格；失敗的搜尋要把那一格的串列整條比完。 每個已經存的鍵落在
+第 $h(k)$ 格的機率是 $1/m$，由期望值的線性，那條串列的期望長度是 $n \cdot \frac{1}{m} = \alpha$（資結書
+定理~12.2）。 加上算 $h(k)$、找到串列開頭的 $\Theta(1)$，總共 $\Theta(1 + \alpha)$。 寫 $1 +$ 是因為
+$\alpha$ 可能遠小於 $1$，這時時間仍然至少是常數。
+
+\textbf{(3)} 除了每個節點是紅或黑，還要滿足（資結書定義~10.2）：根是黑色；每個 NIL 是黑色；紅色節點的
+兩個子節點都是黑色（沒有兩個紅色相連）；從任一節點往下到任何 NIL 的每條路徑，黑色節點數都一樣。
+這四條保證 $n$ 個內部節點的紅黑樹高度 $\le 2\lg(n+1)$（資結書定理~10.4）。
+
+\textbf{(4)} 平均情況（資結書第~14.7~節的比較表）：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+演算法 & 平均時間 \\
+\midrule
+堆積排序 & $\Theta(n \lg n)$ \\
+插入排序 & $\Theta(n^2)$ \\
+氣泡排序 & $\Theta(n^2)$ \\
+快速排序 & $\Theta(n \lg n)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+理由：堆積排序建堆積 $O(n)$，再做 $n - 1$ 次取出最大值，每次 $O(\lg n)$，任何輸入都是 $\Theta(n \lg n)$。
+插入排序和氣泡排序做的交換次數都等於逆序對的個數，隨機排列平均有 $n(n-1)/4$ 個逆序對，所以平均
+$\Theta(n^2)$。 快速排序在隨機輸入（或隨機選基準）下比較次數的期望值約 $2n \ln n$（資結書定理~14.3），
+平均 $\Theta(n \lg n)$，最壞才是 $\Theta(n^2)$。
+
+\textbf{(5)} 先從矩陣讀出每個點的鄰居（已經照字母順序）：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+點 & 鄰居 \\
+\midrule
+A & B, C \\
+B & A, C, D \\
+C & A, B, D, E, F \\
+D & B, C, F \\
+E & C, F, S \\
+F & C, D, E, S \\
+S & E, F \\
+\bottomrule
+\end{tabular}
+\end{center}
+題目沒說從哪個點出發。 照「有多個選擇時依字母順序」，起點取第一個字母 A；圖裡有一個點叫 S，如果它的
+意思是起點（source），答案列在最後。
+
+\textbf{BFS，從 A 出發}。 用佇列，一個點從佇列取出時，把還沒看過的鄰居依字母順序放進佇列
+（資結書虛擬碼~21.1）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+取出 & 新放進佇列 & 佇列（前 $\to$ 後） \\
+\midrule
+（開始） & A & A \\
+A & B, C & B, C \\
+B & D & C, D \\
+C & E, F & D, E, F \\
+D & --- & E, F \\
+E & S & F, S \\
+F & --- & S \\
+S & --- & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+拜訪順序：\textbf{A, B, C, D, E, F, S}。
+
+\textbf{DFS，從 A 出發}。 遞迴版，每到一個點就依字母順序找第一個還沒拜訪的鄰居往下走，沒有了就退回
+（資結書虛擬碼~21.3）：
+\begin{itemize}
+\item A $\to$ B（A 的第一個鄰居）$\to$ B 的鄰居 A 已拜訪，走 C；
+\item C 的鄰居 A、B 已拜訪，走 D；D 的鄰居 B、C 已拜訪，走 F；
+\item F 的鄰居 C、D 已拜訪，走 E；E 的鄰居 C、F 已拜訪，走 S；
+\item S 的鄰居 E、F 都拜訪過，一路退回，所有點都拜訪過了。
+\end{itemize}
+拜訪順序：\textbf{A, B, C, D, F, E, S}。 注意 DFS 是走到 D 之後接著走 F，不是回頭去拜訪 C 的下一個
+鄰居 E，這是和 BFS 最容易混淆的地方。
+
+\textbf{如果從 S 出發}：BFS 是 S, E, F, C, D, A, B（S 放進 E、F；E 放進 C；F 放進 D；C 放進 A、B）；
+DFS 是 S, E, C, A, B, D, F（S $\to$ E $\to$ C $\to$ A $\to$ B $\to$ D $\to$ F）。
+\end{pastsoln}

@@ -1,0 +1,87 @@
+\begin{pastexam}[label={px:ccu-109-csb-02}]{中正資工所乙組 109 學年度 第 5 題}
+（是非）
+
+(20\%) Carefully examine the following twenty sentences and give your answer, true (T) or false
+(F), for each sentence. Two points are given for each correct answer, whereas \textbf{three points
+are deducted} for each incorrect answer. Therefore, please do not guess at the answer if you are
+unsure since \textbf{the expected value is negative.} Note that the deduction for incorrect
+responses only affects the 20 points of this question.
+\begin{enumerate}[label=(\alph*)]
+\item The fields of a user-defined data type ``union'' in C share their memory space.
+\item The maximum number of nodes in a binary tree of depth 10 is 1024.
+\item We can invert a linked list in place (i.e., no need to use additional memory with a size
+proportional to the elements in the linked list).
+\item A heap (i.e., priority queue) is better than a binary search tree when we examine whether
+an element is stored in the data set.
+\item Dijkstra algorithm cannot deal with the graph with negative edge weights.
+\item In most cases, prime numbers are good divisors for implementing a division-based hash
+function.
+\item A balanced binary search tree is always the best binary search tree for storing the records
+even if the identifiers are with different searching probabilities.
+\item Quick sort is faster than insertion sort even if the input size is small.
+\item A stack is a first-in-first-out data structure.
+\item A user-defined ``struct'' in C creates a data type that can be used to group items of
+possibly different types into a single type.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\toprule
+(a) & (b) & (c) & (d) & (e) & (f) & (g) & (h) & (i) & (j) \\
+\midrule
+T & F & T & F & T & T & F & F & F & T \\
+\bottomrule
+\end{tabular}
+\end{center}
+題目說「twenty sentences」，實際只有 (a)--(j) 十句，每句 $2$ 分，合起來正好 $20$ 分，「twenty」
+應該是筆誤。 (a)、(j) 考 C 語言，不在資結書的範圍，這裡簡單說明。
+
+\textbf{(a) T}。 \texttt{union} 的所有欄位從同一個位址開始存放，共用同一塊記憶體，大小是最大的那個
+欄位（再加上對齊）。 同一時間只有最後寫入的那個欄位有意義。
+
+\textbf{(b) F}。 \textbf{depth} 有兩種常見的定義，兩種都得不到 $1024$：
+\begin{itemize}
+\item depth 指層數、根在第 $1$ 層（Horowitz 課本的定義）：最多 $2^{10} - 1 = 1023$ 個節點。
+\item depth 指根到最深節點的邊數（資結書第~7.1~節的深度）：共 $11$ 層，最多
+$2^{11} - 1 = 2047$ 個。
+\end{itemize}
+第 $i$ 層最多 $2^{i-1}$ 個節點，總數是 $1 + 2 + \cdots$ 這種等比級數的和，一定是
+$2^k - 1$ 的形式（資結書定理~7.1），不可能是 $1024 = 2^{10}$。 $1024$ 只是「深度為 $10$
+的那一層」最多的節點數，不是整棵樹的。
+
+\textbf{(c) T}。 就地反轉只要三個指標 $\mathit{prev}$、$\mathit{cur}$、$\mathit{next}$：從頭走到尾，
+把每個節點的 $\mathit{next}$ 改指向前一個節點（資結書虛擬碼~5.12）。 額外空間是 $O(1)$，
+和串列長度無關。
+
+\textbf{(d) F}。 堆積只保證父節點不小於（或不大於）子節點，兄弟之間、左右子樹之間沒有大小關係，
+找一個任意的鍵沒辦法決定往哪邊走，最壞要看過全部 $n$ 個元素，$O(n)$。 二元搜尋樹每次比較就能
+決定往左或往右，花 $O(h)$；平衡時 $h = O(\lg n)$。 判斷「某個元素在不在」時二元搜尋樹比較好；
+堆積擅長的是取最大（最小）值（資結書第~8.3~節）。
+
+\textbf{(e) T}。 Dijkstra 演算法每次取出距離最小的頂點後就把它的距離定下來，不再更新；這要靠
+「之後的路徑只會越走越長」，邊權重是負的時候不成立（資結書第~25.2.5~節）。 例如三條邊
+$1 \to 2$（權重 $3$）、$1 \to 3$（$5$）、$3 \to 2$（$-4$），從 $1$ 出發：Dijkstra 先取出 $2$，
+定下 $d[2] = 3$；但 $1 \to 3 \to 2$ 的長度是 $1$。 所以有負邊的圖不能用 Dijkstra，要改用
+Bellman--Ford。 有負邊時 Dijkstra 偶爾也會碰巧算對，但不保證，一般就說它不能處理負邊。
+
+\textbf{(f) T}。 除法雜湊 $h(k) = k \bmod m$ 的 $m$ 通常選質數，而且不要太接近 $2$ 的次方
+（資結書第~12.1~節）。 $m$ 和鍵常見的間隔（例如全是偶數、全是 $10$ 的倍數）有公因數時，鍵只會
+落在一部分的格子；$m$ 是質數就不會有這個問題。 題目說「in most cases」，對。
+
+\textbf{(g) F}。 各個鍵被搜尋的機率不同時，最好的二元搜尋樹要把常被搜尋的鍵放在靠近根的地方，
+不一定平衡，這就是最佳二元搜尋樹（資結書第~18.4~節）。 例如鍵 $1, 2, 3$ 的搜尋機率是
+$0.8, 0.1, 0.1$：平衡的樹以 $2$ 為根，期望比較次數 $0.8 \cdot 2 + 0.1 \cdot 1 + 0.1 \cdot 2 = 1.9$；
+以 $1$ 為根、$2$ 接右邊、$3$ 再接右邊的斜樹只要 $0.8 \cdot 1 + 0.1 \cdot 2 + 0.1 \cdot 3 = 1.3$。
+
+\textbf{(h) F}。 $n$ 很小時，插入排序的常數小、沒有遞迴呼叫的負擔，比快速排序快（資結書
+第~14.2~節）。 實務上的快速排序在子陣列小到某個長度以下時改用插入排序，就是這個原因。
+
+\textbf{(i) F}。 堆疊是後進先出（last-in-first-out, LIFO）；先進先出（FIFO）的是佇列（資結書
+第~6.1、6.2~節）。
+
+\textbf{(j) T}。 \texttt{struct} 把幾個可能不同型別的欄位組成一個新的型別，每個欄位各有自己的
+記憶體位置。 這正是它和 (a) 的 \texttt{union} 不同的地方。
+\end{pastsoln}

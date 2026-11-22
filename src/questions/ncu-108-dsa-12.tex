@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-108-dsa-12}]{中央資工所 108 學年度 第 12 題}
+（複選；每題 5 分，答錯倒扣 1 分。 第 10--12 題共用同一張圖）
+
+（第 10 題的題幹：）Given a weighted undirected graph $G = (V, E)$, let $\delta[u, v]$ denote the distance (the length
+of a shortest path) from vertex $u$ to vertex $v$. A path $[v_1, v_2, \ldots, v_k]$ is said to be a
+\textit{progress path}, if $\delta[v_i, v_k] > \delta[v_{i+1}, v_k]$ for $1 \le i < k$. For example,
+consider the graph with vertex set \{1, 2, 3, 4\} and edge set: (1,2,2), (2,4,1), (3,1,2), (3,4,2),
+(1,4,3), where each triple $(i, j, t)$ represents there is an undirected edge between $i$ and $j$
+with weight $t$. Then, in this graph, there are totally 2 shortest paths from 1 to 4 (i.e. [1,2,4]
+and [1,4]) and there are 3 progress paths from 1 to 4 (they are [1,2,4], [1,4] and [1,3,4]). Now
+consider another graph with vertex set \{a, b, c, d, e, f, g, h\} and edge set: (a,b,3), (a,c,1),
+(b,c,1), (b,e,5), (b,f,4), (c,d,9), (d,e,5), (d,g,3), (e,f,2), (e,g,2), (f,h,7), (g,h,4).
+
+Follow the previous question. Choose the correct item(s):
+\begin{enumerate}[label=(\Alph*)]
+\item There is totally 1 progress path from e to h.
+\item There are totally 9 progress paths from a to h
+\item There is totally 1 progress path from f to h.
+\item There are totally 3 progress paths from b to h.
+\item There are totally 5 progress paths from c to h.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)(E)。
+
+用第~10~題的距離 $\delta[\cdot, h]$：a $= 13$、b $= 11$、c $= 12$、d $= 7$、e $= 6$、f $= 7$、g $= 4$、h $= 0$。
+把每條無向邊 $\{u, v\}$ 改成從距離大的指向距離小的（距離相同就不用），progress path 就是這張新圖上從起點走到
+h 的路徑。 新圖的邊都讓距離嚴格變小，所以是有向無環圖，可以照距離由小到大用動態規劃數路徑（資結書
+第~25.5~節依拓樸順序處理的想法）：令 $N(v)$ 為 $v$ 到 h 的 progress path 個數，
+\[
+N(h) = 1, \qquad N(v) = \sum_{\substack{\{v, u\} \in E \\ \delta[u, h] < \delta[v, h]}} N(u).
+\]
+\begin{center}
+\small
+\begin{tabular}{cclc}
+\toprule
+點 & $\delta[\cdot, h]$ & 可以走到的下一點 & $N$ \\
+\midrule
+h & 0 & （終點） & 1 \\
+g & 4 & h & 1 \\
+e & 6 & g（b $11$、d $7$、f $7$ 都比 $6$ 大） & 1 \\
+d & 7 & e, g（c $12$ 比較大） & $1 + 1 = 2$ \\
+f & 7 & e, h（b $11$ 比較大） & $1 + 1 = 2$ \\
+b & 11 & e, f（a $13$、c $12$ 比較大） & $1 + 2 = 3$ \\
+c & 12 & b, d（a $13$ 比較大） & $3 + 2 = 5$ \\
+a & 13 & b, c & $3 + 5 = 8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 b 的三條是 [b,e,g,h]、[b,f,h]、[b,f,e,g,h]；a 的八條是 b 的三條前面加 a、c 的五條前面加 a。
+
+逐項：
+\begin{itemize}
+\item (A) e 到 h 只有 [e,g,h] 一條，對。
+\item (B) a 到 h 有 $8$ 條，不是 $9$，錯。
+\item (C) f 到 h 有 [f,h]、[f,e,g,h] 兩條，不是 $1$，錯。
+\item (D) b 到 h 有 $3$ 條，對。
+\item (E) c 到 h 有 $5$ 條：[c,d,g,h]、[c,d,e,g,h]，以及 b 的三條前面加 c，對。
+\end{itemize}
+\end{pastsoln}

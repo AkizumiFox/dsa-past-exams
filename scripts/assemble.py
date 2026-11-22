@@ -42,9 +42,11 @@ def main():
             path = os.path.join(ROOT, 'src/questions', q['id'] + '.tex')
             if not os.path.exists(path):
                 sys.exit(f'missing {path}')
-            bych.setdefault(int(q['chapter']), []).append((pi, qi, m, q))
+            ch = q['chapter']
+            ch = 'A' if str(ch) == 'A' else int(ch)
+            bych.setdefault(ch, []).append((pi, qi, m, q))
     out = ['% 由 scripts/assemble.py 產生，不要手改。']
-    for ch in sorted(bych):
+    for ch in sorted(k for k in bych if k != 'A'):
         out.append(f'\\setcounter{{chapter}}{{{ch - 1}}}')
         out.append(f'\\chapter{{{CHAPTERS[ch]}}}')
         out.append(f'本章的題目對應《資料結構與演算法：C 語言、虛擬碼與研究所考試》第~{ch}~章。'
@@ -56,6 +58,16 @@ def main():
     os.makedirs(gen, exist_ok=True)
     open(os.path.join(gen, f'vol{vol}-body.tex'), 'w').write('\n'.join(out) + '\n')
 
+    # 附錄 A：數學工具（離散數學、數論等，對應資結書附錄 A）。沒有這類題時檔案是空的。
+    ma = ['% 由 scripts/assemble.py 產生，不要手改。']
+    if 'A' in bych:
+        ma.append('\\chapter{數學工具}')
+        ma.append('本章收組合計數、數學歸納法、數論這類題目，對應資結書附錄~A。'
+                  '依學校、學年度排列。\n')
+        for _, _, m, q in sorted(bych['A'], key=lambda x: (x[0], x[1])):
+            ma.append(f'\\input{{questions/{q["id"]}}}')
+    open(os.path.join(gen, f'vol{vol}-math.tex'), 'w').write('\n'.join(ma) + '\n')
+
     ap = ['% 由 scripts/assemble.py 產生，不要手改。', '\\chapter{依考卷查題}',
           '想用整份考卷計時練習時，照下表找出每一題在書裡的頁碼。'
           '只列資料結構與演算法的題目；合卷裡其他科目的題目沒有收。\n']
@@ -65,11 +77,12 @@ def main():
             ap.append('\\begin{paperinfo}原卷說明：' + m['instructions'].strip() + '\\end{paperinfo}')
         ap.append('\\begin{tabular}{llr}\\toprule 題號 & 主題（章） & 頁 \\\\ \\midrule')
         for q in m['questions']:
-            ap.append(f"{q['label']} & 第~{q['chapter']}~章 & \\pageref{{px:{q['id']}}} \\\\")
+            where = '附錄~A' if str(q['chapter']) == 'A' else f"第~{q['chapter']}~章"
+            ap.append(f"{q['label']} & {where} & \\pageref{{px:{q['id']}}} \\\\")
         ap.append('\\bottomrule\\end{tabular}\n')
     open(os.path.join(gen, f'vol{vol}-papers.tex'), 'w').write('\n'.join(ap) + '\n')
     n = sum(len(m['questions']) for m in papers)
-    print(f'vol{vol}: {len(papers)} papers, {n} questions, chapters {sorted(bych)}')
+    print(f'vol{vol}: {len(papers)} papers, {n} questions, chapters {sorted(bych, key=str)}')
 
 if __name__ == '__main__':
     main()

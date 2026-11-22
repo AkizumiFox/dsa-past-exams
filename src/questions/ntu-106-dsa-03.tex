@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:ntu-106-dsa-03}]{臺大資工所 106 學年度 第 3 題}
+（問答）
+
+(15 points) A subsequence of a sequence $S$ is obtained by deleting zero or more elements from
+$S$. Given two sequences, the longest common subsequence (LCS) problem is to find a subsequence
+that is common to both sequences and its length is maximized. Complete the following pseudocode
+for computing the length of an LCS and for delivering an LCS by filling \fbox{3A}, \fbox{3B} and
+\fbox{3C}.
+
+\smallskip
+\noindent\rule{\linewidth}{0.4pt}
+\begin{tabbing}
+\hspace{1.5em}\=\hspace{1.5em}\=\hspace{1.5em}\=\hspace{1.5em}\=\kill
+\textbf{Algorithm} \textsc{LCS\_length}($A=\langle a_1,a_2,\ldots,a_m\rangle$, $B=\langle b_1,b_2,\ldots,b_n\rangle$)\\
+\textbf{begin}\\
+\>\textbf{for} $i\gets 0$ \textbf{to} $m$ \textbf{do} $len[i,0]\gets 0$\\
+\>\textbf{for} $j\gets 1$ \textbf{to} $n$ \textbf{do} $len[0,j]\gets 0$\\
+\>\textbf{for} $i\gets 1$ \textbf{to} $m$ \textbf{do}\\
+\>\>\textbf{for} $j\gets 1$ \textbf{to} $n$ \textbf{do}\\
+\>\>\>\textbf{if} $a_i=b_j$ \textbf{then}\\
+\>\>\>\>$len[i,j]\gets$ \fbox{3A}\\
+\>\>\>\>$prev[i,j]\gets$``$\nwarrow$''\\
+\>\>\>\textbf{else if} $len[i-1,j]\ge len[i,j-1]$ \textbf{then}\\
+\>\>\>\>$len[i,j]\gets len[i-1,j]$\\
+\>\>\>\>$prev[i,j]\gets$``$\uparrow$''\\
+\>\>\>\textbf{else}\\
+\>\>\>\>$len[i,j]\gets len[i,j-1]$\\
+\>\>\>\>$prev[i,j]\gets$``$\leftarrow$''\\
+\>\textbf{return} $len$ and $prev$\\
+\textbf{end}\\[0.6em]
+\textbf{Algorithm} \textsc{LCS\_output}($A=\langle a_1,a_2,\ldots,a_m\rangle$, $prev$, $i$, $j$)\\
+\textbf{begin}\\
+\>\textbf{if} $i=0$ \textbf{or} $j=0$ \textbf{then return}\\
+\>\textbf{if} $prev[i,j]=$``$\nwarrow$'' \textbf{then}\\
+\>\>\textsc{LCS\_output}(\fbox{3B})\\
+\>\>\textbf{print} \fbox{3C}\\
+\>\textbf{else if} $prev[i,j]=$``$\uparrow$'' \textbf{then} \textsc{LCS\_output}($A$, $prev$, $i-1$, $j$)\\
+\>\textbf{else} \textsc{LCS\_output}($A$, $prev$, $i$, $j-1$)\\
+\textbf{end}
+\end{tabbing}
+\vspace{-0.8em}
+\noindent\rule{\linewidth}{0.4pt}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{itemize}
+\item \fbox{3A}：$len[i-1, j-1] + 1$
+\item \fbox{3B}：$A,\ prev,\ i-1,\ j-1$
+\item \fbox{3C}：$a_i$
+\end{itemize}
+最外層的呼叫是 \textsc{LCS\_output}($A$, $prev$, $m$, $n$)。
+
+這兩個演算法就是資結書虛擬碼~18.6（\proc{LCS-Length}）和虛擬碼~18.7（\proc{Print-LCS}），只是把
+箭頭表叫做 $prev$。
+
+\textbf{3A}。 $len[i, j]$ 是 $a_1 \ldots a_i$ 和 $b_1 \ldots b_j$ 的 LCS 長度。 $a_i = b_j$ 時，任取 $a_1 \ldots a_i$ 和 $b_1 \ldots b_j$ 的一個 LCS $Z = z_1 \ldots z_k$。 如果
+$z_k \ne a_i$，$Z$ 後面再接上 $a_i$ 仍然是共同子序列，比 $Z$ 長，矛盾；所以 $z_k = a_i = b_j$，而且
+可以讓 $z_k$ 配到 $a_i$、$b_j$ 這兩個位置。 去掉 $z_k$，前面的 $z_1 \ldots z_{k-1}$ 是 $a_1 \ldots a_{i-1}$
+和 $b_1 \ldots b_{j-1}$ 的共同子序列，而且必須是最長的，否則換成更長的，再接上 $a_i$，會得到比 $Z$
+更長的共同子序列（資結書定理~18.2 的第一種情形）。 所以
+\[
+len[i, j] = len[i-1, j-1] + 1 ,
+\]
+箭頭記成「$\nwarrow$」，表示這一格是從左上角那一格加一個字元來的。 另外兩種情形（$a_i \ne b_j$）
+已經寫在題目裡：LCS 至少丟掉 $a_i$ 或 $b_j$ 其中一個，取上面一格和左邊一格的較大者。
+
+\textbf{3B、3C}。 \textsc{LCS\_output}($A$, $prev$, $i$, $j$) 印出 $a_1 \ldots a_i$ 和 $b_1 \ldots b_j$ 的
+一個 LCS。 箭頭是「$\nwarrow$」時，這一格的 LCS 是「$(i-1, j-1)$ 那一格的 LCS，後面接上
+$a_i$」。 要依原本的順序印出來，先遞迴印前面的部分，再印最後這個字元：
+\[
+\textsc{LCS\_output}(A, prev, i-1, j-1); \quad \textbf{print } a_i .
+\]
+印 $a_i$ 和印 $b_j$ 一樣（兩者相等），但函式只拿到 $A$，所以只能寫 $a_i$。 先印再遞迴的話，順序會
+反過來。
+
+\textbf{小例子}。 $A = \mathtt{ABCBDAB}$、$B = \mathtt{BDCABA}$。 依上面
+填好的演算法，$len[7, 6] = 4$，從 $(7, 6)$ 沿著箭頭往回走，碰到「$\nwarrow$」的格子依序是
+$(6,6)\,\mathtt{A}$、$(4,5)\,\mathtt{B}$、$(3,3)\,\mathtt{C}$、$(2,1)\,\mathtt{B}$（由後往前），
+遞迴回來時由前往後印出 \texttt{BCBA}。
+
+\textbf{複雜度}。 \textsc{LCS\_length} 填 $(m+1)(n+1)$ 格，每格 $O(1)$，共 $\Theta(mn)$ 時間和空間。
+\textsc{LCS\_output} 每次呼叫 $i$ 或 $j$ 至少減一，最多 $m + n$ 次呼叫，$O(m + n)$。
+\end{pastsoln}

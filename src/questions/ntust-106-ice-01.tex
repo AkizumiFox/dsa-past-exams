@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntust-106-ice-01}]{臺科大資工所 106 學年度 第 1 題}
+（是非）
+
+General Concepts, True of False? (10\%)
+\begin{enumerate}[label=(\alph*)]
+\item The recursive function calls are implemented using Heap structure? (2\%)
+\item A queue follows a FIFO (first-in-first-out) rule? (2\%)
+\item BST is always a complete binary tree? (2\%)
+\item Deleting the element with min key from a min heap takes O(1)? (2\%)
+\item We can use several stacks to implement a queue? (2\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) False；(b) True；(c) False；(d) False；(e) True。（原卷的「True of False」是 True or False
+的筆誤。）
+
+\textbf{(a) False}。 遞迴呼叫是用\textbf{堆疊}實作的：每呼叫一次就在呼叫堆疊上放一個 frame，最後呼叫的
+最先返回，後進先出（資結書第~6.4~節）。 堆積（heap）是優先佇列的結構，和函式呼叫無關；容易混淆的是
+記憶體配置裡的「heap 區」，那是 \texttt{malloc} 動態配置的地方，也不是用來放呼叫的 frame。
+
+\textbf{(b) True}。 佇列從後端放入、前端取出，先進先出（資結書第~6.2~節）。
+
+\textbf{(c) False}。 二元搜尋樹的形狀由插入順序決定，不一定是完整二元樹。 例如依序插入 $1, 2, 3$，
+每個都接在前一個的右邊，長成一條往右的鏈（資結書第~9.3~節），第二層只有右子節點，不是完整二元樹。
+
+\textbf{(d) False}。 最小堆積的最小值在根，\textbf{看}最小值是 $O(1)$；但\textbf{刪除}它要把最後一個
+元素搬到根，再往下調整（sift down），最多走過樹高 $\lfloor \lg n \rfloor$ 層，最壞 $\Theta(\log n)$
+（資結書虛擬碼~8.2）。
+
+\textbf{(e) True}。 用兩個堆疊 $S_{\mathrm{in}}$、$S_{\mathrm{out}}$ 就能做出佇列：放入時 push 到 $S_{\mathrm{in}}$；
+取出時若 $S_{\mathrm{out}}$ 是空的，先把 $S_{\mathrm{in}}$ 的元素全部 pop 出來、依序 push 進 $S_{\mathrm{out}}$
+（順序因此倒過來，最早放入的到了頂端），再從 $S_{\mathrm{out}}$ pop。 取出的順序是對的：$S_{\mathrm{out}}$ 裡的元素都比 $S_{\mathrm{in}}$ 裡的早放入，而且頂端是其中最早的。
+時間用資結書第~3.1~節的聚合法算：每個元素一生最多被 push 兩次、pop 兩次（進 $S_{\mathrm{in}}$、搬到
+$S_{\mathrm{out}}$、被取出），所以任意 $k$ 個操作總共 $O(k)$，平攤每個操作 $O(1)$。 題目說
+several stacks，兩個就夠了。
+\end{pastsoln}

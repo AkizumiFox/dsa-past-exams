@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nsysu-107-osds-03}]{中山資工所甲組 107 學年度 第 7 題（節錄 (1)--(5) 小題）}
+（是非）
+
+\textbf{[True/False Question: 10\%]} Please mark `O' or `X' to answer each question.
+\begin{enumerate}[label=(\arabic*)]
+\item The average-case time complexity of selection sort is O($n$ lg$n$). (1\%)
+\item LIFO and FIFO policies can be implemented by queues and stacks, respectively. (1\%)
+\item A hash has no inverse functions. (1\%)
+\item A red-black tree with $k$ internal nodes has height no more than 2lg($k$-1). (1\%)
+\item A tree contains no cycles. (1\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這一題的 (6)--(10) 考作業系統，沒有收。 答案：(1) X；(2) X；(3) O；(4) X；(5) O。
+
+\textbf{(1) X}。 選擇排序每一輪都要把剩下的數全部看一遍才知道最小值是誰，不管輸入長什麼樣子，比較
+次數都是 $(n-1) + (n-2) + \cdots + 1 = n(n-1)/2$（資結書第~14.2~節）。 所以最好、平均、最壞都是
+$\Theta(n^2)$，平均情況不是 $O(n \lg n)$。 平均 $O(n \lg n)$ 的是快速排序、合併排序、堆積排序。
+
+\textbf{(2) X}。 方向說反了。 LIFO（後進先出）是堆疊（stack），FIFO（先進先出）是佇列（queue），
+句子裡的 respectively 把兩者對調了。 （用兩個堆疊可以模擬一個佇列，但那不是這句話的意思。）
+
+\textbf{(3) O}。 雜湊函數把一個很大的鍵空間 $U$ 對應到只有 $m$ 格的表，$|U| > m$ 時一定有兩個不同
+的鍵對到同一格（鴿籠原理，也就是碰撞，資結書第~12.1~節），不是一對一，所以沒有反函數：知道
+$h(k)$ 不能決定 $k$。 密碼學用的雜湊更進一步要求「單向」，連找出一個對到某個值的鍵都很難。 題目的
+``a hash'' 指雜湊函數，照這個意思是對的。
+
+\textbf{(4) X}。 正確的上界是 $2\lg(k + 1)$（資結書定理~10.4），不是 $2\lg(k - 1)$。 反例：$k = 2$ 時
+$2\lg(2 - 1) = 0$，但兩個內部節點的紅黑樹（黑根加一個紅色子節點）高度至少是 $1$（數邊；數節點是 $2$），
+超過 $0$。 $k = 1$ 時 $\lg 0$ 根本沒有定義。 用 $k + 1$ 的理由：黑高為 $b$ 的子樹至少有 $2^b - 1$ 個內部
+節點，根的黑高至少是高度的一半，所以 $k \ge 2^{h/2} - 1$，$h \le 2\lg(k+1)$。
+
+\textbf{(5) O}。 樹的定義就是連通而且沒有迴路（無環）的圖（資結書定理~21.3 列出幾個等價的說法）。 有根
+樹也一樣：每個非根節點只有一個父節點，沿著父節點往上一定走到根，不會繞回來。
+\end{pastsoln}

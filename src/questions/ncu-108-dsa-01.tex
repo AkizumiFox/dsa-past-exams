@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncu-108-dsa-01}]{中央資工所 108 學年度 第 1 題}
+（單選；每題 5 分，答錯倒扣 1 分）
+
+Suppose that the following list is the result of the first partition step of quick sort.
+\begin{center}\textbf{12 \ 9 \ 1 \ 13 \ 19 \ 24 \ 22 \ 20}\end{center}
+Which of the following statements is correct about the partition step?
+\begin{enumerate}[label=(\Alph*)]
+\item The pivot could have been either 13 or 19.
+\item The pivot must be 13.
+\item Both 13 and 19 are pivots in the first partition.
+\item Neither 13 nor 19 could have been the pivot.
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+一次分割（資結書第~14.5~節）做完之後，基準 $x$ 在它最後的位置上，左邊都比它小、右邊都比它大。 所以
+可能當基準的數，必須比左邊每個數大、比右邊每個數小：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+位置 & 數 & 可能是基準？ & 理由 \\
+\midrule
+1 & 12 & 否 & 右邊有 $9, 1 < 12$ \\
+2 & 9 & 否 & 左邊有 $12 > 9$ \\
+3 & 1 & 否 & 左邊有 $12, 9 > 1$ \\
+4 & 13 & 是 & 左邊 $12, 9, 1$ 都小於 $13$，右邊 $19, 24, 22, 20$ 都大於 $13$ \\
+5 & 19 & 是 & 左邊 $12, 9, 1, 13$ 都小於 $19$，右邊 $24, 22, 20$ 都大於 $19$ \\
+6 & 24 & 否 & 右邊有 $22, 20 < 24$ \\
+7 & 22 & 否 & 左邊有 $24 > 22$ \\
+8 & 20 & 否 & 左邊有 $24, 22 > 20$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$13$ 和 $19$ 都真的可能。 用資結書虛擬碼~14.8 的 Lomuto 分割（基準取最後一個）：輸入
+$12, 9, 1, 20, 19, 24, 22, 13$ 以 $13$ 為基準，前三個留在原處，最後 $A[4] = 20$ 和 $A[8] = 13$ 交換；輸入
+$12, 9, 1, 13, 20, 24, 22, 19$ 以 $19$ 為基準，前四個留在原處，最後 $A[5] = 20$ 和 $A[8] = 19$ 交換。 兩個
+都得到 $12, 9, 1, 13, 19, 24, 22, 20$。
+
+逐項：
+\begin{itemize}
+\item (A) 基準可能是 $13$ 或 $19$：對。
+\item (B) 基準一定是 $13$：上面第二個例子的基準是 $19$，錯。
+\item (C) 兩個都是基準：一次分割只用一個基準，錯。
+\item (D) 兩個都不可能：兩個都可能，錯。
+\item (E) 以上皆非：(A) 是對的，錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:nccu-107-dsa-01}]{政大資科所 107 學年度 第 1 題}
+（問答）
+
+(10\%) Design a polynomial-time algorithm for the following task.
+
+\hspace*{1.5em}Input: A graph $G$.\\
+\hspace*{1.5em}Output: ``Yes'', if $G$ has a cycle;\\
+\hspace*{5.2em}``No'', if $G$ does not have a cycle.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{解讀}。 題目沒說 $G$ 是有向圖還是無向圖，兩種的「環」不一樣，作答時兩種都寫。 $G$ 有 $n$ 個
+頂點、$m$ 條邊，用鄰接串列存。 無向圖假設是簡單圖（沒有重邊、自環；有的話直接回答 Yes）。
+
+\textbf{無向圖：數連通元件}。 資結書引理~21.2：$n$ 個頂點、$m$ 條邊的無向圖至少有 $n - m$ 個連通元件，
+而且剛好 $n - m$ 個若且唯若它沒有環。 所以：
+\begin{enumerate}
+\item 用 BFS 或 DFS（資結書第~21.3、21.4~節）數出連通元件的個數 $c$：所有頂點設成未拜訪，依序看每個
+頂點，未拜訪就從它做一次走訪，$c$ 加一。
+\item 若 $c = n - m$（也就是 $m = n - c$），回答 No；否則（$m > n - c$）回答 Yes。
+\end{enumerate}
+正確性就是上面的引理。 直觀地說：每個元件是連通的，$n_i$ 個頂點至少要 $n_i - 1$ 條邊才連得起來，
+剛好 $n_i - 1$ 條時是一棵樹（資結書定理~21.3），多一條就會成環。 時間 $O(n + m)$。
+
+也可以直接做 DFS：無向圖的 DFS 每條邊不是樹邊就是後向邊（資結書定理~21.8），遇到一個已經發現過、
+又不是父節點的鄰居，就是後向邊，有環。
+
+\textbf{有向圖：找後向邊}。 有向圖有環若且唯若 DFS 會出現後向邊（資結書定理~21.10）。 DFS 時頂點
+有三種顏色：白（還沒發現）、灰（正在處理，在遞迴堆疊上）、黑（處理完）。 遇到灰色的鄰居就是後向邊。
+\begin{pseudo}{判斷有向圖有沒有環（資結書虛擬碼~21.6）}
+\Function{Has-Cycle}{$G$}
+    \For{每個頂點 $u \in V$}
+        \State $\mathit{color}[u] \gets \gtrwhite$
+    \EndFor
+    \For{每個頂點 $u \in V$}
+        \If{$\mathit{color}[u] = \gtrwhite$ \AND \Call{Visit}{$G, u$}}
+            \State \Return Yes
+        \EndIf
+    \EndFor
+    \State \Return No
+\EndFunction
+\Function{Visit}{$G, u$} \Comment{從 $u$ 出發找得到環就回傳 \TRUE}
+    \State $\mathit{color}[u] \gets \gtrgray$
+    \For{每個 $v \in \mathit{Adj}[u]$}
+        \If{$\mathit{color}[v] = \gtrgray$}
+            \State \Return \TRUE \Comment{後向邊 $(u, v)$}
+        \EndIf
+        \If{$\mathit{color}[v] = \gtrwhite$ \AND \Call{Visit}{$G, v$}}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State $\mathit{color}[u] \gets \gtrblack$
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 ($\Leftarrow$) 遇到灰色的 $v$ 時，$v$ 還在遞迴堆疊上，是 $u$ 的祖先（或 $u$ 自己），
+樹路徑 $v \leadsto u$ 接上 $(u, v)$ 就是一個環。 ($\Rightarrow$) 設 $G$ 有環，取環上最早被發現的頂點
+$v$，$u$ 是環上 $v$ 的前一個頂點。 發現 $v$ 時環上其他頂點都是白色，由白路徑定理 $u$ 會成為 $v$ 的
+子孫；$u$ 檢查邊 $(u, v)$ 時 $v$ 還沒處理完，是灰色，所以一定會回傳 \TRUE。 沒有環時永遠遇不到
+灰色的鄰居，DFS 走完回傳 No。
+
+注意黑色的鄰居不代表有環：$A \to B$、$A \to C$、$B \to C$ 沒有環，但從 $A$ 做 DFS，處理 $A$ 的
+第二個鄰居 $C$ 時 $C$ 已經是黑色。 所以有向圖不能用「看到已經拜訪過的頂點就有環」，也不能用無向圖的
+邊數條件（這張圖 $m = 3 > n - 1 = 2$，卻沒有環）。
+
+\textbf{時間}。 每個頂點只會從白變灰一次（呼叫 \proc{Visit} 一次），每條邊只在它的起點的
+\proc{Visit} 裡被看一次，共 $O(n + m)$，是多項式時間。
+\end{pastsoln}

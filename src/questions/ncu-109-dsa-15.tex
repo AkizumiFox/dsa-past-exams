@@ -1,0 +1,136 @@
+\begin{pastexam}[label={px:ncu-109-dsa-15}]{中央資工所 109 學年度 申論題第 4 題}
+（申論）
+
+Given a set $S$ of $n$ real numbers, and another real number $M$, we want to determine whether or
+not there exist 3 numbers in $S$ whose sum is exactly $M$. The algorithm of testing all possible 3
+numbers in $S$ will take $O(n^3)$ time and it is unacceptable.
+
+\textbf{a)} (10\%) Design a more efficient algorithm to solve this problem. Analyze the time
+complexity of your algorithm.
+
+\textbf{b)} (5\%) Consider the following similar problem: Given a set $S$ of $n$ real numbers,
+another real number $M$, and an integer $k$, we want to determine whether or not there exist $k$
+numbers in $S$ whose sum is exactly $M$. Show that this problem is NP-Complete.
+
+\textbf{c)} (10\%) If $M$ is small enough, then it is possible to solve the above problem
+efficiently in $O(nkM)$ time. Design such an algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+$S$ 是集合，「3 numbers in $S$」指三個不同的元素。 下面把 $S$ 的元素記成 $a_1, \ldots, a_n$。
+
+\textbf{a)} 先排序，再對每個 $i$ 用\textbf{雙指標}在 $a_{i+1..n}$ 裡找兩個數，和為 $M - a_i$。 $O(n^2)$。
+
+\begin{pseudo}{三數和}
+\Function{Three-Sum}{$a, n, M$}
+    \State 把 $a[1..n]$ 由小到大排序
+    \For{$i \gets 1$ \To $n - 2$}
+        \State $l \gets i + 1$；$r \gets n$
+        \While{$l < r$}
+            \State $s \gets a[i] + a[l] + a[r]$
+            \If{$s = M$}
+                \State \Return \TRUE
+            \ElsIf{$s < M$}
+                \State $l \gets l + 1$
+            \Else
+                \State $r \gets r - 1$
+            \EndIf
+        \EndWhile
+    \EndFor
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 任何三個元素，把下標由小到大寫成 $i < l' < r'$，外層迴圈跑到這個 $i$ 時，問題變成：
+在 $a[i+1..n]$ 裡有沒有 $l' < r'$ 使 $a[l'] + a[r'] = T$，$T = M - a[i]$。 內層迴圈維持這個不變量：
+\begin{center}
+若有這樣的一對 $(l', r')$，則 $l \le l' < r' \le r$。
+\end{center}
+一開始 $l = i + 1$、$r = n$，成立。 若 $a[l] + a[r] < T$：陣列排好了，對所有 $r' \le r$ 都有
+$a[l] + a[r'] \le a[l] + a[r] < T$，所以 $l$ 不可能是答案裡較小的那一個，$l$ 加一後不變量仍成立。
+$a[l] + a[r] > T$ 時同理，$r$ 不可能是較大的那一個，$r$ 減一。 每一步 $r - l$ 減少一，若答案存在，
+$l$、$r$ 最遲在夾到 $(l', r')$ 時就會找到；迴圈因 $l \ge r$ 結束時，不變量說明沒有答案。
+
+\textbf{時間}。 排序 $O(n \lg n)$。 對每個 $i$，內層每一步讓 $r - l$ 少一，最多 $n$ 步，共 $O(n^2)$。
+合計 $O(n^2)$，空間 $O(1)$（不算排序）。 另一個 $O(n^2)$ 的做法是把元素放進雜湊表，對每一對
+$(l, r)$ 查 $M - a[l] - a[r]$ 在不在表裡（要排除和 $l$、$r$ 同一個元素），期望 $O(n^2)$。
+
+\textbf{b)} 記這個問題為 $k$-SUM。 數用有限的二進位（例如有理數的分子、分母）寫在輸入裡，才談得上
+輸入長度；下面歸約造出來的都是整數。
+
+\textbf{$k$-SUM $\in$ NP}。 憑證是 $k$ 個下標。 驗證時檢查它們互不相同、都在 $1..n$ 之間、對應的數加起來
+等於 $M$，$k \le n$ 次加法，每次是多項式位元的運算，多項式時間。
+
+\textbf{NP-hard：由 SUBSET-SUM 歸約}。 SUBSET-SUM 是 NP 完備的（資結書定理~28.10）：給正整數
+$s_1, \ldots, s_m$（可以重複）和目標 $t$，問能不能挑一些數，和恰好是 $t$。 它和 $k$-SUM 的差別是不限定
+挑幾個。 做法是把每個 $s_i$ 配一個「不挑」的替身，強迫每一對恰好挑一個，這樣一定挑 $m$ 個。 令
+\[
+C = s_1 + \cdots + s_m + t + 1, \qquad P_i = C \cdot 3^{\,i-1} \quad (i = 1, \ldots, m),
+\]
+造出 $k$-SUM 的實例：
+\[
+S' = \{\, P_i + s_i,\ P_i \;:\; i = 1, \ldots, m \,\}, \qquad k = m, \qquad M' = P_1 + \cdots + P_m + t.
+\]
+$P_i + s_i$ 代表「挑 $s_i$」，$P_i$ 代表「不挑」。 第 $i$ 對的兩個數都在 $[P_i, P_i + C)$ 裡，而
+$P_{i+1} - P_i = 2C \cdot 3^{\,i-1} \ge 2C$，不同對的區間不重疊；同一對的兩個數差 $s_i > 0$。 所以這 $2m$
+個數互不相同（就算 $s_i$ 有重複），$S'$ 確實是集合。 每個數最多 $O(m + \lg C)$ 個位元，算出它們只要多項式
+時間。
+\begin{itemize}
+\item \textbf{SUBSET-SUM 答「是」$\Rightarrow$ $k$-SUM 答「是」}。 設 $\sum_{i \in I} s_i = t$。 對 $i \in I$ 挑
+$P_i + s_i$，對 $i \notin I$ 挑 $P_i$，恰好 $m$ 個數，和是 $\sum_i P_i + \sum_{i \in I} s_i = M'$。
+\item \textbf{$k$-SUM 答「是」$\Rightarrow$ SUBSET-SUM 答「是」}。 設挑出的 $m$ 個數和為 $M'$。 令 $c_i \in \{0, 1, 2\}$
+是第 $i$ 對裡挑了幾個，$L$ 是挑到的 $P_i + s_i$ 那些 $s_i$ 的和，$0 \le L \le \sum s_i < C$。 和可以寫成
+\[
+C \sum_{i=1}^{m} c_i\, 3^{\,i-1} + L \;=\; C \sum_{i=1}^{m} 3^{\,i-1} + t .
+\]
+兩邊的 $L$ 和 $t$ 都在 $[0, C)$ 裡，兩邊除以 $C$ 的商和餘數分別相等：$L = t$，而且
+$\sum c_i 3^{\,i-1} = \sum 3^{\,i-1}$。 $c_i$ 都是 $0, 1, 2$，是三進位的數字，三進位表示法唯一，所以每個
+$c_i = 1$，每一對恰好挑一個。 令 $I$ 為挑了 $P_i + s_i$ 的那些 $i$，$\sum_{i \in I} s_i = L = t$。
+\end{itemize}
+所以 SUBSET-SUM $\le_{\mathrm{p}}$ $k$-SUM，$k$-SUM 是 NP-hard，加上在 NP 裡，是 NP 完備的。
+
+注意 (a) 和 (b) 不矛盾：$k$ 固定是 $3$ 時，$O(n^3)$ 甚至 $O(n^2)$ 都是多項式；$k$ 是輸入的一部分時，
+試遍 $\binom{n}{k}$ 種組合在 $k \approx n/2$ 時是指數。
+
+\textbf{c)} $O(nkM)$ 要用 $M$ 當表的一個維度，所以這一小題假設 $S$ 的元素和 $M$ 都是\textbf{非負整數}
+（和 SUBSET-SUM 一樣；有負數或非整數時沒辦法用和當下標）。 這是 0/1 背包（資結書第~18.5~節）多加一個
+「挑了幾個」的維度。
+
+\textbf{子問題}。 $R[i, j, s]$ 為真，若且唯若能從 $a_1, \ldots, a_i$ 挑\textbf{恰好} $j$ 個，和恰好是 $s$，
+$0 \le i \le n$、$0 \le j \le k$、$0 \le s \le M$。 看 $a_i$ 有沒有被挑：
+\[
+R[i, j, s] = R[i-1, j, s] \;\lor\; \bigl(j \ge 1 \land s \ge a_i \land R[i-1, j-1, s - a_i]\bigr),
+\]
+邊界 $R[0, 0, 0] = \TRUE$，其他 $R[0, j, s] = \FALSE$。 答案是 $R[n, k, M]$。
+
+\begin{pseudo}{恰好挑 $k$ 個、和為 $M$}
+\Function{K-Sum}{$a, n, k, M$}
+    \If{$k > n$}
+        \State \Return \FALSE
+    \EndIf
+    \State 建立 $R[0..n, 0..k, 0..M]$，全部設成 \FALSE；$R[0, 0, 0] \gets \TRUE$
+    \For{$i \gets 1$ \To $n$}
+        \For{$j \gets 0$ \To $k$}
+            \For{$s \gets 0$ \To $M$}
+                \State $R[i, j, s] \gets R[i-1, j, s]$ \Comment{不挑 $a_i$}
+                \If{$j \ge 1$ \AND $s \ge a_i$ \AND $R[i-1, j-1, s - a_i]$}
+                    \State $R[i, j, s] \gets \TRUE$ \Comment{挑 $a_i$}
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \Return $R[n, k, M]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 對 $i$ 歸納。 $i = 0$ 時只有空集合，挑 $0$ 個、和 $0$，邊界正確。 $i \ge 1$ 時，從前 $i$
+個挑 $j$ 個和為 $s$ 的挑法分兩種：不含 $a_i$，等於從前 $i - 1$ 個挑 $j$ 個和為 $s$；含 $a_i$，等於從前
+$i - 1$ 個挑 $j - 1$ 個和為 $s - a_i$（需要 $j \ge 1$、$s \ge a_i$，因為元素非負，和不會是負的）。
+遞迴式的兩項正好對應這兩種，每個 $a_i$ 最多用一次。
+
+\textbf{時間}。 表有 $(n + 1)(k + 1)(M + 1)$ 格，每格 $O(1)$，共 $O(nkM)$。 空間可以只留兩層 $i$，
+降到 $O(kM)$。 要印出挑了哪些數，從 $R[n, k, M]$ 倒著看每一格是由哪一項得到的。
+
+這是擬多項式時間（資結書第~28.6~節）：$M$ 寫在輸入裡只占 $\lg M$ 個位元，$O(nkM)$ 是輸入長度的指數，
+所以和 (b) 的 NP 完備不衝突；只有 $M$ 的數值本身不大（例如不超過 $n$ 的多項式）時，它才是有效率的。
+\end{pastsoln}

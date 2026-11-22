@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncu-107-dsa-17}]{中央資工所 107 學年度 第 17 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Choose the correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item If X is an NP-complete problem, then X is an NP problem.
+\item If X is an NP-complete problem, then X is NP-hard.
+\item Let X be an NP-complete problem. If X can polynomially reduce to a problem Y, then Y is
+NP-complete.
+\item Let X be an NP-complete problem. If a problem Y can polynomially reduce to X, then Y is
+NP-complete.
+\item Let X be an NP-complete problem. If X can polynomially reduce to a problem Y, then Y is
+NP-hard.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(e)。
+
+NP 完備的定義（資結書第~28.4~節）：X 在 NP 裡，而且 X 是 NP 難的。 兩個條件缺一不可。
+
+\begin{itemize}
+\item (a) 對。 定義的第一個條件。
+\item (b) 對。 定義的第二個條件。
+\item (c) \textbf{錯}。 $X \le_{\mathrm{p}} Y$ 可以推出 $Y$ 是 NP 難的（見 (e)），但推不出 $Y$ 在 NP 裡。
+反例：$Y$ 是停機問題。 資結書第~28.4~節說明了 SAT $\le_{\mathrm{p}}$ 停機問題，所以任何 NP 完備的 X 都能
+歸約到它；但停機問題根本沒有演算法，不在 NP 裡，不是 NP 完備的。
+\item (d) \textbf{錯}。 方向反了，$Y \le_{\mathrm{p}} X$ 只說明 $Y$ 不比 X 難。 反例：$Y$ 是「永遠回答否」
+的問題（沒有是實例）。 把 $Y$ 的每個實例都對應到 X 的同一個否實例，就是一個歸約；但 SAT 不可能歸約到 $Y$
+（SAT 的是實例沒地方對應），所以 $Y$ 不是 NP 難的，也就不是 NP 完備的。 這個反例不管 P 是否等於 NP 都成立。
+\item (e) 對。 任取 NP 裡的 $L$，$L \le_{\mathrm{p}} X$（X 是 NP 難的），再加上 $X \le_{\mathrm{p}} Y$，由
+遞移性（資結書引理~28.3）$L \le_{\mathrm{p}} Y$，$Y$ 是 NP 難的。 再證 $Y \in \mathrm{NP}$ 就能得到 $Y$ 是
+NP 完備的，這就是資結書引理~28.6 的做法；(c) 錯就錯在少了這一步。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ncku-109-prog-02}]{成大資訊聯招 109 學年度 資料結構第 2 題}
+（計算）
+
+A Bloom Filter consists of $m$ bits of memory and $h$ uniform and independent hash functions
+$f_1, f_2, \ldots, f_h$. Each $f_i$ hashes a key $k$ to an integer in the range $[1, m]$.
+Initially all $m$ filter bits are zero, and the data set is empty. When key $k$ is added to the
+data set, bits $f_1(k), f_2(k), \ldots, f_h(k)$ of the filter are set to 1. When a query ``Is
+key $k$ is in the data set?'' is made, bits $f_1(k), f_2(k), \ldots, f_h(k)$ are examined. The
+query answer is ``maybe'' if all these bits are 1. Otherwise, the answer is ``no.'' A
+\textit{filter error} occurs whenever the answer is ``maybe'' and the key is not in the data set.
+Assume that key $k$ is an integer in the range $[1, n]$ and $u$ updates are made. Compute the
+probability of filter error for an arbitrary query after the $u$-th update. \quad (10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\[
+\Pr[\text{filter error}] \approx \left(1 - \frac1n\right)^{u}
+\left(1 - \left(1 - \frac1m\right)^{uh}\right)^{h}
+\approx \left(1 - \frac1n\right)^{u} \left(1 - e^{-uh/m}\right)^{h}.
+\]
+
+\textbf{假設}。 題目說鍵是 $[1, n]$ 裡的整數，又說查詢是「任意的」（arbitrary），這裡照
+一般的讀法：每次更新加入的鍵、查詢的鍵，都是 $[1, n]$ 裡均勻亂選、互相獨立的；$h$ 個雜湊函數
+的值像亂數，每個都等可能是 $1$ 到 $m$ 的任何一格，彼此獨立（資結書第~12.6.3~節的假設）。
+
+\textbf{發生錯誤要兩件事同時成立}：查詢的鍵 $k$ 不在資料集裡，而且 $k$ 的 $h$ 個位元都是 $1$。
+分開算再相乘。
+
+\textbf{(a) $k$ 不在資料集裡}。 每次更新加入的鍵不是 $k$ 的機率是 $1 - 1/n$，$u$ 次更新
+互相獨立，所以
+\[
+\Pr[k \text{ 不在資料集裡}] = \left(1 - \frac1n\right)^{u}.
+\]
+
+\textbf{(b) 一個位元在 $u$ 次更新後是 $1$}。 固定一個位元 $j$。 每次更新算 $h$ 個雜湊值，
+$u$ 次一共 $uh$ 個，每一個落在 $j$ 以外的機率是 $1 - 1/m$，所以
+\[
+\Pr[\text{位元 } j \text{ 還是 } 0] = \left(1 - \frac1m\right)^{uh}, \qquad
+\Pr[\text{位元 } j \text{ 是 } 1] = 1 - \left(1 - \frac1m\right)^{uh}.
+\]
+
+\textbf{(c) $k$ 的 $h$ 個位元都是 $1$}。 $k$ 不在資料集裡，它的 $h$ 個位置和前面的更新無關，
+每個位置是 $1$ 的機率都是 (b) 的值。 把 $h$ 個位置當成互相獨立，得到
+$\bigl(1 - (1 - 1/m)^{uh}\bigr)^{h}$。 (a)、(c) 相乘就是上面的答案。 $m$ 很大時
+$(1 - 1/m)^{uh} \approx e^{-uh/m}$（資結書引理~A.1），得到第二個近似式。
+
+\textbf{兩個說明}。
+\begin{itemize}
+\item 這是課本上的標準近似。 嚴格說，各位元是不是 $1$ 並不完全獨立；$u$ 次更新也可能加入同一個
+鍵，同一個鍵設的是同一組位元，上式把每次更新都當成新的 $h$ 個獨立位置。 $m$、$n$ 很大時
+這兩點的影響很小。
+\item 題目定義的 filter error 是「回答 maybe 而且鍵不在資料集裡」，對任意一個查詢算機率，所以要
+乘上 (a)。 如果題目問的是「已知 $k$ 不在資料集裡，回答 maybe 的機率」（偽陽性率），答案就只有
+$\bigl(1 - (1 - 1/m)^{uh}\bigr)^{h}$，和資結書式子的形式一樣（那裡的 $k$ 是雜湊函數個數，
+$n$ 是插入的鍵數）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nccu-107-dsa-02}]{政大資科所 107 學年度 第 2 題}
+（問答）
+
+(10\%) Compare arrays with linked lists.
+\begin{enumerate}[label=\alph*.]
+\item (5\%) Give one advantage of linked lists over arrays.
+\item (5\%) Give one advantage of arrays over linked lists.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目各要一個優點，寫一個並說明理由就夠；下面多列幾個，答題時挑一個寫清楚。 以下 $n$ 是元素個數。
+
+\textbf{a. 串列勝過陣列}。
+\begin{itemize}
+\item \textbf{插入、刪除不必搬移}。 已經拿到某個節點的指標時，在它後面插入或刪除它後面的節點，只改
+常數個指標，$\Theta(1)$（資結書虛擬碼~5.2、5.3）。 陣列要保持元素連續，在第 $i$ 格插入或刪除要把
+後面 $n - i$ 個元素整段往後或往前搬，最壞 $\Theta(n)$。 例如在開頭插入：串列 $\Theta(1)$，陣列
+$\Theta(n)$。
+\item \textbf{大小可以隨時變}。 串列需要時才配置一個節點，不必事先知道最多有幾個元素，也不會因為
+空間不夠而要整個搬到更大的陣列；記憶體也不必是一整塊連續的空間。
+\end{itemize}
+
+\textbf{b. 陣列勝過串列}。
+\begin{itemize}
+\item \textbf{隨機存取 $\Theta(1)$}。 陣列的元素連續存放，第 $i$ 個元素的位址是
+$\text{起始位址} + i \times (\text{元素大小})$（資結書第~4.1~節），一次算出來。 串列只能從頭沿著
+$\mathit{next}$ 走 $i$ 步，$\Theta(i)$。 所以排好序的陣列可以二分搜尋，$O(\lg n)$；排好序的串列
+不行，還是要 $O(n)$。
+\item \textbf{省空間、快取友善}。 陣列不用存指標；元素放在一起，循序走訪時用得到快取，實際上比
+走串列快很多。
+\end{itemize}
+\end{pastsoln}

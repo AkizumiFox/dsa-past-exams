@@ -1,0 +1,110 @@
+\begin{pastexam}[label={px:ccu-109-swa-01}]{中正資工所甲組 109 學年度 第 4 題}
+（程式除錯）
+
+(20\%) Below is a \textbf{bubble sort} program that sorts an integer array containing 10 elements.
+The algorithm sorts elements in \textbf{ascending order}, i.e., the greatest element in the list
+will be carried to the end of the list. However, the first version of the program contains a lot
+of bugs. Please indicate and correct all bugs so that the program creates the desired output.
+
+Try to use as \textbf{few changes} as possible to make the program compile and run correctly. You
+may also insert and delete lines if you like to. Do not rewrite entire lines of code but try to
+keep the changes as \textbf{small} as possible.
+\begin{minted}[fontsize=\footnotesize]{text}
+Line 1:   #include <iostream>
+Line 2:   #include <vector>
+Line 3:   using namespace std;
+Line 4:
+Line 5:   void SwapIntegers (int a, int b) {
+Line 6:       int temp = a;
+Line 7:       a = b;
+Line 8:       temp = b; }
+Line 9:
+Line 10:  void BubbleSort (vector &intVector) {
+Line 11:      for (int i = intVector.size() - 1; i > 0; i++)
+Line 12:          for (j = 0; j < i; j++)
+Line 13:              if (intVector[j] < intVector[j + 1])
+Line 14:                  SwapIntegers (intVector[j], intVector[j + 1]); }
+Line 15:
+Line 16:  int main () {
+Line 17:      int intArray[] = {34, 1432, 1, -54, 16, 22, 13245, 512, -3000, 0};
+Line 18:      vector<int> intVector(intArray, intArray + 9);
+Line 19:
+Line 20:      BubbleSort (&intVector);
+Line 21:
+Line 22:      for (int i = 0; i <= intVector.size(); i++)
+Line 23:          cout >> intVector[i] >> endl;
+Line 24:
+Line 25:      return 0; }
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+共 $10$ 處要改，都只動一小段。 先看程式想做什麼：外層 $i$ 從最後一格往前，每一輪內層 $j$ 從
+頭掃到 $i - 1$，相鄰兩個前大後小就交換，一輪結束時這一段最大的數被推到第 $i$ 格。 這就是資結書
+虛擬碼~14.1 的氣泡排序（資結書第~14.2~節），只是索引從 $0$ 開始。 照這個意思逐行檢查：
+
+\begin{center}
+\small
+\begin{tabular}{rp{0.48\linewidth}l}
+\toprule
+行 & 錯在哪裡 & 改的地方 \\
+\midrule
+5 & 傳值呼叫，函式裡交換的是副本，呼叫端的元素不變 & \texttt{int \&a, int \&b} \\
+8 & 沒有把 \texttt{temp} 存的舊 \texttt{a} 放回 \texttt{b} & \texttt{b = temp;} \\
+10 & \texttt{vector} 是樣板，要寫元素型別，編譯錯誤 & \texttt{vector<int> \&intVector} \\
+11 & $i$ 應該往下數；\texttt{i++} 讓 $i$ 越來越大，迴圈不會停 & \texttt{i-{}-} \\
+12 & \texttt{j} 沒有宣告，編譯錯誤 & \texttt{int j = 0} \\
+13 & 前小後大就交換，會把最小的推到最後，排成遞減 & \texttt{intVector[j] > intVector[j + 1]} \\
+18 & 只放了前 $9$ 個數，漏掉最後的 $0$ & \texttt{intArray + 10} \\
+20 & 參數是參考，直接傳物件；\texttt{\&intVector} 是指標，型別不合，編譯錯誤 & \texttt{BubbleSort (intVector)} \\
+22 & 用 \texttt{<=} 會讀到 \texttt{intVector[10]}，超出範圍 & \texttt{i < intVector.size()} \\
+23 & 輸出要用 \texttt{<<}，\texttt{>>} 是輸入運算子，編譯錯誤 & \texttt{cout << intVector[i] << endl} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+幾點說明：
+\begin{itemize}
+\item 第 18 行的建構子 \texttt{vector<int>(first, last)} 複製 $[\mathit{first}, \mathit{last})$
+這段，不含 \texttt{last}。 \texttt{intArray + 9} 只拿到第 $0$ 到第 $8$ 個數，題目說要排 $10$ 個，
+所以改成 \texttt{+ 10}。
+\item 第 13 行：題目要求遞增，而且「最大的被帶到最後」。 原來的 \texttt{<} 在前面比較小時交換，
+每一輪把最小的帶到最後，結果是遞減，所以改成 \texttt{>}。
+\item 第 5、8 行兩個錯要一起改：只加 \texttt{\&} 而不改第 8 行，\texttt{a}、\texttt{b} 都會變成原來的
+\texttt{b}；只改第 8 行而不加 \texttt{\&}，呼叫端完全不變。
+\item 第 11 行 \texttt{intVector.size() - 1} 是無號數 $9$，指定給 \texttt{int} 沒有問題（陣列不是空的）。
+第 22 行改完以後 \texttt{int} 和無號數比較，編譯器可能給警告，但不影響正確性，不必改。
+\item 第 14 行最後的 \texttt{\}} 是 \texttt{BubbleSort} 的函式結尾。 兩層 \texttt{for} 都只有一個
+敘述，不加大括號也對。
+\end{itemize}
+
+改完的整支程式（左邊的行號就是原題的 Line 編號）：
+\begin{minted}[fontsize=\footnotesize, linenos, numbersep=6pt, style=perldoc]{cpp}
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void SwapIntegers (int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp; }
+
+void BubbleSort (vector<int> &intVector) {
+    for (int i = intVector.size() - 1; i > 0; i--)
+        for (int j = 0; j < i; j++)
+            if (intVector[j] > intVector[j + 1])
+                SwapIntegers (intVector[j], intVector[j + 1]); }
+
+int main () {
+    int intArray[] = {34, 1432, 1, -54, 16, 22, 13245, 512, -3000, 0};
+    vector<int> intVector(intArray, intArray + 10);
+
+    BubbleSort (intVector);
+
+    for (int i = 0; i < intVector.size(); i++)
+        cout << intVector[i] << endl;
+
+    return 0; }
+\end{minted}
+執行結果是一行一個數：$-3000, -54, 0, 1, 16, 22, 34, 512, 1432, 13245$。
+\end{pastsoln}

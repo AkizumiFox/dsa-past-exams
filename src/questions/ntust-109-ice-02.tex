@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntust-109-ice-02}]{臺科大資工所 109 學年度 第 2 題}
+（問答）
+
+A binary tree has a total of 45 nodes. Answer the following questions please.
+\begin{enumerate}[label=(\alph*)]
+\item What is the minimum possible height of the tree? (Assume that the height of a binary tree
+with one node is one.) (2\%)
+\item Assume that we use linked representation for each node in the tree with two links pointing
+respectively to the left child and the right child of the node. How many links in the 45 nodes of
+the tree are set to NULL? (3\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $6$；(b) $46$。
+
+題目規定只有一個節點的樹高度是 $1$，和資結書的定義相同。
+
+\textbf{(a)} 由資結書定理~7.1，高度 $h$ 的二元樹最多 $2^h - 1$ 個節點，所以 $45 \le 2^h - 1$，
+$2^h \ge 46$。 $2^5 = 32 < 46 \le 64 = 2^6$，所以 $h \ge 6$。 $45$ 個節點的完整二元樹高度是
+$\lfloor \lg 45 \rfloor + 1 = 5 + 1 = 6$（資結書定理~7.3），達到下界，所以最小高度是 $6$。
+
+\textbf{(b)} $45$ 個節點共有 $2 \times 45 = 90$ 個指標。 除了根，每個節點恰好被一個指標指著，
+所以有 $45 - 1 = 44$ 個指標指向節點，其餘 $90 - 44 = 46 = n + 1$ 個是 \texttt{NULL}
+（資結書第~7.2.2~節），和樹的形狀無關。
+\end{pastsoln}

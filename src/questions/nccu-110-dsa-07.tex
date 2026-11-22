@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:nccu-110-dsa-07}]{政大資科所 110 學年度 第 7 題}
+（問答）
+
+(15\%) Design a polynomial-time algorithm for the following problem.\\
+Input: An $n$-node undirected graph $G$.\\
+Output:
+\begin{quote}
+``Yes'', if there is a cycle of length at most $n/2$ (i.e., a cycle that has at most $n/2$ nodes) in
+$G$;\\
+``No'', otherwise.
+\end{quote}
+***Please give the high-level idea of your algorithm and explain why it has polynomial running time.***
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定}。 $G$ 是簡單圖，$m$ 條邊，用鄰接串列存。 環至少有 $3$ 個點；有 $k$ 個點的環有 $k$ 條邊，長度就是 $k$。
+
+\textbf{高階想法}。 求出圖裡最短的環的長度 $g$（稱為圍長，girth），再看 $g \le n/2$ 是否成立。 最短的環一定經過某一條邊，
+而「經過邊 $e = \{u, v\}$ 的最短環」可以用 BFS 求：把 $e$ 拿掉，算 $u$ 到 $v$ 的最短距離（邊數）$\delta'$，環長就是
+$\delta' + 1$。 對每一條邊都做一次，取最小。 （這和政大 106 學年度第 3 題，歷屆試題~\ref{px:nccu-106-dsa-03}，是同一個想法，
+只是邊長都是 $1$，用 BFS 代替 Dijkstra。）
+
+\begin{pseudo}{有沒有長度不超過 $n/2$ 的環}
+\Function{Short-Cycle}{$G$}
+    \State $g \gets \infty$
+    \For{每條邊 $e = \{u, v\}$}
+        \State 在 $G - e$ 上從 $u$ 做 BFS，得到距離 $d[\cdot]$ \Comment{$O(n + m)$}
+        \If{$d[v] < \infty$}
+            \State $g \gets \min(g, d[v] + 1)$ \Comment{經過 $e$ 的最短環}
+        \EndIf
+    \EndFor
+    \If{$g \le n/2$}
+        \State \Return Yes
+    \Else
+        \State \Return No
+    \EndIf
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。
+\begin{itemize}
+\item \textbf{經過 $e$ 的最短環長是 $\delta' + 1$}。 經過 $e$ 的環，拿掉 $e$ 剩下一條 $G - e$ 裡的 $u$--$v$ 路徑，所以環長
+$\ge \delta' + 1$。 反過來，BFS 找到的 $u$--$v$ 最短路徑不會重複經過頂點，也不含 $e$，而且至少兩條邊（簡單圖裡 $u$、$v$
+之間只有 $e$ 一條邊），接上 $e$ 就是一個長度 $\delta' + 1$ 的環。 $d[v] = \infty$ 表示沒有環經過 $e$。
+\item \textbf{$g$ 是最短環的長度}。 每個環都經過至少一條邊，所以最短環的長度就是「經過 $e$ 的最短環長」對所有邊 $e$
+取的最小值，也就是演算法算出的 $g$；沒有環時 $g = \infty$。
+\item 所以「有長度 $\le n/2$ 的環」若且唯若 $g \le n/2$，演算法回答正確。
+\end{itemize}
+
+\textbf{為什麼是多項式時間}。 外層迴圈跑 $m$ 次，每次一個 BFS，$O(n + m)$（資結書第~21.3~節）。 總共 $O(m(n + m))$。 簡單圖
+$m \le n(n-1)/2$，所以是 $O(n^4)$，是 $n$ 的多項式。 （更快的寫法：從每個頂點 $r$ 各做一次 BFS，遇到一條非樹邊 $\{x, y\}$ 時
+記下 $d[x] + d[y] + 1$，所有記下的值的最小值就是 $g$，總共 $O(n(n + m)) = O(n^3)$。）
+
+注意不能列舉所有不超過 $n/2$ 個點的點集合或路徑：那是指數多個。 「找一個長度\textbf{恰好}是 $n$ 的環」（哈密頓環）是 NP 完備的，
+但「找最短的環」是多項式時間可解的，這題問的是後者的變形。
+
+\textbf{例子}。 $n = 6$ 的環 $1$--$2$--$3$--$4$--$5$--$6$--$1$：唯一的環長 $6 > 3$，回答 No。 再加一條邊 $\{1, 3\}$：拿掉 $\{1, 3\}$
+後 $1$ 到 $3$ 的距離是 $2$（經過 $2$），得到長度 $3$ 的環 $1, 2, 3$，$3 \le 3$，回答 Yes。
+\end{pastsoln}

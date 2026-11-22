@@ -1,0 +1,121 @@
+\begin{pastexam}[label={px:ntu-107-dsa-06}]{臺大資工所 107 學年度 第 VI 題}
+（問答）
+
+(25 points) The network of roads in NTU can be modeled as a graph $G=(V,E)$, where each node
+$v_i\in V$ represents a building and each edge $e_{ij}\in E$ represents a road connecting the
+buildings $v_i$ and $v_j$. Each edge $e_{ij}$ is associated with a positive weight $w_{ij}$, i.e.,
+$w_{ij}>0$.
+\begin{enumerate}[label=(\alph*)]
+\item (10 points) Consider all roads are bidirectional. Before an earthquake, it is possible to
+travel between any pair of buildings. However, after the earthquake, all of the roads are damaged
+and closed until repairs are completed. Suppose the weight $w_{ij}$ indicates the time required to
+repair the corresponding road $e_{ij}$. Assume that all roads are fixed at the same time.
+
+Given two buildings $v_a$ and $v_b$, please propose an efficient algorithm to determine a path
+starting from $v_a$ to $v_b$ that can be fixed in the smallest amount of time. Analyze the time
+complexity of your algorithm.
+\item (15 points) Consider all roads are directional but we don't know their directions in $G$.
+Suppose the weight $w_{ij}$ indicates the time required to travel from the building $v_i$ to the
+building $v_j$. Given two buildings $v_a$ and $v_b$ and the following two different conditions,
+for each condition, please propose an efficient algorithm to determine the directions of the roads
+in $G$ so that the time to travel from $v_a$ to $v_b$ is minimum. Assume that $v_b$ is reachable
+from $v_a$ in $G$.
+\begin{enumerate}[label=(\arabic*)]
+\item (5 points) Consider all edges have equal weights. Your algorithm should run in linear time.
+\item (10 points) Consider the edges might have different weights. Analyze the time complexity of
+your algorithm in this question.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本題 (a) 是最小生成樹的瓶頸性質（資結書第~24~章），(b) 是最短路徑；(b) 佔的分數較多，歸在最短路徑
+這一章。 以下 $n = |V|$、$m = |E|$。
+
+\textbf{(a) 題意。} 所有道路同時開始修，道路 $e_{ij}$ 在時間 $w_{ij}$ 修好。 一條從 $v_a$ 到 $v_b$ 的路徑
+要等它上面\textbf{每一段}都修好才能走，所以它能通行的時間是路徑上最大的 $w_{ij}$，也就是路徑的瓶頸
+（資結書第~24.5.3~節）。 題目要的是瓶頸最小的路徑，不是權重總和最小的最短路徑。
+
+\textbf{演算法。} 照 Kruskal 演算法由輕到重加邊，$v_a$、$v_b$ 第一次連通時停下來，在選到的邊組成的
+森林上找 $v_a$ 到 $v_b$ 的路徑。
+\begin{pseudo}{最早修好的路徑}
+\Function{Earliest-Path}{$G, w, a, b$}
+    \State $F \gets \emptyset$
+    \For{每個頂點 $v \in V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \State 把 $E$ 的邊依權重由小到大排序
+    \For{依排好的順序，每條邊 $(u, v)$}
+        \If{$\Call{Find-Set}{a} = \Call{Find-Set}{b}$}
+            \State \Break
+        \EndIf
+        \If{$\Call{Find-Set}{u} \ne \Call{Find-Set}{v}$}
+            \State $F \gets F \cup \{(u, v)\}$；\Call{Union}{$u, v$}
+        \EndIf
+    \EndFor
+    \State 在森林 $F$ 上從 $a$ 做 BFS，沿 $\pi$ 從 $b$ 走回 $a$，得到路徑 $P$
+    \State \Return $P$
+\EndFunction
+\end{pseudo}
+地震前任兩棟建築都連通，所以 $G$ 連通，迴圈一定會在某條邊之後讓 $a$、$b$ 連通（$a = b$ 時一開始就
+停，路徑只有一個頂點）。 $F$ 是森林，$a$、$b$ 在同一棵樹裡，樹上兩點之間恰好有一條簡單路徑，第 11 行
+找到的就是它。
+
+\textbf{正確性。} 設 $e^{*}$ 是最後一條加進 $F$ 的邊，也就是讓 $a$、$b$ 第一次連通的那一條，
+$w^{*} = w(e^{*})$。
+\begin{itemize}
+\item \textbf{$P$ 的瓶頸 $\le w^{*}$。} $P$ 的邊都在 $F$ 裡，$F$ 的邊都不比 $e^{*}$ 晚處理，權重都
+$\le w^{*}$。
+\item \textbf{任何路徑的瓶頸 $\ge w^{*}$。} 令 $E^{-}$ 是排序後排在 $e^{*}$ 前面的邊。 處理完 $E^{-}$ 時，
+互斥集合正好是圖 $(V, E^{-})$ 的連通元件：被略過的邊兩端本來就在同一個集合，加了也不改變連通性。
+那時 $a$、$b$ 還在不同的集合，所以只用 $E^{-}$ 的邊從 $a$ 走不到 $b$。 任何一條 $a$ 到 $b$ 的路徑 $Q$
+都至少用到一條不在 $E^{-}$ 的邊，它排在 $e^{*}$ 或它後面，權重 $\ge w^{*}$，所以 $Q$ 的瓶頸
+$\ge w^{*}$。
+\end{itemize}
+兩點合起來，$P$ 的瓶頸是所有路徑裡最小的，它在時間 $w^{*}$ 就能通行，沒有路徑能更早。 換個說法：
+$F$ 是 Kruskal 求最小生成樹的前半段，$P$ 是最小生成樹上 $a$ 到 $b$ 的路徑，由資結書定理~24.13，
+它的瓶頸最小。
+
+\textbf{時間。} 排序 $O(m \lg m) = O(m \lg n)$；最多 $m$ 輪迴圈，每輪幾次 \proc{Find-Set}，用依大小合併
+加路徑壓縮共 $O(m\,\alpha(n))$（資結書第~13~章）；$F$ 最多 $n - 1$ 條邊，BFS 是 $O(n)$。 合計
+$O(m \lg n)$，瓶頸在排序。
+
+\textbf{另一種寫法。} 把 Dijkstra 演算法的「$d[u] + w(u, v)$」改成「$\max(d[u], w(u, v))$」，$d[v]$ 代表
+目前找到的最小瓶頸，取出 $d$ 最小的頂點時它就確定了，證明和 Dijkstra 相同（$\max$ 和加非負數一樣，
+沿路徑不會變小）。 用二元堆積也是 $O(m \lg n)$，而且找到 $v_b$ 就能停。 兩種寫法都要說明的關鍵是：
+題目要的是\textbf{瓶頸}，直接跑一般的最短路徑（權重相加）會答錯。 例如 $v_a$ 到 $v_b$ 一條路是一段
+$10$，另一條路是三段 $4$：總和最小的是 $10$ 那條，但三段 $4$ 的那條在時間 $4$ 就修好了。
+
+\textbf{(b) 題意。} 每條路只能單向通行，方向由我們決定；$w_{ij}$ 是走這條路的時間（不論定成哪個方向）。
+要把每條路定一個方向，讓定完之後 $v_a$ 到 $v_b$ 的最短行走時間最小。
+
+\textbf{關鍵觀察。} 令 $\delta(v_a, v_b)$ 是把 $G$ 當成\textbf{無向圖}時 $v_a$ 到 $v_b$ 的最短距離。
+\begin{itemize}
+\item 不管怎麼定方向，定完之後的任何一條 $v_a$ 到 $v_b$ 的有向路徑，忽略方向後都是 $G$ 裡的一條路徑，
+長度 $\ge \delta(v_a, v_b)$。 所以答案不可能比 $\delta(v_a, v_b)$ 小。
+\item 取一條無向的最短路徑 $P$：$v_a = u_0, u_1, \ldots, u_k = v_b$。 最短路徑是簡單路徑（權重都是正的，
+有重複頂點就能剪掉一段變得更短），每條邊只出現一次，把 $P$ 上的邊都定成 $u_{t-1} \to u_t$ 不會互相
+衝突；其他的邊方向隨便定。 這樣 $v_a$ 沿 $P$ 走到 $v_b$ 花 $\delta(v_a, v_b)$。
+\end{itemize}
+所以最小值就是 $\delta(v_a, v_b)$，問題化成在無向圖上找一條最短路徑，再沿路定方向。
+\begin{pseudo}{定方向讓 $v_a$ 到 $v_b$ 最快}
+\Procedure{Orient}{$G, w, a, b$}
+    \State 把 $G$ 當無向圖，從 $a$ 求最短路徑的前驅 $\pi$（(1) 用 BFS，(2) 用 Dijkstra）
+    \State $v \gets b$
+    \While{$v \ne a$}
+        \State 把邊 $\{\pi[v], v\}$ 定成 $\pi[v] \to v$
+        \State $v \gets \pi[v]$
+    \EndWhile
+    \State 其餘的邊方向任意定
+\EndProcedure
+\end{pseudo}
+
+\textbf{(b)(1) 權重都相同。} 每條邊的時間都一樣，路徑時間和邊數成正比，最短路徑就是邊數最少的路徑，
+用 BFS（資結書第~21.3~節，資結書定理~21.4）求出 $\pi$。 BFS 是 $O(n + m)$，沿 $\pi$ 走回去最多 $n - 1$ 步，
+替其他邊定方向 $O(m)$，總共 $O(n + m)$，是線性時間。
+
+\textbf{(b)(2) 權重不同。} 權重都是正的，用 Dijkstra 演算法（資結書第~25.2~節）在無向圖上求 $\pi$
+（每條無向邊當成兩個方向的有向邊，正確性由資結書定理~25.6）。 用二元堆積時 $O((n + m) \lg n)$，用
+Fibonacci 堆積時 $O(m + n \lg n)$；後面定方向的部分 $O(n + m)$。 總時間 $O((n + m) \lg n)$（或
+$O(m + n \lg n)$）。 這裡不能用 BFS：邊數最少的路徑不一定時間最短，例如一段 $10$ 和兩段 $1$。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:nccu-107-dsa-03}]{政大資科所 107 學年度 第 3 題}
+（問答）
+
+(10\%) Explain the reason that the worst-case running time of quick sort is $\theta(n^2)$, where $n$
+is the number of elements to be sorted.
+\end{pastexam}
+
+\begin{pastsoln}
+原題的小寫 $\theta$ 就是 $\Theta$。 要說明最壞情況是 $\Theta(n^2)$，兩個方向都要講：任何輸入都不超過
+$O(n^2)$，而且有輸入真的要 $\Omega(n^2)$。
+
+\textbf{分割的成本}。 快速排序（資結書第~14.5~節）每次在長度 $m$ 的子陣列選一個基準，分割時基準和
+其他 $m - 1$ 個數各比一次，花 $\Theta(m)$，然後對基準左右兩邊遞迴。 所以總時間取決於每次切得
+平不平均。
+
+\textbf{有輸入要 $\Omega(n^2)$}。 最壞的情形是每次基準都是子陣列的最小值或最大值，切成 $0$ 和
+$m - 1$ 個。 例如固定取最後一個數當基準（Lomuto 分割），輸入已經由小到大排好：基準每次都是最大值，
+左邊剩 $m - 1$ 個、右邊 $0$ 個。 這時
+\[
+T(n) = T(n - 1) + \Theta(n),
+\]
+展開得
+\[
+T(n) = \Theta\bigl(n + (n - 1) + \cdots + 1\bigr) = \Theta\Bigl(\frac{n(n+1)}{2}\Bigr) = \Theta(n^2).
+\]
+比較次數剛好是 $(n - 1) + (n - 2) + \cdots + 1 = n(n-1)/2$。 即使隨機選基準，也可能（機率很小）每次
+都抽到最大或最小值，最壞情況一樣是 $\Theta(n^2)$，隨機化只讓期望時間變成 $\Theta(n \lg n)$。
+
+\textbf{任何輸入都是 $O(n^2)$}。 每次比較都是基準和同一段裡的另一個數比；一個數當過基準之後就固定在
+它的位置，不會再進入任何子陣列，所以任兩個數最多比較一次（資結書引理~14.1）。 比較次數最多
+$\binom{n}{2} = n(n-1)/2$，其他工作（交換、遞迴呼叫）都不超過比較次數的常數倍加上 $O(n)$，所以
+時間是 $O(n^2)$。
+
+兩邊合起來，最壞情況的時間是 $\Theta(n^2)$。 對照：每次都切成兩半時 $T(n) = 2T(n/2) + \Theta(n) =
+\Theta(n \lg n)$，這是最好的情況。
+\end{pastsoln}

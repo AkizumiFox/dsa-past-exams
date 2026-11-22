@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-107-prog-09}]{成大資訊聯招 107 學年度 第 9 題}
+（問答）
+
+(10\%) Use Master theorem to solve the recurrence $T(n)=3T(2n/3)+O(1)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta\bigl(n^{\log_{3/2} 3}\bigr) \approx \Theta(n^{2.71})$。
+
+\textbf{對應主定理的參數。} 主定理（資結書定理~2.4）的形式是 $T(n) = aT(n/b) + f(n)$。 子問題大小是
+$2n/3 = n/(3/2)$，所以 $b = 3/2$，不是 $3$ 也不是 $2/3$；$a = 3$，$f(n) = O(1)$。 $a \ge 1$、$b > 1$，
+可以用主定理。
+\[
+n^{\log_b a} = n^{\log_{3/2} 3}, \qquad
+\log_{3/2} 3 = \frac{\ln 3}{\ln 1.5} \approx \frac{1.0986}{0.4055} \approx 2.71 .
+\]
+
+\textbf{比較 $f(n)$ 和 $n^{\log_b a}$。} 取 $\varepsilon = 1$，$\log_{3/2} 3 - 1 \approx 1.71 > 0$，所以
+$f(n) = O(1) = O(n^{\log_{3/2} 3 - 1})$，$f(n)$ 比 $n^{\log_b a}$ 多項式地小，是情況 1：
+\[
+T(n) = \Theta\bigl(n^{\log_{3/2} 3}\bigr).
+\]
+
+\textbf{$f(n)$ 只給 $O(1)$ 也可以。} 情況 1 只要求 $f(n)$ 的上界。 從下界看也一樣：遞迴樹每層把問題
+分成 $3$ 份，深度 $\log_{3/2} n$，葉子有 $3^{\log_{3/2} n} = n^{\log_{3/2} 3}$ 個，每個葉子至少花常數
+時間 $T(1) > 0$，所以 $T(n) = \Omega(n^{\log_{3/2} 3})$；上界由情況 1 得到。 兩邊合起來是 $\Theta$。
+
+這個遞迴式是 stooge 排序（先排前 $2/3$、再排後 $2/3$、再排前 $2/3$）的時間，比 $\Theta(n^2)$ 的插入
+排序還慢。
+\end{pastsoln}

@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:nccu-109-dsa-02}]{政大資科所 109 學年度 第 2 題}
+（問答）
+
+(20 points) Design a dynamic array that supports the following four operations in $\Theta(1)$
+amortized time. Show your algorithm for each of the four operations in C or pseudo code.
+\begin{enumerate}[label=2.\arabic*]
+\item Initializing an empty array
+\item Inserting a new element at the end of the array
+\item Removing the last element of the array
+\item Access to the $k$th element of the array
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+用資結書第~3.4~節的動態陣列：記住目前的元素個數 $\mathit{num}$ 和容量 $\mathit{cap}$，放滿了就把容量
+\textbf{加倍}，少於四分之一滿就\textbf{減半}。 成本的算法：寫入或刪除一個元素算 $1$，換容量時每搬一個元素
+算 $1$，配置、釋放記憶體算常數。
+
+\begin{pseudo}{動態陣列的四個操作}
+\Procedure{Init}{$T$} \Comment{2.1}
+    \State $T.\mathit{data} \gets \NIL$；$T.\mathit{num} \gets 0$；$T.\mathit{cap} \gets 0$
+\EndProcedure
+\Statex
+\Procedure{Resize}{$T, m$} \Comment{換成 $m$ 格，搬 $\mathit{num}$ 個}
+    \State 配置一個 $m$ 格的新陣列 $B$（$m = 0$ 時 $B \gets \NIL$）
+    \For{$i \gets 1$ \To $T.\mathit{num}$}
+        \State $B[i] \gets T.\mathit{data}[i]$
+    \EndFor
+    \State 釋放舊的陣列；$T.\mathit{data} \gets B$；$T.\mathit{cap} \gets m$
+\EndProcedure
+\Statex
+\Procedure{Push}{$T, x$} \Comment{2.2}
+    \If{$T.\mathit{num} = T.\mathit{cap}$}
+        \State \Call{Resize}{$T, \max(1, 2 \cdot T.\mathit{cap})$}
+    \EndIf
+    \State $T.\mathit{num} \gets T.\mathit{num} + 1$；$T.\mathit{data}[T.\mathit{num}] \gets x$
+\EndProcedure
+\Statex
+\Function{Pop}{$T$} \Comment{2.3，假設不是空的}
+    \State $x \gets T.\mathit{data}[T.\mathit{num}]$；$T.\mathit{num} \gets T.\mathit{num} - 1$
+    \If{$T.\mathit{num} = 0$}
+        \State \Call{Resize}{$T, 0$}
+    \ElsIf{$4 \cdot T.\mathit{num} < T.\mathit{cap}$}
+        \State \Call{Resize}{$T, T.\mathit{cap} / 2$}
+    \EndIf
+    \State \Return $x$
+\EndFunction
+\Statex
+\Function{Get}{$T, k$} \Comment{2.4，$1 \le k \le T.\mathit{num}$}
+    \State \Return $T.\mathit{data}[k]$
+\EndFunction
+\end{pseudo}
+
+\textbf{2.1、2.4 是真的 $\Theta(1)$}。 \proc{Init} 只設三個欄位。 \proc{Get} 直接用索引讀，因為元素一直存
+在一塊連續的陣列裡，位址一次算出來（資結書第~4.1~節）。
+
+\textbf{2.2、2.3 平攤 $\Theta(1)$}。 單看一次 \proc{Push} 或 \proc{Pop}，換容量時要搬 $\mathit{num}$ 個，
+可能是 $\Theta(n)$；但整串操作平均下來每次是常數。 用位能法（資結書第~3.3~節），取
+\[
+\Phi = |2 \cdot \mathit{num} - \mathit{cap}|,
+\]
+一開始是 $0$，永遠 $\ge 0$。 平攤成本 $\hat{c} = c + \Delta\Phi$。 以下 $m$ 是操作前的容量（永遠是 $0$ 或
+$2$ 的冪次）。
+\begin{itemize}
+\item \proc{Push} 不擴充：$c = 1$，$2\mathit{num}$ 加 $2$，$\Phi$ 最多加 $2$，$\hat{c} \le 3$。
+\item \proc{Push} 擴充，$m \ge 1$：原本 $\mathit{num} = m$，$c = m + 1$；$\Phi$ 從 $|2m - m| = m$ 變成
+$|2(m+1) - 2m| = 2$，$\hat{c} = (m + 1) + 2 - m = 3$。 $m = 0$ 時 $c = 1$，$\Phi$ 從 $0$ 變 $1$，$\hat{c} = 2$。
+\item \proc{Pop} 之後變空：$c = 1$，$\Phi$ 變成 $0$，$\hat{c} \le 1$。
+\item \proc{Pop} 不縮小（剩 $r \ge 1$ 個，$4r \ge m$）：$c = 1$，$\Phi$ 最多加 $2$，$\hat{c} \le 3$。
+\item \proc{Pop} 縮小（剩 $r \ge 1$ 個，$4r < m$）：$m > 4r \ge 4$ 又是 $2$ 的冪次，所以 $m \ge 8$。 $c = 1 + r$。
+縮小後容量 $m/2 > 2r$，$\Phi_{\text{後}} = m/2 - 2r$；刪除前有 $r + 1$ 個，$2(r+1) < m/2 + 2 \le m$，
+$\Phi_{\text{前}} = m - 2r - 2$。 於是
+\[
+\hat{c} = (1 + r) + \Bigl(\frac{m}{2} - 2r\Bigr) - (m - 2r - 2) = 3 + r - \frac{m}{2} < 3 + \frac{m}{4} - \frac{m}{2} < 3.
+\]
+\end{itemize}
+每一種操作的平攤成本都 $\le 3$，而 $\Phi$ 從 $0$ 開始、不會變負，所以任意 $n$ 次操作的實際總成本
+$\sum c \le \sum \hat{c} \le 3n$（資結書定理~3.3）。 每次操作平攤 $O(1)$；每次至少有成本 $1$，所以是
+$\Theta(1)$。 另外容量永遠不超過 $4 \cdot \mathit{num}$（$\mathit{num} \ge 1$ 時），空間是 $\Theta(n)$。
+
+\textbf{兩個常見的錯}。 (1) 擴充時每次只加固定的 $d$ 格：$n$ 次 \proc{Push} 要搬 $d + 2d + \cdots \approx
+n^2/(2d)$ 個，平攤 $\Theta(n)$。 (2) 少於\textbf{一半}就減半：容量 $m$、剛好放滿時，反覆「加入、刪除、刪除、
+加入」，每四次操作就加倍一次又減半一次，各搬大約 $m$ 個，平攤 $\Theta(n)$。 縮小的門檻要比擴充後的半滿
+低，四分之一是常用的選擇。
+\end{pastsoln}

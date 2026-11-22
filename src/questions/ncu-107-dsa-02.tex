@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-107-dsa-02}]{中央資工所 107 學年度 第 2 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+Follow the previous question. What is the amount of auxiliary space (extra space or temporary
+space not including the input array) used by the algorithm E-SORT?
+
+(a)~$\Theta(1)$ \qquad (b)~$\Theta(\log n)$ \qquad (c)~$\Theta(n^{1/3})$ \qquad
+(d)~$\Theta(n^{2/3})$ \qquad (e)~$\Theta(n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)。 E-SORT 見上一題（歷屆試題~\ref{px:ncu-107-dsa-01}）。
+
+E-SORT 沒有另外開陣列，額外空間全是遞迴用的堆疊：每一層呼叫存 $i$、$j$、$k$ 和返回位址，
+$O(1)$。 第 6、7、8 行的三個呼叫是\textbf{一個接一個}做的，前一個返回、它的堆疊框就拿掉了，
+不會三個同時佔著空間。 所以堆疊最多同時有「遞迴深度」那麼多層（資結書第~6.4~節）。
+
+\textbf{遞迴深度}。 令 $D(n)$ 是處理 $n$ 個元素時堆疊最多有幾層：
+\[
+D(n) = D\bigl(\lceil 2n/3 \rceil\bigr) + 1, \qquad D(1) = D(2) = 1 .
+\]
+每往下一層，元素個數大約乘以 $2/3$，降到 $2$ 以下要
+$\log_{3/2} n = \lg n / \lg 1.5$ 層左右，所以 $D(n) = \Theta(\log n)$（資結書主定理，$a = 1$、
+$b = 3/2$、$f(n) = \Theta(1)$，第二種情況）。 額外空間是 $D(n) \cdot O(1) = \Theta(\log n)$。
+例如 $n = 1000$ 時深度是 $17$，$\log_{1.5} 1000 \approx 17.0$。
+
+逐項檢查：
+\begin{itemize}
+\item (a) $\Theta(1)$：只算了一層的區域變數，漏了遞迴堆疊，錯。
+\item (b) $\Theta(\log n)$：對。
+\item (c) $\Theta(n^{1/3})$、(d) $\Theta(n^{2/3})$：$k$ 和子陣列的大小是這個數量級，但子陣列不是複製
+出來的，只傳了兩個索引，不佔額外空間，錯。
+\item (e) $\Theta(n)$：要深度達到 $n$ 才會這麼多，例如每層只少一個元素；這裡每層少三分之一，錯。
+\end{itemize}
+注意時間和空間的差別：呼叫次數是 $\Theta(n^{2.71})$，但同時存在的只有一條從根到葉的路徑。
+\end{pastsoln}

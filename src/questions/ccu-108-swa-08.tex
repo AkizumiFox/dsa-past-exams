@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ccu-108-swa-08}]{中正資工所甲組 108 學年度 第 9 題}
+（問答）
+
+(8\%) Determine if the following sorting algorithms are asymptotically optimal or not:
+
+(a)~Bubble sort; \qquad (b)~Quicksort; \qquad (c)~Mergesort; \qquad (d)~Heapsort.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 不是；(b) 不是（以最壞情況而言；平均情況是）；(c) 是；(d) 是。
+
+\textbf{標準}。 四個都是比較排序。 任何比較排序在最壞情況下都要 $\Omega(n \lg n)$ 次比較：決策樹
+至少有 $n!$ 片葉，最深的葉深度至少 $\lg(n!) = \Theta(n \lg n)$（資結書定理~15.1）。 「漸近最佳」
+是說最壞情況的時間是 $O(n \lg n)$，和這個下界只差常數倍（資結書系理~15.2）。 所以只要看每個
+演算法的最壞時間是不是 $O(n \lg n)$。
+
+\begin{itemize}
+\item (a) Bubble sort：\textbf{不是}。 最壞情況（輸入由大到小）每一對都要交換，比較
+$n(n-1)/2$ 次，$\Theta(n^2)$（資結書第~14.2~節）。 加了「這一趟沒有交換就提早結束」的版本，最好
+情況是 $O(n)$，但最壞仍是 $\Theta(n^2)$，不是最佳。
+\item (b) Quicksort：\textbf{不是}。 基準每次都是最大或最小值時（例如固定取第一個、輸入已排好），
+遞迴式 $T(n) = T(n-1) + \Theta(n)$，最壞 $\Theta(n^2)$（資結書第~14.5~節）。 補充：它的平均是
+$\Theta(n \lg n)$，而比較排序的\textbf{平均}比較次數也至少 $\lg(n!)$（資結書定理~15.3），所以就
+平均情況而言快速排序是最佳的；題目沒說是平均，依慣例看最壞情況，答「不是」，再補一句平均情況。
+\item (c) Mergesort：\textbf{是}。 $T(n) = 2T(n/2) + \Theta(n)$，不論輸入，時間都是 $\Theta(n \lg n)$
+（資結書第~14.4~節），最壞 $O(n \lg n)$ 達到下界。
+\item (d) Heapsort：\textbf{是}。 建堆積 $O(n)$，再做 $n - 1$ 次「交換加下沉」，每次 $O(\lg n)$，
+最壞 $O(n \lg n)$（資結書第~14.6~節），達到下界。
+\end{itemize}
+\end{pastsoln}

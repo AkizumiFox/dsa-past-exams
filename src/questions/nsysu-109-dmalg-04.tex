@@ -1,0 +1,93 @@
+\begin{pastexam}[label={px:nsysu-109-dmalg-04}]{中山資工所資安組 109 學年度 第 7 題}
+（設計、分析）
+
+\begin{enumerate}[label=(\alph*)]
+\item {[7\%]} Please state the quick sort algorithm in detail.
+\item {[7\%]} Please derive the time complexity of quick sort by the method of recurrence relation
+for the input data size $n$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 快速排序是分治法（資結書第~14.5~節）。 排 $A[p..r]$：
+\begin{enumerate}
+\item \textbf{分割}：選一個數當基準 $x$，重新排列 $A[p..r]$，使基準放到某個位置 $q$，左邊 $A[p..q-1]$ 都 $\le x$，
+右邊 $A[q+1..r]$ 都 $> x$。 這時基準已經在最後排好的位置上。
+\item \textbf{遞迴}：分別排 $A[p..q-1]$ 和 $A[q+1..r]$。
+\item \textbf{合併}：不用做，兩邊排好整段就排好了。
+\end{enumerate}
+用 Lomuto 分割（取最後一個數當基準）：
+\begin{pseudo}{快速排序（Lomuto 分割）}
+\Procedure{Quicksort}{$A, p, r$}
+    \If{$p < r$}
+        \State $q \gets$ \Call{Partition}{$A, p, r$}
+        \State \Call{Quicksort}{$A, p, q - 1$}
+        \State \Call{Quicksort}{$A, q + 1, r$}
+    \EndIf
+\EndProcedure
+\Function{Partition}{$A, p, r$}
+    \State $x \gets A[r]$ \Comment{基準}
+    \State $i \gets p$
+    \For{$j \gets p$ \To $r - 1$}
+        \If{$A[j] \le x$}
+            \State 交換 $A[i]$ 和 $A[j]$
+            \State $i \gets i + 1$
+        \EndIf
+    \EndFor
+    \State 交換 $A[i]$ 和 $A[r]$
+    \State \Return $i$
+\EndFunction
+\end{pseudo}
+呼叫 \proc{Quicksort}$(A, 1, n)$。 \proc{Partition} 的迴圈不變量：每一輪開始時 $A[p..i-1] \le x$、$A[i..j-1] > x$、
+$A[r] = x$；迴圈結束時 $j = r$，再把基準換到 $A[i]$，左邊都 $\le x$、右邊都 $> x$（資結書第~14.5~節的證明）。
+例：$\langle 3, 8, 2, 5, 1, 4\rangle$ 以 $4$ 為基準，分割後是 $\langle 3, 2, 1, \mathbf{4}, 8, 5\rangle$，$q = 4$，再各自
+遞迴排 $\langle 3, 2, 1\rangle$ 和 $\langle 8, 5\rangle$。
+
+\textbf{(b)} 分割 $n$ 個數，基準和其他 $n - 1$ 個各比一次，時間 $\Theta(n)$。 分割後左邊 $q$ 個、右邊 $n - 1 - q$ 個：
+\[
+T(n) = T(q) + T(n - 1 - q) + \Theta(n), \qquad T(0) = T(1) = \Theta(1).
+\]
+$q$ 取決於基準在這一段裡排第幾，分三種情況。
+
+\textbf{最壞情況}：每次都切成 $0$ 和 $n - 1$（例如輸入已經排好，基準永遠是最大值）。
+\[
+T(n) = T(n - 1) + cn = c\bigl(n + (n-1) + \cdots + 2\bigr) + T(1) = \Theta(n^2).
+\]
+
+\textbf{最好情況}：每次都切成兩半。 $T(n) = 2T(n/2) + cn$。 反覆代入（$n = 2^k$）：
+\[
+T(n) = 2^k T(n/2^k) + kcn = nT(1) + cn\lg n = \Theta(n \lg n),
+\]
+也是主定理的情況 2（資結書定理~2.4）。
+
+\textbf{平均情況}：設鍵互不相同，$n!$ 種排列等可能（或隨機選基準）。 基準是第 $q + 1$ 小的機率都是 $1/n$，
+$q = 0, 1, \ldots, n-1$；而且分割後兩邊仍然是隨機排列。 令 $C(n)$ 是平均比較次數，$C(0) = C(1) = 0$：
+\[
+C(n) = (n - 1) + \frac{1}{n}\sum_{q=0}^{n-1} \bigl(C(q) + C(n-1-q)\bigr) = (n - 1) + \frac{2}{n}\sum_{q=0}^{n-1} C(q).
+\]
+兩邊乘 $n$，再減去 $n - 1$ 時的同一個式子，消掉總和：
+\begin{align*}
+nC(n) &= n(n-1) + 2\sum_{q=0}^{n-1} C(q),\\
+(n-1)C(n-1) &= (n-1)(n-2) + 2\sum_{q=0}^{n-2} C(q),\\
+nC(n) - (n-1)C(n-1) &= 2(n-1) + 2C(n-1),
+\end{align*}
+所以 $nC(n) = (n+1)C(n-1) + 2(n-1)$。 兩邊除以 $n(n+1)$：
+\[
+\frac{C(n)}{n+1} = \frac{C(n-1)}{n} + \frac{2(n-1)}{n(n+1)} = \frac{C(n-1)}{n} + \frac{4}{n+1} - \frac{2}{n}.
+\]
+從 $k = 2$ 疊加到 $n$（$C(1)/2 = 0$），令 $H_n = 1 + \frac12 + \cdots + \frac1n$：
+\[
+\frac{C(n)}{n+1} = \sum_{k=2}^{n}\Bigl(\frac{4}{k+1} - \frac{2}{k}\Bigr) = 4\Bigl(H_{n+1} - \frac32\Bigr) - 2(H_n - 1)
+= 2H_n + \frac{4}{n+1} - 4 .
+\]
+所以
+\[
+C(n) = 2(n+1)H_n - 4n \approx 2n\ln n \approx 1.39\, n\lg n,
+\]
+和資結書定理~14.3 用指示變數得到的結果相同。 平均時間 $\Theta(n \lg n)$。 驗算：$C(2) = 1$、$C(3) = \frac{8}{3}$，
+直接由遞迴式算也是 $2 - 1 + \frac{2}{2}\cdot 0 = 1$、$2 + \frac{2}{3}(0 + 0 + 1) = \frac{8}{3}$。
+
+\textbf{結論}：最好 $\Theta(n \lg n)$、平均 $\Theta(n \lg n)$、最壞 $\Theta(n^2)$。 額外空間是遞迴深度，平均
+$\Theta(\lg n)$、最壞 $\Theta(n)$（先遞迴較短的一邊可以壓到 $O(\lg n)$）。 隨機選基準或三數取中，可以讓最壞情況
+不再對應到「已經排好」這類常見的輸入。
+\end{pastsoln}

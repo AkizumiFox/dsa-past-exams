@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ntut-106-prog-01}]{北科大資工所 106 學年度 第 1 題}
+（簡答；只寫答案）
+
+\textbf{Problem 1 [8\%, each 2\%]}\\
+Please give the best asymptotic running time for each of the problems or bound for each of the
+recurrences shown below using the ``big oh'' notation. It is assumed that $T(1)=d$ for some
+constant $d$ and $c$ is a constant in all the recurrences. Just state the answer - you
+\textbf{do NOT} need to justify them.
+\begin{enumerate}[label=(\arabic*)]
+\item $T(n)=T(n/2)+c\log n$
+\item $T(n)=T(n-1)+1/n$
+\item Finding the median in an unsorted set of size $n$.
+\item Performing a breadth-first search on a graph $G=(V,E)$ where $|V|=n$ and $|E|=m$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $O(\log^2 n)$；(2) $O(\log n)$；(3) $O(n)$；(4) $O(n + m)$。 四個都是緊的界。
+
+題目只要答案，下面是推導，供核對。
+
+\textbf{(1)} 主定理的形式，$a = 1$、$b = 2$，$n^{\log_2 1} = n^0 = 1$，$f(n) = c \lg n = \Theta(n^0 \lg^1 n)$。
+原本的情況 2 要 $f(n) = \Theta(1)$，不成立；推廣的情況 2（資結書定理~2.5，$k = 1$）給
+$T(n) = \Theta(\lg^2 n)$。 直接展開也一樣（$n = 2^m$）：
+\[
+T(n) = d + \sum_{j=0}^{m-1} c \lg \frac{n}{2^j} = d + c \sum_{j=0}^{m-1} (m - j) = d + c\,\frac{m(m+1)}{2}
+= \Theta(\lg^2 n).
+\]
+對數的底數只差常數倍，寫 $O(\log^2 n)$ 即可。
+
+\textbf{(2)} 規模每次減 $1$，不是主定理的形式，直接展開：
+\[
+T(n) = d + \frac12 + \frac13 + \cdots + \frac1n = d + H_n - 1 = \Theta(\log n),
+\]
+$H_n$ 是調和數，$\ln(n+1) \le H_n \le \ln n + 1$（資結書定理~A.7）。 注意每一項是 $1/n$ 不是 $1$，
+答案不是 $O(n)$。
+
+\textbf{(3)} 中位數是第 $\lceil n/2 \rceil$ 小的數。 資結書第~16.3~節的中位數的中位數法（\proc{Select}）
+在最壞情況 $O(n)$ 時間找出任何名次的數（資結書定理~16.6）；而任何演算法至少要看過每個數一次，
+所以 $\Theta(n)$ 是最好的。 先排序再取中間是 $O(n \log n)$，不是最好的答案。 隨機化的
+\proc{Randomized-Select} 期望 $O(n)$，但最壞 $O(n^2)$。
+
+\textbf{(4)} 用鄰接串列時，BFS 每個頂點最多進出佇列一次（$O(n)$），每個頂點的鄰接串列只掃一次，
+全部串列的長度合計 $m$（有向圖）或 $2m$（無向圖），總共 $O(n + m)$（資結書第~21.3~節）。 用鄰接矩陣
+時每個頂點要掃一整列，是 $O(n^2)$；題目問最好的，答 $O(n + m)$。
+\end{pastsoln}

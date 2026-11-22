@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ncku-107-prog-07}]{成大資訊聯招 107 學年度 第 7 題}
+（問答）
+
+(10\%) Given a sequence of $n$ numbers, what is the lower bound of sorting algorithms using
+comparison and exchange operations?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\Omega(n \lg n)$。 精確地說，最壞情況至少要做 $\lceil \lg(n!) \rceil$ 次比較（資結書定理~15.1）。
+
+只用「比較」和「交換」的排序，就是比較排序。 交換只是搬資料，不會告訴演算法任何有關大小的資訊；
+演算法對輸入知道的一切都來自比較的結果。 所以只要數比較次數。
+
+\textbf{決策樹。} 固定 $n$，把演算法做的比較畫成一棵二元樹：每個內部節點是一次比較 $a_i \le a_j$?，
+左右兩個子樹是兩種結果之後演算法接著做的事；每個葉節點是演算法輸出的一種排列。 給定一個輸入，演算法
+從根走到某個葉節點，路上經過的內部節點數就是它做的比較次數，最壞情況的比較次數就是樹的高度 $d$
+（這裡高度數邊數）。
+
+\textbf{葉節點夠多。} $n$ 個不同的數有 $n!$ 種輸入順序，每一種需要的輸出排列都不同。 如果兩種順序走到
+同一個葉節點，演算法對它們做一樣的搬移，至少有一個排錯。 所以至少要有 $n!$ 個葉節點。
+
+\textbf{高度的下界。} 高度 $d$ 的二元樹最多 $2^d$ 個葉節點，所以 $2^d \ge n!$，$d \ge \lg(n!)$；$d$ 是整數，
+$d \ge \lceil \lg(n!) \rceil$。 再估 $\lg(n!)$：$n!$ 裡最大的 $\lceil n/2 \rceil$ 個因數都至少 $n/2$，
+所以 $n! \ge (n/2)^{n/2}$，
+\[
+\lg(n!) \ge \frac{n}{2} \lg \frac{n}{2} = \frac{n}{2}(\lg n - 1) ,
+\]
+$n \ge 4$ 時 $\lg n - 1 \ge \frac{1}{2} \lg n$，所以 $\lg(n!) \ge \frac{1}{4} n \lg n$，是
+$\Omega(n \lg n)$。
+
+最壞情況的時間至少是比較次數，所以任何比較排序的最壞情況時間是 $\Omega(n \lg n)$。 平均情況也一樣是
+$\Omega(n \lg n)$（資結書定理~15.3）。 這個下界是緊的：合併排序、堆積排序最壞 $O(n \lg n)$（資結書
+推論~15.2），所以比較排序的最佳最壞時間是 $\Theta(n \lg n)$。 計數排序、基數排序能做到線性時間，是因為
+它們不只用比較（資結書第~15.2~節）。
+\end{pastsoln}

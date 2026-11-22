@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-110-dsa-05}]{中央資工所 110 學年度 複選題第 5 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+In a 2-dimension integer array arr[5][5], which of the followings are equal to arr[3][2]?\\
+(A)~\texttt{*(*arr+17)}\quad (B)~\texttt{(*(arr+3))[2]}\quad (C)~\texttt{*((*(arr+3))+2)}\quad
+(D)~\texttt{(*arr+3)[2]}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)。
+
+C 的二維陣列以列為主存放（資結書第~4.1~節）：\texttt{arr[i][j]} 是從 \texttt{arr[0][0]} 算起第
+$5i + j$ 個 \texttt{int}，\texttt{arr[3][2]} 是第 $5 \cdot 3 + 2 = 17$ 個。 兩條規則：
+\texttt{p[k]} 就是 \texttt{*(p+k)}；指標加 $k$ 是往後移 $k$ 個「它指向的型別」。
+\begin{itemize}
+\item \texttt{arr} 的型別是「指向一列（\texttt{int[5]}）的指標」，\texttt{arr+3} 往後移 $3$ 列，
+\texttt{*(arr+3)} 是第 $3$ 列，也就是 \texttt{arr[3]}，用在運算式裡會變成指向 \texttt{arr[3][0]} 的
+\texttt{int *}。
+\item \texttt{*arr} 是第 $0$ 列，變成指向 \texttt{arr[0][0]} 的 \texttt{int *}；加 $k$ 是往後移 $k$ 個
+\texttt{int}。
+\end{itemize}
+
+\textbf{(A) 相等}。 \texttt{*arr+17} 指向從 \texttt{arr[0][0]} 算起第 $17$ 個 \texttt{int}，就是
+\texttt{arr[3][2]}，取值相等。 （嚴格照 C 標準，從第 $0$ 列的指標走出那一列的範圍是未定義行為；
+但考題問的是位址計算，實際的編譯器也都得到 \texttt{arr[3][2]}。）
+
+\textbf{(B) 相等}。 \texttt{(*(arr+3))[2]} 就是 \texttt{arr[3][2]}，只是把 \texttt{arr[3]} 寫成
+\texttt{*(arr+3)}。
+
+\textbf{(C) 相等}。 \texttt{*((*(arr+3))+2)} 是把 (B) 的 \texttt{[2]} 也改寫成 \texttt{*(\ldots+2)}，
+兩次都照 \texttt{p[k]} $=$ \texttt{*(p+k)}，還是 \texttt{arr[3][2]}。
+
+\textbf{(D) 不相等}。 \texttt{*arr+3} 是指向 \texttt{arr[0][3]} 的 \texttt{int *}，再 \texttt{[2]} 往後
+$2$ 個 \texttt{int}，是第 $3 + 2 = 5$ 個，也就是 \texttt{arr[1][0]}。 常見的誤解是把它當成
+\texttt{(*(arr+3))[2]}，差別在 \texttt{*} 先作用在 \texttt{arr} 上（先取第 $0$ 列）才加 $3$。
+\end{pastsoln}

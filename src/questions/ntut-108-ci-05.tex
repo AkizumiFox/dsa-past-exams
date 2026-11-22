@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntut-108-ci-05}]{北科大資工所 108 學年度 第 3 題}
+（是非）
+
+(8 pts) Indicate whether the following statements are TRUE or FALSE:
+\begin{enumerate}[label=(\arabic*)]
+\item (2 pts) If $e$ is a minimum-weight edge in a connected weighted graph, it must be among edges
+of each minimum spanning tree of the graph.
+\item (2 pts) If edge weights of a connected weighted graph are not all distinct, the graph must
+have more than one minimum spanning tree.
+\item (2 pts) There is a unique (2, 4) tree associated with a given red-black tree.
+\item (2 pts) In red-black trees, the sibling of an external node is either external or it is red.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) FALSE；(2) FALSE；(3) TRUE；(4) TRUE。
+
+\textbf{(1) FALSE。} 最輕的邊不只一條時就不一定。 反例：三角形 $a, b, c$，三條邊的權重都是
+$1$。 $e = (a, b)$ 是最輕的邊之一，但 $\{(a, c), (b, c)\}$ 總權重 $2$，也是最小生成樹，裡面
+沒有 $e$。 如果 $e$ 是\textbf{唯一}最輕的邊，敘述才成立：假設某一棵最小生成樹 $T$ 不含 $e$，
+把 $e$ 加進 $T$ 會形成一個環，環上其他的邊都比 $e$ 重，拿掉其中一條得到總權重更小的生成樹，
+矛盾（這就是資結書第~24.1~節環性質的交換論證）。 題目說的是「a minimum-weight edge」，沒有說唯一，所以是錯的。
+
+\textbf{(2) FALSE。} 權重互不相同保證最小生成樹唯一（資結書定理~24.4），反過來不成立。 反例：
+圖本身就是一棵樹，例如路徑 $a - b - c$，兩條邊權重都是 $1$。 權重不是互不相同，但這個圖只有
+一棵生成樹，就是它自己，最小生成樹當然只有一棵。 有重複權重的圖，最小生成樹可能有好幾棵，
+也可能只有一棵，要看重複的權重有沒有在某個環上「打平」（資結書第~24.1.7~節）。
+
+\textbf{(3) TRUE。} 資結書第~10.4~節的對應：把每個黑色節點和它的紅色子節點合併成一個大節點。
+紅黑樹裡紅色節點的父節點一定是黑色（不能有連續兩個紅色），根是黑色，所以每個紅色節點都恰好
+併進它父節點那一組，每個黑色節點自成一組的中心。 怎麼分組完全由顏色決定，沒有選擇的餘地，合併
+出來的 $(2, 4)$ 樹（也就是 2-3-4 樹）只有一棵。 反方向才不唯一：存兩個鍵 $\{x, y\}$ 的 3-節點，
+可以畫成「$x$ 黑、右子節點 $y$ 紅」或「$y$ 黑、左子節點 $x$ 紅」，所以一棵 2-3-4 樹可以對應
+好幾棵紅黑樹。
+
+\textbf{(4) TRUE。} 外部節點就是 NIL（資結書第~10.3~節，NIL 是黑色）。 設外部節點 $x$ 的父節點
+是 $p$、兄弟是 $s$。 從 $p$ 往下經過 $x$ 到 NIL 的路徑，路上（不算 $p$）的黑色節點只有 $x$
+自己，共 $1$ 個。 假設 $s$ 是內部節點而且是黑色：從 $p$ 經過 $s$ 往下走到任一個 NIL，路上至少
+有 $s$ 和最後那個 NIL 兩個黑色節點。 同一個節點 $p$ 往下到 NIL 的兩條路徑黑色節點個數不同，
+違反紅黑樹「從任一節點到其下每個 NIL，黑色節點個數都相同」那一條性質。 所以 $s$ 不是外部節點，
+就一定是紅色。 （而且 $s$ 是紅色時，它的兩個子節點都必須是 NIL：從 $p$ 經過 $s$ 只能再碰到一個
+黑色節點。）
+\end{pastsoln}

@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ncku-106-prog-07}]{成大資訊聯招 106 學年度 第 7 題}
+（設計）
+
+(12\%) Given an $O(V)$-time algorithm that determines whether or not a given undirected graph
+G=($V$,$E$) contains a cycle.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 Given 應是 Give（設計一個演算法）。 假設圖用鄰接串列存（用鄰接矩陣時光是找一個頂點的鄰居就要
+$\Theta(n)$，做不到 $O(n)$），而且是簡單圖。 下面 $n = |V|$、$m = |E|$。 要求 $O(n)$，表示演算法的時間不能
+和 $m$ 成正比，$m$ 可能大到 $\Theta(n^2)$。
+
+\textbf{想法。} 由資結書第~21.6~節，無向圖有環若且唯若 DFS 會出現後向邊。 DFS 一遇到「不是父節點、又已經
+發現過」的鄰居，就可以回答有環並停止。 沒有環的圖是森林，最多 $n - 1$ 條邊；有環的圖則在看到第一條後向
+邊時就停了，所以 DFS 實際看的邊數和 $m$ 無關。
+
+\begin{pseudo}{判斷無向圖有沒有環，$O(n)$}
+\Function{Undirected-Has-Cycle}{$G$}
+    \For{每個頂點 $u \in V$}
+        \State $\mathit{color}[u] \gets \gtrwhite$
+    \EndFor
+    \For{每個頂點 $u \in V$}
+        \If{$\mathit{color}[u] = \gtrwhite$ \AND \Call{Visit-U}{$G, u, \NIL$}}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State \Return \FALSE
+\EndFunction
+\Function{Visit-U}{$G, u, p$} \Comment{$p$ 是 $u$ 的父節點}
+    \State $\mathit{color}[u] \gets \gtrgray$
+    \For{每個 $v \in \mathit{Adj}[u]$}
+        \If{$v = p$}
+            \State 跳過 \Comment{樹邊的另一端}
+        \ElsIf{$\mathit{color}[v] \ne \gtrwhite$}
+            \State \Return \TRUE \Comment{後向邊}
+        \ElsIf{\Call{Visit-U}{$G, v, u$}}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State $\mathit{color}[u] \gets \gtrblack$
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 這就是資結書第~21.4~節的 DFS，只是提早停。
+\begin{itemize}
+\item 回傳 \TRUE 時一定有環。 第 16 行回傳，是因為更深一層已經回傳 \TRUE；追到最深處，一定是第 13 行成立：
+$v$ 不是 $p$、已經發現過。 由資結書定理~21.8，$u$、$v$ 一個是另一個的祖先。 $v$ 若是灰色，它是 $u$ 的祖先而且
+不是父節點，$\{u, v\}$ 是後向邊，樹路徑 $v \leadsto u$ 至少兩條邊，再加上 $\{u, v\}$ 就是長度至少 $3$ 的環。 $v$
+若是黑色，它是 $u$ 已經完成的子孫，但不是經由這條邊發現的（簡單圖裡 $u$、$v$ 之間只有這一條邊，而這個串列
+節點現在才被看到），所以 $\{u, v\}$ 也是一條後向邊，同樣有環。（實際上這種情形不會發生：$v$ 處理自己的串列
+時已經看到灰色的 $u$，早就回傳了。）
+\item 有環時一定回傳 \TRUE：完整的 DFS 會出現後向邊（資結書第~21.6~節：無向圖有環若且唯若有後向邊）。 第一次
+看到某條後向邊時，第 13 行的條件成立。
+\item 沒有環時，DFS 照常走完，每次第 13 行都不成立，最後回傳 \FALSE。
+\end{itemize}
+
+\textbf{時間。} 在回傳之前，\proc{Visit-U} 看到的每個串列節點只有兩種：第 11 行的父節點（每個非根頂點恰好
+一次），或第 15 行的白色頂點（變成樹邊，全部最多 $n - 1$ 次）。 所以回傳之前最多看 $2(n - 1)$ 個串列節點，
+再加上讓它回傳的那一個。 兩個外層迴圈各 $\Theta(n)$。 總共 $O(n)$，和 $m$ 無關。 圖的邊再多，DFS 也只會走到
+第一條後向邊為止。
+
+另一種寫法：如果圖的邊數 $m$ 已經存好，可以先看 $m \ge n$ 是否成立。 由資結書引理~21.2，沒有環的圖有 $c$ 個
+連通元件時 $m = n - c \le n - 1$，所以 $m \ge n$ 一定有環；否則 $m < n$，再做一次完整的 DFS 也只要
+$O(n + m) = O(n)$。 但如果 $m$ 要自己數，數一遍就是 $\Theta(m)$，還是上面的提早停止比較好。
+\end{pastsoln}

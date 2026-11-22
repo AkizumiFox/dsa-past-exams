@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ncu-109-dsa-08}]{中央資工所 109 學年度 第 8 題}
+（是非；答對 1 分，答錯倒扣 0.5 分）
+
+Consider an adjacency matrix on a directed graph, the row sum is the in-degree, while the column
+sum is the out-degree. \qquad (A)~True. \qquad (B)~False.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) False。
+
+有向圖的鄰接矩陣（資結書第~21.2~節）定義成：有一條邊 $i \to j$ 時 $A[i][j] = 1$，否則為 $0$。 第 $i$
+列（row）的 $1$ 是所有 $i \to j$ 的邊，也就是從 $i$ 出去的邊，所以\textbf{列和是出度}；第 $j$ 行
+（column）的 $1$ 是所有 $i \to j$ 的邊，也就是進入 $j$ 的邊，所以\textbf{行和是入度}。 題目把兩者
+說反了。
+
+例如只有一條邊 $1 \to 2$ 的兩點圖，$A[1][2] = 1$。 第 $1$ 列的和是 $1$，而頂點 $1$ 的入度是 $0$、
+出度是 $1$，列和是出度，不是入度。
+\end{pastsoln}

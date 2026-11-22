@@ -1,0 +1,79 @@
+\begin{pastexam}[label={px:ccu-109-swa-07}]{中正資工所甲組 109 學年度 第 12 題}
+（追蹤）
+
+(5\%) You are given the following ten numbers: 55, 45, 25, 35, 85, 95, 65, 75, 105, 15. Please sort
+these numbers using quick sort, where the first element of a sublist is always picked as the pivot.
+Note that you have to write the number sequence for each pass.
+\end{pastexam}
+
+\begin{pastsoln}
+題目只規定「取子串列的第一個當基準」，沒有規定分割的細節。 這裡採用資結書第~14.5~節作答提醒
+說的那一種寫法（台灣常見的課本多半用它）：兩個指標從兩端往中間找，交錯之後把基準換到分界上，
+所以每次分割結束時基準就在最後的位置，遞迴的範圍是 $[p..j-1]$ 和 $[j+1..r]$。 寫成虛擬碼：
+
+\begin{pseudo}{本題採用的分割}
+\Function{Partition-First}{$A, p, r$}
+    \State $x \gets A[p]$；$i \gets p + 1$；$j \gets r$ \Comment{基準是第一個}
+    \While{\TRUE}
+        \While{$i \le r$ \AND $A[i] < x$}
+            \State $i \gets i + 1$
+        \EndWhile
+        \While{$A[j] > x$}
+            \State $j \gets j - 1$
+        \EndWhile
+        \If{$i \ge j$}
+            \State 交換 $A[p]$ 和 $A[j]$；\Return $j$
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$；$i \gets i + 1$；$j \gets j - 1$
+    \EndWhile
+\EndFunction
+\end{pseudo}
+
+第 6 行的 $j$ 最晚停在 $A[p] = x$，不會越界。 「一個 pass」取一次分割（範圍至少兩個數），依
+遞迴呼叫的先後。
+
+\textbf{第一次分割的細節}（$x = 55$，粗體是交換的兩格）：
+\begin{center}
+\small
+\begin{tabular}{l*{10}{c}}
+\toprule
+步驟 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+開始 & 55 & 45 & 25 & 35 & 85 & 95 & 65 & 75 & 105 & 15 \\
+$i = 5$、$j = 10$，交換 & 55 & 45 & 25 & 35 & \textbf{15} & 95 & 65 & 75 & 105 & \textbf{85} \\
+$i = 6$、$j = 5$，交錯 & \textbf{15} & 45 & 25 & 35 & \textbf{55} & 95 & 65 & 75 & 105 & 85 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$i$ 跳過 $45, 25, 35$，停在 $85$；$j$ 停在 $15$，交換。 接著 $i$ 停在 $95$，$j$ 往左走過
+$105, 75, 65, 95$，停在 $15$（位置 5），已經交錯，把基準 $55$ 換到位置 5，回傳 $5$。
+
+\textbf{每一個 pass}（粗體是這次歸位的基準）：
+\begin{center}
+\small
+\begin{tabular}{cc*{10}{c}}
+\toprule
+範圍 & $x$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+開始 & & 55 & 45 & 25 & 35 & 85 & 95 & 65 & 75 & 105 & 15 \\
+$[1..10]$ & 55 & 15 & 45 & 25 & 35 & \textbf{55} & 95 & 65 & 75 & 105 & 85 \\
+$[1..4]$ & 15 & \textbf{15} & 45 & 25 & 35 & 55 & 95 & 65 & 75 & 105 & 85 \\
+$[2..4]$ & 45 & 15 & 35 & 25 & \textbf{45} & 55 & 95 & 65 & 75 & 105 & 85 \\
+$[2..3]$ & 35 & 15 & 25 & \textbf{35} & 45 & 55 & 95 & 65 & 75 & 105 & 85 \\
+$[6..10]$ & 95 & 15 & 25 & 35 & 45 & 55 & 85 & 65 & 75 & \textbf{95} & 105 \\
+$[6..8]$ & 85 & 15 & 25 & 35 & 45 & 55 & 75 & 65 & \textbf{85} & 95 & 105 \\
+$[6..7]$ & 75 & 15 & 25 & 35 & 45 & 55 & 65 & \textbf{75} & 85 & 95 & 105 \\
+\bottomrule
+\end{tabular}
+\end{center}
+說明幾個比較不直觀的 pass。 $[1..4]$：基準 $15$ 是最小的，$i$ 停在 $45$，$j$ 一路走回
+位置 1，基準和自己交換，左邊是空的。 $[2..4] = \langle 45, 25, 35 \rangle$：$i$ 走過 $25, 35$
+超出範圍，$j$ 停在 $35$，交錯，$45$ 換到位置 4。 $[6..10] = \langle 95, 65, 75, 105, 85 \rangle$：
+$i$ 停在 $105$、$j$ 停在 $85$，交換成 $\langle 95, 65, 75, 85, 105 \rangle$；再走一次 $i$ 停在
+$105$、$j$ 停在 $85$，交錯，$95$ 換到位置 9。 只有一個數的範圍（例如 $[1..0]$、$[10..10]$）
+直接返回，不寫。 最後結果是 $15, 25, 35, 45, 55, 65, 75, 85, 95, 105$。
+
+若改用資結書虛擬碼~14.10 的 Hoare 分割（基準不一定歸位，遞迴 $[p..j]$ 和 $[j+1..r]$），中間的
+陣列會不同，例如第一次分割後是 $\langle 15, 45, 25, 35, 85, 95, 65, 75, 105, 55 \rangle$、回傳
+$j = 4$。 所以作答時一定要先寫出用哪一種分割。
+\end{pastsoln}

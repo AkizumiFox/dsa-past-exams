@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ncu-107-dsa-10}]{中央資工所 107 學年度 第 10 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+Suppose that array A[1:n] maintains a binary tree. For a binary tree node stored in A[i], its two
+children (if exist) are stored in A[2i] and A[2i+1], respectively. the program below aims to
+complete the following two tasks
+\begin{enumerate}[label=(\arabic*)]
+\item adjust array A to establish a max heap, and
+\item apply heap sort on the max heap built in (1) in nondecreasing order.
+\end{enumerate}
+\begin{minted}[fontsize=\small,breaklines]{c}
+void adjust (int A[], int root, int n)
+{
+  int child, rootkey;
+  int temp;
+  temp = A[root];
+  rootkey = A[root];
+  child = 2* root;
+  while ( child <=n ) {
+     if (( child <=n ) && ( A[child] < A[child+1] ))
+        child ++;
+     if ( rootkey > A[child] )
+        break;
+     else {
+        ____(B1)____;
+        child *=2; }
+  }
+    ____(B2)____;
+}
+
+void heapsort (int A[], int n)
+{ /* perform a heap sort on A[1:n] */
+   int i, j;
+   int temp;
+   for ( ___(B3)___; i>0; i++)  /* adjust the binary tree to establish the max heap */
+      adjust (A, i, n);
+   for (1=n-1; i>0; i--) {      /* heap sort */
+      swap( A[1], A[i+1], temp);  /* exchange A[i] and A[i+1] */
+      adjust(A, 1, i); }
+}
+\end{minted}
+
+Blank (B3) in the program above should be
+
+(a)~\texttt{i=1} \qquad (b)~\texttt{i=0} \qquad (c)~\texttt{i=n/2} \qquad (d)~\texttt{i=n} \qquad
+(e)~\texttt{i=n/2+1}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (c) \texttt{i=n/2}。
+
+原卷迴圈寫成 \texttt{for ( (B3); i>0; i++)}，\texttt{i++} 是筆誤：條件是 \texttt{i>0}，\texttt{i} 一直
+加會停不下來，也和由下而上建堆積的做法不合。 下面照 \texttt{i--} 來讀。
+
+\textbf{由下而上建堆積}（資結書第~8.2~節，虛擬碼~8.3）。 \texttt{adjust(A, i, n)} 的前提是 \texttt{i}
+的兩棵子樹已經是最大堆積（上兩題）。 葉節點本身就是堆積，所以從最後一個有子節點的位置開始，
+往回做到根。 $A[i]$ 有子節點若且唯若 $2i \le n$，也就是 $i \le \lfloor n/2 \rfloor$；C 的整數除法
+\texttt{n/2} 正好是 $\lfloor n/2 \rfloor$。 \texttt{i} 從 \texttt{n/2} 往下減，處理到 \texttt{i} 時，
+它的子節點 $2i$、$2i+1$ 比它大，已經處理過，前提成立。 做完 $i = 1$，整棵樹是最大堆積。 總時間
+$O(n)$（資結書定理~8.1）。
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{i=1}：只對根做一次 \texttt{adjust}，下面的子樹還不是堆積，前提不成立。 例如
+$A = 1, 2, 3, 4$：只調整根得到 $3, 2, 1, 4$，$2 < 4$，不是堆積，錯。
+\item (b) \texttt{i=0}：條件 \texttt{i>0} 一開始就不成立，什麼都沒做，錯。
+\item (c) \texttt{i=n/2}：對。
+\item (d) \texttt{i=n}、(e) \texttt{i=n/2+1}：從葉節點開始。 對葉節點呼叫 \texttt{adjust} 時
+\texttt{child = 2i > n}，迴圈不執行，(B2) 把原值放回原位，什麼都沒改；接著一樣會做到
+\texttt{n/2}，\textbf{結果還是對的}，只是白白多呼叫了 $n - \lfloor n/2 \rfloor$ 次（(d)）或 $1$ 次（(e)）。 這是單選題，要選的是建堆積
+真正的起點，也就是最後一個有子節點的位置 \texttt{n/2}，所以選 (c)，(d)(e) 不選。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:ncu-110-dsa-09}]{中央資工所 110 學年度 複選題第 9 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+The pseudo code below aims to reverse a linked list.
+\begin{minted}[fontsize=\small]{text}
+typedef struct Node{
+    int data;
+    Node *next;
+};
+Node *NPtr;
+
+int main()
+{
+    NPtr head = NULL; /* Start with an empty linked list */
+    push(&head, ...); /* insert items into the linked list */
+    reverse(&head); /* reverse the linked list */
+}
+
+void reverse(NPtr *Href)
+{
+    NPtr P = NULL;
+    NPtr C = *Href;
+    NPtr N = NULL;
+
+    while (____(1)____) {
+        N = C->next;
+        C->next = P;
+        P = C;
+        C = N;
+    }
+    ____(2)____
+}
+\end{minted}
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Blank (1) should be C != NULL.
+\item Statement C->next = P; reverses node's pointer.
+\item Blank (2) should be *Href = C;
+\item Statement P = C; moves the pointer to the next.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(D)。
+
+這是資結書虛擬碼~5.12 的三指標反轉：$P$ 是已經反轉好的那一段的頭，$C$ 是目前要處理的節點，
+$N$ 先記住 $C$ 原本的下一個，免得改了 \texttt{C->next} 之後找不到後面。 程式碼本身是「虛擬碼」，
+\texttt{Node *NPtr;} 應該是 \texttt{typedef Node *NPtr;} 的意思，不影響作答。
+
+以串列 $1 \to 2 \to 3$ 追蹤，每一列是做完一圈迴圈之後：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+圈 & $P$ & $C$ & 已反轉的部分（從 $P$ 走） \\
+\midrule
+開始 & \NIL & $1$ & （空） \\
+1 & $1$ & $2$ & $1 \to \NIL$ \\
+2 & $2$ & $3$ & $2 \to 1 \to \NIL$ \\
+3 & $3$ & \NIL & $3 \to 2 \to 1 \to \NIL$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(A) 對}。 每一圈處理一個節點 $C$，處理到最後一個節點之後 $C$ 變成 \NIL，迴圈要停；
+空串列時 $C$ 一開始就是 \NIL，一圈都不跑。 所以條件是 \texttt{C != NULL}。 寫成
+\texttt{C->next != NULL} 會漏掉最後一個節點，空串列時還會存取空指標。
+
+\textbf{(B) 對}。 \texttt{C->next = P;} 把 $C$ 的指標從「指向原本的下一個」改成「指向前一個」，
+這一行就是反轉的動作。
+
+\textbf{(C) 錯}。 迴圈結束時 $C = \NIL$，新的頭是原本的最後一個節點，存在 $P$ 裡（上表最後一列）。
+空格 (2) 應該是 \texttt{*Href = P;}，寫 \texttt{*Href = C;} 會讓串列變成空的。
+
+\textbf{(D) 對}。 每一圈最後兩行把兩個指標各往前推一格：\texttt{P = C;} 讓 $P$ 移到下一個節點
+（剛反轉好的 $C$），\texttt{C = N;} 讓 $C$ 移到下一個節點。 選項說 \texttt{P = C;} 把指標往下一個移，
+說的是 $P$，成立。
+\end{pastsoln}

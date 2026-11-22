@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:nccu-110-dsa-06}]{政大資科所 110 學年度 第 6 題}
+（問答）
+
+(15\%) Consider an $n$-node sorted singly linked list $L$, where the first node (i.e., the head) stores
+the smallest data, the last node (i.e., the tail) stores the largest data, and the
+i\textsuperscript{th} node stores the i\textsuperscript{th} smallest data. Given the address of $L$'s
+head and a key, is it possible to search for the key in $L$ in $O(\log n)$ time? Please explain your
+answer.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：\textbf{不可能}，最壞情況需要 $\Omega(n)$ 時間。
+
+\textbf{為什麼二分搜尋用不上}。 二分搜尋（資結書第~17.1~節）每一步要直接看中間那一個，靠的是陣列可以用 $O(1)$
+時間取第 $i$ 個元素。 單向串列的節點不是連續存放的，手上只有 head 的位址，要到第 $i$ 個節點只能從 head 沿著
+$\mathit{next}$ 走 $i - 1$ 步（資結書第~5.1~節）。 光是走到中間那個節點就要 $n/2$ 步，已經超過 $O(\log n)$。
+「排好序」只能讓搜尋在遇到比 key 大的資料時提早停下，最壞還是要走到尾巴。
+
+\textbf{嚴格的論證}（任何演算法都不行）。 演算法一開始只知道 head 的位址；第 $i$ 個節點的位址只存在第 $i - 1$ 個
+節點的 $\mathit{next}$ 裡，所以要讀到第 $i$ 個節點，之前一定讀過第 $1, 2, \ldots, i - 1$ 個節點，至少花 $i - 1$ 步。
+現在設 key 比第 $n - 1$ 個節點的資料大。 考慮兩個串列 $L_1$、$L_2$：前 $n - 1$ 個節點完全一樣，$L_1$ 的尾巴存 key，
+$L_2$ 的尾巴存 key${}+1$。 兩個都是排好序的。 正確的演算法對 $L_1$ 要回答「找到」，對 $L_2$ 要回答「找不到」；如果它
+沒有讀到尾巴，它在兩個串列上看到的東西完全一樣，回答也一樣，必定錯一個。 所以它一定要讀到第 $n$ 個節點，至少
+$n - 1$ 步。 最壞時間是 $\Omega(n)$，不可能是 $O(\log n)$。 而逐一往後找是 $O(n)$，所以搜尋的最壞時間是 $\Theta(n)$。
+
+\textbf{怎樣才能 $O(\log n)$}：換資料結構。 用陣列存（可以二分搜尋）、用平衡二元搜尋樹，或在串列上加幾層「快速通道」
+指標的跳躍串列（skip list，資結書第~10.7~節，期望 $O(\log n)$）。 題目限定只有一條單向串列和 head 的位址，所以做不到。
+\end{pastsoln}

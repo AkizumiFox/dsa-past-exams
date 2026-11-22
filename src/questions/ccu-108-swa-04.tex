@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ccu-108-swa-04}]{中正資工所甲組 108 學年度 第 5 題}
+（填表）
+
+(2\%) Assume that we have a 17-bucket hash table with one slot per bucket. The hash function for
+each key using the division hash function, \textit{key}\%17. Sequentially insert the records with
+keys are 6, 12, 34, 29, 28, 11, 23, 7, 0, and 33. Please complete the hash table at the end with
+Linear Probing to handle overflows.
+
+\begin{center}\small
+\begin{tabular}{|*{17}{c|}}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} & \multicolumn{1}{c}{10} & \multicolumn{1}{c}{11} & \multicolumn{1}{c}{12} & \multicolumn{1}{c}{13} & \multicolumn{1}{c}{14} & \multicolumn{1}{c}{15} & \multicolumn{1}{c}{16}\\\hline
+\phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00}\\\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+線性探測（資結書第~12.3~節）：先算 $h(k) = k \bmod 17$，那一格有人就往後一格一格找空位，
+超過第 $16$ 格繞回第 $0$ 格。
+
+\begin{center}
+\begin{tabular}{rrl}
+\toprule
+鍵 & $k \bmod 17$ & 探測的格子 $\to$ 放在 \\
+\midrule
+6 & 6 & $6 \to 6$ \\
+12 & 12 & $12 \to 12$ \\
+34 & $34 - 34 = 0$ & $0 \to 0$ \\
+29 & $29 - 17 = 12$ & $12, 13 \to 13$ \\
+28 & $28 - 17 = 11$ & $11 \to 11$ \\
+11 & 11 & $11, 12, 13, 14 \to 14$ \\
+23 & $23 - 17 = 6$ & $6, 7 \to 7$ \\
+7 & 7 & $7, 8 \to 8$ \\
+0 & 0 & $0, 1 \to 1$ \\
+33 & $33 - 17 = 16$ & $16 \to 16$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+幾個要注意的地方：$29$ 和 $12$ 撞在第 $12$ 格，往後放到第 $13$ 格；$11$ 的家是第 $11$ 格，
+但前面的 $28$ 已經放在那裡，第 $12$、$13$ 格也被 $12$、$29$ 佔了，一路探到第 $14$ 格；
+$7$ 的家第 $7$ 格被先來的 $23$ 佔走，放到第 $8$ 格。 最後的表：
+
+\begin{center}\small
+\begin{tabular}{|*{17}{c|}}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} & \multicolumn{1}{c}{8} & \multicolumn{1}{c}{9} & \multicolumn{1}{c}{10} & \multicolumn{1}{c}{11} & \multicolumn{1}{c}{12} & \multicolumn{1}{c}{13} & \multicolumn{1}{c}{14} & \multicolumn{1}{c}{15} & \multicolumn{1}{c}{16}\\\hline
+34 & 0 & & & & & 6 & 23 & 7 & & & 28 & 12 & 29 & 11 & & 33\\\hline
+\end{tabular}
+\end{center}
+\end{pastsoln}

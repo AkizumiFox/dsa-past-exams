@@ -1,0 +1,101 @@
+\begin{pastexam}[label={px:ntut-108-prog-02}]{北科大資工所 108 學年度 第 2 題}
+（程式填空）
+
+\textbf{Problem 2 [15\%, each 3\%]}
+
+Please trace the following C program and answer problems \textbf{2-1$\sim$2-5} with the correct
+statements.
+\begin{minted}[fontsize=\small, breaklines]{c}
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct linkdata {
+  ___________ *link;                          // Problem 2-1
+    char name[10];
+    int data[4][4];
+} LinkData;
+
+void f1(int d[][4]) {
+   int k, c, r;
+   int a[][3] ={{1,1,1},{2,2,2},{1,1,2}};
+   int b[][3]={{1,2,3},{2,3,4},{3,4,5}};
+   for (r=0; r<3; r++) {   // matrix multiplication
+     for (c=0; c<3; c++) {
+        __________;                           // Problem 2-2
+        for (k=0; k<3; k++)
+           d[c][r] += a[c][k] *__________;     // Problem 2-3
+     }
+   }
+   printf("%d,%d,%d\n",d[0][0],d[0][1],d[0][2]); // print out 6,9,12
+}
+
+void f2(LinkData **topp, char* s) {
+    LinkData *x;
+    x = (LinkData *)______________________;    // Problem 2-4
+    strncpy(x->name,s,10);
+    for(int i=0; i<4; i++)
+        for(int j=0; j<4; j++)
+            x->data[i][j] = i+j;
+  ____________= (*topp);                      // Problem 2-5
+    (*topp) = x;
+}
+
+int main() {
+    char *array[]={"dog","lion","hippo","giraffe"};
+    LinkData a, *top=NULL;
+
+    f1(a.data);
+    for(int i=0;i<4; i++)
+        f2(&top, array[i]);
+    printf("%s\n", top->link->name);           // print out hippo
+    return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+2-1 & \texttt{struct linkdata} \\
+2-2 & \texttt{d[c][r] = 0} \\
+2-3 & \texttt{b[k][r]} \\
+2-4 & \texttt{malloc(sizeof(LinkData))} \\
+2-5 & \texttt{x->link} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2-1}：\texttt{link} 指向下一個同型的節點，是自我參考的結構（資結書第~5.1~節）。 這時
+\texttt{typedef} 還沒結束，\texttt{LinkData} 這個名字要到右大括號後面才有，只能寫
+\texttt{struct linkdata}。 寫 \texttt{LinkData *link;} 會編譯失敗。
+
+\textbf{2-2、2-3}：註解說這是矩陣乘法，$D = AB$ 的第 \texttt{c} 列第 \texttt{r} 行是
+\[
+d[c][r] = \sum_{k=0}^{2} a[c][k] \cdot b[k][r] ,
+\]
+所以 2-3 填 \texttt{b[k][r]}。 2-2 要在累加前把 \texttt{d[c][r]} 歸零：\texttt{d} 是
+\texttt{main} 裡區域變數 \texttt{a} 的 \texttt{data}，區域變數沒有初始化，裡面是垃圾值，不歸零
+就加不對。 填好之後 $D$ 的第 $0$ 列是 $(1, 1, 1)$ 乘上 $B$ 的三行：
+$1 + 2 + 3 = 6$、$2 + 3 + 4 = 9$、$3 + 4 + 5 = 12$，印出 \texttt{6,9,12}，和註解一樣。 這題的
+$B$ 剛好是對稱矩陣（$b[k][r] = b[r][k]$），所以 2-3 寫成 \texttt{b[r][k]} 印出來也是
+\texttt{6,9,12}；但那不是矩陣乘法的寫法，換一個不對稱的 $B$ 就錯，要填 \texttt{b[k][r]}。
+
+\textbf{2-4}：要配置一整個節點，大小是 \texttt{sizeof(LinkData)}（寫
+\texttt{sizeof(struct linkdata)} 或 \texttt{sizeof(*x)} 也可以）。 常見的錯是寫成
+\texttt{sizeof(LinkData *)}，那只是一個指標的大小，後面寫 \texttt{name}、\texttt{data} 會寫出界。
+
+\textbf{2-5}：\texttt{f2} 是把新節點插在串列最前面，也就是用串列存的堆疊的 push（資結書虛擬碼~6.2）：
+新節點先指向原本的第一個節點，\texttt{x->link = (*topp);}，再讓 \texttt{*topp} 改指新節點。 兩行
+順序不能反過來，否則原本的串列就接不上了。 \texttt{topp} 是指標的指標，所以 \texttt{f2} 能改到
+\texttt{main} 裡的 \texttt{top}。
+
+驗證最後一行：依序 push \texttt{dog}、\texttt{lion}、\texttt{hippo}、\texttt{giraffe} 之後，
+串列由 \texttt{top} 開始是
+\[
+\texttt{giraffe} \to \texttt{hippo} \to \texttt{lion} \to \texttt{dog} \to \texttt{NULL},
+\]
+\texttt{top->link->name} 是第二個節點的 \texttt{hippo}，和註解一樣。
+\end{pastsoln}

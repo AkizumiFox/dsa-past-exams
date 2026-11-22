@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:ccu-110-csb-02}]{中正資工所乙組 110 學年度 第 2 題}
+（填空）
+
+(5\%) The Fibonacci numbers are defined as: $f_0=1$, $f_1=1$, and $f_i=f_{i-1}+f_{i-2}$ for
+$i\ge 2$. Please fill in the blanks (a), (b), (c), (d), (e) of the both recursive and iterative C
+functions below. Note that you are not allowed to create new variables in the blanks.
+\begin{minted}[fontsize=\small]{c}
+unsigned int recursive_fib(unsigned int i) {
+    if ( ____(a)____ ) return i;
+    return ____ (b) ____;
+}
+
+unsigned int iterative_fib(unsigned int i) {
+    unsigned int fib, fib1, fib2, count;
+    if ( ____(a)____ ) return i;
+    fib1 = 0;
+    fib2 = 1;
+    ____(c)____;
+    for (count = 3; count <= i; count ++) {
+        ____(d)____;
+        ____(e)____;
+        ____(c)____;
+    }
+    return fib;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+空格 & 填入 \\
+\midrule
+(a) & \texttt{i <= 1} \\
+(b) & \texttt{recursive\_fib(i - 1) + recursive\_fib(i - 2)} \\
+(c) & \texttt{fib = fib1 + fib2} \\
+(d) & \texttt{fib1 = fib2} \\
+(e) & \texttt{fib2 = fib} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{原題的定義和程式對不上}。 題目寫 $f_0 = 1$，但兩個函式在 (a) 成立時都 \texttt{return i}，
+$i = 0$ 時只能回傳 $0$；\texttt{iterative\_fib} 的起始值 \texttt{fib1 = 0}、\texttt{fib2 = 1}
+也是 $f_0 = 0$、$f_1 = 1$ 的寫法。 照題目的定義，數列是 $1, 1, 2, 3, 5, \ldots$；照程式的骨架，
+數列是 $0, 1, 1, 2, 3, \ldots$，兩者只在 $i = 1$ 一致。 程式的這些部分是印好的，不是空格，所以 $f_0 = 1$
+應該是 $f_0 = 0$ 的筆誤，下面照標準的費氏數 $f_0 = 0$、$f_1 = 1$ 填空。
+
+\textbf{遞迴版}。 (a) 是終止條件：$i = 0$、$i = 1$ 時 $f_i = i$，直接回傳，所以填 \texttt{i <= 1}
+（寫 \texttt{i < 2} 也一樣）。 不能只寫 \texttt{i == 1}：$i = 0$ 會往下呼叫
+\texttt{recursive\_fib(-1)}，而 \texttt{unsigned int} 的 $-1$ 是很大的正數，遞迴停不下來。
+(b) 照遞迴式 $f_i = f_{i-1} + f_{i-2}$ 寫兩個遞迴呼叫。 這個寫法會重複計算同一個 $f_j$ 很多次，
+呼叫次數隨 $i$ 指數成長，是資結書第~18.1.1~節「子問題重疊」的典型例子。
+
+\textbf{迴圈版}。 (a) 和遞迴版相同。 接下來用 \texttt{fib1}、\texttt{fib2} 記住「前兩項」和
+「前一項」，\texttt{fib} 是目前這一項，由小到大算上去（資結書第~18.1.3~節的由下而上）：
+\begin{itemize}
+\item 迴圈前的 (c)：\texttt{fib = fib1 + fib2} $= f_0 + f_1 = f_2$。 $i = 2$ 時迴圈一次都不跑，
+直接回傳 $f_2 = 1$，所以迴圈前一定要先算出 $f_2$。
+\item 迴圈裡第 \texttt{count} 輪開始時，\texttt{fib1}、\texttt{fib2}、\texttt{fib} 分別是
+$f_{\mathit{count}-3}$、$f_{\mathit{count}-2}$、$f_{\mathit{count}-1}$。 (d) \texttt{fib1 = fib2}、
+(e) \texttt{fib2 = fib} 把三個值往前挪一格，變成 $f_{\mathit{count}-2}$、$f_{\mathit{count}-1}$；
+再用 (c) 算出 $f_{\mathit{count}} = f_{\mathit{count}-2} + f_{\mathit{count}-1}$。
+\item (d)、(e) 的順序不能對調：先做 \texttt{fib2 = fib} 的話，\texttt{fib2} 原本的值就被蓋掉，
+\texttt{fib1} 拿不到它。 題目不准新增變數，所以只能靠這個順序。
+\end{itemize}
+迴圈結束時 $\mathit{count} = i + 1$，\texttt{fib} $= f_i$。
+
+追蹤 $i = 5$：
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+時間點 & \texttt{fib1} & \texttt{fib2} & \texttt{fib} \\
+\midrule
+迴圈前 (c) 之後 & 0 & 1 & 1 \\
+\texttt{count = 3} 結束 & 1 & 1 & 2 \\
+\texttt{count = 4} 結束 & 1 & 2 & 3 \\
+\texttt{count = 5} 結束 & 2 & 3 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $5 = f_5$，和遞迴版相同。 迴圈版只跑 $i - 2$ 輪，時間 $O(i)$，額外空間 $O(1)$。
+\end{pastsoln}

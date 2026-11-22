@@ -1,0 +1,10 @@
+paper: nsysu-108-osds
+volume: 1
+school: 中山
+dept: 資工所甲組
+year: 108
+subject: 作業系統與資料結構
+instructions: '考試時間：100 分鐘。※本科目依簡章規定「不可以」使用計算機（問答申論題）。'
+questions:
+  - {id: nsysu-108-osds-01, label: 第 1 題, chapter: 21}
+  - {id: nsysu-108-osds-02, label: 第 2 題, chapter: 8}

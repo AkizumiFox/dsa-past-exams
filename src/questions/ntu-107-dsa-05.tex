@@ -1,0 +1,175 @@
+\begin{pastexam}[label={px:ntu-107-dsa-05}]{臺大資工所 107 學年度 第 V 題}
+（問答）
+
+(35 points) In the data structure \textit{queue}, elements can be added to one end and removed
+from the other. Different from queues, a \textit{deque} allows elements to be added to and removed
+from both ends.
+\begin{enumerate}[label=(\alph*)]
+\item (15 points) Given a deque with a permutation of the numbers from 1 to $n$ ($n\ge5$), we want
+to remove all of the numbers to form a sequence $<a_1,a_2,a_3,\ldots,a_n>$ that maximizes the
+alternative sum $(a_1-a_2+a_3\ldots\pm a_n)$, where $a_1$ is the first number removed, $a_2$ is the
+second number, and so on. For example, suppose a deque contains 5 numbers as follows:
+
+\hspace*{2em}(head) 2, 3, 1, 4, 5 (rear)
+
+One possible generated sequence is $<5,2,4,1,3>$ whose alternative sum is 9.
+\begin{enumerate}[label=(\arabic*)]
+\item (5 points) Give an example to demonstrate that the problem cannot be solved by a greedy
+algorithm, which first removes the larger one of the two ends, then removing in the order of the
+smaller one, the larger one, the smaller one, etc. Show your calculation.
+\item (10 points) Devise an $O(n^2)$ algorithm to generate the optimal sequence for a given deque.
+Explain how your algorithm works on the example you give previously.
+\end{enumerate}
+\item (20 points) Stacks can be used to implement queues and deques.
+\begin{enumerate}[label=(\arabic*)]
+\item (6 points) Describe how to implement a queue using only two stacks. And then describe how to
+extend the way to implement a queue to implement a deque using the same two stacks.
+\item (7 points) Use the accounting method to prove the amortized time complexity of a sequence of
+$n$ queue operations (implemented with stacks) is $O(n)$. Show your derivation.
+\item (7 points) Prove or disprove that the amortized time complexity of a sequence of $n$ deque
+operations (implemented with stacks) is also $O(n)$. Show your derivation.
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+本題橫跨幾章：(a) 是動態規劃（資結書第~18~章），(b) 是用堆疊做佇列（資結書第~6~章）和記帳法
+（資結書第~3.2~節）。 (b) 佔的分數較多，歸在平攤分析這一章。
+
+\textbf{(a)(1) 貪心的反例。} 取 $n = 5$，(head) $3, 1, 2, 4, 5$ (rear)。 照題目的貪心法：第奇數次拿兩端
+較大的（要加），第偶數次拿兩端較小的（要減）。
+\begin{center}
+\small
+\begin{tabular}{clcl}
+\toprule
+第幾次 & 兩端 & 拿走 & 剩下 \\
+\midrule
+1（加，拿大的） & $3$、$5$ & $5$ & $3, 1, 2, 4$ \\
+2（減，拿小的） & $3$、$4$ & $3$ & $1, 2, 4$ \\
+3（加，拿大的） & $1$、$4$ & $4$ & $1, 2$ \\
+4（減，拿小的） & $1$、$2$ & $1$ & $2$ \\
+5（加） & $2$ & $2$ & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+得到 $\langle 5, 3, 4, 1, 2\rangle$，交錯和 $5 - 3 + 4 - 1 + 2 = 7$。 但是先從頭拿 $3$、再從頭拿 $1$、
+然後從尾拿 $5$、從頭拿 $2$、最後拿 $4$，得到 $\langle 3, 1, 5, 2, 4\rangle$，交錯和
+$3 - 1 + 5 - 2 + 4 = 9$。 $9$ 已經是 $n = 5$ 的上限：交錯和是三個「加」的數減兩個「減」的數，
+最多 $(5 + 4 + 3) - (2 + 1) = 9$。 所以貪心法得不到最佳解。 它錯在第 1 步：拿走 $5$ 雖然當下最
+大，卻讓第 2 步只能在 $3$、$4$ 裡挑一個減掉，大的數被浪費在「減」的位置；先忍住、把 $3$ 加進
+來、把 $1$ 減掉，$5$ 和 $4$ 之後都還拿得到。
+
+\textbf{(a)(2) 動態規劃。} 不管之前怎麼拿，deque 裡剩下的永遠是原序列連續的一段 $d_i, \ldots, d_j$
+（$d_1, \ldots, d_n$ 是從 head 到 rear 的原序列）。 已經拿走 $n - (j - i + 1)$ 個，所以下一個拿走的數
+在序列中的位置、也就是它要加還是減，完全由這一段的長度決定：令
+\[
+s(L) = \begin{cases} +1 & n - L \text{ 是偶數（下一個是第奇數個）},\\ -1 & n - L \text{ 是奇數}.\end{cases}
+\]
+以後怎麼拿只和這一段有關，和之前的順序無關，所以可以定義子問題（資結書第~18.1.5~節的步驟）：
+$D[i, j]$ 是「剩下 $d_i..d_j$ 時，把它們拿完能得到的最大加減總和」。 下一個不是拿頭 $d_i$ 就是拿尾
+$d_j$：
+\[
+D[i, i] = s(1)\, d_i, \qquad
+D[i, j] = \max\bigl(s(L)\, d_i + D[i+1, j],\; s(L)\, d_j + D[i, j-1]\bigr),\quad L = j - i + 1.
+\]
+答案是 $D[1, n]$。 依長度 $L = 1, 2, \ldots, n$ 填表，同時記下每一格選了頭還是尾，最後從 $[1, n]$ 照
+記錄走回來，就得到最佳的拿取順序。
+\begin{pseudo}{雙端佇列交錯和的最大值}
+\Function{Max-Alternating}{$d, n$}
+    \For{$L \gets 1$ \To $n$}
+        \State $s \gets +1$ \textbf{if} $n - L$ 是偶數 \textbf{else} $-1$
+        \For{$i \gets 1$ \To $n - L + 1$}
+            \State $j \gets i + L - 1$
+            \If{$L = 1$}
+                \State $D[i, i] \gets s \cdot d_i$；$\mathit{take}[i, i] \gets \text{頭}$
+            \Else
+                \State $x \gets s \cdot d_i + D[i+1, j]$；$y \gets s \cdot d_j + D[i, j-1]$
+                \State $D[i, j] \gets \max(x, y)$；$\mathit{take}[i, j] \gets$（$x \ge y$ 時頭，否則尾）
+            \EndIf
+        \EndFor
+    \EndFor
+    \State $i \gets 1$；$j \gets n$
+    \While{$i \le j$} \Comment{照記錄輸出順序}
+        \If{$\mathit{take}[i, j] = \text{頭}$}
+            \State 輸出 $d_i$；$i \gets i + 1$
+        \Else
+            \State 輸出 $d_j$；$j \gets j - 1$
+        \EndIf
+    \EndWhile
+    \State \Return $D[1, n]$
+\EndFunction
+\end{pseudo}
+正確性：最佳的拿法第一步拿頭或拿尾；拿頭之後，剩下 $d_{i+1}..d_j$ 的拿法如果不是那一段的最佳，換
+成最佳的只會讓總和變大，所以 $D[i, j]$ 一定等於兩個選項之一，遞迴式成立（最佳子結構）。 時間：表有
+$n(n+1)/2$ 格，每格 $O(1)$，回溯 $O(n)$，總共 $O(n^2)$；空間 $O(n^2)$。
+
+\textbf{在 (a)(1) 的例子上跑一次}：$d = \langle 3, 1, 2, 4, 5\rangle$，$n = 5$。 長度 $1, 3, 5$ 的段
+$s = +1$，長度 $2, 4$ 的段 $s = -1$。
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+$L$ & 計算（頭；尾） & 結果 \\
+\midrule
+1 & $D[1,1] = 3$，$D[2,2] = 1$，$D[3,3] = 2$，$D[4,4] = 4$，$D[5,5] = 5$ & \\
+2 & $D[1,2] = \max(-3 + 1,\ -1 + 3) = 2$ & 尾 \\
+ & $D[2,3] = \max(-1 + 2,\ -2 + 1) = 1$ & 頭 \\
+ & $D[3,4] = \max(-2 + 4,\ -4 + 2) = 2$ & 頭 \\
+ & $D[4,5] = \max(-4 + 5,\ -5 + 4) = 1$ & 頭 \\
+3 & $D[1,3] = \max(3 + D[2,3],\ 2 + D[1,2]) = \max(4, 4) = 4$ & 頭 \\
+ & $D[2,4] = \max(1 + D[3,4],\ 4 + D[2,3]) = \max(3, 5) = 5$ & 尾 \\
+ & $D[3,5] = \max(2 + D[4,5],\ 5 + D[3,4]) = \max(3, 7) = 7$ & 尾 \\
+4 & $D[1,4] = \max(-3 + D[2,4],\ -4 + D[1,3]) = \max(2, 0) = 2$ & 頭 \\
+ & $D[2,5] = \max(-1 + D[3,5],\ -5 + D[2,4]) = \max(6, 0) = 6$ & 頭 \\
+5 & $D[1,5] = \max(3 + D[2,5],\ 5 + D[1,4]) = \max(9, 7) = 9$ & 頭 \\
+\bottomrule
+\end{tabular}
+\end{center}
+回溯：$[1,5]$ 拿頭 $3$ → $[2,5]$ 拿頭 $1$ → $[3,5]$ 拿尾 $5$ → $[3,4]$ 拿頭 $2$ → $[4,4]$ 拿 $4$，順序
+$\langle 3, 1, 5, 2, 4\rangle$，交錯和 $9$，和 (a)(1) 一樣。 $D[1,5]$ 那一格的「尾」選項 $5 + D[1,4] = 7$
+正是貪心法的第一步，表格顯示它比拿頭少 $2$。 （題目自己的例子 $2, 3, 1, 4, 5$ 用同樣的表算，最大值
+也是 $9$，$\langle 5, 2, 4, 1, 3\rangle$ 就是一組最佳解。）
+
+\textbf{(b)(1) 兩個堆疊做佇列、雙端佇列。} 兩個堆疊 $S_{\mathit{in}}$、$S_{\mathit{out}}$。
+\begin{itemize}
+\item \textbf{佇列}。 ENQUEUE$(x)$：push 到 $S_{\mathit{in}}$。 DEQUEUE：如果 $S_{\mathit{out}}$ 是空的，
+把 $S_{\mathit{in}}$ 的元素一個一個 pop 出來 push 進 $S_{\mathit{out}}$（順序因此反過來，最早進來的到了
+$S_{\mathit{out}}$ 頂端）；然後 pop $S_{\mathit{out}}$。 整個佇列由前到後是「$S_{\mathit{out}}$ 由頂到底，
+接著 $S_{\mathit{in}}$ 由底到頂」，前端在 $S_{\mathit{out}}$ 的頂端，後端在 $S_{\mathit{in}}$ 的頂端。
+\item \textbf{雙端佇列}。 沿用同樣的排法，$S_{\mathit{out}}$ 管前端、$S_{\mathit{in}}$ 管後端，兩邊對稱：
+PUSH-FRONT$(x)$ push 到 $S_{\mathit{out}}$；PUSH-BACK$(x)$ push 到 $S_{\mathit{in}}$；POP-FRONT 同佇列的
+DEQUEUE；POP-BACK：如果 $S_{\mathit{in}}$ 是空的，先把 $S_{\mathit{out}}$ 全部倒進 $S_{\mathit{in}}$，再 pop
+$S_{\mathit{in}}$。 倒的時候順序反過來，正好讓原本在 $S_{\mathit{out}}$ 底部的最後一個元素到了
+$S_{\mathit{in}}$ 頂端。
+\end{itemize}
+
+\textbf{(b)(2) 記帳法：佇列。} 成本模型：每次 push 或 pop 花 $1$。 收費訂成 ENQUEUE 收 $3$，DEQUEUE
+收 $1$（資結書第~3.2~節）。
+\begin{itemize}
+\item ENQUEUE 實際花 $1$（push 到 $S_{\mathit{in}}$），多收的 $2$ 存在這個元素身上。
+\item DEQUEUE 搬家時，每個被搬的元素花 $2$（從 $S_{\mathit{in}}$ pop、push 到 $S_{\mathit{out}}$），剛好
+用它身上的 $2$ 付；最後 pop $S_{\mathit{out}}$ 的 $1$ 由 DEQUEUE 自己收的 $1$ 付。
+\end{itemize}
+存款不會變負：任何時刻，$S_{\mathit{in}}$ 裡每個元素身上剛好有 $2$，$S_{\mathit{out}}$ 裡的元素身上是
+$0$，存款 $= 2\,|S_{\mathit{in}}| \ge 0$。 每個元素一生只會從 $S_{\mathit{in}}$ 搬到 $S_{\mathit{out}}$ 一次
+（$S_{\mathit{out}}$ 的元素不會回到 $S_{\mathit{in}}$），所以它身上的 $2$ 夠用。 因此 $n$ 次操作的實際總
+成本不超過總收費 $\le 3n$，是 $O(n)$，每次操作平攤 $O(1)$。
+
+\textbf{(b)(3) 雙端佇列：不成立（反證）。} 用 (b)(1) 的做法，下面這串 $n$ 個操作要花 $\Theta(n^2)$。
+令 $m = n/2$。 先 PUSH-BACK $m$ 次，元素全在 $S_{\mathit{in}}$。 接著 POP-FRONT、POP-BACK 交替做 $m$ 次：
+\begin{itemize}
+\item 第 $1$ 次 POP-FRONT：$S_{\mathit{out}}$ 空，把 $m$ 個全搬過去（$2m$），pop 一個；剩 $m - 1$ 個，全在
+$S_{\mathit{out}}$。
+\item 第 $1$ 次 POP-BACK：$S_{\mathit{in}}$ 空，把 $m - 1$ 個全搬回來（$2(m - 1)$），pop 一個；剩 $m - 2$ 個，
+全在 $S_{\mathit{in}}$。
+\item 以此類推，每一次都要把剩下的全部搬到另一邊。
+\end{itemize}
+總成本是
+\[
+m + 2\bigl(m + (m - 1) + \cdots + 1\bigr) + m = m(m + 1) + 2m = m^2 + 3m = \Theta(n^2).
+\]
+所以 $n$ 次操作的總時間不是 $O(n)$（平攤每次是 $\Theta(n)$，不是 $O(1)$），題目的敘述不成立。 (b)(2)
+的論證在這裡失效，是因為元素可以在兩個堆疊之間來回搬很多次，身上的固定存款付不起。 （補充：如果
+另外用一個暫存堆疊，一邊空了的時候只把另一邊的\textbf{一半}搬過來，可以證明平攤 $O(1)$；但那已經不是
+「只用同樣兩個堆疊」的做法。）
+\end{pastsoln}

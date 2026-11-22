@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ncu-107-dsa-13}]{中央資工所 107 學年度 第 13 題}
+（單選；每題 5 分，答錯倒扣一分）
+
+Program quickSort below aim to apply quick sort to A[left: right] into non-decreasing order.
+\begin{minted}[fontsize=\small,breaklines]{c}
+void quickSort ( int A[], int left, int right )
+{
+  int pivot, i, j;
+  int temp;
+  if ( left < right ) {
+     i = left-1; j = right;
+     pivot = A[right];
+     do {
+          do i++; while ( A[i] < pivot );
+          do j--; while ( A[j] > pivot );
+          If ( __(B4)__ ) swap(A[i], A[j], temp);   /* exchange A[i] and A[j] */
+     } while ( __(B5)__ );
+     swap ( __(B6)__ );
+     quickSort( A, left, j-1 );
+     quickSort( A, j+1, right ); }
+}
+\end{minted}
+
+Blank (B6) in the algorithm above should be\\
+(a)~\texttt{A[left], A[j], temp}\\
+(b)~\texttt{A[i], A[right], temp}\\
+(c)~\texttt{A[right], A[j], temp}\\
+(d)~\texttt{A[left+1], A[right], temp}\\
+(e)~\texttt{A[right-1], A[j], temp}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b) \texttt{A[i], A[right], temp}。
+
+分割的過程見歷屆試題~\ref{px:ncu-107-dsa-11}。 迴圈結束時 $i \ge j$，而且
+\begin{itemize}
+\item $A[\mathit{left}..i-1]$ 都 $\le \mathit{pivot}$：$i$ 掃過的數都 $< \mathit{pivot}$，交換進來的
+$A[j]$ 都 $\le \mathit{pivot}$；
+\item $A[i..\mathit{right}-1]$ 都 $\ge \mathit{pivot}$：$A[i]$ 是 $i$ 停下的位置，$\ge \mathit{pivot}$；
+$i$ 右邊到 $\mathit{right}-1$ 的數，不是被 $j$ 掃過（$> \mathit{pivot}$）就是交換過去的（$\ge \mathit{pivot}$）。
+\end{itemize}
+基準還在 $A[\mathit{right}]$。 把它和 $A[i]$ 交換：基準到了位置 $i$，左邊都 $\le$ 它、右邊都 $\ge$ 它，
+這就是它排好之後的位置；換到 $\mathit{right}$ 的 $A[i]$ 是 $\ge \mathit{pivot}$ 的數，留在右半沒問題。
+上一題的例子：$4, 1, 2, 7, 9, 5$，$i = 3$，交換 $A[3]$ 和 $A[5]$ 得 $4, 1, 2, 5, 9, 7$。
+
+所以 (B6) 是 \texttt{A[i], A[right], temp}。 照這個填法，基準在 $i$，原卷後面兩行遞迴的 \texttt{j}
+應該改成 \texttt{i}（歷屆試題~\ref{px:ncu-107-dsa-11} 的說明）。
+
+逐項檢查（都用上面的例子，結束時 $i = 3$、$j = 2$）：
+\begin{itemize}
+\item (a) 交換 $A[0] = 4$ 和 $A[2] = 2$：基準 $5$ 還在最右邊，沒有放到中間，錯。
+\item (b) 對。
+\item (c) 交換 $A[5] = 5$ 和 $A[2] = 2$：得 $4, 1, 5, 7, 9, 2$，$2$ 跑到右端，$7$ 在 $5$ 的左邊，錯。
+一般來說 $A[j] \le \mathit{pivot}$，換到右端就壞了。
+\item (d) 交換 $A[1]$ 和 $A[5]$：和分割的結果無關，錯。
+\item (e) 交換 $A[4]$ 和 $A[2]$：基準根本沒動，錯。
+\end{itemize}
+\end{pastsoln}

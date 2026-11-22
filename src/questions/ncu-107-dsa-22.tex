@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-107-dsa-22}]{中央資工所 107 學年度 第 22 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is the algorithm AllPairCost which computes the shortest distances between all pairs of
+vertices i, j, where i $\ne$ j. Formally, given distances of edges in graph G, determine the
+shortest distances between all pairs of vertices in G. Note that the distance of an arbitrary edge
+in G is non-negative.
+\begin{quote}
+\textbf{Algorithm} AllPairCost\\
+\textbf{Input:} a two dimensional array C, where C[i][j]$>$0 denotes the distance of directed edge
+(i, j) (i.e., the edge from vertex i to vertex j).\\
+\textbf{Output:} a two dimensional array D, where D[i][j] denotes the shortest distance from
+vertex i to vertex j.
+\end{quote}
+\begin{minted}[fontsize=\small,breaklines]{c}
+1:  int i, j, k;
+2:  for ( i=0; i<n; i++ )
+3:     for ( j=0; j<n; j++ )
+4:          D[i][j] = C[i][j];
+5:  for ( k=0; k<n; k++ )
+6:     for ( i=0; i<n; j++ )
+7:          for ( j=0; j<n; j++ )
+8:              if ( ___(B7)___ )
+9:                    ____(B8)____;
+\end{minted}
+
+Which of the following statements is true?
+\begin{enumerate}[label=(\alph*)]
+\item For two non-adjacent vertices u and v, C[u][v] should be 0
+\item Algorithm AllPairCost is applicable to graphs with cycles
+\item Algorithm AllPairCost is applicable to undirected graphs
+\item Algorithm AllPairCost is applicable to graphs with multiple edges (i.e., two or more edges
+are incident to the same two vertices)
+\item All of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)(c)(d)。
+
+AllPairCost 是 Floyd--Warshall（歷屆試題~\ref{px:ncu-107-dsa-20}，(B7)、(B8) 填 (b)，不等號應為 \texttt{>}）。
+題目說邊的距離非負，所以圖上沒有負環。
+
+\begin{itemize}
+\item (a) \textbf{錯}。 不相鄰的 $u$、$v$ 之間沒有邊，$C[u][v]$ 應該設成 $\infty$（實作上用一個比任何路徑都
+大的數），表示「目前走不到」（資結書第~25.6~節的 $D^{(0)}$）。 設成 $0$ 等於說 $u$ 到 $v$ 有一條長度 $0$ 的
+邊，最短距離會全部算錯。 例如兩個頂點、只有一條邊 $0 \to 1$ 長 $5$，$C[1][0]$ 設成 $0$ 就會得到
+$D[1][0] = 0$，但 $1$ 根本走不到 $0$。 （對角線 $C[i][i]$ 才是 $0$。）
+\item (b) \textbf{對}。 Floyd--Warshall 只要求沒有負環。 邊的距離非負，任何環的總長都 $\ge 0$，有環的圖照樣
+適用。 （有正環時，最短路徑不會繞環，因為繞一圈只會更長。）
+\item (c) \textbf{對}。 無向邊 $\{u, v\}$ 長 $w$，當成兩條有向邊 $u \to v$、$v \to u$，令
+$C[u][v] = C[v][u] = w$（相鄰矩陣對稱，資結書第~21.2~節）。 權重非負，來回走一條邊得到的環長 $2w \ge 0$，
+不會有負環，演算法適用，算出來的 $D$ 也是對稱的。
+\item (d) \textbf{對}。 $C$ 每一對頂點只能存一個數，但同方向的平行邊裡，最短路徑只會用最短的那一條（換成較長
+的只會變長），所以輸入時令 $C[u][v]$ 為所有 $u \to v$ 邊裡最短的長度，演算法就照樣適用。
+\item (e) \textbf{錯}。 (a) 錯，所以「以上皆是」不成立。
+\end{itemize}
+題目寫「Which of the following statements is true?」，但它在多選題的區段，(b)(c)(d) 三項都對，全選。
+(d) 要先把平行邊取最小值才放得進 $C$，如果認為「放不進 $C$ 就不算適用」，會只選 (b)(c)；本書的看法是這個前處理
+是輸入格式的一部分，演算法本身不必改，所以選 (d)。
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nccu-110-dsa-02}]{政大資科所 110 學年度 第 2 題}
+（是非）
+
+(10\%) Assume P $\neq$ NP. For each of the following statements, answer True or False.\\
+No explanation is needed.
+\begin{enumerate}[label=\alph*.]
+\item (5\%) If a problem is in NP-hard, then the problem is in NP.
+\item (5\%) If a problem is in NP, then the problem is in NP-complete.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a. False；b. False。 題目不用寫理由，下面說明為什麼。
+
+定義（資結書第~28.4~節）：問題 $X$ 是 \textbf{NP-hard}，是指 NP 裡每個問題都能在多項式時間內歸約到 $X$；
+\textbf{NP 完備}（NP-complete）是「NP-hard 而且本身在 NP 裡」。 所以 NP 完備 $=$ NP-hard $\cap$ NP。
+
+\textbf{a. False}。 NP-hard 只要求「至少和 NP 裡最難的一樣難」，沒要求它在 NP 裡。 反例：停機問題（給一支程式和
+輸入，問它會不會停）。 資結書第~28.4~節說明 SAT 能歸約到它：把公式 $\varphi$ 轉成「試遍所有指派，找到滿足的就停，
+否則無窮迴圈」的程式。 SAT 是 NP 完備的，所以停機問題是 NP-hard。 但停機問題根本沒有演算法，NP 裡的問題都能
+在指數時間內解（試遍所有憑證），所以停機問題不在 NP 裡。 這個反例不需要用到 $\mathrm{P} \ne \mathrm{NP}$。
+
+\textbf{b. False}。 由 $\mathrm{P} \ne \mathrm{NP}$：P 裡的問題都在 NP 裡（資結書定理~28.1），但都不是 NP 完備的。
+因為若某個 P 裡的問題是 NP 完備的，NP 裡每個問題都能歸約到它，就都有多項式時間演算法，得到
+$\mathrm{P} = \mathrm{NP}$（資結書定理~28.5），和假設矛盾。 例如「給一張圖，它是不是連通的」在 P 裡（BFS），
+因此在 NP 裡，但在 $\mathrm{P} \ne \mathrm{NP}$ 的假設下它不是 NP 完備的。 這也是題目要先假設 $\mathrm{P} \ne
+\mathrm{NP}$ 的原因：如果 $\mathrm{P} = \mathrm{NP}$，除了「全部回答是」和「全部回答否」兩個平凡問題以外，NP 裡的
+問題都是 NP 完備的。
+\end{pastsoln}

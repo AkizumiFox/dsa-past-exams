@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:nsysu-106-osds-02}]{中山資工所甲組 106 學年度 第 7 題}
+（計算）
+
+(10\%) The Ackermann function $A(m,n)$ is defined recursively for non-negative integers $m$ and
+$n$ as follows:
+\[
+A(m,n)=\begin{cases} n+1 & \text{if } m=0,\\ A(m-1,1) & \text{if } m>0 \text{ and } n=0,\\
+A(m-1,A(m,n-1)) & \text{if } m>0 \text{ and } n>0.\end{cases}
+\]
+Its value grows very quickly, even for small values of $m$ and $n$. For instance, $A(1,1)=65533$.
+What would be the value of $A(2,3)$?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$A(2, 3) = 9$。
+
+題目的例子 $A(1, 1) = 65533$ 是錯的：照定義 $A(1, 1) = A(0, A(1, 0)) = A(0, A(0, 1)) = A(0, 2) = 3$。
+$65533$ 是 $A(4, 1)$ 的值（中山 109 學年度同一題就寫成 $A(4, 1) = 65533$）。 這個錯不影響要算的
+$A(2, 3)$。
+
+\textbf{先求 $m = 1$ 和 $m = 2$ 的封閉式}，比直接展開省力，也比較不會算錯。
+\begin{itemize}
+\item $m = 1$：$A(1, 0) = A(0, 1) = 2$；$n > 0$ 時 $A(1, n) = A(0, A(1, n-1)) = A(1, n-1) + 1$。
+每次加 $1$，所以 $A(1, n) = n + 2$。
+\item $m = 2$：$A(2, 0) = A(1, 1) = 3$；$n > 0$ 時
+$A(2, n) = A(1, A(2, n-1)) = A(2, n-1) + 2$。 每次加 $2$，所以 $A(2, n) = 2n + 3$。
+\end{itemize}
+（兩個都是對 $n$ 的簡單歸納：基底對了，每一步的遞迴式也對，就對所有 $n$ 成立。）
+
+\textbf{再算 $A(2, 3)$}，用上面的式子逐層代回：
+\begin{align*}
+A(2, 0) &= A(1, 1) = 1 + 2 = 3,\\
+A(2, 1) &= A(1, A(2, 0)) = A(1, 3) = 5,\\
+A(2, 2) &= A(1, A(2, 1)) = A(1, 5) = 7,\\
+A(2, 3) &= A(1, A(2, 2)) = A(1, 7) = 9.
+\end{align*}
+和 $2 \cdot 3 + 3 = 9$ 一致。 如果完全照定義一層一層展開到 $m = 0$，$A(2, 3)$ 一共要呼叫 $44$ 次
+函式，考場上不建議這樣做；先推 $A(1, n)$、$A(2, n)$ 的封閉式，就是資結書第~2~章「把遞迴式解出來」
+的做法。 順帶一提，$A(3, n) = 2^{n+3} - 3$，$A(4, 1) = A(3, 13) = 2^{16} - 3 = 65533$，就是題目想引用的
+那個數。
+\end{pastsoln}

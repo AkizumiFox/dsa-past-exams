@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ncku-108-prog-07}]{成大資訊聯招 108 學年度 第 7 題}
+（問答）
+
+(10\%) Use Master theorem to solve the recurrence $T(n)=T(2n/3)+1$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(\lg n)$。
+
+\textbf{參數。} 主定理（資結書定理~2.4）的形式是 $T(n) = aT(n/b) + f(n)$。 子問題大小 $2n/3 = n/(3/2)$，所以
+$a = 1$、$b = 3/2$（不是 $2/3$），$f(n) = 1$。 $a \ge 1$、$b > 1$，可以用主定理。
+\[
+n^{\log_b a} = n^{\log_{3/2} 1} = n^0 = 1 .
+\]
+
+\textbf{比較。} $f(n) = 1 = \Theta(1) = \Theta(n^{\log_b a})$，兩者同一級，是情況 2：
+\[
+T(n) = \Theta(n^{\log_b a} \lg n) = \Theta(\lg n).
+\]
+
+\textbf{直接展開核對。} 每呼叫一次，問題縮成原來的 $2/3$，多花 $1$。 從 $n$ 縮到常數要 $k$ 次，$(2/3)^k n \le 1$，
+$k = \lceil \log_{3/2} n \rceil$；所以 $T(n) = \log_{3/2} n + \Theta(1)$。 $\log_{3/2} n = \lg n / \lg(3/2)$，和
+$\lg n$ 只差常數倍，是 $\Theta(\lg n)$。 這和二分搜尋的 $T(n) = T(n/2) + 1$ 同一類，只是每次只砍掉三分之一。
+\end{pastsoln}

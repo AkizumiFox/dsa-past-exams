@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ncku-110-prog-07}]{成大資訊聯招 110 學年度 第 7 題}
+（是非；要說明理由）
+
+(15\%) Answer \textbf{True} or \textbf{False} for the following statements and also justify your
+reasons.
+\begin{enumerate}[label=(\arabic*),itemsep=0pt,topsep=2pt]
+\item (3\%) If an NP-complete problem can be reduced to a problem $L$ in polynomial time, then
+$L$ is NP-complete.
+\item (3\%) If a problem $A$ can be reduced to a problem $B$ and $A\in\mathrm{P}$, then
+$B\in\mathrm{P}$.
+\item (3\%) If a problem $A\in\mathrm{P}$, then $A\in\mathrm{NP}$.
+\item (3\%) If P$\neq$NP, there exists a 2-approximation algorithm for the general
+traveling-salesman problem.
+\item (3\%) The maximum numbers of elements in a heap of height $h$ is $2^h-1$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) False；(2) False；(3) True；(4) False；(5) False（高度數邊；若高度數層則為 True，見下）。
+
+\textbf{(1) False。} NP 完備問題 $C$ 能在多項式時間歸約到 $L$，只說明 $L$ 至少和 $C$ 一樣難：
+每個 NP 問題都歸約到 $C$，再接上 $C \le_{\mathrm p} L$，由遞移性（資結書引理~28.3）每個 NP 問題都
+歸約到 $L$，所以 $L$ 是 \textbf{NP-hard}。 NP 完備還要求 $L \in \mathrm{NP}$，題目沒有給。 反例：停機
+問題（halting problem）是 NP-hard 的（SAT 可以歸約到它：給一個公式，造一個程式「窮舉所有賦值，
+找到滿足的就停，否則進入無窮迴圈」），但它不可判定，不在 NP 裡，所以不是 NP 完備。 改正：
+$L$ 是 NP-hard；若再加上 $L \in \mathrm{NP}$，$L$ 才是 NP 完備。
+
+\textbf{(2) False。} 方向反了。 $A \le_{\mathrm p} B$ 表示「會解 $B$ 就會解 $A$」，資訊從 $B$ 傳到
+$A$：若 $B \in \mathrm{P}$ 則 $A \in \mathrm{P}$（資結書引理~28.2）。 知道比較簡單的 $A$ 在 P 裡，推
+不出 $B$ 的任何事。 反例：$A$ 是「判斷一個整數是不是偶數」，$A \in \mathrm{P}$；$B$ 是停機問題。
+把偶數對應到一個固定的、馬上就停的程式，奇數對應到一個固定的無窮迴圈程式，這個對應在多項式
+時間內算得出來，而且「是偶數」若且唯若「對應的程式會停」，所以 $A \le_{\mathrm p} B$。 但停機問題
+不可判定，一定不在 P 裡。 改正：若 $A \le_{\mathrm p} B$ 且 $B \in \mathrm{P}$，則 $A \in \mathrm{P}$。
+
+\textbf{(3) True。} P $\subseteq$ NP（資結書定理~28.1）。 $A$ 有多項式時間演算法 $M$。 驗證器
+不看證書，直接執行 $M$：答案是 yes 的輸入，用任何證書（例如空字串）都會被接受；答案是 no 的
+輸入，任何證書都不會被接受。 驗證器是多項式時間的，所以 $A \in \mathrm{NP}$。 用非決定性的
+定義也一樣：決定性演算法本身就是一個不做猜測的非決定性演算法。
+
+\textbf{(4) False。} 資結書定理~29.4：若 P $\ne$ NP，則對任何常數 $\rho \ge 1$，一般（不滿足三角
+不等式）的 TSP 都沒有多項式時間的 $\rho$-近似演算法，$\rho = 2$ 也一樣。 理由：給一張圖
+$G = (V, E)$，$|V| = n$，造一個完全圖，$G$ 的邊成本 $1$，其他邊成本 $\rho n + 1$。 $G$ 有漢米爾頓
+迴路時最佳巡迴成本是 $n$，$\rho$-近似演算法會傳回成本 $\le \rho n$ 的巡迴，只能全部用成本 $1$ 的
+邊；沒有漢米爾頓迴路時，任何巡迴至少用一條貴的邊，成本 $> \rho n$。 看傳回的成本是否
+$\le \rho n$，就能在多項式時間判斷漢米爾頓迴路，與 P $\ne$ NP 矛盾。 有 2-近似的是\textbf{滿足三角
+不等式}的 TSP（資結書第~29.3~節，用最小生成樹）。
+
+\textbf{(5) 要看「高度」怎麼定義。} 這句是 CLRS 習題 6.1-1 的問法，CLRS 的高度數\textbf{邊}：
+只有根的堆積高度是 $0$。 本卷第二部分（演算法）的記號都和 CLRS 一致，這裡採用這個定義。
+堆積是完整二元樹，高度 $h$ 時第 $0$ 到第 $h$ 層最多都填滿，第 $d$ 層最多 $2^d$ 個，最多
+\[
+1 + 2 + \cdots + 2^h = 2^{h+1} - 1
+\]
+個元素，所以敘述 False，改正成 $2^{h+1} - 1$（最少是 $2^h$ 個：前 $h$ 層填滿，第 $h$ 層只有
+$1$ 個）。 反例：高度 $1$ 的堆積可以有 $3$ 個元素（根和兩個子節點），不是 $2^1 - 1 = 1$。
+
+如果高度數的是\textbf{層數}（只有根的樹高度是 $1$，資結書第~7.1~節和本卷第 1 題的定義），
+$h$ 層的完整二元樹最多 $2^h - 1$ 個節點，敘述就是 True。 這種題目作答時先寫出採用的高度定義，
+再下結論。
+\end{pastsoln}

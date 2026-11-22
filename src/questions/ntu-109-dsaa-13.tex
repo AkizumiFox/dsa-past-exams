@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-13}]{臺大資工所 109 學年度 第 13 題}
+（問答）
+
+(15 points) A disjoint-set data structure supports two operations. One is UNION($x,y$), which
+merges the two roots of the trees containing $x$ and $y$. The other is FIND($x$), which returns
+the root of the tree containing $x$. Union-by-height is a union heuristic, which keeps track of
+the heights of the trees to attach the shorter tree to the root of the taller tree.
+\begin{enumerate}[label=(\alph*)]
+\item (9 points) Given an undirected graph $G=(V,E)$, where $V=\{v_1,\ldots,v_m\}$ ($m>0$) and
+$E=\{e_1,\ldots,e_n\}$ ($n>0$), devise an algorithm to check if the graph $G$ is a tree or not by
+using UNION($v_i,v_j$) with union-by-height and FIND($v_k$) with no path compression, where
+$v_i,v_j$ and $v_k\in V$. Clearly describe your solution and analyze the time complexity of your
+algorithm in the worst case. \textbf{No code is required (code will not be graded).}
+\item (6 points) The union-by-height heuristic prevents the height of a tree from growing
+linearly. Consider another heuristic, called union-by-descendant, which always attaches the tree
+with fewer descendants to the root of the tree with more descendants. Suppose that path
+compression is not applied. Which of the two heuristics is asymptotically better? Why?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 先檢查 $n = m - 1$，再逐條邊用 FIND 看兩端是否已經在同一個集合（是就有迴路，不是樹），不是就 UNION；
+最壞 $O(m \log m)$。 (b) 漸近一樣好，兩者都保證 $N$ 個元素時樹高 $O(\log N)$，而且都會達到 $\Theta(\log N)$。
+
+這一題的記號和資結書相反：$m = |V|$ 是頂點數、$n = |E|$ 是邊數，下面照題目的記號。 不做路
+徑壓縮時，union-by-height 就是資結書第~13.2.2~節的依秩合併：每個根記的秩恰好是樹的
+高度（用邊數算），一樣高時任選一邊當根、高度加一。
+
+\textbf{(a)} 由資結書定理~21.3，$G$ 是樹的充分必要條件是「$G$ 沒有迴路，而且 $n = m - 1$」。
+所以先檢查邊數，再用互斥集合檢查有沒有迴路：
+
+\begin{pseudo}[unbreakable]{判斷無向圖是不是樹}
+\Function{Is-Tree}{$V, E$}
+    \If{$n \ne m - 1$}
+        \State \Return \FALSE
+    \EndIf
+    \For{每個頂點 $v \in V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \For{每條邊 $(v_i, v_j) \in E$}
+        \State $r_i \gets$ \Call{Find}{$v_i$}
+        \State $r_j \gets$ \Call{Find}{$v_j$}
+        \If{$r_i = r_j$}
+            \State \Return \FALSE \Comment{這條邊和之前的邊形成迴路}
+        \EndIf
+        \State \Call{Union}{$v_i, v_j$}
+    \EndFor
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 用歸納法證明：處理完前 $t$ 條邊、還沒有回傳時，(i) 每個集合恰好是子圖
+$G_t = (V, \{e_1, \ldots, e_t\})$ 的一個連通元件；(ii) $G_t$ 沒有迴路。 $t = 0$ 時每個頂點自
+己一組、沒有邊，成立。 處理 $e_{t+1} = (v_i, v_j)$：
+\begin{itemize}
+\item 第 9 行成立：由 (i)，$v_i$、$v_j$ 在 $G_t$ 裡有一條路徑，加上 $e_{t+1}$ 就是 $G$ 裡的
+一個迴路（$v_i = v_j$ 時 $e_{t+1}$ 本身是自環），$G$ 不是樹，回傳 \FALSE{} 正確。
+\item 第 9 行不成立：$v_i$、$v_j$ 在 $G_t$ 的不同元件，加上 $e_{t+1}$ 正好把這兩個元件連成
+一個，第 11 行也正好合併這兩個集合，(i) 仍然成立。 $e_{t+1}$ 不在任何迴路上（否則去掉它，
+$G_t$ 裡還有一條 $v_i$ 到 $v_j$ 的路徑），(ii) 也成立。
+\end{itemize}
+迴圈跑完都沒回傳，表示 $G$ 沒有迴路；第 2 行又確認了 $n = m - 1$，由資結書定理~21.3
+的 (3)$\Rightarrow$(1)，$G$ 是樹。 反過來，如果 $G$ 是樹，$n = m - 1$ 通過第 2 行，沒有任何邊
+會讓第 9 行成立，最後回傳 \TRUE。
+
+\textbf{時間}。 依秩合併不壓縮時，由資結書引理~13.3 (3)，每棵樹的高度不超過
+$\lfloor \lg m \rfloor + 1$，所以每次 FIND 是 $O(\log m)$，UNION 裡面的兩次 FIND 也是。 第 2 行
+$O(1)$；$m$ 次 \proc{Make-Set} 是 $O(m)$；第 6--11 行最多跑 $n = m - 1$ 次，每次 $O(\log m)$。
+最壞情況的總時間是 $O(m \log m)$。 如果不先檢查邊數、改成最後數集合個數，迴圈要跑 $n$ 次，
+總時間是 $O(m + n \log m)$；先檢查邊數可以在 $n$ 很大時立刻回答。
+
+\textbf{(b)} 兩個規則在漸近意義下一樣好，都不比對方好。 根的子孫個數等於樹的節點數減一，所以「子孫
+比較少的接到子孫比較多的底下」就是資結書第~13.2.1~節的依大小合併。 設一共有 $N$ 個元
+素：
+\begin{itemize}
+\item 依大小合併：由資結書定理~13.2，有 $s$ 個節點的樹高度不超過
+$\lfloor \lg s \rfloor + 1$。 理由是一個節點的深度加一時，它所在的樹被接到一棵至少一樣大的
+樹底下，節點數至少加倍，所以深度最多 $\lg N$。
+\item 依高度合併：由資結書引理~13.3 (2)，高度（邊數）是 $h$ 的樹至少有 $2^h$ 個節點：
+兩棵一樣高的樹合併，高度變成 $h + 1$，節點數至少 $2^h + 2^h = 2^{h+1}$；不一樣高時高度不
+變、節點數變多。 所以高度最多 $\lg N$。
+\end{itemize}
+兩個規則都保證 FIND 最壞 $O(\log N)$。 而且兩個都會達到 $\Theta(\log N)$：$N = 2^k$，每一輪
+都把兩棵一模一樣的樹合併，$k$ 輪之後兩個規則做出同一棵樹，高度（邊數）$k = \lg N$，最深
+的節點做 FIND 要走 $\lg N$ 步（資結書第~13.3~節 $N = 8$ 的例子）。 所以兩者最壞都是
+FIND $\Theta(\log N)$、$M$ 個操作 $\Theta(M \log N)$，漸近相同。 對個別的操作序列，兩者做出
+的樹高度可能不同（資結書第~13~章觀念題第~5~題就有依大小合併比較高的例子），但只差常數
+倍，不影響漸近的結論。
+\end{pastsoln}

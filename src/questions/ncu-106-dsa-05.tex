@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncu-106-dsa-05}]{中央資工所 106 學年度 第 5 題}
+（問答）
+
+Assume it is a known fact that problem $X$ is NP-complete.
+\begin{enumerate}[label=(\alph*)]
+\item How can we prove that problem $Y$ is also NP-hard by taking advantage of polynomial-time
+reduction and the fact? (6\%)
+\item If we can prove $Y$ is NP-hard and $Y$ is NP, then we can prove $Y$ is also NP-complete.
+How can we prove that $Y$ is NP? (6\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 證明 $X \le_{\mathrm{p}} Y$，也就是把\textbf{已知難的 $X$} 歸約到\textbf{要證明的 $Y$}，
+方向不能反。 具體要寫出三件事（資結書第~28.3~節）：
+\begin{enumerate}
+\item 構造一個轉換 $f$：給 $X$ 的任何一個實例 $x$，產生 $Y$ 的一個實例 $f(x)$。
+\item $f$ 可以在 $|x|$ 的多項式時間內算出來（輸出 $f(x)$ 的長度自然也是多項式）。
+\item 正確性，兩個方向都要證：$x$ 是 $X$ 的是實例 $\Rightarrow$ $f(x)$ 是 $Y$ 的是實例；
+$f(x)$ 是 $Y$ 的是實例 $\Rightarrow$ $x$ 是 $X$ 的是實例。 只證第一個方向不夠，把每個 $x$ 都變成
+同一個是實例的 $f$ 也滿足第一個方向。
+\end{enumerate}
+\textbf{為什麼這樣就證完}。 任取 NP 裡的問題 $L$。 $X$ 是 NP 完備的，所以 $X$ 是 NP 難的，
+$L \le_{\mathrm{p}} X$。 再加上 $X \le_{\mathrm{p}} Y$，由遞移性（資結書引理~28.3：兩個多項式時間的
+轉換接起來，$g(f(x))$ 仍是多項式時間），$L \le_{\mathrm{p}} Y$。 NP 裡每個問題都能歸約到 $Y$，
+這正是 $Y$ 是 NP 難的定義。
+
+方向的直覺：$X \le_{\mathrm{p}} Y$ 表示「會解 $Y$ 就會解 $X$」，所以 $Y$ 至少和 $X$ 一樣難。 反過來
+證 $Y \le_{\mathrm{p}} X$ 只說明 $Y$ 不比 $X$ 難，任何 P 裡的問題都做得到，證不出 $Y$ 難。
+
+\textbf{(b)} 照 NP 的定義（資結書第~28.2~節）：給出一個\textbf{憑證}（certificate）和一個
+\textbf{驗證者}（verifier）。
+\begin{enumerate}
+\item 說明憑證是什麼：對 $Y$ 的每一個是實例 $y$，都有一個長度是 $|y|$ 的多項式的憑證 $c$。
+\item 寫出驗證者 $V(y, c)$：一個確定性的演算法，在 $|y|$ 的多項式時間內檢查 $c$。
+\item 正確性：$y$ 是是實例 若且唯若 存在某個 $c$ 讓 $V(y, c)$ 回答是。 也就是是實例一定有能通過的
+憑證，否實例不管給什麼憑證都不會通過。
+\end{enumerate}
+等價的說法是：寫一個非確定性的多項式時間演算法，先「猜」出憑證，再用多項式時間檢查。
+
+例如 $Y$ 是哈密頓環問題：憑證是頂點的一個排列 $v_1, v_2, \ldots, v_n$，長度 $O(n \lg n)$ 個位元；
+驗證者檢查每個頂點恰好出現一次、$v_i v_{i+1}$（$1 \le i < n$）和 $v_n v_1$ 都是邊，用相鄰矩陣
+$O(n)$ 時間就檢查完。
+
+(a)(b) 都做到，$Y$ 既是 NP 難又在 NP 裡，就是 NP 完備的（資結書引理~28.6 把這兩步合成一個做法）。
+\end{pastsoln}

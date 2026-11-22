@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncku-106-prog-02}]{成大資訊聯招 106 學年度 第 2 題}
+（問答）
+
+(10\%) Suppose there are 11 slots available from 250, please give the hashing function to insert
+the keys, 42, 77, 85, 113, 315, 433, 474, 479, 574, 582, 698, to the 11 slots without collision by
+using the division method, and show the hashing table.
+\end{pastexam}
+
+\begin{pastsoln}
+「11 slots available from 250」沒有說清楚，這裡讀成：可用的位址是從 $250$ 開始的 $11$ 格，也就是
+$250, 251, \ldots, 260$。 如果位址就是 $0..10$，把下面答案的 $250 +$ 拿掉即可，表的內容不變。
+
+答案：$h(k) = 250 + (k \bmod 11)$。 雜湊表：
+\begin{center}
+\small
+\begin{tabular}{c*{11}{c}}
+\toprule
+位址 & 250 & 251 & 252 & 253 & 254 & 255 & 256 & 257 & 258 & 259 & 260 \\
+\midrule
+鍵 & 77 & 474 & 574 & 113 & 433 & 698 & 479 & 315 & 85 & 42 & 582 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{為什麼除數取 $11$。} 除法雜湊是 $k \bmod m$（資結書第~12.1~節），值落在 $0..m-1$。 要把 $11$ 個
+鍵放進 $11$ 格又不碰撞，$11$ 個餘數必須兩兩不同：$m < 11$ 時餘數只有 $m$ 種，由鴿籠原理一定有兩個鍵相同；
+$m > 11$ 時餘數可能超過 $10$，落到 $11$ 格以外。 所以取 $m = 11$，再加上起始位址 $250$。 $11$ 也是質數，
+符合除法雜湊「$m$ 取質數」的建議。
+
+\textbf{逐一計算 $k \bmod 11$}（寫成 $k = 11q + r$）：
+\begin{center}
+\small
+\begin{tabular}{rlcc}
+\toprule
+$k$ & $11q + r$ & $r = k \bmod 11$ & $h(k)$ \\
+\midrule
+42 & $11 \cdot 3 + 9$ & 9 & 259 \\
+77 & $11 \cdot 7 + 0$ & 0 & 250 \\
+85 & $11 \cdot 7 + 8$ & 8 & 258 \\
+113 & $11 \cdot 10 + 3$ & 3 & 253 \\
+315 & $11 \cdot 28 + 7$ & 7 & 257 \\
+433 & $11 \cdot 39 + 4$ & 4 & 254 \\
+474 & $11 \cdot 43 + 1$ & 1 & 251 \\
+479 & $11 \cdot 43 + 6$ & 6 & 256 \\
+574 & $11 \cdot 52 + 2$ & 2 & 252 \\
+582 & $11 \cdot 52 + 10$ & 10 & 260 \\
+698 & $11 \cdot 63 + 5$ & 5 & 255 \\
+\bottomrule
+\end{tabular}
+\end{center}
+十一個餘數正好是 $0, 1, \ldots, 10$ 各一次，沒有碰撞，每一格都用到，載入因子是 $1$。
+\end{pastsoln}

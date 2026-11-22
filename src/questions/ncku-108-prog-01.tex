@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncku-108-prog-01}]{成大資訊聯招 108 學年度 第 1 題}
+（是非；錯的要訂正或說明）
+
+Answer \textbf{True} or \textbf{False} for the following statements. Give correct answers or explain
+clearly for \textbf{False} statements. (12\%)
+\begin{enumerate}[label=(\arabic*)]
+\item Let $G$ be a graph with $e$ edges and $v$ vertices. If $G$ is represented by adjacency matrix,
+DFS requires O($e^2$) time. (4\%)
+\item The path from vertex $u$ to vertex $v$ on a minimal cost spanning tree of an undirected graph
+$G$ is also a shortest path from $u$ to $v$. (4\%)
+\item In static hashing, the worst-case number of comparisons needed for a successful search is
+O($n$) for open addressing. The number could be reduced to O(log $n$) by using chaining method. (4\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) False；(2) False；(3) False。
+
+\textbf{(1) False。} 正確的說法是 $O(v^2)$（而且是 $\Theta(v^2)$）。 用鄰接矩陣時，要列出頂點 $u$ 的鄰居，得把
+$u$ 那一列的 $v$ 格全部看過，不管裡面有幾個 $1$。 DFS 對每個頂點恰好做一次這件事，共 $v \cdot v$ 格，再加上
+外層迴圈的 $\Theta(v)$，總共 $\Theta(v^2)$（資結書第~21.4~節）。 這個時間由 $v$ 決定，和 $e$ 無關：例如一張
+$v$ 個頂點、沒有邊的圖，$e^2 = 0$，DFS 卻還是要掃完 $v^2$ 格，所以「$O(e^2)$」一般不成立。（連通圖有
+$e \ge v - 1$，那時 $v^2 = O(e^2)$ 碰巧成立，但這只是很鬆的上界，不是 DFS 時間的正確寫法。）用鄰接串列才是
+$\Theta(v + e)$。
+
+\textbf{(2) False。} 最小生成樹讓\textbf{整棵樹的邊權重總和}最小，不保證樹上每兩點之間的路徑最短（資結書
+第~24.5.4~節）。 反例：三角形，$w(1,2) = 4$、$w(2,3) = 3$、$w(3,1) = 5$。
+
+\begin{center}
+\begin{tikzpicture}[x=1.1cm, y=1.1cm,
+    v/.style={circle, draw=black!65, minimum size=6mm, inner sep=0pt, font=\small},
+    w/.style={inner sep=1.5pt, font=\small},
+    te/.style={draw=memStroke, line width=1.6pt},
+    ne/.style={draw=black!40, dashed}]
+\node[v] (a) at (0,0) {$1$};
+\node[v] (b) at (2,0) {$2$};
+\node[v] (c) at (1,1.6) {$3$};
+\draw[te] (a) -- node[w, below] {4} (b);
+\draw[te] (b) -- node[w, right] {3} (c);
+\draw[ne] (c) -- node[w, left] {5} (a);
+\end{tikzpicture}
+\end{center}
+唯一的最小生成樹是 $\{(1,2), (2,3)\}$，總重 $7$（粗線）；去掉權重最大的 $(3,1)$ 才能讓總和最小。 樹上
+從 $1$ 到 $3$ 的路徑是 $1 \to 2 \to 3$，長度 $4 + 3 = 7$，但直接走邊 $(1, 3)$ 只要 $5$，所以樹上的路徑不是最短
+路徑。
+
+\textbf{(3) False。} 前半句對：開放定址在最壞情況下所有鍵都擠成一串，成功搜尋最後放進去的那個鍵要比較
+$n$ 次，是 $O(n)$。 後半句錯：鏈結法的最壞情況也是 $O(n)$。 $n$ 個鍵可能全部雜湊到同一格（資結書
+第~12.2.2~節），那一格的串列有 $n$ 個節點，搜尋串列尾端的鍵要比較 $n$ 次。 換成鏈結法改善的是\textbf{平均}
+情況（簡單均勻雜湊下成功搜尋的期望比較次數是 $1 + \alpha/2$ 左右，$\alpha$ 是載入因子），不是最壞情況。 要讓
+最壞情況變成 $O(\log n)$，每一格得改用平衡搜尋樹（例如紅黑樹）而不是串列。
+\end{pastsoln}

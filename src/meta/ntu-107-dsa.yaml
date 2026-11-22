@@ -1,0 +1,14 @@
+paper: ntu-107-dsa
+volume: 1
+school: 臺大
+dept: 資工所
+year: 107
+subject: 資料結構與演算法
+instructions: "※ 注意：請用 2B 鉛筆作答於答案卡，並先詳閱答案卡上之「畫記說明」。 注意: (I), (II), (III), (IV) 四大題共 16 題選擇題考生應劃卡作答於『答案卡』。選擇題不答零分，答錯倒扣當題分數。 ※ 注意：請作答於試卷內之「非選擇題作答區」，請標明題號依序作答。"
+questions:
+  - {id: ntu-107-dsa-01, label: 第 I 題, chapter: 14}
+  - {id: ntu-107-dsa-02, label: 第 II 題, chapter: 8}
+  - {id: ntu-107-dsa-03, label: 第 III 題, chapter: 12}
+  - {id: ntu-107-dsa-04, label: 第 IV 題, chapter: 10}
+  - {id: ntu-107-dsa-05, label: 第 V 題, chapter: 3}
+  - {id: ntu-107-dsa-06, label: 第 VI 題, chapter: 25}

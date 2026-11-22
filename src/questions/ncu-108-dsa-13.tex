@@ -1,0 +1,96 @@
+\begin{pastexam}[label={px:ncu-108-dsa-13}]{中央資工所 108 學年度 問答題第 1 題}
+（問答）
+
+A divide-and-conquer algorithm solves a problem directly if the problem is small. If the problem is
+large, it is first \textbf{divided} into two or more parts called subproblems. Each subproblem is then
+recursively solved (\textbf{conquered}) in the same manner. Afterwards, the solutions to the
+subproblems are combined (\textbf{merged}) into a solution to the original problem. The merge sort
+algorithm is a well-known example following the divide-and-conquer paradigm. The key operation of
+the merge sort algorithm is the merging of two sorted sequences. To perform the merging, we use an
+auxiliary procedure MERGE($A$, $p$, $q$, $r$), where $A$ is an array and $p$, $q$, and $r$ are indices
+numbering elements of the array such that $p \le q < r$. The procedure assumes that the subarrays
+$A[p \,..\, q]$ and $A[q+1 \,..\, r]$ are in sorted order. It merges them to form a single sorted
+subarray that replaces the current subarray $A[p \,..\, r]$. The pseudo code of the MERGE operation is
+shown below. Based on the operation, we can design the merge sort algorithm easily.
+\begin{enumerate}[label=(\alph*)]
+\item Write a detailed divide-and-conquer merge sort algorithm using the MERGE operation. Note that
+the algorithm \textbf{MUST} include well-described input and output. (9\%)
+\item Analyze the time complexity of the merge sort algorithm with the big-O notation. (8\%)
+\end{enumerate}
+
+\begin{small}
+\textbf{MERGE}($A$, $p$, $q$, $r$)\\
+\textbf{Input}:\\
+\hspace*{1.5em}$A$: an array of elements;\\
+\hspace*{1.5em}$p$, $q$, $r$: indices of $A$, where $p \le q < r$, and the subarrays $A[p \,..\, q]$
+and $A[q+1 \,..\, r]$ are in sorted order (from small to large)\\
+\textbf{Output}:\\
+\hspace*{1.5em}$A$: an array of elements, where the subarray $A[p \,..\, r]$ is in sorted order
+(from small to large)\\
+1. $n_1 \leftarrow q - p + 1$\\
+2. $n_2 \leftarrow r - q$\\
+3. create arrays $L[1 \,..\, n_1+1]$ and $R[1 \,..\, n_2+1]$\\
+4. \textbf{for} $i \leftarrow 1$ \textbf{to} $n_1$\\
+5. \hspace*{1em}\textbf{do} $L[i] \leftarrow A[p+i-1]$\\
+6. \textbf{for} $j \leftarrow 1$ \textbf{to} $n_2$\\
+7. \hspace*{1em}\textbf{do} $R[j] \leftarrow A[q+j]$\\
+8. $L[n_1+1] \leftarrow \infty$\\
+9. $R[n_2+1] \leftarrow \infty$\\
+10. $i \leftarrow 1$\\
+11. $j \leftarrow 1$\\
+12. \textbf{for} $k \leftarrow p$ \textbf{to} $r$\\
+13. \hspace*{1em}\textbf{do if} $L[i] \le R[j]$\\
+14. \hspace*{3em}\textbf{then} $A[k] \leftarrow L[i]$\\
+15. \hspace*{5.2em}$i \leftarrow i+1$\\
+16. \hspace*{3em}\textbf{else} $A[k] \leftarrow R[j]$\\
+17. \hspace*{5.2em}$j \leftarrow j+1$
+\end{small}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 和資結書虛擬碼~14.5 相同：一段長度至少 $2$ 時，從中間切開（divide），兩半各自遞迴排序（conquer），
+再用 MERGE 合併（combine）；長度 $0$ 或 $1$ 時本來就排好了，直接返回。
+
+\begin{pseudo}{合併排序}
+\Procedure{Merge-Sort}{$A, p, r$}
+    \Statex \textbf{Input}：陣列 $A$，下標 $p, r$；要排序的是子陣列 $A[p..r]$（$p > r$ 表示空的）。
+    \Statex \textbf{Output}：同一個陣列 $A$，其中 $A[p..r]$ 由小到大排好，而且是原來那些元素的一個排列；$A$ 的其他部分不變。
+    \If{$p < r$} \Comment{兩個以上的元素才需要做}
+        \State $q \gets \lfloor (p + r)/2 \rfloor$ \Comment{divide}
+        \State \Call{Merge-Sort}{$A, p, q$} \Comment{conquer 左半}
+        \State \Call{Merge-Sort}{$A, q + 1, r$} \Comment{conquer 右半}
+        \State \Call{Merge}{$A, p, q, r$} \Comment{combine}
+    \EndIf
+\EndProcedure
+\end{pseudo}
+排序整個 $A[1..n]$ 時呼叫 \proc{Merge-Sort}$(A, 1, n)$。
+
+\textbf{正確性}。 對長度 $m = r - p + 1$ 做強歸納。 $m \le 1$ 時什麼都不做，$A[p..r]$ 已經排好。 $m \ge 2$ 時
+$p < r$，$q = \lfloor (p + r)/2 \rfloor$ 滿足 $p \le q < r$，正好是 MERGE 要求的條件；左半長度
+$q - p + 1 = \lceil m/2 \rceil$、右半長度 $\lfloor m/2 \rfloor$ 都小於 $m$，由歸納假設，兩次遞迴之後
+$A[p..q]$、$A[q+1..r]$ 各自排好。 MERGE 的輸出規格就是把它們合成排好的 $A[p..r]$，而且只動 $A[p..r]$，
+所以結論成立。
+
+\textbf{(b)} 先算 MERGE 的時間。 合併 $m = r - p + 1$ 個元素時，第 1--11 行複製 $n_1 + n_2 = m$ 個元素並設定哨兵，
+$\Theta(m)$；第 12--17 行的迴圈跑 $m$ 次，每次 $O(1)$，$\Theta(m)$。 所以 MERGE 是 $\Theta(m)$。
+
+令 $T(n)$ 為 \proc{Merge-Sort} 排 $n$ 個元素的時間，
+\[
+T(n) = \begin{cases}
+\Theta(1), & n = 1,\\
+T(\lceil n/2 \rceil) + T(\lfloor n/2 \rfloor) + \Theta(n), & n \ge 2.
+\end{cases}
+\]
+地板和天花板不影響漸近的結果（資結書第~2.1.6~節），先看 $n$ 是 $2$ 的次方，$T(n) = 2T(n/2) + cn$。
+
+\textbf{遞迴樹}（資結書第~2.3~節）：第 $i$ 層有 $2^i$ 個子問題，每個大小 $n/2^i$，合併的時間合計
+$2^i \cdot c\,n/2^i = cn$；子問題大小從 $n$ 減半到 $1$，共 $\lg n + 1$ 層。 總時間
+\[
+T(n) = cn(\lg n + 1) = \Theta(n \lg n).
+\]
+也可以用主定理（資結書定理~2.4）：$a = 2$、$b = 2$，$n^{\log_b a} = n$，$f(n) = \Theta(n)$ 屬於情況 2，
+$T(n) = \Theta(n \lg n)$。
+
+所以合併排序的時間是 $O(n \lg n)$。 每一層不管資料長什麼樣都要完整合併一次，最好、最壞、平均都是
+$\Theta(n \lg n)$；額外空間是 MERGE 的 $L$、$R$，$\Theta(n)$。
+\end{pastsoln}

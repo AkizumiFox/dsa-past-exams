@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncu-108-dsa-05}]{中央資工所 108 學年度 第 5 題}
+（單選；每題 5 分，答錯倒扣 1 分。 第 4、5 題共用下面的程式）
+
+The following procedure recursively generates all the permutations of list[$i$] to list[$n$].
+\begin{minted}[fontsize=\small]{c}
+void perm(char *list, int i, int n)
+{
+ int j, temp;
+ if (i==n) { /* print the newly generated permutation */
+    for (j=0; j<=n; j++)
+        printf("%c", list[j]);
+    printf("     ");
+}
+else { /* generate permutations recursively */
+      for (j=i; j<=n; j++) {
+          ___(B1)___
+          ___(B2)___
+          swap(list[i], list[j], temp);}}}
+\end{minted}
+
+Blank (B2) in the algorithm above should be
+\begin{enumerate}[label=(\Alph*)]
+\item perm(\textit{list}, $i$+1, $n$)
+\item perm(\textit{list}, $i$, $n$)
+\item perm(\textit{list}, $j$, $n$)
+\item perm(\textit{list}, $j$+1, $n$)
+\item None of the above
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+(B1) 是 \texttt{swap(list[i], list[j], temp)}（第~4~題），把選好的元素放到第 $i$ 格。 第 $i$ 格決定了，接著要
+決定的是下一個\textbf{位置}，所以 (B2) 是 \texttt{perm(list, i+1, n)}。 遞迴到 $i = n$ 時只剩最後一格，沒有選擇，
+直接印出。 正確性的歸納證明見第~4~題。
+
+\textbf{其他選項}：
+\begin{itemize}
+\item (B) \texttt{perm(list, i, n)}：參數和自己一樣，又會從同一格開始，永遠不會到 $i = n$，無窮遞迴。
+\item (C) \texttt{perm(list, j, n)}：第一輪 $j = i$，同樣變成 \texttt{perm(list, i, n)}，無窮遞迴。
+\item (D) \texttt{perm(list, j+1, n)}：下一層從第 $j + 1$ 格開始，第 $i + 1$ 到第 $j$ 格被跳過，不會再換；$j = n$ 時
+呼叫 \texttt{perm(list, n+1, n)}，$i \ne n$、迴圈也不執行，什麼都不印。 \texttt{list} 是 abc 時只印出 abc、bac 兩種。
+\item (E) (A) 是對的，所以錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,146 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-05}]{臺大資工所 108 學年度 第 5 題}
+（是非與填空）
+
+(20\%) Quicksort is a fast and commonly used comparison-based sorting algorithm. Below you can
+find a version of quicksort algorithm in pseudo code format.
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{\textsc{Quicksort}$(A,p,r)$}\\
+1 & \textbf{if} $p<r$\\
+2 & \quad $q=\textsc{Partition}(A,p,r)$\\
+3 & \quad \textsc{Quicksort}$(A,p,q-1)$\\
+4 & \quad \textsc{Quicksort}$(A,q+1,r)$\\[6pt]
+\multicolumn{2}{l}{\textsc{Partition}$(A,p,r)$}\\
+1 & $x=A[r]$\\
+2 & $i=p-1$\\
+3 & \textbf{for} $j=p$ \textbf{to} $r-1$\\
+4 & \quad \textbf{if} $A[j]\le x$\\
+5 & \quad\quad $i=i+1$\\
+6 & \quad\quad exchange $A[i]$ with $A[j]$\\
+7 & exchange $A[i+1]$ with $A[r]$\\
+8 & \textbf{return} $i+1$
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+\item (6\%) True or false:
+\begin{enumerate}[label=(\arabic*)]
+\item The output of \textsc{Quicksort}() above is a \textbf{non-increasing} sorted sequence. (2\%)
+\item The \textsc{Quicksort}() above is a \textbf{stable} sorting algorithm. (2\%)
+\item The \textsc{Quicksort}() above is an \textbf{in-place} sorting algorithm. (2\%)
+\end{enumerate}
+\item (4\%) The given version of \textsc{Quicksort} above cannot efficiently process the cases
+where in the input array there are a large number of repeated elements. Analyze the worst-case
+running time which occurs when all $n$ keys in the input array A are identical. Please give it in
+big-O notation in terms of $n$.
+\item (10\%) To address the previously mentioned problematic case, we will now develop a new
+partition algorithm \textsc{ParititionThree}() that separates the input keys into three groups,
+the ones that are smaller than, that are identical to, and that are larger than the pivot key $x$.
+The return values $q1$ and $q2$ represent the indices of the first and the last keys of the group
+that equals the pivot key, respectively. Fill the blanks (A), (B), (C) in \textsc{ParitionThree}()
+below to complete the implementation, such that \textsc{QuickSortThree}() runs in $O(n)$-time
+when the input array has all $n$ elements identical.
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{rl}
+\multicolumn{2}{l}{\textsc{QuicksortThree}$(A,p,r)$}\\
+1 & \textbf{if} $p<r$\\
+2 & \quad $(q1,q2)=\textsc{PartitionThree}(A,p,r)$\\
+3 & \quad \textsc{QuicksortThree}$(A,p,q1-1)$\\
+4 & \quad \textsc{QuicksortThree}$(A,q2+1,r)$\\[6pt]
+\multicolumn{2}{l}{\textsc{PartitionThree}$(A,p,r)$}\\
+1 & $x=A[r]$\\
+2 & $q1=p$\\
+3 & $q2=r$\\
+4 & $j=p$\\
+5 & \textbf{while} $j\le q2$\\
+6 & \quad \textbf{if} $A[j]<x$\\
+7 & \quad\quad exchange $A[j]$ with $A[q1]$\\
+8 & \quad\quad // (A)\\
+9 & \quad\quad $j=j+1$\\
+10 & \quad \textbf{elseif} $A[j]>x$\\
+11 & \quad\quad exchange $A[j]$ with $A[q2]$\\
+12 & \quad\quad // (B)\\
+13 & \quad \textbf{else}\\
+14 & \quad\quad // (C)\\
+15 & \textbf{return} $(q1,q2)$
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) (1) False；(2) False；(3) True。 (b) $O(n^2)$。 (c) (A) $q1 = q1 + 1$；
+(B) $q2 = q2 - 1$；(C) $j = j + 1$。
+
+原卷的程序名稱有三種拼法（\textsc{ParititionThree}、\textsc{ParitionThree}、\textsc{PartitionThree}，
+還有 \textsc{QuickSortThree} 和 \textsc{QuicksortThree}），都是指虛擬碼裡的同一個程序。
+
+這裡的 \textsc{Partition} 就是 Lomuto 分割（資結書第~14.5~節）：取最後一個 $A[r]$ 當基準 $x$，
+$A[p..i]$ 放 $\le x$ 的數，$A[i+1..j-1]$ 放 $> x$ 的數，最後把基準換到 $i + 1$。
+
+\textbf{(a)(1) False。} 每次分割後，基準左邊都 $\le x$、右邊都 $> x$，遞迴把兩邊排好，結果是由小
+到大，也就是 non-decreasing（不遞減），不是 non-increasing。
+
+\textbf{(a)(2) False。} 反例：$A = \langle 2_a, 2_b, 1\rangle$（下標只用來分辨兩個 $2$）。 第一次
+分割 $x = 1$，$2_a$、$2_b$ 都 $> 1$，$i$ 停在 $0$；第 7 行把 $A[1] = 2_a$ 和 $A[3] = 1$ 交換，得
+$\langle 1, 2_b, 2_a\rangle$，回傳 $q = 1$。 右邊 $\langle 2_b, 2_a\rangle$ 再分割：$x = 2_a$，
+$2_b \le 2$，$i = 2$，和自己交換；第 7 行 $A[3]$ 和自己交換，不動。 輸出
+$\langle 1, 2_b, 2_a\rangle$，兩個 $2$ 的相對順序反了。 問題出在第 7 行和第 6 行的「遠距離交換」，
+會把相同的鍵跳過彼此。
+
+\textbf{(a)(3) True。} 所有搬動都是 $A$ 裡兩格互換，陣列之外只用 $x, i, j$ 幾個變數，這就是
+原地排序（資結書第~14.1~節的定義：除了輸入陣列，只用 $O(1)$ 個元素大小的額外空間）。 遞迴
+呼叫的堆疊另計（最壞 $O(n)$ 層），資結書第~14.7~節的比較表和 CLRS 都把快速排序列為原地排序。
+
+\textbf{(b) $O(n^2)$。} 全部 $n$ 個鍵相同時，第 4 行 $A[j] \le x$ 每次都成立，$i$ 跟著 $j$ 走到
+$r - 1$，回傳 $q = r$。 分割切成 $A[p..r-1]$（$n - 1$ 個）和空的右邊，下一層又是全部相同。
+分割 $m$ 個數比較 $m - 1$ 次，
+\[
+T(n) = T(n - 1) + \Theta(n) \quad\Longrightarrow\quad
+T(n) = \sum_{m=2}^{n} (m - 1) = \frac{n(n-1)}{2} = \Theta(n^2),
+\]
+和已經排好的輸入一樣，是快速排序的最壞情況（資結書第~14.5~節）。
+
+\textbf{(c)} 先寫出 \textsc{PartitionThree} 要維持的不變量。 每一輪 \textbf{while} 開始時：
+\begin{center}
+$A[p..q1-1] < x$，\quad $A[q1..j-1] = x$，\quad $A[j..q2]$ 還沒看過，\quad $A[q2+1..r] > x$。
+\end{center}
+一開始 $q1 = j = p$、$q2 = r$，前兩段和最後一段都是空的，整段都還沒看過，成立。 三種情況：
+\begin{itemize}
+\item $A[j] < x$（第 6--9 行）：$A[q1]$ 是「等於」區的第一個（等於區空的時候 $q1 = j$，就是和
+自己交換）。 交換後小於 $x$ 的數到了 $q1$，等於 $x$ 的數到了 $j$。 小於區多一格，所以
+\textbf{(A) 填 $q1 = q1 + 1$}；第 9 行 $j = j + 1$ 讓等於區往右移一格。
+\item $A[j] > x$（第 10--12 行）：把它換到還沒看過那段的最右邊 $q2$，大於區往左長一格，
+\textbf{(B) 填 $q2 = q2 - 1$}。 這裡\textbf{不能}動 $j$：從 $A[q2]$ 換過來的數還沒看過，下一輪
+要檢查它。
+\item $A[j] = x$：直接併進等於區，\textbf{(C) 填 $j = j + 1$}。
+\end{itemize}
+每一輪不是 $j$ 加一就是 $q2$ 減一，還沒看過的 $A[j..q2]$ 恰好少一格，所以迴圈剛好跑
+$r - p + 1$ 輪，$O(n)$。 結束時 $j = q2 + 1$，不變量變成 $A[p..q1-1] < x$、$A[q1..q2] = x$、
+$A[q2+1..r] > x$，回傳的 $(q1, q2)$ 正是等於區的頭尾。 基準 $A[r] = x$ 本身會被分到等於區，所以
+$q1 \le q2$，兩個遞迴呼叫的範圍都比 $A[p..r]$ 小，遞迴會結束。
+
+全部 $n$ 個鍵相同時，每一輪都走 (C)，一輪分割 $O(n)$ 後回傳 $(p, r)$，兩個遞迴呼叫的範圍
+$A[p..p-1]$、$A[r+1..r]$ 都是空的，立刻返回，總時間 $O(n)$，符合題目要求。
+
+舉例：$A = \langle 3, 5, 1, 3, 2, 3\rangle$，$x = 3$。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$j$ & $A[j]$ & 情況 & 之後的 $A$（$q1$, $q2$）\\
+\midrule
+1 & 3 & $=$ & $\langle 3, 5, 1, 3, 2, 3\rangle$（1, 6） \\
+2 & 5 & $>$，和 $A[6]$ 換 & $\langle 3, 3, 1, 3, 2, 5\rangle$（1, 5） \\
+2 & 3 & $=$ & 不變（1, 5） \\
+3 & 1 & $<$，和 $A[1]$ 換 & $\langle 1, 3, 3, 3, 2, 5\rangle$（2, 5） \\
+4 & 3 & $=$ & 不變（2, 5） \\
+5 & 2 & $<$，和 $A[2]$ 換 & $\langle 1, 2, 3, 3, 3, 5\rangle$（3, 5） \\
+\bottomrule
+\end{tabular}
+\end{center}
+這時 $j = 6 > q2 = 5$，迴圈結束，回傳 $(3, 5)$：$A[1..2] = \langle 1, 2\rangle < 3$，
+$A[3..5]$ 都是 $3$，$A[6] = 5 > 3$。
+\end{pastsoln}

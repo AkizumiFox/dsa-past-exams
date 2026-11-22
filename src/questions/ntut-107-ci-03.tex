@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntut-107-ci-03}]{北科大資工所 107 學年度 第 3 題}
+（是非）
+
+(6 pts) Mark by T(=true) or F(=false) each of the following:
+\begin{enumerate}[label=(\arabic*)]
+\item (3 pts) If someone was able to give an exponential time lower bound for a problem that is
+NP-complete, then this would imply that $\mathcal{P}$ is not equal to $\mathcal{NP}$, where
+$\mathcal{P}$ is the set of all decision problems solvable by deterministic algorithms in
+polynomial time and $\mathcal{NP}$ is the set of all decision problems solvable by
+nondeterministic algorithm in polynomial time.
+\item (3 pts) Suppose problem $P_1$ can be reduced to problem $P_2$ in linear time. Then, if $P_1$
+is NP-hard then $P_2$ is NP-hard.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) T；(2) T。
+
+\textbf{(1) T。} 設 $C$ 是 NP 完備問題，而且有人證明了任何解 $C$ 的決定性演算法最壞都要指數時間。
+那麼 $C$ 沒有多項式時間的決定性演算法，$C \notin \mathcal{P}$。 但 $C$ 是 NP 完備的，$C \in \mathcal{NP}$，
+所以 $\mathcal{NP}$ 裡有一個問題不在 $\mathcal{P}$ 裡，$\mathcal{P} \ne \mathcal{NP}$（$\mathcal{P} \subseteq
+\mathcal{NP}$ 一直成立，資結書定理~28.1）。 這也是資結書定理~28.5 的另一面：任何一個 NP 完備問題在
+$\mathcal P$ 裡就有 $\mathcal P = \mathcal{NP}$；反過來，有一個 NP 完備問題確定不在 $\mathcal P$ 裡，就
+有 $\mathcal P \ne \mathcal{NP}$。 這裡其實只用到 $C \in \mathcal{NP}$，「完備」不是必要的。
+
+\textbf{(2) T。} $P_1$ 是 NP-hard，表示每個 NP 問題 $A$ 都有 $A \le_{\mathrm p} P_1$。 題目給
+$P_1 \le P_2$，而且只花線性時間，線性時間當然是多項式時間，所以 $P_1 \le_{\mathrm p} P_2$。 由遞移性
+（資結書引理~28.3）：先把 $A$ 的輸入轉成 $P_1$ 的輸入，再轉成 $P_2$ 的輸入，兩次多項式時間的轉換
+合起來仍是多項式時間（第一次的輸出長度是多項式，代進第二個多項式還是多項式），所以
+$A \le_{\mathrm p} P_2$。 每個 NP 問題都歸約到 $P_2$，$P_2$ 是 NP-hard。
+
+方向要看清楚：難度是沿著歸約的箭頭\textbf{往後}傳的。 $P_1 \le P_2$ 時，「$P_1$ 難」推得出「$P_2$ 難」
+（本題）；「$P_2$ 難」推不出「$P_1$ 難」（北科大 106 學年度程式設計第 2 題第 (3) 小題就是這個反方向）。
+\end{pastsoln}

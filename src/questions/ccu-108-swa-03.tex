@@ -1,0 +1,96 @@
+\begin{pastexam}[label={px:ccu-108-swa-03}]{中正資工所甲組 108 學年度 第 4 題}
+（追蹤）
+
+(4\%) Given an edge-weighted directed graph, please answer the following questions.
+
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]}, v/.style={circle,draw,minimum size=9mm,inner sep=0pt,font=\sffamily}, w/.style={font=\sffamily\small,inner sep=1.5pt}]
+\node[v] (4) at (0,2.9) {4};
+\node[v] (1) at (5.6,2.9) {1};
+\node[v] (3) at (1.5,1.35) {3};
+\node[v] (0) at (7.6,1.35) {0};
+\node[v] (5) at (0,-0.2) {5};
+\node[v] (2) at (5.6,-0.2) {2};
+\draw[->] (1) -- node[w,above,pos=0.6] {10} (4);
+\draw[->] (4) -- node[w,above right,pos=0.4] {15} (3);
+\draw[->] (5) -- node[w,left,pos=0.4] {10} (4);
+\draw[->] (5) -- node[w,above left,pos=0.5] {4} (3);
+\draw[->] (1) -- node[w,above,pos=0.42] {30} (5);
+\draw[->] (2) -- node[w,above,pos=0.3] {4} (3);
+\draw[->] (2) -- node[w,below,pos=0.5] {10} (5);
+\draw[->] (0.120) -- node[w,above right,pos=0.6] {20} (1.-15);
+\draw[->] (1.-60) -- node[w,below left,pos=0.6] {2} (0.165);
+\draw[->] (0) -- node[w,below right,pos=0.55] {15} (2);
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) Perform Dijkstra's algorithm to determine the shortest path from vertex 0 to each of
+the other vertices. Please list the vertices in the order they are processed by the algorithm.
+\item (2\%) Perform a breadth-first traversal of the graph, starting with vertex 0. Select the
+smallest edge first, when appropriate.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $0, 2, 3, 1, 5, 4$；(b) $0, 2, 1, 3, 5, 4$。
+
+圖上的邊（$u \to v$：權重）：$0 \to 1$：20，$0 \to 2$：15，$1 \to 0$：2，$1 \to 4$：10，
+$1 \to 5$：30，$2 \to 3$：4，$2 \to 5$：10，$4 \to 3$：15，$5 \to 3$：4，$5 \to 4$：10。
+頂點 $3$ 沒有出邊。
+
+\textbf{(a)} Dijkstra（資結書第~25.2~節）每回合從還沒處理的頂點裡取出 $d$ 最小的，再鬆弛它的
+出邊。 表中每一列是取出那個頂點、鬆弛完之後的 $d$ 值，格子寫 $d/\pi$；空白表示已經處理過。
+
+\begin{center}
+\begin{tabular}{cccccccc}
+\toprule
+回合 & 取出 & $0$ & $1$ & $2$ & $3$ & $4$ & $5$ \\
+\midrule
+初始 & — & $0$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+1 & $0$ & & $20/0$ & $15/0$ & $\infty$ & $\infty$ & $\infty$ \\
+2 & $2$ & & $20/0$ & & $19/2$ & $\infty$ & $25/2$ \\
+3 & $3$ & & $20/0$ & & & $\infty$ & $25/2$ \\
+4 & $1$ & & & & & $30/1$ & $25/2$ \\
+5 & $5$ & & & & & $30/1$ & \\
+6 & $4$ & & & & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item 第 $1$ 回合取出 $0$：$d[1] = 20$、$d[2] = 15$。
+\item 第 $2$ 回合，最小的是 $d[2] = 15$：$2 \to 3$ 得 $15 + 4 = 19$，$2 \to 5$ 得 $15 + 10 = 25$。
+\item 第 $3$ 回合，最小的是 $d[3] = 19$（比 $d[1] = 20$ 小）。 $3$ 沒有出邊，不更新。
+\item 第 $4$ 回合取出 $1$（$20$）：$1 \to 4$ 得 $30$；$1 \to 5$ 得 $50$，不比 $25$ 小；$1 \to 0$ 的 $0$
+已處理。
+\item 第 $5$ 回合取出 $5$（$25$）：$5 \to 4$ 得 $35$，不比 $30$ 小；$5 \to 3$ 已處理。
+\item 第 $6$ 回合取出 $4$（$30$）：$4 \to 3$ 已處理。
+\end{itemize}
+
+處理的順序是 $0, 2, 3, 1, 5, 4$。 最短距離：$d(1) = 20$（$0 \to 1$）、$d(2) = 15$（$0 \to 2$）、
+$d(3) = 19$（$0 \to 2 \to 3$）、$d(4) = 30$（$0 \to 1 \to 4$）、$d(5) = 25$（$0 \to 2 \to 5$）。
+所有權重都是正的，Dijkstra 的結果正確。
+
+\textbf{(b)} 題目說「Select the smallest edge first」，這裡讀成：同一個頂點的鄰居，沿權重較小的
+邊先放進佇列。 BFS（資結書第~21.3~節）只沿著邊的方向走。
+
+\begin{center}
+\small
+\begin{tabular}{clp{0.5\linewidth}l}
+\toprule
+步 & 取出 & 出邊依權重排序，新發現的頂點 & 佇列 \\
+\midrule
+1 & $0$ & $0 \to 2$（15）、$0 \to 1$（20）：發現 $2, 1$ & $2, 1$ \\
+2 & $2$ & $2 \to 3$（4）、$2 \to 5$（10）：發現 $3, 5$ & $1, 3, 5$ \\
+3 & $1$ & $1 \to 0$（2）已訪、$1 \to 4$（10）發現 $4$、$1 \to 5$（30）已發現 & $3, 5, 4$ \\
+4 & $3$ & 沒有出邊 & $5, 4$ \\
+5 & $5$ & $5 \to 3$（4）、$5 \to 4$（10）都已發現 & $4$ \\
+6 & $4$ & $4 \to 3$ 已發現 & 空 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+走訪順序是 $0, 2, 1, 3, 5, 4$。 如果把「smallest」讀成頂點編號小的先走，第 $1$ 步會先放 $1$
+再放 $2$，順序變成 $0, 1, 2, 4, 5, 3$；作答時寫一句採用哪一種讀法。
+\end{pastsoln}

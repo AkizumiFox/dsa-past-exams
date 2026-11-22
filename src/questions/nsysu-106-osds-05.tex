@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:nsysu-106-osds-05}]{中山資工所甲組 106 學年度 第 10 題}
+（計算）
+
+(10\%) Transform the following expression to prefix and postfix.
+\[
+(A+B)*(C+D-E)*F
+\]
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{itemize}
+\item 前序式（prefix）：\texttt{* * + A B - + C D E F}
+\item 後序式（postfix）：\texttt{A B + C D + E - * F *}
+\end{itemize}
+
+\textbf{先加上完整的括號}。 \texttt{*} 和 \texttt{*}、\texttt{+} 和 \texttt{-} 各是同一個優先順序，
+都是由左到右結合，所以
+\[
+\bigl(\,((A + B) * ((C + D) - E)) * F\,\bigr).
+\]
+注意 $C + D - E$ 是 $(C + D) - E$，不是 $C + (D - E)$；$(A+B)*(C+D-E)*F$ 是先做左邊的乘法，再乘 $F$。
+
+\textbf{後序式}：每個括號裡寫成「左運算元、右運算元、運算子」，由內往外：
+\begin{itemize}
+\item $A + B \to$ \texttt{A B +}；$(C + D) - E \to$ \texttt{C D + E -}；
+\item $(A + B) * ((C + D) - E) \to$ \texttt{A B + C D + E - *}；
+\item 再乘 $F$：\texttt{A B + C D + E - * F *}。
+\end{itemize}
+
+\textbf{前序式}：每個括號寫成「運算子、左運算元、右運算元」：
+\begin{itemize}
+\item $A + B \to$ \texttt{+ A B}；$(C + D) - E \to$ \texttt{- + C D E}；
+\item $(A + B) * ((C + D) - E) \to$ \texttt{* + A B - + C D E}；
+\item 再乘 $F$：\texttt{* * + A B - + C D E F}。
+\end{itemize}
+
+\textbf{用堆疊驗證後序式}（資結書虛擬碼~6.8 的轉換法）。 運算元直接輸出；讀到運算子時，先把堆疊頂端
+優先順序大於或等於它的運算子彈出輸出，再推入；左括號推入，右括號彈到左括號為止。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+讀到 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+\texttt{(} & \texttt{(} & \\
+\texttt{A} & \texttt{(} & \texttt{A} \\
+\texttt{+} & \texttt{( +} & \texttt{A} \\
+\texttt{B} & \texttt{( +} & \texttt{A B} \\
+\texttt{)} & （空） & \texttt{A B +} \\
+\texttt{*} & \texttt{*} & \texttt{A B +} \\
+\texttt{(} & \texttt{* (} & \texttt{A B +} \\
+\texttt{C} & \texttt{* (} & \texttt{A B + C} \\
+\texttt{+} & \texttt{* ( +} & \texttt{A B + C} \\
+\texttt{D} & \texttt{* ( +} & \texttt{A B + C D} \\
+\texttt{-} & \texttt{* ( -} & \texttt{A B + C D +} \\
+\texttt{E} & \texttt{* ( -} & \texttt{A B + C D + E} \\
+\texttt{)} & \texttt{*} & \texttt{A B + C D + E -} \\
+\texttt{*} & \texttt{*} & \texttt{A B + C D + E - *} \\
+\texttt{F} & \texttt{*} & \texttt{A B + C D + E - * F} \\
+結束 & （空） & \texttt{A B + C D + E - * F *} \\
+\bottomrule
+\end{tabular}
+\end{center}
+讀到 \texttt{-} 時，堆疊頂端的 \texttt{+} 優先順序相同，要先彈出，這一步保證了由左到右結合；
+讀到第二個 \texttt{*} 時也一樣，先彈出前一個 \texttt{*}。 結果和上面一致。
+\end{pastsoln}

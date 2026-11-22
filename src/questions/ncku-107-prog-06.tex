@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ncku-107-prog-06}]{成大資訊聯招 107 學年度 第 6 題}
+（問答）
+
+(10\%) If someone gives a polynomial algorithm for an NP-hard problem, what conclusions you can
+draw from this fact?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\mathrm{P} = \mathrm{NP}$。 因此每一個 NP 問題（包括所有 NP 完備問題，例如 SAT、頂點覆蓋、
+哈密頓環）都有多項式時間的演算法。
+
+這裡的 polynomial algorithm 指最壞情況多項式時間的（確定性）演算法。 設 $X$ 是 NP 難的決策問題，
+而且 $X \in \mathrm{P}$。
+
+\textbf{證明 $\mathrm{NP} \subseteq \mathrm{P}$。} 任取 $A \in \mathrm{NP}$。 由 NP 難的定義（資結書
+定義~28.4），$A \le_{\mathrm{p}} X$：有一個多項式時間的轉換 $f$，使 $x$ 的答案是「是」若且唯若 $f(x)$
+的答案是「是」。 解 $A$ 的輸入 $x$（長度 $N$）時，先花 $p(N)$ 時間算出 $f(x)$，它的長度也不超過
+$p(N)$；再用 $X$ 的演算法解 $f(x)$，花 $q(p(N))$ 時間。 多項式代進多項式還是多項式，所以
+$A \in \mathrm{P}$（資結書引理~28.2）。 $A$ 是任取的，所以 $\mathrm{NP} \subseteq \mathrm{P}$。
+
+\textbf{另一個方向}：$\mathrm{P} \subseteq \mathrm{NP}$ 本來就成立（資結書定理~28.1）。 兩個方向合起來，
+$\mathrm{P} = \mathrm{NP}$。
+
+幾點補充：
+\begin{itemize}
+\item 題目沒說 $X$ 在 NP 裡（NP 難不一定屬於 NP），但上面的證明沒用到這一點，只用到「NP 的每個問題都
+能歸約到 $X$」。
+\item 如果 $X$ 是最佳化問題（例如求最小頂點覆蓋），它的決策版本可以用它在多項式時間內回答，決策版本
+是 NP 難的，結論一樣。
+\item 到目前沒有人找到這樣的演算法，一般相信 $\mathrm{P} \ne \mathrm{NP}$。 真有人給出來，就解決了
+P 與 NP 的問題。 反過來說，在 $\mathrm{P} \ne \mathrm{NP}$ 的前提下，NP 難的問題都沒有多項式時間的
+演算法。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,145 @@
+\begin{pastexam}[label={px:ncu-110-dsa-12}]{中央資工所 110 學年度 問答題第 2 題}
+（問答）
+
+A weighted graph G=(V, E) is an undirected graph with nonnegative weight assigned to each edge in
+E. The length of a path in G is the sum of edge weights of the edges in the path. A path P from
+vertex u to vertex v is said to be shortest if the length of P is smallest for all paths from vertex
+u to vertex v.
+\begin{enumerate}[label=(\Alph*)]
+\item (12\%) For a weighted graph $G$=($V$, $E$) and two vertices $x$, $y$ in $V$, give an efficient
+algorithm to find a shortest path from $x$ to $y$. Analyses the time complexity of the algorithm.
+\item (13\%) Now you are given a weighted graph $G$=($V$, $E$), a specified vertex $s$ in $V$, an
+array $d$[\,] of size $|V|$, and it is claimed that for each $v$ in $V$, $d$[$v$] is the length of the
+shortest path from $s$ to $v$. The claim may be correct or may be not. Design a linear time
+algorithm to check whether the claim is correct. Analyses the time complexity of your algorithm and
+make sure it is linear, that is, the running time of your algorithm must be $O(|V|+|E|)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+記 $n = |V|$、$m = |E|$，$\delta(u, v)$ 是 $u$ 到 $v$ 真正的最短距離，走不到時 $\delta = \infty$。 圖用
+鄰接串列存，無向邊 $\{u, v\}$ 在 $u$、$v$ 的串列裡各出現一次（看成兩條方向相反、權重相同的有向邊）。
+權重都 $\ge 0$，所以沒有負環，最短路徑一定存在（走得到的話）。
+
+\textbf{(A)} 權重非負，用 Dijkstra 演算法（資結書第~25.2~節、虛擬碼~25.3），以 $x$ 為起點；$y$ 一被
+取出就可以停，再沿著前驅 $\pi$ 從 $y$ 走回 $x$。
+\begin{pseudo}{$x$ 到 $y$ 的最短路徑}
+\Function{Shortest-Path}{$G, w, x, y$}
+    \For{每個頂點 $v \in V$}
+        \State $d[v] \gets \infty$；$\pi[v] \gets \NIL$；$\mathit{done}[v] \gets \FALSE$
+    \EndFor
+    \State $d[x] \gets 0$
+    \State $Q \gets$ 以 $d$ 為鍵、含所有頂點的最小優先佇列
+    \While{$Q$ 不是空的}
+        \State $u \gets$ \Call{Extract-Min}{$Q$}
+        \If{$d[u] = \infty$ \OR $u = y$}
+            \State \Break \Comment{剩下的都走不到，或 $y$ 已經確定}
+        \EndIf
+        \State $\mathit{done}[u] \gets \TRUE$
+        \For{每個 $v \in \mathit{Adj}[u]$}
+            \If{$\mathit{done}[v] = \FALSE$ \AND $d[u] + w(u, v) < d[v]$}
+                \State $d[v] \gets d[u] + w(u, v)$；$\pi[v] \gets u$
+                \State \Call{Decrease-Key}{$Q, v, d[v]$}
+            \EndIf
+        \EndFor
+    \EndWhile
+    \If{$d[y] = \infty$}
+        \State \Return 「$x$ 走不到 $y$」
+    \EndIf
+    \State 從 $y$ 沿著 $\pi$ 走回 $x$，把經過的頂點倒過來，\Return 這條路徑和長度 $d[y]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 資結書定理~25.6：權重非負時，每個頂點被 \proc{Extract-Min} 取出的那一刻，$d[u] =
+\delta(x, u)$，而且之後不會再變。 所以 $y$ 被取出時 $d[y] = \delta(x, y)$，可以提早結束。 取出的頂點
+$d = \infty$ 時，佇列裡剩下的頂點 $d$ 也都是 $\infty$，它們（包括還沒取出的 $y$）都從 $x$ 走不到。
+路徑的部分：$\pi[v]$ 最後一次被設成 $u$ 時，$u$ 已經取出，$d[u] = \delta(x, u)$ 不再改變，而且
+$d[v] = d[u] + w(u, v)$。 從 $y$ 沿著 $\pi$ 往回走，經過的都是已經取出的頂點，每一步都滿足這個等式，
+一路加回 $d[x] = 0$，得到一條長度恰好是 $d[y] = \delta(x, y)$ 的路徑，也就是最短路徑（和資結書
+定理~25.5 同一個道理）。
+
+\textbf{時間}。 初始化 $O(n)$。 每個頂點最多被取出一次，每條無向邊在兩個端點的串列裡各被檢查最多一次，
+所以最多 $n$ 次 \proc{Extract-Min}、$2m$ 次 \proc{Decrease-Key}。 取回路徑最多 $n - 1$ 步。 依優先佇列
+的做法：
+\begin{itemize}
+\item 二元堆積：每個操作 $O(\log n)$，總共 $O((n + m)\log n)$。 圖是連通的時候 $m \ge n - 1$，就是
+$O(m \log n)$。
+\item 陣列（每次掃一遍找最小）：\proc{Extract-Min} $O(n)$、\proc{Decrease-Key} $O(1)$，共 $O(n^2 + m) =
+O(n^2)$，適合稠密圖。
+\item 費氏堆積：\proc{Decrease-Key} 平攤 $O(1)$，共 $O(m + n \log n)$（資結書第~8.6~節）。
+\end{itemize}
+提早結束不會讓最壞情況變好（$y$ 可能是最後一個被取出的），但平均上常常省很多。 權重全部相同時可以
+直接用 BFS，$O(n + m)$；這題權重任意非負，所以用 Dijkstra。
+
+\textbf{(B)} 要同時確認兩件事：$d[v]$ 不比真正的距離大（真的有一條那麼短的路），也不比它小（沒有
+更短的路）。 「沒有更短的路」用三角不等式檢查每條邊；「真的有那麼短的路」要找到一條實際的路徑，
+只檢查每個頂點「有一個鄰居讓等號成立」還不夠，下面會給反例。 假設 $d[v]$ 允許是 $\infty$（宣稱走不到）。
+
+\begin{pseudo}{檢查 $d$ 是不是最短距離}
+\Function{Verify-Distances}{$G, w, s, d$}
+    \If{$d[s] \ne 0$}
+        \State \Return \FALSE
+    \EndIf
+    \For{每條邊 $\{u, v\} \in E$}
+        \If{$d[v] > d[u] + w(u, v)$ \OR $d[u] > d[v] + w(u, v)$}
+            \State \Return \FALSE \Comment{有更短的走法}
+        \EndIf
+    \EndFor
+    \For{每個頂點 $v$}
+        \State $\mathit{seen}[v] \gets \FALSE$
+    \EndFor
+    \State $\mathit{seen}[s] \gets \TRUE$；$Q \gets \langle s \rangle$
+    \While{$Q$ 不是空的}
+        \State $u \gets$ \Call{Dequeue}{$Q$}
+        \For{每個 $v \in \mathit{Adj}[u]$}
+            \If{$\mathit{seen}[v] = \FALSE$ \AND $d[v] = d[u] + w(u, v)$}
+                \State $\mathit{seen}[v] \gets \TRUE$；\Call{Enqueue}{$Q, v$}
+            \EndIf
+        \EndFor
+    \EndWhile
+    \For{每個頂點 $v$}
+        \If{$d[v] < \infty$ \AND $\mathit{seen}[v] = \FALSE$}
+            \State \Return \FALSE \Comment{沒有路徑能達到 $d[v]$}
+        \EndIf
+    \EndFor
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+第 4--6 行檢查每條邊的兩個方向（無向邊可以兩個方向走）。 約定 $\infty \le \infty$ 成立、
+$\infty + w = \infty$，所以兩端都是 $\infty$ 的邊不會被判錯，一端有限一端 $\infty$ 的邊會被第 5 行抓到。
+第 9--14 行是資結書第~21~章的 BFS，只走「等號成立」的邊（叫它\textbf{緊的邊}），$d[u] = \infty$ 的頂點
+不會被走到。
+
+\textbf{正確性}。 證明回傳 \TRUE 若且唯若每個 $v$ 都有 $d[v] = \delta(s, v)$。
+
+$(\Leftarrow)$ 設 $d = \delta$。 $d[s] = \delta(s, s) = 0$，第 2 行通過。 由三角不等式（資結書引理~25.3，
+無向邊兩個方向各是一條有向邊），第 5 行都不成立。 設 $v$ 有 $d[v] < \infty$，取一條從 $s$ 到 $v$ 的最短
+路徑 $\langle s = u_0, u_1, \ldots, u_k = v \rangle$。 由資結書引理~25.2，每一段前綴都是最短路徑，所以
+$\delta(s, u_t) = \delta(s, u_{t-1}) + w(u_{t-1}, u_t)$，路徑上每條邊都是緊的。 BFS 沿著緊的邊從 $s$ 出發，
+一定會走到 $v$：對 $t$ 歸納，$u_{t-1}$ 被標記後會被取出，檢查它的鄰居 $u_t$ 時，$u_t$ 若還沒被標記就會
+被標記。 所以第 16 行的條件都不成立，回傳 \TRUE。
+
+$(\Rightarrow)$ 設回傳 \TRUE。
+\begin{itemize}
+\item \textbf{$d[v] \le \delta(s, v)$}。 $\delta(s, v) = \infty$ 時顯然。 否則取一條最短路徑
+$\langle u_0 = s, \ldots, u_k = v \rangle$，第 5 行不成立表示 $d[u_t] \le d[u_{t-1}] + w(u_{t-1}, u_t)$，
+從 $d[u_0] = 0$ 一路加上去，$d[v] \le w(\text{路徑}) = \delta(s, v)$。
+\item \textbf{$d[v] \ge \delta(s, v)$}。 $d[v] = \infty$ 時顯然。 否則第 15--17 行沒有回傳 \FALSE，$v$ 被
+BFS 標記過，沿著 BFS 的前驅從 $v$ 走回 $s$，是一條每條邊都緊的路徑 $\langle s = u_0, \ldots, u_k = v \rangle$。
+把等式 $d[u_t] = d[u_{t-1}] + w(u_{t-1}, u_t)$ 加起來，$d[v] = d[s] + w(\text{路徑}) = w(\text{路徑})
+\ge \delta(s, v)$。
+\end{itemize}
+兩邊合起來 $d[v] = \delta(s, v)$。
+
+\textbf{為什麼不能只檢查「每個頂點有一條緊的邊」}。 權重可以是 $0$。 反例：邊 $\{s, u\}$ 權重 $10$、
+$\{u, v\}$ 權重 $0$，宣稱 $d = (d[s], d[u], d[v]) = (0, 5, 5)$。 每條邊的三角不等式都成立
+（$5 \le 0 + 10$、$0 \le 5 + 10$、$5 \le 5 + 0$），而且 $u$、$v$ 各有一條緊的邊（彼此之間那條）。 但
+真正的 $\delta(s, u) = \delta(s, v) = 10$。 上面的演算法從 $s$ 出發，$s$--$u$ 不緊（$0 + 10 \ne 5$），
+走不到 $u$、$v$，第 17 行回傳 \FALSE。 權重都是正數時，緊的邊一定從 $d$ 小的指向 $d$ 大的，沿著它往回
+走 $d$ 嚴格變小，最後只能停在 $s$，「每個頂點有一條緊的邊」就夠了；題目允許 $0$，所以要做 BFS。
+
+\textbf{時間}。 第 2 行 $O(1)$；第 4--6 行每條邊一次，$O(m)$；BFS 用鄰接串列，每個頂點進出佇列最多一次、
+每條邊在兩端各看一次，$O(n + m)$；最後掃一遍頂點 $O(n)$。 合計 $O(n + m) = O(|V| + |E|)$，是線性時間。
+沒有用到任何優先佇列，比重新跑一次 Dijkstra（$O(m \log n)$）再逐一比對快。
+\end{pastsoln}

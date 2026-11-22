@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ccu-110-csb-01}]{中正資工所乙組 110 學年度 第 1 題}
+（是非）
+
+(10\%) Carefully examine the following sentences and give your answer, true (T) or false (F),
+for each sentence. Two points are given for each correct answer, whereas \textbf{three points are
+deducted} for each incorrect answer. Therefore, please \textbf{do not guess at the answer} if you
+are unsure since \textbf{the expected value is negative}. Note that the deduction for incorrect
+responses only affects the 10 points of this question.
+\begin{enumerate}[label=(\alph*)]
+\item Data movement is not required for inserting a node to a linked list.
+\item The maximum number of nodes in a binary tree of depth 10 is 1023.
+\item Every binary tree can be uniquely defined by its pre-order and post-order sequences.
+\item A bi-connected graph is a connected graph that has two articulation points.
+\item Design patterns are formalized to make changes propagate throughout the code.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) T；(b) T；(c) F；(d) F；(e) F。
+
+(b) 的對錯要看「depth」怎麼定義，下面說明為什麼取 T。 (e) 考的是軟體工程，不在資結書的範圍，
+這裡只簡單說明。
+
+\textbf{(a) T}。 在鏈結串列裡插入一個節點，先找到要插在哪個節點 $p$ 後面，接著配置新節點 $x$，
+然後只改兩個指標：$x.\mathit{next} \gets p.\mathit{next}$，$p.\mathit{next} \gets x$（資結書
+第~5.1~節）。 原有的節點都留在原來的記憶體位置，沒有任何一筆資料被搬動。 陣列就不同：在第 $k$
+格插入，要把後面的 $n - k$ 個元素各往後挪一格。 「插入不用搬資料」正是串列相對於陣列的優點。
+
+\textbf{(b) T}。 這句話直接來自 Horowitz 課本的引理「深度為 $k$ 的二元樹最多有 $2^k - 1$ 個節點，
+$k \ge 1$」。 那本書的 depth 指樹的層數，根在第 $1$ 層。 照這個定義，深度 $10$ 的二元樹有
+$10$ 層，第 $i$ 層最多 $2^{i-1}$ 個節點，總共最多
+\[
+\sum_{i=1}^{10} 2^{i-1} = 2^{10} - 1 = 1023
+\]
+個，每層都滿時恰好達到（資結書定理~7.1 (2)，資結書的「高度」就是這裡的層數）。 如果 depth 改用
+「從根到最深節點的邊數」（資結書第~7.1~節對節點深度的定義），深度 $10$ 的樹有 $11$ 層，最多
+$2^{11} - 1 = 2047$ 個節點，這句就是錯的。 題目的 $1023 = 2^{10} - 1$ 正好對上「數層」的定義，
+出題的意思是 T。 考卷上遇到這種題，可以在答案旁註明「depth 指層數，根在第 1 層」。
+
+\textbf{(c) F}。 反例：根 $A$ 只有一個子節點 $B$。 $B$ 接在左邊或右邊，兩棵二元樹的前序都是
+$A\,B$，後序都是 $B\,A$，前序和後序分不出這兩棵。 一般來說，前序加後序只在每個節點都沒有
+「只有一個子節點」的情形（嚴格二元樹）時才能唯一決定樹；有 $m$ 個分支度為 $1$ 的節點時，符合的
+樹有 $2^m$ 棵（資結書定理~7.5）。 能唯一決定二元樹的是前序加中序、後序加中序（資結書第~7.4~節）。
+
+\textbf{(d) F}。 雙連通圖的定義是\textbf{沒有}割點（articulation point）的連通圖（資結書
+第~23.6~節），不是「有兩個割點」。 例如三個頂點的環 $a$--$b$--$c$--$a$ 沒有割點，是雙連通圖；
+路徑 $a$--$b$--$c$--$d$ 恰好有兩個割點 $b$、$c$（拿掉任何一個圖就斷開），卻不是雙連通圖。
+
+\textbf{(e) F}。 設計模式（design patterns）是把常見設計問題的解法整理成固定的結構，主要目的之一
+是把「會變動的部分」包起來，讓需求改變時只要改一個地方，\textbf{不會}牽動整份程式。 句子說
+「讓改變擴散到整份程式」，方向正好相反。
+\end{pastsoln}

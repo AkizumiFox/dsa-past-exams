@@ -1,0 +1,121 @@
+\begin{pastexam}[label={px:ntut-110-prog-01}]{北科大資工所 110 學年度 第 1 題}
+（程式追蹤）
+
+\textbf{Problem 1 [13\%] [ 1-1, 1\%] [ 1-2 $\sim$ 1-5, each 3\%]}
+
+The following Python code is binary search function. The parameters of the function are described
+as follows:
+\begin{enumerate}[label=(\alph*),nosep]
+\item \textit{data}: a sorted list to be searched.
+\item \textit{left}: the minimum index of the data.
+\item \textit{right}: the maximum index of the data.
+\item \textit{key}: the searching target.
+\end{enumerate}
+The return value of the search function is the index of the \textit{key}. If the \textit{key} not in
+the \textit{data}, the return value is "-1".
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{python}
+def search(data, left, right, key):
+    mid = (left+right)//2
+    if data[mid]==key:
+        return mid
+    if left==right:
+        return -1
+    if data[mid]>key:
+        return search(data, left, mid, key)
+    else:
+        return search(data, mid, right, key)
+def f(x):
+    print(search([1, 5, 9, 14, 23, 26], 0, 5, x))
+\end{minted}
+\begin{enumerate}[label=(\arabic*)]
+\item (1\%) If f(5) is executed, what is the output?
+\item (3\%) If f(5) is executed, please write the line numbers of the running sequence for this
+code. (11, 12, 1, 2, 3, 5, \underline{\hspace{3em}}3, 4)
+\item (3\%) If f(26) is executed, what kind of the error is reported while this code is running?
+\item (3\%) If f(26) is executed, please fix the error of this code (Line 8 and Line 10), so that the
+correct output should be 5.
+\item (3\%) Assume the functionality of search() is correct. What is the output of the following
+Python code f()?
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{python}
+def f():
+    data = [1, 5, 9, 14, 23, 26]
+    my_dict ={}
+    my_dict[9]=search(data, 0, 5, 9)
+    my_dict[1]=search(data, 0, 5, 1)
+    my_dict[14]=search(data, 0, 5, 14)
+    print(my_dict)                      # (i)(2%)
+    print(data[1:5:2])                  # (ii)(1%)
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+1-1 & \texttt{1} \\
+1-2 & 空格填 \texttt{7, 8, 1, 2,}；完整順序是 11, 12, 1, 2, 3, 5, 7, 8, 1, 2, 3, 4 \\
+1-3 & \texttt{RecursionError}（maximum recursion depth exceeded），無限遞迴 \\
+1-4 & 第 10 行改成 \texttt{return search(data, mid+1, right, key)}；第 8 行維持 \texttt{mid} \\
+1-5 & (i) \texttt{\{9: 2, 1: 0, 14: 3\}}；(ii) \texttt{[5, 14]} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\texttt{data} $= [1, 5, 9, 14, 23, 26]$，索引 $0$ 到 $5$。
+
+\textbf{1-1、1-2：\texttt{f(5)}。} 第 11、12 行呼叫 \texttt{search(data, 0, 5, 5)}，進入第 1 行。
+\begin{itemize}
+\item 第一層：第 2 行 $\mathit{mid} = (0 + 5) /\!/ 2 = 2$；第 3 行 \texttt{data[2]} $= 9 \ne 5$；第 5 行
+$0 \ne 5$；第 7 行 $9 > 5$ 成立，第 8 行呼叫 \texttt{search(data, 0, 2, 5)}，回到第 1 行。
+\item 第二層：第 2 行 $\mathit{mid} = 1$；第 3 行 \texttt{data[1]} $= 5$，相等，第 4 行回傳 $1$。
+\end{itemize}
+第 8 行把 $1$ 原封不動傳回，第 12 行印出 \texttt{1}。 行號順序是
+$11, 12, 1, 2, 3, 5, 7, 8, 1, 2, 3, 4$，空格填 \texttt{7, 8, 1, 2}。 第 6 行沒有執行（$\mathit{left} \ne
+\mathit{right}$），第 9、10 行也沒有（第 7 行的條件成立）。
+
+\textbf{1-3：\texttt{f(26)}。} 逐層看 $(\mathit{left}, \mathit{right}, \mathit{mid})$：
+\begin{center}
+\small
+\begin{tabular}{cccccl}
+\toprule
+層 & left & right & mid & data[mid] & 下一步 \\
+\midrule
+1 & 0 & 5 & 2 & 9 & $9 < 26$，第 10 行 \texttt{search(2, 5)} \\
+2 & 2 & 5 & 3 & 14 & $14 < 26$，\texttt{search(3, 5)} \\
+3 & 3 & 5 & 4 & 23 & $23 < 26$，\texttt{search(4, 5)} \\
+4 & 4 & 5 & 4 & 23 & $23 < 26$，\texttt{search(4, 5)} \\
+5 & 4 & 5 & 4 & 23 & 同上，永遠不變 \\
+\bottomrule
+\end{tabular}
+\end{center}
+區間剩兩格 $[4, 5]$ 時，$\mathit{mid} = 4$ 等於 $\mathit{left}$，第 10 行又用同一個區間 $[4, 5]$ 遞迴，
+區間不再縮小，也到不了 $\mathit{left} = \mathit{right}$。 遞迴不會停，深度超過 Python 的上限（預設約
+$1000$ 層）時丟出 \texttt{RecursionError: maximum recursion depth exceeded}（Python 3.5 以前是
+\texttt{RuntimeError}）。 這就是資結書第~17.1.3~節說的邊界陷阱：$\mathit{mid}$ 無條件捨去時，往右的
+那一邊一定要從 $\mathit{mid} + 1$ 開始。
+
+\textbf{1-4：修正。} 第 10 行改成 \texttt{return search(data, mid+1, right, key)}。 第 8 行可以維持
+\texttt{return search(data, left, mid, key)}，題目說改第 8 行，寫回原樣即可。 理由：進到第 7 行時
+$\mathit{left} < \mathit{right}$，所以 $\mathit{left} \le \mathit{mid} < \mathit{right}$。
+\begin{itemize}
+\item 第 8 行的 $[\mathit{left}, \mathit{mid}]$：非空，而且因為 $\mathit{mid} < \mathit{right}$，比原區間短。
+$\mathit{data}[\mathit{mid}] > \mathit{key}$ 時，$\mathit{key}$ 若存在一定在 $\mathit{mid}$ 左邊，在這個區間裡。
+\item 第 10 行的 $[\mathit{mid} + 1, \mathit{right}]$：非空（$\mathit{mid} + 1 \le \mathit{right}$），也比原區間短。
+$\mathit{data}[\mathit{mid}] < \mathit{key}$ 時，$\mathit{key}$ 若存在一定在 $\mathit{mid}$ 右邊。
+\end{itemize}
+每次遞迴區間至少少一格又不會變空，最後一定走到 $\mathit{left} = \mathit{right}$，由第 4 行或第 6 行回傳。
+修正後 \texttt{f(26)}：$(0, 5, \mathit{mid}{=}2) \to (3, 5, \mathit{mid}{=}4) \to (5, 5, \mathit{mid}{=}5)$，
+\texttt{data[5]} $= 26$，印出 \texttt{5}。
+
+照「兩邊都排除 $\mathit{mid}$」的習慣，把第 8 行也改成 \texttt{mid-1} 的話，\texttt{f(26)} 一樣印出
+\texttt{5}，但對比所有元素都小的鍵會出事。 例如 \texttt{f(0)}：$(0, 5) \to (0, 1) \to (0, -1)$，這時
+$\mathit{left} > \mathit{right}$，第 5 行的 \texttt{left==right} 攔不住，$\mathit{mid} = (0 - 1) /\!/ 2 = -1$，
+Python 的 \texttt{data[-1]} 是最後一個元素 $26$，又往 $(0, -2)$ 走，之後無限遞迴。 要用 \texttt{mid-1}，
+第 5 行就得改成先檢查 \texttt{left > right}；題目只讓改第 8、10 行，所以第 8 行保留 \texttt{mid}。
+
+\textbf{1-5。} (i) \texttt{search} 正確時，$9$、$1$、$14$ 的索引分別是 $2$、$0$、$3$。 Python 3.7 起
+字典照插入順序印出，所以印 \texttt{\{9: 2, 1: 0, 14: 3\}}。 (ii) \texttt{data[1:5:2]} 從索引 $1$ 開始、
+每次跳 $2$、不含 $5$，取索引 $1$、$3$，印 \texttt{[5, 14]}。
+\end{pastsoln}

@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ntut-108-ci-01}]{北科大資工所 108 學年度 第 1 題（節錄 (3) 小題）}
+（簡答）
+
+(15 pts) Please answer the following questions concisely.
+\begin{enumerate}[label=(\arabic*)]
+\setcounter{enumi}{2}
+\item (3 pts) Please write the following postfix expression in infix form:
+\[ f\,a \times b\,b \times + c\,d + / e + \]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$(f \times a + b \times b) / (c + d) + e$。
+
+用資結書第~6.3.2~節後序求值的堆疊，只是堆疊裡放的不是數值，而是「目前算到的那一段運算式」。
+由左往右讀：讀到運算元就 push；讀到運算子就 pop 兩次，\textbf{先 pop 出來的是右邊的運算元}，
+把兩段接成一段再 push 回去。 接的時候，如果某一段的最後一個運算子優先順序比較低，就要加括號。
+
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） \\
+\midrule
+$f$ & push & $f$ \\
+$a$ & push & $f$,\ $a$ \\
+$\times$ & pop $a$（右）、$f$（左） & $f \times a$ \\
+$b$ & push & $f \times a$,\ $b$ \\
+$b$ & push & $f \times a$,\ $b$,\ $b$ \\
+$\times$ & pop $b$、$b$ & $f \times a$,\ $b \times b$ \\
+$+$ & pop $b \times b$（右）、$f \times a$（左） & $f \times a + b \times b$ \\
+$c$ & push & $f \times a + b \times b$,\ $c$ \\
+$d$ & push & $f \times a + b \times b$,\ $c$,\ $d$ \\
+$+$ & pop $d$（右）、$c$（左） & $f \times a + b \times b$,\ $c + d$ \\
+$/$ & pop $c + d$（右）、$f \times a + b \times b$（左） & $(f \times a + b \times b) / (c + d)$ \\
+$e$ & push & $(f \times a + b \times b) / (c + d)$,\ $e$ \\
+$+$ & pop $e$（右）、前一段（左） & $(f \times a + b \times b) / (c + d) + e$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+讀完時堆疊裡剩一段，就是答案。 讀到 $/$ 那一步要注意括號：左右兩段的最後一個運算子都是 $+$，
+比 $/$ 低，兩邊都要加括號。 寫成 $f \times a + b \times b / c + d$ 意思就完全不同了。 最後的
+$+ e$ 不必再加括號，因為 $/$ 比 $+$ 高。
+
+也可以反過來檢查：把答案照資結書第~6.3.3~節轉回後序，左邊的 $(f \times a + b \times b)$ 得
+$f\,a \times b\,b \times +$，右邊的 $(c + d)$ 得 $c\,d +$，接上 $/$，再接 $e\,+$，和題目一樣。
+\end{pastsoln}

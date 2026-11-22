@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ncu-107-dsa-04}]{中央資工所 107 學年度 第 4 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+The Floyd-Warshall algorithm is a famous algorithm to solve the all-pairs shortest-paths problem
+on a weighted directed graph $G=(V,E)$. The algorithm gives a recursive formula to compute
+$d^{(k)}[i,j]$, the length of a shortest path from $i$ to $j$ using only vertices with indices
+$\le k$. Here it is assumed that the vertex set $V=\{1,2,\ldots,n\}$ if the given graph contains
+$n$ vertices. Now if the given graph has 5 vertices and the edges: (1,2,3), (1,3,8), (1,5,$-4$),
+(2,4,1), (2,5,7), (3,2 4), (4,1,2), (4,3,$-5$), (5,4,6), where each triple $(i,j,t)$ represents
+there is an edge directed from $i$ to $j$ with weight $t$. Then, after the execution of the
+algorithm, the value $d^{(4)}[2,3]=$
+
+(a)~$-4$ \qquad (b)~$-2$ \qquad (c)~$-1$ \qquad (d)~2 \qquad (e)~3..
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a) $-4$。
+
+原卷的 (3,2 4) 少了一個逗號，讀成 $(3, 2, 4)$：$3 \to 2$，權重 $4$。 題目的 $d^{(k)}[i, j]$ 就是
+資結書第~25.6~節的 $D^{(k)}$（虛擬碼~25.8）：
+\[
+d^{(k)}[i, j] = \min\bigl(d^{(k-1)}[i, j],\; d^{(k-1)}[i, k] + d^{(k-1)}[k, j]\bigr).
+\]
+這個圖有負邊，但沒有負環（最後 $D^{(5)}$ 的對角線全是 $0$，見下一題），Floyd--Warshall 適用。
+
+\textbf{逐一算出 $D^{(0)}$ 到 $D^{(4)}$}（第 $i$ 列第 $j$ 行是 $d^{(k)}[i, j]$，粗體是這一輪變小的）：
+\begin{center}
+\small
+\begin{tabular}{c|ccccc}
+$D^{(0)}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & 3 & 8 & $\infty$ & $-4$ \\
+2 & $\infty$ & 0 & $\infty$ & 1 & 7 \\
+3 & $\infty$ & 4 & 0 & $\infty$ & $\infty$ \\
+4 & 2 & $\infty$ & $-5$ & 0 & $\infty$ \\
+5 & $\infty$ & $\infty$ & $\infty$ & 6 & 0 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|ccccc}
+$D^{(1)}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & 3 & 8 & $\infty$ & $-4$ \\
+2 & $\infty$ & 0 & $\infty$ & 1 & 7 \\
+3 & $\infty$ & 4 & 0 & $\infty$ & $\infty$ \\
+4 & 2 & \textbf{5} & $-5$ & 0 & $\mathbf{-2}$ \\
+5 & $\infty$ & $\infty$ & $\infty$ & 6 & 0 \\
+\end{tabular}
+
+\medskip
+\begin{tabular}{c|ccccc}
+$D^{(2)}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & 3 & 8 & \textbf{4} & $-4$ \\
+2 & $\infty$ & 0 & $\infty$ & 1 & 7 \\
+3 & $\infty$ & 4 & 0 & \textbf{5} & \textbf{11} \\
+4 & 2 & 5 & $-5$ & 0 & $-2$ \\
+5 & $\infty$ & $\infty$ & $\infty$ & 6 & 0 \\
+\end{tabular}
+\qquad
+\begin{tabular}{c|ccccc}
+$D^{(3)}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & 3 & 8 & 4 & $-4$ \\
+2 & $\infty$ & 0 & $\infty$ & 1 & 7 \\
+3 & $\infty$ & 4 & 0 & 5 & 11 \\
+4 & 2 & $\mathbf{-1}$ & $-5$ & 0 & $-2$ \\
+5 & $\infty$ & $\infty$ & $\infty$ & 6 & 0 \\
+\end{tabular}
+
+\medskip
+\begin{tabular}{c|ccccc}
+$D^{(4)}$ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & 3 & $\mathbf{-1}$ & 4 & $-4$ \\
+2 & \textbf{3} & 0 & $\mathbf{-4}$ & 1 & $\mathbf{-1}$ \\
+3 & \textbf{7} & 4 & 0 & 5 & \textbf{3} \\
+4 & 2 & $-1$ & $-5$ & 0 & $-2$ \\
+5 & \textbf{8} & \textbf{5} & \textbf{1} & 6 & 0 \\
+\end{tabular}
+\end{center}
+各輪的理由：
+\begin{itemize}
+\item $k = 1$：只有 $4 \to 1$ 進得了 $1$。 $d[4, 2] = 2 + 3 = 5$，$d[4, 5] = 2 + (-4) = -2$。
+\item $k = 2$：進得了 $2$ 的是 $1$、$3$、$4$。 $d[1, 4] = 3 + 1 = 4$；$d[3, 4] = 4 + 1 = 5$，
+$d[3, 5] = 4 + 7 = 11$；$d[4, 4]$、$d[4, 5]$ 經過 $2$ 都沒有變小。
+\item $k = 3$：$d[4, 2] = d[4, 3] + d[3, 2] = -5 + 4 = -1 < 5$。
+\item $k = 4$：用第 $4$ 行和第 $4$ 列：$d[i, j] \gets \min(d[i, j], d[i, 4] + d[4, j])$。 例如
+$d[1, 3] = 4 + (-5) = -1$，$d[2, 1] = 1 + 2 = 3$，$d[2, 5] = 1 + (-2) = -1$，$d[3, 5] = 5 + (-2) = 3$，
+$d[5, 3] = 6 + (-5) = 1$。
+\end{itemize}
+
+\textbf{所求}。 $d^{(3)}[2, 3] = \infty$（只用 $1, 2, 3$ 當中間點，$2$ 走不到 $3$），$k = 4$ 時
+\[
+d^{(4)}[2, 3] = \min\bigl(\infty,\; d^{(3)}[2, 4] + d^{(3)}[4, 3]\bigr) = 1 + (-5) = -4,
+\]
+對應的路徑是 $2 \to 4 \to 3$。 選 (a)。
+
+其他選項：(b) $-2$ 是 $d[4, 5]$；(c) $-1$ 是 $d[1, 3]$、$d[2, 5]$ 等格子；(d) $2$、(e) $3$ 都不是
+$2$ 到 $3$ 的距離（$3$ 是 $d^{(4)}[2, 1]$）。
+\end{pastsoln}

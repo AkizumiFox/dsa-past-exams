@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntut-108-ci-03}]{北科大資工所 108 學年度 第 1 題（節錄 (5) 小題）}
+（簡答）
+
+(15 pts) Please answer the following questions concisely.
+\begin{enumerate}[label=(\arabic*)]
+\setcounter{enumi}{4}
+\item (3 pts) Let A and B be two problems and we were able to establish the following fact: ``if we
+could solve A in time O($T(n)$), then we could solve B in time O($n\log n+T(n)$).'' Suppose that B
+now has a $\Omega$($n\log n$) time lower bound. Can we conclude that A also has a $\Omega$($n\log n$)
+time lower bound?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：不能。
+
+用歸約推下界的想法是反證：假設 A 能做得比下界快，透過歸約讓 B 也變快，和 B 的下界矛盾
+（資結書第~17.6.7~節用排序推出凸包的 $\Omega(n \lg n)$ 就是這樣）。 套到本題：假設 A 能在
+$T(n) = o(n \lg n)$ 時間內解，題目給的事實只保證 B 能在
+\[
+O(n \log n + T(n)) = O(n \log n)
+\]
+時間內解。 這和 B 的下界 $\Omega(n \log n)$ 完全相容，推不出矛盾。 問題出在歸約本身就要
+$O(n \log n)$：B 的困難可能全部花在歸約的那 $n \log n$ 上，跟 A 沒有關係。 要能推出 A 的下界，
+歸約的額外時間必須是 $o(n \log n)$，例如 $O(n)$。
+
+具體的反例：令 B 是比較模型下的排序，有 $\Omega(n \log n)$ 的下界（資結書定理~15.1）；令 A 是
+「找 $n$ 個數的最小值」。 題目的事實成立：不管 A 用多少時間 $T(n)$，B 都可以直接用合併排序在
+$O(n \log n) \subseteq O(n \log n + T(n))$ 時間內解。 B 也確實有 $\Omega(n \log n)$ 的下界。 但 A
+從頭到尾掃一遍就好，$O(n)$，沒有 $\Omega(n \log n)$ 的下界。 所以一般情況下不能下這個結論。
+\end{pastsoln}

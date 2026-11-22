@@ -1,0 +1,118 @@
+\begin{pastexam}[label={px:ntut-110-prog-03}]{北科大資工所 110 學年度 第 4 題}
+（程式填空與追蹤）
+
+\textbf{Problem 4 [11\%] [ 4-1 $\sim$ 4-3, each 2\%] [ 4-4 $\sim$ 4-8, each 1\%]}
+
+Please trace the following C program and fill the blanks with correct statements or write down the
+outputs of the statements.
+\begin{minted}[fontsize=\small, breaklines]{c}
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node { int data; struct node *next; } NODE;
+
+int showTop(NODE* top) {
+    return top->data;
+}
+
+void pushStack(_______ top, int data) {         /* Problem 4-1 (2 points) */
+    NODE* node;
+
+    node = (_______) malloc(sizeof(NODE));       /* Problem 4-2 (2 points) */
+    if(node == NULL) {
+        printf("Memory allocation failure!\n");
+        exit(1);
+    }
+    node->data = data;
+    node->next = *top;
+    *top = node;
+}
+
+void showStack(NODE* top) {
+    NODE* node = top;
+    while(node != NULL) {
+        printf("%d ", node->data);
+        node = ___________;                      /* Problem 4-3 (2 points) */
+    }
+    printf("\n");
+}
+
+int popStack(_______ top) {                      /* Problem 4-4 (1 points) */
+    int value;
+    NODE* node = *top;
+    if(node == NULL) {
+        printf("Stack is empty!\n");
+        exit(1);
+    }
+    value = (int) (node->data);
+    _______ = node->next;                        /* Problem 4-5 (1 points) */
+    free(node);
+    return value;
+}
+
+int main(void) {
+    NODE* stackTop=NULL;
+
+    pushStack(&stackTop, 5);
+    pushStack(&stackTop, 6);
+    pushStack(&stackTop, 2);
+    showStack(stackTop);                         /* Problem 4-6 (1 points) */
+    printf("%d\n", popStack(&stackTop));         /* Problem 4-7 (1 points) */
+    printf("%d\n", showTop(stackTop));           /* Problem 4-8 (1 points) */
+    return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+4-1 & \texttt{NODE**} & 參數型別 \\
+4-2 & \texttt{NODE*} & 轉型 \\
+4-3 & \texttt{node->next} & \\
+4-4 & \texttt{NODE**} & 參數型別 \\
+4-5 & \texttt{*top} & \\
+4-6 & \texttt{2 6 5} & 每個數後面一個空格，再換行 \\
+4-7 & \texttt{2} & \\
+4-8 & \texttt{6} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+這是資結書第~6.1~節「用串列存」的堆疊（虛擬碼~6.2）：堆疊頂端就是串列的第一個節點，push 和 pop 都
+在串列前端做，$O(1)$。
+
+\textbf{4-1、4-4}：\texttt{main} 傳進來的是 \texttt{\&stackTop}，\texttt{stackTop} 的型別是
+\texttt{NODE*}，取位址得到 \texttt{NODE**}。 函式裡也用 \texttt{*top} 讀寫 \texttt{main} 的
+\texttt{stackTop}（\texttt{node->next = *top;}、\texttt{*top = node;}），所以參數必須是指向指標的指標。
+如果寫成 \texttt{NODE* top}，函式只改到自己的副本，\texttt{main} 的 \texttt{stackTop} 永遠是
+\texttt{NULL}。 pop 也要改頂端，同理填 \texttt{NODE**}。
+
+\textbf{4-2}：\texttt{malloc} 回傳 \texttt{void*}，轉成要存的型別 \texttt{NODE*}，配置一個
+\texttt{sizeof(NODE)} 大小的節點。
+
+\textbf{4-3}：走訪串列，印完一個節點就往下一個走，\texttt{node = node->next;}，走到 \texttt{NULL}
+停。
+
+\textbf{4-5}：pop 時頂端改成原頂端的下一個節點，\texttt{*top = node->next;}，接著才 \texttt{free} 掉
+原頂端。 順序不能反過來：先 \texttt{free(node)} 再讀 \texttt{node->next} 是讀已釋放的記憶體。
+
+\textbf{4-6 到 4-8 的追蹤}（串列由頂端往下寫）：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+執行 & 堆疊（左邊是頂端） \\
+\midrule
+\texttt{pushStack(\&stackTop, 5)} & 5 \\
+\texttt{pushStack(\&stackTop, 6)} & 6, 5 \\
+\texttt{pushStack(\&stackTop, 2)} & 2, 6, 5 \\
+\texttt{showStack} & 印出 \texttt{2 6 5}（每個數後接一個空格），換行 \\
+\texttt{popStack} & 取出 2，剩 6, 5；印出 \texttt{2} \\
+\texttt{showTop} & 頂端是 6，印出 \texttt{6} \\
+\bottomrule
+\end{tabular}
+\end{center}
+後進先出：最後 push 的 $2$ 最先印、最先被 pop。 \texttt{showStack} 的格式是 \texttt{"\%d "}，所以嚴格說
+輸出是 ``\verb*|2 6 5 |'' 再換行，最後一個 $5$ 後面也有空格。
+\end{pastsoln}

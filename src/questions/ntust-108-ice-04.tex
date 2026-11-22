@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ntust-108-ice-04}]{臺科大資工所 108 學年度 第 4 題}
+（問答）
+
+Given the graph in Fig. 1, please give the following representations of the graph. (10\%)
+\begin{enumerate}[label=(\alph*)]
+\item Adjacency matrix (5\%)
+\item Adjacency list (5\%)
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1.5pt,minimum size=5mm},>={Latex[length=2.5mm]}]
+\node[v] (1) at (1,1.3) {1};
+\node[v] (2) at (0,0) {2};
+\node[v] (3) at (1.9,0) {3};
+\draw[->] (1) to[out=180,in=100] (2);
+\draw[->] (2) to[out=10,in=260] (1);
+\draw[->] (2) -- (3);
+\end{tikzpicture}
+
+Fig. 1
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+圖是有向圖，三條邊：$1 \to 2$（左邊那條弧，箭頭指向 $2$）、$2 \to 1$（內側那條弧，箭頭指向 $1$）、
+$2 \to 3$。 表示法照資結書第~21.2~節。
+
+\textbf{(a) 鄰接矩陣}。 $A[i][j] = 1$ 表示有邊 $i \to j$，否則是 $0$（左邊是列 $i$，上面是行 $j$）：
+\begin{center}
+\begin{tabular}{c|ccc}
+$A$ & 1 & 2 & 3 \\ \hline
+1 & 0 & 1 & 0 \\
+2 & 1 & 0 & 1 \\
+3 & 0 & 0 & 0 \\
+\end{tabular}
+\end{center}
+有向圖的矩陣不一定對稱：$A[2][3] = 1$ 但 $A[3][2] = 0$。 第 $i$ 列的 $1$ 的個數是 $i$ 的出分支度
+（$1, 2, 0$），第 $j$ 行的是入分支度（$1, 1, 1$），總和都是邊數 $3$。
+
+\textbf{(b) 鄰接串列}。 每個頂點一條串列，放它指出去的邊的終點（依編號由小到大）：
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2mm]},
+  c/.style={draw,minimum width=7mm,minimum height=6mm,inner sep=0pt,font=\small}]
+\node[c] (h1) at (0,0) {1};
+\node[c] (h2) at (0,-0.6) {2};
+\node[c] (h3) at (0,-1.2) {3};
+\node[c] (a1) at (1.6,0) {2}; \node[c,anchor=west,font=\scriptsize] (a2) at (a1.east) {\NIL};
+\node[c] (b1) at (1.6,-0.6) {1}; \node[c,anchor=west] (b2) at (b1.east) {};
+\node[c] (c1) at (3.6,-0.6) {3}; \node[c,anchor=west,font=\scriptsize] (c2) at (c1.east) {\NIL};
+\draw[->] (h1.east) -- (a1.west);
+\draw[->] (h2.east) -- (b1.west);
+\draw[->] (b2.center) -- (c1.west);
+\node[anchor=west,font=\scriptsize] at (h3.east) {\ \NIL};
+\end{tikzpicture}
+\end{center}
+也就是 $1\colon 2$；$2\colon 1 \to 3$；$3\colon$ 空串列。 共 $3$ 個串列節點，等於邊數；有向圖的每條邊
+只出現一次（無向圖才會在兩端各出現一次）。
+\end{pastsoln}

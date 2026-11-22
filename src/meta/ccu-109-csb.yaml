@@ -1,0 +1,10 @@
+paper: ccu-109-csb
+volume: 1
+school: 中正
+dept: 資工所乙組
+year: 109
+subject: 計算機概論（含程式設計）
+questions:
+  - {id: ccu-109-csb-01, label: 第 4 題, chapter: 7}
+  - {id: ccu-109-csb-02, label: 第 5 題, chapter: 7}
+  - {id: ccu-109-csb-03, label: 第 6 題, chapter: 24}

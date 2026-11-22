@@ -1,0 +1,23 @@
+paper: ncu-109-dsa
+volume: 1
+school: 中央
+dept: 資工所
+year: 109
+subject: 資料結構與演算法
+instructions: '本科考試禁用計算器。＊請在答案卷(卡)內作答。複選題 (30\%，每題5分，全對才給分，答錯倒扣1.25分) 倒扣到該大題 0 分為止。是非題 (5\%, 每一題答對給 1 分、答錯倒扣 0.5 分) 倒扣到該大題 0 分為止。申論題 (65\%)。'
+questions:
+  - {id: ncu-109-dsa-01, label: 第 1 題, chapter: 21}
+  - {id: ncu-109-dsa-02, label: 第 2 題, chapter: 8}
+  - {id: ncu-109-dsa-03, label: 第 3 題, chapter: 7}
+  - {id: ncu-109-dsa-04, label: 第 4 題, chapter: 22}
+  - {id: ncu-109-dsa-05, label: 第 5 題, chapter: 14}
+  - {id: ncu-109-dsa-06, label: 第 6 題, chapter: 12}
+  - {id: ncu-109-dsa-07, label: 第 7 題, chapter: 6}
+  - {id: ncu-109-dsa-08, label: 第 8 題, chapter: 21}
+  - {id: ncu-109-dsa-09, label: 第 9 題, chapter: 21}
+  - {id: ncu-109-dsa-10, label: 第 10 題, chapter: 21}
+  - {id: ncu-109-dsa-11, label: 第 11 題, chapter: 21}
+  - {id: ncu-109-dsa-12, label: 申論題第 1 題, chapter: 6}
+  - {id: ncu-109-dsa-13, label: 申論題第 2 題, chapter: 20}
+  - {id: ncu-109-dsa-14, label: 申論題第 3 題, chapter: 24}
+  - {id: ncu-109-dsa-15, label: 申論題第 4 題, chapter: 28}

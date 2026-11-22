@@ -1,0 +1,91 @@
+\begin{pastexam}[label={px:ncu-110-dsa-04}]{中央資工所 110 學年度 複選題第 4 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item In general, a recursive version is less efficient in terms of time and space than a
+non-recursive version.
+\item The function \textbf{F1} below is executable (i.e., terminable) for all positive integer x.
+\begin{minted}[fontsize=\small]{text}
+Int F1(int x)
+{
+      If x is even then
+         return x/2;
+      else
+         return F1(F1(3x+1));
+}
+\end{minted}
+\item When input data are 21 and 12, the output of function \textbf{F2} is 4, i.e.,
+\textbf{F2}(21, 12)=4.
+\begin{minted}[fontsize=\small]{text}
+Int F2(int x, int y)
+{
+      If y=0 then
+         return x;
+      else
+         return F2(y, x mod y);
+}
+\end{minted}
+\item When input data is 5, the output of function \textbf{F3} is 5, i.e., \textbf{F3}(5) =5.
+\begin{minted}[fontsize=\small]{text}
+Int F3(int x)
+{
+      Int p, q;
+
+      If x <= 2 then
+         return x;
+      else
+         p=F3(x-2);
+         q=F3(x-3);
+         return p+q;
+}
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)。
+
+\textbf{(A) 對}。 這是「一般而言」的比較。 每次遞迴呼叫都要在呼叫堆疊上放一個 frame（參數、區域
+變數、返回位置），返回時再拿掉（資結書第~6.4~節）：時間上多了呼叫和返回的固定成本，空間上多了
+和遞迴深度成正比的堆疊空間。 同一個演算法寫成迴圈，通常沒有這兩項額外成本，例如資結書
+虛擬碼~6.9 的遞迴輾轉相除法要 $\Theta(\text{深度})$ 的堆疊，虛擬碼~6.10 的迴圈版只要 $O(1)$
+額外空間。 兩者的漸近時間常常相同，差的是常數和空間，所以說「一般而言比較沒效率」是對的；
+遞迴的好處是好寫、好證明。
+
+\textbf{(B) 對}。 先看 $x$ 是奇數時發生什麼事：$3x + 1$ 是偶數，內層的 $\mathrm{F1}(3x+1)$ 直接回傳
+$(3x+1)/2$，所以
+\[
+\mathrm{F1}(x) = \mathrm{F1}\Bigl(\frac{3x + 1}{2}\Bigr) \qquad (x \text{ 是奇數}).
+\]
+也就是說，奇數 $x$ 會一直換成 $T(x) = (3x + 1)/2$，直到變成偶數才回傳。 只要證明這件事一定在有限步內發生。
+
+令 $x + 1 = 2^k m$，$m$ 是奇數；$x$ 是奇數，所以 $k \ge 1$。 計算
+\[
+T(x) + 1 = \frac{3x + 1}{2} + 1 = \frac{3(x + 1)}{2} = 2^{k-1} \cdot 3m,
+\]
+$3m$ 也是奇數，所以每做一次 $T$，$x + 1$ 裡 $2$ 的次方就少 $1$。 做了 $k$ 次以後 $x + 1$ 是奇數，
+也就是 $x$ 是偶數，函式回傳。 所以對每個正整數 $x$，呼叫次數最多大約 $2k + 1$ 次（$k \le
+\log_2(x + 1)$），一定會結束。 例如 $x = 7$：$7 + 1 = 2^3$，$7 \to 11 \to 17 \to 26$，$26$ 是偶數，
+$\mathrm{F1}(7) = 13$。 $x = 1$：$1 \to 2$，$\mathrm{F1}(1) = 1$。
+
+這個函式看起來像考拉茲（$3x + 1$）問題，容易誤以為「沒人知道會不會停」。 但它遇到偶數就直接回傳
+$x/2$，不會繼續迭代，和考拉茲問題不同。 （實際用 \texttt{int} 跑時，$x$ 很大的話 $3x + 1$ 會溢位；
+題目問的是數學上的終止性。）
+
+\textbf{(C) 錯}。 $\mathrm{F2}$ 是輾轉相除法（資結書虛擬碼~6.9），算最大公因數：
+\[
+\mathrm{F2}(21, 12) = \mathrm{F2}(12, 9) = \mathrm{F2}(9, 3) = \mathrm{F2}(3, 0) = 3,
+\]
+答案是 $3$ 不是 $4$。
+
+\textbf{(D) 錯}。 展開：
+\[
+\begin{aligned}
+\mathrm{F3}(5) &= \mathrm{F3}(3) + \mathrm{F3}(2), \\
+\mathrm{F3}(3) &= \mathrm{F3}(1) + \mathrm{F3}(0) = 1 + 0 = 1, \\
+\mathrm{F3}(2) &= 2,
+\end{aligned}
+\]
+所以 $\mathrm{F3}(5) = 1 + 2 = 3$，不是 $5$。 （$x \le 2$ 時回傳 $x$ 本身，$\mathrm{F3}(0) = 0$。）
+\end{pastsoln}

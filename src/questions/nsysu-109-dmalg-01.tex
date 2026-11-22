@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:nsysu-109-dmalg-01}]{中山資工所資安組 109 學年度 第 1 題}
+（計算）
+
+Determine the number of integer solutions of $x_1+x_2+x_3+x_4=64$, where
+\begin{enumerate}[label=(\alph*)]
+\item {[7\%]} $x_i\ge 1, 1\le i\le 4$.
+\item {[7\%]} $x_1,x_2,x_1>2, 0<x_4\le 14$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $\binom{63}{3} = 39711$；(b) $\binom{57}{3} - \binom{43}{3} = 16919$。
+
+(b) 的條件「$x_1, x_2, x_1 > 2$」重複寫了 $x_1$，漏了 $x_3$，應該是 $x_1, x_2, x_3 > 2$（照原題目的形式，$x_4$ 另外
+給範圍）。 下面照 $x_1, x_2, x_3 \ge 3$、$1 \le x_4 \le 14$ 作答。
+
+工具是「重複組合」：$y_1 + \cdots + y_k = s$ 的非負整數解有 $\binom{s + k - 1}{k - 1}$ 個（把 $s$ 個球用 $k - 1$
+根隔板分成 $k$ 堆，從 $s + k - 1$ 個位置選 $k - 1$ 個放隔板；資結書附錄~A.3~節的二項式係數）。 有下界時先扣掉
+下界，變成非負；有上界時用排容扣掉超過上界的解。
+
+\textbf{(a)} 令 $y_i = x_i - 1 \ge 0$，$y_1 + y_2 + y_3 + y_4 = 64 - 4 = 60$。 解的個數
+\[
+\binom{60 + 3}{3} = \binom{63}{3} = \frac{63 \cdot 62 \cdot 61}{6} = 39711 .
+\]
+
+\textbf{(b)} 令 $y_i = x_i - 3 \ge 0$（$i = 1, 2, 3$），$y_4 = x_4 - 1$，$0 \le y_4 \le 13$。 方程式變成
+\[
+y_1 + y_2 + y_3 + y_4 = 64 - 9 - 1 = 54 .
+\]
+先不管 $y_4 \le 13$：$\binom{54 + 3}{3} = \binom{57}{3} = \frac{57 \cdot 56 \cdot 55}{6} = 29260$ 個。 扣掉
+$y_4 \ge 14$ 的：令 $z = y_4 - 14 \ge 0$，$y_1 + y_2 + y_3 + z = 40$，有 $\binom{43}{3} = \frac{43 \cdot 42 \cdot 41}{6}
+= 12341$ 個。 所以
+\[
+29260 - 12341 = 16919 .
+\]
+也可以對 $x_4$ 分情況加總：$x_4 = t$ 時 $y_1 + y_2 + y_3 = 55 - t$，有 $\binom{57 - t}{2}$ 個解，
+$\sum_{t=1}^{14} \binom{57 - t}{2} = \binom{56}{2} + \binom{55}{2} + \cdots + \binom{43}{2} = 16919$，結果相同。
+\end{pastsoln}

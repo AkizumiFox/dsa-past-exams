@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ncu-106-dsa-06}]{中央資工所 106 學年度 第 6 題}
+（問答）
+
+The procedure of solving many problems can be represented by trees. Thus, the solving of these
+problems becomes a tree searching problem. There are many tree searching algorithms:
+breadth-first search, depth-first search, hill climbing and best-first search. Below is the pseudo
+code of the breadth-first search algorithm. Please modify the pseudo-code to be the depth-first
+search algorithm (6\%), the hill climbing algorithm (6\%) and the best-first search algorithm
+(6\%). You should write down the complete algorithm including the input, the output and all steps.
+
+\begin{center}
+\begin{tabular}{|p{0.9\linewidth}|}
+\hline
+\textbf{Algorithm:} Breadth-First Search Algorithm\\ \hline
+\textbf{Input}: the root node $r$ of a tree to search for the goal node $g$\\
+\textbf{Output}: the path from $r$ to $g$ as the solution or NIL to indicate failure to find a solution\\ \hline
+Step 1: Construct a one-element queue consisting of the root node $r$\\
+Step 2: Check if the first element in the queue is the goal node $g$. If so, return the path from $r$ to $g$ as the solution and stop.\\
+Step 3: Remove the first element from the queue. Add all descendants of the first element, if any, to the end of the queue one by one.\\
+Step 4: If the queue is empty, then return NIL and stop. Otherwise, go to Step 2.\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+三種搜尋和 BFS 的差別只在「放活節點的容器」和「子節點放進去的順序」：BFS 用佇列；DFS 用
+堆疊；爬山法也用堆疊，但同一個節點的子節點依評估值排好再放；最佳優先搜尋用優先佇列，每次從
+\textbf{所有}活節點裡挑評估值最好的。 這和資結書第~20.2~節分支限界的 FIFO、LIFO、最小成本三種
+取法是同一回事。 題目的 descendants 指的是子節點（下一層），不是整棵子樹。
+
+兩點共同的約定：
+\begin{itemize}
+\item 每個節點放進容器時記下它的父節點。 這是一棵樹，從 $r$ 到 $g$ 的路徑只有一條，找到 $g$ 之後
+沿著父節點往上走回 $r$，再倒過來，就是要輸出的路徑。 BFS 的 Step~2 能「return the path」也是靠
+這個。
+\item 爬山法和最佳優先搜尋需要一個\textbf{評估函數} $h(x)$，估計節點 $x$ 離目標還有多遠，
+越小越好。 它是演算法的輸入，所以要寫進 Input。
+\end{itemize}
+
+\textbf{深度優先搜尋}（把佇列改成堆疊，子節點放在頂端）：
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm:} Depth-First Search Algorithm\\ \hline
+\textbf{Input}：樹的根 $r$，要找的目標節點 $g$\\
+\textbf{Output}：從 $r$ 到 $g$ 的路徑；找不到時輸出 NIL\\ \hline
+Step 1：建立一個只有根 $r$ 的堆疊。\\
+Step 2：檢查堆疊頂端的節點是不是 $g$。 是的話，沿父節點從 $g$ 走回 $r$，輸出 $r$ 到 $g$ 的路徑，結束。\\
+Step 3：從堆疊頂端移除這個節點，把它的子節點（如果有）放到堆疊頂端；最左邊的子節點放在最上面。\\
+Step 4：如果堆疊是空的，輸出 NIL，結束；否則回到 Step 2。\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{爬山法}（DFS，但同一層的子節點依評估值排好，最好的先走）：
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm:} Hill Climbing Algorithm\\ \hline
+\textbf{Input}：樹的根 $r$，目標節點 $g$，評估函數 $h$（$h(x)$ 越小表示 $x$ 越接近目標）\\
+\textbf{Output}：從 $r$ 到 $g$ 的路徑；找不到時輸出 NIL\\ \hline
+Step 1：建立一個只有根 $r$ 的堆疊。\\
+Step 2：檢查堆疊頂端的節點是不是 $g$。 是的話，沿父節點從 $g$ 走回 $r$，輸出 $r$ 到 $g$ 的路徑，結束。\\
+Step 3：從堆疊頂端移除這個節點 $x$。 把 $x$ 的子節點依 $h$ 值由大到小依序放到堆疊頂端，使 $h$ 值最小的子節點在最上面。\\
+Step 4：如果堆疊是空的，輸出 NIL，結束；否則回到 Step 2。\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{最佳優先搜尋}（所有活節點放進以 $h$ 為鍵的最小堆積）：
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm:} Best-First Search Algorithm\\ \hline
+\textbf{Input}：樹的根 $r$，目標節點 $g$，評估函數 $h$（$h(x)$ 越小表示 $x$ 越接近目標）\\
+\textbf{Output}：從 $r$ 到 $g$ 的路徑；找不到時輸出 NIL\\ \hline
+Step 1：建立一個以 $h$ 值為鍵的最小堆積（優先佇列），裡面只有根 $r$。\\
+Step 2：檢查堆積中 $h$ 值最小的節點（堆積的根）是不是 $g$。 是的話，沿父節點從 $g$ 走回 $r$，輸出 $r$ 到 $g$ 的路徑，結束。\\
+Step 3：從堆積取出 $h$ 值最小的節點 $x$，把 $x$ 的子節點（如果有）逐一插入堆積。\\
+Step 4：如果堆積是空的，輸出 NIL，結束；否則回到 Step 2。\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{爬山法和最佳優先的差別}。 爬山法只在「同一個節點的子節點」之間比 $h$，選了一個就一路往下，
+這條路走完才回頭試它的兄弟；最佳優先每次在\textbf{全部}還沒展開的節點裡挑 $h$ 最小的，可能從樹的
+另一邊跳過去。 有的課本把爬山法寫成「只保留最好的子節點、其他丟掉」，那樣會卡在局部最佳，可能找
+不到 $g$；題目要的是由 BFS 改出來、找不到才回答 NIL 的完整演算法，所以這裡保留所有子節點在堆疊裡。
+
+\textbf{正確性與成本}。 樹沒有環，每個節點只會被放進容器一次。 三個演算法都是「取出一個節點、
+放進它的子節點」，直到找到 $g$ 或容器空了；容器空了表示每個節點都被檢查過，所以 $g$ 在樹裡就一定會
+找到，回答 NIL 時 $g$ 確實不在樹裡（樹是有限的）。 設樹有 $N$ 個節點：DFS 每個節點進出堆疊一次，
+$O(N)$；爬山法還要排序每個節點的子節點，子節點數加起來是 $N - 1$，總共 $O(N \lg N)$；最佳優先每次
+插入、取出堆積 $O(\lg N)$，總共 $O(N \lg N)$。 找路徑時從 $g$ 往上走，最多是樹的高度。
+\end{pastsoln}

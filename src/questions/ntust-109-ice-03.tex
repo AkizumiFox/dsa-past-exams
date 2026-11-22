@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntust-109-ice-03}]{臺科大資工所 109 學年度 第 3 題}
+（問答）
+
+A binary tree has a total of 24 nodes, among which 10 are nodes of degree 2. How many nodes of
+degree one are there in the binary tree? (7\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$3$。
+
+令 $n_0$、$n_1$、$n_2$ 分別是分支度 $0$、$1$、$2$ 的節點數。 用兩種方式數邊（資結書定理~7.2）：
+\begin{itemize}
+\item 除了根，每個節點都恰好有一條邊連到父節點，所以邊數是 $n - 1 = 24 - 1 = 23$。
+\item 每個節點往下的邊數就是它的分支度，所以邊數也是 $0 \cdot n_0 + 1 \cdot n_1 + 2 \cdot n_2
+= n_1 + 2n_2$。
+\end{itemize}
+兩式相等，加上 $n = n_0 + n_1 + n_2$，得到 $n_0 = n_2 + 1$。 代入 $n_2 = 10$：
+\[
+n_0 = 10 + 1 = 11, \qquad n_1 = n - n_0 - n_2 = 24 - 11 - 10 = 3.
+\]
+也可以直接用邊數算：$n_1 + 2 \times 10 = 23$，$n_1 = 3$。
+
+這樣的樹確實存在：先畫一棵有 $10$ 個內部節點、$11$ 個葉節點的滿二元樹（例如右邊一直往下長的
+「梳子」形狀），再把其中一個葉節點往下接一條長度 $3$ 的鏈，原來的葉節點和鏈上前兩個節點各有
+一個子節點，共 $24$ 個節點、$n_2 = 10$、$n_1 = 3$。 所以答案 $3$ 不是只滿足等式而已。
+\end{pastsoln}

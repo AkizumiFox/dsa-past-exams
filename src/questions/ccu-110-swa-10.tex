@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ccu-110-swa-10}]{中正資工所甲組 110 學年度 第 12 題}
+（問答）
+
+(6\%) In the knapsack problem, given $k$ items whose weight $w_i$ and the corresponding value $v_i$
+has the relationship: $w_1>w_2>w_3>\ldots>w_k$ and $v_1<v_2<v_3<\ldots<v_k$. If we want to develop
+an efficient algorithm to find the optimal solution for such problem, determine if the two types
+of knapsack, (a) fractional knapsack, and (b) 0-1 knapsack, have the following properties:
+(1) optimal substructure; (2) greedy choice; (3) overlapping subproblems
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+& (1) 最佳子結構 & (2) 貪心選擇 & (3) 重疊子問題 \\
+\midrule
+(a) 分數背包 & 有 & 有 & 沒有 \\
+(b) 0/1 背包（題目的條件下） & 有 & 有 & 沒有 \\
+\bottomrule
+\end{tabular}
+\end{center}
+這題的重點在 (b)：一般的 0/1 背包是「有、沒有、有」，要用動態規劃（資結書第~18.5~節）；但題目
+給的條件讓 0/1 背包也有貪心選擇性質。 下面設容量是 $W$，重量和價值都是正數。 題目的條件下，
+編號越大的物品越輕、越值錢，單位價值 $v_i / w_i$ 也由小到大（分子變大、分母變小），第 $k$ 個物品
+在每一方面都最好。
+
+\textbf{(a) 分數背包。}
+\begin{itemize}
+\item (1) 有。 最佳解拿掉第 $i$ 個物品拿的那一部分（重量 $x$），剩下的一定是「其他物品、容量
+$W - x$」的最佳解，否則換成更好的，整體也更好。
+\item (2) 有。 單位價值最高的物品盡量拿，存在一個最佳解這樣拿（資結書定理~19.2）。 這裡單位價值
+最高的就是第 $k$ 個，所以貪心依 $k, k - 1, \ldots, 1$ 的順序拿，最後一個放不下的切一部分。 不必
+排序，$O(k)$ 時間。
+\item (3) 沒有。 每做一個貪心選擇只留下一個子問題，子問題排成一條鏈，每一個只解一次，不會重複。
+\end{itemize}
+
+\textbf{(b) 0/1 背包。}
+\begin{itemize}
+\item (1) 有。 最佳解 $S$ 若含第 $i$ 個物品，$S - \{i\}$ 一定是「其他物品、容量 $W - w_i$」的最佳解，
+理由同上（資結書第~18.5~節的遞迴式就靠這一點）。
+\item (2) 在題目的條件下有。 貪心選擇是「第 $k$ 個物品（最輕、最值錢）放得下就拿」。 證明：設
+$w_k \le W$，$S$ 是任何一個最佳解。 若 $k \notin S$：$S$ 是空的時候，$\{k\}$ 可行而且價值
+$v_k > 0$，比 $S$ 好；$S$ 不是空的時候，任取 $i \in S$（$i < k$），$S' = S - \{i\} \cup \{k\}$
+的重量少了 $w_i - w_k > 0$，仍然放得下，價值多了 $v_k - v_i > 0$，比 $S$ 好。 兩種情況都和 $S$ 最佳
+矛盾，所以每個最佳解都含第 $k$ 個物品。 拿了之後，剩下的是物品 $1..k-1$、容量 $W - w_k$，條件
+一樣，由 (1) 歸納下去。 $w_k > W$ 時其他物品更重，都放不下，答案是 $0$。
+
+於是演算法是：依 $k, k - 1, \ldots$ 的順序拿，第一個放不下的時候停（後面的更重，也放不下）。
+$O(k)$ 時間。 換個角度看：最多能放 $t$ 個物品，而最輕的 $t$ 個正好也是最值錢的 $t$ 個。
+\item (3) 沒有。 有了貪心選擇，每一步只留下一個子問題，和 (a) 一樣不會重複。 一般的 0/1 背包
+沒有貪心選擇，遞迴式 $K(i, c) = \max\bigl(K(i - 1, c),\ K(i - 1, c - w_i) + v_i\bigr)$ 兩個分支都要算，
+不同的選法會走到同一個 $(i, c)$，才有重疊子問題、才需要動態規劃。 題目問的是這個特殊情況下
+要怎麼設計有效率的演算法，答案是貪心，用不到這個性質。
+\end{itemize}
+
+有些答案把 (b) 寫成一般 0/1 背包的「有、沒有、有」。 那是沒有用到題目給的兩個不等式；作答時
+最好把上面 (2) 的交換論證寫出來，說明在這個條件下貪心是對的。
+\end{pastsoln}

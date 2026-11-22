@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:ncu-107-dsa-11}]{中央資工所 107 學年度 第 11 題}
+（單選；每題 5 分，答錯倒扣一分）
+
+Program quickSort below aim to apply quick sort to A[left: right] into non-decreasing order.
+\begin{minted}[fontsize=\small,breaklines]{c}
+void quickSort ( int A[], int left, int right )
+{
+  int pivot, i, j;
+  int temp;
+  if ( left < right ) {
+     i = left-1; j = right;
+     pivot = A[right];
+     do {
+          do i++; while ( A[i] < pivot );
+          do j--; while ( A[j] > pivot );
+          If ( __(B4)__ ) swap(A[i], A[j], temp);   /* exchange A[i] and A[j] */
+     } while ( __(B5)__ );
+     swap ( __(B6)__ );
+     quickSort( A, left, j-1 );
+     quickSort( A, j+1, right ); }
+}
+\end{minted}
+
+Blank (B4) in the algorithm above should be
+
+(a)~\texttt{i>right-1} \qquad (b)~\texttt{j<left+1} \qquad (c)~\texttt{i>j} \qquad (d)~\texttt{i>=j} \qquad (e)~\texttt{i<j}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (e) \texttt{i<j}。
+
+\textbf{這段分割在做什麼}。 基準 \texttt{pivot} 取最右邊的 $A[\mathit{right}]$。 $i$ 從左往右找第一個
+$\ge \mathit{pivot}$ 的數，$j$ 從 $\mathit{right} - 1$ 往左找第一個 $\le \mathit{pivot}$ 的數。 兩個
+都停下來時，$A[i]$ 是左邊「太大」的、$A[j]$ 是右邊「太小」的，如果 $i$ 還在 $j$ 左邊，就把它們交換，
+然後繼續往中間掃；$i$、$j$ 交錯（$i \ge j$）就結束。 這和資結書第~14.5~節的 Hoare 分割（虛擬碼~14.10）
+是同一個想法，只是基準放在右端。 結束時 $A[\mathit{left}..i-1]$ 都 $\le \mathit{pivot}$，
+$A[i..\mathit{right}-1]$ 都 $\ge \mathit{pivot}$，$A[i]$ 是右半第一個，把基準和它交換，基準就到了
+最終的位置 $i$。
+
+(B4) 是「什麼時候交換」：只有 $i < j$ 時 $A[i]$、$A[j]$ 才是位置顛倒的一對。 $i \ge j$ 時兩個已經交錯，
+$A[i]$ 屬於右半、$A[j]$ 屬於左半，再交換反而把它們換錯邊。
+
+\textbf{追蹤}（陣列從 $0$ 開始，$A[0..5] = 4, 9, 2, 7, 1, 5$，$\mathit{left} = 0$、$\mathit{right} = 5$，
+$\mathit{pivot} = 5$）：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+回合 & $i$ 停在 & $j$ 停在 & 動作 \\
+\midrule
+1 & $1$（$9 \ge 5$） & $4$（$1 \le 5$） & $i < j$，交換：$4, 1, 2, 7, 9, 5$ \\
+2 & $3$（$7 \ge 5$） & $2$（$2 \le 5$） & $i > j$，不交換，離開迴圈 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後把 $A[i] = A[3]$ 和 $A[\mathit{right}]$ 交換：$4, 1, 2, \mathbf{5}, 9, 7$，左邊都 $\le 5$、右邊都
+$\ge 5$。
+
+\textbf{原卷程式的錯}。 (B4)--(B6) 照上面填之後，這支程式還有兩個地方不對，答題時可以註明：
+\begin{itemize}
+\item 基準最後在 $i$，遞迴應該是 \texttt{quickSort(A, left, i-1)} 和 \texttt{quickSort(A, i+1, right)}。
+原卷寫 \texttt{j}：上面的例子 $j = 2$，會遞迴 $A[0..1] = 4, 1$ 和 $A[3..5]$，$A[2] = 2$ 被漏掉，排完是
+$1, 4, 2, 5, 7, 9$，錯。
+\item \texttt{do j--; while (A[j] > pivot);} 沒有下界。 基準是這一段最小的數時，$j$ 會一路走過
+$\mathit{left}$，讀到陣列外面。 要加上 \texttt{j > left} 的檢查，或在 $A[\mathit{left}-1]$ 放一個比所有數
+都小的哨兵。 $i$ 那一邊沒有這個問題，最晚停在 $A[\mathit{right}] = \mathit{pivot}$。
+\end{itemize}
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{i>right-1}、(b) \texttt{j<left+1}：這是檢查 $i$、$j$ 有沒有跑出範圍的條件，和要不要
+交換無關。 例如上面第 1 回合 $i = 1$，(a) 不成立就不交換，$9$ 和 $1$ 留在錯的一邊，錯。
+\item (c) \texttt{i>j}、(d) \texttt{i>=j}：正好相反，該換的時候不換、交錯後才換，錯。
+\item (e) \texttt{i<j}：對。
+\end{itemize}
+\end{pastsoln}

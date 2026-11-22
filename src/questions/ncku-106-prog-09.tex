@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ncku-106-prog-09}]{成大資訊聯招 106 學年度 第 9 題}
+（設計）
+
+(10\%) A directed graph $G$=($V$,$E$) is \textit{semiconnected} if, for all pairs of vertices
+$u,v\in V$, $u$ is reachable from $v$ through a directed path, or $v$ is reachable from $u$ through
+a directed path. Given a linear-time algorithm to determine whether or not G is semiconnected.
+\end{pastexam}
+
+\begin{pastsoln}
+題目說的 Given 應是 Give（設計一個演算法）。 下面 $n = |V|$、$m = |E|$。
+
+\textbf{想法。} 先把強連通元件縮成一個點（資結書第~23.4~節）。 $u \leadsto v$ 在 $G$ 裡成立，若且唯若在元件圖裡
+$\mathit{comp}[u]$ 走得到 $\mathit{comp}[v]$：$G$ 的路徑經過的元件依序排起來，就是元件圖的一條路徑；反過來元件圖
+的每條邊都來自 $G$ 的某條邊，元件內部又互相可達，可以接回 $G$ 的路徑。 所以 $G$ 是 semiconnected，若且唯若
+元件圖的任兩個元件之間至少有一個方向走得到。
+
+\textbf{引理。} 設元件圖依拓樸順序是 $C_1, C_2, \ldots, C_k$。 任兩個元件至少一個方向走得到，若且唯若對每個
+$1 \le i < k$，元件圖都有邊 $(C_i, C_{i+1})$。
+
+\textbf{證明。}（$\Leftarrow$）$i < j$ 時，$C_i \to C_{i+1} \to \cdots \to C_j$ 是一條路徑，所以 $C_i$ 走得到 $C_j$。
+
+（$\Rightarrow$）設某個 $i$ 沒有邊 $(C_i, C_{i+1})$。 拓樸順序裡每條邊都往後指，沿著路徑元件的位置只會變大，所
+以 $C_{i+1}$ 走不到 $C_i$。 $C_i$ 走到 $C_{i+1}$ 的路徑上，元件的位置要從 $i$ 嚴格增加到 $i + 1$，中間不能有別的
+元件，只能是一條直接的邊 $(C_i, C_{i+1})$，但它不存在。 所以 $C_i$、$C_{i+1}$ 兩個方向都走不到。 \hfill$\blacksquare$
+
+這個條件也等於「元件圖的拓樸順序唯一」（資結書定理~22.5）。
+
+\textbf{演算法。} Kosaraju 演算法正好依元件圖的拓樸順序替元件編號（資結書第~23.2~節），用它就不必再排序。
+
+\begin{pseudo}{判斷有向圖是不是 semiconnected}
+\Function{Semiconnected}{$G$}
+    \State 用 Kosaraju 演算法求出 $\mathit{comp}[u] \in \{1, \ldots, k\}$ \Comment{依拓樸順序編號}
+    \For{$i \gets 1$ \To $k - 1$}
+        \State $\mathit{link}[i] \gets \FALSE$
+    \EndFor
+    \For{每條邊 $(u, v) \in E$}
+        \If{$\mathit{comp}[v] = \mathit{comp}[u] + 1$}
+            \State $\mathit{link}[\mathit{comp}[u]] \gets \TRUE$ \Comment{有邊 $(C_i, C_{i+1})$}
+        \EndIf
+    \EndFor
+    \For{$i \gets 1$ \To $k - 1$}
+        \If{$\mathit{link}[i] = \FALSE$}
+            \State \Return \FALSE
+        \EndIf
+    \EndFor
+    \State \Return \TRUE
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 第 5--7 行對每條原圖的邊檢查它是否連接相鄰編號的兩個元件，所以結束時 $\mathit{link}[i]$ 為真若且
+唯若元件圖有邊 $(C_i, C_{i+1})$；由上面的想法和引理，回傳值正確。 用 Tarjan 演算法也可以，它的輸出順序是反向
+拓樸順序（資結書定理~23.5），把編號倒過來即可。
+
+\textbf{時間。} Kosaraju $\Theta(n + m)$，其餘迴圈 $\Theta(k)$ 和 $\Theta(m)$，總共 $\Theta(n + m)$，是線性時間。
+
+\textbf{例子。} 邊為 $1 \to 2$、$2 \to 1$、$2 \to 3$、$3 \to 4$、$4 \to 3$、$4 \to 5$ 的圖，元件依拓樸順序是
+$C_1 = \{1, 2\}$、$C_2 = \{3, 4\}$、$C_3 = \{5\}$，有邊 $2 \to 3$（$C_1 \to C_2$）和 $4 \to 5$（$C_2 \to C_3$），
+是 semiconnected。 只有 $1 \to 2$、$1 \to 3$ 兩條邊的圖，三個點各自是一個元件，拓樸順序 $\{1\}, \{2\}, \{3\}$（或 $\{1\}, \{3\}, \{2\}$），
+$\{2\}$ 和 $\{3\}$ 之間沒有邊；確實 $2$、$3$ 兩個方向都走不到，不是 semiconnected。
+\end{pastsoln}

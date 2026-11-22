@@ -1,0 +1,15 @@
+paper: nccu-106-dsa
+volume: 1
+school: 政大
+dept: 資科所
+year: 106
+subject: 資料結構及演算法
+questions:
+  - {id: nccu-106-dsa-01, label: 第 1 題, chapter: 4}
+  - {id: nccu-106-dsa-02, label: 第 2 題, chapter: 2}
+  - {id: nccu-106-dsa-03, label: 第 3 題, chapter: 25}
+  - {id: nccu-106-dsa-04, label: 第 4 題, chapter: 19}
+  - {id: nccu-106-dsa-05, label: 第 5 題, chapter: 18}
+  - {id: nccu-106-dsa-06, label: 第 6 題, chapter: 28}
+  - {id: nccu-106-dsa-07, label: 第 7 題, chapter: 6}
+  - {id: nccu-106-dsa-08, label: 第 8 題, chapter: 7}

@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ncku-109-prog-05}]{成大資訊聯招 109 學年度 演算法第 2 題}
+（問答）
+
+Give asymptotic upper and lower bound for $T(n)=\sqrt{n}T(\sqrt{n})+n$. Assume that $T(n)$ is
+constant for sufficiently small $n$. Make your bounds as tight as possible. (10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n \lg\lg n)$，也就是上界 $O(n \lg\lg n)$、下界 $\Omega(n \lg\lg n)$，
+兩個界相同，已經是最緊的。
+
+係數 $\sqrt{n}$ 不是常數，主定理不能用。 做法是先除掉 $n$，再換變數（資結書第~2.5~節）。
+
+\textbf{除以 $n$}。 令 $S(n) = T(n)/n$。 原式兩邊除以 $n$：
+\[
+\frac{T(n)}{n} = \frac{\sqrt{n}\,T(\sqrt{n})}{n} + 1 = \frac{T(\sqrt{n})}{\sqrt{n}} + 1,
+\qquad\text{即}\qquad S(n) = S(\sqrt{n}) + 1 .
+\]
+
+\textbf{換變數}。 令 $n = 2^{2^k}$，則 $\sqrt{n} = 2^{2^{k-1}}$。 記 $R(k) = S(2^{2^k})$，
+得 $R(k) = R(k - 1) + 1$，所以 $R(k) = R(k_0) + (k - k_0)$，其中 $k_0$ 是常數（$n$ 小到
+$T$ 是常數的那一層）。 $k = \lg\lg n$，所以
+\[
+S(n) = \lg\lg n + O(1), \qquad T(n) = n\,S(n) = n \lg\lg n + O(n) = \Theta(n \lg\lg n).
+\]
+
+\textbf{換成遞迴樹看}（不限於 $n = 2^{2^k}$）。 第 $0$ 層是 $n$；第 $1$ 層有 $\sqrt{n}$ 個
+規模 $\sqrt{n}$ 的子問題，各花 $\sqrt{n}$，合計 $n$；第 $2$ 層有 $\sqrt{n} \cdot n^{1/4}$ 個規模
+$n^{1/4}$ 的子問題，合計 $\sqrt{n} \cdot n^{1/4} \cdot n^{1/4} = n$。 每一層的總和都是 $n$。
+規模從 $n$ 開平方到小於某個常數 $n_0 > 1$（例如 $2$）要 $\lg\lg n - \lg\lg n_0 + O(1)$ 次
+（開一次平方，$\lg n$ 就減半），層數是 $\Theta(\lg\lg n)$；最底層的子問題規模小於 $n_0$、
+每個 $\Theta(1)$，個數不超過 $n$。 總和是 $n \cdot \Theta(\lg\lg n) + O(n) = \Theta(n \lg\lg n)$。
+上下界都來自同一個計算：每層恰好 $n$、層數 $\Theta(\lg\lg n)$。
+
+注意：如果只看出「每層 $n$」但把層數誤當成 $\lg n$，會得到 $O(n \lg n)$，這是對的上界但不緊；
+題目要求盡量緊，答案要寫 $\Theta(n \lg\lg n)$。
+\end{pastsoln}

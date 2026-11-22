@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:ncu-107-dsa-18}]{中央資工所 107 學年度 第 18 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is the Bellman-Ford Shortest Path (BFSP) algorithm, whose input is a positively weighted
+digraph, and whose output is the distance (or accumulated weight) of the shortest path from the
+source node to every node. Choose all items that all together make the algorithm a negative cycle
+detection algorithm, whose input is a weighted digraph $G$ in which weights may be negative or
+positive, and whose output is ``\,`yes' if graph $G$ has cycles of negative weights; otherwise,
+`no'\,''.\\
+(a)~replace ``$w[x][y]>0$'' with ``$w[x][y]>0$ or $w[x][y]<0$'' in the \textbf{Input} section\\
+(b)~replace the \textbf{Output} with ``\,`yes' if graph $G$ has cycles of negative weights;
+otherwise, `no'\,''\\
+(c)~replace line 2 with\\
+\hspace*{2em}2. \textbf{for} $i\leftarrow 1$ to $|V|$ \textbf{do}\\
+(d)~replace line 6 with the following lines:\\
+\hspace*{2em}6. \textbf{if} $d[u]>0$ for each $u\ne s$ \textbf{then}\\
+\hspace*{2em}7. \qquad \textbf{return} ``yes''\\
+\hspace*{2em}8. \textbf{else}\\
+\hspace*{2em}9. \qquad \textbf{return} ``no''\\
+(e)~replace line 6 with the following lines:\\
+\hspace*{2em}6. \textbf{for} every edge $(x,y)$ in $E$ \textbf{do}\\
+\hspace*{2em}7. \quad \textbf{if} $d[y]>d[x]+w[x][y]$ \textbf{then}\\
+\hspace*{2em}8. \qquad\quad \textbf{return} ``yes''\\
+\hspace*{2em}9. \textbf{return} ``no''
+\begin{quote}
+\textbf{Algorithm} BFSP\\
+\textbf{Input:} a weighted digraph $G=(V,E)$, where the weight of each edge $(x,y)$ in $E$ is
+represented by $w[x][y]$, $w[x][y]>0$, and a source node $s$, $s\in V$\\
+\textbf{Output:} the distance of the shortest path from the source node to every node\\
+1.\quad $d[s]\leftarrow 0$;\quad $d[u]\leftarrow\infty$ for each $u\ne s$\\
+2.\quad \textbf{for} $i\leftarrow 1$ to $|V|$-1 \textbf{do}\\
+3.\quad\quad \textbf{for} every edge $(x,y)$ in $E$ \textbf{do}\\
+4.\quad\quad\quad \textbf{if}\ \ $d[y]>d[x]+w[x][y]$ \textbf{then}\\
+5.\quad\quad\quad\quad $d[y]\leftarrow d[x]+w[x][y]$\\
+6.\quad \textbf{return} $d$
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(e)。
+
+這就是資結書第~25.3~節 Bellman--Ford 的做法（虛擬碼~25.4）：鬆弛 $|V| - 1$ 輪之後，再把每條邊檢查
+一次，還能鬆弛就表示有負環（資結書定理~25.7、第~25.3.4~節）。
+
+\begin{itemize}
+\item (a) 選。 新的問題要處理負權重，Input 的限制 $w[x][y] > 0$ 要放寬。 照字面它排除了權重 $0$，嚴格說
+寫成「任意實數」比較好，但在五個選項裡這一項是必要的。
+\item (b) 選。 輸出從距離改成 yes／no，Output 的描述要跟著改。
+\item (c) 不選。 多鬆弛一輪不必要：沒有負環時，$|V| - 1$ 輪之後所有 $d$ 已經是最短距離（最短路徑最多
+$|V| - 1$ 條邊），偵測負環靠的是 (e) 那一輪檢查，不是多跑一輪。 單獨改 (c) 而沒有檢查，演算法仍然只
+回傳 $d$。 （加上 (c) 再配 (e) 結果也還是對的，只是多做一輪；題目要的是讓它變成負環偵測的那幾項。）
+\item (d) 不選。 「所有 $d[u] > 0$ 就回答 yes」和負環沒有關係。 反例：只有一條邊 $s \to u$，權重 $1$，
+沒有任何環；$d[u] = 1 > 0$，(d) 回答 yes，錯。 反過來，有負環時 $d$ 值會被拉成負的，(d) 反而回答 no。
+\item (e) 選。 沒有負環時，$|V| - 1$ 輪後 $d[y] = \delta(s, y)$，三角不等式 $d[y] \le d[x] + w[x][y]$ 對
+每條邊都成立，第 7 行不會成立，回答 no。 有從 $s$ 走得到的負環 $v_0, v_1, \ldots, v_k = v_0$ 時，若每條環
+上的邊都滿足 $d[v_i] \le d[v_{i-1}] + w[v_{i-1}][v_i]$，沿環加起來得
+$\sum d[v_i] \le \sum d[v_{i-1}] + \sum w$，兩邊的 $\sum d$ 相同（都是有限值），得 $0 \le \sum w$，和負環矛盾；
+所以一定有一條邊能鬆弛，回答 yes。
+\end{itemize}
+
+補充：這個演算法只偵測得到\textbf{從 $s$ 走得到}的負環。 走不到的點 $d$ 一直是 $\infty$，那裡的負環檢查
+不出來。 題目要「$G$ 有沒有負環」，嚴格的做法是加一個新起點連到每個點（權重 $0$），或一開始把所有
+$d[u]$ 都設成 $0$。 這不在選項裡，照題意選 (a)(b)(e)。
+\end{pastsoln}

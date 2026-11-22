@@ -1,0 +1,124 @@
+\begin{pastexam}[label={px:ccu-109-swa-09}]{中正資工所甲組 109 學年度 第 14 題}
+（問答）
+
+(7\%)\\
+Given a network at the right side figure (the numbers are edge capacities),
+\begin{enumerate}[label=(\alph*)]
+\item (3\%) Find its maximum flow and a minimum cut.
+\item (2\%) Draw its residual graph. In your answer mark the vertices reachable from S and the
+vertices from which T is reachable.
+\item (2\%) An edge of a network is called a bottleneck edge if increasing its capacity results in an
+increase in the maximum flow. List all bottleneck edges in the network.
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=7mm,inner sep=0pt},e/.style={-{Stealth[length=2mm]}},w/.style={font=\small,inner sep=0pt}]
+\node[v] (S) at (10.82,-11.56) {S};
+\node[v] (A) at (12.36,-9.84) {A};
+\node[v] (B) at (12.36,-13.24) {B};
+\node[v] (C) at (14.87,-9.84) {C};
+\node[v] (D) at (14.87,-13.24) {D};
+\node[v] (T) at (16.40,-11.56) {T};
+\draw[e] (S) -- (A);
+\draw[e] (S) -- (B);
+\draw[e] (A) -- (C);
+\draw[e] (A) -- (D);
+\draw[e] (B) -- (C);
+\draw[e] (B) -- (D);
+\draw[e] (C) -- (T);
+\draw[e] (D) -- (T);
+\node[w] at (11.44,-10.56) {7};
+\node[w] at (11.44,-12.58) {6};
+\node[w] at (13.62,-9.62) {4};
+\node[w] at (12.93,-10.98) {2};
+\node[w] at (12.93,-12.07) {2};
+\node[w] at (13.62,-13.47) {3};
+\node[w] at (15.73,-10.40) {9};
+\node[w] at (15.69,-12.69) {5};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 最大流量 $11$；最小割 $(\{S, A, B\}, \{C, D, T\})$，容量 $11$。 (b) 剩餘網路見下圖；從 $S$
+走得到的是 $S, A, B$，走得到 $T$ 的是 $C, T$。 (c) 瓶頸邊是 $A \to C$ 和 $B \to C$。
+
+\textbf{(a)} 依序沿下面四條增廣路徑送流（資結書第~26.3~節的 Ford--Fulkerson），每條取路徑上剩餘
+容量的最小值：
+\begin{center}
+\small
+\begin{tabular}{lcl}
+\toprule
+增廣路徑 & 送 & 用完的邊 \\
+\midrule
+$S \to A \to C \to T$ & $4$ & $A \to C$（$4/4$） \\
+$S \to A \to D \to T$ & $2$ & $A \to D$（$2/2$） \\
+$S \to B \to C \to T$ & $2$ & $B \to C$（$2/2$） \\
+$S \to B \to D \to T$ & $3$ & $B \to D$（$3/3$），$D \to T$（$5/5$） \\
+\bottomrule
+\end{tabular}
+\end{center}
+得到的流（流量/容量）：$S \to A$ $6/7$、$S \to B$ $5/6$、$A \to C$ $4/4$、$A \to D$ $2/2$、
+$B \to C$ $2/2$、$B \to D$ $3/3$、$C \to T$ $6/9$、$D \to T$ $5/5$，流量 $|f| = 6 + 5 = 11$。
+
+這是最大流：取割 $(\{S, A, B\}, \{C, D, T\})$，從左到右的邊是中間四條，容量
+$4 + 2 + 2 + 3 = 11$。 任何流都不超過任何割的容量（資結書第~26.5~節），而這個流已經等於這個割的
+容量，所以流是最大流、割是最小割（資結書定理~26.6）。 另一個最小割是
+$(\{S, A, B, D\}, \{C, T\})$，容量 $A \to C$ 的 $4$ 加 $B \to C$ 的 $2$ 加 $D \to T$ 的 $5$，也是 $11$；
+只要寫一個。
+
+\textbf{(b)} 剩餘網路（資結書第~26.2~節）：每條邊 $(u, v)$ 有流 $f$、容量 $c$ 時，畫一條 $u \to v$
+剩餘容量 $c - f$ 的邊（$c - f > 0$ 才畫），和一條 $v \to u$ 剩餘容量 $f$ 的反向邊（$f > 0$ 才畫）。
+中間四條和 $D \to T$ 都滿了，只剩反向邊。 下圖灰底是從 $S$ 走得到的頂點，雙圈是走得到 $T$ 的
+頂點：
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=7mm,inner sep=0pt},
+  rs/.style={fill=black!15}, rt/.style={double,double distance=1pt},
+  e/.style={-{Stealth[length=2mm]}}, w/.style={font=\small,inner sep=1pt,fill=white}]
+\node[v,rs] (S) at (0,0) {S};
+\node[v,rs] (A) at (2.2,1.6) {A};
+\node[v,rs] (B) at (2.2,-1.6) {B};
+\node[v,rt] (C) at (5.8,1.6) {C};
+\node[v] (D) at (5.8,-1.6) {D};
+\node[v,rt] (T) at (8,0) {T};
+\draw[e] (S) to[bend left=15] node[w,pos=0.45] {1} (A);
+\draw[e] (A) to[bend left=15] node[w,pos=0.45] {6} (S);
+\draw[e] (S) to[bend left=15] node[w,pos=0.45] {1} (B);
+\draw[e] (B) to[bend left=15] node[w,pos=0.45] {5} (S);
+\draw[e] (C) -- node[w] {4} (A);
+\draw[e] (D) -- node[w,pos=0.25] {2} (A);
+\draw[e] (C) -- node[w,pos=0.25] {2} (B);
+\draw[e] (D) -- node[w] {3} (B);
+\draw[e] (C) to[bend left=15] node[w,pos=0.45] {3} (T);
+\draw[e] (T) to[bend left=15] node[w,pos=0.45] {6} (C);
+\draw[e] (T) -- node[w] {5} (D);
+\end{tikzpicture}
+\end{center}
+各邊：$S \to A$ $1$、$A \to S$ $6$；$S \to B$ $1$、$B \to S$ $5$；$C \to A$ $4$；$D \to A$ $2$；
+$C \to B$ $2$；$D \to B$ $3$；$C \to T$ $3$、$T \to C$ $6$；$T \to D$ $5$。
+
+\begin{itemize}
+\item 從 $S$ 走得到：$S \to A$、$S \to B$ 還有剩，$A$、$B$ 往外只剩回 $S$ 的反向邊，所以是
+$\{S, A, B\}$。 $T$ 不在裡面，再次確認沒有增廣路徑。
+\item 走得到 $T$：只有 $C \to T$ 有剩餘容量，而走進 $C$ 的剩餘邊只有 $T \to C$，所以是 $\{C, T\}$。
+$D$ 往外只有 $D \to A$、$D \to B$，走不到 $T$。
+\end{itemize}
+
+\textbf{(c)} 令 $R_S$ 是從 $S$ 走得到的頂點，$R_T$ 是走得到 $T$ 的頂點（都在最大流 $f$ 的剩餘網路
+裡）。 結論：$(u, v)$ 是瓶頸邊，若且唯若 $u \in R_S$ 且 $v \in R_T$。
+\begin{itemize}
+\item 若 $u \in R_S$、$v \in R_T$：$(u, v)$ 不可能還有剩餘容量（否則 $S$ 走得到 $T$，$f$ 不是最大流），
+所以它是滿的。 容量加 $1$ 後它多出剩餘容量 $1$，$S \rightsquigarrow u \to v \rightsquigarrow T$ 是
+增廣路徑，最大流至少加 $1$。
+\item 若 $u \notin R_S$：割 $(R_S, V - R_S)$ 是最小割（資結書定理~26.6 的證明），$(u, v)$ 不是從
+$R_S$ 指出去的邊，加大它的容量不改變這個割的容量，最大流仍然 $\le 11$，不變。
+\item 若 $v \notin R_T$：令 $Y = V - R_T$。 剩餘網路裡沒有從 $Y$ 進入 $R_T$ 的邊（否則那個起點也
+走得到 $T$），也就是從 $Y$ 到 $R_T$ 的原邊都滿、從 $R_T$ 到 $Y$ 的原邊都沒有流，所以割
+$(Y, R_T)$ 的容量等於 $|f|$，也是最小割。 $v \in Y$，$(u, v)$ 不是從 $Y$ 指向 $R_T$ 的邊，加大它
+不改變這個割的容量，最大流不變。
+\end{itemize}
+本題 $R_S = \{S, A, B\}$、$R_T = \{C, T\}$，從 $R_S$ 指向 $R_T$ 的邊只有 $A \to C$ 和 $B \to C$。
+直接檢查：$A \to C$ 容量加 $1$，沿 $S \to A \to C \to T$（剩餘 $1, 1, 3$）多送 $1$，流量變 $12$；
+$B \to C$ 加 $1$，沿 $S \to B \to C \to T$ 多送 $1$。 其他邊加大都不行，例如 $A \to D$、$B \to D$
+加大後 $D \to T$ 已經滿了；$D \to T$ 加大後 $A \to D$、$B \to D$ 也滿了；$S \to A$、$S \to B$、
+$C \to T$ 本來就沒用滿。 所以瓶頸邊是 $A \to C$ 和 $B \to C$。
+\end{pastsoln}

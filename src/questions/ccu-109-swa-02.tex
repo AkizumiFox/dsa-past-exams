@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ccu-109-swa-02}]{中正資工所甲組 109 學年度 第 5 題}
+（程式）
+
+(10\%) Please write a function to perform linked list insertion. Assume that each node has a name
+field with at most 32 bytes, and a link field. You have to declare the data structure for the node.
+The inserted node will become the first node of the linked list. The return value of the function
+is a pointer to the head of the linked list.
+\end{pastexam}
+
+\begin{pastsoln}
+「name field with at most 32 bytes」採用的讀法：\texttt{name} 欄位本身佔 $32$ 個 byte，C 字串要留一格
+給結尾的 \verb|'\0'|，所以名字最多 $31$ 個字元。 如果要讓名字本身最多 $32$ 個字元，把陣列宣告成
+\texttt{name[33]} 即可，其他不變。
+
+做法就是資結書虛擬碼~5.2 裡「接在最前面」的情形（資結書第~5.1~節）：新節點的 \texttt{link} 指向原來
+的第一個節點，再把新節點當成新的串列頭回傳。 函式拿舊的 \texttt{head} 當參數、回傳新的
+\texttt{head}，呼叫端寫 \texttt{head = insert\_front(head, "Amy");}。
+
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+#include <stdlib.h>
+#include <string.h>
+
+struct node {
+    char name[32];          /* 名字，含結尾的 '\0' 共 32 bytes */
+    struct node *link;      /* 下一個節點；最後一個是 NULL */
+};
+
+/* 把 name 插在串列最前面，回傳新的串列頭 */
+struct node *insert_front(struct node *head, const char *name)
+{
+    struct node *p = malloc(sizeof(struct node));
+    if (p == NULL)          /* 配置失敗：串列不變 */
+        return head;
+    strncpy(p->name, name, sizeof(p->name) - 1);
+    p->name[sizeof(p->name) - 1] = '\0';   /* 名字太長時截斷，仍保證有結尾 */
+    p->link = head;         /* 新節點接在原來的第一個節點前面 */
+    return p;               /* 新節點成為串列頭 */
+}
+\end{minted}
+
+\textbf{正確性}。 設插入前串列是 $x_1 \to x_2 \to \cdots \to x_k \to \texttt{NULL}$，\texttt{head} 指向
+$x_1$。 執行 \texttt{p->link = head} 之後，從 \texttt{p} 出發依序是 $p, x_1, \ldots, x_k$，原來的節點
+一個都沒少、順序不變；回傳 \texttt{p}，新節點就是第一個。 空串列（\texttt{head == NULL}）也一樣：
+\texttt{p->link} 是 \texttt{NULL}，串列只有新節點一個，不用另外處理。 兩行的順序不能倒過來：先回傳
+或先讓 \texttt{head} 改指 \texttt{p}，就找不到原來的 $x_1$ 了。
+
+\textbf{複製字串}。 \texttt{strncpy} 最多複製 $31$ 個字元；來源比較長時它不會自己補
+\verb|'\0'|，所以最後一格手動設成 \verb|'\0'|。 直接寫 \texttt{strcpy(p->name, name)}，名字超過
+$31$ 個字元就會寫出陣列範圍。
+
+\textbf{複雜度}。 配置一個節點、複製最多 $32$ 個 byte、改一個指標，和串列長度無關，$O(1)$。
+
+例如從空串列依序插入 \texttt{"apple"}、\texttt{"banana"}，串列變成
+\texttt{banana} $\to$ \texttt{apple} $\to$ \texttt{NULL}。
+\end{pastsoln}

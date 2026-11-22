@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:nsysu-109-osds-03}]{中山資工所甲組 109 學年度 第 9 題}
+（問答）
+
+(10\%) For any input of size $n$ and assuming that $k_1$ denotes the maximum number of digits and
+$k_2$ the number of buckets, what is the average-case running time of each of the following sorting
+algorithms: (a) selection sort, (b) merge sort, (c) heap sort, (d) radix sort, and (e) bucket sort?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+演算法 & 平均時間 & 資結書 \\
+\midrule
+(a) 選擇排序 & $\Theta(n^2)$ & 第~14.2~節 \\
+(b) 合併排序 & $\Theta(n \lg n)$ & 第~14.4~節 \\
+(c) 堆積排序 & $\Theta(n \lg n)$ & 第~14.6~節 \\
+(d) 基數排序 & $\Theta(k_1(n + k_2))$ & 第~15.2.2~節 \\
+(e) 桶子排序 & $\Theta(n + k_2)$（資料均勻分布、$k_2 = \Theta(n)$ 時是 $\Theta(n)$） & 第~15.2.5~節 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(a)} 每一輪都要看完剩下的所有數才找得到最小值，比較次數固定是 $n(n-1)/2$，和輸入無關，所以平均（也是
+最好、最壞）都是 $\Theta(n^2)$。
+
+\textbf{(b)} 遞迴式 $T(n) = 2T(n/2) + \Theta(n)$，合併的時間不管輸入長怎樣都是 $\Theta(n)$，由主定理
+$T(n) = \Theta(n \lg n)$，平均、最好、最壞都一樣。
+
+\textbf{(c)} 建堆積 $O(n)$，再做 $n - 1$ 次「把堆積頂端換到最後、下沉」，每次 $O(\lg n)$，共 $O(n \lg n)$；
+它是比較排序，平均至少 $\lg(n!) = \Omega(n \lg n)$ 次比較（資結書定理~15.3），所以平均是 $\Theta(n \lg n)$。
+
+\textbf{(d)} 基數排序（LSD）從最低位到最高位，每一位用一次穩定的分配：把 $n$ 個數依這一位的值分進桶子、再依序
+收回來。 題目的 $k_2$ 是桶子數，在基數排序裡就是每一位可能的值的個數（基數，例如十進位是 $10$）。 一趟要
+$\Theta(n)$ 分配、$\Theta(k_2)$ 掃過桶子，$\Theta(n + k_2)$；共 $k_1$ 趟，總共 $\Theta(k_1(n + k_2))$。 它不比較，
+時間和輸入的排列無關，平均、最壞都一樣。 $k_1$ 是常數、$k_2 = O(n)$ 時是 $\Theta(n)$。
+
+\textbf{(e)} 桶子排序假設資料均勻分布在一個範圍裡，把範圍切成 $k_2$ 段（桶子），每個數放進對應的桶子，各桶用插入
+排序，再依序串起來。 分配和串接是 $\Theta(n + k_2)$。 桶子 $j$ 有 $n_j$ 個數，插入排序 $O(n_j^2)$；均勻分布下
+$n_j$ 是二項分布 $B(n, 1/k_2)$，
+\[
+\mathrm{E}[n_j^2] = \mathrm{Var}[n_j] + \mathrm{E}[n_j]^2 = \frac{n}{k_2}\Bigl(1 - \frac{1}{k_2}\Bigr) + \frac{n^2}{k_2^2},
+\]
+$k_2$ 個桶子加起來是 $O(n + n^2/k_2)$。 所以平均時間是 $\Theta(n + k_2 + n^2/k_2)$；通常取 $k_2 = \Theta(n)$，
+就是 $\Theta(n)$（資結書第~15.2.5~節取 $k_2 = n$，期望時間 $\Theta(n)$）。 題目只問用 $n$、$k_2$ 表示的答案時，寫
+「$\Theta(n + k_2)$，在 $k_2 = \Theta(n)$ 且資料均勻時」即可。 資料不均勻時最壞是 $\Theta(n^2)$。
+\end{pastsoln}

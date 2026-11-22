@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-09}]{臺大資工所 109 學年度 第 9 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) A \textit{binary search tree} is a tree where every node has at most \textit{two}
+children. For ease of discussion we assume that every node has a \textit{distinct} key. In
+addition, all keys in the left subtree are \textit{smaller} than the key of root, and all keys in
+the right subtree are \textit{larger} than the key of the root. A tree node is a \textit{leaf} if
+it does \textit{not} have any children. The \textit{height} of the tree is the length of the
+\textit{longest} path from the root to a leaf. The \textit{successor} of a node $x$ is the node
+right \textit{after} $x$ in increasing order, and the \textit{predecessor} of a node $x$ is the
+node right \textit{before} $x$ in increasing order.
+\begin{enumerate}[label=\arabic*.]
+\item We can locate the \textit{smallest} key in a binary search tree in $O(h)$ time in the
+worst case, where $h$ is the height of the tree.
+\item The height of a binary search tree of $n$ nodes is $O(\log n)$.
+\item We can locate the \textit{largest} key in a binary search tree in $O(\log n)$ time in the
+worst case, where $n$ is the number of the nodes in the tree.
+\item Assume that a node $z$ has two children. We can remove $z$ while still maintaining the
+sorted order by locating its \textit{successor} $y$, connecting $y$'s parent directly to the only
+child of $y$ (if there is one, otherwise make it null), which effectively removes the node $y$
+from the tree, and replacing the key of $z$ with that of $y$.
+\item Assume that a node $z$ has two children. We can remove $z$ while still maintaining the
+sorted order by locating its \textit{predecessor} $y$, connecting $y$'s parent directly to the
+only child of $y$ (if there is one, otherwise make it null), which effectively removes the node
+$y$ from the tree, and replacing the key of $z$ with that of $y$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1、4、5。
+
+\begin{itemize}
+\item 1. 對。 最小的鍵在「從根一直往左走，走到沒有左子節點」的那個節點（資結書虛擬碼~9.3）：它左邊沒有
+更小的，而它的祖先裡比它小的那些，它都在其右子樹裡，不可能；所以它就是最小值。 每一步往下一層，最多走
+$h$ 步，$O(h)$。
+\item 2. 錯。 二元搜尋樹沒有平衡的保證。 依序插入 $1, 2, \ldots, n$，每個節點都是前一個的右子節點，
+得到一條鏈，高度 $n - 1$（資結書第~9.3.1~節）。 $O(\log n)$ 是平衡樹（AVL、紅黑樹）才有的保證，或隨機
+插入時的期望值（資結書定理~9.2）。
+\item 3. 錯。 找最大值是從根一直往右走，時間 $\Theta(h)$。 依序插入 $1, 2, \ldots, n$ 的那條鏈，最大值
+$n$ 在最底下，要走 $n - 1$ 步，最壞是 $\Theta(n)$，不是 $O(\log n)$。
+\item 4. 對。 這是刪除兩個子節點的節點的標準做法（資結書第~9.2.2~節）。 $z$ 有右子樹，所以它的後繼
+$y$ 是右子樹的最小值，從 $z$ 的右子節點一直往左走得到；$y$ 沒有左子節點，最多一個（右）子節點。
+\begin{itemize}
+\item 把 $y$ 的父節點原本指向 $y$ 的那個指標，改成指向 $y$ 的右子節點（沒有就是 null）：這是刪除最多
+一個子節點的節點，$y$ 的子樹整個往上接一層，接上去的子樹裡的鍵都在 $y$ 原來那棵子樹裡，大小關係不變。
+$y$ 是 $z$ 的右子節點時也一樣（$y$ 的父節點就是 $z$）。
+\item 再把 $z$ 的鍵換成 $y$ 的鍵。 $y$ 是比 $z$ 大的鍵裡最小的，所以 $z$ 左子樹的鍵都 $< z < y$，右子樹
+剩下的鍵都 $> y$。 新的鍵放在 $z$ 的位置，左小右大仍然成立。
+\end{itemize}
+中序走訪的結果正好是原本的序列去掉 $z$。 對。
+\item 5. 對。 和 4 對稱：$z$ 有左子樹，前驅 $y$ 是左子樹的最大值，沒有右子節點，最多一個（左）子節點。
+把 $y$ 的父節點接到 $y$ 的左子節點，再用 $y$ 的鍵取代 $z$ 的鍵：$y$ 是比 $z$ 小的鍵裡最大的，左子樹剩下
+的鍵都 $< y$，右子樹的鍵都 $> z > y$。 對。
+\end{itemize}
+\end{pastsoln}

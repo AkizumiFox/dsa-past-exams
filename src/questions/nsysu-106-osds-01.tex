@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:nsysu-106-osds-01}]{中山資工所甲組 106 學年度 第 6 題}
+（問答）
+
+(10\%) \textit{Declare} in a single statement in C a pointer ``p'' to the array
+``\texttt{int a[256];}'' so that \texttt{p[1]} is an alias of \texttt{a[0]}, \texttt{p[2]} is an
+alias of \texttt{a[1]}, and so on, all the way up so that \texttt{p[256]} is an alias of
+\texttt{a[255]}.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\texttt{int *p = a - 1;}
+\end{center}
+寫成 \texttt{int *p = \&a[-1];} 意思一樣。
+
+\textbf{為什麼}。 C 的下標是指標運算的縮寫：\texttt{p[i]} 就是 \texttt{*(p + i)}，而
+\texttt{p + i} 指向 \texttt{p} 後面第 $i$ 個 \texttt{int}，位址是 $\mathrm{loc}(p) + 4i$（設
+\texttt{int} 占 $4$ 位元組；寫成 \texttt{sizeof(int)} 也一樣）。 陣列名稱 \texttt{a} 出現在運算式裡
+會變成指向 \texttt{a[0]} 的指標，所以 \texttt{a - 1} 指向 \texttt{a[0]} 前面一格。 令
+\texttt{p = a - 1}，則
+\[
+\texttt{p[i]} = \texttt{*(p + i)} = \texttt{*(a - 1 + i)} = \texttt{a[i - 1]},
+\]
+$i = 1$ 時是 \texttt{a[0]}，$i = 256$ 時是 \texttt{a[255]}，正是題目要的對應。 用資結書第~4.1~節
+的位址公式看：\texttt{a} 是下界 $0$ 的陣列，\texttt{p} 是「同一塊記憶體、下界改成 $1$」的看法，
+$\mathrm{loc}(\texttt{p[i]}) = \alpha + (i - 1)w = \mathrm{loc}(\texttt{a[i-1]})$，$\alpha$ 是
+\texttt{a[0]} 的位址。 這就是 Numerical Recipes 等書讓 C 陣列從 $1$ 開始編號的寫法。
+
+\textbf{常見的錯}：
+\begin{itemize}
+\item \texttt{int (*p)[256] = \&a;}：這才是字面上「指向陣列的指標」，但 \texttt{p[1]} 是
+\texttt{a} 後面的下一整個 $256$ 格陣列，不是 \texttt{a[0]}，不合題意。
+\item \texttt{int *p = a;}：\texttt{p[1]} 是 \texttt{a[1]}，差了一格。
+\item \texttt{int *p = a + 1;}：方向反了，\texttt{p[1]} 是 \texttt{a[2]}。
+\end{itemize}
+
+\textbf{補充}。 嚴格照 C 標準，指標只能指向陣列裡的元素或最後一個元素的下一格，算出
+\texttt{a - 1} 這個位址本身就是未定義行為（undefined behavior）。 在一般平坦記憶體的機器上這樣寫
+都能正常運作，考題要的也是這個寫法；作答時可以加一句這個附註。 完全合乎標準的做法是不要移動指標，
+改用 \texttt{a[i - 1]} 存取。
+\end{pastsoln}

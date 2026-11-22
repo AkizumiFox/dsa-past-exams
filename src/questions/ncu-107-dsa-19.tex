@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ncu-107-dsa-19}]{中央資工所 107 學年度 第 19 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is Subset Sum Dynamic Programming (SSDP) algorithm to solve the subset sum problem, as
+described below. Given a set $S$ of $n$ positive integers, and a specific integer $c$, determine if
+there exists a subset $S'$ of $S$ such that the sum of elements in $S'$ is $c$. Choose the correct
+statement(s).\\
+(a). The time complexity of the SSDP algorithm is $O(n\cdot c)$.\\
+(b). The time complexity of the SSDP algorithm is $O(n\cdot c^2)$.\\
+(c). The SSDP algorithm is a pseudo-polynomial time-complexity algorithm.\\
+(d). The subset sum problem is a P problem.\\
+(e). The subset sum problem is an NP-complete problem.
+\begin{quote}
+\textbf{Algorithm} SSDP\\
+\textbf{Input:} a set $S=\{v_1,\ldots,v_n\}$ of $n$ positive integers, and a positive integer $c$\\
+\textbf{Output:} ``yes'' if there exists a subset $S'$ of $S$ such that the sum of elements in $S'$
+is $c$; otherwise, ``no''\\
+1:\quad \textbf{for} $w\leftarrow 0$ to $c$ \textbf{do}\\
+2:\quad\quad $v[0,w]=0$\\
+3:\quad \textbf{for} $i\leftarrow 1$ to $n$ \textbf{do}\\
+4:\quad\quad \textbf{for} $w\leftarrow 0$ to $c$ \textbf{do}\\
+5:\quad\quad\quad \textbf{if} $v_i\le w$ \textbf{then}\\
+6:\quad\quad\quad\quad $v[i,w]\leftarrow\max(v[i\text{-}1,w],\ v_i+v[i\text{-}1,w\text{-}v_i])$\\
+7:\quad\quad\quad \textbf{else}\\
+8:\quad\quad\quad\quad $v[i,w]\leftarrow v[i\text{-}1,w]$\\
+9:\quad \textbf{if} $v[n,c]=c$ \textbf{then}\\
+10:\quad\quad \textbf{return} ``yes''\\
+11:\ \textbf{else}\\
+12:\quad\quad \textbf{return} ``no''
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(c)(e)。
+
+\textbf{先看演算法對不對}。 這是 0/1 背包的表（資結書第~18.5~節），每個物品的重量和價值都是 $v_i$，容量
+$c$。 $v[i, w]$ 是用 $v_1, \ldots, v_i$、總和不超過 $w$ 時能湊到的最大總和。 每一種選法的和都 $\le c$，
+所以 $v[n, c] \le c$；$v[n, c] = c$ 若且唯若有一個子集合的和恰好是 $c$。 演算法正確。 （中央資工所
+106 學年度第 8 題要求的就是這種改寫。）
+
+\begin{itemize}
+\item (a) 對。 第 1--2 行 $O(c)$；第 3--8 行兩層迴圈共 $n(c + 1)$ 次，每次 $O(1)$；總共 $O(nc)$。
+\item (b) 不選。 迴圈裡沒有任何和 $c$ 成正比的工作，緊的界是 $\Theta(nc)$。 嚴格說 $O$ 只是上界，
+$O(nc)$ 的演算法也是 $O(nc^2)$（資結書第~1.5.3~節），照字面 (b) 不算錯；但題目把 (a)(b) 並列，問的顯然是
+它的時間複雜度是哪一個，(b) 多了一個 $c$，不選。 作答時可以註明這一點。
+\item (c) 對。 時間 $O(nc)$ 是 $n$ 和 $c$ 的\textbf{數值}的多項式，但 $c$ 寫成二進位只要 $\lg c$ 個位元，
+$c = 2^{\lg c}$ 對輸入長度是指數，所以這是擬多項式時間（資結書第~18.5.5~節、第~28.6~節）。
+\item (d) 不選。 SSDP 不是多項式時間，不能用它說明子集合和在 P 裡。 子集合和是 NP 完備的，它在 P 裡
+若且唯若 $\mathrm{P} = \mathrm{NP}$，這目前沒有人證明，所以 (d) 不是一個正確的敘述。
+\item (e) 對。 子集合和在 NP 裡（憑證就是子集合，加起來比對 $c$），而且 3-SAT 可以歸約到它（資結書
+第~28.5.2~節，定理~28.10），是 NP 完備的。 (c) 和 (e) 並不衝突：擬多項式演算法存在，說明它只是
+「弱」NP 完備（資結書第~28.6~節）。
+\end{itemize}
+\end{pastsoln}

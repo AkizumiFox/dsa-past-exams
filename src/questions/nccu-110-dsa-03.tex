@@ -1,0 +1,57 @@
+\begin{pastexam}[label={px:nccu-110-dsa-03}]{政大資科所 110 學年度 第 3 題}
+（問答）
+
+(15\%) Use an example to explain why Dijkstra's shortest path algorithm cannot be applied to graphs
+with negative edge weights. In your example graph, please highlight the source and the destination.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{例子}。 有向圖，起點 $s$（來源），終點 $t$（目的地），四條邊：$s \to a$ 權重 $2$、$s \to b$ 權重 $3$、
+$b \to a$ 權重 $-2$、$a \to t$ 權重 $2$。 圖中雙圈的是起點和終點。
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=1.2cm,>={Stealth[length=2.4mm]},
+  v/.style={circle,draw,minimum size=7mm,inner sep=0pt},
+  st/.style={circle,draw,double,very thick,minimum size=7mm,inner sep=0pt},
+  w/.style={fill=white,inner sep=1.5pt,font=\small}]
+\node[st] (s) at (0,0) {$s$}; \node[font=\small,left=2pt of s] {起點};
+\node[v] (a) at (1.5,0.9) {$a$};
+\node[v] (b) at (1.5,-0.9) {$b$};
+\node[st] (t) at (3,0.9) {$t$}; \node[font=\small,right=2pt of t] {終點};
+\draw[->] (s) -- node[w] {$2$} (a);
+\draw[->] (s) -- node[w] {$3$} (b);
+\draw[->] (b) -- node[w] {$-2$} (a);
+\draw[->] (a) -- node[w] {$2$} (t);
+\end{tikzpicture}
+\end{center}
+真正的最短路徑是 $s \to b \to a \to t$，長度 $3 + (-2) + 2 = 3$；另一條 $s \to a \to t$ 長度 $4$。 圖裡沒有負環，
+最短距離是有定義的：$\delta(s, a) = 1$、$\delta(s, b) = 3$、$\delta(s, t) = 3$。
+
+\textbf{Dijkstra 的執行}（資結書虛擬碼~25.3）。 每一步取出 $d$ 最小、還沒確定的頂點，放進 $S$（認定它的 $d$ 已經是
+最短距離），再鬆弛它的出邊：
+\begin{center}
+\begin{tabular}{clcccc}
+\toprule
+步驟 & 取出 & $d[s]$ & $d[a]$ & $d[b]$ & $d[t]$ \\
+\midrule
+初始 & & $0$ & $\infty$ & $\infty$ & $\infty$ \\
+1 & $s$；鬆弛 $s \to a$、$s \to b$ & $0$ & $2$ & $3$ & $\infty$ \\
+2 & $a$（$d = 2$ 最小）；鬆弛 $a \to t$ & $0$ & $\mathbf{2}$ & $3$ & $4$ \\
+3 & $b$；$a$ 已經在 $S$，不再更新 & $0$ & $2$ & $3$ & $4$ \\
+4 & $t$ & $0$ & $2$ & $3$ & $\mathbf{4}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Dijkstra 回答 $s$ 到 $t$ 的距離是 $4$、路徑 $s \to a \to t$，但正確答案是 $3$。 $d[a] = 2$ 也錯了（應該是 $1$）。
+
+\textbf{錯在哪裡}。 Dijkstra 的正確性證明（資結書定理~25.6）靠的是：取出 $u$ 時，任何還沒確定的頂點 $y$ 都有
+$d[y] \ge d[u]$，而從 $y$ 再走下去，權重非負，路徑只會變長，所以不可能經過 $y$ 繞回來得到更短的 $u$。 有負邊時
+這個推論不成立：第 2 步取出 $a$ 時 $d[b] = 3 > 2$，看起來經過 $b$ 只會更遠，但 $b \to a$ 的 $-2$ 讓 $3 - 2 = 1 < 2$。
+$a$ 一旦放進 $S$ 就不會再被修正，靠 $a$ 算出的 $d[t]$ 也跟著錯。
+
+就算實作時允許第 3 步把 $d[a]$ 改成 $1$（不檢查 $a$ 是否在 $S$ 裡），$a$ 已經取出過，不會再去鬆弛 $a \to t$，
+$d[t]$ 還是 $4$，一樣錯。 有負邊（沒有負環）時要改用 Bellman--Ford（資結書第~25.3~節），它對這張圖算出
+$d[t] = 3$；圖是 DAG 時也可以用拓樸順序鬆弛（資結書第~25.5~節）。
+
+補充：題目若要無向圖的例子，要小心一條負邊 $\{u, v\}$ 在無向圖裡就等於 $u \to v \to u$ 這個負環，最短路徑沒有定義，
+所以這類例子通常用有向圖舉。
+\end{pastsoln}

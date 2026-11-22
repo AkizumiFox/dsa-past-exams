@@ -1,0 +1,94 @@
+\begin{pastexam}[label={px:ntut-109-ci-04}]{北科大資工所 109 學年度 第 3 題}
+（簡答）
+
+Please consider the following questions and answer them concisely. (6 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item Solve the \textit{continuous-knapsack problem} for the following weights ($w$), profits ($p$),
+and knapsack capacity ($M$). Please show your work step by step. (3 pts)
+\begin{center}
+$w_1=25$, $w_2=15$, $w_3=20$, $w_4=10$, $w_5=24$;\\
+$p_1=10$, $p_2=3$, $p_3=5$, $p_4=8$, $p_5=8$;\\
+$M=75$.
+\end{center}
+\item Consider two tennis players, A and B, playing a series of games until one of them win $n$
+games. Assume that the probability of player A winning a game is the same for each game and equals
+to $p$, and let the probability of player A losing a game is $q=1-p$. (Hence, there are no ties.)
+Let $P(i,j)$ be the probability of player A winning the series if player A needs $i$ more games to
+win the series and player B needs $j$ more games to win the series. Set up a recurrence relation for
+$P(i,j)$ that can be used by a dynamic programming algorithm to find the probability of player A
+winning a seven-game series. (3 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $x = (x_1, \ldots, x_5) = (1, 0, \tfrac{4}{5}, 1, 1)$，總利潤 $30$。
+(2) $P(i, j) = p\,P(i-1, j) + q\,P(i, j-1)$（$i, j \ge 1$），$P(0, j) = 1$（$j \ge 1$），
+$P(i, 0) = 0$（$i \ge 1$）；七戰四勝要的是 $P(4, 4)$。
+
+\textbf{(1)} 分數背包可以只放一部分，照資結書第~19.2~節的貪心法：依單位重量的利潤 $p_i / w_i$
+由大到小放，放得下就整個放，最後一個放不下的放一部分（資結書定理~19.2 證明這樣最佳）。 先算比值：
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+物品 $i$ & 1 & 2 & 3 & 4 & 5 \\
+\midrule
+$w_i$ & 25 & 15 & 20 & 10 & 24 \\
+$p_i$ & 10 & 3 & 5 & 8 & 8 \\
+$p_i / w_i$ & $0.4$ & $0.2$ & $0.25$ & $0.8$ & $0.333\ldots$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+順序是 $4, 1, 5, 3, 2$。 逐步放：
+\begin{center}
+\begin{tabular}{clccc}
+\toprule
+步驟 & 動作 & 放的比例 & 剩下容量 & 累計利潤 \\
+\midrule
+1 & 物品 4（$w = 10$） & $1$ & $75 - 10 = 65$ & $8$ \\
+2 & 物品 1（$w = 25$） & $1$ & $65 - 25 = 40$ & $18$ \\
+3 & 物品 5（$w = 24$） & $1$ & $40 - 24 = 16$ & $26$ \\
+4 & 物品 3（$w = 20$），只剩 $16$ & $16/20 = 4/5$ & $0$ & $26 + \tfrac{4}{5} \cdot 5 = 30$ \\
+5 & 物品 2 & $0$ & $0$ & $30$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+解是 $x_1 = 1$、$x_2 = 0$、$x_3 = 4/5$、$x_4 = 1$、$x_5 = 1$，總重量
+$25 + 16 + 10 + 24 = 75$ 剛好裝滿，最大利潤 $30$。
+
+\textbf{(2)} 看下一局。 A 還差 $i$ 勝、B 還差 $j$ 勝（$i, j \ge 1$）時，下一局：
+\begin{itemize}
+\item 機率 $p$ A 贏，變成 A 還差 $i - 1$ 勝、B 還差 $j$ 勝；
+\item 機率 $q$ A 輸，變成 A 還差 $i$ 勝、B 還差 $j - 1$ 勝。
+\end{itemize}
+每局的結果互相獨立，之後 A 贏得系列賽的機率只跟「還差幾勝」有關，所以由全機率
+\[
+P(i, j) = p\,P(i - 1, j) + q\,P(i, j - 1), \qquad i \ge 1,\ j \ge 1 .
+\]
+邊界：A 已經不差勝場（$i = 0$）而 B 還差（$j \ge 1$）時，A 已經贏了，$P(0, j) = 1$；反過來
+$P(i, 0) = 0$（$i \ge 1$）。 $P(0, 0)$ 不會出現，因為兩人不會同時拿到第 $n$ 勝。
+
+七戰四勝制是 $n = 4$，所求是 $P(4, 4)$。 DP 時開一個 $(n + 1) \times (n + 1)$ 的表，先填邊界，再依
+$i$ 由小到大、同一個 $i$ 裡 $j$ 由小到大填（每一格只用到左邊和上面那一格，資結書第~18.1.3~節的
+由下而上）：
+
+\begin{pseudo}{系列賽 A 獲勝的機率}
+\Function{Series}{$n, p$}
+    \State $q \gets 1 - p$
+    \For{$j \gets 1$ \To $n$}
+        \State $P[0, j] \gets 1$
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \State $P[i, 0] \gets 0$
+        \For{$j \gets 1$ \To $n$}
+            \State $P[i, j] \gets p \cdot P[i-1, j] + q \cdot P[i, j-1]$
+        \EndFor
+    \EndFor
+    \State \Return $P[n, n]$
+\EndFunction
+\end{pseudo}
+
+共 $n^2$ 格、每格 $O(1)$，時間 $\Theta(n^2)$、空間 $\Theta(n^2)$。 舉例：$p = 1/2$ 時由對稱得
+$P(4, 4) = 1/2$；$p = 0.6$ 時 $P(4, 4) = 11097/15625 \approx 0.710$，每局只多一成的勝率，七戰四勝的
+勝率就到七成。 直接寫成遞迴不做記憶化的話，同一個 $(i, j)$ 會被算很多次，呼叫次數是指數級的，
+這正是需要 DP 的原因。
+\end{pastsoln}

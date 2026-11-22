@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-06}]{臺大資工所 109 學年度 第 6 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) A \textit{randomized quick sort} works as follows. For ease of discussion we assume
+that the sequence we want to sort, $K=(k_1,\ldots,k_n)$, is a \textit{permutation} of 1 to $n$.
+We randomly and uniformly pick a key $k$ from $K$. Then we partition $K$ into two subsets --
+$K_1$ that has keys less than $k$ and $K_2$ that has keys greater than $k$. Then we recursively
+sort $K_1$ and $K_2$, and combine the results with $k$ to get the sorted sequence.
+\begin{enumerate}[label=\arabic*.]
+\item The number of key comparisons will always be maximized when the keys in $K$ are already
+sorted.
+\item Let $|K_1|$ and $|K_2|$ be the number of keys in $K_1$ and $K_2$ respectively. The expected
+value of $\max(|K_1|,|K_2|)$ is $\frac{2}{3}n$.
+\item The algorithm will compare two keys $k_i$ and $k_j$ at most once, so the number of key
+comparisons is $O(n^2)$.
+\item The probability that the algorithm will compare $k_i$ and $k_j$ ($n\ge i>j\ge 1$) is
+$\frac{2}{i-j+1}$.
+\item Let $P=\{(i,j)|1\le i,j\le n, i\ne j\}$. The expected total number of key comparisons is
+$\sum_{(i,j)\in P}\frac{1}{|k_i-k_j|+1}$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：3、5。
+
+分割時拿基準 $k$ 和其他每個鍵各比一次，大小為 $m$ 的一段比 $m - 1$ 次。 分析用資結書第~14.5.6~節的
+方法：把鍵由小到大記成 $z_1 < z_2 < \cdots < z_n$，這題的鍵是 $1$ 到 $n$ 的排列，所以 $z_a = a$。
+資結書引理~14.1、14.2：任兩個鍵最多比一次（只有基準會和別人比，比完基準就不再進遞迴）；$z_a$、$z_b$
+（$a < b$）會被比較，若且唯若 $z_a, z_{a+1}, \ldots, z_b$ 這 $b - a + 1$ 個鍵之中，第一個被選為基準的是
+$z_a$ 或 $z_b$，機率是 $\frac{2}{b - a + 1}$。
+
+\begin{itemize}
+\item 1. 錯。 基準是隨機選的，每次從目前的鍵裡均勻挑一個，挑到的是第幾小和鍵在陣列裡怎麼排無關，所以
+比較次數的機率分布對每個輸入都一樣。 已經排好的輸入，比較次數也是隨機的：運氣好每次挑到中位數，只要
+$\Theta(n \log n)$ 次；別的輸入運氣差時可以比到 $n(n-1)/2$ 次。 「已排好時一定最多」不成立。 （固定挑
+第一個當基準的非隨機版本，已排好才是最壞情況，這個選項是拿那個結論來混淆。）
+\item 2. 錯。 基準是第 $r$ 小的機率都是 $1/n$，這時 $|K_1| = r - 1$、$|K_2| = n - r$。
+\[
+E[\max(|K_1|, |K_2|)] = \frac{1}{n}\sum_{r=1}^{n} \max(r - 1, n - r).
+\]
+$n = 2m$ 時，和裡的數是 $n-1, n-2, \ldots, m$ 各出現兩次，總和 $n(n-1) - m(m-1)$，期望值
+$\frac{3m - 1}{2} = \frac{3n}{4} - \frac{1}{2}$；$n$ 是奇數時算出來是 $\frac{3n}{4} - \frac{1}{2} -
+\frac{1}{4n}$。 都大約是 $\frac{3}{4}n$，不是 $\frac{2}{3}n$。 例如 $n = 4$：$\frac{1}{4}(3 + 2 + 2 + 3) =
+\frac{5}{2}$，而 $\frac{2}{3} \cdot 4 = \frac{8}{3}$。 （剛好 $n = 6$ 時 $\frac{3 \cdot 6}{4} - \frac{1}{2}
+= 4 = \frac{2}{3}\cdot 6$，只是巧合；題目講的是一般的 $n$。）
+\item 3. 對。 每一對鍵最多比一次，一共 $\binom{n}{2}$ 對，比較次數 $\le n(n-1)/2 = O(n^2)$。
+\item 4. 錯。 題目的 $k_i$ 是輸入序列的\textbf{第 $i$ 個位置}上的鍵，不是第 $i$ 小的鍵。 會不會被比較
+取決於鍵的\textbf{值}之間夾了幾個鍵：正確的機率是 $\frac{2}{|k_i - k_j| + 1}$。 反例：$n = 3$，
+$K = (1, 3, 2)$，取 $i = 3$、$j = 1$：$k_3 = 2$、$k_1 = 1$ 是相鄰的值，第一個從 $\{1, 2\}$ 裡被選為
+基準的一定是 $1$ 或 $2$，所以一定會比，機率 $1$；題目的式子給 $\frac{2}{3 - 1 + 1} = \frac{2}{3}$。 只有
+$K$ 已經排好（$k_i = i$）時這個式子才對。
+\item 5. 對。 對每一對鍵定義指標變數，由期望值的線性性（資結書定理~A.10），總比較次數的期望值是每一對被
+比較的機率加總。 每一對無序的 $\{k_i, k_j\}$ 被比較的機率是 $\frac{2}{|k_i - k_j| + 1}$；$P$ 是有序對，
+每個無序對算兩次，所以
+\[
+\sum_{\{i, j\}} \frac{2}{|k_i - k_j| + 1} = \sum_{(i, j) \in P} \frac{1}{|k_i - k_j| + 1}.
+\]
+例如 $K = (3, 1, 4, 2, 5)$，兩邊都是 $\frac{37}{5}$。
+\end{itemize}
+\end{pastsoln}

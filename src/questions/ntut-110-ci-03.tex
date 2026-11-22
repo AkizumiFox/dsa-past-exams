@@ -1,0 +1,96 @@
+\begin{pastexam}[label={px:ntut-110-ci-03}]{北科大資工所 110 學年度 第四題}
+（問答）
+
+Suppose Alice and Bob work on a project at different places and Bob needs to send a binary tree $T$
+to Alice. The communication channel between Bob and Alice only allows to send/receive one node of
+the tree at a time. One way for them to communicate is to serialize the binary tree. A binary tree
+can be serialized by arranging the nodes linearly. Thus, a \textit{serialization} of a given binary
+tree $T$ is a sequence of nodes. Answer the following questions. (10 pts)
+\begin{enumerate}[label=(\arabic*)]
+\item How many serializations for a given binary tree $T$ with $n$ nodes? (2 pts)
+\item Please provide a way for Bob to send a binary tree $T$ over the channel and Alice can restore
+$T$ by receiving the nodes from the channel. Explain how Bob sends and Alice restores the tree with
+time and space analysis. (4 pts)
+\item Suppose that the tree to be sent is a \textit{binary search tree} (BST). Again, please provide
+a more efficient way for them to communication and explain why the scheme works with time and space
+analysis. (4 pts)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目對「序列化」的定義只說是「把節點排成一列」，沒有要求能還原。 (1) 依這個定義作答；(2)(3) 要
+設計的是「能還原的」序列化，下面假設每個節點送出時可以附帶少量資訊（例如兩個位元），鍵值互不相同。
+
+\textbf{(1) $n!$ 種。} 序列化就是 $n$ 個（不同的）節點的一種排列，第一個位置有 $n$ 種選法、第二個有
+$n - 1$ 種……，共 $n!$ 種。 其中只有少數排法配上適當的資訊才能還原樹，這就是 (2) 要處理的事。
+
+\textbf{(2) 送前序，每個節點附帶「有沒有左子、有沒有右子」兩個位元。}
+
+Bob 照前序（根、左子樹、右子樹）一個一個送；Alice 照同樣的順序收，收到一個節點就看它的兩個位元，
+決定要不要接著遞迴收它的左子樹、右子樹。
+
+\begin{pseudo}{Bob 送出、Alice 還原（前序加兩個位元）}
+\Procedure{Send}{$x$}
+    \State 送出 $(x.\mathit{key},\ x.\mathit{left} \ne \NIL,\ x.\mathit{right} \ne \NIL)$
+    \If{$x.\mathit{left} \ne \NIL$}
+        \State \Call{Send}{$x.\mathit{left}$}
+    \EndIf
+    \If{$x.\mathit{right} \ne \NIL$}
+        \State \Call{Send}{$x.\mathit{right}$}
+    \EndIf
+\EndProcedure
+\Statex
+\Function{Receive}{}
+    \State 收下一個節點 $(k, \mathit{hasL}, \mathit{hasR})$，建立新節點 $x$，$x.\mathit{key} \gets k$
+    \State $x.\mathit{left} \gets$ \textbf{if} $\mathit{hasL}$ \textbf{then} \Call{Receive}{} \textbf{else} \NIL
+    \State $x.\mathit{right} \gets$ \textbf{if} $\mathit{hasR}$ \textbf{then} \Call{Receive}{} \textbf{else} \NIL
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+Bob 呼叫 \proc{Send}($T.\mathit{root}$)（$T$ 非空），Alice 呼叫 \proc{Receive}() 得到根。
+
+正確性：對子樹的節點數做歸納。 \proc{Send}($x$) 送出的正是以 $x$ 為根的子樹的前序，而且連續送完才
+輪到別的節點。 假設 Alice 呼叫 \proc{Receive} 時，通道上接下來是某棵子樹 $S$ 的前序：第一個收到
+的是 $S$ 的根，它的兩個位元正確說出左右子樹是否存在；若左子樹存在，接下來連續的就是左子樹的前序，
+由歸納假設，遞迴呼叫恰好把它還原、而且剛好收完；右子樹同理。 所以 \proc{Receive} 還原出 $S$，
+左右不會弄反。 這其實就是資結書第~7.4~節的延伸前序（範例~7.1 用 \texttt{.} 表示空的子樹）：把「後面
+跟一個空的子樹」的資訊放進節點本身的位元，就不用另外送 $n + 1$ 個空標記。 如果通道只能送真正的
+節點、不能附帶位元，也可以送前序和中序兩串（共 $2n$ 次），用資結書虛擬碼~7.5 還原。
+
+時間：Bob 每個節點送一次，$\Theta(n)$；Alice 每收一個節點做 $O(1)$ 的事，$\Theta(n)$。 通訊量是
+$n$ 個節點加 $2n$ 個位元。 空間：Bob 只用遞迴堆疊，$O(h)$，$h$ 是樹高（最壞 $n$）；Alice 要存整棵樹
+$\Theta(n)$，再加遞迴堆疊 $O(h)$。
+
+\textbf{(3) 二元搜尋樹：只送前序的鍵，不用附帶任何位元。}
+
+Bob 照前序送出鍵值。 Alice 用「每棵子樹的鍵一定落在某個範圍內」來判斷收到的鍵屬於哪裡：
+
+\begin{pseudo}{由二元搜尋樹的前序還原}
+\Function{Receive-BST}{$\mathit{lo}, \mathit{hi}$}
+    \If{通道已經沒有鍵 \OR 下一個鍵 $k$ 不在 $(\mathit{lo}, \mathit{hi})$ 之間}
+        \State \Return \NIL \Comment{只偷看，不取出}
+    \EndIf
+    \State 取出 $k$，建立新節點 $x$，$x.\mathit{key} \gets k$
+    \State $x.\mathit{left} \gets \Call{Receive-BST}{\mathit{lo}, k}$
+    \State $x.\mathit{right} \gets \Call{Receive-BST}{k, \mathit{hi}}$
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+Alice 呼叫 \proc{Receive-BST}($-\infty, +\infty$)。 「偷看下一個鍵」只要 Alice 多收一個、先放在一個
+變數裡就好。
+
+為什麼可行：二元搜尋樹的前序裡，根之後先是左子樹的所有鍵（都小於根），再來是右子樹的所有鍵（都大於
+根）（資結書第~9.1~節）。 以節點 $x$ 為根的子樹，它的鍵都落在一個開區間 $(\mathit{lo}, \mathit{hi})$
+裡，這兩個界就是從根走到 $x$ 的路上，最近一次往右轉、往左轉的那兩個祖先的鍵。 呼叫
+\proc{Receive-BST}($\mathit{lo}, \mathit{hi}$) 時，若下一個鍵在範圍內，它一定是這個位置的子樹的根；
+若不在範圍內，表示這個位置是空的，下一個鍵屬於某個祖先的右子樹（比 $\mathit{hi}$ 大）。 對子樹大小
+歸納，每個呼叫恰好取走它那棵子樹的鍵，還原出來的樹和 Bob 的一樣。
+
+時間：每一次 \proc{Receive-BST} 不是取走一個鍵（共 $n$ 次），就是直接回傳 \NIL（每個空指標一次，共
+$n + 1$ 次），每次 $O(1)$，總共 $\Theta(n)$。 通訊量只有 $n$ 個鍵，比 (2) 少了 $2n$ 個位元。 空間：
+Alice 存樹 $\Theta(n)$，遞迴堆疊 $O(h)$；Bob 做前序走訪，$O(h)$。
+
+比較：把收到的鍵依序用一般的插入（資結書虛擬碼~9.6）插進空的二元搜尋樹，也會得到同一棵樹（前序裡
+父節點總是比子孫先到），但每次插入要從根走下去，總時間 $O(nh)$，樹退化成一條鏈時是 $\Theta(n^2)$。
+用範圍判斷的做法每個鍵只處理一次，是線性的。
+\end{pastsoln}

@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncu-109-dsa-06}]{中央資工所 109 學年度 第 6 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1.25 分）
+
+Consider an empty hash table with 11 buckets and each bucket has 2 slots. Suppose that linear
+probing is used to handle overflow, and the hash function: $h(n)=n\ \%\ 11$.\\
+Now we sequentially insert the following numbers into the hash table:
+\begin{center}\textbf{6 \ 16 \ 22 \ 44 \ 53 \ 24 \ 45 \ 7 \ 74 \ 4 \ 109 \ 78 12}\end{center}
+What is the summation of the numbers in the full buckets of the hash table?\\
+(A)~294 \qquad (B)~216 \qquad (C)~225 \qquad (D)~201
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+每個桶（bucket）有兩格（slot），一個桶裝得下兩個鍵。 線性探測以桶為單位（資結書第~12.3~節的
+線性探測，把「格」換成「桶」）：先放進 $h(n)$ 號桶，那個桶兩格都滿了，就試下一個桶
+$(h(n) + 1) \bmod 11$，依此類推。 「full bucket」是兩格都放了鍵的桶。
+
+先算每個數的雜湊值：
+\begin{center}
+\small
+\begin{tabular}{c*{13}{c}}
+\toprule
+$n$ & 6 & 16 & 22 & 44 & 53 & 24 & 45 & 7 & 74 & 4 & 109 & 78 & 12 \\
+$n \bmod 11$ & 6 & 5 & 0 & 0 & 9 & 2 & 1 & 7 & 8 & 4 & 10 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+（$53 = 4 \cdot 11 + 9$，$74 = 6 \cdot 11 + 8$，$109 = 9 \cdot 11 + 10$，$78 = 7 \cdot 11 + 1$。）
+
+依序插入：前十二個數，只有 $44$ 和 $22$ 同在 $0$ 號桶、$78$ 和 $45$ 同在 $1$ 號桶，每個桶最多兩個，
+都直接放進自己的桶，不必探測。 最後的 $12$：$1$ 號桶已經有 $45, 78$，滿了；試 $2$ 號桶，裡面只有
+$24$，放進去。 最後的表：
+\begin{center}
+\small
+\begin{tabular}{c*{11}{c}}
+\toprule
+桶 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+第一格 & 22 & 45 & 24 & & 4 & 16 & 6 & 7 & 74 & 53 & 109 \\
+第二格 & 44 & 78 & 12 & & & & & & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+滿的桶是 $0, 1, 2$ 號，總和
+\[
+(22 + 44) + (45 + 78) + (24 + 12) = 66 + 123 + 36 = 225,
+\]
+選 (C)。 (A) $294$、(B) $216$、(D) $201$ 都和這個總和不同。 注意只算\textbf{兩格都滿}的桶；
+$3$ 到 $10$ 號桶裡只有一個鍵或沒有鍵，不算。
+\end{pastsoln}

@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntust-110-ice-07}]{臺科大資工所 110 學年度 第 7 題}
+（問答）
+
+Given a hash function as follows:\\
+The size of the hash table is 7.\\
+Linear probing is used to resolve collisions.\\
+The hash function used is H(k) = k mod 7
+
+Suppose that the hash table is initially empty. What values will be in the hash table after the
+following sequence of insertions?
+\begin{quote}15, 26, 29, 19, 8\end{quote}
+Draw the contents of the hash table as shown below. (5\%)
+\begin{center}
+\begin{tabular}{r|p{1.6cm}|}
+\cline{2-2}
+0 & \\ \cline{2-2}
+1 & \\ \cline{2-2}
+2 & \\ \cline{2-2}
+3 & \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & \\ \cline{2-2}
+6 & \\ \cline{2-2}
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：第 $1$ 格 $15$、第 $2$ 格 $29$、第 $3$ 格 $8$、第 $5$ 格 $26$、第 $6$ 格 $19$，第 $0$、$4$ 格空著。
+
+線性探測（資結書第~12.3~節）：從 $H(k)$ 開始，被占用就往下一格找，到表尾繞回第 $0$ 格。
+\begin{itemize}
+\item $15$：$15 \bmod 7 = 1$，第 $1$ 格空，放入。
+\item $26$：$26 \bmod 7 = 5$，第 $5$ 格空，放入。
+\item $29$：$29 \bmod 7 = 1$，第 $1$ 格有 $15$；第 $2$ 格空，放入（探測 $2$ 次）。
+\item $19$：$19 \bmod 7 = 5$，第 $5$ 格有 $26$；第 $6$ 格空，放入（探測 $2$ 次）。
+\item $8$：$8 \bmod 7 = 1$，第 $1$、$2$ 格都有鍵；第 $3$ 格空，放入（探測 $3$ 次）。
+\end{itemize}
+\begin{center}
+\begin{tabular}{r|c|}
+\cline{2-2}
+0 & \\ \cline{2-2}
+1 & 15 \\ \cline{2-2}
+2 & 29 \\ \cline{2-2}
+3 & 8 \\ \cline{2-2}
+4 & \\ \cline{2-2}
+5 & 26 \\ \cline{2-2}
+6 & 19 \\ \cline{2-2}
+\end{tabular}
+\end{center}
+$15$、$29$、$8$ 三個鍵的雜湊值都是 $1$，在第 $1$--$3$ 格擠成一個叢集，這就是線性探測的主叢集現象。
+\end{pastsoln}

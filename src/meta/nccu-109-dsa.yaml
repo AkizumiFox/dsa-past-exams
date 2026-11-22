@@ -1,0 +1,12 @@
+paper: nccu-109-dsa
+volume: 1
+school: 政大
+dept: 資科所
+year: 109
+subject: 資料結構及演算法
+questions:
+  - {id: nccu-109-dsa-01, label: 第 1 題, chapter: 1}
+  - {id: nccu-109-dsa-02, label: 第 2 題, chapter: 3}
+  - {id: nccu-109-dsa-03, label: 第 3 題, chapter: 7}
+  - {id: nccu-109-dsa-04, label: 第 4 題, chapter: 17}
+  - {id: nccu-109-dsa-05, label: 第 5 題, chapter: 18}

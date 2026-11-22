@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:nsysu-110-osds-02}]{中山資工所甲組 110 學年度 第 8 題}
+（追蹤）
+
+(15\%) In the hash method, suppose that a rehash function $h_i(x)$=(5$i$+$x$) mod 13 is applied
+sequentially when a new element is inserted into the hash table, but a hash collision occurs. In
+other words, $h_1$( ) is applied for the first time; $h_2$( ) is applied if a hash collision occurs;
+$h_3$( ) is applied if a hash collision occurs again; and so on. What is the content of the hash
+table after the elements 35, 22, 9, 24, 16, 19, 3, are inserted sequentially into an empty hash table
+of size 13, indexed as 0 through 12 ?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{*{13}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+19 & 35 & & 24 & & 3 & 22 & & 16 & & & 9 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$h_i(x) = (x + 5i) \bmod 13$，$i = 1, 2, 3, \ldots$：第一次看 $(x + 5) \bmod 13$，每碰撞一次就往後跳 $5$ 格（繞回
+開頭）。 這是開放定址，探測序列的間隔固定是 $5$，本質上是間隔 $5$ 的線性探測（資結書第~12.3~節）。 $13$ 是質數，
+$\gcd(5, 13) = 1$，所以 $13$ 次之內一定會看遍所有格子，只要表沒滿就找得到空格。 注意 $i$ 從 $1$ 開始，第一次
+看的格子是 $(x + 5) \bmod 13$，不是 $x \bmod 13$。
+\begin{center}
+\begin{tabular}{rp{0.68\linewidth}c}
+\toprule
+$x$ & 依序探測的格子 $h_1, h_2, \ldots$ & 放在 \\
+\midrule
+35 & $40 \bmod 13 = 1$ & 1 \\
+22 & $27 \bmod 13 = 1$（35 占了），$32 \bmod 13 = 6$ & 6 \\
+9 & $14 \bmod 13 = 1$（占），$19 \bmod 13 = 6$（占），$24 \bmod 13 = 11$ & 11 \\
+24 & $29 \bmod 13 = 3$ & 3 \\
+16 & $21 \bmod 13 = 8$ & 8 \\
+19 & $24 \bmod 13 = 11$（占），$29 \bmod 13 = 3$（占），$34 \bmod 13 = 8$（占），$39 \bmod 13 = 0$ & 0 \\
+3 & $8$（占），$13 \bmod 13 = 0$（占），$18 \bmod 13 = 5$ & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+共發生 $1 + 2 + 3 + 2 = 8$ 次碰撞。 第 $2, 4, 7, 9, 10, 12$ 格是空的。
+
+如果把第一次誤算成 $h_0(x) = x \bmod 13$（$i$ 從 $0$ 開始），會得到完全不同的表（例如 35 放在第 $9$ 格），題目明確說
+第一次用 $h_1$，要照題目。
+\end{pastsoln}

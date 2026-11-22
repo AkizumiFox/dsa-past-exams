@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:nsysu-110-dmalg-03}]{中山資工所資安組 110 學年度 第 7 題}
+（設計、分析）
+
+(Algorithm points) {[10\%]} Please express quicksort algorithm and analyze its time complexity in
+detail.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{演算法}（資結書第~14.5~節）。 快速排序是分治法：選一個基準 $x$，把陣列分割成「$\le x$」「$x$」「$> x$」三段，
+基準就落在它最後的位置；再遞迴排左右兩段，不需要合併。 用 Hoare 分割（取第一個數當基準）：
+\begin{pseudo}{快速排序（Hoare 分割）}
+\Procedure{Quicksort}{$A, p, r$}
+    \If{$p < r$}
+        \State $q \gets$ \Call{Hoare-Partition}{$A, p, r$}
+        \State \Call{Quicksort}{$A, p, q$}
+        \State \Call{Quicksort}{$A, q + 1, r$}
+    \EndIf
+\EndProcedure
+\Function{Hoare-Partition}{$A, p, r$}
+    \State $x \gets A[p]$ \Comment{基準}
+    \State $i \gets p$；$j \gets r$
+    \While{\TRUE}
+        \While{$A[i] < x$}
+            \State $i \gets i + 1$
+        \EndWhile
+        \While{$A[j] > x$}
+            \State $j \gets j - 1$
+        \EndWhile
+        \If{$i \ge j$}
+            \State \Return $j$
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$
+        \State $i \gets i + 1$；$j \gets j - 1$
+    \EndWhile
+\EndFunction
+\end{pseudo}
+\proc{Hoare-Partition} 回傳 $j$ 時，$A[p..j]$ 的每個數都 $\le$ $A[j+1..r]$ 的每個數，而且 $p \le j < r$，兩邊都比原來
+短，遞迴一定會結束（資結書虛擬碼~14.10、14.11）。 注意這個版本遞迴的是 $A[p..q]$，不是 $A[p..q-1]$：Hoare 分割不保證
+基準落在 $q$。 例：$\langle 5, 3, 8, 1, 9, 2\rangle$ 以 $5$ 為基準，$i$、$j$ 從兩端往中間走，先交換 $5 \leftrightarrow 2$、
+再交換 $8 \leftrightarrow 1$，得 $\langle 2, 3, 1, 8, 9, 5\rangle$，回傳 $j = 3$，左段 $\langle 2, 3, 1\rangle$ 都 $\le$ 右段
+$\langle 8, 9, 5\rangle$。
+
+\textbf{時間分析}。 一次分割掃過整段，$n$ 個數花 $\Theta(n)$。 切成 $q$ 和 $n - q$ 個時
+$T(n) = T(q) + T(n - q) + \Theta(n)$。
+\begin{itemize}
+\item \textbf{最壞}：每次都切成 $1$ 和 $n - 1$（例如輸入已經排好，基準每次都是最小值）。
+$T(n) = T(n-1) + \Theta(n) = \Theta(n) + \Theta(n-1) + \cdots = \Theta(n^2)$。 上界也成立：$q$ 怎麼選，
+$q^2 + (n-q)^2 \le 1 + (n-1)^2$，用代換法可證 $T(n) \le cn^2$，所以最壞就是 $\Theta(n^2)$。
+\item \textbf{最好}：每次切成兩半，$T(n) = 2T(n/2) + \Theta(n) = \Theta(n \lg n)$（主定理情況 2，資結書定理~2.4）。
+只要每次至少切出固定的比例（例如 $1:9$），遞迴樹高度仍是 $O(\lg n)$、每層工作 $O(n)$，也是 $\Theta(n \lg n)$。
+\item \textbf{平均}：輸入的 $n!$ 種排列等可能（或隨機選基準），基準的名次均勻分布。 比較次數 $C(n)$ 滿足
+\[
+C(n) = (n - 1) + \frac{2}{n}\sum_{q=0}^{n-1} C(q)
+\]
+（以基準落在 $q + 1$ 的 Lomuto 版寫，兩種分割的階數一樣）。 乘 $n$ 後和 $n - 1$ 的式子相減得
+$nC(n) = (n+1)C(n-1) + 2(n-1)$，除以 $n(n+1)$ 疊加，得 $C(n) = 2(n+1)H_n - 4n \approx 1.39\, n \lg n$
+（逐步推導見本章中山資安組 109 學年度第 7 題，第~\pageref{px:nsysu-109-dmalg-04}~頁；也可用資結書定理~14.3 的指示
+變數法）。 平均 $\Theta(n \lg n)$。
+\end{itemize}
+空間：原地排序，額外空間是遞迴堆疊，平均 $\Theta(\lg n)$、最壞 $\Theta(n)$。 隨機選基準讓任何輸入的期望時間都是
+$O(n \lg n)$，最壞情況不再對應到特定的輸入。
+\end{pastsoln}

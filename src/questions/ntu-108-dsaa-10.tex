@@ -1,0 +1,201 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-10}]{臺大資工所 108 學年度 第 10 題}
+（問答）
+
+(10\%) The goal of this problem is to transform the following sequence of shapes into another
+sequence of shapes so that the total cost is minimized.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+\newcommand{\shsq}[2]{\draw[thick] (#1-0.3,#2-0.3) rectangle (#1+0.3,#2+0.3);}
+\newcommand{\shci}[2]{\draw[thick] (#1,#2) circle (0.3);}
+\newcommand{\shtr}[2]{\draw[thick] (#1-0.3,#2+0.3) -- (#1+0.3,#2) -- (#1-0.3,#2-0.3) -- cycle;}
+\draw[thick] (-0.5,0) -- (9.049999999999999,0);
+\fill[white] (-0.3,-0.3) rectangle (0.3,0.3);
+\shsq{0.0}{0}
+\fill[white] (0.95,0) circle (0.3);
+\shci{0.95}{0}
+\fill[white] (1.5999999999999999,0.3) -- (2.1999999999999997,0) -- (1.5999999999999999,-0.3) -- cycle;
+\shtr{1.9}{0}
+\fill[white] (2.5500000000000003,-0.3) rectangle (3.15,0.3);
+\shsq{2.85}{0}
+\fill[white] (3.5,0.3) -- (4.1,0) -- (3.5,-0.3) -- cycle;
+\shtr{3.8}{0}
+\fill[white] (4.45,-0.3) rectangle (5.05,0.3);
+\shsq{4.75}{0}
+\fill[white] (5.4,0.3) -- (6.0,0) -- (5.4,-0.3) -- cycle;
+\shtr{5.7}{0}
+\fill[white] (6.3500000000000005,-0.3) rectangle (6.95,0.3);
+\shsq{6.65}{0}
+\fill[white] (7.6,0) circle (0.3);
+\shci{7.6}{0}
+\fill[white] (8.25,0.3) -- (8.850000000000001,0) -- (8.25,-0.3) -- cycle;
+\shtr{8.55}{0}
+\end{tikzpicture}
+\end{center}
+
+The rules of transformation are shown below. For example, if you do not replace anything, the total cost is $6+3+2+6+2+6+2+6+3+2=38$. If you replace the last two shapes (circle and triangle) by the rule \#3, the total cost is $6+3+2+6+2+6+2+6+4=37$. Note that you can choose not to replace a shape if the total cost can be minimized. Also, a rule of transformation can be applied more than once.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+\newcommand{\shsq}[2]{\draw[thick] (#1-0.3,#2-0.3) rectangle (#1+0.3,#2+0.3);}
+\newcommand{\shci}[2]{\draw[thick] (#1,#2) circle (0.3);}
+\newcommand{\shtr}[2]{\draw[thick] (#1-0.3,#2+0.3) -- (#1+0.3,#2) -- (#1-0.3,#2-0.3) -- cycle;}
+\node[align=center] at (0.4,1.15) {shape\\cost\\$\Downarrow$};
+\node[align=center] at (2.45,1.15) {cost before\\transformation\\$\Downarrow$};
+\node[align=center] at (6.75,1.15) {rule of\\transformation\\$\Downarrow$};
+\node[align=center] at (10.4,1.15) {cost after\\transformation\\$\Downarrow$};
+\shsq{0}{0.0} \node at (0.8,0.0) {6};
+\shci{0}{-0.95} \node at (0.8,-0.95) {3};
+\shtr{0}{-1.9} \node at (0.8,-1.9) {2};
+\draw[thick] (1.3,0.4) -- (1.3,-6.1);
+\node at (2.45,0.13) {9}; \node[font=\footnotesize] at (2.45,-0.24) {(6+3)};
+\draw[thick] (4.2,0.0) -- (6.2,0.0);
+\fill[white] (4.4,-0.3) rectangle (5.0,0.3);
+\shsq{4.7}{0.0}
+\fill[white] (5.7,0.0) circle (0.3);
+\shci{5.7}{0.0}
+\node[font=\small] at (6.75,0.2) {\#1}; \node at (6.75,-0.1) {$\rightarrow$};
+\draw[thick] (7.3,0.0) -- (7.5,0.0) (8.7,0.0) -- (8.899999999999999,0.0);
+\draw[thick,rounded corners=2.2mm] (7.5,-0.3) rectangle (8.7,0.3);
+\node at (10.4,0.0) {7};
+\node at (2.45,-0.82) {8}; \node[font=\footnotesize] at (2.45,-1.19) {(6+2)};
+\draw[thick] (4.2,-0.95) -- (6.2,-0.95);
+\fill[white] (4.4,-1.25) rectangle (5.0,-0.6499999999999999);
+\shsq{4.7}{-0.95}
+\fill[white] (5.4,-0.6499999999999999) -- (6.0,-0.95) -- (5.4,-1.25) -- cycle;
+\shtr{5.7}{-0.95}
+\node[font=\small] at (6.75,-0.75) {\#2}; \node at (6.75,-1.05) {$\rightarrow$};
+\draw[thick] (7.3,-0.95) -- (7.5,-0.95) (8.7,-0.95) -- (8.899999999999999,-0.95);
+\draw[thick] (7.5,-0.65) -- (8.1,-0.65) -- (8.7,-0.95) -- (8.1,-1.25) -- (7.5,-1.25) -- cycle;
+\node at (10.4,-0.95) {7};
+\node at (2.45,-1.77) {5}; \node[font=\footnotesize] at (2.45,-2.14) {(3+2)};
+\draw[thick] (4.2,-1.9) -- (6.2,-1.9);
+\fill[white] (4.7,-1.9) circle (0.3);
+\shci{4.7}{-1.9}
+\fill[white] (5.4,-1.5999999999999999) -- (6.0,-1.9) -- (5.4,-2.1999999999999997) -- cycle;
+\shtr{5.7}{-1.9}
+\node[font=\small] at (6.75,-1.7) {\#3}; \node at (6.75,-2.0) {$\rightarrow$};
+\draw[thick] (7.3,-1.9) -- (7.5,-1.9) (8.7,-1.9) -- (8.899999999999999,-1.9);
+\draw[thick] (7.95,-1.6) arc (90:270:0.45 and 0.3) -- (8.1,-2.2) -- (8.7,-1.9) -- (8.1,-1.6) -- cycle;
+\node at (10.4,-1.9) {4};
+\node at (2.45,-2.72) {8}; \node[font=\footnotesize] at (2.45,-3.09) {(2+6)};
+\draw[thick] (4.2,-2.85) -- (6.2,-2.85);
+\fill[white] (4.4,-2.5500000000000003) -- (5.0,-2.85) -- (4.4,-3.15) -- cycle;
+\shtr{4.7}{-2.85}
+\fill[white] (5.4,-3.15) rectangle (6.0,-2.5500000000000003);
+\shsq{5.7}{-2.85}
+\node[font=\small] at (6.75,-2.65) {\#4}; \node at (6.75,-2.95) {$\rightarrow$};
+\draw[thick] (7.3,-2.85) -- (7.5,-2.85) (8.7,-2.85) -- (8.899999999999999,-2.85);
+\draw[thick] (7.5,-2.85) -- (8.1,-2.55) -- (8.7,-2.85) -- (8.1,-3.15) -- cycle;
+\node at (10.4,-2.85) {6};
+\node at (2.45,-3.67) {11}; \node[font=\footnotesize] at (2.45,-4.04) {(6+3+2)};
+\draw[thick] (3.2,-3.8) -- (6.2,-3.8);
+\fill[white] (3.4000000000000004,-4.1) rectangle (4.0,-3.5);
+\shsq{3.7}{-3.8}
+\fill[white] (4.7,-3.8) circle (0.3);
+\shci{4.7}{-3.8}
+\fill[white] (5.4,-3.5) -- (6.0,-3.8) -- (5.4,-4.1) -- cycle;
+\shtr{5.7}{-3.8}
+\node[font=\small] at (6.75,-3.6) {\#5}; \node at (6.75,-3.9) {$\rightarrow$};
+\draw[thick] (7.3,-3.8) -- (7.5,-3.8) (9.3,-3.8) -- (9.5,-3.8);
+\draw[thick] (7.75,-3.5) arc (90:270:0.25 and 0.3) -- (8.700000000000001,-4.1) -- (9.3,-3.8) -- (8.700000000000001,-3.5) -- cycle;
+\node at (10.4,-3.8) {8};
+\node at (2.45,-4.62) {14}; \node[font=\footnotesize] at (2.45,-4.99) {(6+2+6)};
+\draw[thick] (3.2,-4.75) -- (6.2,-4.75);
+\fill[white] (3.4000000000000004,-5.05) rectangle (4.0,-4.45);
+\shsq{3.7}{-4.75}
+\fill[white] (4.4,-4.45) -- (5.0,-4.75) -- (4.4,-5.05) -- cycle;
+\shtr{4.7}{-4.75}
+\fill[white] (5.4,-5.05) rectangle (6.0,-4.45);
+\shsq{5.7}{-4.75}
+\node[font=\small] at (6.75,-4.55) {\#6}; \node at (6.75,-4.85) {$\rightarrow$};
+\draw[thick] (7.3,-4.75) -- (7.5,-4.75) (9.3,-4.75) -- (9.5,-4.75);
+\draw[thick] (7.5,-4.45) -- (8.1,-4.45) -- (8.4,-4.68) -- (8.700000000000001,-4.45) -- (9.3,-4.45) -- (9.3,-5.05) -- (8.700000000000001,-5.05) -- (8.4,-4.82) -- (8.1,-5.05) -- (7.5,-5.05) -- cycle;
+\node at (10.4,-4.75) {12};
+\node at (2.45,-5.57) {10}; \node[font=\footnotesize] at (2.45,-5.94) {(2+6+2)};
+\draw[thick] (3.2,-5.7) -- (6.2,-5.7);
+\fill[white] (3.4000000000000004,-5.4) -- (4.0,-5.7) -- (3.4000000000000004,-6.0) -- cycle;
+\shtr{3.7}{-5.7}
+\fill[white] (4.4,-6.0) rectangle (5.0,-5.4);
+\shsq{4.7}{-5.7}
+\fill[white] (5.4,-5.4) -- (6.0,-5.7) -- (5.4,-6.0) -- cycle;
+\shtr{5.7}{-5.7}
+\node[font=\small] at (6.75,-5.5) {\#7}; \node at (6.75,-5.8) {$\rightarrow$};
+\draw[thick] (7.3,-5.7) -- (7.5,-5.7) (9.3,-5.7) -- (9.5,-5.7);
+\draw[thick] (7.5,-5.7) -- (8.1,-5.4) -- (8.700000000000001,-5.4) -- (9.3,-5.7) -- (8.700000000000001,-6.0) -- (8.1,-6.0) -- cycle;
+\node at (10.4,-5.7) {7};
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=(\alph*)]
+\item (4\%) Write down the minimum total cost after transforming the given sequence.
+\item (6\%) Following (a), write down the applied rules of transformation from left of the
+sequence to right of the sequence.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $28$。 (b) \#1, \#4, \#7, \#5。
+
+下面用 $\square$、$\bigcirc$、$\vartriangleright$ 代表方形、圓形、三角形（單獨的成本 $6, 3, 2$）。 原序列
+共 $10$ 個：
+\[
+s_1 \ldots s_{10} = \square\ \bigcirc\ \vartriangleright\ \square\ \vartriangleright\ \square\
+\vartriangleright\ \square\ \bigcirc\ \vartriangleright.
+\]
+題意：把序列切成連續的若干段，每一段不是單獨一個圖形（照原本的成本），就是剛好符合某一條規則的
+兩個或三個相鄰圖形（換成規則右邊的成本）。 七條規則是
+\#1 $\square\bigcirc \to 7$、\#2 $\square\vartriangleright \to 7$、\#3 $\bigcirc\vartriangleright \to 4$、
+\#4 $\vartriangleright\square \to 6$、\#5 $\square\bigcirc\vartriangleright \to 8$、
+\#6 $\square\vartriangleright\square \to 12$、\#7 $\vartriangleright\square\vartriangleright \to 7$。
+
+\textbf{子問題}（資結書第~18.1.5~節的步驟）。 令 $f(i)$ 是前 $i$ 個圖形 $s_1 \ldots s_i$ 換完的最小
+總成本，$f(0) = 0$。 最後一段結尾一定在 $s_i$：它要嘛是 $s_i$ 自己，要嘛是某條長度 $k$ 的規則剛好
+吻合 $s_{i-k+1} \ldots s_i$，前面的部分是一個獨立的同類子問題，所以
+\[
+f(i) = \min\Bigl( f(i-1) + \mathrm{cost}(s_i),\ \
+\min_{\text{規則 } r \text{ 吻合 } s_{i-k_r+1} \ldots s_i} \bigl( f(i - k_r) + c_r \bigr) \Bigr),
+\]
+$k_r$ 是規則 $r$ 左邊的圖形個數（$2$ 或 $3$），$c_r$ 是換完的成本。 每一格最多看 $8$ 個選項，
+全部 $O(n)$。
+
+\textbf{填表}（每一列列出所有可用的選項，取最小）：
+\begin{center}
+\small
+\begin{tabular}{cclc}
+\toprule
+$i$ & $s_i$ & 選項 & $f(i)$ \\
+\midrule
+1 & $\square$ & 不換 $0 + 6 = 6$ & 6 \\
+2 & $\bigcirc$ & 不換 $6 + 3 = 9$；\#1 $f(0) + 7 = 7$ & 7 \\
+3 & $\vartriangleright$ & 不換 $7 + 2 = 9$；\#3 $f(1) + 4 = 10$；\#5 $f(0) + 8 = 8$ & 8 \\
+4 & $\square$ & 不換 $8 + 6 = 14$；\#4 $f(2) + 6 = 13$ & 13 \\
+5 & $\vartriangleright$ & 不換 $13 + 2 = 15$；\#2 $f(3) + 7 = 15$；\#7 $f(2) + 7 = 14$ & 14 \\
+6 & $\square$ & 不換 $14 + 6 = 20$；\#4 $f(4) + 6 = 19$；\#6 $f(3) + 12 = 20$ & 19 \\
+7 & $\vartriangleright$ & 不換 $19 + 2 = 21$；\#2 $f(5) + 7 = 21$；\#7 $f(4) + 7 = 20$ & 20 \\
+8 & $\square$ & 不換 $20 + 6 = 26$；\#4 $f(6) + 6 = 25$；\#6 $f(5) + 12 = 26$ & 25 \\
+9 & $\bigcirc$ & 不換 $25 + 3 = 28$；\#1 $f(7) + 7 = 27$ & 27 \\
+10 & $\vartriangleright$ & 不換 $27 + 2 = 29$；\#3 $f(8) + 4 = 29$；\#5 $f(7) + 8 = 28$ & \textbf{28} \\
+\bottomrule
+\end{tabular}
+\end{center}
+$f(10) = 28$，(a) 的答案是 $28$。
+
+\textbf{回溯。} $f(10)$ 取自 \#5（$s_8 s_9 s_{10} = \square\bigcirc\vartriangleright$），回到 $f(7)$；$f(7)$
+取自 \#7（$s_5 s_6 s_7 = \vartriangleright\square\vartriangleright$），回到 $f(4)$；$f(4)$ 取自 \#4
+（$s_3 s_4 = \vartriangleright\square$），回到 $f(2)$；$f(2)$ 取自 \#1（$s_1 s_2 = \square\bigcirc$）。
+每一步的最小值都只有一個選項達到，所以最佳做法是唯一的。 由左到右：
+\[
+\underbrace{\square\bigcirc}_{\#1:\ 7}\
+\underbrace{\vartriangleright\square}_{\#4:\ 6}\
+\underbrace{\vartriangleright\square\vartriangleright}_{\#7:\ 7}\
+\underbrace{\square\bigcirc\vartriangleright}_{\#5:\ 8},
+\qquad 7 + 6 + 7 + 8 = 28.
+\]
+十個圖形全部都被換掉了，(b) 的答案是 \#1, \#4, \#7, \#5。
+
+只看局部會選錯的地方：開頭的 $\square\bigcirc\vartriangleright$ 用 \#5 只要 $8$，比 \#1 加上不換的
+$\vartriangleright$（$7 + 2 = 9$）便宜，但 \#5 吃掉了第 $3$ 個三角形，後面的 $\vartriangleright\square$
+就不能用 \#4。 整體比較：前四個用 \#5 再單獨放 $\square$ 是 $8 + 6 = 14$，用 \#1、\#4 是
+$7 + 6 = 13$，差在這裡，所以要靠表格比較整段，不能每次挑當下省最多的規則。
+\end{pastsoln}

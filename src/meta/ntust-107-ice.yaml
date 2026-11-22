@@ -1,0 +1,9 @@
+paper: ntust-107-ice
+volume: 1
+school: 臺科大
+dept: 資工所
+year: 107
+subject: 資訊工程概論
+instructions: 總分為 100 分。
+questions:
+  - {id: ntust-107-ice-06, label: 第 6 題, chapter: 9}

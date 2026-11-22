@@ -1,0 +1,11 @@
+paper: ntut-110-ci
+volume: 1
+school: 北科大
+dept: 資工所
+year: 110
+subject: 計算機概論
+instructions: 本試題共十一題，共 100 分。不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-110-ci-01, label: 第二題 (2)(4), chapter: 2}
+  - {id: ntut-110-ci-02, label: 第三題, chapter: 19}
+  - {id: ntut-110-ci-03, label: 第四題, chapter: 7}

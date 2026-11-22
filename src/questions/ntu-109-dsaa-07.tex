@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-07}]{臺大資工所 109 學年度 第 7 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) We can use a linked list to implement a stack. We assume that we use structure
+\texttt{Node} with two members to represent a node of the linked list. The member \texttt{data}
+stores the data, and the member \texttt{next} points to the next node in the linked list. Also
+we use a variable \texttt{head} to point to the \textit{first} node of the linked list.
+\texttt{head} is initialized to \texttt{NULL}.
+\begin{enumerate}[label=\arabic*.]
+\item Pushing the value of a variable $i$ into the stack can be implemented as follows.
+\begin{minted}[fontsize=\small]{c}
+newHead = malloc(sizeof(Node));
+newHead->data = i;
+newHead->next = head;
+head = newHead;
+\end{minted}
+\item Popping the top of the stack into a variable $i$ can be implemented as follows.
+\begin{minted}[fontsize=\small]{c}
+free(head);
+i = head->data;
+head = head->next;
+\end{minted}
+\item To test if the stack is empty we can check if the \texttt{head} is a \texttt{NULL} pointer.
+\item We can improve the push/pop efficiency of this stack by adding another pointer
+\texttt{tail} that points to the \textit{end} of the linked list, so we can access the
+\textit{last} node in the list in $O(1)$ time.
+\item We can improve the push/pop efficiency of this stack by adding another pointer member into
+every node, so it becomes a \textit{double linked list}. That is, we can traverse in
+\textit{both} directions in this linked list.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1、3。
+
+用串列做堆疊時，頂端就是串列的第一個節點，push 是在串列前端插入、pop 是刪除第一個節點（資結書第~6.1~節
+虛擬碼~6.2）。 兩個操作都只動 \texttt{head} 附近，$O(1)$。
+
+\begin{itemize}
+\item 1. 對。 新節點的 \texttt{next} 指向原來的第一個節點，再讓 \texttt{head} 指向新節點，新節點成為頂端。
+空堆疊（\texttt{head} 是 \texttt{NULL}）也對：新節點的 \texttt{next} 是 \texttt{NULL}。 順序也重要：
+如果先寫 \texttt{head = newHead;} 再寫 \texttt{newHead->next = head;}，新節點會指向自己，原來的串列就
+接不上了。 （實際的程式還要檢查 \texttt{malloc} 有沒有傳回 \texttt{NULL}，但題目問的是做法本身。）
+\item 2. 錯。 先 \texttt{free(head)}，接著又讀 \texttt{head->data} 和 \texttt{head->next}，讀的是已經
+釋放的記憶體（use after free），結果未定義。 正確的順序是先把資料和下一個節點存起來，最後才釋放：
+\begin{minted}[fontsize=\small]{c}
+Node *old = head;
+i = old->data;
+head = old->next;
+free(old);
+\end{minted}
+另外 pop 之前還要確認堆疊不是空的。
+\item 3. 對。 \texttt{head} 一開始是 \texttt{NULL}；push 之後不是 \texttt{NULL}；pop 掉最後一個節點時，
+\texttt{head} 變成那個節點的 \texttt{next}，也就是 \texttt{NULL}。 所以堆疊是空的若且唯若
+\texttt{head == NULL}。
+\item 4. 錯。 push、pop 都在串列前端，本來就是 $O(1)$，用不到最後一個節點。 加了 \texttt{tail} 也幫不上
+忙：如果改成在尾端 push、pop，單向串列刪除最後一個節點要先找到它的前一個節點，反而要 $O(n)$。
+\texttt{tail} 是串列做\textbf{佇列}時才需要的（從尾端進、前端出，資結書第~6.2~節）。
+\item 5. 錯。 原本已經是 $O(1)$，多一個指標成員只是讓每個節點變大、push 時多更新一個指標，效率不會
+變好。
+\end{itemize}
+\end{pastsoln}

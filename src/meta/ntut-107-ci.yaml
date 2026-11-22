@@ -1,0 +1,12 @@
+paper: ntut-107-ci
+volume: 1
+school: 北科大
+dept: 資工所
+year: 107
+subject: 計算機概論
+instructions: 1. 本試題共 13 題，每題配分如題目所列，共 100 分。 2. 請標明大題、子題編號作答，不必抄題。 3. 全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-107-ci-01, label: 第 1 題（節錄 (2)(3)(4) 小題）, chapter: 8}
+  - {id: ntut-107-ci-02, label: 第 2 題, chapter: 2}
+  - {id: ntut-107-ci-03, label: 第 3 題, chapter: 28}
+  - {id: ntut-107-ci-04, label: 第 4 題, chapter: 22}

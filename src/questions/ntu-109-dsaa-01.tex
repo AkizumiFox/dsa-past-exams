@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-01}]{臺大資工所 109 學年度 第 1 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) Let $f(n)$ be the number of additions in the following algorithm.
+\begin{minted}[fontsize=\small]{text}
+for i = 1 to n do
+  for j = 1 to i do
+    for k = 1 to j do
+      C[i][j][k] = A[i][j][k] + B[i][j][k];
+    end for
+  end for
+end for
+\end{minted}
+\begin{enumerate}[label=\arabic*.]
+\item $f(n)=O(n^2\sqrt{n})$
+\item $f(n)=O(n^2\log n)$
+\item $f(n)=O(n^3)$
+\item $f(n)=O(n^3\log n)$
+\item $f(n)=O(n^{100})$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：3、4、5。
+
+\textbf{先算 $f(n)$}（資結書第~1.7~節的巢狀迴圈）。 最內層每跑一次做一次加法。 固定 $i$、$j$ 時，
+$k$ 從 $1$ 跑到 $j$，做 $j$ 次；固定 $i$ 時，$j$ 從 $1$ 到 $i$，做 $1 + 2 + \cdots + i = i(i+1)/2$ 次。
+所以
+\[
+f(n) = \sum_{i=1}^{n} \frac{i(i+1)}{2} = \frac{1}{2}\left(\frac{n(n+1)(2n+1)}{6} + \frac{n(n+1)}{2}\right)
+= \frac{n(n+1)(n+2)}{6} = \Theta(n^3).
+\]
+也可以直接數：迴圈跑的是滿足 $1 \le k \le j \le i \le n$ 的三元組 $(i, j, k)$，個數等於從 $n + 2$
+個數裡選 $3$ 個的組合數 $\binom{n+2}{3}$，同一個答案。 例如 $n = 2$ 時，$(i, j, k)$ 有
+$(1,1,1)$、$(2,1,1)$、$(2,2,1)$、$(2,2,2)$ 四組，$\binom{4}{3} = 4$。
+
+題目只算「additions」，迴圈變數的遞增不算；就算也算進去，次數一樣是 $\Theta(n^3)$，不影響下面的
+判斷。 $f(n) = O(g(n))$ 的意思是 $f$ 最多和 $g$ 同階，所以 $g$ 只要成長得不比 $n^3$ 慢就對。
+
+\begin{itemize}
+\item 1. $O(n^2\sqrt{n})$：$f(n)/(n^{2.5}) \ge n^3/(6n^{2.5}) = \sqrt{n}/6 \to \infty$，不可能被常數
+倍的 $n^{2.5}$ 蓋住。 錯。
+\item 2. $O(n^2\log n)$：$f(n)/(n^2 \log n) \ge n/(6\log n) \to \infty$。 錯。
+\item 3. $O(n^3)$：$n \ge 1$ 時 $(n+1)(n+2) \le 6n^2$，$f(n) \le n^3$。 對（而且是緊的）。
+\item 4. $O(n^3\log n)$：比 $n^3$ 更大的上界，仍然成立。 對。
+\item 5. $O(n^{100})$：鬆，但是是正確的上界。 對。
+\end{itemize}
+選項 4、5 是在測「$O$ 只是上界」：題目沒有要求緊，上界寫大了仍然是對的敘述。
+\end{pastsoln}

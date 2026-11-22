@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncu-107-dsa-20}]{中央資工所 107 學年度 第 20 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is the algorithm AllPairCost which computes the shortest distances between all pairs of
+vertices i, j, where i $\ne$ j. Formally, given distances of edges in graph G, determine the
+shortest distances between all pairs of vertices in G. Note that the distance of an arbitrary edge
+in G is non-negative.
+\begin{quote}
+\textbf{Algorithm} AllPairCost\\
+\textbf{Input:} a two dimensional array C, where C[i][j]$>$0 denotes the distance of directed edge
+(i, j) (i.e., the edge from vertex i to vertex j).\\
+\textbf{Output:} a two dimensional array D, where D[i][j] denotes the shortest distance from
+vertex i to vertex j.
+\end{quote}
+\begin{minted}[fontsize=\small,breaklines]{c}
+1:  int i, j, k;
+2:  for ( i=0; i<n; i++ )
+3:     for ( j=0; j<n; j++ )
+4:          D[i][j] = C[i][j];
+5:  for ( k=0; k<n; k++ )
+6:     for ( i=0; i<n; j++ )
+7:          for ( j=0; j<n; j++ )
+8:              if ( ___(B7)___ )
+9:                    ____(B8)____;
+\end{minted}
+
+Blank (B7) in the algorithm above should be\\
+(a)~\texttt{D[i][j] < D[i-1][k]+D[k][j-1]}\\
+(b)~\texttt{D[i][j] < D[i][k]+D[k][j]}\\
+(c)~\texttt{D[i][j] < D[i][k+1]+D[k+1][j]}\\
+(d)~\texttt{D[i][j] < D[i][k] +D[j][k]}\\
+(e)~\texttt{D[i][j] < D[i-1][j-1]}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (b)。 原卷的不等號方向寫反了，(b) 應該是
+\begin{center}
+\texttt{D[i][j] > D[i][k]+D[k][j]}。
+\end{center}
+
+\textbf{原題的問題}。 五個選項都寫成 \texttt{D[i][j] < \ldots}。 照字面填 (b)，(B8) 再填
+\texttt{D[i][j] = D[i][k]+D[k][j]}，就變成「經過 $k$ 比較長才改」，距離只會變大，算的不是最短距離。 這顯然是
+筆誤，下面照 \texttt{>}（經過 $k$ 比較短才更新）來解，五個選項裡只有 (b) 的索引是對的。 另外第 6 行
+\texttt{for ( i=0; i<n; j++ )} 的 \texttt{j++} 應該是 \texttt{i++}，否則 \texttt{i} 不會變、迴圈停不下來。
+
+\textbf{這是 Floyd--Warshall}（資結書第~25.6~節，虛擬碼~25.8），頂點編號 $0..n-1$。 外層第 $k$ 輪做完時，
+\texttt{D[i][j]} 是「中間點只用 $0..k$」時 $i$ 到 $j$ 的最短距離。 第 $k$ 輪對每一對 $(i, j)$ 只有兩個選擇：
+不經過 $k$，維持 \texttt{D[i][j]}；經過 $k$，先從 $i$ 走到 $k$ 再從 $k$ 走到 $j$，長度
+\texttt{D[i][k] + D[k][j]}。 後者比較短就更新：
+\[
+\text{(B7)}\colon\ \mathtt{D[i][j] > D[i][k] + D[k][j]}, \qquad
+\text{(B8)}\colon\ \mathtt{D[i][j] = D[i][k] + D[k][j]}.
+\]
+同一輪裡 \texttt{D[i][k]}、\texttt{D[k][j]} 會不會先被改掉？ 它們經過 $k$ 的版本是 \texttt{D[i][k] + D[k][k]}，
+而 \texttt{D[k][k] = 0}（沒有負環），不會變，所以只用一個陣列原地更新沒有問題。
+
+逐項檢查：
+\begin{itemize}
+\item (a) \texttt{D[i-1][k]+D[k][j-1]}：$i - 1$ 到 $k$ 再 $k$ 到 $j - 1$，和 $i$ 到 $j$ 的路徑無關；
+\texttt{i = 0} 時還會讀到 \texttt{D[-1]}，錯。
+\item (b) 索引正確（不等號應為 \texttt{>}），選。
+\item (c) \texttt{D[i][k+1]+D[k+1][j]}：第 $k$ 輪卻用 $k + 1$ 當中間點，$k = n - 1$ 時超出範圍，而且頂點 $0$
+永遠沒當過中間點，錯。
+\item (d) \texttt{D[i][k]+D[j][k]}：$i \to k$ 加上 $j \to k$，第二段方向反了；有向圖上 $j$ 到 $k$ 和 $k$ 到 $j$
+不一樣，錯。
+\item (e) \texttt{D[i-1][j-1]}：和 $k$ 無關，也不是路徑長，錯。
+\end{itemize}
+\end{pastsoln}

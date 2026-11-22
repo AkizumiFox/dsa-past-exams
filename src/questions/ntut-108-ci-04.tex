@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntut-108-ci-04}]{北科大資工所 108 學年度 第 2 題}
+（簡答，只寫答案）
+
+(6 pts) It is assumed that $T(1)=d$ for some constant $d$. State, using the ``Big-Oh'' notation, the
+solution to each of the following two recurrences. Just state the answer - you do NOT need to
+justify them.
+\begin{enumerate}[label=(\arabic*)]
+\item (3 pts) $T(n)=16T(\frac{n}{2})+n^4$
+\item (3 pts) $T(n)=7T(\frac{n}{2})+18n^2\sqrt{n}$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $O(n^4 \log n)$；(2) $O(n^{\lg 7})$，約 $O(n^{2.81})$。
+
+兩題都是 $T(n) = aT(n/b) + f(n)$ 的形式，$T(1)$ 是常數，直接套資結書定理~2.4 的主定理：先算
+$n^{\log_b a}$，再和 $f(n)$ 比。 題目只要答案，下面寫出判斷的過程。
+
+\textbf{(1)} $a = 16$、$b = 2$，$n^{\log_2 16} = n^4$。 $f(n) = n^4 = \Theta(n^4)$，兩者同階，是
+情況 2：
+\[
+T(n) = \Theta(n^4 \lg n) ,
+\]
+所以 $T(n) = O(n^4 \log n)$。 只寫 $O(n^4)$ 是錯的，少了每一層都花 $n^4$、共 $\lg n$ 層的那個
+$\lg n$。
+
+\textbf{(2)} $a = 7$、$b = 2$，$n^{\log_2 7} \approx n^{2.807}$。 $f(n) = 18 n^2 \sqrt{n} = 18 n^{2.5}$。
+取 $\varepsilon = 0.3$，$\log_2 7 - 0.3 \approx 2.507 \ge 2.5$，所以
+$f(n) = O(n^{\log_2 7 - \varepsilon})$，$f$ 多項式地比 $n^{\log_2 7}$ 小，是情況 1：
+\[
+T(n) = \Theta(n^{\log_2 7}) = \Theta(n^{\lg 7}) ,
+\]
+所以 $T(n) = O(n^{\lg 7}) \approx O(n^{2.81})$。 這就是 Strassen 的遞迴式（資結書第~17.3.4~節），
+只是合併的工作從 $\Theta(n^2)$ 變成 $\Theta(n^{2.5})$；只要合併的時間還是多項式地小於
+$n^{\lg 7}$，答案就不變。 常數 $18$ 不影響漸近的結果。
+\end{pastsoln}

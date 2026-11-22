@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:nsysu-109-dmalg-02}]{中山資工所資安組 109 學年度 第 5 題}
+（計算）
+
+{[12\%]} Find the exponential generating function for the sequence 0!, 1!, 2!, 3!, \ldots.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\dfrac{1}{1 - x}$。
+
+數列 $a_0, a_1, a_2, \ldots$ 的\textbf{指數生成函數}（exponential generating function）是
+\[
+E(x) = \sum_{n \ge 0} a_n \frac{x^n}{n!}.
+\]
+和資結書第~2.6~節的（普通）生成函數 $\sum a_n x^n$ 不同的是每一項多除以 $n!$。 這裡 $a_n = n!$，正好約掉：
+\[
+E(x) = \sum_{n \ge 0} n! \cdot \frac{x^n}{n!} = \sum_{n \ge 0} x^n = 1 + x + x^2 + \cdots = \frac{1}{1 - x}.
+\]
+最後一步是等比級數（當成形式冪級數，或在 $|x| < 1$ 時收斂）。
+
+反過來檢查：$\frac{1}{1-x} = \sum x^n$，$x^n$ 的係數是 $1$，所以 $\frac{x^n}{n!}$ 的係數是 $n!$，正是原數列。
+
+$0!, 1!, 2!, \ldots$ 是 $n$ 個相異物件的排列數，所以這也說明「排列數的指數生成函數是 $\frac{1}{1-x}$」。 這種
+數列的普通生成函數 $\sum n!\, x^n$ 在 $x \ne 0$ 時不收斂，也沒有簡單的封閉式，這正是指數生成函數適合用來處理排列
+計數的原因。
+\end{pastsoln}

@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntust-106-ice-02}]{臺科大資工所 106 學年度 第 2 題}
+（填充）
+
+Performance Analysis (10\%)
+\begin{enumerate}[label=(\alph*)]
+\item Please sort the following terms according to its time complexity and fill the blanks. (5\%)
+\begin{center}
+$a.\,O(n^2);\ \ b.\,O(2^n);\ \ c.\,O(n\log_2 n);\ \ d.\,O(\log_2 n);\ \ e.\,O(n).$\\[2pt]
+$O(1)<\underline{\hspace{2em}}<\underline{\hspace{2em}}<\underline{\hspace{2em}}<\underline{\hspace{2em}}
+<\underline{\hspace{2em}}<O(n!).$
+\end{center}
+\item $\theta$(n log n)+$\theta$(log n)+$\theta(n^2)$=$\theta$(?) (5\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) d, e, c, a, b，也就是 $O(1) < O(\log_2 n) < O(n) < O(n\log_2 n) < O(n^2) < O(2^n) < O(n!)$；
+(b) $\Theta(n^2)$。
+
+\textbf{(a)} 這裡的「$<$」是指 $n$ 夠大時成長得比較慢（資結書第~1.6~節）。 相鄰兩個都可以用比值趨近 $0$
+確認：
+\begin{itemize}
+\item $1$ 和 $\log_2 n$：$\log_2 n \to \infty$，常數比它慢。
+\item $\log_2 n$ 和 $n$：$\dfrac{\log_2 n}{n} \to 0$，對數比任何正次方的多項式都慢。
+\item $n$ 和 $n\log_2 n$：比值是 $\dfrac{1}{\log_2 n} \to 0$。
+\item $n\log_2 n$ 和 $n^2$：比值是 $\dfrac{\log_2 n}{n} \to 0$。
+\item $n^2$ 和 $2^n$：$\dfrac{n^2}{2^n} \to 0$，多項式比指數慢。
+\item $2^n$ 和 $n!$：$\dfrac{2^n}{n!} = \dfrac{2}{1} \cdot \dfrac{2}{2} \cdot \dfrac{2}{3} \cdots \dfrac{2}{n}
+\le 2 \cdot \dfrac{2}{n} \to 0$（從第三個因子起每個都 $\le 1$）。
+\end{itemize}
+所以五格依序填 d、e、c、a、b。 以 $n = 1000$ 為例：$\log_2 n \approx 10$、$n = 1000$、
+$n\log_2 n \approx 10^4$、$n^2 = 10^6$，$2^n$ 是三百多位數。
+
+\textbf{(b)} 幾個函數相加，$\Theta$ 由成長最快的那一項決定（資結書第~1.5~節）：
+$\Theta(f) + \Theta(g) = \Theta(\max(f, g))$。 證明：設三項分別是 $f_1 = \Theta(n\log n)$、
+$f_2 = \Theta(\log n)$、$f_3 = \Theta(n^2)$，都是非負函數。 下界 $f_1 + f_2 + f_3 \ge f_3 \ge c_3 n^2$；上界：
+$n$ 夠大時 $f_1 \le c_1 n\log n \le c_1 n^2$、$f_2 \le c_2 \log n \le c_2 n^2$、$f_3 \le c_3' n^2$，相加
+$\le (c_1 + c_2 + c_3')n^2$。 兩邊都是 $n^2$ 的常數倍，所以總和是 $\Theta(n^2)$。
+\end{pastsoln}

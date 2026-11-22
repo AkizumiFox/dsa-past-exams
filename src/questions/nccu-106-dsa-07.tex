@@ -1,0 +1,88 @@
+\begin{pastexam}[label={px:nccu-106-dsa-07}]{政大資科所 106 學年度 第 7 題}
+（程式設計）
+
+In this problem, you need to implement queues by linked lists.
+\begin{minted}[fontsize=\small]{c}
+struct ListNode{
+    int data;
+    struct ListNode* next;
+};
+struct Queue{
+    struct ListNode* front;
+    struct ListNode* end;
+};
+struct Queue* CreateQueue(){
+    struct Queue* Q = (struct Queue*) malloc(sizeof(struct Queue));
+    if (!Q)
+        return NULL;
+    Q->front = Q->end = NULL;
+    return Q;
+}
+\end{minted}
+\begin{enumerate}[label=\Alph*.]
+\item (15\%) Implement a function \texttt{void EnQueue(struct Queue* Q, int data)} by inserting an
+element \texttt{data} at the end of the linked list.
+\item (15\%) Implement a function \texttt{int DeQueue(struct Queue* Q)} by outputting and deleting
+the first element of the linked list. You can assume that the queue is not empty.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\texttt{front} 指向第一個節點，\texttt{end} 指向最後一個節點，空佇列時兩個都是 \texttt{NULL}
+（\texttt{CreateQueue} 就是這樣初始化的）。 加入接在 \texttt{end} 後面，取出拿 \texttt{front}，
+兩個都是 $\Theta(1)$。 這就是資結書虛擬碼~6.5、6.6 的串列佇列，方向不能反：在單向串列的尾巴刪除
+要先找到前一個節點，是 $\Theta(n)$。
+
+\begin{code}{c}{A. 加入}
+void EnQueue(struct Queue* Q, int data){
+    struct ListNode* p = malloc(sizeof(struct ListNode));
+    if (!p)
+        return;                 /* 配置失敗：佇列不變 */
+    p->data = data;
+    p->next = NULL;             /* 新節點是最後一個 */
+    if (Q->end == NULL)         /* 原本是空的 */
+        Q->front = p;
+    else
+        Q->end->next = p;
+    Q->end = p;
+}
+\end{code}
+
+\begin{code}{c}{B. 取出}
+int DeQueue(struct Queue* Q){
+    struct ListNode* p = Q->front;
+    int data = p->data;
+    Q->front = p->next;
+    if (Q->front == NULL)       /* 取走的是最後一個 */
+        Q->end = NULL;
+    free(p);
+    return data;
+}
+\end{code}
+
+\textbf{兩個邊界}。 兩個 \texttt{if} 處理的都是空佇列：
+\begin{itemize}
+\item 加入第一個節點時，\texttt{Q->end} 是 \texttt{NULL}，沒有 \texttt{Q->end->next} 可以設，而且
+\texttt{front} 也要指向這個節點。 少了這個判斷，第一次加入就會對 \texttt{NULL} 取成員。
+\item 取走最後一個節點後，\texttt{front} 變成 \texttt{NULL}，\texttt{end} 也要清成 \texttt{NULL}。
+少了這行，\texttt{end} 會指向已經 \texttt{free} 的節點，下一次加入時 \texttt{Q->end == NULL} 不成立，
+程式會寫進釋放過的記憶體，而 \texttt{front} 還是 \texttt{NULL}，新節點也接不上。
+\end{itemize}
+\texttt{DeQueue} 要先把 \texttt{p->data} 存起來再 \texttt{free(p)}，不能 \texttt{free} 之後再讀。
+新節點的 \texttt{next} 一定要設成 \texttt{NULL}，\texttt{malloc} 不會幫你清。
+
+\textbf{追蹤}。 \texttt{EnQueue(Q,1)}、\texttt{EnQueue(Q,2)}、\texttt{DeQueue(Q)}、\texttt{DeQueue(Q)}：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+操作 & 串列（\texttt{front} 到 \texttt{end}） & 回傳 \\
+\midrule
+\texttt{EnQueue(Q,1)} & $1$（\texttt{front}、\texttt{end} 都指向它） & \\
+\texttt{EnQueue(Q,2)} & $1 \to 2$ & \\
+\texttt{DeQueue(Q)} & $2$ & $1$ \\
+\texttt{DeQueue(Q)} & 空（\texttt{front} = \texttt{end} = \texttt{NULL}） & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+先進先出，是佇列。 兩個函式都只做常數個指標操作，時間 $\Theta(1)$。
+\end{pastsoln}

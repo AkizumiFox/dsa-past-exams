@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-106-prog-06}]{成大資訊聯招 106 學年度 第 6 題}
+（是非）
+
+(18\%) Answer each part TRUE or FALSE for the little $o$ notation.
+\begin{enumerate}[label=\alph*)]
+\item (3\%) $n=o(8n)$.
+\item (3\%) $2^n=o(n^3)$.
+\item (3\%) $2^n=o(4^n)$.
+\item (3\%) $1=o(n^2)$.
+\item (3\%) $n=o(\lg n)$.
+\item (3\%) $1=o(\frac{1}{n})$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a) FALSE；b) FALSE；c) TRUE；d) TRUE；e) FALSE；f) FALSE。
+
+$f(n) = o(g(n))$ 的意思是：對\textbf{每一個}正的常數 $c$，$n$ 夠大以後都有 $0 \le f(n) < c\,g(n)$（資結書
+定義~1.3）。 這裡每一題的 $g(n) > 0$，而且 $\lim_{n\to\infty} f(n)/g(n)$ 存在，所以用極限判斷（資結書定理~1.2）：
+極限是 $0$ 時 $f = o(g)$；極限是正的常數或 $\infty$ 時都不是。
+
+\begin{enumerate}[label=\alph*)]
+\item $\dfrac{n}{8n} = \dfrac{1}{8}$，極限 $\frac{1}{8} \ne 0$。 $n = \Theta(8n)$，同一級，不是嚴格小一級。 取
+$c = \frac{1}{16}$，$n < \frac{1}{16} \cdot 8n = \frac{n}{2}$ 永遠不成立。 FALSE。
+\item $\dfrac{2^n}{n^3} \to \infty$（指數函數比任何多項式長得快），$2^n = \omega(n^3)$，方向反了。 FALSE。
+\item $\dfrac{2^n}{4^n} = \Bigl(\dfrac{1}{2}\Bigr)^n \to 0$。 TRUE。 注意底數不同的指數函數不同級：$4^n = 2^n \cdot 2^n$，
+多了一個會變大的因子。
+\item $\dfrac{1}{n^2} \to 0$。 TRUE。
+\item $\dfrac{n}{\lg n} \to \infty$，$n = \omega(\lg n)$。 FALSE。
+\item $\dfrac{1}{1/n} = n \to \infty$，$1 = \omega(1/n)$。 $1/n$ 會趨近 $0$，常數 $1$ 不可能比它小。 FALSE。
+\end{enumerate}
+\end{pastsoln}

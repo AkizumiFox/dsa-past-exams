@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ncku-109-prog-01}]{成大資訊聯招 109 學年度 資料結構第 1 題}
+（是非；錯的要改正）
+
+Answer \textbf{True} or \textbf{False} for the following statements. Give correct answers for
+\textbf{False} statements. (30\%, 6\% for each question)
+\begin{enumerate}[label=(\arabic*)]
+\item In static hashing, the worst-case number of comparisons needed for a successful search is
+O($n$) for open addressing. The number could be reduced to O(log $n$) by using balanced search
+tree.
+\item Let $d_i$ be the degree of vertex $i$ in a graph $G$ with $|V|=n$ and $|E|=e$, then
+$e=\sum_{i=0}^{n-1}d_i$.
+\item The path from vertex $u$ to vertex $v$ on a minimal cost spanning tree of an undirected
+graph $G$ is also a shortest path from $u$ to $v$.
+\item Let $G$ be a graph with $e$ edges and $v$ vertices. If $G$ is represented by adjacency
+lists, DFS requires O($ev^2$) time.
+\item If an AOV network represents a feasible project, its topological order is not unique.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) True；(2) False；(3) False；(4) False；(5) False。
+
+\textbf{(1) True。} 開放定址法裡，$n$ 個鍵可能全部雜湊到同一格（或探測序列一路重疊），
+找最後放進去的那個鍵要比較 $n$ 次，最壞是 $O(n)$（資結書第~12.4~節）。 鏈結法的最壞
+情況也一樣：全部的鍵落在同一條串列。 如果把同一格的同義鍵（synonyms）不存成串列，而是存成
+一棵平衡搜尋樹（例如 AVL 樹、紅黑樹），一格裡有 $n$ 個鍵時樹高是 $O(\log n)$，最壞的
+比較次數就降到 $O(\log n)$。 敘述的兩句都對。
+
+\textbf{(2) False。} 每一條邊有兩個端點，在兩個端點的度數裡各算一次，所以
+\[
+\sum_{i=0}^{n-1} d_i = 2e, \qquad e = \frac12 \sum_{i=0}^{n-1} d_i,
+\]
+這是握手定理（資結書定理~21.1）。 反例：只有一條邊的圖，$n = 2$、$e = 1$，兩個頂點的度數
+都是 $1$，$\sum d_i = 2 \ne 1$。 有向圖把 $d_i$ 當成入度加出度，結論一樣是 $2e$；只算入度
+（或只算出度）的和才等於 $e$。
+
+\textbf{(3) False。} 最小生成樹讓\textbf{全部邊權的總和}最小，不保證兩點之間的路徑最短
+（資結書第~24.5.4~節）。 反例：三個頂點 $u$、$v$、$w$，邊 $uv = 3$、$uw = 2$、$wv = 2$。
+最小生成樹是 $\{uw, wv\}$（總和 $4$，另外兩種生成樹都是 $5$），樹上 $u$ 到 $v$ 的路徑
+長 $2 + 2 = 4$，但直接走邊 $uv$ 只要 $3$。 改正：最小生成樹上 $u$ 到 $v$ 的路徑\textbf{不一定}是
+最短路徑。
+
+\textbf{(4) False。} 用鄰接串列時，DFS 對每個頂點呼叫一次 \proc{DFS-Visit}，掃過它的
+鄰接串列一次；全部串列的長度加起來是 $e$（有向圖）或 $2e$（無向圖），所以總時間是
+$O(v + e)$（資結書第~21.4~節）。 敘述的 $O(ev^2)$ 不是 DFS 的時間：$e = 0$ 時
+$ev^2 = 0$，DFS 仍要花 $\Theta(v)$ 把每個頂點標記一次，連上界都不成立。 改正：DFS 需要
+$O(v + e)$ 時間（用鄰接矩陣才是 $O(v^2)$）。
+
+\textbf{(5) False。} AOV 網路代表可行的計畫，就是它沒有環，一定有拓樸順序，但不一定有好幾個。
+資結書定理~22.5：拓樸順序唯一，若且唯若順序裡相鄰的兩個頂點之間都有邊，也就是圖裡有一條
+經過所有頂點的路徑。 反例：三個工作 $a \to b \to c$，只有 $a, b, c$ 一個拓樸順序。 改正：
+可行計畫的拓樸順序\textbf{不一定}唯一；有一條經過所有頂點的路徑時唯一，否則不唯一。
+\end{pastsoln}

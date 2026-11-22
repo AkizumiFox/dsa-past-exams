@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:ntu-106-dsa-01}]{臺大資工所 106 學年度 第 1 題}
+（問答）
+
+(20 points) Give asymptotically upper (big $O$) bounds for $T(n)$ in each of the following
+recurrences, where we assume that $T(n)$ is constant for small $n$. Make your bounds as tight as
+possible and \textbf{justify} your answers.
+\begin{enumerate}[label=(\alph*)]
+\item (5 points) $T(n)=T(n/3)+1$
+\item (5 points) $T(n)=3T(n/3)+1$
+\item (5 points) $T(n)=T(n/10)+T(9n/10)+n$
+\item (5 points) $T(n)=2T(\sqrt{n})+\lg n$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $O(\lg n)$；(b) $O(n)$；(c) $O(n \lg n)$；(d) $O(\lg n \lg\lg n)$。 四個都是緊的，也就是
+$\Theta$。
+
+題目要「盡量緊」的上界，所以每一小題除了上界，也要說明下界一樣大，否則寫 $O(n^2)$ 之類的也算
+上界。 (a)(b) 直接套主定理（資結書定理~2.4）；(c) 兩個子問題大小不同，主定理不能用，畫遞迴樹
+（資結書第~2.3.3~節）；(d) 先換變數（資結書第~2.2.4~節）。 主定理只對 $n$ 是 $b$ 的次方時陳述，
+題目說小的 $n$ 時 $T(n)$ 是常數，加上地板、天花板不影響 $\Theta$ 的結果（資結書第~2.1.6~節）。
+
+\textbf{(a)} $a = 1$、$b = 3$，$n^{\log_b a} = n^{\log_3 1} = n^0 = 1$，而 $f(n) = 1 = \Theta(1)$，是主定理
+的情形 2：
+\[
+T(n) = \Theta(n^{0} \lg n) = \Theta(\lg n).
+\]
+直接展開也看得出來：每一層 $n$ 變成三分之一、多花 $1$，要 $\log_3 n$ 層才降到常數，
+$T(n) = \log_3 n + O(1)$。 這就是三分搜尋那一類「每次丟掉三分之二」的遞迴。
+
+\textbf{(b)} $a = 3$、$b = 3$，$n^{\log_3 3} = n$。 $f(n) = 1 = O(n^{1 - \varepsilon})$，取
+$\varepsilon = 1/2$ 就成立，是情形 1：
+\[
+T(n) = \Theta(n).
+\]
+用遞迴樹看：第 $i$ 層有 $3^i$ 個節點，每個花 $1$，共 $\log_3 n$ 層，總和
+$1 + 3 + \cdots + 3^{\log_3 n} = (3n - 1)/2 = \Theta(n)$。 成本集中在最底層的葉節點。
+
+\textbf{(c)} 兩個子問題大小是 $n/10$ 和 $9n/10$，畫遞迴樹：
+\begin{itemize}
+\item 每一層的子問題大小加起來：第 $0$ 層是 $n$；每往下一層，每個子問題 $m$ 拆成 $m/10$ 和
+$9m/10$，總和不變。 所以只要這一層的每個分支都還沒到底，這一層的成本恰好是 $n$；有分支到底之後，
+成本 $\le n$。
+\item 最短的分支一直走 $n/10$，$\log_{10} n$ 層就到底；最長的分支一直走 $9n/10$，
+$\log_{10/9} n$ 層才到底。
+\end{itemize}
+上界：最多 $\log_{10/9} n + 1$ 層，每層 $\le n$，
+\[
+T(n) \le n\,(\log_{10/9} n + 1) + O(n) = O(n \lg n)
+\]
+（最後的 $O(n)$ 是葉節點：葉節點的大小加起來不超過 $n$，每個葉節點是常數，所以葉節點的總成本是
+$O(n)$）。 下界：前 $\log_{10} n$ 層每一層都滿，每層恰好 $n$，所以 $T(n) \ge n \log_{10} n =
+\Omega(n \lg n)$。 合起來 $T(n) = \Theta(n \lg n)$。
+
+也可以用 Akra--Bazzi（資結書定理~2.8）核對：$p$ 滿足 $(1/10)^p + (9/10)^p = 1$，得 $p = 1$；
+\[
+T(n) = \Theta\!\left(n\left(1 + \int_1^n \frac{u}{u^2}\,du\right)\right) = \Theta(n(1 + \ln n)) =
+\Theta(n \lg n).
+\]
+要寫得更嚴謹，可以用代換法證明上界：猜 $T(n) \le d\, n \lg n$，代進去
+\[
+T(n) \le d\,\tfrac{n}{10}\lg\tfrac{n}{10} + d\,\tfrac{9n}{10}\lg\tfrac{9n}{10} + n
+= d\,n\lg n - d\,n\Bigl(\tfrac{1}{10}\lg 10 + \tfrac{9}{10}\lg\tfrac{10}{9}\Bigr) + n ,
+\]
+括號裡的常數約是 $0.469$，取 $d \ge 1/0.469$（例如 $d = 3$）就得到 $T(n) \le d\,n\lg n$。
+
+\textbf{(d)} 換變數。 令 $m = \lg n$，即 $n = 2^m$，$\sqrt{n} = 2^{m/2}$。 定義 $S(m) = T(2^m)$，
+原式變成
+\[
+S(m) = T(2^m) = 2T(2^{m/2}) + m = 2S(m/2) + m .
+\]
+這是主定理的情形 2（$a = b = 2$，$m^{\log_2 2} = m = \Theta(f(m))$），$S(m) = \Theta(m \lg m)$。
+換回 $n$：
+\[
+T(n) = S(\lg n) = \Theta(\lg n \cdot \lg\lg n).
+\]
+「$T(n)$ 在 $n$ 小的時候是常數」對應到 $S(m)$ 在 $m$ 小的時候是常數，換變數不改變基礎情況的性質。
+常見的錯是把 $T(\sqrt{n})$ 當成 $T(n/2)$，得到 $\Theta(n)$ 或 $\Theta(\lg^2 n)$ 之類的答案。
+\end{pastsoln}

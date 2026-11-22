@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncku-108-prog-06}]{成大資訊聯招 108 學年度 第 6 題}
+（是非；要說明）
+
+(10\%) True or false, please explain your answer.
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) 0-1 knapsack problem can be solved by greedy strategy.
+\item (2\%) In an undirected graph, we can apply the Depth-First-Search algorithm (DFS) to get tree
+edges and cross edges.
+\item (2\%) Based on the top-down approach, we can use the memorization to reduce the time.
+\item (2\%) Unweighted longest simple path problem has the optimal sub-structure.
+\item (2\%) If we first apply the topology sort to a directed graph and then run the DFS algorithm on
+this graph, no back edges can be obtained.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) False；(b) False；(c) True；(d) False；(e) True。
+
+\textbf{(a) False。} 依「價值／重量」由大到小挑的貪心法只對\textbf{分數}背包正確；0/1 背包不能把物品切開，貪心可能
+錯（資結書第~19.2~節）。 反例：容量 $50$，三個物品（重量, 價值）為 $(10, 60)$、$(20, 100)$、$(30, 120)$，單位價值
+$6$、$5$、$4$。 貪心先拿前兩個，重量 $30$，剩下的 $20$ 放不下第三個，總價值 $160$；但拿第二、三個，重量剛好
+$50$，價值 $220$。 0/1 背包要用動態規劃（資結書第~18.5~節）。 若問的是「任何一種貪心法都不行」，換別的標準（例如
+價值大的先拿、重量輕的先拿）也都有反例；0/1 背包（的決策版本）是 NP 完備的，目前沒有已知的多項式時間正確解法。
+
+\textbf{(b) False。} 對無向圖做 DFS，每一條邊不是樹邊就是後向邊，不會出現交叉邊（也不會有前向邊，前向邊和後向邊
+在無向圖裡是同一條邊）（資結書定理~21.8）。 理由：設 $\{u, v\}$ 是一條邊，$u$ 比 $v$ 先被發現。 $u$ 完成之前一定會掃到
+串列裡的 $v$；那時 $v$ 若還是白色，就在這時被發現；若不是白色，表示它已經在 $u$ 發現之後被發現了。 不論哪一種，
+$v$ 都在 $u$ 還是灰色的期間被發現，由括號定理（資結書定理~21.5），$v$ 是 $u$ 的子孫。 所以一條邊的兩端一定是
+祖先和子孫的關係，而交叉邊連接的是兩個沒有祖先關係的頂點，不可能出現。 有向圖才會有交叉邊。
+
+\textbf{(c) True。} 原題的 memorization 應是 memoization（記憶化）。 由上而下的遞迴解法中，同一個子問題可能被呼叫
+很多次（重疊的子問題）；記憶化把每個子問題第一次算出的答案存在表裡，之後直接查表，每個子問題只算一次
+（資結書第~18.1.2~節）。 例如費氏數列的直接遞迴是指數時間，加上記憶化後變成 $\Theta(n)$。 要注意的是：子問題沒有
+重疊時（例如合併排序），記憶化省不了時間。
+
+\textbf{(d) False。} 最長簡單路徑沒有最佳子結構（資結書第~18.1.4~節）。 反例：三角形 $a, b, c$ 兩兩相連。 從 $a$
+到 $c$ 最長的簡單路徑是 $a \to b \to c$（$2$ 條邊），它從 $a$ 到 $b$ 的那一段只有 $1$ 條邊，可是從 $a$ 到 $b$ 最長的
+簡單路徑是 $a \to c \to b$（$2$ 條邊）：最佳解的一段不是那一段的最佳解。 反過來把兩段各自的最佳解接起來，$a \to c
+\to b$ 接上 $b \to a \to c$，會重複經過頂點，根本不是簡單路徑。 原因是兩段會搶同一批頂點，子問題不獨立。（最短路徑
+就有最佳子結構。）
+
+\textbf{(e) True。} 拓樸排序存在若且唯若圖是有向無環圖（資結書定理~22.2）。 能先做完拓樸排序，就表示這張圖沒有環；
+而有向圖的 DFS 出現後向邊若且唯若圖有環（資結書定理~21.10），不管 DFS 從哪個頂點開始、鄰居用什麼順序。 所以之後
+跑 DFS 不會得到後向邊。 這裡的「做完拓樸排序」是指排序成功；如果圖有環，Kahn 演算法會停在還有頂點沒輸出的狀態
+（資結書第~22.1~節），拓樸排序根本做不出來，那時 DFS 就會有後向邊。
+\end{pastsoln}

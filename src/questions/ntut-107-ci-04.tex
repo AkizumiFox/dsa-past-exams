@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntut-107-ci-04}]{北科大資工所 107 學年度 第 4 題}
+（是非）
+
+(6 pts) Consider the \textit{directed acyclic graph} (DAG) G in Figure 1. Suppose we use the
+DFS-based approach to find a \textit{topological order} starting with node $B$. Since we use DFS
+on the DAG, we can have a DFS-tree $T$ rooted at $B$. Mark by \textbf{True} or \textbf{False} each
+of the following statements:
+
+\begin{center}
+\begin{tikzpicture}[x=0.0125cm,y=-0.0125cm,v/.style={circle,draw,thick,minimum size=6.5mm,inner sep=0pt},e/.style={thick,-{Latex[length=2.2mm]}}]
+\node[v] (A) at (122,92) {$\boldsymbol{A}$};
+\node[v] (C) at (322,92) {$\boldsymbol{C}$};
+\node[v] (E) at (512,92) {$\boldsymbol{E}$};
+\node[v] (B) at (122,348) {$\boldsymbol{B}$};
+\node[v] (D) at (322,348) {$\boldsymbol{D}$};
+\node[v] (F) at (512,348) {$\boldsymbol{F}$};
+\draw[e] (A)--(C); \draw[e] (C)--(E); \draw[e] (B)--(A); \draw[e] (B)--(D); \draw[e] (D)--(C); \draw[e] (C)--(F);
+\end{tikzpicture}\\[2pt]
+Figure 1. Directed acyclic graph (DAG) $G$ in problem 4\end{center}
+\begin{enumerate}[label=(\arabic*)]
+\item (2 pts) There are five possible resulting topological sorts.
+\item (2 pts) There is no forward edge in $T$ by observation. So, a DAG cannot have forward edges.
+\item (2 pts) There is only one cross edge in $T$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) False，(2) False，(3) True。
+
+圖的邊是 $A \to C$、$B \to A$、$B \to D$、$C \to E$、$C \to F$、$D \to C$。 題目沒有指定鄰接串列的順序，
+先照字母順序做一次 DFS（資結書虛擬碼~22.2，從 $B$ 開始）：
+$B$（$d = 1$）$\to A$（$2$）$\to C$（$3$）$\to E$（$4$，完成 $5$）；$C \to F$（$6$，完成 $7$）；$C$ 完成
+$8$、$A$ 完成 $9$；回到 $B$，$B \to D$（$10$），$D \to C$ 時 $C$ 是黑的、$d[D] > d[C]$，是交叉邊；$D$ 完成
+$11$、$B$ 完成 $12$。 依 $f$ 由大到小得到 $B, D, A, C, F, E$。
+
+\textbf{(1) False。} 拓樸順序共有 $4$ 個，不是 $5$ 個。 $B$ 是唯一入度 $0$ 的頂點，一定排第一；$C$ 要等
+$A$、$D$，所以第二、三個位置是 $A$、$D$ 的兩種排法；接著是 $C$；最後 $E$、$F$ 兩種排法。 共
+$2 \times 2 = 4$ 個：
+\[
+BADCEF,\quad BADCFE,\quad BDACEF,\quad BDACFE.
+\]
+如果把題目理解成「DFS 法在不同的鄰接串列順序下能產生幾種結果」，答案也是 $4$：$\mathit{Adj}[B]$ 先
+$A$ 或先 $D$、$\mathit{Adj}[C]$ 先 $E$ 或先 $F$，四種組合正好得到上面四個順序。 不管哪一種讀法都不是
+$5$。
+
+\textbf{(2) False。} 前半句對：這一次 DFS 確實沒有前向邊。 但「所以 DAG 不會有前向邊」不成立，一個例
+子不能推出一般的結論。 反例：三個頂點，邊 $x \to y$、$y \to z$、$x \to z$，$\mathit{Adj}[x] = y, z$。
+從 $x$ 做 DFS，$x \to y \to z$ 都是樹邊；回到 $x$ 看 $x \to z$ 時，$z$ 是黑的、$d[x] < d[z]$，是前向邊。 這
+張圖沒有環。 資結書第~22.2~節說過，DAG 上不會出現的只有後向邊。
+
+\textbf{(3) True。} 從 $B$ 走得到全部 $6$ 個頂點，DFS 森林只有一棵樹，樹邊 $6 - 1 = 5$ 條；全部 $6$ 條邊，
+剩下 $1$ 條不是樹邊。 DAG 沒有後向邊（資結書定理~21.10）。 照字母順序時剩下的是 $D \to C$，上面已經
+看到是交叉邊。 換成別的鄰接串列順序結論也一樣：$C$ 的兩個前驅 $A$、$D$ 先被走到的那一個發現 $C$（樹
+邊），另一個看到 $C$ 時 $C$ 已經是黑的，而且 $C$ 不是它的子孫（$A$、$D$ 都是 $B$ 的子節點，互不為祖先
+子孫），所以是交叉邊，不是前向邊。
+\end{pastsoln}

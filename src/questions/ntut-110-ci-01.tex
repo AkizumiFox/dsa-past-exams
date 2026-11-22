@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ntut-110-ci-01}]{北科大資工所 110 學年度 第二題（節錄 (2)(4) 小題）}
+（單選與簡答，只寫答案）
+
+Please answer the following questions. Just give the answers and you do not need to explain.
+(15 pts)
+\begin{enumerate}[label=(\arabic*)]
+\setcounter{enumi}{1}
+\item Let $x_n$ be a sequence satisfying $x_{n+1}=3x_n-2x_{n-1}$ with $x_0=2$, $x_1=3$, what is
+$x_n$? (3 pts)
+
+a.~$n+2$ \qquad b.~$n^2+2$ \qquad c.~$2^n+1$ \qquad d.~$2^n-1$
+\setcounter{enumi}{3}
+\item Please give the asymptotic upper bound (``Big-Oh'' notation) for each of the following two
+functions. (6 pts)
+\begin{enumerate}[label=\alph*.]
+\item $T(n)=3n^5+6n^5\sqrt{n}+n^5\log n$ \quad (3 pts)
+\item $T(n)=2\mathrm{T}(\frac{n}{2})+n^2$ \quad (3 pts)
+\end{enumerate}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(2) c，$x_n = 2^n + 1$；(4) a.\ $O(n^5 \sqrt{n}) = O(n^{5.5})$，b.\ $O(n^2)$。
+
+題目只要答案，下面寫出推導。
+
+\textbf{(2)} 這是二階齊次線性遞迴，用資結書定理~2.7：特徵方程式
+\[
+r^2 = 3r - 2 \quad\Longrightarrow\quad r^2 - 3r + 2 = (r - 1)(r - 2) = 0 ,
+\]
+兩個相異根 $1$、$2$，所以 $x_n = \alpha \cdot 1^n + \beta \cdot 2^n$。 代初始條件：
+$x_0 = \alpha + \beta = 2$，$x_1 = \alpha + 2\beta = 3$，相減得 $\beta = 1$、$\alpha = 1$，
+\[
+x_n = 2^n + 1 ,
+\]
+選 c。 用遞迴式多算幾項核對：$x_2 = 3 \cdot 3 - 2 \cdot 2 = 5$、$x_3 = 3 \cdot 5 - 2 \cdot 3 = 9$，
+$2^n + 1$ 給出 $2, 3, 5, 9$，對。 其他選項：a.\ $n + 2$ 在 $n = 0, 1$ 也是 $2, 3$，但 $n = 2$ 時是
+$4 \ne 5$；b.\ $n^2 + 2$ 在 $n = 1$ 是 $3$，$n = 2$ 是 $6 \ne 5$；d.\ $2^n - 1$ 在 $n = 0$ 是 $0 \ne 2$。
+只看前兩項會被 a 騙到，至少要多算一項。
+
+\textbf{(4) a.} 三項分別是 $n^5$、$n^{5.5}$、$n^5 \log n$。 $\log n = O(n^{0.5})$（對數比任何正次方
+都長得慢，資結書第~1.6~節），所以 $n^5 \log n = O(n^{5.5})$，$3n^5 = O(n^{5.5})$，最大的一項是
+$6n^5\sqrt{n}$：
+\[
+T(n) = O(n^5 \sqrt{n}) = O(n^{5.5}) .
+\]
+這也是緊的界（$T(n) \ge 6 n^{5.5}$），寫 $O(n^6)$ 雖然不算錯，但不是題目要的最小上界。 常見的錯是
+以為 $n^5 \log n$ 比 $n^5\sqrt{n}$ 大。
+
+\textbf{(4) b.} 主定理（資結書定理~2.4）：$a = 2$、$b = 2$，$n^{\log_2 2} = n$。 $f(n) = n^2 =
+\Omega(n^{1 + \varepsilon})$，取 $\varepsilon = 1$；正則條件 $2 f(n/2) = 2 \cdot n^2/4 = \tfrac{1}{2} n^2$，
+取 $c = 1/2 < 1$ 成立。 是情況 3，$T(n) = \Theta(n^2)$，所以 $T(n) = O(n^2)$。 遞迴樹上每一層的工作
+是上一層的一半，$n^2 (1 + \tfrac12 + \tfrac14 + \cdots) \le 2n^2$，根那一層就佔了一半。
+\end{pastsoln}

@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ccu-108-csb-02}]{中正資工所乙組 108 學年度 第 3 題}
+（程式）
+
+(10pts) Please design a recursive version of a function to calculate the factorial of a positive
+integer $n$, i.e $n!=1\times2\times3\times\ldots\times n$.
+\end{pastexam}
+
+\begin{pastsoln}
+遞迴的寫法要兩件事：基礎情況，和把問題縮小的遞迴關係（資結書第~2.1~節）。 階乘滿足
+\[
+n! = \begin{cases} 1, & n = 1, \\ n \times (n-1)!, & n \ge 2, \end{cases}
+\]
+直接照著寫：
+
+\begin{minted}[fontsize=\small]{c}
+unsigned long long factorial(unsigned int n)
+{
+    if (n <= 1)
+        return 1;
+    return n * factorial(n - 1);
+}
+\end{minted}
+
+\textbf{正確性}（對 $n$ 歸納）。 $n = 1$ 時回傳 $1 = 1!$。 設 \texttt{factorial(n - 1)} 回傳
+$(n-1)!$，則 \texttt{factorial(n)} 回傳 $n \cdot (n-1)! = n!$。 每次呼叫的參數少 $1$，從 $n$
+往下一定會碰到 $1$，所以遞迴會停。 基礎情況寫成 \texttt{n <= 1} 而不是 \texttt{n == 1}：題目只
+要求正整數，但萬一傳進 $0$，寫 \texttt{n == 1} 會呼叫 \texttt{factorial(0 - 1)}，
+\texttt{unsigned} 的 $-1$ 是很大的數，遞迴停不下來。
+
+\textbf{複雜度}。 每層只做一次乘法和一次呼叫，$T(n) = T(n-1) + \Theta(1)$，$T(n) = \Theta(n)$；
+遞迴深度 $n$，呼叫堆疊用 $\Theta(n)$ 的空間。 例如 \texttt{factorial(4)} 依序呼叫
+\texttt{factorial(3)}、\texttt{factorial(2)}、\texttt{factorial(1)}，回傳時算出
+$2 \cdot 1 = 2$、$3 \cdot 2 = 6$、$4 \cdot 6 = 24$。
+
+\textbf{溢位}。 階乘長得很快：用 $64$ 位元的 \texttt{unsigned long long}，最大只能算到
+$20! \approx 2.4 \times 10^{18}$，$21!$ 就溢位了；用 $32$ 位元的 \texttt{int} 只能到 $12!$。
+作答時可以註明這一點。
+\end{pastsoln}

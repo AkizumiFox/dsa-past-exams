@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncku-109-prog-08}]{成大資訊聯招 109 學年度 演算法第 5 題}
+（問答）
+
+If possible, use the master method to solve $T(n)=27T(\frac{n}{3})+\Theta(\frac{n^3}{\lg n})$.
+(10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：主定理不能用；$T(n) = \Theta(n^3 \lg\lg n)$。
+
+\textbf{檢查主定理}（資結書定理~2.4）。 $a = 27$、$b = 3$，$n^{\log_b a} = n^{\log_3 27} = n^3$，
+$f(n) = \Theta(n^3/\lg n)$。
+\begin{itemize}
+\item 情況 1 要 $f(n) = O(n^{3 - \varepsilon})$。 $f(n)/n^{3-\varepsilon} = n^{\varepsilon}/\lg n \to \infty$，
+對任何 $\varepsilon > 0$ 都不成立：$f(n)$ 比 $n^3$ 小，但只小了 $\lg n$，不是小一個多項式因子。
+\item 情況 2 要 $f(n) = \Theta(n^3)$，$f(n)/n^3 = 1/\lg n \to 0$，不成立。 推廣的情況 2
+（資結書定理~2.5）要 $f(n) = \Theta(n^3 \lg^k n)$ 且 $k \ge 0$，這裡等於 $k = -1$，也不成立。
+\item 情況 3 要 $f(n) = \Omega(n^{3+\varepsilon})$，$f(n)$ 比 $n^3$ 還小，不成立。
+\end{itemize}
+三種情況都不適用，主定理不能用。 這正好落在情況 1 和情況 2 之間的空隙。
+
+\textbf{用遞迴樹算}。 設 $f(n) = n^3/\lg n$（$\Theta$ 裡的常數倍不影響結論），$n = 3^m$，
+$\lg n = m \lg 3$。 第 $j$ 層（$j = 0, 1, \ldots, m - 1$）有 $27^j$ 個規模 $n/3^j$ 的子問題，
+這一層的總和是
+\[
+27^j \cdot \frac{(n/3^j)^3}{\lg (n/3^j)} = \frac{n^3}{(m - j)\lg 3}.
+\]
+每一層都是 $n^3$ 除以「剩下的層數」。 加起來：
+\[
+\sum_{j=0}^{m-1} \frac{n^3}{(m - j)\lg 3} = \frac{n^3}{\lg 3}\left(\frac1m + \frac1{m-1} + \cdots + \frac11\right)
+= \frac{n^3}{\lg 3} H_m .
+\]
+葉子有 $27^m = n^3$ 個，每個 $\Theta(1)$，合計 $\Theta(n^3)$。 調和數 $H_m = \Theta(\lg m)$
+（資結書定理~A.7），而 $m = \log_3 n$，$\lg m = \lg\lg n - \lg\lg 3 = \Theta(\lg\lg n)$。 所以
+\[
+T(n) = \Theta(n^3 \lg\lg n) + \Theta(n^3) = \Theta(n^3 \lg\lg n).
+\]
+這和資結書第~2.4~節「不能用的時候」裡 $4T(n/2) + n^2/\lg n$ 的例子是同一個型態。 $f(n)$ 寫成
+$\Theta(\cdot)$ 時，每一層的和是上面的值乘上夾在兩個正常數之間的倍數，上下界一起成立。
+\end{pastsoln}

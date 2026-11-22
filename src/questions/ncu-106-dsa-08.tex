@@ -1,0 +1,95 @@
+\begin{pastexam}[label={px:ncu-106-dsa-08}]{中央資工所 106 學年度 第 8 題}
+（問答）
+
+Given a knapsack with capacity $C$, and $n$ objects $o_1,\ldots,o_n$ with weights
+$w_1,\ldots,w_n$ and values $v_1,\ldots,v_n$, the 0/1 knapsack problem is to determine $x_i$
+($x_i=0$ or 1, $1\le i\le n$) such that $\sum_{1\le i\le n}x_iw_i\le C$ and
+$V=\sum_{1\le i\le n}x_iv_i$ is maximized. Below is a dynamic programming algorithm to solve the
+0/1 knapsack problem to output $V$. Please modify the algorithm to solve the subset sum problem,
+described as follows. Given a set $S$ of $n$ values $v_1, v_2, \ldots, v_n$ and a special value
+$C$, the subset sum problem is to determine whether or not there exists a subset $S'$ of $S$ such
+that $C=\sum_{v_i\in S'}v_i$. You should write down the complete algorithm including the input,
+the output and all steps. (10\%)
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm:} 0/1 knapsack dynamic programming algorithm\\ \hline
+\textbf{Input}: knapsack capacity $C$, $n$ object weights $w_1,\ldots,w_n$ and $n$ object values $v_1,\ldots,v_n$\\
+\textbf{Output}: the maximum value $V$ of all objects that can be kept in the knapsack\\ \hline
+1:\ \ \textbf{for} $w\leftarrow 0$ to $C$ do\\
+2:\ \ \hspace*{1.5em}$v[0, w]\leftarrow 0$\\
+3:\ \ \textbf{for} $i\leftarrow 1$ to $n$ do\\
+4:\ \ \hspace*{1.5em}\textbf{for} $w\leftarrow 0$ \textbf{to} $C$ do\\
+5:\ \ \hspace*{3em}\textbf{if} $w_i\le w$ \textbf{then}\\
+6:\ \ \hspace*{4.5em}$v[i, w]\leftarrow\max(v[i\text{-}1, w], v_i+v[i\text{-}1, w\text{-}w_i])$\\
+7:\ \ \hspace*{3em}\textbf{else}\\
+8:\ \ \hspace*{4.5em}$v[i, w]\leftarrow v[i\text{-}1, w]$\\
+9:\ \ $V\leftarrow v[n, C]$\\
+10: \textbf{return} $V$\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有說 $v_i$、$C$ 的範圍。 表格要用 $C$ 當索引，這裡照背包問題的設定，假設 $v_i$ 和 $C$ 都是
+非負整數。
+
+\textbf{子問題}（資結書第~18.5~節的背包表，把「最大價值」換成「做不做得到」）。 令
+\[
+s[i, w] = \TRUE \iff \text{$v_1, \ldots, v_i$ 之中有一個子集合的和恰好是 $w$}.
+\]
+\begin{itemize}
+\item $i = 0$：沒有數可以用，只有空集合，和是 $0$。 所以 $s[0, 0] = \TRUE$，$s[0, w] = \FALSE$（$w > 0$）。
+這是和背包表最大的不同：背包的 $v[0, w]$ 全部是 $0$，因為容量 $w$ 不必裝滿；子集合和要求\textbf{恰好}
+等於 $w$。
+\item $i \ge 1$：看 $v_i$ 有沒有選。 不選，要用 $v_1, \ldots, v_{i-1}$ 湊出 $w$，即 $s[i-1, w]$；
+選（必須 $v_i \le w$），要用前面的數湊出 $w - v_i$，即 $s[i-1, w - v_i]$。 兩者有一個成立就行：
+\[
+s[i, w] = s[i-1, w] \;\textbf{or}\; \bigl(v_i \le w \textbf{ and } s[i-1, w - v_i]\bigr).
+\]
+\end{itemize}
+答案是 $s[n, C]$。 和背包演算法對照：重量 $w_i$ 換成 $v_i$，$\max$ 換成 \textbf{or}，
+「$v_i + \cdots$」換成「直接拿 $s[i-1, w - v_i]$」。
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.92\linewidth}|}
+\hline
+\textbf{Algorithm:} subset sum dynamic programming algorithm\\ \hline
+\textbf{Input}：$n$ 個非負整數 $v_1, \ldots, v_n$，目標值 $C$（非負整數）\\
+\textbf{Output}：存在 $S' \subseteq S$ 使 $\sum_{v_i \in S'} v_i = C$ 時輸出 yes，否則輸出 no\\ \hline
+1:\ \ $s[0, 0] \leftarrow$ \TRUE\\
+2:\ \ \textbf{for} $w\leftarrow 1$ \textbf{to} $C$ \textbf{do}\\
+3:\ \ \hspace*{1.5em}$s[0, w]\leftarrow$ \FALSE\\
+4:\ \ \textbf{for} $i\leftarrow 1$ \textbf{to} $n$ \textbf{do}\\
+5:\ \ \hspace*{1.5em}\textbf{for} $w\leftarrow 0$ \textbf{to} $C$ \textbf{do}\\
+6:\ \ \hspace*{3em}\textbf{if} $v_i\le w$ \textbf{then}\\
+7:\ \ \hspace*{4.5em}$s[i, w]\leftarrow s[i\text{-}1, w]$ \textbf{or} $s[i\text{-}1, w\text{-}v_i]$\\
+8:\ \ \hspace*{3em}\textbf{else}\\
+9:\ \ \hspace*{4.5em}$s[i, w]\leftarrow s[i\text{-}1, w]$\\
+10: \textbf{if} $s[n, C] =$ \TRUE{} \textbf{then return} yes\\
+11: \textbf{else return} no\\ \hline
+\end{tabular}
+\end{center}
+
+\textbf{正確性}。 對 $i$ 做歸納。 $i = 0$ 時第 1--3 行就是定義。 設第 $i - 1$ 列都對。 $v_1, \ldots,
+v_i$ 的任何一個和為 $w$ 的子集合，若不含 $v_i$，它是 $v_1, \ldots, v_{i-1}$ 的子集合，和為 $w$，
+$s[i-1, w]$ 為真；若含 $v_i$，去掉 $v_i$ 剩下的和是 $w - v_i \ge 0$，$s[i-1, w - v_i]$ 為真。 反過來，
+$s[i-1, w]$ 為真時那個子集合直接可用；$s[i-1, w - v_i]$ 為真時把 $v_i$ 加進去，和就是 $w$。 所以第
+6--9 行算出的 $s[i, w]$ 正確，$s[n, C]$ 就是答案。
+
+\textbf{複雜度}。 表有 $(n + 1)(C + 1)$ 格，每格 $O(1)$，時間和空間都是 $O(nC)$；只要答案的話，像
+背包一樣只留一列（$w$ 由大到小更新），空間 $O(C)$。 $O(nC)$ 和 $C$ 的數值成正比，是擬多項式時間
+（資結書第~18.5.5~節），不是多項式時間；子集合和是 NP 完備的（資結書第~28.5.2~節）。
+
+\textbf{另一個寫法}。 也可以不改表的意義：把背包演算法的重量 $w_i$ 設成 $v_i$、容量設成 $C$，算出
+$V = v[n, C]$，最後改成「$V = C$ 就輸出 yes，否則 no」。 每個可行的選法和都不超過 $C$，所以
+$V \le C$，而 $V = C$ 若且唯若有一個子集合的和恰好是 $C$。 這就是中央資工所 107 學年度第 19 題給的
+SSDP 演算法。
+
+\textbf{小例子}。 $v = 3, 5, 7$，$C = 12$。 各列為真的 $w$：$i = 0$ 只有 $\{0\}$；$i = 1$ 是
+$\{0, 3\}$；$i = 2$ 是 $\{0, 3, 5, 8\}$；$i = 3$ 是 $\{0, 3, 5, 7, 8, 10, 12\}$。 $s[3, 12]$ 為真，
+輸出 yes（$5 + 7 = 12$）。
+\end{pastsoln}

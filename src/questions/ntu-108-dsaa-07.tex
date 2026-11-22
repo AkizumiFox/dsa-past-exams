@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-07}]{臺大資工所 108 學年度 第 7 題}
+（是非）
+
+(6\%) True or false:
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) The Dijkstra's algorithm (single run) solves the single-source shortest path problem
+with positive, zero, or negative edge weights, if there is no negative cycle.
+\item (2\%) The Bellman-Ford algorithm (single run) solves the all-pairs shortest path problem
+with non-negative edge weights.
+\item (2\%) The Floyd-Warshall algorithm (single run) solves the all-pairs shortest path with
+positive, zero, or negative edge weights, even if there are negative cycles.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) False；(b) False；(c) False。
+
+\textbf{(a) False。} Dijkstra 演算法要求邊的權重都不是負的；只要有負邊，即使沒有負環也可能出錯
+（資結書第~25.2.5~節）。 反例：有向邊 $1 \to 2$（$3$）、$1 \to 3$（$5$）、$3 \to 2$（$-4$）、
+$2 \to 4$（$2$），起點 $1$，沒有環。 真正的距離是 $\delta(1, 2) = 5 - 4 = 1$、
+$\delta(1, 4) = 1 + 2 = 3$。 Dijkstra 的過程：
+\begin{itemize}
+\item 取出 $1$，$d[2] = 3$、$d[3] = 5$。
+\item 取出 $d$ 最小的 $2$（$d[2] = 3$），宣布確定，放鬆 $2 \to 4$ 得 $d[4] = 5$。
+\item 取出 $3$ 或 $4$（$d$ 都是 $5$）。 取出 $3$ 時放鬆 $3 \to 2$，$d[2]$ 就算被改成 $1$，$2$ 已經
+取出過，$2 \to 4$ 不會再放鬆一次。
+\end{itemize}
+結束時 $d[4] = 5 \ne 3$。 出錯的原因是 Dijkstra 的正確性證明用到「路徑往後走，長度不會變短」，
+負邊讓這件事不成立。
+
+\textbf{(b) False。} Bellman--Ford 演算法跑一次只算出\textbf{一個起點}到所有點的最短距離
+（資結書第~25.3~節），是單一起點的演算法。 要所有點對，得對每個頂點各跑一次，共 $|V|$ 次，
+$O(|V|^2 |E|)$。 「權重非負」這個條件不影響結論。
+
+\textbf{(c) False。} 有負環時，能經過負環的點對之間沒有最短路徑（繞負環一圈就變短一次，距離是
+$-\infty$），問題本身沒有答案。 Floyd--Warshall 演算法能處理負邊，只要沒有負環就正確
+（資結書第~25.6~節）；有負環時它算出來的數字不是最短距離，它能做的是\textbf{偵測}負環：跑完後
+某個 $d_{ii} < 0$，就表示 $i$ 在負環上。 「even if there are negative cycles」也能解，不對。
+\end{pastsoln}

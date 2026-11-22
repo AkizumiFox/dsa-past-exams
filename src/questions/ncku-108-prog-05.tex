@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-108-prog-05}]{成大資訊聯招 108 學年度 第 5 題}
+（設計）
+
+(10\%) Give an algorithm that determines whether or not a given undirected graph G=(V,E) contains a
+cycle. Your algorithm should run in O(V) time, independent of $|$E$|$.
+\end{pastexam}
+
+\begin{pastsoln}
+這題和成大 106 學年度第 7 題（歷屆試題~\ref{px:ncku-106-prog-07}，第~\pageref{px:ncku-106-prog-07}~頁）相同，
+這一年多寫了 independent of $|E|$，意思就是時間不能和邊數成正比。 虛擬碼和完整的正確性證明見那一題，這裡只寫
+重點。 假設圖用鄰接串列存，是簡單圖，$n = |V|$、$m = |E|$。
+
+\textbf{演算法。} 對每個還沒發現的頂點做 DFS，遞迴時多傳父節點 $p$。 掃 $u$ 的鄰居 $v$ 時：
+\begin{itemize}
+\item $v = p$：是剛走過來的那條樹邊，跳過；
+\item $v$ 已經發現過（不是白色）：$\{u, v\}$ 是後向邊，立刻回答「有環」並停止；
+\item $v$ 是白色：沿樹邊 $\{u, v\}$ 遞迴下去。
+\end{itemize}
+全部走完都沒停，回答「沒有環」。
+
+\textbf{正確性。} 無向圖做 DFS 只有樹邊和後向邊（資結書定理~21.8），而無向圖有環若且唯若有後向邊（資結書第~21.6~節）。
+遇到「不是父節點、又已經發現過」的鄰居，就是一條後向邊，加上樹上的路徑形成長度至少 $3$ 的環；反過來有環時，DFS
+一定會在某個時候看到後向邊。
+
+\textbf{時間 $O(n)$，和 $m$ 無關。} 回答之前，DFS 看過的每個串列節點只有兩種：通往父節點的（每個非根頂點一次），
+或通往白色頂點、變成樹邊的（全部最多 $n - 1$ 次），所以最多看 $2(n - 1) + 1$ 個串列節點。 加上初始化和外層迴圈的
+$\Theta(n)$，總共 $O(n)$。 有環時，不管還有多少邊沒看，第一條後向邊出現就停了；沒有環時圖是森林，本來就只有
+$m \le n - 1$ 條邊。
+\end{pastsoln}

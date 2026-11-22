@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-05}]{臺大資工所 109 學年度 第 5 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none。 「previous question」是上一題第 4 題）
+
+(3 points) We will follow the notations from the previous question. We can build a heap from an
+array of $n$ keys by the following algorithm. A \textit{heapify} operation for a binary minimum
+heap combines two heaps and a root into a new heap. For ease of discussion we assume that the
+array is indexed from 1 to $n$, and the left/right child of a node with array index $i$ have
+array indices $2i$ and $2i+1$ respectively. We first set each key of the second half of the
+array (indexed from $n/2$ to $n$) as $n/2$ heaps, each has one node. Then we combine two of them
+and their parent into a heap of three nodes, and so on. If the root is \textit{smaller} than the
+roots of \textit{both} subtrees then we stop. Otherwise we exchange the root with the smaller
+root from the subtrees, and repeatedly heapify the subtree where the root has just been
+replaced. Next we heapify the key at $n/2-1$ and all the way back to the root (at index 1). The
+final result will be a binary minimum heap of $n$ nodes.
+\begin{enumerate}[label=\arabic*.]
+\item The minimum number of key comparisons is $\Theta(n)$.
+\item The maximum number of key comparisons is $\Theta(n)$.
+\item Since each heapify on a key may compare it with all the keys down to a leaf, its number of
+comparisons is no more than the height of the heap, which is $O(\log n)$. Also we have $O(n)$
+keys to heapify, so the total number of key comparisons is $O(n\log n)$.
+\item The number of key comparisons is in the same order as the sum of (\textit{original, before
+heapified}) levels (as defined in the previous question, the distance to the root) of all keys.
+\item The number of key comparisons is \textit{maximized} if and only if the \textit{largest}
+$n/2$ keys are in the \textit{first} half of the array and in \textit{decreasing} order.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1、2、3。
+
+\textbf{演算法和計數方式}。 這是由下而上建堆積（資結書第~8.2~節，虛擬碼~8.3），只是改成最小堆積。
+原題說「後半段（$n/2$ 到 $n$）各是一個節點的堆積」、再從 $n/2 - 1$ 開始 heapify，差了一：精確地說，
+葉節點是位置 $\lfloor n/2 \rfloor + 1$ 到 $n$，heapify 從 $\lfloor n/2 \rfloor$ 做到 $1$。 這不影響各選項
+的判斷，下面照精確的版本。 heapify 一個節點時每往下一層：有兩個子節點就先比兩個子節點（$1$ 次），
+再比根和較小的子節點（$1$ 次）；只有一個子節點就只比 $1$ 次。 根比較小就停，否則交換、往下一層。
+所以每往下一層最多 $2$ 次比較。
+
+令 $h(i)$ 是以位置 $i$ 為根的子樹的高度（用邊數算，葉節點是 $0$）。 heapify 位置 $i$ 最多往下
+$h(i)$ 層，比較次數介於 $1$ 和 $2h(i)$ 之間。
+
+\begin{itemize}
+\item 1. 最少的比較次數：每一個非葉節點（共 $\lfloor n/2 \rfloor$ 個）heapify 時至少比 $1$ 次，所以至少
+$\lfloor n/2 \rfloor$ 次；上界見選項 2，是 $O(n)$。 所以最少的次數是 $\Theta(n)$。 例如陣列本來就由小到大
+排好時，每個節點比完子節點就停，$n = 2^k - 1$ 時剛好 $n - 1$ 次。 對。
+\item 2. 最多的比較次數：總數 $\le \sum_i 2h(i)$。 資結書定理~8.1 證明了完整二元樹所有節點的高度和小於
+$2n$（那裡的高度用節點數算，$h(x) - 1$ 就是這裡的 $h(x)$），所以最多不到 $4n$ 次，是 $O(n)$；又至少
+$\lfloor n/2 \rfloor$ 次。 最大值是 $\Theta(n)$。 例如由大到小排好的陣列，每個節點都一路換到葉節點，
+次數大約是 $2n$。 對。
+\item 3. 這是建堆積的「粗略分析」：每個節點最多往下 $O(\log n)$ 層，一共 $O(n)$ 個節點，所以
+$O(n \log n)$。 嚴格說，每往下一層有兩次比較（兩個子節點互比一次、和根比一次），一個 heapify 最多
+比 $2\lfloor \lg n \rfloor$ 次，不是「不超過高度」；但只差常數倍，$O(\log n)$ 和最後的 $O(n \log n)$
+都不受影響。 $O$ 只是上界，$O(n \log n)$ 雖然不緊（真正是 $\Theta(n)$，見選項 2），仍然是正確的敘述。
+對。
+\item 4. 原本各節點的 level 加總：位置 $i$ 的 level 是 $\lfloor \lg i \rfloor$，位置 $\lfloor n/2 \rfloor + 1$
+到 $n$ 這一半的節點 level 都 $\ge \lfloor \lg n \rfloor - 1$，所以加總至少 $\frac{n}{2}(\lfloor \lg n
+\rfloor - 1) = \Omega(n \log n)$；而比較次數是 $\Theta(n)$。 兩者不同階。 跟比較次數同階的是「各節點
+\textbf{高度}的總和」（到葉節點的距離），不是深度（到根的距離）：深的節點多，但它們往下走不了幾層。 錯。
+\item 5. 「若且唯若」兩個方向都不成立。 取 $n = 4$，heapify 位置 $2$（一個子節點，$1$ 次），再 heapify
+位置 $1$（$2$ 次；換到位置 $2$ 時再 $1$ 次），所以最多 $4$ 次。 前半段是位置 $1$、$2$，「最大的兩個鍵
+由大到小放在前半段」只有 $\langle 4, 3, 1, 2\rangle$ 和 $\langle 4, 3, 2, 1\rangle$ 兩種。
+\begin{itemize}
+\item $\langle 4, 3, 1, 2\rangle$：位置 $2$ 的 $3$ 和子節點 $2$ 比（$1$ 次），交換成
+$\langle 4, 2, 1, 3\rangle$。 位置 $1$：$2$ 和 $1$ 比（$1$ 次），$4$ 和 $1$ 比（$1$ 次），換到位置 $3$，
+位置 $3$ 是葉節點，停。 共 $3$ 次，不是最多。 所以「若」不成立。
+\item $\langle 2, 1, 3, 4\rangle$：位置 $2$ 的 $1$ 和 $4$ 比（$1$ 次），不換。 位置 $1$：$1$ 和 $3$ 比、
+$2$ 和 $1$ 比（$2$ 次），換到位置 $2$，再和 $4$ 比（$1$ 次）。 共 $4$ 次，是最多，但最大的兩個鍵
+$3$、$4$ 在後半段。 所以「唯若」也不成立。
+\end{itemize}
+錯。 列舉 $n \le 8$ 的所有排列，達到最多次數的排列都很多（$n = 4$ 時 $24$ 個裡有 $12$ 個），遠不只
+題目說的那一種。
+\end{itemize}
+\end{pastsoln}

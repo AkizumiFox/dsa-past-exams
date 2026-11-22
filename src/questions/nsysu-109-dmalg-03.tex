@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:nsysu-109-dmalg-03}]{中山資工所資安組 109 學年度 第 6 題}
+（計算）
+
+{[12\%]} If $a_0=0, a_1=2, a_2=6$, and $a_3=56$ satisfy the recurrence relation
+$a_{n+2}+ba_{n+1}+ca_n=0$, where $n\ge 0$ and $b,c$ are constants, determine $b,c$ and solve for $a_n$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$b = -3$，$c = -19$；
+\[
+a_n = \frac{2}{\sqrt{85}}\left[\left(\frac{3 + \sqrt{85}}{2}\right)^{\!n} - \left(\frac{3 - \sqrt{85}}{2}\right)^{\!n}\,\right].
+\]
+
+\textbf{求 $b$、$c$}。 代 $n = 0$ 和 $n = 1$：
+\begin{align*}
+n = 0:&\quad a_2 + b a_1 + c a_0 = 6 + 2b + 0 = 0 \;\Rightarrow\; b = -3,\\
+n = 1:&\quad a_3 + b a_2 + c a_1 = 56 - 18 + 2c = 0 \;\Rightarrow\; c = -19.
+\end{align*}
+所以遞迴式是 $a_{n+2} = 3a_{n+1} + 19a_n$。 （$a_0 = 0$ 讓第一個式子剛好不含 $c$，先解出 $b$ 再代第二個。）
+
+\textbf{解遞迴式}。 這是二階常係數齊次線性遞迴，用特徵方程式（資結書定理~2.7）：
+\[
+x^2 = 3x + 19, \qquad x^2 - 3x - 19 = 0, \qquad r_{1,2} = \frac{3 \pm \sqrt{9 + 76}}{2} = \frac{3 \pm \sqrt{85}}{2}.
+\]
+兩根相異，$a_n = A r_1^n + B r_2^n$。 代初始值：
+\begin{align*}
+a_0 = 0:&\quad A + B = 0,\\
+a_1 = 2:&\quad A r_1 + B r_2 = A(r_1 - r_2) = A\sqrt{85} = 2 .
+\end{align*}
+得 $A = \frac{2}{\sqrt{85}}$，$B = -\frac{2}{\sqrt{85}}$，就是上面的答案。
+
+\textbf{驗算}：由遞迴式 $a_2 = 3 \cdot 2 + 19 \cdot 0 = 6$，$a_3 = 3 \cdot 6 + 19 \cdot 2 = 56$，和題目給的一致；公式在
+$n = 0, 1$ 時是 $0$、$2$，又滿足同一個遞迴式，所以每一項都對。 再往下 $a_4 = 3 \cdot 56 + 19 \cdot 6 = 282$，
+$a_5 = 1910$。
+
+根是無理數，答案看起來不漂亮，但題目的數字確實給出這個結果；常見的錯是把 $b$、$c$ 的正負號弄反（遞迴式寫的是
+$a_{n+2} + ba_{n+1} + ca_n = 0$，移項後係數變號）。
+\end{pastsoln}

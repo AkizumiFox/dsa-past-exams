@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:nccu-107-dsa-10}]{政大資科所 107 學年度 第 10 題}
+（問答）
+
+(10\%) Let A be a problem that belongs to NP. For each of the following statements, explain whether
+or not the statement is true.
+\begin{enumerate}[label=\alph*.]
+\item (5\%) There is no polynomial-time algorithm for A.
+\item (5\%) If A can be solved in polynomial time, then P=NP.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+兩句都\textbf{不一定}成立。 關鍵是 NP 包含 P（資結書定理~28.1）：NP 是「答案為是時，有憑證可以在
+多項式時間內驗證」的決策問題，P 裡的問題不需要憑證就能直接在多項式時間內解，當然也在 NP 裡。 所以
+「A 在 NP 裡」只說 A 不會太難，沒說 A 很難。
+
+\textbf{a. 錯}。 反例：A 取「給一張無向圖，它是不是連通的」。 BFS 在 $O(|V| + |E|)$ 時間內就能回答
+（資結書第~21.3~節），A 在 P 裡，因此也在 NP 裡，而它有多項式時間演算法。 就算 A 是 NP 完備的，
+「沒有多項式時間演算法」也還沒有人證明，那等於證明 $\mathrm{P} \ne \mathrm{NP}$，是公開的難題。
+
+\textbf{b. 一般不成立}。 同一個 A（圖的連通性）可以在多項式時間內解，前提成立，但我們不能因此推出
+$\mathrm{P} = \mathrm{NP}$：如果真如大家相信的 $\mathrm{P} \ne \mathrm{NP}$，這就是前提真、結論假的反例。
+這句話只有在 A 是 \textbf{NP 完備}（或 NP-hard）時才對：NP 裡每個問題都能在多項式時間內歸約到 A，
+A 有多項式時間演算法就表示 NP 裡每個問題都有，$\mathrm{NP} \subseteq \mathrm{P}$，再加上
+$\mathrm{P} \subseteq \mathrm{NP}$ 得 $\mathrm{P} = \mathrm{NP}$（資結書定理~28.5）。 題目只說 A 在
+NP 裡，沒說 A 是 NP 完備，所以推不出來。
+\end{pastsoln}

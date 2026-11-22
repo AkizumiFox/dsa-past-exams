@@ -1,0 +1,11 @@
+paper: nsysu-107-osds
+volume: 1
+school: 中山
+dept: 資工所甲組
+year: 107
+subject: 作業系統與資料結構
+instructions: '※本科目依簡章規定「不可以」使用計算機（問答申論題）。'
+questions:
+  - {id: nsysu-107-osds-01, label: 第 5 題, chapter: 7}
+  - {id: nsysu-107-osds-02, label: 第 6 題, chapter: 11}
+  - {id: nsysu-107-osds-03, label: 第 7 題 (1)--(5), chapter: 10}

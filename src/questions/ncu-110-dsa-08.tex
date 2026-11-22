@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncu-110-dsa-08}]{中央資工所 110 學年度 複選題第 8 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Let T(n) denote the time taken to sort a list of n records. Which of the following statements are
+false for QuickSort?
+\begin{enumerate}[label=(\Alph*)]
+\item T(n) = 2T(n/2) + cn for some constant c in the worst-case scenario.
+\item T(n) = 4T(n/4) + cn for some constant c in the worst-case scenario.
+\item T(n) = T(n-1) + cn for some constant c in the worst-case scenario.
+\item T(n) = 2T(n-2) + cn for some constant c in the best-case scenario.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(D)。 題目問的是\textbf{錯}的敘述。
+
+快速排序每一層先用 $cn$ 的時間把 $n$ 個數分割成兩段，再遞迴排兩段（資結書第~14.5~節）。 分割成
+$q$ 和 $n - 1 - q$ 個時，$T(n) = T(q) + T(n - 1 - q) + cn$。 每次只切成兩段，所以遞迴式裡永遠只有
+兩項 $T(\cdot)$，而且兩段加起來是 $n - 1$。
+
+\textbf{(A) 錯}。 $2T(n/2) + cn$ 是每次都切成兩半，是\textbf{最好}的情況，$T(n) = \Theta(n \log n)$。
+最壞情況不是這樣。
+
+\textbf{(B) 錯}。 $4T(n/4) + cn$ 表示切成四段，快速排序一次只切兩段，不會出現這個式子；就算把兩層
+平均分割合成一層看，也是最好的情況，不是最壞。
+
+\textbf{(C) 對}。 最壞情況是每次都切成 $0$ 和 $n - 1$ 個（例如基準總是最大或最小值），
+$T(n) = T(n - 1) + T(0) + cn = T(n-1) + cn$，展開得 $\Theta(n^2)$（資結書第~2.5~節）。
+
+\textbf{(D) 錯}。 兩段大小相加應該是 $n - 1$，$2T(n-2)$ 的兩段加起來是 $2n - 4$，對 $n \ge 4$ 比 $n - 1$
+還大，不是任何一種分割。 而且這個遞迴式的解是指數的：每次 $n$ 只少 $2$、項數翻倍，
+$T(n) \ge 2^{n/2 - 1}T(2)$ 這個量級，遠比最好情況的 $\Theta(n \log n)$ 慢。 最好情況是 (A) 那條。
+\end{pastsoln}

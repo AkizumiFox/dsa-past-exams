@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:nccu-106-dsa-03}]{政大資科所 106 學年度 第 3 題}
+（問答）
+
+(10\%) Design an algorithm of running time $O(|V|^2)$ for the following task.
+
+\hspace*{1.5em}Input: An undirected graph $G=(V,E)$ in which each edge $e\in E$ is associated
+with a positive edge length $l(e)$; an edge $a\in E$.\\
+\hspace*{1.5em}Output: The length of the shortest cycle containing edge $a$ in $G$.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}。 設 $a$ 的兩端是 $u$、$v$。 一個經過 $a$ 的環，拿掉 $a$ 之後剩下一條從 $u$ 到 $v$、
+不經過 $a$ 的路徑；反過來，一條不經過 $a$ 的 $u$--$v$ 路徑接上 $a$ 就是一個環。 所以最短的環
+長度是
+\[
+\delta'(u, v) + l(a),
+\]
+$\delta'(u, v)$ 是在 $G' = (V, E - \{a\})$ 裡 $u$ 到 $v$ 的最短距離。 邊長都是正的，用 Dijkstra
+演算法（資結書第~25.2~節）在 $G'$ 上從 $u$ 出發算一次就好。 要 $O(|V|^2)$，用陣列版：每次掃過
+所有頂點找 $d$ 最小的（資結書第~25.2.6~節）。 下面假設 $G$ 是簡單圖（沒有重邊、自環），所以
+$|E| \le |V|(|V|-1)/2$。 $u$、$v$ 在 $G'$ 不連通時，$a$ 是橋，沒有環經過它，回傳 $\infty$。
+
+\begin{pseudo}{經過邊 $a$ 的最短環}
+\Function{Shortest-Cycle-Through}{$G, l, a$}
+    \State $(u, v) \gets a$ 的兩端
+    \For{每個頂點 $x \in V$}
+        \State $d[x] \gets \infty$；$\mathit{done}[x] \gets \FALSE$
+    \EndFor
+    \State $d[u] \gets 0$
+    \For{$k \gets 1$ \To $|V|$}
+        \State $x \gets$ 所有 $\mathit{done}[x] = \FALSE$ 的頂點裡 $d[x]$ 最小的 \Comment{掃一遍，$O(|V|)$}
+        \If{$d[x] = \infty$}
+            \State \Break \Comment{剩下的都走不到}
+        \EndIf
+        \State $\mathit{done}[x] \gets \TRUE$
+        \For{每條和 $x$ 相連的邊 $e = \{x, y\}$，$e \ne a$}
+            \If{$\mathit{done}[y] = \FALSE$ \AND $d[x] + l(e) < d[y]$}
+                \State $d[y] \gets d[x] + l(e)$
+            \EndIf
+        \EndFor
+    \EndFor
+    \If{$d[v] = \infty$}
+        \State \Return $\infty$ \Comment{沒有環經過 $a$}
+    \EndIf
+    \State \Return $d[v] + l(a)$
+\EndFunction
+\end{pseudo}
+
+第 11 行跳過 $a$，等於在 $G'$ 上跑 Dijkstra。
+
+\textbf{正確性}。 由 Dijkstra 演算法的正確性（資結書定理~25.6，邊長非負），結束時 $d[v] =
+\delta'(u, v)$。 只要再證明最短環的長度就是 $\delta'(u, v) + l(a)$。
+\begin{itemize}
+\item \textbf{任何經過 $a$ 的環都不比它短}。 設環 $C$ 經過 $a$。 把 $a$ 從 $C$ 拿掉，剩下的邊
+從 $u$ 沿著環走到 $v$，是 $G'$ 裡的一條 $u$--$v$ 路徑，長度 $\ge \delta'(u, v)$。 所以
+$C$ 的長度 $= l(a) + (\text{這條路徑的長度}) \ge l(a) + \delta'(u, v)$。
+\item \textbf{真的有這麼短的環}。 設 $\delta'(u, v) < \infty$，取 $G'$ 裡一條最短的 $u$--$v$ 路徑 $P$。
+邊長都是正的，最短路徑不會重複經過頂點（資結書引理~25.1），所以 $P$ 是簡單路徑，而且不含 $a$。
+簡單圖裡 $u$、$v$ 之間只有 $a$ 這一條邊，所以 $P$ 至少有兩條邊，$P$ 接上 $a$ 是一個至少三個頂點、
+沒有重複頂點的環，長度 $\delta'(u, v) + l(a)$。
+\item $\delta'(u, v) = \infty$ 時，由第一點，任何經過 $a$ 的環都會給出 $G'$ 裡的 $u$--$v$ 路徑，
+所以沒有環經過 $a$，回傳 $\infty$ 是對的。
+\end{itemize}
+
+\textbf{時間}。 第 3--5 行 $O(|V|)$。 第 6 行的迴圈最多 $|V|$ 輪，每輪第 7 行掃過所有頂點，
+$O(|V|)$，共 $O(|V|^2)$。 第 11--13 行：每個頂點最多被取出一次，所以每條邊在兩端各被看一次，
+共 $O(|E|) = O(|V|^2)$。 圖用鄰接矩陣存時，第 11 行改成掃 $x$ 那一列，每輪 $O(|V|)$，也是
+$O(|V|^2)$。 總時間 $O(|V|^2)$。
+
+注意不能直接在 $G$ 上算 $u$ 到 $v$ 的最短距離：$G$ 裡最短的 $u$--$v$ 路徑可能就是 $a$ 本身，
+加上 $l(a)$ 得到的 $2l(a)$ 不是一個環。 也不能用 BFS，邊長不一樣。
+\end{pastsoln}

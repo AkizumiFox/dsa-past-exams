@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-107-dsa-01}]{臺大資工所 107 學年度 第 I 題}
+（單選；答錯倒扣當題分數）
+
+(14 points) For each of the following algorithms, what is the tightest asymptotic upper bound for
+its runtime complexity? Please use the following table of (A)-(E) choices when answering.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+(A) & (B) & (C) & (D) & (E) \\ \hline
+$O(1)$ & $O(n)$ & $O(\lg n)$ & $O(n\lg n)$ & $O(n^2)$ \\ \hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+\item (2 points) quick sort for $n$ numbers (worst-case time)
+\item (2 points) quick sort for $n$ numbers (expected time)
+\item (2 points) bucket sort for $n$ numbers (expected time)
+\item (2 points) MAX-HEAPIFY for $n$ numbers (expected time)
+\item (2 points) PUSH/POP on stack of $n$ keys (expected time)
+\item (2 points) SEARCH on hash table with $n$ static keys and perfect hashing (worst-case time)
+\item (2 points) INSERT/DELETE on red-black tree with $n$ keys (worst-case)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1.~(E)\quad 2.~(D)\quad 3.~(B)\quad 4.~(C)\quad 5.~(A)\quad 6.~(A)\quad 7.~(C)。
+
+「最緊的上界」是指能成立的選項裡最小的那個。 例如快速排序的最壞情況是 $\Theta(n^2)$，$O(n^2)$
+成立而 $O(n \lg n)$ 不成立，就選 $O(n^2)$。 題目用的是 CLRS 的名稱（MAX-HEAPIFY、perfect
+hashing），以下照 CLRS 的版本說明。
+
+\textbf{1. 快速排序，最壞：(E) $O(n^2)$。} 每次分割都切成 $0$ 和 $m - 1$ 個（例如已排好的輸入、取最後
+一個當基準），$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$（資結書第~14.5~節）。 $O(n \lg n)$ 不夠，因為這個
+最壞情況確實會發生。
+
+\textbf{2. 快速排序，期望：(D) $O(n \lg n)$。} 隨機選基準（或輸入是隨機排列）時，期望比較次數是
+$2(n+1)H_n - 4n = \Theta(n \lg n)$（資結書定理~14.3）。 比較排序的平均下界也是 $\Omega(n \lg n)$
+（資結書定理~15.3），所以不會是 $O(n)$。
+
+\textbf{3. 桶子排序，期望：(B) $O(n)$。} 在輸入均勻分布在 $[0, 1)$、開 $n$ 個桶子的假設下，每個桶子
+的期望個數是常數，桶內用插入排序的總期望時間是 $\Theta(n)$（資結書第~15.2.5~節）。 讀一遍輸入就
+要 $\Omega(n)$，所以 (B) 是最緊的。
+
+\textbf{4. MAX-HEAPIFY：(C) $O(\lg n)$。} MAX-HEAPIFY（資結書的 \proc{Sift-Down}，虛擬碼~8.1）每一層
+做常數次比較，最多往下走到葉節點，$O(h) = O(\lg n)$。 題目寫「expected」，但它最常用的地方（取出
+最大值、堆積排序）是把最後一個葉節點搬到根再下沉，這個數本來就在底層，通常會沉回接近底層，
+平均也是 $\Theta(\lg n)$，所以最緊的上界仍是 $O(\lg n)$。 (A) $O(1)$ 太小；(B) 以上雖然成立但不是
+最緊的。
+
+\textbf{5. 堆疊的 PUSH/POP：(A) $O(1)$。} 只動頂端一格（陣列的 $\mathit{top}$ 加減一，或串列的頭）
+（資結書第~6.1~節）。 期望和最壞都是 $O(1)$。
+
+\textbf{6. 完美雜湊的 SEARCH，最壞：(A) $O(1)$。} 完美雜湊（perfect hashing）用在鍵固定不變（static）
+的情形：第一層用一個雜湊函數把 $n$ 個鍵分到 $n$ 格；第 $j$ 格的 $n_j$ 個鍵再放進一個大小
+$n_j^2$ 的第二層表，第二層的雜湊函數挑選到完全沒有碰撞為止（從 universal hash family 裡隨機挑，
+每次成功機率至少 $1/2$），而且可以讓總空間 $O(n)$。 搜尋時算兩次雜湊、比一次鍵，最壞 $O(1)$。
+這是建表時花時間換來的，題目特別寫 static keys 就是這個原因。 資結書第~12~章沒有講完美雜湊，
+這裡只說結論。
+
+\textbf{7. 紅黑樹的 INSERT/DELETE，最壞：(C) $O(\lg n)$。} 紅黑樹的高度 $h \le 2 \lg(n + 1)$
+（資結書定理~10.4）；插入、刪除先沿一條路徑找位置，再往上修正（旋轉最多 $2$ 或 $3$ 次、換色最多
+$O(h)$ 次），都是 $O(\lg n)$（資結書第~10.3~節）。 一般的二元搜尋樹最壞是 $O(n)$，紅黑樹靠平衡
+保證把它壓到 $O(\lg n)$。
+\end{pastsoln}

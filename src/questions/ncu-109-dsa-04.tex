@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncu-109-dsa-04}]{中央資工所 109 學年度 第 4 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1.25 分）
+
+What orderings are topological sortings of the graph below?
+
+\begin{center}
+\begin{tikzpicture}[x=0.6cm,y=0.6cm,v/.style={circle,draw,inner sep=1pt,minimum size=6mm,font=\small},
+  e/.style={thick,-{Triangle[length=2.4mm,width=2.2mm]}}]
+\node[v] (5) at (4.7,-1.3) {5};
+\node[v] (3) at (2.05,-3.55) {3};
+\node[v] (4) at (7.6,-3.35) {4};
+\node[v] (2) at (3.35,-5.9) {2};
+\node[v] (1) at (6.45,-5.9) {1};
+\node[v] (0) at (9.7,-5.75) {0};
+\draw[e] (3)--(5); \draw[e] (4)--(5); \draw[e] (4)--(3); \draw[e] (2)--(3);
+\draw[e] (4)--(1); \draw[e] (0)--(4); \draw[e] (2)--(1); \draw[e] (0)--(1);
+\end{tikzpicture}
+\end{center}
+
+(A)~0 4 2 1 3 5 \qquad (B)~0 4 2 3 1 5 \qquad (C)~2 0 4 1 3 5 \qquad (D)~2 0 4 3 1 5
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(C)(D)。
+
+拓樸順序要求每一條邊 $u \to v$ 的 $u$ 都排在 $v$ 前面（資結書第~22.1~節）。 圖上的八條邊：
+\[
+0 \to 1,\quad 0 \to 4,\quad 2 \to 1,\quad 2 \to 3,\quad 3 \to 5,\quad 4 \to 1,\quad 4 \to 3,\quad 4 \to 5.
+\]
+把限制整理一下：$1$ 要在 $0, 2, 4$ 之後；$3$ 要在 $2, 4$ 之後；$5$ 要在 $3, 4$ 之後；$4$ 要在 $0$ 之後。
+$0$、$2$ 沒有進來的邊，可以排最前面。
+
+逐項檢查每一條邊：
+\begin{itemize}
+\item (A) 0 4 2 1 3 5：$0$ 在 $4$、$1$ 前；$2$ 在 $1$、$3$ 前；$4$ 在 $1$、$3$、$5$ 前；$3$ 在 $5$ 前。
+八條都滿足，對。
+\item (B) 0 4 2 3 1 5：和 (A) 只差 $1$、$3$ 對調。 $1$、$3$ 之間沒有邊，而且兩個都排在 $0, 2, 4$ 之後、
+$5$ 之前（$5$ 只要求在 $3$、$4$ 之後），對。
+\item (C) 2 0 4 1 3 5：和 (A) 比，把 $2$ 移到最前面。 $2$ 沒有進來的邊，排第一沒問題；$0 \to 4$、
+$4 \to 1$、$4 \to 3$、$3 \to 5$ 的先後都沒變，對。
+\item (D) 2 0 4 3 1 5：同 (C) 再把 $1$、$3$ 對調，理由同 (B)，對。
+\end{itemize}
+
+這張圖的拓樸順序一共有 $9$ 種，四個選項都在裡面。 用 Kahn 演算法（資結書虛擬碼~22.1）看得更清楚：
+一開始入度為 $0$ 的是 $0$ 和 $2$；拿掉 $0$ 之後 $4$ 的入度變 $0$；$0, 2, 4$ 都拿掉之後，$1$ 和 $3$
+同時入度為 $0$，先拿哪一個都可以，所以 (A)(B)、(C)(D) 兩兩成對。
+\end{pastsoln}

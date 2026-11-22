@@ -1,0 +1,16 @@
+paper: ncku-109-prog
+volume: 1
+school: 成大
+dept: 資訊聯招
+year: 109
+subject: 程式設計
+instructions: 本試題不可使用計算機。 請於答案卷(卡)作答，於本試題紙上作答者，不予計分。 Part I. 資料結構 (50\%)；Part II. 演算法 (50\%)。
+questions:
+  - {id: ncku-109-prog-01, label: 資料結構第 1 題, chapter: 21}
+  - {id: ncku-109-prog-02, label: 資料結構第 2 題, chapter: 12}
+  - {id: ncku-109-prog-03, label: 資料結構第 3 題, chapter: 24}
+  - {id: ncku-109-prog-04, label: 演算法第 1 題, chapter: 1}
+  - {id: ncku-109-prog-05, label: 演算法第 2 題, chapter: 2}
+  - {id: ncku-109-prog-06, label: 演算法第 3 題, chapter: 16}
+  - {id: ncku-109-prog-07, label: 演算法第 4 題, chapter: 18}
+  - {id: ncku-109-prog-08, label: 演算法第 5 題, chapter: 2}

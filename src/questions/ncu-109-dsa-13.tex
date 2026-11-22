@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-109-dsa-13}]{中央資工所 109 學年度 申論題第 2 題}
+（申論）
+
+(5\%) Below is the algorithm that produces all permutations of a set with n elements. Suppose the
+i-th element of the set is stored in list[i]. Please fill the two blankets to complete the algorithm.
+\begin{minted}[fontsize=\small]{c}
+void perm (char *list, int i, int n)
+{
+  int j, temp;
+  if (i==n) {
+    For (j=1; j<=n; j++)
+      Printf("%c", list[j]);
+  }
+  else {
+     For (________________) {
+        SWAP(list[i], list[j], temp); /* swap list[i] and list[j] */
+        ________________
+        SWAP(list[i], list[j], temp);
+     }
+  }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：第一格 \texttt{j = i; j <= n; j++}，第二格 \texttt{perm(list, i + 1, n);}。
+
+原題的 \texttt{For}、\texttt{Printf} 大寫是筆誤（C 分大小寫，應為 \texttt{for}、\texttt{printf}），
+「blankets」是 blanks。 元素存在 \texttt{list[1..n]}，印出時也是印 \texttt{list[1]} 到 \texttt{list[n]}，
+所以一開始的呼叫是 \texttt{perm(list, 1, n)}。
+
+\textbf{想法}。 這是資結書第~20.1~節開頭提到的「用交換產生所有排列」，也是回溯的固定形狀：做選擇、
+往下探索、撤銷。 \texttt{perm(list, i, n)} 負責決定第 $i$ 個位置放誰：\texttt{list[i..n]} 裡每一個元素
+都輪流換到第 $i$ 格（$j = i$ 時是和自己交換，也就是原來那個元素留在原地），然後遞迴處理第 $i + 1$
+格以後，回來再換回去。
+\begin{itemize}
+\item 第一格 $j$ 必須從 $i$ 開始。 從 $i + 1$ 開始的話，\texttt{list[i]} 永遠不會留在第 $i$ 格，會漏掉
+排列；從 $1$ 開始則會把前面已經決定好的元素換出來，重複又打亂。
+\item 第二格遞迴的是下一個\textbf{位置} $i + 1$，不是 $j + 1$。 遞迴到 $i = n$ 時只剩最後一格，沒有
+選擇，直接印出。
+\end{itemize}
+
+\textbf{正確性}。 對 $n - i$ 做歸納，證明：呼叫 \texttt{perm(list, i, n)} 時若 \texttt{list[i..n]} 是
+$m = n - i + 1$ 個不同的元素，它會把這 $m$ 個元素的每一種排列（前面的 \texttt{list[1..i-1]} 固定不動）
+各印恰好一次，而且返回時 \texttt{list} 和呼叫時一模一樣。
+\begin{itemize}
+\item $i = n$：只有一種排列，印一次，沒有改動陣列。
+\item $i < n$：歸納假設保證每次遞迴回來 \texttt{list} 都還原，第二個 \texttt{SWAP} 再把第 $i$ 格換回來，
+所以每一輪開始時 \texttt{list[i..n]} 都是原來的樣子。 第 $j$ 輪把原來的 \texttt{list[j]} 放到第 $i$
+格，$j = i, \ldots, n$ 這 $m$ 輪放到第 $i$ 格的元素互不相同；每一輪由歸納假設印出其餘 $m - 1$ 個元素
+的 $(m - 1)!$ 種排列各一次。 不同輪的第 $i$ 格不同，印出的排列不會重複，總共
+$m \cdot (m - 1)! = m!$ 種，就是全部。 迴圈結束時陣列也還原了。
+\end{itemize}
+取 $i = 1$，就得到 $n$ 個元素的 $n!$ 種排列各一次。
+
+\textbf{例子}。 \texttt{list[1..3]} 是 a, b, c 時，依序印出 abc、acb、bac、bca、cba、cab，共 $3! = 6$ 種。
+
+\textbf{時間}。 呼叫樹的葉子有 $n!$ 個，每個葉子印 $n$ 個字元。 剩 $k$ 個元素的內部呼叫有 $n!/k!$ 個
+（$k = 2, \ldots, n$），共 $\sum_{k=2}^{n} n!/k! < n!$ 個，每個呼叫的迴圈做 $k$ 輪、每輪常數個交換，
+加起來也不超過呼叫總數的常數倍。 總時間 $\Theta(n \cdot n!)$，由印出主導。
+\end{pastsoln}

@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ccu-110-swa-06}]{中正資工所甲組 110 學年度 第 8 題}
+（問答）
+
+(4\%) Use substitution method to find a tight asymptotic lower bound for this recurrence:\\
+$T(n)=4T(n/2)+n^2$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Omega(n^2 \lg n)$，而且是緊的，$T(n) = \Theta(n^2 \lg n)$。
+
+題目沒有寫基礎情況，照資結書第~2~章的習慣：$T(1)$ 是正的常數。 先對 $n$ 是 $2$ 的次方證明，
+最後再推到所有 $n$。
+
+\textbf{先猜}。 這是主定理情況 2 的形狀：$a = 4$、$b = 2$，$n^{\log_b a} = n^{\log_2 4} = n^2$，和
+$f(n) = n^2$ 同階（資結書第~2.4~節）。 遞迴樹每一層的總和都是 $n^2$，共 $\lg n + 1$ 層，猜
+$T(n) \ge c\, n^2 \lg n$。 題目要求用代換法證下界。
+
+\textbf{代換法}（資結書第~2.2~節）。 對 $n = 1, 2, 4, \ldots$ 做歸納，證明 $T(n) \ge c\, n^2 \lg n$，
+取 $c = 1$。
+\begin{itemize}
+\item 基礎情況 $n = 1$：右邊是 $c \cdot 1 \cdot \lg 1 = 0$，而 $T(1) > 0$，成立。
+\item $n \ge 2$：由歸納假設，
+\[
+T(n) \ge 4c \left(\frac{n}{2}\right)^2 \lg \frac{n}{2} + n^2
+= c\, n^2 (\lg n - 1) + n^2 = c\, n^2 \lg n + (1 - c)\, n^2 \ge c\, n^2 \lg n ,
+\]
+最後一步只要 $c \le 1$。
+\end{itemize}
+所以 $T(n) \ge n^2 \lg n$，$T(n) = \Omega(n^2 \lg n)$。
+
+\textbf{為什麼是緊的}。 同樣的代換可以證上界 $T(n) \le d\, n^2 \lg n + T(1)\, n^2$：
+$n = 1$ 時兩邊都是 $T(1)$；$n \ge 2$ 時
+\[
+T(n) \le 4\Bigl(d\, \frac{n^2}{4}\Bigl(\lg n - 1\Bigr) + T(1)\, \frac{n^2}{4}\Bigr) + n^2
+= d\, n^2 \lg n + T(1)\, n^2 + (1 - d)\, n^2 ,
+\]
+取 $d = 1$ 即可。 所以 $T(n) = O(n^2 \lg n)$，下界 $n^2 \lg n$ 不可能再提高。
+$T(1) = 1$ 時精確解就是 $T(n) = n^2 \lg n + n^2$，例如 $T(8) = 4 \cdot 48 + 64 = 256 = 64 \cdot 3 + 64$。
+
+\textbf{不是 $2$ 的次方的 $n$}。 把 $n/2$ 當成 $\lfloor n/2 \rfloor$ 時，對 $n$ 歸納可知 $T$ 是
+非遞減的；$g(n) = n^2 \lg n$ 也非遞減，而且 $n \ge 2$ 時 $g(2n) = 4n^2(\lg n + 1) \le 8\, g(n)$。
+由資結書定理~2.1，對 $2$ 的次方成立的 $\Theta(n^2 \lg n)$ 推到所有 $n$。
+\end{pastsoln}

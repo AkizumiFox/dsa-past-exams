@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ccu-109-swa-08}]{中正資工所甲組 109 學年度 第 13 題}
+（是非改錯）
+
+(18\%) True or false. If the statement is false, correct the wrong part. Simply negate the statement
+is not accepted. (3\% each)
+\begin{enumerate}[label=(\arabic*)]
+\item Given an array A[1\,..\,n] of integers, the running time of Counting Sort is polynomial in the
+input size n.
+\item Given an array A[1\,..\,n] of integers, the running time of Heap Sort is polynomial in the input
+size n.
+\item Depth-first search will take $\Theta$(V$^2$) time on a graph G = (V, E) represented as an
+adjacency matrix.
+\item For every dynamic program, we can assign weights to edges in the directed acyclic graph of
+dependences among subproblems, such that finding a shortest path in this DAG is equivalent to
+solving the dynamic program.
+\item If a problem X can be reduced to a known NP-hard problem, then X must be NP-hard.
+\item Using DFS to search augmenting paths in Ford-Fulkerson algorithm could reduce the time
+complexity
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) F；(2) T；(3) T；(4) F；(5) F；(6) F。
+
+\textbf{(1) F}。 計數排序的時間是 $\Theta(n + k)$，$k$ 是數值的範圍（資結書第~15.2.1~節）。 題目
+只說是整數，沒有限制大小，$k$ 可以遠大於 $n$。 例如 $n = 2$，$A = \langle 0, 2^m \rangle$：輸入只要
+大約 $m$ 個位元就寫得下，計數排序卻要開 $2^m + 1$ 格的計數陣列，時間是輸入長度的指數。 這是
+擬多項式時間（資結書第~1.9、18.5.5~節），不是多項式。 \textbf{改正}：the running time of Counting
+Sort is $\Theta(n + k)$, polynomial in $n$ and the value range $k$ (pseudo-polynomial), \textbf{not}
+polynomial in the input size。
+
+\textbf{(2) T}。 堆積排序做 $O(n \lg n)$ 次比較和交換（資結書第~14.6~節），次數和數值大小無關。
+每個整數至少佔一個位元，輸入長度 $N \ge n$，所以 $n \lg n \le N^2$。 就算把比較兩個 $b$ 位元整數
+的成本算成 $O(b)$，總時間 $O(n \lg n \cdot b)$ 也不超過 $O(N^2)$，仍是輸入長度的多項式。
+
+\textbf{(3) T}。 用鄰接矩陣時，DFS 每個頂點恰好拜訪一次（資結書虛擬碼~21.3 的外層迴圈會從每個
+還沒拜訪的頂點出發），拜訪頂點 $u$ 時要把矩陣第 $u$ 列的 $V$ 格全部看過才知道誰是鄰居。 每列
+看一次，共 $V \cdot V$ 格，再加上外層迴圈的 $\Theta(V)$，時間 $\Theta(V^2)$，和邊數無關
+（資結書第~21.2、21.4~節）。 鄰接串列才是 $\Theta(V + E)$。
+
+\textbf{(4) F}。 化成 DAG 最短路徑，要求每個子問題的遞迴式是「在幾個選擇裡取最小，每個選擇只用到
+\textbf{一個}子問題，再加上一個固定的成本」，這樣成本才能放在邊上，一條路徑只經過一個前驅。
+很多動態規劃不是這個形狀：
+\begin{itemize}
+\item 矩陣鏈乘積 $m[i, j] = \min_{i \le k < j} \bigl(m[i, k] + m[k+1, j] + p_{i-1} p_k p_j\bigr)$
+（資結書第~18.2~節）：每個選擇同時用到 $m[i, k]$ 和 $m[k+1, j]$ 兩個子問題，相依關係是「一個點
+接兩個點」的超圖，一條路徑表示不了。 最佳二元搜尋樹（資結書第~18.4~節）也一樣。
+\item 計數型的動態規劃，例如 $n$ 個節點的二元樹個數 $b_n = \sum_k b_k b_{n-1-k}$，要的是加總和乘積，
+根本不是取最小。
+\end{itemize}
+\textbf{改正}：For \textbf{some} dynamic programs (those whose recurrence takes a minimum over choices,
+each depending on a single subproblem plus a cost), we can assign weights \ldots。 這一類（例如 0/1
+背包、LCS、編輯距離）才能看成 DAG 上的最短或最長路徑。
+
+\textbf{(5) F}。 歸約的方向反了。 「$X$ 可以歸約到 $Y$」（$X \le_p Y$）表示 $Y$ 至少和 $X$ 一樣難，
+只能推出 $X$ 不比 $Y$ 難（資結書第~28.3~節）。 反例：$X$ 是「不管輸入是什麼，答案都是是」的問題。
+把每個輸入都轉成同一個可滿足的公式（例如 $x_1$），就是 $X$ 到 SAT 的多項式歸約，SAT 是 NP 難的。
+但 $X$ 不是 NP 難：SAT 有答案為否的輸入，要歸約到 $X$ 就得把它轉成 $X$ 答案為否的輸入，而 $X$ 沒有
+這種輸入，所以 SAT 不能歸約到 $X$。 \textbf{改正}：If a known NP-hard problem can be reduced to
+problem X (in polynomial time), then X must be NP-hard。 理由是歸約可以串接（資結書引理~28.3）：
+NP 裡任何問題 $\le_p$ 已知的 NP 難問題 $\le_p X$。
+
+\textbf{(6) F}。 Ford--Fulkerson 不規定怎麼找增廣路徑，整數容量時的界是 $O(E\,|f^*|)$，$|f^*|$ 是
+最大流量（資結書第~26.3~節）。 用 DFS 找路徑並沒有改進這個界：資結書第~26.3.3~節的例子裡，DFS
+可能每次都走經過中間那條容量 $1$ 的邊，一次只送 $1$，輪數和容量成正比。 能降低時間的是用
+\textbf{BFS} 找邊數最少的增廣路徑，也就是 Edmonds--Karp 演算法，時間 $O(VE^2)$，和容量無關
+（資結書第~26.4~節、定理~26.3）。 \textbf{改正}：Using \textbf{BFS} to search augmenting paths
+(the Edmonds--Karp algorithm) could reduce the time complexity to $O(VE^2)$。
+\end{pastsoln}

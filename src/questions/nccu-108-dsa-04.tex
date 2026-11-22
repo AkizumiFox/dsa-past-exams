@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:nccu-108-dsa-04}]{政大資科所 108 學年度 第 4 題}
+（問答）
+
+(10\%) Design an $O(n)$ algorithm for the following task.
+
+\quad Input: A list of $n$ positive integers $a_1,a_2,\ldots,a_n$, where each $a_i$ satisfies
+$1\le a_i\le n$.\\
+\quad Task: Sort $a_1,a_2,\ldots,a_n$ in non-decreasing order.\\
+\quad For example, if the input contains 4 integers 3, 1, 1, and 3, then the output should be 1, 1,
+3, 3.
+\end{pastexam}
+
+\begin{pastsoln}
+鍵是 $1$ 到 $n$ 的整數，正好是計數排序（資結書第~15.2.1~節）的情況，$k = n$。 這題只有整數本身、沒有
+附帶資料，所以不需要前綴和和輸出陣列：數出每個值出現幾次，再由小到大依次數寫回去就好。
+
+\begin{pseudo}[unbreakable]{值在 $1..n$ 的整數排序}
+\Procedure{Sort-Small-Integers}{$a, n$}
+    \State 建立陣列 $C[1..n]$，每一格都設成 $0$
+    \For{$j \gets 1$ \To $n$}
+        \State $C[a_j] \gets C[a_j] + 1$
+    \EndFor
+    \State $t \gets 1$ \Comment{下一個要寫的位置}
+    \For{$v \gets 1$ \To $n$}
+        \For{$c \gets 1$ \To $C[v]$}
+            \State $a_t \gets v$；$t \gets t + 1$
+        \EndFor
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{例子}。 輸入 $3, 1, 1, 3$：第 3--4 行之後 $C = [2, 0, 2, 0]$；第 6--8 行寫兩個 $1$、零個 $2$、
+兩個 $3$、零個 $4$，得到 $1, 1, 3, 3$。
+
+\textbf{正確性}。 第 3--4 行結束時，$C[v]$ 是輸入裡等於 $v$ 的個數（$1 \le a_j \le n$，所以 $C[a_j]$ 不會
+越界）。 第 6--8 行依 $v = 1, 2, \ldots, n$ 的順序，每個 $v$ 寫 $C[v]$ 次，總共寫 $\sum_v C[v] = n$ 次，剛好
+填滿 $a_1..a_n$。 寫出來的序列不遞減，而且每個值出現的次數和輸入一樣，所以它就是輸入排好的結果。
+
+\textbf{時間}。 第 2 行 $\Theta(n)$；第 3--4 行 $\Theta(n)$；第 6--8 行外層跑 $n$ 次，內層總共跑
+$\sum_v C[v] = n$ 次，合計 $\Theta(n)$。 總共 $\Theta(n)$ 時間、$\Theta(n)$ 額外空間。 它沒有違反比較排序
+$\Omega(n \lg n)$ 的下界（資結書定理~15.1），因為它拿數值當陣列索引，不是比較排序。 如果每個數還帶著別的
+資料、要求穩定，就用完整的資結書虛擬碼~15.1，$k = n$，時間一樣是 $\Theta(n)$。
+\end{pastsoln}

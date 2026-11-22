@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ncu-109-dsa-02}]{中央資工所 109 學年度 第 2 題}
+（複選；每題 5 分，全對才給分，答錯倒扣 1.25 分）
+
+If a number 9 is inserted to the end of the Min-Heap below, and the heap is being reconstructed,
+which position will the 9 go?
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Index: & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline
+Content: & 6 & 8 & 15 & 10 & 17 & 16 & 23 & 20 & 22 & 18 & 40 \\ \hline
+\end{tabular}
+\end{center}
+(A)~A[0] \qquad (B)~A[1] \qquad (C)~A[2] \qquad (D)~A[5]
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+陣列從 $0$ 開始編號，$A[i]$ 的父節點是 $A[\lfloor (i-1)/2 \rfloor]$，子節點是 $A[2i+1]$、$A[2i+2]$
+（資結書第~8.1~節用的是從 $1$ 開始的編號，父節點 $\lfloor i/2 \rfloor$，兩種只差一個位移）。 先確認
+原來的陣列是最小堆積：$A[0] = 6$ 的子節點 $8, 15$；$A[1] = 8$ 的子節點 $10, 17$；$A[2] = 15$ 的子節點
+$16, 23$；$A[3] = 10$ 的子節點 $20, 22$；$A[4] = 17$ 的子節點 $18, 40$，每個父節點都不比子節點大。
+
+插入就是放在最後一格再往上浮（資結書虛擬碼~8.2）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步驟 & $9$ 的位置 & 父節點 & 動作 \\
+\midrule
+1 & $A[11]$ & $A[5] = 16$ & $9 < 16$，交換 \\
+2 & $A[5]$ & $A[2] = 15$ & $9 < 15$，交換 \\
+3 & $A[2]$ & $A[0] = 6$ & $9 > 6$，停 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的陣列是 $6, 8, 9, 10, 17, 15, 23, 20, 22, 18, 40, 16$，$9$ 停在 $A[2]$，選 (C)。
+
+(A) $A[0]$ 要比 $6$ 小才會到根；(B) $A[1]$ 不在 $9$ 往上走的路上（$11 \to 5 \to 2 \to 0$），不可能
+停在那裡；(D) $A[5]$ 是第一次交換後的位置，$9$ 還比父節點 $15$ 小，會繼續往上。 順帶一提，如果誤用
+從 $1$ 開始的公式（父節點 $\lfloor i/2 \rfloor$），路線是 $11 \to 5 \to 2 \to 1$，比到 $A[1] = 8$ 停下，
+恰好也停在 $A[2]$；這題兩種算法答案相同，但一般不會這麼巧，作答時要先看清楚陣列從哪裡開始編號。
+\end{pastsoln}

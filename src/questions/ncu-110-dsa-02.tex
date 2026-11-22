@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncu-110-dsa-02}]{中央資工所 110 學年度 複選題第 2 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Which of the following statements about n-element AVL trees are false?
+\begin{enumerate}[label=(\Alph*)]
+\item The time complexity of deleting element with key k is O(1).
+\item The time complexity of insertion is O(log n).
+\item If the AVL tree has height = h, then n >= F$_{\text{h+1}}$ -1, where F$_{\text{h+1}}$ is the
+Fibonacci number, i.e., F$_{\text{h+1}}$=F$_{\text{h}}$+F$_{\text{h-1}}$.
+\item h$_{\text{L}}$ - h$_{\text{R}}$ should be 0, where h$_{\text{L}}$ and h$_{\text{R}}$ denote
+the height of the left subtree and the right subtree, respectively.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。 題目問的是\textbf{錯}的敘述。
+
+\textbf{(A) 錯}。 刪除要先找到鍵值 $k$，從根往下走一條路徑，AVL 樹的高度是 $\Theta(\log n)$
+（資結書定理~10.1），光是搜尋就要 $\Theta(\log n)$；刪除之後還要沿路往上檢查平衡、可能旋轉
+多次（資結書第~10.2.6~節）。 時間是 $O(\log n)$，不是 $O(1)$。
+
+\textbf{(B) 對}。 插入是往下找位置 $O(\log n)$，再往上更新高度、最多做一次單旋轉或雙旋轉
+（資結書第~10.2.3~節），共 $O(\log n)$。
+
+\textbf{(C) 對}。 令 $N(h)$ 是高度 $h$ 的 AVL 樹最少的節點數。 資結書第~10.2.2~節用單一節點
+高度為 $1$ 的定義、$F_1 = F_2 = 1$，證明 $N(h) = N(h-1) + N(h-2) + 1$、$N(h) = F_{h+2} - 1$
+（資結書定理~10.1）。 所以
+\[
+n \ge N(h) = F_{h+2} - 1 \ge F_{h+1} - 1,
+\]
+最後一步是因為費氏數遞增。 換成別的定義也不會變錯：高度從 $0$ 算時 $N(h) = F_{h+3} - 1$，
+更大；費氏數從 $F_0 = F_1 = 1$ 起算時，題目的 $F_{h+1}$ 等於這裡的 $F_{h+2}$，不等式剛好是等號
+成立的下界。 例如 $h = 4$：最少 $N(4) = 7$ 個節點，$F_5 - 1 = 4$，$7 \ge 4$。
+
+\textbf{(D) 錯}。 AVL 樹只要求每個節點的 $|h_L - h_R| \le 1$（資結書定義~10.1），差 $1$ 是允許的。
+例如根只有一個左子節點的兩個節點的樹，$h_L - h_R = 1$，仍然是 AVL 樹。 要求差為 $0$ 的話，
+只剩完美二元樹，節點數必須是 $2^h - 1$，無法支援任意次的插入。
+\end{pastsoln}

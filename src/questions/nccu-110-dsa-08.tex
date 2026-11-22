@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:nccu-110-dsa-08}]{政大資科所 110 學年度 第 8 題}
+（問答）
+
+(10\%) Consider a 500-node binary heap, whose array representation is stored in Arr.\\
+Let $p$ be a node in the binary heap.\\
+Further assume that $u$ is $p$'s child node and $u$'s key is stored at Arr[305].
+\begin{enumerate}[label=\alph*.]
+\item (5\%) How to find $p$'s key in Arr?
+\item (5\%) Does $u$ have a left child node in the binary heap? Please explain your answer.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+二元堆積是完全二元樹，依層序存在陣列裡（資結書第~7.2.1、8.1~節）。 題目沒說索引從 $0$ 還是 $1$ 開始，兩種都算，答案一樣。
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & 從 $1$ 開始：Arr[1..500] & 從 $0$ 開始：Arr[0..499] \\
+\midrule
+節點 $i$ 的父節點 & $\lfloor i/2 \rfloor$ & $\lfloor (i-1)/2 \rfloor$ \\
+節點 $i$ 的左、右孩子 & $2i$、$2i + 1$ & $2i + 1$、$2i + 2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{a.} $p$ 是 $u$ 的父節點，$p$ 的鍵在 \textbf{Arr[152]}。
+\begin{itemize}
+\item 從 $1$ 開始：$\lfloor 305/2 \rfloor = 152$。 檢查：$152$ 的孩子是 $304$、$305$，$u$ 是右孩子。
+\item 從 $0$ 開始：$\lfloor (305-1)/2 \rfloor = 152$。 檢查：$152$ 的孩子是 $305$、$306$，$u$ 是左孩子。
+\end{itemize}
+所以讀 Arr[152] 就是 $p$ 的鍵，$O(1)$ 時間，不必搜尋。
+
+\textbf{b.} \textbf{沒有}。 $u$ 的左孩子應該在
+\begin{itemize}
+\item 從 $1$ 開始：$2 \times 305 = 610$，但堆積只用到 Arr[1..500]，$610 > 500$；
+\item 從 $0$ 開始：$2 \times 305 + 1 = 611$，但只用到 Arr[0..499]，$611 > 499$。
+\end{itemize}
+左孩子的位置超出堆積的範圍，所以 $u$ 沒有左孩子（當然也沒有右孩子），$u$ 是葉節點。 一般來說，$n$ 個節點的堆積
+（從 $1$ 開始）裡，索引 $> \lfloor n/2 \rfloor = 250$ 的都是葉節點，$305 > 250$。
+\end{pastsoln}

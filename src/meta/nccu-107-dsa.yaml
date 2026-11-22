@@ -1,0 +1,17 @@
+paper: nccu-107-dsa
+volume: 1
+school: 政大
+dept: 資科所
+year: 107
+subject: 資料結構及演算法
+questions:
+  - {id: nccu-107-dsa-01, label: 第 1 題, chapter: 21}
+  - {id: nccu-107-dsa-02, label: 第 2 題, chapter: 5}
+  - {id: nccu-107-dsa-03, label: 第 3 題, chapter: 14}
+  - {id: nccu-107-dsa-04, label: 第 4 題, chapter: 14}
+  - {id: nccu-107-dsa-05, label: 第 5 題, chapter: 21}
+  - {id: nccu-107-dsa-06, label: 第 6 題, chapter: 24}
+  - {id: nccu-107-dsa-07, label: 第 7 題, chapter: 17}
+  - {id: nccu-107-dsa-08, label: 第 8 題, chapter: 8}
+  - {id: nccu-107-dsa-09, label: 第 9 題, chapter: 10}
+  - {id: nccu-107-dsa-10, label: 第 10 題, chapter: 28}

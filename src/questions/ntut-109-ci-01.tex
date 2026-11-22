@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntut-109-ci-01}]{北科大資工所 109 學年度 第 1 題（節錄 (3) 小題）}
+（簡答）
+
+Please answer the following questions shortly and concisely. It is assumed that $T(1)=d$ for some
+constant $d$. (15 pts)
+\begin{enumerate}[label=(\arabic*)]
+\setcounter{enumi}{2}
+\item Please write the following prefix expression in infix form: (3 pts)
+\[+\ /\ +\times a\ b\times c\ c+d\ e\ f\]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$(a \times b + c \times c) / (d + e) + f$。
+
+用資結書第~6.3.5~節前序求值的第一種做法：\textbf{由右往左}讀，讀到運算元就 push，讀到運算子
+就 pop 兩次，\textbf{先 pop 出來的是左邊的運算元}，接成一段再 push 回去。 堆疊裡放的是運算式，
+接的時候視優先順序加括號。
+
+由右往左，記號依序是 $f, e, d, +, c, c, \times, b, a, \times, +, /, +$：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） \\
+\midrule
+$f$ & push & $f$ \\
+$e$ & push & $f$,\ $e$ \\
+$d$ & push & $f$,\ $e$,\ $d$ \\
+$+$ & pop $d$（左）、$e$（右） & $f$,\ $d + e$ \\
+$c$ & push & $f$,\ $d + e$,\ $c$ \\
+$c$ & push & $f$,\ $d + e$,\ $c$,\ $c$ \\
+$\times$ & pop $c$、$c$ & $f$,\ $d + e$,\ $c \times c$ \\
+$b$ & push & $f$,\ $d + e$,\ $c \times c$,\ $b$ \\
+$a$ & push & $f$,\ $d + e$,\ $c \times c$,\ $b$,\ $a$ \\
+$\times$ & pop $a$（左）、$b$（右） & $f$,\ $d + e$,\ $c \times c$,\ $a \times b$ \\
+$+$ & pop $a \times b$（左）、$c \times c$（右） & $f$,\ $d + e$,\ $a \times b + c \times c$ \\
+$/$ & pop $a \times b + c \times c$（左）、$d + e$（右） & $f$,\ $(a \times b + c \times c) / (d + e)$ \\
+$+$ & pop 前一段（左）、$f$（右） & $(a \times b + c \times c) / (d + e) + f$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+讀到 $/$ 時，左右兩段的最後一個運算子都是 $+$，比 $/$ 低，兩邊都要加括號。 最外層的 $+$ 比
+$/$ 低，不必再加括號。
+
+也可以照前序的定義由左往右分段檢查：$+$ 後面接兩個運算式，第一個是 $/\;+\times a\,b\times c\,c\;+d\,e$，
+第二個是 $f$；$/$ 的左邊是 $+\times a\,b\times c\,c$（即 $a \times b + c \times c$），右邊是 $+d\,e$
+（即 $d + e$）。 和上面的結果一樣。
+\end{pastsoln}

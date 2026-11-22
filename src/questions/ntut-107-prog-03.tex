@@ -1,0 +1,158 @@
+\begin{pastexam}[label={px:ntut-107-prog-03}]{北科大資工所 107 學年度 第 3 題}
+（程式填空）
+
+\textbf{Problem 3 [30\%, each 3\%]}
+
+The following program can transfer an infix expression into a postfix expression according to the
+BODMAS (Brackets, Orders, Division, Multiplication, Addition, and Subtraction) rule that is used for
+ordering mathematical operations. In this program, suppose that brackets are not used. The
+operators include "+, $-$, *, /", and the operands consist of "a $\sim$ z". The sample inputs of
+the program are: \{\texttt{"a+b*c-d/e\^{}f", "a*b-c/d\^{}e*f+g*h"}\}, and their corresponding
+outputs are \{\texttt{"abc*+def\^{}/-", "ab*cde\^{}/f*-gh*+"}\}. Please trace this program and fill
+the 3-1$\sim$3-10 blanks with correct answers.
+
+\begin{minted}[fontsize=\small]{c}
+#include <stdio.h>
+#define SIZE 20
+typedef enum {false=0, true =1} bool;
+bool isEmpty(char stack[], int top) {
+    if (__problem 3-1__ <=-1) return true;
+    else return false;
+}
+bool push(char stack[], int *topp, char element) {
+    stack[__problem 3-2__(*topp)] = element;
+    return true;
+}
+bool pop(char stack[], int *topp, char *element) {
+    if (isEmpty(stack, (*topp))) return false;
+    (*element) = stack[(*topp)__problem 3-3__];
+    return true;
+}
+void popAll(char stack[], int *topp, char postfix[],
+            int *indexp) {
+    while (!__problem 3-4__(stack, (*topp))) {
+        postfix[(__problem 3-5__)++]
+                            =stack[(*topp)--];
+        printf("%c", postfix[(*indexp)-1]);
+    }
+}
+bool isOperand(char c) {
+    if ((c>='a')__problem 3-6__(c<='z')) return true;
+    else return false;
+}
+int opPriority(char c) {
+    if (c=='^') return 3;
+    else if (c=='*' || c=='/') return 2;
+    else if (c=='+' || c=='-') return 1;
+    else return 0;
+}
+bool shouldPopOp(char x, char y) {
+   if (opPriority(x)__problem 3-7__opPriority(y))
+       return true;
+   else return false;
+}
+void operatorProcess(char stack[], int *topp,
+                 char postfix[], int *index, char c) {
+    char elem;
+    bool nonEmpty;
+    nonEmpty = pop(stack, topp, &elem);
+    while (nonEmpty&&shouldPopOp(elem, c)) {
+        postfix[(*index)++] = elem;
+        printf("%c", __problem 3-8__);
+        nonEmpty = pop(stack, topp, &elem);
+    }
+    if (__problem 3-9__) push(stack, topp, elem);
+    push(stack, topp, c);
+}
+void operandProcess(char postfix[], int *indexp,
+                    char c) {
+    postfix[(*indexp)++] =__problem 3-10__;
+    printf("%c", c);
+}
+void infixToPostfix(char infix[], char postfix[],
+                    int size) {
+  int i=0, index=0, top=-1;
+  char stack[SIZE];
+  for (i=0; i<size; i++) {
+    if (isOperand(infix[i])) {
+      operandProcess(postfix, &index, infix[i]);
+    }
+    else {
+     operatorProcess(stack, &top, postfix,
+                     &index, infix[i]);
+    }
+  }
+  popAll(stack, &top, postfix, &index);
+}
+void test01() {
+    char infix1[] = "a+b*c-d/e^f";
+    char infix2[] = "a*b-c/d^e*f+g*h";
+    char postfix[30];
+    int size = 15;
+    infixToPostfix(infix1, postfix, size);
+    infixToPostfix(infix2, postfix, size);
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{*{5}{l}}
+\toprule
+3-1 \texttt{top} & 3-2 \texttt{++} & 3-3 \texttt{--} & 3-4 \texttt{isEmpty} & 3-5 \texttt{*indexp} \\
+3-6 \texttt{\&\&} & 3-7 \texttt{>=} & 3-8 \texttt{elem} & 3-9 \texttt{nonEmpty} & 3-10 \texttt{c} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{原題的兩個問題}。 第一，題目說運算子只有 $+$、$-$、$*$、$/$，但範例和 \texttt{opPriority} 都有
+\verb|^|（次方，優先序 $3$），照程式和範例把 \verb|^| 當成運算子。 第二，\texttt{test01} 對兩個字串都傳
+\texttt{size = 15}，但 \texttt{infix1} 只有 $11$ 個字元（陣列長度 $12$，含結尾的 \verb|'\0'|），迴圈會讀到
+\verb|infix1[11]|（\verb|'\0'|）和陣列外面的 \verb|infix1[12..14]|，是未定義行為；讀到 \verb|'\0'| 時它不是
+小寫字母，會被當成運算子送進 \texttt{operatorProcess}，把堆疊整個彈光。 要得到題目給的輸出，
+\texttt{infix1} 要傳 \texttt{11}（或用 \texttt{strlen}）。 這不影響填空的答案，下面照字串的實際長度追蹤。
+
+\textbf{堆疊的約定}（資結書第~6.1~節的陣列堆疊）：\texttt{top} 是頂端元素的索引，空堆疊時是 $-1$。
+\begin{itemize}
+\item \textbf{3-1 \texttt{top}}：\texttt{isEmpty} 收到的是 \texttt{top} 本身（不是指標），$\texttt{top} \le -1$ 就是空的。
+\item \textbf{3-2 \texttt{++}}：推入要先把 \texttt{top} 加一再存，\texttt{stack[++(*topp)]}。 空堆疊
+$\texttt{top} = -1$，第一個元素存在 \texttt{stack[0]}。 寫 \texttt{(*topp)++} 的後置形式放不進這個空格，
+而且會先寫到 \texttt{stack[-1]}。
+\item \textbf{3-3 \texttt{--}}：彈出是先讀頂端再減一，\texttt{stack[(*topp)--]}，和 \texttt{popAll} 裡的寫法一樣。
+\item \textbf{3-4 \texttt{isEmpty}}：\texttt{popAll} 在堆疊不空時一直彈，\texttt{!isEmpty(stack, (*topp))}。
+\item \textbf{3-5 \texttt{*indexp}}：\texttt{indexp} 是指向輸出位置的指標，要遞增的是它指到的整數；下一行
+\texttt{postfix[(*indexp)-1]} 也證實了這一點。 寫 \texttt{indexp} 會把指標本身加一，型別也不對。
+\item \textbf{3-6 \texttt{\&\&}}：小寫字母要同時滿足 $\ge$ \texttt{'a'} 和 $\le$ \texttt{'z'}。
+\item \textbf{3-7 \texttt{>=}}：遇到新運算子 \texttt{c} 時，堆疊頂端的運算子 \texttt{x} 優先序\textbf{大於或等於}
+\texttt{c} 就先輸出（資結書虛擬碼~6.8）。 等號是必要的：同級的 $-$、$+$ 是左結合，\texttt{a-b+c} 要先算
+\texttt{a-b}。 用範例驗證：寫成 \texttt{>} 時，第一個範例會輸出 \texttt{abc*def\^{}/-+}，第二個輸出
+\texttt{ab*cde\^{}f*/gh*+-}，都和題目給的不同；寫成 \texttt{>=} 才和題目一致。
+\item \textbf{3-8 \texttt{elem}}：剛彈出、剛寫進 \texttt{postfix} 的運算子就是 \texttt{elem}（寫成
+\texttt{postfix[(*index)-1]} 也對）。
+\item \textbf{3-9 \texttt{nonEmpty}}：迴圈結束有兩種原因。 堆疊彈空了（\texttt{nonEmpty} 是 false），什麼都
+沒拿出來；或是彈出的 \texttt{elem} 優先序比 \texttt{c} 低，不該輸出，這時 \texttt{nonEmpty} 是 true，必須把
+它推回去。 所以條件是 \texttt{nonEmpty}。
+\item \textbf{3-10 \texttt{c}}：運算元直接寫進輸出，下一行印的也是 \texttt{c}。
+\end{itemize}
+
+\textbf{追蹤第一個範例} \texttt{a+b*c-d/e\^{}f}（只列運算子）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+讀入 & 動作 & 堆疊（右邊是頂端） & 到目前的輸出 \\
+\midrule
+\texttt{+} & 堆疊空，推入 & \texttt{+} & \texttt{a} \\
+\texttt{*} & 彈出 \texttt{+}，$1 \ge 2$ 不成立，推回；推入 \texttt{*} & \texttt{+ *} & \texttt{ab} \\
+\texttt{-} & 彈出 \texttt{*}（$2 \ge 1$）、\texttt{+}（$1 \ge 1$）都輸出；推入 \texttt{-} & \texttt{-} & \texttt{abc*+} \\
+\texttt{/} & 彈出 \texttt{-}，$1 \ge 2$ 不成立，推回；推入 \texttt{/} & \texttt{- /} & \texttt{abc*+d} \\
+\verb|^| & 彈出 \texttt{/}，$2 \ge 3$ 不成立，推回；推入 \verb|^| & \verb|- / ^| & \texttt{abc*+de} \\
+結束 & \texttt{popAll} 依序彈出 \verb|^|、\texttt{/}、\texttt{-} & & \texttt{abc*+def\^{}/-} \\
+\bottomrule
+\end{tabular}
+\end{center}
+和題目給的輸出相同。 第二個範例同樣得到 \texttt{ab*cde\^{}/f*-gh*+}。 附帶一提，用 \texttt{>=} 時
+\verb|^| 也被當成左結合（\verb|a^b^c| 會輸出 \verb|ab^c^|），數學上次方通常是右結合；範例裡沒有連續
+的 \verb|^|，所以不影響本題。
+\end{pastsoln}

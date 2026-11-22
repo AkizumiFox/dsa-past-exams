@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-04}]{臺大資工所 108 學年度 第 4 題}
+（問答）
+
+(8\%) Describe how you can construct a heap of $n$ keys with $O(n)$ complexity. You can simply
+use $n=15$ as an example to explain your idea. (You don't need to prove the complexity.)
+\end{pastexam}
+
+\begin{pastsoln}
+用\textbf{由下而上建堆積}（資結書第~8.2~節，虛擬碼~8.3）。 題目沒有指定最大或最小堆積，下面
+以最小堆積說明（和第~3 題一致），最大堆積只要把比較反過來。
+
+\textbf{做法。} 把 $n$ 個鍵照任意順序放進陣列 $A[1..n]$，看成一棵完整二元樹（位置 $i$ 的子節點
+在 $2i$、$2i + 1$）。 然後 $i$ 從 $\lfloor n/2 \rfloor$ 往回到 $1$，對每個位置做一次下沉
+（\proc{Sift-Down}）：$A[i]$ 和兩個子節點中較小的比，比它大就交換，跟著往下，直到比兩個子節點
+都小或到了葉節點。
+\begin{pseudo}{由下而上建最小堆積}
+\Procedure{Build-Min-Heap}{$A, n$}
+    \For{$i \gets \lfloor n/2 \rfloor$ \DownTo $1$}
+        \State \Call{Sift-Down}{$A, i$} \Comment{下沉，和較小的子節點交換}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+為什麼對：位置 $\lfloor n/2 \rfloor + 1$ 到 $n$ 都是葉節點，本身就是堆積。 處理到位置 $i$ 時，
+它的兩棵子樹（根在 $2i$、$2i + 1$，編號比 $i$ 大）已經處理過，都是堆積，下沉一次就讓以 $i$
+為根的子樹也成為堆積。 做到 $i = 1$，整棵樹就是堆積。
+
+\textbf{以 $n = 15$ 為例。} $15$ 個節點的完整二元樹剛好四層：
+\begin{itemize}
+\item 位置 $8$--$15$（$8$ 個）是葉節點，不用處理；
+\item 位置 $7, 6, 5, 4$ 依序下沉，每個最多往下 $1$ 層；
+\item 位置 $3, 2$ 依序下沉，每個最多往下 $2$ 層；
+\item 最後位置 $1$ 下沉，最多往下 $3$ 層。
+\end{itemize}
+交換次數最多 $4 \cdot 1 + 2 \cdot 2 + 1 \cdot 3 = 11$，比 $n = 15$ 還少。 例如陣列一開始是
+$[15, 14, 13, \ldots, 1]$（每個位置都比子節點大，最不利的情形），依序處理之後：
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+下沉的位置 & 之後的陣列 \\
+\midrule
+7 & $[15, 14, 13, 12, 11, 10, \mathbf{1}, 8, 7, 6, 5, 4, 3, 2, \mathbf{9}]$ \\
+6 & $[15, 14, 13, 12, 11, \mathbf{3}, 1, 8, 7, 6, 5, 4, \mathbf{10}, 2, 9]$ \\
+5 & $[15, 14, 13, 12, \mathbf{5}, 3, 1, 8, 7, 6, \mathbf{11}, 4, 10, 2, 9]$ \\
+4 & $[15, 14, 13, \mathbf{7}, 5, 3, 1, 8, \mathbf{12}, 6, 11, 4, 10, 2, 9]$ \\
+3 & $[15, 14, \mathbf{1}, 7, 5, 3, \mathbf{2}, 8, 12, 6, 11, 4, 10, \mathbf{13}, 9]$ \\
+2 & $[15, \mathbf{5}, 1, 7, \mathbf{6}, 3, 2, 8, 12, \mathbf{14}, 11, 4, 10, 13, 9]$ \\
+1 & $[\mathbf{1}, 5, \mathbf{2}, 7, 6, 3, \mathbf{9}, 8, 12, 14, 11, 4, 10, 13, \mathbf{15}]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+粗體是那一步下沉時移動過的位置。 共交換 $11$ 次，正好是上限。
+
+\textbf{為什麼是 $O(n)$}（題目不要求證明，只說直覺）：大部分節點在底層，下沉的距離很短；要往下
+走很多層的只有上面少數幾個節點。 一般的 $n$，高度 $h$ 的節點最多 $\lceil n/2^{h+1} \rceil$ 個，
+每個下沉 $O(h)$，總和 $\sum_h h \cdot n/2^{h+1} = O(n)$（資結書定理~8.1）。 對照的做法是
+「一個一個插入」：每次插入上浮最多 $O(\lg n)$，總共 $O(n \lg n)$，不符合題目要求。
+\end{pastsoln}

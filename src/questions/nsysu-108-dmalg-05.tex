@@ -1,0 +1,129 @@
+\begin{pastexam}[label={px:nsysu-108-dmalg-05}]{中山資工所資安組 108 學年度 第 9 題}
+（追蹤）
+
+(Algorithm points)
+\begin{enumerate}[label=(\alph*)]
+\item {[6\%]} Apply Dijkstra's algorithm to the graph shown in the following Fig.~1 and determine
+the shortest distance from vertex $b$ to each of the other vertices in the graph.
+\item {[6\%]} Find a shortest path from vertex $g$ to each of the vertices $a$, $b$, and $c$.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=0.82cm,y=0.82cm,
+  p/.style={circle,fill,inner sep=1.6pt},
+  ah/.style={-{Triangle[length=2.6mm,width=2.2mm]}},
+  w/.style={font=\small\sffamily,inner sep=2pt}]
+\node[p] (a) at (0,0) {};
+\node[p] (b) at (3.6,0) {};
+\node[p] (h) at (7.6,0) {};
+\node[p] (c) at (1.6,4.1) {};
+\node[p] (f) at (5.35,4.1) {};
+\node[p] (g) at (8.35,2.4) {};
+\node[w,left=2pt] at (a) {\textit{a}};
+\node[w,below=3pt] at (b) {\textit{b}};
+\node[w,below=3pt] at (h) {\textit{h}};
+\node[w,left=2pt] at (c) {\textit{c}};
+\node[w,above right=1pt] at (f) {\textit{f}};
+\node[w,above right=1pt] at (g) {\textit{g}};
+\draw (a)--(c); \draw[ah] ($(a)!0.41!(c)$)--($(a)!0.45!(c)$) node[w,right=2pt]{6};
+\draw (b)--(c); \draw[ah] ($(b)!0.41!(c)$)--($(b)!0.45!(c)$) node[w,right=2pt]{4};
+\draw (b)--(a); \draw[ah] ($(b)!0.48!(a)$)--($(b)!0.52!(a)$) node[w,above=3pt]{3};
+\draw (b)--(h); \draw[ah] ($(b)!0.46!(h)$)--($(b)!0.50!(h)$) node[w,above=3pt]{7};
+\draw (c)--(f); \draw[ah] ($(c)!0.51!(f)$)--($(c)!0.55!(f)$) node[w,below=3pt]{6};
+\draw (c)--(h); \draw[ah] ($(c)!0.43!(h)$)--($(c)!0.47!(h)$) node[w,above=5pt,xshift=3pt]{11};
+\draw (h)--(f); \draw[ah] ($(h)!0.56!(f)$)--($(h)!0.60!(f)$) node[w,right=3pt]{9};
+\draw (f)--(g); \draw[ah] ($(f)!0.58!(g)$)--($(f)!0.62!(g)$) node[w,above=3pt,xshift=2pt]{9};
+\draw (h)--(g); \draw[ah] ($(h)!0.51!(g)$)--($(h)!0.55!(g)$) node[w,left=3pt]{4};
+\draw (f) .. controls (4.75,4.75) and (4.3,5.15) .. (3.55,5.15) to[out=180,in=55] (c);
+\draw[ah] (3.75,5.15)--(3.45,5.15) node[w,above=2pt]{7};
+\draw (f) to[out=98,in=0] (3.4,6.55) to[out=180,in=90] (-0.55,2.6) to[out=-90,in=115] (a);
+\draw[ah] (0.84,5.74)--(0.62,5.52) node[w,left=4pt]{11};
+\draw (f) to[out=-88,in=118] (5.95,2.3) to[out=-62,in=128] (h);
+\draw[ah] (5.86,2.47)--(5.97,2.26) node[w,left=4pt]{4};
+\draw (g) to[out=-40,in=90] (8.8,1.2) to[out=-90,in=12] (h);
+\draw[ah] (8.8,1.35)--(8.8,1.05) node[w,below right=0pt]{5};
+\draw (a) to[out=-30,in=180] (1.85,-0.78) to[out=0,in=-135] (b);
+\draw[ah] (1.6,-0.78)--(1.95,-0.78) node[w,below right=2pt]{5};
+\draw (h) to[out=-140,in=0] (3.6,-1.52) to[out=180,in=-35] (a);
+\draw[ah] (3.85,-1.52)--(3.5,-1.52) node[w,below=3pt]{11};
+\draw (g) to[out=-22,in=90] (9.55,0.2) to[out=-90,in=0] (5.0,-2.8) to[out=180,in=-65] (a);
+\draw[ah] (8.28,-1.9)--(8.53,-1.69);
+\node[w] at (8.0,-1.35) {17};
+\end{tikzpicture}\\ Fig. 1
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{itemize}
+\item (a) 從 $b$ 出發：$\delta(b, a) = 3$，$\delta(b, c) = 4$，$\delta(b, h) = 7$，$\delta(b, f) = 10$，
+$\delta(b, g) = 11$。
+\item (b) $g \to h \to a$（長度 $16$）；$g \to h \to a \to b$（長度 $21$）；$g \to h \to f \to c$（長度 $21$）。
+\end{itemize}
+
+\textbf{先把圖讀成邊的清單}（$u \to v$：權重）：
+$a \to b$：5，$a \to c$：6，$a \to g$：17，$b \to a$：3，$b \to c$：4，$b \to h$：7，$c \to f$：6，$c \to h$：11，
+$f \to a$：11，$f \to c$：7，$f \to g$：9，$f \to h$：4，$g \to h$：5，$h \to a$：11，$h \to f$：9，$h \to g$：4。
+$a, b$ 之間、$c, f$ 之間、$f, h$ 之間、$g, h$ 之間各有兩條方向相反、權重不同的邊，要分清楚。 權重都是正的，
+可以用 Dijkstra。
+
+\textbf{(a)} Dijkstra（資結書虛擬碼~25.3）：每一輪從還沒確定的點裡取出 $d$ 最小的 $u$，確定它的距離，再鬆弛
+$u$ 的每條出邊：$d[v] > d[u] + w(u, v)$ 時更新 $d[v]$ 和前驅 $\pi[v]$。 下表每一列是取出那個點並鬆弛之後的
+$d$ 值；框起來的是已經確定的距離。
+\begin{center}
+\begin{tabular}{clcccccc}
+\toprule
+輪 & 取出 & $a$ & $b$ & $c$ & $f$ & $g$ & $h$ \\
+\midrule
+0 & --- & $\infty$ & $0$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+1 & $b$ & $3$ & \fbox{$0$} & $4$ & $\infty$ & $\infty$ & $7$ \\
+2 & $a$ & \fbox{$3$} & & $4$ & $\infty$ & $20$ & $7$ \\
+3 & $c$ & & & \fbox{$4$} & $10$ & $20$ & $7$ \\
+4 & $h$ & & & & $10$ & $11$ & \fbox{$7$} \\
+5 & $f$ & & & & \fbox{$10$} & $11$ & \\
+6 & $g$ & & & & & \fbox{$11$} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+各輪的鬆弛：
+\begin{itemize}
+\item 取 $b$：$a \gets 3$、$c \gets 4$、$h \gets 7$。
+\item 取 $a$（$3$）：$a \to c$ 得 $9$，不比 $4$ 好；$a \to g$ 得 $3 + 17 = 20$，$g \gets 20$；$a \to b$ 的 $b$ 已確定。
+\item 取 $c$（$4$）：$c \to f$ 得 $10$，$f \gets 10$；$c \to h$ 得 $15$，不比 $7$ 好。
+\item 取 $h$（$7$）：$h \to g$ 得 $11 < 20$，$g \gets 11$；$h \to f$ 得 $16$，不比 $10$ 好；$h \to a$ 的 $a$ 已確定。
+\item 取 $f$（$10$）：$f \to g$ 得 $19$，不比 $11$ 好；其他出邊指向已確定的點。
+\item 取 $g$（$11$）：唯一的出邊 $g \to h$ 指向已確定的點。 結束。
+\end{itemize}
+最短路徑樹（前驅）：$a, c, h$ 的前驅是 $b$，$f$ 的前驅是 $c$，$g$ 的前驅是 $h$。 所以 $b \to c \to f$（$10$）、
+$b \to h \to g$（$11$）。
+
+\textbf{(b)} 從 $g$ 再跑一次 Dijkstra。 $g$ 只有一條出邊 $g \to h$。
+\begin{center}
+\begin{tabular}{clcccccc}
+\toprule
+輪 & 取出 & $a$ & $b$ & $c$ & $f$ & $g$ & $h$ \\
+\midrule
+0 & --- & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $0$ & $\infty$ \\
+1 & $g$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & \fbox{$0$} & $5$ \\
+2 & $h$ & $16$ & $\infty$ & $\infty$ & $14$ & & \fbox{$5$} \\
+3 & $f$ & $16$ & $\infty$ & $21$ & \fbox{$14$} & & \\
+4 & $a$ & \fbox{$16$} & $21$ & $21$ & & & \\
+5 & $b$ & & \fbox{$21$} & $21$ & & & \\
+6 & $c$ & & & \fbox{$21$} & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item 取 $h$（$5$）：$h \to a$ 得 $16$，$h \to f$ 得 $14$。
+\item 取 $f$（$14$）：$f \to c$ 得 $21$；$f \to a$ 得 $25$，不比 $16$ 好。
+\item 取 $a$（$16$）：$a \to b$ 得 $21$；$a \to c$ 得 $22$，不比 $21$ 好。
+\item $b$、$c$ 都是 $21$，先取哪個都一樣：$b \to c$ 得 $25$，不比 $21$ 好；$c$ 的出邊都指向已確定的點。
+\end{itemize}
+沿前驅往回走：$\pi[a] = h$，$\pi[b] = a$，$\pi[c] = f$，$\pi[f] = h$，$\pi[h] = g$。 所以最短路徑是
+\[
+g \xrightarrow{5} h \xrightarrow{11} a \;(16), \qquad
+g \xrightarrow{5} h \xrightarrow{11} a \xrightarrow{5} b \;(21), \qquad
+g \xrightarrow{5} h \xrightarrow{9} f \xrightarrow{7} c \;(21).
+\]
+到 $c$ 的另一條候選 $g \to h \to a \to c$ 長 $5 + 11 + 6 = 22$，不是最短。 $g$ 到這三點的最短路徑都是唯一的。
+\end{pastsoln}

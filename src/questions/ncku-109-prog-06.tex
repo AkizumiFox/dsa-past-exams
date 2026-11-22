@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ncku-109-prog-06}]{成大資訊聯招 109 學年度 演算法第 3 題}
+（設計）
+
+Show how the time complexity of quicksort can be made to run in $O(n\lg n)$ time. \quad (10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+快速排序本來的期望時間就是 $O(n \lg n)$（資結書定理~14.3），所以題目要的是\textbf{最壞情況}
+也是 $O(n \lg n)$。 最壞情況發生在每次都切得極偏；如果每次都用\textbf{中位數}當基準，兩邊各剩
+大約一半，而資結書第~16.3~節的 \proc{Select} 可以在最壞 $O(n)$ 時間找到中位數。 以下假設鍵
+互不相同。
+
+\begin{pseudo}{用中位數當基準的快速排序}
+\Procedure{Median-Quicksort}{$A, p, r$}
+    \If{$p < r$}
+        \State $x \gets$ \Call{Select}{$A, p, r, \lfloor (r - p + 2)/2 \rfloor$} \Comment{$A[p..r]$ 的中位數}
+        \State $q \gets$ \Call{Partition-Around}{$A, p, r, x$}
+        \State \Call{Median-Quicksort}{$A, p, q - 1$}
+        \State \Call{Median-Quicksort}{$A, q + 1, r$}
+    \EndIf
+\EndProcedure
+\end{pseudo}
+
+\proc{Select} 和 \proc{Partition-Around} 都是資結書虛擬碼~16.3 裡的程序。 範圍有
+$n = r - p + 1$ 個數，$\lfloor (r - p + 2)/2 \rfloor = \lfloor (n+1)/2 \rfloor$，就是中位數的名次。
+
+\textbf{正確性。} \proc{Select} 只在 $A[p..r]$ 裡搬動元素，不改變這一段裝的是哪些數。
+\proc{Partition-Around} 把 $x$ 換到 $A[r]$ 再做 Lomuto 分割，結束時
+$A[p..q-1] < A[q] = x < A[q+1..r]$。 之後和資結書虛擬碼~14.9 的 \proc{Quicksort}
+一樣：對 $n$ 歸納，兩邊遞迴的範圍都比 $n$ 小，由歸納假設各自排好，左邊每個數小於 $x$、右邊
+每個數大於 $x$，所以整段排好。 快速排序的正確性不依賴基準選誰，換成中位數也一樣。
+
+\textbf{時間。} 設 $T(n)$ 是 $n$ 個數時的最壞時間。 第 3 行由資結書定理~16.6 是 $O(n)$，
+第 4 行找 $x$ 的位置和分割都是 $O(n)$，合計不超過 $cn$。 $x$ 是第 $\lceil n/2 \rceil$ 小，左邊有
+$\lceil n/2 \rceil - 1 \le \lfloor n/2 \rfloor$ 個數，右邊有 $n - \lceil n/2 \rceil = \lfloor n/2
+\rfloor$ 個數。 所以
+\[
+T(n) \le 2T(\lfloor n/2 \rfloor) + cn .
+\]
+用遞迴樹看：第 $d$ 層的每個範圍不超過 $n/2^d$ 個數，同一層的範圍互不重疊，所以每一層的工作量
+加起來不超過 $cn$；範圍每往下一層至少減半，$\lfloor \lg n \rfloor + 1$ 層以內就只剩 $0$ 或 $1$
+個數。 總時間 $O(n \lg n)$，這也是主定理（資結書定理~2.4）$a = b = 2$、
+$f(n) = \Theta(n)$ 的情況 2。
+
+\textbf{補充。} 這個做法的常數很大（\proc{Select} 本身就要很多次比較），實務上不會這樣寫。 常見
+的做法是隨機選基準，只保證期望 $O(n \lg n)$；要保證最壞情況，C++ 程式庫的 introsort 在遞迴太
+深時改用堆積排序（資結書第~14.6~節最後）。 作答時寫出上面的演算法和遞迴式就夠了，
+可以加一句說明這兩種實務做法。 鍵有重複時，把分割改成三路分割（資結書第~14~章觀念題第 6 題），
+等於 $x$ 的數全部留在中間，兩邊仍然各不超過一半。
+\end{pastsoln}

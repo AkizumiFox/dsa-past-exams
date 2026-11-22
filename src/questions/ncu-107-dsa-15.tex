@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncu-107-dsa-15}]{中央資工所 107 學年度 第 15 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Below is the Maximum Contiguous Subsequence Sum Dynamic Programming (MCSSDP) algorithm returning
+the all-element sum of a \underline{\textbf{non-empty}} contiguous subsequence $S'$ of a given
+sequence $S$ such that the sum is maximum, where $S=\{s_1,\ldots,s_n\}$, $n>0$, is a sequence of
+positive or negative integers. Choose all items that all together allow $S'$ to be an
+\underline{\textbf{empty}} subsequencc, whose sum is assumed to be 0.\\
+(a)~delete both line 1 and line 2\\
+(b)~replace line 3 with $m\leftarrow\max(s_1,0)$\\
+(c)~replace line 6 with $m\leftarrow\max(m+s_i,0)$\\
+(d)~replace line 7 with $mcss\leftarrow\max(m+s_i,0)$\\
+(e)~replace line 7 with $mcss\leftarrow\max(m,s_i,0)$
+\begin{quote}
+\textbf{Algorithm} MCSSDP\\
+\textbf{Input:} a non-empty sequence $S=\{s_1,\ldots,s_n\}$, $n>0$, where $s_i$, $1\le i\le n$, is
+a positive or negative number\\
+\textbf{Output:} the maximum all-element sum of a non-empty contiguous subsequence of $S$\\
+1. \textbf{if} all elements of $S$ is negative \textbf{then}\\
+2. \qquad \textbf{return} $\max(s_1,\ldots,s_n)$\\
+3. $m\leftarrow s_1$\\
+4. $mcss\leftarrow m$\\
+5. \textbf{for} $i\leftarrow 2$ to $n$ \textbf{do}\\
+6. \quad $m\leftarrow\max(m+s_i,s_i)$\\
+7. \quad $mcss\leftarrow\max(mcss,m)$\\
+8. \textbf{return} $mcss$
+\end{quote}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(c)。
+
+\textbf{原來的演算法}就是資結書第~17.2.3~節的線性做法（虛擬碼~17.7）：$m$ 是「結尾在 $s_i$ 的非空連續
+子序列」的最大和，$mcss$ 是到目前為止所有 $m$ 的最大值。 允許空序列之後，答案變成
+$\max(0, \text{原來的答案})$。 要改的地方是：任何時候「空的」都要算一個候選，和是 $0$。
+
+\textbf{(a) 要選}。 第 1--2 行在全部是負數時回傳最大的那個負數；允許空序列時答案應該是 $0$。 例如
+$S = \langle -1 \rangle$，不刪這兩行就回傳 $-1$。
+
+\textbf{(b) 要選}。 $mcss$ 的初值來自第 3--4 行，要讓空序列的 $0$ 進得來，第 3 行要改成
+$\max(s_1, 0)$。 不改的話，$S = \langle -1 \rangle$（已經刪掉第 1--2 行）會回傳 $-1$；就算再改 (c)，
+$S = \langle -5, 3 \rangle$ 會得到 $m = -5$、$mcss = -5$，接著 $m = \max(-5 + 3, 0) = 0$、$mcss = 0$，
+漏掉了只取 $3$ 的答案 $3$。
+
+\textbf{(c) 選}。 改成 $m \gets \max(m + s_i, 0)$ 之後，$m$ 的意義變成「結尾在 $s_i$、可以是空的連續
+子序列」的最大和：接上前面的一段，或者什麼都不取（$0$）。 這和 (b) 的初值 $\max(s_1, 0)$ 是同一個意義，
+(a)(b)(c) 一起改，就是允許空序列的標準寫法（Bentley 的版本）：
+\[
+m_i = \max(m_{i-1} + s_i,\, 0), \qquad \mathit{mcss} = \max_i m_i .
+\]
+正確性：結尾在 $s_i$ 的最好選法，要嘛是空的（$0$），要嘛最後一個是 $s_i$、前面接的是結尾在 $s_{i-1}$
+的最好選法（可以是空的），所以 $m_i = \max(0, m_{i-1} + s_i)$；整個序列的最好選法一定結尾在某個 $i$
+或是空的，所以取所有 $m_i$ 的最大值。 驗算：$S = \langle -5, 3 \rangle$ 得 $m = 0, 3$，回傳 $3$；
+$S = \langle -1, -2 \rangle$ 得 $m = 0, 0$，回傳 $0$。
+
+要說明的是 (c) 其實不是非改不可。 只改 (a)(b)：$m_1 = \max(s_1, 0)$，之後第 6 行
+$m_i = s_i + \max(m_{i-1}, 0)$，從 $m_2$ 起就和原來的值一樣，是結尾在 $s_i$ 的非空最大和；$mcss$ 的初值
+$\max(s_1, 0)$ 已經含了 $0$，所以回傳的仍是 $\max(0, \text{原來的答案})$，也對。 題目要的是「一起改了
+之後允許空序列」的那組修改，(b)(c) 是把兩處「至少取一個」都換成「可以不取」的一對改法，本書選
+(a)(b)(c)；只答 (a)(b) 輸出也正確，作答時可以補一句說明。
+
+\textbf{(d) 不選}。 $mcss$ 要記住到目前為止的最大值，改成 $\max(m + s_i, 0)$ 就忘了前面的結果。 例如
+$S = \langle 5, -1, -1 \rangle$，和 (a)(b)(c) 一起改時，$i = 2$：$m = 4$、$mcss = \max(4 - 1, 0) = 3$；
+$i = 3$：$m = 3$、$mcss = \max(3 - 1, 0) = 2$，回傳 $2$，正確答案是 $5$。
+
+\textbf{(e) 不選}。 同樣沒有和舊的 $mcss$ 比。 $S = \langle 5, -1, -1 \rangle$：$i = 2$ 時
+$mcss = \max(4, -1, 0) = 4$，$i = 3$ 時 $mcss = \max(3, -1, 0) = 3$，回傳 $3$，錯。
+\end{pastsoln}

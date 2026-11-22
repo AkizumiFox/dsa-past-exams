@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-08}]{臺大資工所 109 學年度 第 8 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) A \textit{randomized} linked list sorting algorithm works as follows. We want to build
+a linked list in which the keys are in \textit{increasing order}. That is, every node has a
+\textit{smaller} key than its \textit{successor} in the list. For ease of discussion we assume
+that the keys are \textit{distinct} integers from 1 to $n$. The algorithm \textit{randomly} picks
+a key from the remaining keys, and inserts it into the list. This process repeats until all keys
+are inserted. The inserted key $k$ will \textit{skip} those at the \textit{beginning} of the list
+that are \textit{smaller} than it, and will \textit{stop} at the first key $p$ that are
+\textit{greater} than it. We then insert the key $k$ \textit{before} $p$. To ensure that all keys
+will stop we assume that initially the list has only one key, $n+1$. After we insert all keys we
+will have a sorted linked list from 1 to $n+1$.
+\begin{enumerate}[label=\arabic*.]
+\item Every inserted key will stop exactly once.
+\item The smallest key 1 will not skip any keys.
+\item The largest key $n$ will always skip $n-1$ keys.
+\item The expected number of keys that the key $i$ will skip is $\Omega(i)$.
+\item The key $i$ will skip $j$ if and only if $i>j$ and $i$ is inserted after $j$ is inserted,
+so the expected value of the total number of key comparisons is $\Theta(n^2)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：1、2、4、5。
+
+這是把鍵依隨機的順序做有序串列的插入（資結書虛擬碼~5.4），也就是串列版的插入排序。 插入 $k$ 時從頭
+往後走，每個比 $k$ 小的鍵「skip」一次，碰到第一個比 $k$ 大的鍵「stop」，兩種都各是一次比較。 串列一直
+保持遞增，所以「開頭那些比 $k$ 小的鍵」正好是\textbf{目前已經在串列裡、比 $k$ 小的全部鍵}。
+
+\begin{itemize}
+\item 1. 對。 串列最後有 $n + 1$，比每個要插入的鍵都大，所以每次插入一定會碰到一個比它大的鍵而停下；
+停下之後就插入，不會再走。 每次插入恰好 stop 一次。
+\item 2. 對。 沒有比 $1$ 小的鍵，第一個鍵就比它大，直接停。
+\item 3. 錯。 $n$ 只會 skip 已經插入的鍵。 如果 $n$ 第一個被挑到，串列裡只有 $n + 1$，它一個都不 skip。
+只有 $n$ 最後一個被插入時才 skip $n - 1$ 個，不是「always」。
+\item 4. 對。 由上面的觀察，$i$ skip $j$ 若且唯若 $j < i$ 而且 $j$ 比 $i$ 先插入。 插入順序是均勻隨機的
+排列，$i$、$j$ 兩個誰先的機率各是 $\frac{1}{2}$。 由期望值的線性性（資結書定理~A.10），$i$ skip 的期望
+個數是
+\[
+\sum_{j=1}^{i-1} \Pr[j \text{ 比 } i \text{ 先插入}] = \frac{i - 1}{2}.
+\]
+$i \ge 2$ 時 $\frac{i-1}{2} \ge \frac{i}{4}$，所以是 $\Omega(i)$（$\Omega$ 是對 $i$ 夠大時說的，$i = 1$ 時
+是 $0$ 不影響）。
+\item 5. 對。 「若且唯若」就是選項 4 用到的觀察：$j$ 先插入而且 $j < i$，$i$ 插入時 $j$ 在 $i$ 該放的
+位置前面，一定被 skip；$j > i$ 時不會被 skip（$i$ 最晚停在 $j$ 或更前面）；$j$ 比 $i$ 晚插入時，$i$
+插入那時 $j$ 還不在串列裡。 總比較次數 $=$ 全部 skip 次數 $+$ $n$ 次 stop，期望值
+\[
+\sum_{i=1}^{n} \frac{i-1}{2} + n = \frac{n(n-1)}{4} + n = \Theta(n^2).
+\]
+skip 的總次數正好是插入順序裡「前面的鍵比後面的小」的數對個數，隨機排列裡這種數對和逆序對一樣多，
+期望值都是 $\binom{n}{2}/2 = n(n-1)/4$。
+\end{itemize}
+窮舉 $n \le 6$ 的所有插入順序，每個 $i$ 的平均 skip 數都是 $(i-1)/2$，總比較次數的平均是
+$n(n-1)/4 + n$。
+\end{pastsoln}

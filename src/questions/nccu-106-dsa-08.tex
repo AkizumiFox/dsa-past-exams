@@ -1,0 +1,75 @@
+\begin{pastexam}[label={px:nccu-106-dsa-08}]{政大資科所 106 學年度 第 8 題}
+（程式設計）
+
+(10\%) Suppose we use left-child right-sibling binary tree data structure to represent general trees
+with the following tree node structure. Given the root of a tree, \texttt{root}, implement function
+\texttt{int nNode(struct TreeNode* root)} that outputs the number of nodes in the tree rooted at
+\texttt{root}.\\
+Note:
+\begin{enumerate}[label=\Alph*.,leftmargin=4em]
+\item You CANNOT use loops or jumps in your code.
+\item Since \texttt{root} is a root of a tree, \texttt{root->rightSibling == NULL}.
+\end{enumerate}
+\begin{minted}[fontsize=\small]{c}
+struct TreeNode{
+    int data;
+    struct TreeNode* leftChild;
+    struct TreeNode* rightSibling;
+};
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+左孩子右兄弟表示法（資結書第~7.2.3~節）：\texttt{leftChild} 指向第一個孩子，\texttt{rightSibling}
+指向下一個兄弟。 把每個節點的兩個指標看成二元樹的左、右孩子，整棵一般樹就變成一棵二元樹，節點
+一個不多、一個不少。 所以只要數這棵二元樹的節點數，不能用迴圈就用遞迴：
+\begin{code}{c}{數節點}
+int nNode(struct TreeNode* root){
+    if (root == NULL)
+        return 0;
+    return 1 + nNode(root->leftChild) + nNode(root->rightSibling);
+}
+\end{code}
+
+\textbf{正確性}。 對一個節點 $x$，令 $B(x)$ 是二元樹裡以 $x$ 為根的子樹，也就是 $x$ 本身、$x$ 在原樹
+的所有子孫、$x$ 後面所有的兄弟和他們的子孫。 對 $B(x)$ 的節點數用歸納法證明 \texttt{nNode(x)} 回傳
+$|B(x)|$：\texttt{x} 是 \texttt{NULL} 時 $B(x)$ 是空的，回傳 $0$；否則 $B(x)$ 由 $x$、$B(x.\mathit{leftChild})$、
+$B(x.\mathit{rightSibling})$ 三個不相交的部分組成，後兩者比 $B(x)$ 小，由歸納假設，兩個遞迴呼叫分別
+回傳它們的大小，加上 $x$ 自己的 $1$ 就是 $|B(x)|$。
+
+題目的根沒有兄弟（Note B），所以 $B(\mathit{root})$ 恰好是原樹的全部節點，\texttt{nNode(root)} 就是
+樹的節點數。 這也是 Note B 的用意：對一個有兄弟的節點呼叫這個函式，會把它右邊的兄弟子樹一起算進去，
+不是「以它為根的子樹」。
+
+\textbf{例子}。 原樹 A 有三個孩子 B、C、D，B 有孩子 E、F，D 有孩子 G。 轉成二元樹：A 的左孩子是 B；
+B 的左孩子是 E、右孩子是 C；E 的右孩子是 F；C 的右孩子是 D；D 的左孩子是 G。
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,v/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small}]
+\begin{scope}
+\node[v] (A) at (0,0) {A};
+\node[v] (B) at (-1.2,-1.1) {B}; \node[v] (C) at (0,-1.1) {C}; \node[v] (D) at (1.2,-1.1) {D};
+\node[v] (E) at (-1.7,-2.2) {E}; \node[v] (F) at (-0.7,-2.2) {F}; \node[v] (G) at (1.2,-2.2) {G};
+\draw (A)--(B) (A)--(C) (A)--(D) (B)--(E) (B)--(F) (D)--(G);
+\node[font=\small] at (0,-3) {原樹};
+\end{scope}
+\begin{scope}[xshift=5cm]
+\node[v] (A) at (0,0) {A};
+\node[v] (B) at (-0.8,-0.8) {B};
+\node[v] (E) at (-1.6,-1.6) {E}; \node[v] (C) at (0,-1.6) {C};
+\node[v] (F) at (-0.8,-2.4) {F}; \node[v] (D) at (0.8,-2.4) {D};
+\node[v] (G) at (0,-3.2) {G};
+\draw (A)--(B) (B)--(E) (B)--(C) (E)--(F) (C)--(D) (D)--(G);
+\node[font=\small] at (2.2,-1.2) {二元樹};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\texttt{nNode} 在二元樹上：$\mathrm{F}, \mathrm{G}$ 各回傳 $1$；E 回傳 $1 + 0 + 1 = 2$；D 回傳
+$1 + 1 + 0 = 2$；C 回傳 $1 + 0 + 2 = 3$；B 回傳 $1 + 2 + 3 = 6$；A 回傳 $1 + 6 + 0 = 7$，正是原樹的
+$7$ 個節點。
+
+\textbf{複雜度}。 每個節點被呼叫一次，每個 \texttt{NULL} 指標也被呼叫一次（共 $n + 1$ 個），時間
+$\Theta(n)$。 遞迴深度是二元樹的高度，最壞（例如一個節點有 $n - 1$ 個孩子）是 $\Theta(n)$。
+
+程式裡的 \texttt{if} 是條件判斷，不是題目禁止的跳躍（\texttt{goto}）。 不想寫 \texttt{if} 也可以寫成
+\texttt{return root ? 1 + nNode(root->leftChild) + nNode(root->rightSibling) : 0;}。
+\end{pastsoln}

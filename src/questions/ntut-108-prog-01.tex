@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntut-108-prog-01}]{北科大資工所 108 學年度 第 1 題（節錄 1-10 小題）}
+（程式追蹤）
+
+\textbf{Problem 1 [20\%, each 2\%]}
+
+Given the program below in C. Please trace the program and fill the \textbf{1-1$\sim$1-10} blanks
+with the printf output of each statement.
+
+（原題是一整個 C 程式，有 \texttt{f1} 到 \texttt{f8} 八個函式、1-1 到 1-10 十格，1-1 到 1-9 考
+的是 C 語法。 這裡只收 1-10，程式只列出和它有關的部分，其餘以 \texttt{...} 表示。）
+\begin{minted}[fontsize=\small, breaklines]{c}
+#include <stdio.h>
+#include <string.h>
+...
+int f8(int n) {
+   if (n < 2)
+      return n;
+   return f8(n-1) + f8(n-2);
+}
+
+int main(int argc, char *argv[]) {
+   ...
+   printf("%d\n", f8(6));                 /*   Problem 1-10  */
+   return 0;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：\texttt{8}。
+
+\texttt{f8(n)} 在 $n < 2$ 時回傳 $n$，否則回傳前兩項的和，正是費氏數 $F_n$：$F_0 = 0$、$F_1 = 1$、
+$F_n = F_{n-1} + F_{n-2}$。 遞迴是由上往下展開，但值是由下往上決定的，手算時從小的參數往上填
+最快：
+\begin{center}
+\begin{tabular}{c|ccccccc}
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+\texttt{f8(n)} & 0 & 1 & 1 & 2 & 3 & 5 & \textbf{8} \\
+\end{tabular}
+\end{center}
+例如 \texttt{f8(2)} 呼叫 \texttt{f8(1)}、\texttt{f8(0)}，得 $1 + 0 = 1$；\texttt{f8(6)} $=$
+\texttt{f8(5)} $+$ \texttt{f8(4)} $= 5 + 3 = 8$。 印出 \texttt{8} 再換行。
+
+這個寫法很慢：令 $c(n)$ 是算 \texttt{f8(n)} 的呼叫次數（含自己），$c(0) = c(1) = 1$，
+$c(n) = 1 + c(n-1) + c(n-2)$，得 $c(2), \ldots, c(6) = 3, 5, 9, 15, 25$，\texttt{f8(6)} 一共呼叫
+$25$ 次，同一個參數被算了很多遍。 呼叫次數和費氏數一樣以指數成長，資結書第~18.1.1~節用記憶化
+或填表改成線性時間。 執行期間，呼叫堆疊最深是 \texttt{f8(6)}、\texttt{f8(5)}、\ldots、
+\texttt{f8(1)} 這 $6$ 層（資結書第~6.4~節：每一層呼叫在堆疊上佔一個框）。
+\end{pastsoln}

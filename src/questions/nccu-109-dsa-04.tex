@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:nccu-109-dsa-04}]{政大資科所 109 學年度 第 4 題}
+（問答）
+
+(20 points) Given an $m\times n$ matrix $M$ of real numbers, find a \textit{maximum sum submatrix} of
+$M$. The maximum sum submatrix of $M$ is a submatrix of $M$ with the largest sum. Describe your
+algorithm in C or pseudo code and show its time complexity.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{解讀}。 這裡的子矩陣指\textbf{連續}的一塊：選第 $t..b$ 列、第 $l..r$ 行（$t \le b$，$l \le r$），
+是最大連續子序列和的二維版本。 子矩陣至少有一格（全部是負數時答案是最大的那一格）。 不妨設 $m \le n$，
+否則先轉置。
+
+\textbf{想法}。 固定上下兩列 $t \le b$ 之後，令
+\[
+S[c] = \sum_{i=t}^{b} M[i, c] \qquad (1 \le c \le n),
+\]
+上下界是 $t..b$ 的子矩陣的和，就是 $S$ 的一段連續子序列 $S[l..r]$ 的和。 所以對每一對 $(t, b)$，在 $S$ 上
+用資結書第~17.2.3~節的線性做法（Kadane）求最大的連續子序列和，再取所有 $(t, b)$ 裡最大的。 $S$ 不必每次
+重算：$t$ 固定、$b$ 加一時，每個 $S[c]$ 加上 $M[b, c]$ 就好。
+
+\begin{pseudo}{最大和子矩陣}
+\Function{Max-Submatrix}{$M, m, n$}
+    \State $\mathit{best} \gets -\infty$
+    \For{$t \gets 1$ \To $m$}
+        \State $S[1..n] \gets 0$
+        \For{$b \gets t$ \To $m$}
+            \For{$c \gets 1$ \To $n$}
+                \State $S[c] \gets S[c] + M[b, c]$ \Comment{$S[c] = M[t..b, c]$ 的和}
+            \EndFor
+            \State $\mathit{cur} \gets 0$；$l \gets 1$
+            \For{$c \gets 1$ \To $n$} \Comment{Kadane：結尾在 $c$ 的最大和}
+                \If{$\mathit{cur} \le 0$}
+                    \State $\mathit{cur} \gets S[c]$；$l \gets c$ \Comment{從 $c$ 重新開始}
+                \Else
+                    \State $\mathit{cur} \gets \mathit{cur} + S[c]$
+                \EndIf
+                \If{$\mathit{cur} > \mathit{best}$}
+                    \State $\mathit{best} \gets \mathit{cur}$；$\mathit{ans} \gets (t, b, l, c)$
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \Return $(\mathit{best}, \mathit{ans})$ \Comment{$\mathit{ans}$：上、下、左、右}
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。
+\begin{itemize}
+\item 每個子矩陣都有唯一的上下界 $(t, b)$，它的和等於 $S[l..r]$ 的和（$S$ 是那一對 $(t, b)$ 的行和），所以
+「所有子矩陣的最大和」$=$ $\max_{t \le b}$（$S$ 的最大非空連續子序列和）。
+\item 內層 Kadane：$\mathit{cur}$ 是「結尾在 $c$ 的非空連續子序列的最大和」。 結尾在 $c$ 的最佳子序列，不是只有
+$S[c]$，就是結尾在 $c - 1$ 的最佳子序列再接上 $S[c]$；前者較好若且唯若結尾在 $c - 1$ 的最大和 $\le 0$，
+這正是第 10--13 行。 每個 $c$ 都和 $\mathit{best}$ 比過，所以 $S$ 的最大非空連續和會被記下（資結書第~17.2.3~節）。
+\item 第 6--7 行維持 $S[c] = \sum_{i=t}^{b} M[i, c]$：$b = t$ 前 $S$ 是 $0$，每次 $b$ 加一就加上第 $b$ 列。
+\end{itemize}
+
+\textbf{時間}。 $(t, b)$ 有 $m(m+1)/2$ 對，每一對做兩個長度 $n$ 的迴圈，$O(n)$。 總共 $O(m^2 n)$；在 $m \le n$
+的約定下是 $O(\min(m,n)^2 \cdot \max(m,n))$，方陣 $n \times n$ 時是 $O(n^3)$。 額外空間 $O(n)$。 對照：直接列舉
+所有子矩陣有 $\Theta(m^2 n^2)$ 個，每個再加總要更久；用二維前綴和可以 $O(1)$ 算一個子矩陣的和，但列舉仍要
+$\Theta(m^2 n^2)$。
+
+\textbf{例子}。
+$M = \begin{bmatrix} 1 & -2 & 3 \\ -4 & 5 & 6 \\ 7 & -8 & -9 \end{bmatrix}$。 $t = 1$、$b = 2$ 時
+$S = \langle -3, 3, 9 \rangle$，Kadane 得到 $3 + 9 = 12$（$l = 2$、$c = 3$）。 其他 $(t, b)$ 都不超過 $12$
+（例如 $t = b = 2$ 時 $S = \langle -4, 5, 6 \rangle$，最大 $11$）。 答案是第 $1$--$2$ 列、第 $2$--$3$ 行，
+和 $-2 + 3 + 5 + 6 = 12$。
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:nsysu-108-dmalg-02}]{中山資工所資安組 108 學年度 第 4 題}
+（計算）
+
+\begin{enumerate}[label=(\alph*)]
+\item {[5\%]} Consider an $9\times 9$ chessboard. It contains eighty-one $1\times 1$ squares and one
+$9\times 9$ square. How many $3\times 3$ squares?
+\item {[5\%]} Now consider an $n\times n$ chessboard for some fixed $n\in\mathbf{Z}^+$. For
+$1\le k\le n$, how many $k\times k$ squares are contained in this chessboard?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $49$；(b) $(n - k + 1)^2$。
+
+這是離散數學的計數題（資結書附錄~A.2~節的求和也會用到）。 一個 $k \times k$ 的正方形由它左上角那一格的位置
+決定，數左上角有幾種放法就好。
+
+\textbf{(b)} 先做一般的情況。 把棋盤的列、行都編號 $1$ 到 $n$。 $k \times k$ 正方形的左上角在第 $r$ 列、第
+$c$ 行時，它占第 $r$ 到 $r + k - 1$ 列，要在棋盤裡就得 $r + k - 1 \le n$，所以 $r$ 可以是
+$1, 2, \ldots, n - k + 1$，共 $n - k + 1$ 種；$c$ 也一樣。 列和行獨立選，乘法原理得
+\[
+(n - k + 1)^2
+\]
+個 $k \times k$ 正方形。 不同的左上角給出不同的正方形，每個正方形也只有一個左上角，所以沒有重複也沒有遺漏。
+
+檢查題目給的兩個數：$n = 9$、$k = 1$ 時 $9^2 = 81$；$k = 9$ 時 $1^2 = 1$。 都對。
+
+\textbf{(a)} $n = 9$、$k = 3$：$(9 - 3 + 1)^2 = 7^2 = 49$。
+
+附帶一提，$9 \times 9$ 棋盤裡所有大小的正方形共有
+$\sum_{k=1}^{9} (10 - k)^2 = 1^2 + 2^2 + \cdots + 9^2 = \frac{9 \cdot 10 \cdot 19}{6} = 285$ 個。
+\end{pastsoln}

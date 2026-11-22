@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ntust-109-ice-01}]{臺科大資工所 109 學年度 第 1 題}
+（問答）
+
+Give the infix form of the following postfix expression? (Include parentheses as needed please.)
+(4\%)
+
+\quad $AB+CD+EF-*/$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$(A+B)/((C+D)*(E-F))$。
+
+後序式從左到右掃描，和求值（資結書第~6.3.2~節、虛擬碼~6.7）的做法一樣，只是堆疊裡放的不是數值，
+而是「子運算式的中序寫法」：遇到運算元就推入；遇到運算子就彈出兩個，\textbf{先彈出的是右運算元}，
+組成「左 運算子 右」再推回去。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） \\
+\midrule
+$A$ & 推入 & $A$ \\
+$B$ & 推入 & $A,\ B$ \\
+$+$ & 彈出 $B$、$A$，組成 $A+B$ & $A+B$ \\
+$C$ & 推入 & $A+B,\ C$ \\
+$D$ & 推入 & $A+B,\ C,\ D$ \\
+$+$ & 彈出 $D$、$C$，組成 $C+D$ & $A+B,\ C+D$ \\
+$E$ & 推入 & $A+B,\ C+D,\ E$ \\
+$F$ & 推入 & $A+B,\ C+D,\ E,\ F$ \\
+$-$ & 彈出 $F$、$E$，組成 $E-F$ & $A+B,\ C+D,\ E-F$ \\
+$*$ & 彈出 $E-F$、$C+D$，組成乘積 & $A+B,\ (C+D)*(E-F)$ \\
+$/$ & 彈出乘積、$A+B$，組成商 & $(A+B)/((C+D)*(E-F))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+掃描完堆疊只剩一個，就是答案。
+
+\textbf{括號怎麼加}。 組合時，子運算式最外層運算子的優先順序比新的運算子低，就要加括號：
+\begin{itemize}
+\item $*$ 的兩邊是 $C+D$ 和 $E-F$，加減比乘低，兩邊都要括號：$(C+D)*(E-F)$。
+\item $/$ 的左邊是 $A+B$，比除低，要括號。 右邊的 $(C+D)*(E-F)$ 和 $/$ 同一級，但它在\textbf{右邊}：
+乘除由左往右結合，寫成 $(A+B)/(C+D)*(E-F)$ 會被讀成 $\bigl((A+B)/(C+D)\bigr)*(E-F)$，意思不同，
+所以右邊這層括號不能省。
+\end{itemize}
+要檢查，可以把答案轉回後序（資結書虛擬碼~6.8）：$(A+B)$ 是 $AB+$，$(C+D)*(E-F)$ 是
+$CD+EF-*$，再接 $/$，得到 $AB+CD+EF-*/$，和題目相同。
+\end{pastsoln}

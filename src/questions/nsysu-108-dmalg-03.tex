@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:nsysu-108-dmalg-03}]{中山資工所資安組 108 學年度 第 7 題}
+（計算）
+
+(Algorithm points) In each of the following, $f:\mathbf{Z}^+\to\mathbf{R}$. Solve for $f(n)$ relative
+to the given set $S$, and determine the appropriate \textbackslash big-Oh" form for $f$ on $S$.
+\begin{enumerate}[label=(\alph*)]
+\item {[5\%]} $f(1)=5, f(n)=6f\left(\frac{n}{3}\right)+6, n=3,9,27,\ldots, S=\{3^i|i\in\mathbf{N}\}$.
+\item {[5\%]} $f(1)=7, f(n)=f\left(\frac{n}{6}\right)+8, n=5,25,125,\ldots, S=\{5^i|i\in\mathbf{N}\}$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $f(n) = \dfrac{31\, n^{\log_3 6} - 6}{5}$，$f \in O(n^{\log_3 6})$（$\log_3 6 \approx 1.63$）；
+(b) $f(n) = 8\log_5 n + 7$，$f \in O(\log n)$。
+
+原卷的「\textbackslash big-Oh"」是排版殘留，意思是 big-Oh。 (b) 的 $f(n/6)$ 和 $n = 5, 25, 125, \ldots$、
+$S = \{5^i\}$ 不合：$n/6$ 不在 $S$ 裡（$5/6$ 連整數都不是），遞迴式接不到 $f(1)$。 這題出自 Grimaldi 的離散數學
+課本，原題是 $f(n) = f(n/5) + 8$，下面照 $f(n/5)$ 作答。
+
+\textbf{(a)} 令 $n = 3^i$，$a_i = f(3^i)$，遞迴式變成 $a_i = 6a_{i-1} + 6$，$a_0 = 5$。 反覆代入：
+\begin{align*}
+a_i &= 6a_{i-1} + 6 = 6^2 a_{i-2} + 6 \cdot 6 + 6 = \cdots\\
+&= 6^i a_0 + 6(6^{i-1} + 6^{i-2} + \cdots + 1) = 5 \cdot 6^i + 6 \cdot \frac{6^i - 1}{5}
+= \frac{31 \cdot 6^i - 6}{5}.
+\end{align*}
+檢查：$a_0 = (31 - 6)/5 = 5$，$a_1 = 6 \cdot 5 + 6 = 36 = (186 - 6)/5$，$a_2 = 6 \cdot 36 + 6 = 222 =
+(1116 - 6)/5$。 換回 $n$：$i = \log_3 n$，$6^i = 6^{\log_3 n} = n^{\log_3 6}$（兩邊取 $\log_3$ 都是
+$\log_3 n \cdot \log_3 6$），所以
+\[
+f(n) = \frac{31\, n^{\log_3 6} - 6}{5}, \qquad f \in O(n^{\log_3 6}) \text{ on } S .
+\]
+和主定理（資結書定理~2.4）一致：$a = 6$、$b = 3$，$n^{\log_3 6}$ 比 $f$ 的加項 $6 = \Theta(1)$ 大，是情況 1。
+
+\textbf{(b)}（照 $f(n/5)$）令 $n = 5^i$，$b_i = f(5^i)$，$b_i = b_{i-1} + 8$，$b_0 = 7$，每次加 $8$：
+\[
+b_i = 7 + 8i, \qquad f(n) = 8\log_5 n + 7, \qquad f \in O(\log n) \text{ on } S .
+\]
+檢查：$f(5) = 7 + 8 = 15$，$f(25) = 15 + 8 = 23 = 7 + 16$。 對數的底只差常數倍，寫 $O(\log_5 n)$ 或
+$O(\lg n)$ 都一樣。 這是二分搜尋型的遞迴式，主定理情況 2（$a = 1$、$b = 5$、$n^{\log_5 1} = 1$）。
+\end{pastsoln}

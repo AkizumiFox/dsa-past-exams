@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncu-107-dsa-14}]{中央資工所 107 學年度 第 14 題}
+（單選；每題 5 分，答錯倒扣一分）
+
+A hash function maps a key into a bucket in the hash table. Which of the following statements is
+false?
+\begin{enumerate}[label=(\alph*)]
+\item A Biased use of the hash table is not a desired property of hash functions.
+\item A division hash function with divisor $D=2^r$, where $r$ is an integer, may result in
+serious collision.
+\item Doubling hash table (i.e., rebuild the hash table by doubling the number of table buckets)
+may result in key search suspended for unacceptable long periods while the rebuild is in progress.
+\item Dynamic hash reduces the table rebuild time by ensuring a small amount of rebuild changes
+\item When chaining is used to resolve overflows, the search for a key involves comparison with
+keys that have different hash values.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (e)。 題目問哪一個是\textbf{錯}的。
+
+\begin{itemize}
+\item (a) 對。 雜湊函數要把鍵盡量平均分到每個桶（資結書第~12.1~節的簡單均勻雜湊）。 偏向某些桶
+（biased use）會讓那些桶的串列變長或探測變多，搜尋變慢，不是想要的性質。
+\item (b) 對。 除法 $h(k) = k \bmod 2^r$ 只取 $k$ 最低的 $r$ 個位元，高位元完全沒用到（資結書第~12.1~節）。
+例如鍵都是 $2^r$ 的倍數時，全部落在第 $0$ 個桶；低位元規律相同的鍵（例如都是偶數、結尾相同的編號）
+也會擠在少數幾個桶裡。
+\item (c) 對。 表加倍（再雜湊，資結書第~12.5~節）時要配置新表，把舊表的每一個鍵重新算雜湊值、搬進新表，
+一次要 $\Theta(n + m)$。 平攤下來每次插入是 $O(1)$，但搬的那一次很久；表很大或在磁碟上時，搬動期間搜尋
+得等，暫停時間可能長到不能接受。
+\item (d) 對。 動態雜湊（例如資結書第~12.5~節的可延伸雜湊）一次只拆一個桶、只搬那個桶裡的鍵，目錄加倍時也
+只複製指標，每次重建只改動一小部分，這正是它要解決 (c) 的問題。
+\item (e) \textbf{錯}。 鏈結法（資結書第~12.2~節）把雜湊值相同的鍵放在同一條串列，搜尋鍵 $k$ 時只走
+$T[h(k)]$ 那一條，比較的都是\textbf{雜湊值和 $k$ 相同}的鍵，不會和雜湊值不同的鍵比較。 會和不同雜湊值的
+鍵比較的是開放定址，例如線性探測時 $k$ 會一路比過被別的鍵佔走的格子（資結書第~12.3~節）。
+\end{itemize}
+\end{pastsoln}

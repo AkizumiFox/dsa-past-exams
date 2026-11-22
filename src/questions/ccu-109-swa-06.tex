@@ -1,0 +1,92 @@
+\begin{pastexam}[label={px:ccu-109-swa-06}]{中正資工所甲組 109 學年度 第 11 題}
+（追蹤）
+
+(4\%) Please write down the final result of failure array obtained by the following Program (i.e.,
+fail function) for each of the following patterns (i.e., pat).
+\begin{enumerate}[label=(\alph*)]
+\item a b a a b a a b
+\item a b c a b a b c a b c
+\end{enumerate}
+\begin{minted}[fontsize=\small, style=perldoc]{c}
+void fail (char *pat, int *failure)
+{
+  int i, j, n = strlen(pat);
+  failure[0] = -1;
+  for(j = 1; j<n; j++)
+  {
+    i = failure[j-1];
+    while (pat[j] != pat[i+1] && (i >= 0))
+      i = failure[i];
+    failure[j] = (pat[j] == pat[i+1]) ? (i+1) : -1;
+  }
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{l*{11}{c}}
+\toprule
+$j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+(a) \texttt{pat[j]} & a & b & a & a & b & a & a & b \\
+(a) \texttt{failure[j]} & $-1$ & $-1$ & $0$ & $0$ & $1$ & $2$ & $3$ & $4$ \\
+\midrule
+(b) \texttt{pat[j]} & a & b & c & a & b & a & b & c & a & b & c \\
+(b) \texttt{failure[j]} & $-1$ & $-1$ & $-1$ & $0$ & $1$ & $0$ & $1$ & $2$ & $3$ & $4$ & $2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{這個程式的失敗函數是什麼}。 索引從 $0$ 開始，\texttt{failure[j]} 是
+\texttt{pat[0..j]} 最長的真邊界（既是真前綴又是後綴的字串）的\textbf{最後一個位置}，也就是邊界長度
+減 $1$；沒有邊界時是 $-1$。 它等於資結書第~27.3~節的 $\pi[j+1] - 1$。 迴圈的想法和資結書
+虛擬碼~27.3 一樣：先試著把上一格的邊界 \texttt{pat[0..i]} 延長一個字元（比 \texttt{pat[j]} 和
+\texttt{pat[i+1]}）；接不上就退到次長的邊界 \texttt{i = failure[i]} 再試，退到 $i = -1$ 為止。
+\texttt{while} 條件先比字元再看 $i \ge 0$，$i = -1$ 時比的是 \texttt{pat[0]}，不會越界。
+
+\textbf{(a)} \texttt{abaabaab}，每一格的計算（$i$ 欄是退的過程）：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$j$ & \texttt{pat[j]} & $i$ & 結果 \\
+\midrule
+1 & b & $-1$ & \texttt{pat[0]} $=$ a $\ne$ b，$-1$ \\
+2 & a & $-1$ & \texttt{pat[0]} $=$ a，$0$ \\
+3 & a & $0 \to -1$ & \texttt{pat[1]} $=$ b $\ne$ a，退到 $-1$；\texttt{pat[0]} $=$ a，$0$ \\
+4 & b & $0$ & \texttt{pat[1]} $=$ b，$1$ \\
+5 & a & $1$ & \texttt{pat[2]} $=$ a，$2$ \\
+6 & a & $2$ & \texttt{pat[3]} $=$ a，$3$ \\
+7 & b & $3$ & \texttt{pat[4]} $=$ b，$4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $j = 7$：\texttt{pat[0..7]} $=$ \texttt{abaabaab} 最長的真邊界是 \texttt{abaab}（長度 $5$），
+\texttt{failure[7]} $= 4$。
+
+\textbf{(b)} \texttt{abcababcabc}：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$j$ & \texttt{pat[j]} & $i$ & 結果 \\
+\midrule
+1 & b & $-1$ & \texttt{pat[0]} $=$ a $\ne$ b，$-1$ \\
+2 & c & $-1$ & \texttt{pat[0]} $=$ a $\ne$ c，$-1$ \\
+3 & a & $-1$ & \texttt{pat[0]} $=$ a，$0$ \\
+4 & b & $0$ & \texttt{pat[1]} $=$ b，$1$ \\
+5 & a & $1 \to -1$ & \texttt{pat[2]} $=$ c $\ne$ a，退到 \texttt{failure[1]} $= -1$；\texttt{pat[0]} $=$ a，$0$ \\
+6 & b & $0$ & \texttt{pat[1]} $=$ b，$1$ \\
+7 & c & $1$ & \texttt{pat[2]} $=$ c，$2$ \\
+8 & a & $2$ & \texttt{pat[3]} $=$ a，$3$ \\
+9 & b & $3$ & \texttt{pat[4]} $=$ b，$4$ \\
+10 & c & $4 \to 1$ & \texttt{pat[5]} $=$ a $\ne$ c，退到 \texttt{failure[4]} $= 1$；\texttt{pat[2]} $=$ c，$2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$j = 10$ 是唯一退了之後又接上的地方：\texttt{pat[0..9]} $=$ \texttt{abcababcab} 的最長邊界
+\texttt{abcab} 接不上 c，退到它的最長邊界 \texttt{ab}，\texttt{ab} 後面是 c，接上得 \texttt{abc}，
+長度 $3$，\texttt{failure[10]} $= 2$。
+\end{pastsoln}

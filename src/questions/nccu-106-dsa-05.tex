@@ -1,0 +1,64 @@
+\begin{pastexam}[label={px:nccu-106-dsa-05}]{政大資科所 106 學年度 第 5 題}
+（問答）
+
+(10\%) Design an algorithm of running time $O(nt)$ for the following task.
+
+\hspace*{1.5em}Input: A set $S$ of $n$ positive integers $S=\{a_1,a_2,\ldots,a_n\}$; a positive
+integer $t$.\\
+\hspace*{1.5em}Question: Does some subset of $S$ add up to $t$? (You can use each $a_i$ at most
+once.)\\
+\hspace*{1.5em}Hint: Dynamic programming.
+\end{pastexam}
+
+\begin{pastsoln}
+這是子集合和問題，做法和 0/1 背包（資結書第~18.5~節）一樣，只是不用算價值，只記「做不做得到」。
+
+\textbf{子問題}。 對 $0 \le i \le n$、$0 \le s \le t$，令
+\[
+R[i, s] = \TRUE \iff \{a_1, \ldots, a_i\} \text{ 有一個子集合的和恰好是 } s.
+\]
+答案是 $R[n, t]$。
+
+\textbf{遞迴式}。 $i = 0$ 時只有空集合，和是 $0$：$R[0, 0] = \TRUE$，$R[0, s] = \FALSE$（$s > 0$）。
+$i \ge 1$ 時，看 $a_i$ 用不用：不用 $a_i$，要 $\{a_1, \ldots, a_{i-1}\}$ 湊出 $s$；用 $a_i$（必須
+$a_i \le s$），要 $\{a_1, \ldots, a_{i-1}\}$ 湊出 $s - a_i$。 每個數最多用一次，所以兩種情況都只
+回到前 $i - 1$ 個數：
+\[
+R[i, s] = R[i-1, s] \;\lor\; \bigl(a_i \le s \;\land\; R[i-1, s - a_i]\bigr).
+\]
+
+\begin{pseudo}[unbreakable]{子集合和}
+\Function{Subset-Sum}{$a, n, t$}
+    \State $R[0, 0] \gets \TRUE$
+    \For{$s \gets 1$ \To $t$}
+        \State $R[0, s] \gets \FALSE$
+    \EndFor
+    \For{$i \gets 1$ \To $n$}
+        \For{$s \gets 0$ \To $t$}
+            \State $R[i, s] \gets R[i-1, s]$ \Comment{不用 $a_i$}
+            \If{$a_i \le s$ \AND $R[i-1, s - a_i]$}
+                \State $R[i, s] \gets \TRUE$ \Comment{用 $a_i$}
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return $R[n, t]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 對 $i$ 用歸納法證明 $R[i, s]$ 符合定義。 $i = 0$ 由第 2--4 行成立。 設第 $i - 1$
+列都對。 若 $\{a_1, \ldots, a_i\}$ 有子集合 $A$ 的和是 $s$：$a_i \notin A$ 時 $A \subseteq \{a_1,
+\ldots, a_{i-1}\}$，$R[i-1, s] = \TRUE$；$a_i \in A$ 時 $A - \{a_i\}$ 的和是 $s - a_i \ge 0$
+（數都是正的），$R[i-1, s - a_i] = \TRUE$。 兩種情況第 7--9 行都會把 $R[i, s]$ 設成 \TRUE。 反過來，
+第 7 行設成 \TRUE 時，前 $i - 1$ 個數的那個子集合就是答案；第 9 行設成 \TRUE 時，和為 $s - a_i$ 的
+子集合加上 $a_i$ 就是答案。 所以 $R[i, s]$ 是 \TRUE 若且唯若做得到。 計算第 $i$ 列只用到第 $i - 1$
+列，第 5 行由上往下算，用到的值都已經算好。
+
+\textbf{時間}。 表格有 $(n + 1)(t + 1)$ 格，每格 $O(1)$，共 $O(nt)$。 空間也是 $O(nt)$；只要答案
+的話可以只留一列、$s$ 由大到小更新（資結書第~18.5.4~節），空間 $O(t)$。
+
+\textbf{例子}。 $S = \{3, 5, 7\}$，$t = 12$：第 1 列做得到的和是 $\{0, 3\}$，第 2 列是 $\{0, 3, 5, 8\}$，
+第 3 列是 $\{0, 3, 5, 7, 8, 10, 12, 15\}$ 裡不超過 $12$ 的那些，$R[3, 12] = \TRUE$（$5 + 7$）。
+
+注意 $O(nt)$ 是\textbf{擬多項式時間}（資結書第~18.5.5~節）：$t$ 寫成二進位只要 $\lg t$ 個位元，
+$nt$ 對輸入長度可以是指數，所以這個演算法不代表子集合和（NP 完備）在 P 裡。
+\end{pastsoln}

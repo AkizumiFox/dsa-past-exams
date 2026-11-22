@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ncu-110-dsa-03}]{中央資工所 110 學年度 複選題第 3 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Consider a weight-biased leftist tree (WBLT). Let \textbf{w(x)} be the number of internal nodes in
+the subtree with root x. Which of the following statements are false?
+\begin{enumerate}[label=(\Alph*)]
+\item The length of the rightmost path from internal node x to an external node must be no greater
+than log$_2$(\textbf{w(x)}+1).
+\item The height of the subtree with root x must be no greater than log$_2$(\textbf{w(x)}+1).
+\item Combining two weight-based leftist trees with a total of n elements is done in time O(log n).
+\item A max WBLT is a max tree that for every internal node y, \textbf{w(LeftChild(y))} is greater
+than or equal to \textbf{w(RightChild(y))}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。 題目問的是\textbf{錯}的敘述。
+
+\textbf{重量左傾樹}（資結書第~8.5~節末的提醒和第~8.8~節的觀念題）：把空指標看成外部節點，$w(x)$ 是以 $x$ 為根的子樹
+裡內部節點的個數（外部節點的 $w = 0$），每個內部節點都要滿足 $w(\text{左子}) \ge w(\text{右子})$。
+令 $r(x)$ 是從 $x$ 一路往右走到外部節點經過的邊數，也就是右邊路徑上內部節點的個數。
+
+\textbf{(A) 對}。 證明 $r(x) \le \log_2(w(x) + 1)$，也就是 $w(x) \ge 2^{r(x)} - 1$。 對 $w(x)$ 歸納。
+$w(x) = 1$ 時 $x$ 是葉節點，往右一步就到外部節點，$r(x) = 1$，$2^1 - 1 = 1 \le 1$。 一般情形，令
+$L$、$R$ 是 $x$ 的左右子樹，$r(x) = 1 + r(R)$（$R$ 是外部節點時 $r(R) = 0$、$w(R) = 0$，也滿足
+$w(R) \ge 2^{r(R)} - 1$）。 由歸納假設 $w(R) \ge 2^{r(R)} - 1$，再由重量左傾 $w(L) \ge w(R)$：
+\[
+w(x) = 1 + w(L) + w(R) \ge 1 + 2w(R) \ge 1 + 2\bigl(2^{r(R)} - 1\bigr) = 2^{r(R) + 1} - 1 = 2^{r(x)} - 1.
+\]
+這就是資結書第~8.8~節那題觀念題要證的性質。
+
+\textbf{(B) 錯}。 重量左傾只限制右邊，左邊可以很長。 反例：$n$ 個節點排成一條全部往左的鏈。
+每個節點的右子樹是空的（$w = 0$），左子樹的 $w \ge 0$，處處滿足重量左傾；若鍵值由上往下遞減，
+也是最大樹。 但根的子樹高度是 $n$，而 $\log_2(n + 1)$ 遠小於 $n$（例如 $n = 3$：高度 $3 > 2$）。
+
+\textbf{(C) 對}。 合併兩棵重量左傾樹和一般左傾樹一樣，沿兩棵樹的右邊路徑往下合併（資結書
+虛擬碼~8.9 的做法，只是比較的是 $w$ 而不是 $s$）。 由 (A)，大小 $n_1$、$n_2$ 的兩棵樹，右邊
+路徑長度分別不超過 $\log_2(n_1 + 1)$、$\log_2(n_2 + 1)$，合併走的步數不超過兩者之和，是
+$O(\log n)$。 回程每一層依 $w$ 決定要不要交換左右子樹，$w$ 可以從子節點的 $w$ 在 $O(1)$ 更新，
+所以總時間 $O(\log n)$。 （題目寫 weight-based，指的是同一種樹。）
+
+\textbf{(D) 對}。 這就是最大重量左傾樹的定義：它是最大樹（每個節點不小於子節點），同時每個
+內部節點 $y$ 都有 $w(\text{LeftChild}(y)) \ge w(\text{RightChild}(y))$。
+\end{pastsoln}

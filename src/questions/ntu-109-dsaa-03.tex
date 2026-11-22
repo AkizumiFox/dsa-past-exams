@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-03}]{臺大資工所 109 學年度 第 3 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none。 題目裡的「previous question」是上一題第 2 題）
+
+(3 points) We now use the merge algorithm in the previous question to sort a set of keys. We
+first make each key a list of a single node. Then we merge the first and the second lists into a
+sorted list of length two, the third and the fourth lists into a sorted list of length two, and
+so on. If we start with $n$ keys now we have roughly $n/2$ sorted list of length two now. We then
+merge these lists of length two into roughly $n/4$ sorted list of length four, and so on.
+Finally we will have a sorted list of length $n$. Let $f(n)$ denote the \textit{maximum
+possible} total number of comparisons of this algorithm, then $f(n)$ is? Note that all the
+answers are in little-o notation.
+\begin{enumerate}[label=\arabic*.]
+\item $o(n)$
+\item $o(n\sqrt{n})$
+\item $o(n\log n)$
+\item $o(n(\log n)^2)$
+\item $o(n^2)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：2、4、5。
+
+這就是由下而上的合併排序（資結書第~14.4~節），只是落單的那一段直接留到下一輪。 先證明
+$f(n) = \Theta(n \log n)$。
+\begin{itemize}
+\item 上界：合併長度 $a$、$b$ 的兩段最多比 $a + b - 1 < a + b$ 次，同一輪的各次合併加起來少於 $n$ 次。
+段數每一輪從 $s$ 變成 $\lceil s/2 \rceil$，從 $n$ 變到 $1$ 要 $\lceil \lg n \rceil$ 輪。 所以
+$f(n) \le n \lceil \lg n \rceil \le n \lg n + n$。
+\item 下界：這是一個比較排序，由比較排序的下界（資結書第~15~章），最壞至少比 $\lceil \lg(n!) \rceil$
+次，而 $\lg(n!) = \Theta(n \lg n)$。 （$n$ 是 $2$ 的次方時也可以直接算：每次合併兩段長度 $k$ 的，
+最壞比 $2k - 1$ 次，總共剛好 $n \lg n - n + 1$ 次。）
+\end{itemize}
+窮舉 $n \le 9$ 的所有排列，$f(1), \ldots, f(9) = 0, 1, 3, 5, 9, 11, 14, 17, 25$，都落在
+$\lceil \lg(n!) \rceil$ 和 $n \lceil \lg n \rceil$ 之間。
+
+逐一看選項（$g(n) = o(h(n))$ 的意思是 $g(n)/h(n) \to 0$）：
+\begin{itemize}
+\item 1. $o(n)$：$f(n)/n$ 是 $\Theta(\log n)$，不趨近 $0$。 錯。
+\item 2. $o(n\sqrt{n})$：$f(n)/(n\sqrt{n}) = \Theta(\log n / \sqrt{n}) \to 0$。 對。
+\item 3. $o(n \log n)$：$f(n)/(n \log n)$ 夾在兩個正的常數之間，不趨近 $0$。 錯。
+\item 4. $o(n(\log n)^2)$：比值是 $\Theta(1/\log n) \to 0$。 對。
+\item 5. $o(n^2)$：比值是 $\Theta(\log n / n) \to 0$。 對。
+\end{itemize}
+\end{pastsoln}

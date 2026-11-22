@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:nsysu-108-dmalg-01}]{中山資工所資安組 108 學年度 第 1 題}
+（計算）
+
+A committee of 14 is to be selected from 10 men and 10 women. In how many ways can the selection be
+carried out if
+\begin{enumerate}[label=(\alph*)]
+\item {[5\%]} there must be seven men and seven women?
+\item {[5\%]} there must be at least eight men?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $14400$；(b) $12180$。
+
+這是離散數學的計數題，資結書附錄~A.3~節的二項式係數就夠用。 委員會只看選了哪些人，沒有順序，所以從
+$n$ 人選 $k$ 人是 $\binom{n}{k}$ 種；男生、女生分開選，再用乘法原理相乘。
+
+\textbf{(a)} 從 $10$ 位男生選 $7$ 位、從 $10$ 位女生選 $7$ 位：
+\[
+\binom{10}{7}\binom{10}{7} = 120 \times 120 = 14400 .
+\]
+其中 $\binom{10}{7} = \binom{10}{3} = \frac{10 \cdot 9 \cdot 8}{3 \cdot 2 \cdot 1} = 120$。
+
+\textbf{(b)} 「至少 $8$ 位男生」分成男生 $8$、$9$、$10$ 位三種互斥的情況，女生分別是 $6$、$5$、$4$ 位：
+\begin{align*}
+\binom{10}{8}\binom{10}{6} &= 45 \times 210 = 9450,\\
+\binom{10}{9}\binom{10}{5} &= 10 \times 252 = 2520,\\
+\binom{10}{10}\binom{10}{4} &= 1 \times 210 = 210 .
+\end{align*}
+加法原理：$9450 + 2520 + 210 = 12180$。
+
+常見的錯：先選 $8$ 位男生，再從剩下 $12$ 人任選 $6$ 人，算成 $\binom{10}{8}\binom{12}{6} = 41580$。 這樣會重複
+計算：例如男生有 $9$ 位的委員會，「哪 $8$ 位是先選的」有 $\binom{9}{8} = 9$ 種，被算了 $9$ 次。 分情況相加才不會
+重複。
+\end{pastsoln}

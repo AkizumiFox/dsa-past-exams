@@ -1,0 +1,129 @@
+\begin{pastexam}[label={px:ncu-109-dsa-14}]{中央資工所 109 學年度 申論題第 3 題}
+（申論）
+
+Consider the problem of finding minimum spanning tree (MST): Given a weighted undirected graph, find
+a spanning tree with the best (minimum) cost, where the cost of a spanning tree is the sum of the
+weights of its edges.
+
+\textbf{a)} (15\%) Describe an efficient algorithm for solving this problem. You should also analyze
+the time complexity of this algorithm and describe the data structure used by the algorithm.
+
+\textbf{b)} (10\%) Now assume that we also want to know a spanning tree with the second best cost
+(if there is any which may be same as the best cost). For example, consider the graph with vertex
+set \{1, 2, 3\} and edge set \{(1, 2, 1), (1, 3, 1) (2, 3, 1)\} where each triple $(x, y, w)$
+represents there is an edge with end vertices $x$, $y$, and weight $w$. Then the best and second
+best costs of spanning trees of this graph are both 2. For another graph with the same vertex set
+and edge set \{(1, 2, 1), (1, 3, 2) (2, 3, 3)\}, the best and second best costs of spanning trees
+of this graph are 3 and 4 respectively. Design an algorithm to solve this problem.
+\end{pastexam}
+
+\begin{pastsoln}
+下面 $n = |V|$、$m = |E|$，假設圖連通（不連通就沒有生成樹）。
+
+\textbf{a)} 用 \textbf{Kruskal 演算法}（資結書第~24.2~節），配上\textbf{互斥集合}（union--find，
+資結書第~13~章）。
+
+\begin{pseudo}{Kruskal 演算法}
+\Function{MST-Kruskal}{$G, w$}
+    \State $T \gets \emptyset$
+    \For{每個頂點 $v \in V$}
+        \State \Call{Make-Set}{$v$}
+    \EndFor
+    \State 把 $E$ 的邊依權重由小到大排序
+    \For{依排好的順序，每條邊 $(u, v)$}
+        \If{$\Call{Find-Set}{u} \ne \Call{Find-Set}{v}$} \Comment{兩端在不同的樹裡，不會成環}
+            \State $T \gets T \cup \{(u, v)\}$
+            \State \Call{Union}{$u, v$}
+        \EndIf
+    \EndFor
+    \State \Return $T$
+\EndFunction
+\end{pseudo}
+
+\textbf{資料結構}。 互斥集合森林：每個集合是一棵樹，\proc{Find-Set} 沿父指標找到樹根當代表，
+\proc{Union} 把一棵的根接到另一棵的根下。 用\textbf{依秩合併}（rank 小的接到 rank 大的下面）加上
+\textbf{路徑壓縮}（\proc{Find-Set} 順便把路上每個節點直接接到根），$m$ 個操作總共
+$O(m\,\alpha(n))$，$\alpha$ 是反阿克曼函數，實際上不超過 $4$（資結書定理~13.4）。 集合代表「目前
+已經用 $T$ 的邊連在一起的頂點」，兩端的代表相同就表示這條邊會成環。
+
+\textbf{正確性}。 每次加入的邊 $(u, v)$ 是連接兩棵不同樹的邊裡最輕的：比它輕的邊都已經看過，不是被
+加入、就是兩端已經在同一棵樹裡。 取 $S$ 為 $u$ 所在的那棵樹的頂點，切割 $(S, V - S)$ 不被 $T$ 的任何
+邊跨過，$(u, v)$ 是跨過它的最輕邊，由切割性質（資結書定理~24.1），加入 $(u, v)$ 後 $T$ 仍包含在某
+棵最小生成樹裡。 迴圈結束時所有能加的邊都加了，圖連通，$T$ 有 $n - 1$ 條邊，就是一棵最小生成樹。
+
+\textbf{時間}。
+\begin{itemize}
+\item 排序 $m$ 條邊：$O(m \lg m) = O(m \lg n)$（$m \le n^2$，$\lg m \le 2 \lg n$）。
+\item $n$ 次 \proc{Make-Set}、$2m$ 次 \proc{Find-Set}、$n - 1$ 次 \proc{Union}：$O(m\,\alpha(n))$。
+\end{itemize}
+合計 $O(m \lg n)$，排序是瓶頸。
+
+另一個也可以的答案是 \textbf{Prim 演算法}（資結書第~24.3~節）：從一點開始長一棵樹，每次加入跨出樹的
+最輕邊，用\textbf{最小堆積}存每個樹外頂點到樹的最輕邊權重，做 $n$ 次 extract-min 和最多 $m$ 次
+decrease-key，二元堆積是 $O(m \lg n)$；稠密圖改用陣列找最小值是 $O(n^2)$。
+
+\textbf{b)} 這裡的「second best」是：和最小生成樹 $T$ \textbf{不同}的生成樹裡，總權重最小的那棵，可以和
+$T$ 一樣重（題目第一個例子就是這樣）。 只要圖有不在 $T$ 裡的邊，第二好的生成樹就存在；圖本身就是一棵
+樹（$m = n - 1$）時沒有。
+
+\textbf{想法：換一條邊}。 記 $P_T(x, y)$ 為 $T$ 上 $x$ 到 $y$ 的路徑，$\mathit{max}_T(x, y)$ 是這條路徑上
+最重的邊的權重。 把一條非樹邊 $e = (x, y)$ 加進 $T$ 會形成一個環，就是 $e$ 加上 $P_T(x, y)$；拿掉環上任
+一條樹邊 $f$，得到另一棵生成樹 $T - f + e$。 對固定的 $e$，拿掉最重的那條最划算，權重是
+$w(T) + w(e) - \mathit{max}_T(x, y)$。 答案就是對所有非樹邊取最小值：
+\[
+\text{second best} = w(T) + \min_{(x, y) \in E - T} \bigl( w(x, y) - \mathit{max}_T(x, y) \bigr).
+\]
+
+\begin{pseudo}{次小生成樹的權重}
+\Function{Second-Best-Cost}{$G, w$}
+    \State $T \gets \Call{MST-Kruskal}{G, w}$
+    \If{$T$ 不到 $n - 1$ 條邊}
+        \State \Return 「沒有生成樹」
+    \EndIf
+    \For{每個頂點 $s$} \Comment{在 $T$ 上從 $s$ 做 BFS}
+        \State $\mathit{mx}[s, s] \gets -\infty$；把 $s$ 放進空佇列 $Q$，標記 $s$
+        \While{$Q$ 不空}
+            \State $u \gets$ 從 $Q$ 取出
+            \For{$T$ 裡 $u$ 的每個鄰點 $v$，且 $v$ 沒有標記}
+                \State $\mathit{mx}[s, v] \gets \max(\mathit{mx}[s, u],\, w(u, v))$
+                \State 標記 $v$，把 $v$ 放進 $Q$
+            \EndFor
+        \EndWhile
+    \EndFor
+    \State $\mathit{best} \gets \infty$
+    \For{每條不在 $T$ 裡的邊 $(x, y)$}
+        \State $\mathit{best} \gets \min(\mathit{best},\, w(T) + w(x, y) - \mathit{mx}[x, y])$
+    \EndFor
+    \State \Return $(w(T), \mathit{best})$ \Comment{$\mathit{best} = \infty$ 表示沒有第二棵}
+\EndFunction
+\end{pseudo}
+$T$ 是樹，從 $s$ 出發 BFS 到 $v$ 的路就是 $P_T(s, v)$，所以 $\mathit{mx}[s, v] = \mathit{max}_T(s, v)$。
+要印出那棵樹，記下取到最小值的 $e$ 和對應的 $f$（BFS 時一併記下最重的是哪條邊），輸出 $T - f + e$。
+
+\textbf{正確性}。 上面的每個候選 $T - f + e$ 都是和 $T$ 不同的生成樹（多了 $T$ 沒有的 $e$），所以只要
+證明：對任何生成樹 $T' \ne T$，都有某個候選的權重 $\le w(T')$。 資結書定理~24.12 假設權重互不相同，
+這題允許相同的權重，所以完整證一次。
+
+先看一個性質：$T$ 是最小生成樹，所以對每條非樹邊 $e = (x, y)$ 和 $P_T(x, y)$ 上的每條邊 $f$，都有
+$w(f) \le w(e)$。 否則 $T - f + e$ 是比 $T$ 輕的生成樹，矛盾。
+
+令 $d = |T' - T| \ge 1$。 若 $d = 1$，$T' = T - f + e$，其中 $e$ 是 $T'$ 多出來的那條邊；拿掉 $f$ 之後要靠
+$e$ 重新接起來，所以 $f$ 在 $P_T(e)$ 上，$T'$ 本身就是候選之一。 若 $d \ge 2$，任取 $e = (x, y) \in T' - T$。
+從 $T'$ 拿掉 $e$，頂點分成 $x$ 那一邊 $A$ 和 $y$ 那一邊 $B$，$T' - e$ 沒有邊跨過 $(A, B)$。 $P_T(x, y)$ 從
+$A$ 走到 $B$，一定有一條邊 $f$ 跨過 $(A, B)$；$f \ne e$（$e \notin T$），$f \notin T'$（$T'$ 跨過這個切割的
+只有 $e$）。 令 $T'' = T' - e + f$，它連通而且有 $n - 1$ 條邊，是生成樹；由上面的性質 $w(f) \le w(e)$，
+所以 $w(T'') \le w(T')$。 $T''$ 和 $T$ 只差 $d - 1 \ge 1$ 條邊，對 $T''$ 重複同樣的步驟，最後得到一棵和
+$T$ 只差一條邊、權重 $\le w(T')$ 的生成樹，它是候選之一。 證畢。
+
+\textbf{時間}。 Kruskal $O(m \lg n)$；$n$ 次 BFS，每次在 $n - 1$ 條邊的樹上做，$O(n)$，共 $O(n^2)$；最後
+看 $m - (n - 1)$ 條非樹邊，$O(m)$。 合計 $O(m \lg n + n^2)$，空間 $O(n^2)$ 存 $\mathit{mx}$。 （用最近共同
+祖先的倍增法可以把每次查 $\mathit{max}_T$ 降到 $O(\lg n)$，總共 $O(m \lg n)$，不必存整張表。）
+
+\textbf{驗證題目的兩個例子}。
+\begin{itemize}
+\item 三條邊權重都是 $1$：Kruskal 取 $T = \{(1,2), (1,3)\}$，$w(T) = 2$。 非樹邊 $(2, 3)$，$P_T(2, 3)$ 是
+$2$--$1$--$3$，最重 $1$，候選 $2 + 1 - 1 = 2$。 答案 $2$ 和 $2$，與題目相同。
+\item 權重 $1, 2, 3$：$T = \{(1,2,1), (1,3,2)\}$，$w(T) = 3$。 非樹邊 $(2, 3, 3)$，$P_T(2, 3)$ 是 $2$--$1$--$3$，
+最重 $2$，候選 $3 + 3 - 2 = 4$。 答案 $3$ 和 $4$，與題目相同。
+\end{itemize}
+\end{pastsoln}

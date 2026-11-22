@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:nsysu-109-dmalg-05}]{中山資工所資安組 109 學年度 第 8 題}
+（計算）
+
+{[12\%]} Let $T=(V,E)$ be a complete $m$-ary tree of height $h$. This tree is called a \textit{full
+m}-ary tree if all of its leaves are at level $h$. If $T$ is a full $m$-ary tree with height 7 and
+279,936 leaves, how many internal vertices are there in $T$?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$55987$ 個內部節點（$m = 6$）。
+
+先對齊用語。 這題用的是 Grimaldi 離散數學課本的定義，和資結書第~7~章的用法不同：
+\begin{itemize}
+\item 「complete $m$-ary tree」：每個內部節點剛好有 $m$ 個子節點（資結書和多數資料結構課本叫 full，這裡反過來）。
+\item 「full $m$-ary tree」：再加上所有葉子都在第 $h$ 層，也就是每一層都填滿的 $m$ 元樹。
+\item 高度 $h$ 數邊，根在第 $0$ 層。
+\end{itemize}
+
+\textbf{求 $m$}。 每層都填滿：第 $i$ 層有 $m^i$ 個節點，葉子都在第 $7$ 層，所以葉子數 $m^7 = 279936$。
+$6^7 = 279936$（$6^3 = 216$，$6^6 = 216^2 = 46656$，$6^7 = 279936$），而 $m^7$ 對 $m$ 嚴格遞增，所以 $m = 6$。
+
+\textbf{數內部節點}。 內部節點在第 $0$ 到第 $6$ 層：
+\[
+1 + 6 + 6^2 + \cdots + 6^6 = \frac{6^7 - 1}{6 - 1} = \frac{279935}{5} = 55987 .
+\]
+另一個算法：每個內部節點恰好 $m$ 個子節點的樹，節點數 $n = mi + 1$（每個非根節點恰好是某個內部節點的子節點），
+葉子數 $\ell = n - i = (m - 1)i + 1$。 所以 $i = (\ell - 1)/(m - 1) = 279935/5 = 55987$，和上面一致；這個式子不需要
+葉子都在同一層，只要每個內部節點都有 $m$ 個子節點。
+\end{pastsoln}

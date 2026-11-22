@@ -1,0 +1,124 @@
+\begin{pastexam}[label={px:ccu-110-swa-03}]{中正資工所甲組 110 學年度 第 5 題}
+（單選）
+
+(8\%) Given a weighted directed graph with negative edges, please answer the following
+questions.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,thick,minimum size=7mm,inner sep=0pt,font=\sffamily\large},e/.style={thick,-{Stealth[length=2.2mm]}},w/.style={font=\sffamily\small,inner sep=0pt}]
+\node[v] (A) at (8.43,-5.40) {A};
+\node[v] (B) at (10.40,-5.40) {B};
+\node[v] (C) at (10.40,-7.05) {C};
+\node[v] (D) at (12.62,-7.05) {D};
+\node[v] (E) at (10.32,-8.80) {E};
+\node[v] (F) at (12.18,-8.57) {F};
+\node[v] (G) at (11.53,-10.12) {G};
+\draw[e] (A) -- (B);
+\draw[e] (A) -- (C);
+\draw[e] (A) -- (E);
+\draw[e] (B) -- (D);
+\draw[e] (C) -- (B);
+\draw[e] (C) -- (D);
+\draw[e] (C) -- (E);
+\draw[e] (D) -- (F);
+\draw[e] (E) -- (G);
+\draw[e] (F) -- (G);
+\node[w] at (9.32,-5.12) {2};
+\node[w] at (9.52,-5.88) {7};
+\node[w] at (8.93,-7.25) {12};
+\node[w] at (11.65,-5.75) {2};
+\node[w] at (10.70,-6.33) {3};
+\node[w] at (11.47,-6.75) {$-5$};
+\node[w] at (10.68,-7.75) {2};
+\node[w] at (12.18,-7.65) {2};
+\node[w] at (10.55,-9.62) {$-7$};
+\node[w] at (11.68,-9.15) {4};
+\end{tikzpicture}
+\end{center}
+
+\medskip
+5.1 (3\%) (\quad) Please perform Dijkstra's algorithm running on the graph above from vertex A.
+What are the vertices in the order they are selected by Dijkstra's algorithm?
+
+\begin{tabular}{@{}lll@{}}
+(a)~(A, B, D, F, C, G, E) & (b)~(A, B, D, F, C, E, G) & (c)~(A, B, C, E, D, F, G) \\
+(d)~(A, B, D, F, G, C, E) & (e)~(A, B, C, E, G, D, F) & (f)~None of the above
+\end{tabular}
+
+\medskip
+5.2 (3\%) (\quad) What is the cost of the shortest path from vertex A to each vertex (in the
+order of A, B, C, D, E, F, G), after performing Dijkstra's algorithm?
+
+\begin{tabular}{@{}lll@{}}
+(a)~(0, 2, 7, 2, 9, 6, 2) & (b)~(0, 2, 7, 2, 9, 4, 2) & (c)~(0, 2, 7, 2, 9, 4, 8) \\
+(d)~(0, 2, 7, 2, 12, 6, 10) & (e)~(0, 2, 7, 4, 9, 6, 2) & (f)~None of the above
+\end{tabular}
+
+\medskip
+5.3 (2\%) (\quad) What is the resulting shortest path from vertex A to vertex D after performing
+Dijkstra's algorithm?
+
+\begin{tabular}{@{}lll@{}}
+(a)~A->B->D & (b)~A->C->D & (c)~A->E->G->D \\
+(d)~A->C->E->G->D & (e)~None of the above &
+\end{tabular}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：5.1 選 (b)；5.2 選 (e)；5.3 選 (a)。
+
+\textbf{先說明採用的版本。} 題目要的是「照 Dijkstra 演算法跑出來的結果」，不是真正的最短距離；
+有負邊時兩者可能不同（資結書第~25.2.5~節）。 Dijkstra 演算法有兩種常見寫法，差在已經取出的頂點
+還要不要鬆弛：
+\begin{itemize}
+\item 資結書虛擬碼~25.3 和 Horowitz 等人的資料結構課本：只鬆弛還沒取出的頂點（$v \notin S$）。
+本詳解照這個版本。
+\item CLRS：取出 $u$ 之後鬆弛 $u$ 的每一條出邊，已經取出的頂點的 $d$ 也可能被改小。
+\end{itemize}
+5.1 兩個版本答案一樣；5.2、5.3 不一樣，最後會說明。 這張圖跑的過程沒有出現平手。
+
+\textbf{追蹤}。 圖的邊：$A \to B$ ($2$)、$A \to C$ ($7$)、$A \to E$ ($12$)、$B \to D$ ($2$)、
+$C \to B$ ($3$)、$C \to D$ ($-5$)、$C \to E$ ($2$)、$D \to F$ ($2$)、$E \to G$ ($-7$)、
+$F \to G$ ($4$)。 每一列是取出那個頂點、鬆弛完出邊之後的 $d/\pi$；粗體是這一輪取出的頂點，
+空白表示已經在 $S$ 裡。
+
+\begin{center}
+\small
+\begin{tabular}{cc*{7}{c}}
+\toprule
+輪 & 取出 & $A$ & $B$ & $C$ & $D$ & $E$ & $F$ & $G$ \\
+\midrule
+初始 & & $0$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ \\
+1 & $A$ & $\mathbf{0}$ & $2/A$ & $7/A$ & $\infty$ & $12/A$ & $\infty$ & $\infty$ \\
+2 & $B$ & & $\mathbf{2}$ & $7/A$ & $4/B$ & $12/A$ & $\infty$ & $\infty$ \\
+3 & $D$ & & & $7/A$ & $\mathbf{4}$ & $12/A$ & $6/D$ & $\infty$ \\
+4 & $F$ & & & $7/A$ & & $12/A$ & $\mathbf{6}$ & $10/F$ \\
+5 & $C$ & & & $\mathbf{7}$ & & $9/C$ & & $10/F$ \\
+6 & $E$ & & & & & $\mathbf{9}$ & & $2/E$ \\
+7 & $G$ & & & & & & & $\mathbf{2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+第 5 輪取出 $C$（$d = 7$）：$C \to B$ 和 $C \to D$ 的終點已經在 $S$ 裡，跳過（$C \to D$ 本來會
+把 $d[D]$ 從 $4$ 改成 $7 - 5 = 2$）；$C \to E$ 把 $d[E]$ 從 $12$ 改成 $9$。 第 6 輪佇列裡只剩
+$E$ ($9$) 和 $G$ ($10$)，取 $E$，$E \to G$ 把 $d[G]$ 改成 $9 - 7 = 2$。
+
+\textbf{5.1} 取出順序 $A, B, D, F, C, E, G$，選 (b)。 (a)、(d) 在 $E$ 之前取 $G$，但取 $C$ 時
+$d[G] = 10 > d[E] = 9$，$G$ 不會先出來；(c)、(e) 第三個取 $C$，但那時 $d[D] = 4 < d[C] = 7$。
+
+\textbf{5.2} 跑完的 $d$ 依 $A, \ldots, G$ 是 $(0, 2, 7, 4, 9, 6, 2)$，選 (e)。 真正的最短距離是
+$\delta(A, D) = 7 - 5 = 2$（$A \to C \to D$）、$\delta(A, F) = 2 + 2 = 4$，Dijkstra 在第 2、3 輪
+就把 $D$、$F$ 宣布確定，後來發現的捷徑來不及改。 其他選項：(b) $(0, 2, 7, 2, 9, 4, 2)$ 是真正的
+最短距離，不是 Dijkstra 跑出來的；(c) 的 $G = 8$ 是經過 $F$ 的值（$4 + 4$），沒有用到更短的
+$E \to G$；(d) 的 $E = 12$、$G = 10$ 是第 4 輪時的值，取出 $C$、$E$ 之後都會再變小。 (a) 見下面
+的說明。
+
+\textbf{5.3} $\pi[D] = B$、$\pi[B] = A$，Dijkstra 給的路徑是 $A \to B \to D$，選 (a)。 這條路徑長
+$4$，不是真正最短的 $A \to C \to D$（長 $2$）。 (c)、(d) 不是圖上的路徑（沒有 $G \to D$ 這條邊）。
+
+\textbf{換成 CLRS 的版本}。 第 5 輪取出 $C$ 時，$C \to D$ 照樣鬆弛，$d[D] = 2$、$\pi[D] = C$；但 $D$
+已經取出過，它的出邊不會再處理，$d[F]$ 仍然是 $6$。 結果是 $(0, 2, 7, 2, 9, 6, 2)$，就是 5.2 的
+(a)，5.3 則是 (b) A->C->D。 選項同時放了 (a) 和 (e)，就是在考這個差別；作答時寫明用的是哪一版，
+並把追蹤表寫出來。
+\end{pastsoln}

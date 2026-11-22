@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ncu-108-dsa-08}]{中央資工所 108 學年度 第 8 題}
+（複選；每題 5 分，答錯倒扣 1 分）
+
+Consider the problem of solving all-pairs shortest-paths on a weighted directed graph $G = (V, E)$. A
+famous dynamic programming algorithm gives a recursive formula to compute $d^{(k)}[i, j]$, the length
+of a shortest path from $i$ to $j$ using only vertices with indices not greater than $k$. Here it is
+assumed that the vertex set $V = \{1, 2, \ldots, n\}$ if the given graph contains $n$ vertices. Now if
+the given graph has 5 vertices and edges: (1,4,$-$5), (1,5,2), (2,1,6), (3,1,1), (3,2,7), (4,3,4),
+(5,2,$-$4), (5,3,3), (5,4,8), where each triple $(i, j, t)$ represents there is an edge directed from
+$i$ to $j$ with weight $t$. Then, after the execution of the algorithm, each term $d^{(k)}[i, j]$ will
+be computed correctly. For the following items, choose the correct one(s):
+\begin{enumerate}[label=(\Alph*)]
+\item $d^{(2)}[5,1] = 2$
+\item $d^{(2)}[5,4] = -3$
+\item $d^{(3)}[4,1] = 4$
+\item $d^{(3)}[4,2] = 11$
+\item $d^{(3)}[4,5] = 6$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(D)。
+
+這是 Floyd--Warshall 演算法（資結書第~25.6~節，虛擬碼~25.8）。 $d^{(0)}[i, j]$ 是邊 $i \to j$ 的權重（$i = j$ 時
+為 $0$，沒有邊為 $\infty$），之後
+\[
+d^{(k)}[i, j] = \min\bigl(d^{(k-1)}[i, j],\; d^{(k-1)}[i, k] + d^{(k-1)}[k, j]\bigr).
+\]
+第 $k$ 輪只有 $d^{(k-1)}[i, k]$ 和 $d^{(k-1)}[k, j]$ 都不是 $\infty$ 的格子可能變小，也就是第 $k$ 行有值的列、
+第 $k$ 列有值的行。 下面每個矩陣第 $i$ 列第 $j$ 行是 $d^{(k)}[i, j]$，粗體是這一輪變小的格子。
+\[
+D^{(0)} = \begin{array}{c|rrrrr}
+ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & \infty & \infty & -5 & 2 \\
+2 & 6 & 0 & \infty & \infty & \infty \\
+3 & 1 & 7 & 0 & \infty & \infty \\
+4 & \infty & \infty & 4 & 0 & \infty \\
+5 & \infty & -4 & 3 & 8 & 0 \\
+\end{array}
+\qquad
+D^{(1)} = \begin{array}{c|rrrrr}
+ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & \infty & \infty & -5 & 2 \\
+2 & 6 & 0 & \infty & \mathbf{1} & \mathbf{8} \\
+3 & 1 & 7 & 0 & \mathbf{-4} & \mathbf{3} \\
+4 & \infty & \infty & 4 & 0 & \infty \\
+5 & \infty & -4 & 3 & 8 & 0 \\
+\end{array}
+\]
+\textbf{$k = 1$}：進入 $1$ 的邊來自 $2$（$6$）、$3$（$1$），從 $1$ 出去到 $4$（$-5$）、$5$（$2$）。
+$d[2,4] = 6 - 5 = 1$、$d[2,5] = 6 + 2 = 8$、$d[3,4] = 1 - 5 = -4$、$d[3,5] = 1 + 2 = 3$，原來都是 $\infty$。
+\[
+D^{(2)} = \begin{array}{c|rrrrr}
+ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & \infty & \infty & -5 & 2 \\
+2 & 6 & 0 & \infty & 1 & 8 \\
+3 & 1 & 7 & 0 & -4 & 3 \\
+4 & \infty & \infty & 4 & 0 & \infty \\
+5 & \mathbf{2} & -4 & 3 & \mathbf{-3} & 0 \\
+\end{array}
+\qquad
+D^{(3)} = \begin{array}{c|rrrrr}
+ & 1 & 2 & 3 & 4 & 5 \\ \hline
+1 & 0 & \infty & \infty & -5 & 2 \\
+2 & 6 & 0 & \infty & 1 & 8 \\
+3 & 1 & 7 & 0 & -4 & 3 \\
+4 & \mathbf{5} & \mathbf{11} & 4 & 0 & \mathbf{7} \\
+5 & 2 & -4 & 3 & -3 & 0 \\
+\end{array}
+\]
+\textbf{$k = 2$}：第 $2$ 行有值的是第 $3$ 列（$7$）、第 $5$ 列（$-4$）；第 $2$ 列是 $6, 0, \infty, 1, 8$。
+第 $3$ 列經過 $2$ 都變大（例如 $7 + 6 = 13 > 1$），不變。 第 $5$ 列：$d[5,1] = -4 + 6 = 2 < \infty$，
+$d[5,4] = -4 + 1 = -3 < 8$，$d[5,5]$ 經過 $2$ 是 $-4 + 8 = 4 > 0$ 不變。
+
+\textbf{$k = 3$}：第 $3$ 行有值的是第 $4$ 列（$4$）、第 $5$ 列（$3$）；第 $3$ 列是 $1, 7, 0, -4, 3$。 第 $4$ 列：
+$d[4,1] = 4 + 1 = 5$，$d[4,2] = 4 + 7 = 11$，$d[4,5] = 4 + 3 = 7$，原來都是 $\infty$；$d[4,4]$ 經過 $3$ 是
+$4 - 4 = 0$，不變。 第 $5$ 列：$3 + 1 = 4 > 2$、$3 + 7 = 10 > -4$、$3 - 4 = -1 > -3$，都不變。
+
+逐項：
+\begin{itemize}
+\item (A) $d^{(2)}[5,1] = 2$：路徑 $5 \to 2 \to 1$，$-4 + 6$，對。
+\item (B) $d^{(2)}[5,4] = -3$：路徑 $5 \to 2 \to 1 \to 4$，$-4 + 6 - 5$，比直接的邊 $8$ 短，對。
+\item (C) $d^{(3)}[4,1] = 5$（$4 \to 3 \to 1$），不是 $4$，錯。
+\item (D) $d^{(3)}[4,2] = 11$（$4 \to 3 \to 2$），對。
+\item (E) $d^{(3)}[4,5] = 7$（$4 \to 3 \to 1 \to 5$，$4 + 1 + 2$），不是 $6$，錯。
+\end{itemize}
+題目說「每一項都會算對」，就是圖上沒有負環；第~9~題算到 $D^{(5)}$，對角線都是 $0$，確實沒有負環
+（資結書第~25.6~節：有負環時，某個 $d^{(n)}[i, i] < 0$）。
+\end{pastsoln}

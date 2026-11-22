@@ -1,0 +1,29 @@
+paper: ntu-109-dsaa
+volume: 1
+school: 臺大
+dept: 資工所
+year: 109
+subject: 資料結構與演算法（A）
+instructions: >-
+  Please select \textit{all} the correct answer(s) to question 1 to 10. Note that there could be 0
+  to 5 correct answers. If none of the answer is correct, answer ``none''. If you do not wish to
+  answer a question, leave it blank. All 10 answers must be written on the first page of your
+  answer book, and the answer to question 1 must be in the first line, the answer to question 2
+  must be in the second line, and so on. If you fail to follow these rules then your answers will
+  be \textit{ignored}. （第 11 題前：）Answer the following questions in details.
+questions:
+  - {id: ntu-109-dsaa-01, label: 第 1 題, chapter: 1}
+  - {id: ntu-109-dsaa-02, label: 第 2 題, chapter: 14}
+  - {id: ntu-109-dsaa-03, label: 第 3 題, chapter: 14}
+  - {id: ntu-109-dsaa-04, label: 第 4 題, chapter: 8}
+  - {id: ntu-109-dsaa-05, label: 第 5 題, chapter: 8}
+  - {id: ntu-109-dsaa-06, label: 第 6 題, chapter: 14}
+  - {id: ntu-109-dsaa-07, label: 第 7 題, chapter: 6}
+  - {id: ntu-109-dsaa-08, label: 第 8 題, chapter: 14}
+  - {id: ntu-109-dsaa-09, label: 第 9 題, chapter: 9}
+  - {id: ntu-109-dsaa-10, label: 第 10 題, chapter: 10}
+  - {id: ntu-109-dsaa-11, label: 第 11 題, chapter: 16}
+  - {id: ntu-109-dsaa-12, label: 第 12 題, chapter: 18}
+  - {id: ntu-109-dsaa-13, label: 第 13 題, chapter: 13}
+  - {id: ntu-109-dsaa-14, label: 第 14 題, chapter: 18}
+  - {id: ntu-109-dsaa-15, label: 第 15 題, chapter: 28}

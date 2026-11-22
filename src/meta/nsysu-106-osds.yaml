@@ -1,0 +1,13 @@
+paper: nsysu-106-osds
+volume: 1
+school: 中山
+dept: 資工所甲組
+year: 106
+subject: 作業系統與資料結構
+instructions: '※本科目依簡章規定「不可以」使用計算機（問答申論題）。INSTRUCTIONS: If any question is unclear or you believe some assumptions need to be made, state your assumptions clearly at the beginning of your answer.'
+questions:
+  - {id: nsysu-106-osds-01, label: 第 6 題, chapter: 4}
+  - {id: nsysu-106-osds-02, label: 第 7 題, chapter: 2}
+  - {id: nsysu-106-osds-03, label: 第 8 題, chapter: 2}
+  - {id: nsysu-106-osds-04, label: 第 9 題, chapter: 14}
+  - {id: nsysu-106-osds-05, label: 第 10 題, chapter: 6}

@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:ncku-107-prog-08}]{成大資訊聯招 107 學年度 第 8 題}
+（問答）
+
+(10\%) The following graph is a maximum flow problem. Each edge is labeled with its capacity.
+What is the maximum flow from vertex $s$ to vertex $t$.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,very thick,inner sep=1pt,minimum size=8mm},w/.style={inner sep=1pt},very thick,>={Latex[length=2.5mm]}]
+\node[v] (s) at (0,1.2) {$s$};
+\node[v] (1) at (2.2,2.4) {$v_1$};
+\node[v] (2) at (2.2,0) {$v_2$};
+\node[v] (3) at (4.9,2.4) {$v_3$};
+\node[v] (4) at (4.9,0) {$v_4$};
+\node[v] (t) at (6.8,1.35) {$t$};
+\draw[->] (s) -- node[w,above left] {16} (1);
+\draw[->] (s) -- node[w,below left] {13} (2);
+\draw[->] (2) -- node[w,right=2pt] {4} (1);
+\draw[->] (1) -- node[w,above=2pt] {12} (3);
+\draw[->] (3) -- node[w,pos=0.55,below right] {9} (2);
+\draw[->] (2) -- node[w,below=2pt] {14} (4);
+\draw[->] (4) -- node[w,right=2pt] {7} (3);
+\draw[->] (3) -- node[w,above right] {20} (t);
+\draw[->] (4) -- node[w,below right] {4} (t);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最大流量是 $23$。
+
+照圖上的箭頭，邊是 $s \to v_1$~16、$s \to v_2$~13、$v_2 \to v_1$~4、$v_1 \to v_3$~12、$v_3 \to v_2$~9、
+$v_2 \to v_4$~14、$v_4 \to v_3$~7、$v_3 \to t$~20、$v_4 \to t$~4。 用 Edmonds--Karp 演算法（資結書
+第~26.4~節）：每次在剩餘網路上用 BFS 找邊數最少的增廣路徑，沿路推瓶頸容量（鄰居依編號小的先看）。
+
+\begin{center}
+\small
+\begin{tabular}{clcc}
+\toprule
+次 & 增廣路徑 & 瓶頸 & 累計流量 \\
+\midrule
+1 & $s \to v_1 \to v_3 \to t$ & $\min(16, 12, 20) = 12$ & 12 \\
+2 & $s \to v_2 \to v_4 \to t$ & $\min(13, 14, 4) = 4$ & 16 \\
+3 & $s \to v_2 \to v_4 \to v_3 \to t$ & $\min(13 - 4, 14 - 4, 7, 20 - 12) = 7$ & 23 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+第 3 次之後的剩餘容量：$s \to v_1$ 剩 $4$、$s \to v_2$ 剩 $2$、$v_2 \to v_4$ 剩 $3$、$v_1 \to v_3$、
+$v_4 \to v_3$、$v_4 \to t$ 都是 $0$，$v_3 \to v_2$ 沒有流，反向的剩餘容量也是 $0$。 從 $s$ 出發在剩餘網路上
+走得到的頂點是 $S = \{s, v_1, v_2, v_4\}$，走不到 $t$，演算法結束。
+
+得到的流（每條邊的流量／容量）：
+\begin{center}
+\small
+\begin{tabular}{ccccccccc}
+\toprule
+$s v_1$ & $s v_2$ & $v_2 v_1$ & $v_1 v_3$ & $v_3 v_2$ & $v_2 v_4$ & $v_4 v_3$ & $v_3 t$ & $v_4 t$ \\
+\midrule
+12/16 & 11/13 & 0/4 & 12/12 & 0/9 & 11/14 & 7/7 & 19/20 & 4/4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+流量守恆：$v_1$ 進 $12$ 出 $12$；$v_2$ 進 $11$ 出 $11$；$v_3$ 進 $12 + 7 = 19$ 出 $19$；$v_4$ 進 $11$
+出 $7 + 4 = 11$。 流出 $s$ 的總量 $12 + 11 = 23$。
+
+\textbf{為什麼不能更多。} 看割 $(S, T)$，$S = \{s, v_1, v_2, v_4\}$、$T = \{v_3, t\}$。 從 $S$ 指向 $T$
+的邊是 $v_1 \to v_3$~12、$v_4 \to v_3$~7、$v_4 \to t$~4，容量和 $12 + 7 + 4 = 23$；$v_3 \to v_2$ 是從
+$T$ 指回 $S$，不算進割的容量。 任何流的流量都不超過任何割的容量，所以流量不能超過 $23$；上面的流已經
+達到 $23$，由最大流最小割定理（資結書定理~26.6），最大流就是 $23$，這個割也是最小割。
+\end{pastsoln}

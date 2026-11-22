@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:nccu-106-dsa-01}]{政大資科所 106 學年度 第 1 題}
+（問答）
+
+(10\%) Design an algorithm of running time $O(n)$ for the following task.
+
+\hspace*{1.5em}Input: $a_0,a_1,a_2,\ldots,a_n$, and $x$\\
+\hspace*{1.5em}Output: the value of $a_0+a_1x+a_2x^2+\cdots+a_nx^n$\\
+\hspace*{1.5em}Note:
+\begin{enumerate}[label=\Alph*.,leftmargin=4em]
+\item Each addition takes constant time.
+\item Each multiplication takes constant time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+用 Horner 法（資結書第~4.4~節）。 把多項式寫成
+\[
+(\cdots((a_n x + a_{n-1})x + a_{n-2})x + \cdots + a_1)x + a_0,
+\]
+從最裡面往外算。
+\begin{pseudo}[unbreakable]{多項式求值，$a[0..n]$ 是係數}
+\Function{Poly-Value}{$a, n, x$}
+    \State $s \gets a[n]$
+    \For{$i \gets n - 1$ \DownTo $0$}
+        \State $s \gets s \cdot x + a[i]$
+    \EndFor
+    \State \Return $s$
+\EndFunction
+\end{pseudo}
+這就是資結書虛擬碼~4.7，只是把係數陣列改叫 $a$、次數改叫 $n$。
+
+\textbf{正確性}。 用迴圈不變量（資結書定理~4.2）：第 3 行每一輪開始時
+\[
+s = \sum_{k=i+1}^{n} a_k x^{k-i-1},
+\]
+也就是只用 $a_{i+1}, \ldots, a_n$ 的那個多項式在 $x$ 的值。
+\begin{itemize}
+\item \textbf{初始}：$i = n - 1$ 時右邊只有 $k = n$ 一項，等於 $a_n$，和第 2 行設的 $s$ 相同。
+\item \textbf{維持}：這一輪把 $s$ 乘 $x$ 再加 $a_i$，得到
+$\sum_{k=i+1}^{n} a_k x^{k-i} + a_i = \sum_{k=i}^{n} a_k x^{k-i}$，正是 $i$ 減 $1$ 之後的不變量。
+\item \textbf{結束}：迴圈在 $i = -1$ 停下，代進去得 $s = \sum_{k=0}^{n} a_k x^{k}$，就是要求的值。
+\end{itemize}
+$n = 0$ 時迴圈一次都不跑，回傳 $a_0$，也對。
+
+\textbf{時間}。 迴圈跑 $n$ 次，每次一次乘法、一次加法，題目說兩者都是常數時間，所以共
+$n$ 次乘法和 $n$ 次加法，加上迴圈本身的常數成本，是 $\Theta(n)$，符合 $O(n)$ 的要求。
+
+對照：每一項的 $x^k$ 都重新連乘，要 $0 + 1 + \cdots + n = \Theta(n^2)$ 次乘法，不符合要求。
+由低次往高次算、一邊加一邊維護 $p \gets p \cdot x$（$p$ 是目前的 $x^k$）也是 $O(n)$，但要大約
+$2n$ 次乘法；Horner 法只要 $n$ 次。
+\end{pastsoln}

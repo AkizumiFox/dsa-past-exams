@@ -1,0 +1,17 @@
+paper: ccu-108-swa
+volume: 1
+school: 中正
+dept: 資工所甲組
+year: 108
+subject: 軟體設計
+questions:
+  - {id: ccu-108-swa-01, label: 第 2 題, chapter: 9}
+  - {id: ccu-108-swa-02, label: 第 3 題, chapter: 8}
+  - {id: ccu-108-swa-03, label: 第 4 題, chapter: 25}
+  - {id: ccu-108-swa-04, label: 第 5 題, chapter: 12}
+  - {id: ccu-108-swa-05, label: 第 6 題, chapter: 7}
+  - {id: ccu-108-swa-06, label: 第 7 題, chapter: 28}
+  - {id: ccu-108-swa-07, label: 第 8 題, chapter: 14}
+  - {id: ccu-108-swa-08, label: 第 9 題, chapter: 15}
+  - {id: ccu-108-swa-09, label: 第 10 題, chapter: 21}
+  - {id: ccu-108-swa-10, label: 第 11 題, chapter: 25}

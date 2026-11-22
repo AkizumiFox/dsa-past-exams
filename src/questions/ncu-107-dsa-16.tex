@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncu-107-dsa-16}]{中央資工所 107 學年度 第 16 題}
+（複選；每題 5 分，答錯每小題倒扣 1 分，扣到零分為止）
+
+Choose the correct statement(s):
+\begin{enumerate}[label=(\alph*)]
+\item If we can solve a prolem X with a polynomial time-complexity non-deterministic algorithm,
+then X is an NP problem.
+\item If X is an NP-hard problem, then every NP problem can polynomially reduce to X.
+\item Let X be an NP-hard problem. If X can be solved by a deterministic algorithm with polynomial
+time complexity in the worst case, then every NP probloem can be solved by a deterministic
+algorithm with polynomial time complexity in the worst case.
+\item Let X be an NP-hard problem. If a problem Y can polynomially reduce to X, then Y is NP-hard.
+\item Let X be an NP-hard problem. If X can polynomially reduce to a problem Y, then Y is NP-hard.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a)(b)(c)(e)。
+
+下面的 $A \le_{\mathrm{p}} B$ 表示 $A$ 可以在多項式時間內歸約到 $B$（資結書第~28.3~節），讀作「$B$ 至少
+和 $A$ 一樣難」。
+
+\begin{itemize}
+\item (a) 對。 NP 的原始定義就是「可以用非確定性演算法在多項式時間內解」的決策問題；它和資結書第~28.2~節
+「有多項式長度的憑證和多項式時間的驗證者」等價：非確定性演算法猜的就是憑證，之後的確定性計算就是驗證。
+（題目的 X 要是決策問題，NP 只談決策問題。）
+\item (b) 對。 這就是 NP 難的定義：NP 裡每一個問題都能多項式時間歸約到 X（資結書第~28.4~節）。
+\item (c) 對。 任取 NP 裡的 $L$，由 (b) $L \le_{\mathrm{p}} X$；X 有多項式時間的確定性演算法，由資結書
+引理~28.2（$A \le_{\mathrm{p}} B$、$B \in \mathrm{P}$ 則 $A \in \mathrm{P}$），$L$ 也有。 也就是
+$\mathrm{P} = \mathrm{NP}$（資結書定理~28.5 的推廣：那裡要求 X 是 NP 完備的，但證明只用到 X 是 NP 難的）。
+\item (d) \textbf{錯}。 方向反了。 $Y \le_{\mathrm{p}} X$ 只說明 $Y$ 不比 $X$ 難，$Y$ 可以很簡單。 反例：
+$Y$ 是「判斷一個整數是不是偶數」，X 是 SAT。 把偶數對應到一個固定的可滿足公式（例如 $x_1$）、奇數對應到
+一個固定的不可滿足公式（例如 $x_1 \wedge \neg x_1$），這是多項式時間的歸約，但 $Y$ 在 P 裡；若它是 NP 難的，
+由 (c) 的道理會得到 $\mathrm{P} = \mathrm{NP}$，目前沒有人證得出來。
+\item (e) 對。 任取 NP 裡的 $L$：$L \le_{\mathrm{p}} X$（X 是 NP 難的），$X \le_{\mathrm{p}} Y$，由遞移性
+（資結書引理~28.3）$L \le_{\mathrm{p}} Y$，所以 $Y$ 是 NP 難的。 這正是證明新問題是 NP 難的標準做法。
+\end{itemize}
+\end{pastsoln}

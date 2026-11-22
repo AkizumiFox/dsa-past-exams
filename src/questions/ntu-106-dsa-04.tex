@@ -1,0 +1,107 @@
+\begin{pastexam}[label={px:ntu-106-dsa-04}]{臺大資工所 106 學年度 第 4 題}
+（問答；(b) 小題答錯倒扣，作答規定見下）
+
+請遵守下列規定回答以下問題，違者該題不計分。
+\begin{itemize}
+\item 不要書寫任何程式碼或代碼。請以文字，圖表，數學符號陳述你要表達的概念。
+\item 一個問題包括兩個子題。一個子題的回答以一頁為限，並請按順序寫在完整的一頁。請先想好再動筆。如果字寫太小或是太潦草或是英文文法問題導致閱卷者無法理解你的想法，該題不計分。
+\item 一個問題包括兩個子題。前一個子題是觀念的陳述，佔 10 分，後一個子題是觀念的證明，佔 15 分。證明部分有倒扣，答對得 15 分，答錯倒扣 10 分，不答得 0 分。知之為知之，不知為不知，是知也。瞎掰不能解決問題，珍惜分數，遠離倒扣。
+\end{itemize}
+
+(25 points) We are given a network of $C$ cities and $R$ roads. All roads are one-way, i.e., if a
+road goes from city $u$ to city $v$ then there will be no roads going from $v$ to $u$. In
+addition, the roads will not form any \textit{cycle}. That is, you cannot start from a city $v$,
+go through several cities, and go back to $v$. Finally we assume that there is a capital that can
+go to all other cities in the network.
+
+We want to compute the \textit{minimum} number of days for a tourist to go from the capital to
+each non-capital city. When a tourist encounters a city $v$, he will spend $c(v)>0$ days to visit
+all attractions in $v$. When a tourist goes from city $u$ to city $v$, he will spend $r(u,v)>0$
+days on the road. Now given the $c$ function values for all cities, and $r$ function values for
+all roads, please compute the \textit{minimum} number of days for a tourist to go from the
+capital to each non-capital city. We use $M(v)$ to denote this minimum number of days from the
+capital to a city $v$.
+
+We illustrate the problem with an example of four cities $A$, $B$, $C$, $D$ and four roads. Let
+$A$ be the capital and $c(A)=c(B)=c(C)=c(D)=1$, and $r(A,B)=r(A,C)=r(B,D)=2$, and $r(C,D)=10$.
+Then $M(D)=c(A)+r(A,B)+c(B)+r(B,D)+c(D)=7$. Similarly $M(B)=M(C)=4$.
+\begin{enumerate}[label=(\alph*)]
+\item (10 points) Please derive an \textit{optimal} algorithm to compute the $M$ function for
+all cities other than the capital.
+\item (15 points) Please analyze the time complexity of your algorithm and prove that it is
+optimal.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：依拓樸順序做動態規劃，$M(v) = c(v) + \min_{(u, v)} \bigl(M(u) + r(u, v)\bigr)$，時間
+$\Theta(C + R)$；任何正確的演算法最壞都要讀完全部 $C + R$ 個數值，所以 $\Theta(C + R)$ 是最佳的。
+
+\textbf{題意}。 把城市當頂點、道路當有向邊，得到一個有向無環圖（DAG）。 首都記作 $s$。 一條從 $s$
+出發到 $v$ 的路線 $s = v_0 \to v_1 \to \cdots \to v_k = v$ 花的天數是路線上每個城市的 $c$ 加上每條
+道路的 $r$：
+\[
+\mathrm{cost} = \sum_{i=0}^{k} c(v_i) + \sum_{i=1}^{k} r(v_{i-1}, v_i) ,
+\]
+$M(v)$ 是所有這種路線的最小值。 題目的例子照這個定義算：$M(D) = 1 + 2 + 1 + 2 + 1 = 7$，經過 $C$ 的
+路線是 $1 + 2 + 1 + 10 + 1 = 15$，取 $7$。 本題規定不能寫程式碼，下面用文字和數學式描述演算法。
+
+\textbf{(a) 演算法}。
+\begin{enumerate}
+\item 對這個 DAG 做拓樸排序（資結書第~22.1~節 Kahn 的方法，或第~22.2~節用 DFS 結束時間），得到
+城市的順序 $u_1, u_2, \ldots, u_C$，每條道路 $(u, v)$ 的 $u$ 都排在 $v$ 前面。 首都能到所有城市，
+而且沒有迴路，所以沒有道路指向首都（若有 $x \to s$，又有 $s$ 到 $x$ 的路線，就成了迴路），首都的
+入度是 $0$，可以排在第一個。
+\item 令 $M(s) = c(s)$（首都本身也要參觀，例子裡 $M(B) = c(A) + r(A, B) + c(B)$ 包含 $c(A)$）。
+\item 依拓樸順序處理其他城市 $v$：
+\[
+M(v) = c(v) + \min_{(u, v) \in \text{roads}} \bigl( M(u) + r(u, v) \bigr) .
+\]
+算到 $v$ 時，所有指向 $v$ 的城市 $u$ 都排在前面，$M(u)$ 已經算好。 首都能到 $v$，所以 $v$ 至少有一條
+進來的道路，取最小值的集合不是空的。
+\end{enumerate}
+實作上每個城市存出去的道路（相鄰串列），改成「依拓樸順序取出 $u$，對每條 $(u, v)$ 用
+$M(u) + r(u, v) + c(v)$ 去更新 $M(v)$」，效果一樣，每條道路只看一次。 這正是資結書第~25.5~節 DAG 的
+最短路徑（虛擬碼~25.6）：把邊長定成 $w(u, v) = r(u, v) + c(v)$，則 $M(v) = c(s) + \delta(s, v)$。
+
+正確性（對拓樸順序做歸納）。 設排在 $v$ 前面的城市 $M$ 值都正確。
+\begin{itemize}
+\item 「$\ge$」：任取一條到 $v$ 的最佳路線，最後一條道路是 $(u, v)$。 去掉最後的 $v$，前半段是一條到
+$u$ 的路線，天數至少 $M(u)$。 所以最佳路線的天數 $\ge M(u) + r(u, v) + c(v) \ge$ 式子右邊。
+\item 「$\le$」：對每條 $(u, v)$，把到 $u$ 的最佳路線接上 $(u, v)$ 和 $v$，就是到 $v$ 的一條路線，
+天數 $M(u) + r(u, v) + c(v)$。 沒有迴路，接上去不會重複經過 $v$。 所以 $M(v) \le$ 式子右邊。
+\end{itemize}
+兩邊相等，$M(v)$ 正確。
+
+用題目的例子跑一次：拓樸順序 $A, B, C, D$；$M(A) = 1$；$M(B) = 1 + (1 + 2) = 4$；
+$M(C) = 1 + (1 + 2) = 4$；$M(D) = 1 + \min(4 + 2,\ 4 + 10) = 7$，和題目一致。
+
+\textbf{(b) 時間複雜度}。 拓樸排序 $O(C + R)$。 第 3 步每個城市看過它所有進來的道路，加起來每條道路
+看一次，$O(C + R)$。 總共 $O(C + R)$。 因為首都能到所有城市，$R \ge C - 1$，所以也可以寫成 $O(R)$
+（$C \ge 2$ 時）。
+
+\textbf{(b) 最佳性：任何正確的演算法最壞都要 $\Omega(C + R)$}。 證明每一個 $c$ 值和每一個 $r$ 值都必須
+讀到（共 $C + R$ 個），用對手論證。
+
+對任意一張符合題目條件的路網（$C$ 個城市、$R$ 條道路），取它的一個拓樸順序，第 $i$ 個城市 $u_i$
+（$u_1 = s$）給一個「位能」$p(u_i) = 4i$。 設所有 $c(v) = 2$，每條道路 $r(u, v) = p(v) - p(u) - 2$；
+$u$ 排在 $v$ 前面，所以 $r(u, v) \ge 4 - 2 = 2$，符合題目的條件。 這時任何一條從 $s$ 到 $v$ 的路線，
+天數是
+\[
+\sum_{i=0}^{k} 2 + \sum_{i=1}^{k} \bigl(p(v_i) - p(v_{i-1}) - 2\bigr) = 2(k + 1) + p(v) - p(s) - 2k
+= 2 + p(v) - p(s) ,
+\]
+和走哪一條無關：每條路線都是最佳路線，每條道路都在某一條最佳路線上。 稱這個輸入為 $I$。
+
+設某個演算法在 $I$ 上執行完，卻沒有讀某條道路 $(u, v)$ 的 $r$ 值。 把 $r(u, v)$ 減 $1$（仍然
+$\ge 1 > 0$），得到輸入 $I'$。 演算法在 $I'$ 上讀到的每個值都和 $I$ 一樣，所以走完全一樣的步驟、輸出
+一樣的 $M(v)$。 但在 $I'$ 裡，經過 $(u, v)$ 的路線（存在，因為首都能到 $u$）少了一天，$M(v)$ 變小
+了 $1$。 兩個輸入它至少錯一個，矛盾。 所以它在 $I$ 上必須讀完全部 $R$ 個 $r$ 值。 同理，沒有讀某個
+$c(v)$ 時把它改成 $1$，經過 $v$ 的路線都少一天，$M(v)$ 就變了（$v$ 是首都時，所有城市的 $M$ 都
+變了），所以 $C$ 個 $c$ 值也都必須讀。 在 $I$ 上至少讀 $C + R$ 次，最壞時間 $\Omega(C + R)$。
+
+演算法是 $O(C + R)$，下界是 $\Omega(C + R)$，所以這個演算法是漸近最佳的，時間 $\Theta(C + R)$。
+
+比較：用 Dijkstra（資結書第~25.2~節）也能算（權重都是正的），但要 $O((C + R)\lg C)$，不是最佳的；
+這題給了「沒有迴路」，就是要用拓樸順序把 $\lg C$ 省掉。
+\end{pastsoln}

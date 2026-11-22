@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ccu-108-swa-06}]{中正資工所甲組 108 學年度 第 7 題}
+（是非改錯）
+
+(6\%, True or false. If the statement is false, correct the wrong part. Simply negate the
+statement is not accepted.)
+\begin{enumerate}[label=(\alph*)]
+\item Finding a longest common subsequence from an arbitrary number of input sequences is a P
+problem.
+\item Given a non-negatively weighted graph G and two vertices u and v, finding the longest simple
+path from u to v is a NP-hard problem.
+\item Breadth-first search can explore all the edges in a graph G and classify them.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) F，改成「…from \textbf{two} input sequences is a P problem」（或「…from an arbitrary
+number of input sequences is an \textbf{NP-hard} problem」）；(b) T；(c) F，改成
+「\textbf{Depth-first} search can explore all the edges in a graph G and classify them」。
+
+\textbf{(a) 錯}。 兩個序列（長度 $m$、$n$）的 LCS 用資結書第~18.3~節的動態規劃，填 $(m+1)(n+1)$ 格
+的表，$O(mn)$ 時間，在 P 裡。 同樣的做法推廣到 $k$ 個長度 $n$ 的序列，表是 $k$ 維的，有
+$(n+1)^k$ 格，每格要看 $k$ 個鄰格，時間 $O(k n^k)$。 $k$ 是固定的常數時仍是多項式；但
+題目說「任意多個」序列，$k$ 是輸入的一部分，$n^k$ 不是輸入大小的多項式。 事實上，序列個數
+不固定時，LCS 的決策版本（有沒有長度 $\ge L$ 的共同子序列）是 NP 完備的（Maier, 1978；本書
+只敘述這個結論），所以除非 $\mathrm{P} = \mathrm{NP}$，它不在 P 裡。 改法有兩種：把「arbitrary
+number of」改成「two」（或「a fixed number of」），或把「a P problem」改成「an NP-hard
+problem」。 題目不接受單純加 not，這兩種改法都改了錯的部分。
+
+\textbf{(b) 對}。 決策版本 \textsc{Longest-Path}（有沒有一條至少 $L$ 條邊的簡單路徑）是 NP 完備的
+（資結書第~28.5~節）。 歸約很直接：給一個 \textsc{Ham-Path} 的實例（無權重的圖 $G$ 和兩端 $u$、$v$，
+問有沒有從 $u$ 到 $v$、經過每個頂點恰好一次的路徑），把每條邊的權重設成 $1$（非負），問 $u$ 到 $v$
+的最長簡單路徑長度是不是 $n - 1$。 長度 $n - 1$ 的簡單路徑經過全部 $n$ 個頂點，正好是哈密頓路徑，
+轉換是線性時間。 所以能解出最長簡單路徑，就能解 NP 完備的哈密頓路徑問題，求最長簡單路徑是
+NP-hard。 對照：最短路徑在非負權重下用 Dijkstra 就能解（資結書第~25.2~節）；最長路徑只有在
+有向無環圖上才容易（資結書第~22~章）。
+
+\textbf{(c) 錯}。 「把每條邊分類」指的是樹邊、後向邊、前向邊、交叉邊四類（資結書第~21.5~節），
+這是依 \textbf{DFS} 森林定義的：DFS 走到邊 $(u, v)$ 時，看 $v$ 的顏色就能分類（白色是樹邊、灰色是
+後向邊、黑色再比較發現時間 $d[u]$、$d[v]$ 分成前向邊或交叉邊），括號定理（資結書定理~21.5）保證
+這樣分是對的，每條邊 $O(1)$。 BFS 沒有完成時間，也沒有括號結構：遇到一條非樹邊 $(u, v)$ 時，
+BFS 記下的只有 $v$ 的層數和父節點，看不出 $v$ 是不是 $u$ 的祖先，也就分不出後向邊和交叉邊，要
+另外沿父節點往上找才行。 改法：把「Breadth-first」改成「Depth-first」。
+
+說明：BFS 從每個還沒走到的頂點重新出發，同樣會把每條邊看過一次，所以這句的錯不在「explore
+all the edges」，而在「classify them」。 考試的標準答案是 DFS。
+\end{pastsoln}

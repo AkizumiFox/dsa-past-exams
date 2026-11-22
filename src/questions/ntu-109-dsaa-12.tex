@@ -1,0 +1,88 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-12}]{臺大資工所 109 學年度 第 12 題}
+（問答）
+
+(15 points) There are $n$ stations along a coastal railway ($n>0$). You're planning to select some
+of them to open cafes. Three arrays $S$, $L$ and $R$ have been given, including
+\begin{itemize}
+\item $S=(s_1,s_2,\ldots,s_n)$: the list of the stations from $s_1$ (first) to $s_n$ (last).
+\item $L=(l_1,l_2,\ldots,l_n)$: the locations of the stations, where $l_i$ is the distance of
+$s_i$ from the first station $s_1$. So $l_1=0$ and $l_n$ is the length of the railway.
+$l_1<l_2<\ldots<l_n$.
+\item $R=(r_1,r_2,\ldots,r_n)$: the revenues of the cafes, where $r_i$ ($>0$) is the revenue for
+opening a cafe in $s_i$.
+\end{itemize}
+The only one constraint in your plan is that the distance of any pair of your selected stations
+should be longer than a given threshold $T$. If $s_i$ and $s_j$ ($i\ne j$) are selected, the
+total revenue would be $l_i+l_j$. Different selection leads to different total revenue. Given
+$S$, $L$, $R$ and $T$, your goal is to pick up a subset of the stations to maximize the total
+revenue under the constraint. Suppose that $f(n)$ returns the maximum total revenue for the
+cafes you select from the first $n$ stations. Please answer the following questions.
+\textbf{No code is required (code will not be graded).}
+\begin{enumerate}[label=(\alph*)]
+\item (9 points) Give an $O(n^2)$ solution by defining a recurrence formula for $f(n)$. Clearly
+explain the meaning of your formula and why it can be computed in $O(n^2)$ time.
+\item (6 points) Consider the special case that the distance difference between two consecutive
+stations is 1, i.e., $l_{i+1}-l_i=1$ ($1\le i\le n-1$). Give an $O(n)$ solution by defining a
+recurrence formula for $f(n)$. Clearly explain the meaning of your formula and why it can be
+computed in $O(n)$ time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{原題的筆誤}。 題目說選了 $s_i$、$s_j$ 時「total revenue would be $l_i + l_j$」，但 $l_i$ 是位置，
+前面才定義 $r_i$ 是在 $s_i$ 開店的收益；照位置算收益沒有道理（而且 $R$ 就完全用不到了）。 這裡採用
+「總收益是選到的車站的 $r$ 加總」，也就是選 $s_i$、$s_j$ 時是 $r_i + r_j$。 另外 $T$ 當成非負的數。
+
+答案：
+\begin{itemize}
+\item (a) $f(0) = 0$，$f(i) = \max\bigl(f(i-1),\ r_i + f(p(i))\bigr)$，$p(i)$ 是 $l_i - l_j > T$ 的最大
+$j < i$（沒有就是 $0$）；逐一往回找 $p(i)$，$O(n^2)$。
+\item (b) $f(i) = \max\bigl(f(i-1),\ r_i + f(\max(0, i - d))\bigr)$，$d = \lfloor T \rfloor + 1$；$O(n)$。
+\end{itemize}
+
+\textbf{(a) 子問題}（資結書第~18.1.5~節的步驟）。 令 $f(i)$ 是只能從前 $i$ 個車站 $s_1, \ldots, s_i$ 選時
+最大的總收益，$f(0) = 0$（不選）；要的答案是 $f(n)$。 車站照位置排好，選出來的車站兩兩距離都 $> T$，
+等價於「相鄰兩個選到的車站距離 $> T$」：位置是遞增的，相鄰的距離 $> T$，隔得更遠的距離只會更大。
+
+\textbf{遞迴式}。 看 $s_i$ 選不選：
+\begin{itemize}
+\item 不選 $s_i$：剩下的問題是從前 $i - 1$ 個選，最好是 $f(i - 1)$。
+\item 選 $s_i$：其他選到的車站都在 $s_i$ 前面，而且和 $s_i$ 的距離要 $> T$，也就是只能從
+$\{s_j : l_i - l_j > T\}$ 裡選。 因為 $l$ 遞增，這些車站正好是前 $p(i)$ 個，其中
+\[
+p(i) = \max\{\, j : 1 \le j < i,\ l_i - l_j > T \,\} \quad (\text{沒有這樣的 } j \text{ 時 } p(i) = 0).
+\]
+前 $p(i)$ 個裡面怎麼選才合法，和原問題一樣，最好是 $f(p(i))$。 所以這種情形最好是 $r_i + f(p(i))$。
+\end{itemize}
+兩種取大的：
+\[
+f(0) = 0, \qquad f(i) = \max\bigl(f(i - 1),\ r_i + f(p(i))\bigr) \quad (1 \le i \le n).
+\]
+最佳子結構：選 $s_i$ 時，扣掉 $s_i$ 剩下的選法一定是前 $p(i)$ 個車站的最佳選法；如果不是，換成更好的那個，
+再加上 $s_i$ 仍然合法（新選的都在前 $p(i)$ 個裡，和 $s_i$ 的距離 $> T$），總收益更大，矛盾。 不選 $s_i$
+的情形同理。
+
+\textbf{計算和時間}。 $f(i)$ 只用到 $f$ 在比 $i$ 小的位置的值，由 $i = 1$ 填到 $n$ 就好（由下而上，資結書
+第~18.1.3~節）。 每個 $i$ 從 $j = i - 1$ 往回找到第一個 $l_i - l_j > T$ 的 $j$，最多看 $i - 1$ 個，$O(n)$；
+算 $f(i)$ 本身 $O(1)$。 $n$ 個 $i$ 共 $O(n^2)$ 時間、$O(n)$ 空間。 要印出選了哪些車站，從 $i = n$ 往回：
+$f(i) = f(i - 1)$ 就不選 $s_i$、跳到 $i - 1$，否則選 $s_i$、跳到 $p(i)$。
+
+（也可以寫成「$g(i)$ 是最後一個選 $s_i$ 的最大收益，$g(i) = r_i + \max\bigl(0, \max_{j : l_i - l_j > T}
+g(j)\bigr)$，$f(n) = \max_i g(i)$」，每個 $g(i)$ 掃過前面所有 $j$，一樣是 $O(n^2)$。）
+
+\textbf{(b) 間距都是 $1$}。 這時 $l_i = i - 1$，$l_i - l_j = i - j$。 令 $d = \lfloor T \rfloor + 1$，是大於
+$T$ 的最小整數；$i - j > T$ 若且唯若 $i - j \ge d$，也就是 $j \le i - d$。 所以 $p(i)$ 不用找，直接是
+\[
+p(i) = \max(0,\ i - d),
+\]
+遞迴式變成
+\[
+f(0) = 0, \qquad f(i) = \max\bigl(f(i - 1),\ r_i + f(\max(0,\ i - d))\bigr) \quad (1 \le i \le n).
+\]
+意思和 (a) 一樣：不選 $s_i$，或選 $s_i$ 並且前一個選到的車站至少要在 $d$ 站之前。 每個 $f(i)$ 是 $O(1)$
+（$p(i)$ 用一次減法算出），$n$ 個共 $O(n)$。 例如 $T = 2$ 時 $d = 3$，選了 $s_i$ 就不能選 $s_{i-1}$、
+$s_{i-2}$；$T = 0.5$ 時 $d = 1$，相鄰的車站可以同時選，全選最好。
+
+\textbf{補充}。 一般情形其實也能 $O(n)$：$l$ 遞增，所以 $p(i)$ 隨 $i$ 不會變小，用一個指標從上一個
+$p(i - 1)$ 往前推就好，指標總共只往前走 $n$ 步。 題目 (a) 只要求 $O(n^2)$，上面的逐一往回找已經足夠。
+\end{pastsoln}

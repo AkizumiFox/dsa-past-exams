@@ -1,0 +1,16 @@
+paper: ncu-106-dsa
+volume: 1
+school: 中央
+dept: 資工所
+year: 106
+subject: 資料結構與演算法
+instructions: 所別：資工類。本科考試禁用計算器。＊請在答案卷內作答。問答題。
+questions:
+  - {id: ncu-106-dsa-01, label: 第 1 題, chapter: 6}
+  - {id: ncu-106-dsa-02, label: 第 2 題, chapter: 8}
+  - {id: ncu-106-dsa-03, label: 第 3 題, chapter: 7}
+  - {id: ncu-106-dsa-04, label: 第 4 題, chapter: 14}
+  - {id: ncu-106-dsa-05, label: 第 5 題, chapter: 28}
+  - {id: ncu-106-dsa-06, label: 第 6 題, chapter: 20}
+  - {id: ncu-106-dsa-07, label: 第 7 題, chapter: 25}
+  - {id: ncu-106-dsa-08, label: 第 8 題, chapter: 18}

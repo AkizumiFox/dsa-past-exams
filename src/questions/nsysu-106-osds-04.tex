@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:nsysu-106-osds-04}]{中山資工所甲組 106 學年度 第 9 題}
+（問答）
+
+(10\%) Analyze the behavior of \textsc{Quicksort} in the case where a schizophrenic adversary picks
+the best possible splitter (partitioning element) instead of the worst, every other time (i.e., he
+alternates between best and worst). What running time is induced by this ``adversary?''
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\Theta(n \lg n)$。 最壞的分割和最好的分割輪流出現，效果只是讓遞迴樹多一倍的層數，常數變大，
+階數不變。
+
+\textbf{寫出遞迴式}。 一次分割 $m$ 個數要 $\Theta(m)$ 的時間（基準和其他 $m - 1$ 個數各比一次）。
+最壞的分割把基準以外的數全部分到同一邊，切成 $0$ 和 $m - 1$ 個；最好的分割切成兩半，各約
+$(m-1)/2$ 個（資結書第~14.5~節）。 令 $G(n)$ 是「這一層用最好的分割」時排好 $n$ 個數的時間，
+$B(n)$ 是「這一層用最壞的分割」時的時間。 兩種輪流出現：
+\begin{align*}
+G(n) &= 2B\bigl((n-1)/2\bigr) + \Theta(n),\\
+B(n) &= G(n - 1) + \Theta(n).
+\end{align*}
+（$B(0) = G(0) = \Theta(1)$；$B$ 切出的空的那一邊只花常數時間，併進 $\Theta(n)$。）
+
+\textbf{解遞迴式}。 把 $B$ 代進 $G$：
+\[
+G(n) = 2\Bigl(G\bigl(\tfrac{n-1}{2} - 1\bigr) + \Theta\bigl(\tfrac{n-1}{2}\bigr)\Bigr) + \Theta(n)
+= 2G\bigl(\tfrac{n-3}{2}\bigr) + \Theta(n).
+\]
+這和 $T(n) = 2T(n/2) + \Theta(n)$ 是同一型（參數差一個常數不影響階數，資結書第~2.1~節的地板、天花板
+那一段），由主定理（資結書定理~2.4 的情況 2），$G(n) = \Theta(n \lg n)$。 而
+$B(n) = G(n-1) + \Theta(n) = \Theta(n \lg n)$，所以不管第一層是好是壞，總時間都是
+$\Theta(n \lg n)$。
+
+\textbf{直觀的看法（遞迴樹）}。 把「壞＋好」兩層合成一層看：壞的那層花 $\Theta(m)$，只剝掉一個數；
+接下來好的那層再花 $\Theta(m)$，切成兩半。 所以每兩層，問題大小減半，花的時間不超過
+$2cm$。 遞迴樹每兩層的總工作不超過 $2cn$，層數約 $2\lg n$，總共 $O(n \lg n)$。 下界：即使每一層都
+是最好的分割也要 $\Omega(n \lg n)$（資結書第~14.5~節），所以是 $\Theta(n \lg n)$。
+
+和全部都是最好的分割相比，常數大約變成兩倍（多出來的那些「壞層」各做一次幾乎和上一層一樣大的分割）。
+這也說明資結書第~14.5~節的結論：快速排序怕的是幾乎每一次都切得極偏，偶爾切壞並不會讓它退化成
+$\Theta(n^2)$。
+\end{pastsoln}

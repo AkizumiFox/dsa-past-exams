@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:nccu-108-dsa-05}]{政大資科所 108 學年度 第 5 題}
+（問答）
+
+(10\%) Give the tight asymptotic bound of the following recurrence: $T(n)=2T(n/2)+n$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \Theta(n \lg n)$。
+
+\textbf{主定理}（資結書定理~2.4）。 $a = 2$、$b = 2$，$n^{\log_b a} = n^{\log_2 2} = n$。 $f(n) = n =
+\Theta(n^{\log_b a})$，是第二種情形，所以 $T(n) = \Theta(n^{\log_b a} \lg n) = \Theta(n \lg n)$。
+
+\textbf{展開驗證}。 題目沒給初始值，設 $T(1) = c$（常數），$n$ 是 $2$ 的冪次。 展開 $k$ 次：
+\[
+T(n) = 2T(n/2) + n = 4T(n/4) + n + n = \cdots = 2^k T(n/2^k) + kn.
+\]
+取 $k = \lg n$ 得 $T(n) = cn + n \lg n$。 $n \ge 2$ 時 $n \lg n \le T(n) \le (c + 1) n \lg n$（$c \ge 0$），
+所以 $T(n) = \Theta(n \lg n)$。 這也是遞迴樹的說法：共 $\lg n$ 層，每層加起來都是 $n$，再加上 $n$ 個葉子
+各 $c$。 $n$ 不是 $2$ 的冪次時把 $n/2$ 讀成 $\lfloor n/2 \rfloor$ 或 $\lceil n/2 \rceil$，量級不變
+（資結書第~2.1.6~節）。
+
+這正是合併排序的遞迴式。
+\end{pastsoln}

@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:nsysu-110-osds-03}]{中山資工所甲組 110 學年度 第 9 題}
+（問答、追蹤）
+
+\begin{enumerate}[label=(\alph*)]
+\item (5\%) Please give the definition of an AVL binary search tree.
+\item (5\%) Assume that the initial AVL tree is empty. Please draw the AVL tree after the numbers 8,
+9, 6, 3 and 2 are inserted into the tree sequentially.
+\item (5\%) Please draw the AVL tree after the number 5 is inserted into the above AVL obtained in
+(b).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} AVL 樹是一棵二元搜尋樹，而且\textbf{每一個}節點的左、右子樹高度相差不超過 $1$（資結書定義~10.1）。 節點的
+平衡因子 $\mathit{bf} = $ 左子樹高度 $-$ 右子樹高度，AVL 樹要求每個節點的 $\mathit{bf} \in \{-1, 0, 1\}$（空樹高度
+算 $0$，數節點；用數邊的定義、空樹算 $-1$，差值一樣）。 這保證 $n$ 個節點的 AVL 樹高度是 $O(\lg n)$（資結書定理~10.1），
+搜尋、插入、刪除都是 $O(\lg n)$。
+
+\textbf{(b)} 插入照二元搜尋樹的方式放到葉子，再從新節點往上找第一個 $|\mathit{bf}| = 2$ 的節點，依新節點在它的哪一邊
+做 LL、RR、LR、RL 旋轉（資結書第~10.2.3~節）。 圖中節點旁的數字是平衡因子。
+\begin{itemize}
+\item 插入 8、9、6：8 是根，9 在右、6 在左，都平衡。
+\item 插入 3：放在 6 的左邊。 6 的 $\mathit{bf} = 1$，8 的 $\mathit{bf} = 1$，仍然平衡。
+\item 插入 2：放在 3 的左邊。 往上檢查：3 的 $\mathit{bf} = 1$，6 的 $\mathit{bf} = 2$，不平衡（8 的 $\mathit{bf}$ 也
+變成 $2$，但要修的是最低的那個 6）。 新節點在 6 的左子節點 3 的左邊，是 \textbf{LL}，在 6 做一次右旋：3 升上來，
+2、6 分別是它的左右子節點。 旋轉後 6 原來那棵子樹的高度回到插入前的 $2$，8 也恢復平衡。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[x=0.8cm,y=0.95cm,v/.style={circle,draw,inner sep=0pt,minimum size=6mm},
+  bf/.style={font=\scriptsize,inner sep=1pt,text=black!60}]
+\begin{scope}
+\node[v] (a8) at (2,0) {8}; \node[v] (a6) at (1,-1) {6}; \node[v] (a9) at (3,-1) {9};
+\node[v] (a3) at (0.4,-2) {3}; \node[v] (a2) at (-0.2,-3) {2};
+\draw (a8)--(a6) (a8)--(a9) (a6)--(a3) (a3)--(a2);
+\node[bf,right=1pt] at (a8.east) {2}; \node[bf,right=1pt] at (a6.east) {2};
+\node[bf,right=1pt] at (a3.east) {1};
+\node[font=\small] at (1.4,-4) {插入 2 後（未修正）};
+\end{scope}
+\draw[->,thick] (4,-1.5)--(5,-1.5) node[midway,above,font=\small]{在 6 右旋};
+\begin{scope}[xshift=5.2cm]
+\node[v] (b8) at (2,0) {8}; \node[v] (b3) at (1,-1) {3}; \node[v] (b9) at (3,-1) {9};
+\node[v] (b2) at (0.4,-2) {2}; \node[v] (b6) at (1.6,-2) {6};
+\draw (b8)--(b3) (b8)--(b9) (b3)--(b2) (b3)--(b6);
+\node[bf,right=1pt] at (b8.east) {1}; \node[bf,right=1pt] at (b3.east) {0};
+\node[font=\small] at (1.5,-4) {(b) 的答案};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+(b) 的答案：根 8，左子節點 3（子節點 2、6），右子節點 9。 中序 2, 3, 6, 8, 9，是排好的。
+
+\textbf{(c)} 插入 5：$5 < 8$ 往左，$5 > 3$ 往右，$5 < 6$ 放在 6 的左邊。 往上檢查：6 的 $\mathit{bf} = 1$；3 的左子樹高 $1$、
+右子樹高 $2$，$\mathit{bf} = -1$；8 的左子樹高 $3$、右子樹高 $1$，$\mathit{bf} = 2$，不平衡。 新節點在 8 的左子節點 3 的
+\textbf{右}邊，是 \textbf{LR}：先在 3 左旋、再在 8 右旋，效果是 3 的右子節點 6 升為這棵子樹的根，3 和 8 分別成為它的左右
+子節點；6 原來的左子樹（5）給 3 當右子樹，6 原來的右子樹（空）給 8 當左子樹。
+\begin{center}
+\begin{tikzpicture}[x=0.8cm,y=0.95cm,v/.style={circle,draw,inner sep=0pt,minimum size=6mm},
+  bf/.style={font=\scriptsize,inner sep=1pt,text=black!60}]
+\begin{scope}
+\node[v] (a8) at (2,0) {8}; \node[v] (a3) at (1,-1) {3}; \node[v] (a9) at (3,-1) {9};
+\node[v] (a2) at (0.4,-2) {2}; \node[v] (a6) at (1.6,-2) {6}; \node[v] (a5) at (1.1,-3) {5};
+\draw (a8)--(a3) (a8)--(a9) (a3)--(a2) (a3)--(a6) (a6)--(a5);
+\node[bf,right=1pt] at (a8.east) {2}; \node[bf,right=1pt] at (a3.east) {$-1$};
+\node[bf,right=1pt] at (a6.east) {1};
+\node[font=\small] at (1.5,-4) {插入 5 後（未修正）};
+\end{scope}
+\draw[->,thick] (4,-1.5)--(5,-1.5) node[midway,above,font=\small]{LR 旋轉};
+\begin{scope}[xshift=5.2cm]
+\node[v] (b6) at (2,0) {6}; \node[v] (b3) at (1,-1) {3}; \node[v] (b8) at (3,-1) {8};
+\node[v] (b2) at (0.4,-2) {2}; \node[v] (b5) at (1.6,-2) {5}; \node[v] (b9) at (3.6,-2) {9};
+\draw (b6)--(b3) (b6)--(b8) (b3)--(b2) (b3)--(b5) (b8)--(b9);
+\node[bf,right=1pt] at (b6.east) {0}; \node[bf,right=1pt] at (b3.east) {0};
+\node[bf,right=1pt] at (b8.east) {$-1$};
+\node[font=\small] at (2,-3) {(c) 的答案};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+(c) 的答案：根 6，左子節點 3（子節點 2、5），右子節點 8（右子節點 9）。 中序 2, 3, 5, 6, 8, 9，每個節點的平衡因子都在
+$\{-1, 0, 1\}$ 之內。 只在 8 做一次右旋是不夠的：會得到根 3、右子節點 8、8 的左子節點 6、6 的左子節點 5，3 的
+$\mathit{bf}$ 變成 $-2$，這就是 LR 要做兩次旋轉的原因。
+\end{pastsoln}

@@ -1,0 +1,30 @@
+paper: ncu-107-dsa
+volume: 1
+school: 中央
+dept: 資工所
+year: 107
+subject: 資料結構與演算法
+instructions: 所別：資工類。本科考試禁用計算器。＊請在答案卷(卡)內作答。第 1–10 題：單選題 (每題 4 分，答錯倒扣一分)。第 11–14 題：單選題 (每題 5 分，答錯倒扣一分)。第 15–22 題：多選題(每題 5 分，答錯每小題倒扣 1 分，扣到零分為止)。
+questions:
+  - {id: ncu-107-dsa-01, label: 第 1 題, chapter: 2}
+  - {id: ncu-107-dsa-02, label: 第 2 題, chapter: 2}
+  - {id: ncu-107-dsa-03, label: 第 3 題, chapter: 24}
+  - {id: ncu-107-dsa-04, label: 第 4 題, chapter: 25}
+  - {id: ncu-107-dsa-05, label: 第 5 題, chapter: 25}
+  - {id: ncu-107-dsa-06, label: 第 6 題, chapter: 18}
+  - {id: ncu-107-dsa-07, label: 第 7 題, chapter: 2}
+  - {id: ncu-107-dsa-08, label: 第 8 題, chapter: 8}
+  - {id: ncu-107-dsa-09, label: 第 9 題, chapter: 8}
+  - {id: ncu-107-dsa-10, label: 第 10 題, chapter: 8}
+  - {id: ncu-107-dsa-11, label: 第 11 題, chapter: 14}
+  - {id: ncu-107-dsa-12, label: 第 12 題, chapter: 14}
+  - {id: ncu-107-dsa-13, label: 第 13 題, chapter: 14}
+  - {id: ncu-107-dsa-14, label: 第 14 題, chapter: 12}
+  - {id: ncu-107-dsa-15, label: 第 15 題, chapter: 17}
+  - {id: ncu-107-dsa-16, label: 第 16 題, chapter: 28}
+  - {id: ncu-107-dsa-17, label: 第 17 題, chapter: 28}
+  - {id: ncu-107-dsa-18, label: 第 18 題, chapter: 25}
+  - {id: ncu-107-dsa-19, label: 第 19 題, chapter: 28}
+  - {id: ncu-107-dsa-20, label: 第 20 題, chapter: 25}
+  - {id: ncu-107-dsa-21, label: 第 21 題, chapter: 25}
+  - {id: ncu-107-dsa-22, label: 第 22 題, chapter: 25}

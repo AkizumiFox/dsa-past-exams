@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:nccu-106-dsa-04}]{政大資科所 106 學年度 第 4 題}
+（問答）
+
+A server has $n$ customers waiting to be served. The service time required by each customer is
+known in advance; it is $t_i$ minutes for customer $i$. So if, for example, the customers are
+served in order of increasing $i$, then the $i$th customer has to wait $\sum_{j=1}^{i-1}t_j$
+minutes. We wish to minimize the total waiting time
+\[ T=\sum_{i=1}^{n}(\text{time spent waiting by customer } i). \]
+\begin{enumerate}[label=\Alph*.]
+\item (8\%) Design an algorithm for computing the optimal order in which to process the customers.
+\item (2\%) Prove your algorithm is correct.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這是資結書第~19.4.1~節的最短工作優先（SPT）。 題目的「等待時間」是開始服務之前等的時間，不含
+自己的服務時間。
+
+\textbf{A. 演算法}。 把顧客依服務時間 $t_i$ 由小到大排序，照這個順序服務。
+\begin{pseudo}[unbreakable]{讓總等待時間最小的順序}
+\Function{Min-Wait-Order}{$t, n$}
+    \State $\pi \gets \langle 1, 2, \ldots, n \rangle$ 依 $t_{\pi(k)}$ 由小到大排序 \Comment{合併排序，$O(n \lg n)$}
+    \State $s \gets 0$；$T \gets 0$ \Comment{$s$：前面的人的服務時間總和}
+    \For{$k \gets 1$ \To $n$}
+        \State $T \gets T + s$ \Comment{第 $k$ 位等了 $s$ 分鐘}
+        \State $s \gets s + t_{\pi(k)}$
+    \EndFor
+    \State \Return $(\pi, T)$
+\EndFunction
+\end{pseudo}
+時間：排序 $O(n \lg n)$，第 4--6 行 $\Theta(n)$，共 $O(n \lg n)$。 例如 $t = \langle 3, 1, 2
+\rangle$：照 $1, 2, 3$ 的順序，等待時間是 $0, 3, 4$，總和 $7$；照排序後的 $2, 3, 1$（服務時間
+$1, 2, 3$），等待時間是 $0, 1, 3$，總和 $4$，是最小的。
+
+為什麼要把短的排前面：排在第 $k$ 位的顧客，他的服務時間會加進後面 $n - k$ 位每一位的等待時間，
+所以順序是 $\pi(1), \ldots, \pi(n)$ 時
+\[
+T = \sum_{k=1}^{n} (n - k)\, t_{\pi(k)}.
+\]
+越前面的位置，係數越大，應該放越小的 $t$。
+
+\textbf{B. 正確性證明}（交換論證）。
+
+\textbf{(1) 交換相鄰兩位}。 設某個順序裡顧客 $i$ 緊接在顧客 $j$ 前面，排在他們前面的顧客服務時間
+總和是 $s$。 交換前，$i$ 等 $s$，$j$ 等 $s + t_i$；交換後，$j$ 等 $s$，$i$ 等 $s + t_j$。 其他顧客
+的等待時間不變：排在這兩位前面的人不受影響，排在後面的人前面一樣有 $i$、$j$ 兩位，等的時間一樣。
+所以
+\[
+T_{\text{交換前}} - T_{\text{交換後}} = (s + s + t_i) - (s + s + t_j) = t_i - t_j.
+\]
+
+\textbf{(2) 最佳順序一定由小到大}。 順序只有 $n!$ 種，一定有一個讓 $T$ 最小的順序 $\pi^*$。 假設
+$\pi^*$ 不是由小到大排好，那麼一定有相鄰的兩位 $i$ 在 $j$ 前面、$t_i > t_j$。 由 (1)，交換他們讓
+$T$ 減少 $t_i - t_j > 0$，和 $\pi^*$ 最小矛盾。 所以 $\pi^*$ 依 $t$ 由小到大（不遞減）排列。
+
+\textbf{(3) 演算法的輸出是最佳的}。 由小到大的順序可能不只一種（有服務時間相同的顧客時）。 兩個
+不遞減的順序，位置 $k$ 上的服務時間都是「第 $k$ 小的 $t$」，代進 $T = \sum_k (n-k)\,t_{\pi(k)}$
+得到一樣的值。 演算法輸出的 $\pi$ 和 $\pi^*$ 都是不遞減的，所以 $T(\pi) = T(\pi^*)$，$\pi$ 是最佳的。
+\end{pastsoln}

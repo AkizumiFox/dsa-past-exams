@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-08}]{臺大資工所 108 學年度 第 8 題}
+（填空）
+
+(8\%) Given a directed graph G where vertex u (in G) has at least one path to any other vertex
+(in G), the following pseudocode is designed to output an acyclic graph. However, in Lines 8, 10,
+11, and 14, each of A, B, C, and D should be 0, 1, or 2. Write down the correct values of A, B, C,
+and D so that the pseudocode can successfully output an acyclic graph.
+\begin{lstlisting}[numbers=left, numberstyle=\footnotesize, basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries, morekeywords={while,if,else,end}, frame=single,
+    columns=fullflexible, keepspaces=true, xleftmargin=2.5em, framexleftmargin=2em]
+Cycle-Removal(G,u)
+  Initialize S as a stack
+  Label all vertices in G as Type-0
+  Label u as Type-1
+  S.push(u)
+  while S is not empty
+    v = the top vertex of S // Comment: not S.pop() here
+    if v has a Type-A neighbor w in G
+      Remove (v,w) from G
+    else if v a Type-B neighbor w in G
+      Label w as Type-C
+      S.push(w)
+    else
+      Label v as Type-D
+      S.pop()
+    end if
+  end while
+  output G
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A $= 1$，B $= 0$，C $= 1$，D $= 2$。
+
+原卷第 10 行少了 has（「v a Type-B neighbor」），意思和第 8 行一樣，讀成「v has a Type-B
+neighbor w」。 「neighbor」指 $v$ 的出邊指到的頂點。
+
+這是用堆疊寫的 DFS（資結書第~21.4.6~節）。 三種標記對應 DFS 的三種顏色：Type-0 是還沒發現
+（白），Type-1 是已經發現、還在堆疊裡（灰），Type-2 是鄰居都處理完、已經彈出（黑）。 第 4 行
+把起點 $u$ 標成 Type-1 再推進堆疊，所以推進堆疊的頂點都標成 Type-1，C $= 1$。 第 10--12 行是
+「往下走到一個還沒發現的鄰居」，B $= 0$。 第 14 行是「鄰居都處理完，結束 $v$」，D $= 2$。 第 8 行
+要刪的是指向\textbf{灰色}頂點的邊：灰色頂點都在堆疊裡，是 $v$ 的祖先（或 $v$ 自己），這種邊就是
+\textbf{後向邊}（資結書第~21.5~節），A $= 1$。 有向圖有環若且唯若 DFS 有後向邊
+（資結書定理~21.10），把後向邊全部刪掉，剩下的就沒有環。
+
+\textbf{為什麼輸出一定無環。} 令 $v$ 被標成 Type-2 的先後順序為它的完成順序。
+\begin{enumerate}
+\item 每個頂點都會完成。 $u$ 到每個頂點都有路徑。 假設某個頂點 $x$ 從頭到尾都是 Type-0，取 $u$
+到 $x$ 路徑上第一個從沒被發現的頂點 $x'$，它在路徑上的前一個頂點 $y$ 被發現過。 $y$ 被推進堆疊，
+最後一定會走到第 14 行（每個頂點最多推一次，每條邊最多刪一次，迴圈會結束）；那時 $y$ 沒有
+Type-0 的鄰居。 但邊 $(y, x')$ 只有在 $x'$ 是 Type-1 時才會被刪，$x'$ 又從沒被發現，所以這條邊還在，
+$x'$ 是 $y$ 的 Type-0 鄰居，矛盾。
+\item 留下來的邊 $(v, w)$，$w$ 一定比 $v$ 先完成。 $v$ 走到第 14 行時，第 8、10 行的條件都不成立：
+$v$ 沒有 Type-1 也沒有 Type-0 的鄰居，所以它剩下的每個鄰居 $w$ 都已經是 Type-2。 $v$ 彈出後不會
+再推進堆疊（只推 Type-0 的頂點），它的出邊以後也不會再被刪，這時剩下的就是輸出裡 $v$ 的出邊。
+\item 若輸出有環 $v_1 \to v_2 \to \cdots \to v_k \to v_1$，由第 2 點，$v_2$ 比 $v_1$ 先完成、$v_3$ 比
+$v_2$ 先完成……$v_1$ 比 $v_k$ 先完成，繞一圈得到 $v_1$ 比自己先完成，矛盾。
+\end{enumerate}
+
+\textbf{小例子。} 邊 $u \to a$、$a \to b$、$b \to u$、$u \to b$。 $u$ 推入；$u$ 有 Type-0 的鄰居 $a$，推入；
+$a$ 推入 $b$；$b$ 的鄰居 $u$ 是 Type-1，刪掉 $b \to u$；$b$ 沒有鄰居了，標 Type-2 彈出；$a$ 的鄰居
+$b$ 是 Type-2，$a$ 完成；$u$ 的鄰居 $a$、$b$ 都是 Type-2，$u$ 完成。 只刪了後向邊 $b \to u$，
+$u \to b$ 這條前向邊留著，輸出 $u \to a \to b$、$u \to b$ 沒有環。
+
+\textbf{另一組也會無環的值。} 嚴格來說 D $= 1$（完成的頂點仍標 Type-1）時輸出也沒有環：那樣第 8 行
+會把指向任何已發現頂點的邊都刪掉，只剩 DFS 樹的樹邊，當然無環；上面的例子裡 $u \to b$ 也會被刪。
+但它多刪了前向邊和交叉邊，三種標記也失去「白、灰、黑」的意義，題目要的是 D $= 2$ 這組：只刪
+後向邊，其他的邊都留著。
+\end{pastsoln}

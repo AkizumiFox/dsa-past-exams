@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ccu-110-swa-11}]{中正資工所甲組 110 學年度 第 14 題}
+（程式）
+
+(10\%) Please write a function to find a key in a BST (Binary Search Tree). Return the address of
+the matched node if there is a match. Otherwise, return NULL;\\
+The data structure for a tree node contains a key and two pointers. The key is a string. You need
+to declare the data structure of the tree node before the function code.
+\end{pastexam}
+
+\begin{pastsoln}
+做法就是資結書虛擬碼~9.2 的迴圈版搜尋（遞迴版是資結書虛擬碼~9.1）：從根開始，要找的鍵比目前
+節點的鍵小就往左、大就往右，相等就找到，走到空指標就表示不在樹裡。 鍵是字串，「比大小」要用
+\texttt{strcmp}，依字典順序比。
+
+\begin{code}{c}{字串鍵的 BST 搜尋}
+#include <string.h>
+
+typedef struct node {
+    char *key;            /* 以 '\0' 結尾的字串 */
+    struct node *left;    /* 鍵比較小的子樹 */
+    struct node *right;   /* 鍵比較大的子樹 */
+} Node;
+
+Node *bst_search(Node *root, const char *key)
+{
+    Node *x = root;
+    while (x != NULL) {
+        int c = strcmp(key, x->key);
+        if (c == 0)
+            return x;              /* 找到了 */
+        x = (c < 0) ? x->left : x->right;
+    }
+    return NULL;                   /* 走到空的子樹：不在樹裡 */
+}
+\end{code}
+
+\textbf{幾個容易錯的地方}：
+\begin{itemize}
+\item 不能寫 \texttt{key == x->key}。 兩邊都是 \texttt{char *}，\texttt{==} 比的是兩個指標的位址，
+內容相同、存在不同地方的字串會被當成不相等。 \texttt{<}、\texttt{>} 也一樣，要用 \texttt{strcmp}
+的回傳值：負數表示 \texttt{key} 排在前面（往左），正數往右，$0$ 是相等。
+\item \texttt{strcmp} 每個迴圈只呼叫一次，結果存起來用兩次，不必比兩遍。
+\item 樹是空的（\texttt{root} 是 \texttt{NULL}）時迴圈一次都不做，直接回傳 \texttt{NULL}。
+\item 結構裡的 \texttt{key} 也可以宣告成固定長度的陣列，例如 \texttt{char key[32];}，搜尋函式不用改。
+\end{itemize}
+
+\textbf{正確性}。 迴圈不變量：「如果 \texttt{key} 在樹裡，它在以 \texttt{x} 為根的子樹裡。」 一開始
+\texttt{x} 是根，成立。 \texttt{key} 比 \texttt{x->key} 小時，由 BST 性質，右子樹的鍵都比
+\texttt{x->key} 大，不可能是 \texttt{key}，所以 \texttt{key} 若在就在左子樹，往左走後仍成立；比較大時
+同理。 回傳 \texttt{x} 時 \texttt{strcmp} 是 $0$，確實找到；\texttt{x} 變成 \texttt{NULL} 時子樹是空的，
+由不變量 \texttt{key} 不在樹裡，回傳 \texttt{NULL} 正確。
+
+\textbf{時間}。 每一圈往下走一層，最多走 $h + 1$ 圈，$h$ 是樹高；每圈一次 \texttt{strcmp}，最多比到
+較短的字串結束，設字串長度不超過 $L$，總時間 $O(hL)$。 鍵長是常數時就是資結書第~9.1~節的 $O(h)$。
+\end{pastsoln}

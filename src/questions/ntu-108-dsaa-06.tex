@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-06}]{臺大資工所 108 學年度 第 6 題}
+（問答）
+
+(13\%) When implementing a hash table, one of the commonly used collision resolution methods is
+open addressing. Let $k$ be the key, and $m$ be the size of the hash table. Assume each table entry
+can hold one key.
+\begin{enumerate}[label=(\alph*)]
+\item (3\%) The simplest open addressing method is called \textbf{linear probing}, where if a slot
+is already occupied, the following slots are ``probed'' sequentially. Assume an auxiliary hash
+function $h'(k)=k \bmod m$. Please give the hash function $h(k,i)$ of linear probing with the given
+auxiliary function, where $i$ is the number of times the hash table has been probed with this key
+(and thus starting from 0).
+\item (5\%) Linear probing is easy to implement but suffers from the problem of primary
+clustering. A more complex open addressing method which can mitigate this problem is
+\textbf{double hashing}, using a hash function in the form of
+$h(k,i)=\big(h_1(k)+ih_2(k)\big) \bmod m$, with two auxiliary hash functions $h_1(k)$ and
+$h_2(k)$. $i$ is the number of times the hash table has been probed with key $k$. Assume two
+auxiliary hash functions $h_1(k)=k \bmod 16$, $h_2(k)=1+(k \bmod 15)$, and $m=16$. Show the final
+hash table content after inserting all of the following keys to an initially empty hash table in
+the given order: \{16, 3, 35, 67, 51, 1, 15, 31, 19, 17\}.
+\item (5\%) Prof. Alpha proposes a different double hashing method, using two auxiliary hash
+functions $h_1(k)=k \bmod 16$, $h_2(k)=2(k \bmod 8)$, respectively. Assume the table size $m=16$.
+Use an example to briefly explain how Prof. Alpha's method is problematic.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} $h(k, i) = \bigl(h'(k) + i\bigr) \bmod m = \bigl((k \bmod m) + i\bigr) \bmod m$，
+$i = 0, 1, \ldots, m - 1$（資結書第~12.3~節）。 最外面的 $\bmod m$ 不能省：探測走到最後一格
+$m - 1$ 之後要繞回第 $0$ 格。
+
+\textbf{(b)} 每個鍵依序試 $h(k, 0), h(k, 1), \ldots$，第一個空格就放下：
+\begin{center}
+\small
+\begin{tabular}{rcccl}
+\toprule
+$k$ & $h_1(k)$ & $h_2(k)$ & 探測的格子 & 放在 \\
+\midrule
+16 & 0 & 2 & 0 & 0 \\
+3 & 3 & 4 & 3 & 3 \\
+35 & 3 & 6 & 3（有 3）, 9 & 9 \\
+67 & 3 & 8 & 3, 11 & 11 \\
+51 & 3 & 7 & 3, 10 & 10 \\
+1 & 1 & 2 & 1 & 1 \\
+15 & 15 & 1 & 15 & 15 \\
+31 & 15 & 2 & 15（有 15）, 1（有 1）, 3（有 3）, 5 & 5 \\
+19 & 3 & 5 & 3, 8 & 8 \\
+17 & 1 & 3 & 1（有 1）, 4 & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $31$：$h_1 = 31 \bmod 16 = 15$，$h_2 = 1 + (31 \bmod 15) = 2$，依序試
+$15, (15 + 2) \bmod 16 = 1, (15 + 4) \bmod 16 = 3, (15 + 6) \bmod 16 = 5$，前三格都有鍵，放在第
+$5$ 格。 最後的表（空白表示空格）：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|*{16}{c|}}
+\hline
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\ \hline
+16 & 1 &  & 3 & 17 & 31 &  &  & 19 & 35 & 51 & 67 &  &  &  & 15 \\ \hline
+\end{tabular}
+\end{center}
+$35, 67, 51, 19$ 的 $h_1$ 都是 $3$，但 $h_2$ 不同，各自跳到不同的格子，不會像線性探測那樣全部擠
+在第 $3$ 格後面。
+
+\textbf{(c)} 問題在 $h_2(k) = 2(k \bmod 8)$：
+\begin{enumerate}
+\item \textbf{$h_2$ 可能是 $0$。} $k$ 是 $8$ 的倍數時 $h_2(k) = 0$，探測序列是
+$h_1(k), h_1(k), h_1(k), \ldots$，永遠只試同一格。 例子：先插入 $24$，$h_1(24) = 8$，放在第 $8$ 格；
+再插入 $8$，$h_1(8) = 8$、$h_2(8) = 0$，第 $8$ 格有鍵，之後每一次探測都還是第 $8$ 格，表裡另外
+$15$ 格是空的也放不進去（插入失敗或無窮迴圈）。
+\item \textbf{$h_2$ 一定是偶數}，和 $m = 16$ 不互質。 探測序列每次跳偶數格，只會走到和 $h_1(k)$
+同奇偶的那 $8$ 格。 例如 $k = 3$：$h_1 = 3$、$h_2 = 6$，探測 $3, 9, 15, 5, 11, 1, 7, 13$，接著又回到
+$3$，偶數格一個都碰不到。 奇數格滿了，奇數的鍵就插不進去，雖然偶數格還有空位。
+\end{enumerate}
+資結書定理~12.4：$\gcd(h_2(k), m) = 1$ 時探測序列才會走遍全部 $m$ 格。 $m$ 是 $2$ 的冪時，常見的
+做法是讓 $h_2(k)$ 永遠是奇數，例如 $h_2(k) = 2(k \bmod 8) + 1$。 (b) 的 $h_2(k) = 1 + (k \bmod 15)$
+雖然也會出現偶數（例如 $h_2(16) = 2$），但至少不會是 $0$，而且大約一半的鍵拿到奇數。
+\end{pastsoln}

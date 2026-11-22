@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncku-110-prog-04}]{成大資訊聯招 110 學年度 第 4 題}
+（計算）
+
+(10\%) Consider the following algorithm:
+\begin{minted}[fontsize=\small]{text}
+for (i = 1; i <= 2n; i++)
+   sum = sum + i;
+for (i = n; i >= 1; i--)
+   sum = sum + i;
+cout << sum;
+\end{minted}
+\begin{enumerate}[label=(\arabic*),itemsep=0pt,topsep=2pt]
+\item (5\%) What is the output when n = 4?
+\item (5\%) What is the time complexity T(n)?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $46$；(2) $T(n) = \Theta(n)$。
+
+程式沒有寫 \texttt{sum} 的初值，也沒有宣告。 這裡照題意假設 \texttt{sum} 一開始是 $0$；
+\texttt{2n} 是 $2 \times n$。
+
+\textbf{(1)} 第一個迴圈 $i = 1, 2, \ldots, 2n$，加上 $1 + 2 + \cdots + 2n = \frac{2n(2n+1)}{2}
+= n(2n + 1)$。 第二個迴圈 $i = n, n - 1, \ldots, 1$，加上 $1 + 2 + \cdots + n = \frac{n(n+1)}{2}$。
+所以輸出
+\[
+\mathit{sum} = n(2n + 1) + \frac{n(n + 1)}{2}.
+\]
+$n = 4$：第一個迴圈加 $1 + 2 + \cdots + 8 = 36$，第二個迴圈加 $4 + 3 + 2 + 1 = 10$，
+輸出 $36 + 10 = 46$。 代公式：$4 \cdot 9 + \frac{4 \cdot 5}{2} = 36 + 10 = 46$。
+
+\textbf{(2)} 第一個迴圈跑 $2n$ 次，第二個跑 $n$ 次，每次迴圈本體是一個加法和一個指定，
+都是常數時間；迴圈的判斷與 $i$ 的增減也是每次常數。 兩個迴圈是先後執行，不是巢狀，
+總次數相加（資結書第~1.7~節）：
+\[
+T(n) = c_1 \cdot 2n + c_2 \cdot n + c_3 = \Theta(n).
+\]
+注意不要被 \texttt{sum} 的值是 $\Theta(n^2)$ 誤導：輸出的\textbf{數值}和 $n^2$ 同級，但\textbf{時間}只
+看做了幾次運算，是 $3n$ 次加法，$\Theta(n)$。
+\end{pastsoln}

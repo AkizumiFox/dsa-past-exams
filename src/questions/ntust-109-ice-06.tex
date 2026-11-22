@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntust-109-ice-06}]{臺科大資工所 109 學年度 第 6 題}
+（問答）
+
+An array contains a list of $n$ items whose keys are distinct and happen to be in ascending order
+already. Unaware of this fact, we want to sort the list into ascending order. For each of the
+following sorting methods, give the corresponding time complexity (in terms of $n$ using $O(\ )$
+notation) of the sorting operation.
+\begin{enumerate}[label=(\alph*)]
+\item Insertion Sort (3\%)
+\item Quick Sort (3\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $O(n)$；(b) $O(n^2)$。
+
+題目沒有說快速排序怎麼選基準，下面照課本最常見的寫法：固定取第一個或最後一個元素當基準
+（資結書虛擬碼~14.9 的 Lomuto 分割取 $A[r]$）。 改用隨機選基準或三數取中位數，(b) 就不是這個答案，
+最後再說明。
+
+\textbf{(a) 插入排序}。 第 $j$ 輪要把 $A[j]$ 插進已排好的 $A[1..j-1]$（資結書虛擬碼~1.3）。
+輸入已經由小到大時，$A[j-1] < A[j]$，內層迴圈比較一次就停，不挪動任何元素。 每一輪 $O(1)$，
+共 $n - 1$ 輪，比較 $n - 1$ 次，總時間 $O(n)$（資結書第~1.8~節的最好情況）。
+
+\textbf{(b) 快速排序}。 以 Lomuto 分割、基準取最後一個為例：子陣列 $A[p..r]$ 已經排好，基準
+$A[r]$ 是最大值，前面 $r - p$ 個都比它小，分割完基準留在原位，切成 $r - p$ 個和 $0$ 個。 左邊
+那段仍然排好，下一層又是同樣的情形，每一層只少一個元素。 第 $k$ 層分割的長度是 $n - k + 1$，
+比較 $n - k$ 次，總比較次數
+\[
+(n - 1) + (n - 2) + \cdots + 1 = \frac{n(n-1)}{2},
+\]
+遞迴式 $T(n) = T(n-1) + \Theta(n)$，$T(n) = \Theta(n^2)$，是 $O(n^2)$（資結書第~14.5~節「最壞和最好
+的情況」）。 基準取第一個元素時也一樣：基準是最小值，每次切成 $0$ 個和 $m - 1$ 個。
+
+\textbf{如果基準選法不同}。 隨機選基準時，期望時間是 $O(n \lg n)$，和輸入順序無關；三數取中位數
+（第一個、中間、最後一個）在已排好的輸入上會選到正中間，每次切成兩半，也是 $O(n \lg n)$。 作答時
+寫出採用哪一種基準，閱卷才看得出答案從哪裡來。
+\end{pastsoln}

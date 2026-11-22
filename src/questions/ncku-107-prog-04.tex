@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncku-107-prog-04}]{成大資訊聯招 107 學年度 第 4 題}
+（問答）
+
+(10\%) Please compute the total cost of executing $n$ of the stack operations (PUSH, POP,
+and MULTIPOP ).
+
+\textbf{Stack Operations}: PUSH , POP , and MULTIPOP
+
+\textbf{PUSH ($S$, $x$)} pushes object x onto stack S
+
+\textbf{POP ($S$)} pops the top of stack $S$ and returns the popped object. Calling POP on
+an empty stack generates an error.
+
+\textbf{MUTIPOP($S$, $k$)} removes the $k$ top objectives of stack $S$, popping the entire
+stack if the stack contains fewer than $k$ objects. The following pseudo code presents the
+procedure of the MUTIPOP operation
+
+\textbf{MUTIPOP ($S$, $k$)}
+
+\begin{tabular}{ll}
+1 & \textbf{while} not STACK -EMPTY ($S$) and $k>0$ \\
+2 & \quad POP ($S$) \\
+3 & \quad $k$=$k$-1
+\end{tabular}
+
+Both PUSH and POP take O(1) time. The cost of MUTIPOP ($S$, $k$) is 1+ min($s$, $k$) where
+$s$ is the number of objects in stack $S$.
+
+Suppose that there are $n$ stack operations (PUSH, POP, and MULTIPOP ) executed.
+
+The stack is empty before those operations start and it is empty after those operations
+finished.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的成本和資結書第~3.1~節略有不同：\proc{Multipop} 的成本是 $1 + \min(s, k)$，多了檢查的
+那個 $1$。 PUSH、POP 是 $O(1)$，這裡各算成本 $1$。 原題的 MUTIPOP、objectives 是 MULTIPOP、
+objects 的筆誤。
+
+答案：總成本恰好是 $n + P - Q$，其中 $P$、$Q$ 是 PUSH、POP 的次數；它不超過 $2n - 1$，所以是
+$\Theta(n)$，每次操作的平攤成本是 $O(1)$。
+
+用聚合法。 設 $n$ 次操作裡有 $P$ 次 PUSH、$Q$ 次 POP、$M$ 次 MULTIPOP，$P + Q + M = n$；第 $j$
+次 MULTIPOP 實際拿掉 $m_j$ 個。 總成本是
+\[
+P \cdot 1 + Q \cdot 1 + \sum_{j=1}^{M} (1 + m_j) = n + \sum_{j=1}^{M} m_j .
+\]
+每個被拿掉的元素都被 PUSH 過，而一開始和最後堆疊都是空的，所以每個放進去的元素剛好被拿掉一次：
+$Q + \sum_j m_j = P$。 代進去，總成本 $= n + P - Q$。
+
+上界：$n \ge 1$ 時不可能 $n$ 次全是 PUSH（最後堆疊會不是空的），所以 $P \le n - 1$，總成本
+$\le n + (n - 1) = 2n - 1$。 這個上界達得到：先 PUSH $n - 1$ 次，再一次 MULTIPOP$(S, k)$
+（$k \ge n - 1$），成本 $(n - 1) + 1 + (n - 1) = 2n - 1$。 下界：每次操作至少花 $1$，總成本至少
+$n$。 所以總成本是 $\Theta(n)$，平攤到每次操作不超過 $2$。
+\end{pastsoln}

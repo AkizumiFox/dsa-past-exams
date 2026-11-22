@@ -1,0 +1,18 @@
+paper: ntu-108-dsaa
+volume: 1
+school: 臺大
+dept: 資工所
+year: 108
+subject: 資料結構與演算法（A）
+instructions: "Note: NO partial score will be given for partially correct answer for subproblems in each problem (or for a single problem without subproblems). Unless otherwise noted, only the final solution is needed."
+questions:
+  - {id: ntu-108-dsaa-01, label: 第 1 題, chapter: 6}
+  - {id: ntu-108-dsaa-02, label: 第 2 題, chapter: 6}
+  - {id: ntu-108-dsaa-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-108-dsaa-04, label: 第 4 題, chapter: 8}
+  - {id: ntu-108-dsaa-05, label: 第 5 題, chapter: 14}
+  - {id: ntu-108-dsaa-06, label: 第 6 題, chapter: 12}
+  - {id: ntu-108-dsaa-07, label: 第 7 題, chapter: 25}
+  - {id: ntu-108-dsaa-08, label: 第 8 題, chapter: 21}
+  - {id: ntu-108-dsaa-09, label: 第 9 題, chapter: 18}
+  - {id: ntu-108-dsaa-10, label: 第 10 題, chapter: 18}

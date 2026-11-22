@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:nccu-109-dsa-03}]{政大資科所 109 學年度 第 3 題}
+（程式設計）
+
+(20 points) Given two binary trees, design an algorithm for checking if they are identical in terms
+of both the structure and the values. The node in the binary tree is defined as follows. Implement
+the ``equal'' function in C or pseudo code.
+\begin{minted}[fontsize=\small]{c}
+struct node {
+    int value;
+    struct node *left, *right;
+};
+bool equal(struct node *tree1, struct node *tree2)
+{
+    ....
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}。 兩棵二元樹相同，若且唯若：兩棵都是空的；或者兩棵都不空、根的值相同、左子樹相同、右子樹
+相同。 這正是二元樹的遞迴定義（資結書第~7.3~節的走訪也是這樣遞迴），直接寫成遞迴函式：
+\begin{code}{c}{判斷兩棵二元樹是否相同}
+bool equal(struct node *tree1, struct node *tree2)
+{
+    if (tree1 == NULL || tree2 == NULL)
+        return tree1 == tree2;          /* 兩個都空才相同 */
+    return tree1->value == tree2->value
+        && equal(tree1->left, tree2->left)
+        && equal(tree1->right, tree2->right);
+}
+\end{code}
+（\texttt{bool} 要 \texttt{\#include <stdbool.h>}。）
+
+\textbf{正確性}。 對兩棵樹的節點數總和 $s$ 做歸納。
+\begin{itemize}
+\item 至少一棵是空的：兩棵都空時相同，回傳 \texttt{true}；只有一棵空時結構不同，回傳 \texttt{false}。
+第 3--4 行用 \texttt{tree1 == tree2} 一次處理這兩種情形（兩個都是 \texttt{NULL} 才相等）。
+\item 兩棵都不空：它們相同，若且唯若根的值相同、而且左子樹和左子樹相同、右子樹和右子樹相同。 子樹的節點數
+總和比 $s$ 小，由歸納假設遞迴呼叫回傳正確的結果，第 5--7 行把三個條件用 \texttt{\&\&} 接起來。
+\end{itemize}
+\texttt{\&\&} 是短路求值：根的值不同就不會再遞迴，左子樹不同就不會再比右子樹，只會更快，不影響結果。
+
+\textbf{複雜度}。 設兩棵樹分別有 $n_1$、$n_2$ 個節點。 每次呼叫做常數的工作；只有兩邊都不空時才會往下遞迴，
+所以被呼叫的節點對最多 $\min(n_1, n_2)$ 個，加上碰到 \texttt{NULL} 的呼叫（每個節點對最多產生兩個），
+總共 $O(\min(n_1, n_2))$。 最壞（兩棵相同）是 $\Theta(n)$。 遞迴深度不超過較矮那棵的高度加一，最壞
+$O(n)$ 的堆疊空間。
+
+\textbf{常見的錯}。 只比較兩棵樹的中序（或前序）走訪序列不夠：只有 $1$、$2$ 兩個值時，「根 $1$、右孩子 $2$」
+和「根 $2$、左孩子 $1$」的中序都是 $1, 2$，結構卻不同。 一定要連空指標的位置一起比，上面的函式就是在做這件事。
+\end{pastsoln}

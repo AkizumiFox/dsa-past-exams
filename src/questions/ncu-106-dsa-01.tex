@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ncu-106-dsa-01}]{中央資工所 106 學年度 第 1 題}
+（問答）
+
+(5\%) What is printed by the following algorithm?
+\begin{minted}[fontsize=\small,breaklines]{c}
+A[]={0,1,2,3,4,5};
+int min(int i, int j){
+  int n; int m=(i+j)/2;
+  if (i==j) return A[i];
+  else {
+    if (min(i, m) < min(m+1,j)) n=min(i, m);
+    else n=min(m+1,j);
+    printf("%d %d %d \n", i, j, n); return n; }
+}
+void main( ) {
+  int L;
+  L=min(0,5);
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案（共 $10$ 行）：
+\begin{center}
+\texttt{0 1 0\quad 0 1 0\quad 0 2 0\quad 3 4 3\quad 3 4 3\quad 3 5 3\quad 0 1 0\quad 0 1 0\quad
+0 2 0\quad 0 5 0}
+\end{center}
+
+\textbf{約定}。 題目的程式不是完整的 C：\texttt{A[]} 沒寫型別，照 \texttt{int A[]} 讀。 另外，
+\texttt{min(i, m) < min(m+1,j)} 的兩邊都是函式呼叫，C 沒有規定先算哪一邊；兩邊都會印東西，
+先算哪一邊會影響印出的順序。 下面照一般的讀法，由左到右算。 這一點在答案卷上寫一句說明比較保險。
+
+\textbf{先看函式在做什麼}。 \texttt{min(i, j)} 回傳 $A[i..j]$ 的最小值：只有一個元素時直接回傳，
+\textbf{不印}；否則切成 $[i, m]$ 和 $[m+1, j]$。 要注意它對其中一半呼叫了\textbf{兩次}：條件裡
+兩半各算一次，比完之後又對比較小的那一半再呼叫一次，才把結果存進 $n$，最後印出
+「$i$ $j$ $n$」。 $A$ 由小到大排好，左半的最小值永遠比右半小，所以每次重算的都是左半。
+每次呼叫在返回前才印，印的順序是呼叫結束的順序（資結書第~6.4~節：最後呼叫的最先返回）。
+
+\textbf{呼叫樹}（縮排表示被誰呼叫；只有一個元素的呼叫不印，表裡只寫回傳值）：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+呼叫 & 做的事 & 印出 \\
+\midrule
+\texttt{min(0,5)}，$m = 2$ & 先算 \texttt{min(0,2)} & \\
+\quad \texttt{min(0,2)}，$m = 1$ & 先算 \texttt{min(0,1)} & \\
+\qquad \texttt{min(0,1)}，$m = 0$ & \texttt{min(0,0)} $= 0$、\texttt{min(1,1)} $= 1$； & \\
+ & $0 < 1$，再呼叫 \texttt{min(0,0)} & 第 1 行：\texttt{0 1 0} \\
+\qquad \texttt{min(2,2)} $= 2$（比較用） & & \\
+\qquad $0 < 2$，再呼叫 \texttt{min(0,1)} & 同上一次 & 第 2 行：\texttt{0 1 0} \\
+\quad \texttt{min(0,2)} 返回 & $n = 0$ & 第 3 行：\texttt{0 2 0} \\
+\quad \texttt{min(3,5)}（比較用），$m = 4$ & 先算 \texttt{min(3,4)} & \\
+\qquad \texttt{min(3,4)}，$m = 3$ & $3 < 4$，再呼叫 \texttt{min(3,3)} & 第 4 行：\texttt{3 4 3} \\
+\qquad \texttt{min(5,5)} $= 5$（比較用） & & \\
+\qquad $3 < 5$，再呼叫 \texttt{min(3,4)} & 同上一次 & 第 5 行：\texttt{3 4 3} \\
+\quad \texttt{min(3,5)} 返回 & $n = 3$ & 第 6 行：\texttt{3 5 3} \\
+\quad $0 < 3$，再呼叫 \texttt{min(0,2)} & 整棵重跑一次 & 第 7--9 行：同第 1--3 行 \\
+\texttt{min(0,5)} 返回 & $n = 0$ & 第 10 行：\texttt{0 5 0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+數一下行數：\texttt{min(0,1)}、\texttt{min(3,4)} 這種兩個元素的呼叫各印 $1$ 行；
+\texttt{min(0,2)} 會呼叫 \texttt{min(0,1)} 兩次再印自己，共 $3$ 行；\texttt{min(3,5)} 也是 $3$ 行；
+\texttt{min(0,5)} 是 \texttt{min(0,2)} 兩次、\texttt{min(3,5)} 一次再加自己，$3 + 3 + 3 + 1 = 10$ 行。
+
+如果編譯器先算右邊的 \texttt{min(m+1,j)}，同樣是這 $10$ 行，只是順序變成
+\texttt{3 4 3}、\texttt{3 4 3}、\texttt{3 5 3}、\texttt{0 1 0}、\texttt{0 1 0}、\texttt{0 2 0}、
+\texttt{0 1 0}、\texttt{0 1 0}、\texttt{0 2 0}、\texttt{0 5 0}。 把 \texttt{min(i, m)} 的結果先存進
+變數再比較，就不會重算，也不會有順序的問題。
+\end{pastsoln}

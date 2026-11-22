@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:nsysu-110-dmalg-04}]{中山資工所資安組 110 學年度 第 8 題}
+（設計、分析）
+
+(Algorithm points) {[10\%]} Please express the construction of Huffman coding and analyze its time
+complexity in detail.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{問題}。 給 $n \ge 2$ 個符號和各自的出現次數 $\mathit{freq}$，要找一組前綴碼（沒有一個碼字是另一個的開頭），
+使總長度 $\sum \mathit{freq}(c) \cdot \mathrm{len}(c)$ 最小。 前綴碼對應一棵二元樹：符號在葉子，往左寫 $0$、往右寫 $1$，
+碼字長度就是葉子的深度。
+
+\textbf{建構}（資結書第~19.3~節，虛擬碼~19.3）：每個符號先是一棵只有一個節點的樹，權重是 $\mathit{freq}$。 重複
+「取出權重最小的兩棵，合併成一棵新樹（新根的兩個子節點是它們，權重相加），放回去」，直到只剩一棵。
+\begin{pseudo}{霍夫曼編碼}
+\Function{Huffman}{$C$} \Comment{$C$：$n \ge 2$ 個符號}
+    \State 建立最小優先佇列 $Q$，放進 $C$ 的每個符號，鍵是 $\mathit{freq}$
+    \For{$i \gets 1$ \To $n - 1$}
+        \State $x \gets$ \Call{Extract-Min}{$Q$}
+        \State $y \gets$ \Call{Extract-Min}{$Q$}
+        \State 建立新節點 $z$：$z.\mathit{left} \gets x$，$z.\mathit{right} \gets y$，
+        $z.\mathit{freq} \gets x.\mathit{freq} + y.\mathit{freq}$
+        \State \Call{Insert}{$Q, z$}
+    \EndFor
+    \State \Return \Call{Extract-Min}{$Q$} \Comment{碼樹的根}
+\EndFunction
+\end{pseudo}
+最後從根走到每片葉子，記下 $0$、$1$，就是各符號的碼字。 例：a:5、b:9、c:12、d:13、e:16、f:45。 依序合併
+$5 + 9 = 14$、$12 + 13 = 25$、$14 + 16 = 30$、$25 + 30 = 55$、$45 + 55 = 100$，得到 f 碼長 $1$，c、d、e 碼長 $3$，
+a、b 碼長 $4$，總長 $45 + 3(12 + 13 + 16) + 4(5 + 9) = 224$。
+
+\textbf{正確性}（資結書定理~19.5）：(1) 貪心選擇：存在一棵最佳碼樹，頻率最小的兩個符號是最深的一對兄弟葉子
+（把它們和最深的兄弟交換，總長不會變大）。 (2) 最佳子結構：把這兩片葉子合併成一個頻率相加的新符號後，新問題的
+最佳樹展開回去就是原問題的最佳樹，因為兩者總長只差一個固定的 $x.\mathit{freq} + y.\mathit{freq}$。 對 $n$ 歸納即得
+演算法建出的樹是最佳的。
+
+\textbf{時間複雜度}。 用二元堆積當優先佇列：
+\begin{itemize}
+\item 建立佇列：$n$ 個元素由下而上建堆積 $O(n)$（逐一插入則是 $O(n \lg n)$）。
+\item 迴圈跑 $n - 1$ 次，每次兩次 \proc{Extract-Min}、一次 \proc{Insert}，佇列大小不超過 $n$，每次 $O(\lg n)$；
+共 $O(n \lg n)$。
+\item 走訪碼樹寫出碼字：樹有 $2n - 1$ 個節點，$O(n)$（輸出所有碼字的總長另計）。
+\end{itemize}
+總共 $O(n \lg n)$。 如果符號已經依頻率排好，可以用兩個佇列（一個放原始符號、一個依序放合併出來的樹，後者產生的
+權重本來就遞增），每次從兩個佇列的開頭取最小的，整個建構變成 $O(n)$。
+\end{pastsoln}

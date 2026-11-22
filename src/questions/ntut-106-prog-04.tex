@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ntut-106-prog-04}]{北科大資工所 106 學年度 第 4 題}
+（設計）
+
+\textbf{Problem 4 [6\%]}\\
+Let $T$ be a binary tree rooted at $r$ with vertex set $V$ and edge set $E$. Suppose it is
+represented using adjacency list format. If node $u$ is an ancestor of $v$, there is a path from
+$r$ to $v$ passing through $u$. Consider the function \textit{ancestor}($u$, $v$) which returns TRUE
+if $u$ is an ancestor of $v$ and FALSE otherwise. In order to have this function run in O(1) time,
+we are asked to design an algorithm to preprocess the tree. Please provide a linear time, i.e.,
+O($|V|+|E|$) time, algorithm for this preprocessing.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}。 從根 $r$ 做一次 DFS，記下每個節點的發現時間 $d[\cdot]$ 和完成時間 $f[\cdot]$。 由括號定理
+（資結書定理~21.5），$v$ 是 $u$ 的子孫若且唯若區間 $[d[v], f[v]]$ 包含在 $[d[u], f[u]]$ 裡。 查詢時比較
+四個數，$O(1)$。
+
+題目的定義是「$r$ 到 $v$ 的路徑經過 $u$」，$u = v$ 時也成立，所以這裡把節點算成自己的祖先；只要
+真祖先時，把下面的 $\le$ 改成 $<$。 鄰接串列如果是無向的（$u$ 的串列裡也有它的父節點），走訪時要跳過
+父節點；如果只存子節點，那一個判斷永遠成立，不影響。
+
+\begin{pseudo}{祖先查詢的前處理與查詢}
+\Procedure{Preprocess}{$T, r$}
+    \State $\mathit{time} \gets 0$
+    \State \Call{Visit}{$r, \mathrm{NIL}$}
+\EndProcedure
+\Statex
+\Procedure{Visit}{$u, p$} \Comment{$p$ 是 $u$ 的父節點}
+    \State $\mathit{time} \gets \mathit{time} + 1$
+    \State $d[u] \gets \mathit{time}$
+    \For{每個 $w \in \mathit{Adj}[u]$}
+        \If{$w \ne p$}
+            \State \Call{Visit}{$w, u$}
+        \EndIf
+    \EndFor
+    \State $\mathit{time} \gets \mathit{time} + 1$
+    \State $f[u] \gets \mathit{time}$
+\EndProcedure
+\Statex
+\Function{Ancestor}{$u, v$}
+    \State \Return $d[u] \le d[v]$ \AND $f[v] \le f[u]$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 先說明 DFS 樹就是 $T$ 本身。 \proc{Visit}$(u, p)$ 時，$u$ 的鄰居除了父節點 $p$ 以外都是
+$u$ 的子節點，所以 \proc{Visit} 對 $T$ 的每個子節點遞迴一次，沿著樹邊往下走；樹沒有環，每個節點只
+從它的父節點被走到一次。 因此 $u$ 的呼叫從開始（記 $d[u]$）到結束（記 $f[u]$）之間，恰好處理完
+以 $u$ 為根的子樹裡的所有節點，而且不會處理其他節點：
+\begin{itemize}
+\item $v$ 在 $u$ 的子樹裡（$u$ 是 $v$ 的祖先）：$v$ 的呼叫整個包在 $u$ 的呼叫裡面，
+$d[u] \le d[v] < f[v] \le f[u]$，\proc{Ancestor} 回傳 TRUE。
+\item $v$ 不在 $u$ 的子樹裡，分兩種。 $v$ 是 $u$ 的真祖先：$u$ 的呼叫包在 $v$ 的裡面，$d[v] < d[u]$，
+第一個條件不成立。 兩者互不為祖先：兩棵子樹沒有共同節點，兩次呼叫的期間不重疊；$v$ 的在前面時
+$d[v] < d[u]$，在後面時 $f[v] > d[v] > f[u]$，總有一個條件不成立。 都回傳 FALSE。
+\end{itemize}
+
+\textbf{時間}。 每個節點呼叫 \proc{Visit} 一次，每個鄰接串列掃一次，全部串列的長度是 $2|E|$（無向）或
+$|E|$（只存子節點），總共 $O(|V| + |E|)$；樹有 $|E| = |V| - 1$，也就是 $O(|V|)$。 \proc{Ancestor} 只做兩次
+比較，$O(1)$。 空間是 $d$、$f$ 兩個陣列，$O(|V|)$。 樹很深時遞迴可能太深，可以照資結書第~21.4.6~節
+改用自己的堆疊，時間不變。
+
+\textbf{例子}。 根 $1$，子節點 $2$、$3$；$2$ 的子節點 $4$、$5$。 依序得 $d/f$：$1$：$1/10$，$2$：$2/7$，
+$4$：$3/4$，$5$：$5/6$，$3$：$8/9$。 \proc{Ancestor}$(2, 5)$：$2 \le 5$ 且 $6 \le 7$，TRUE。
+\proc{Ancestor}$(2, 3)$：$2 \le 8$ 但 $9 \le 7$ 不成立，FALSE。
+\end{pastsoln}

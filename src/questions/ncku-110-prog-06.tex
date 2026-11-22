@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ncku-110-prog-06}]{成大資訊聯招 110 學年度 第 6 題}
+（問答）
+
+(15\%) Use the master method to give tight asymptotic bounds for the following recurrences. If
+the master method does not apply, you should point out and explain.
+\begin{enumerate}[label=(\arabic*),itemsep=0pt,topsep=2pt]
+\item (3\%) $T(n)=2T(n/4)+\sqrt{n}$
+\item (3\%) $T(n)=T(n-1)+n\lg n$
+\item (3\%) $T(n)=3T(n/4)+n\lg n$
+\item (3\%) $T(n)=4T(n/2)+n^2\lg n$
+\item (3\%) $T(n)=7T(n/2)+\Theta(n^2)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $\Theta(\sqrt{n} \lg n)$；(2) 主定理不能用，$\Theta(n^2 \lg n)$；(3) $\Theta(n \lg n)$；
+(4) 原本的三種情況都不適用，用推廣的情況 2 得 $\Theta(n^2 \lg^2 n)$；(5) $\Theta(n^{\lg 7})$。
+
+主定理照資結書定理~2.4，推廣的情況 2 照資結書定理~2.5。 每一題依序寫出 $a$、$b$、
+$n^{\log_b a}$、$f(n)$、屬於哪一種情況。
+
+\textbf{(1)} $a = 2$、$b = 4$，$n^{\log_4 2} = n^{1/2}$，$f(n) = \sqrt{n} = \Theta(n^{1/2})$，
+兩者同級，情況 2：$T(n) = \Theta(\sqrt{n} \lg n)$。
+
+\textbf{(2)} 不是 $aT(n/b) + f(n)$ 的形式：子問題的規模是 $n - 1$，不是 $n$ 除以一個大於 $1$ 的
+常數，主定理不能用。 直接展開：
+\[
+T(n) = T(0) + \sum_{k=1}^{n} k \lg k .
+\]
+上界：每一項 $k \lg k \le n \lg n$，共 $n$ 項，和 $\le n^2 \lg n$。 下界：只留後一半
+$k \ge n/2$ 的項，每項 $\ge \frac n2 \lg \frac n2$，至少 $n/2$ 項，和
+$\ge \frac{n^2}{4}(\lg n - 1) = \Omega(n^2 \lg n)$。 所以 $T(n) = \Theta(n^2 \lg n)$。
+
+\textbf{(3)} $a = 3$、$b = 4$，$\log_4 3 \approx 0.793$，$f(n) = n \lg n$。 取 $\varepsilon = 0.2$，
+$\log_4 3 + 0.2 < 1$，$n \lg n = \Omega(n^{\log_4 3 + 0.2})$。 正則條件：
+\[
+a f(n/b) = 3 \cdot \frac n4 \lg \frac n4 \le \frac34\, n \lg n = c f(n), \qquad c = \frac34 < 1,
+\]
+對所有 $n \ge 4$ 成立（$\lg (n/4) \le \lg n$）。 情況 3：$T(n) = \Theta(n \lg n)$。
+
+\textbf{(4)} $a = 4$、$b = 2$，$n^{\log_2 4} = n^2$，$f(n) = n^2 \lg n$。
+\begin{itemize}
+\item 情況 3 要 $f(n) = \Omega(n^{2 + \varepsilon})$，但 $n^2 \lg n / n^{2+\varepsilon} = \lg n / n^{\varepsilon} \to 0$，
+對任何 $\varepsilon > 0$ 都不成立：$f(n)$ 比 $n^2$ 大，但只大了 $\lg n$，不是多項式倍。
+\item 情況 2 要 $f(n) = \Theta(n^2)$，也不成立；情況 1 更不可能。
+\end{itemize}
+所以原本的三種情況（CLRS 版的主定理）都不適用，這是本題要你指出的地方。 用推廣的情況 2
+（$f(n) = \Theta(n^{\log_b a} \lg^k n)$，$k = 1$）得 $T(n) = \Theta(n^2 \lg^2 n)$。 不引用推廣版也可以用
+遞迴樹驗證（$n = 2^m$）：第 $j$ 層有 $4^j$ 個規模 $n/2^j$ 的子問題，總和
+$4^j \cdot (n/2^j)^2 \lg(n/2^j) = n^2 (m - j)$；加總 $n^2 \sum_{j=0}^{m-1} (m - j) = n^2 \cdot
+\frac{m(m+1)}{2} = \Theta(n^2 \lg^2 n)$，葉子 $n^2$ 個不影響。
+
+\textbf{(5)} $a = 7$、$b = 2$，$\log_2 7 \approx 2.807$，$f(n) = \Theta(n^2)$。 取 $\varepsilon = 0.8$，
+$f(n) = O(n^{\lg 7 - 0.8})$，情況 1：$T(n) = \Theta(n^{\lg 7}) \approx \Theta(n^{2.81})$。
+這是 Strassen 矩陣乘法的遞迴式（資結書第~17~章）。
+\end{pastsoln}

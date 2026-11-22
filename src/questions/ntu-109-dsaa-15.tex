@@ -1,0 +1,83 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-15}]{臺大資工所 109 學年度 第 15 題}
+（問答）
+
+(15 points) A Single Nucleotide Polymorphism (SNP, pronounced \textit{snip}) is a single nucleotide
+variation in the genome that recurs in a significant proportion of the population of a species.
+The patterns of \textit{Linkage Disequilibrium} (LD) observed in the human population reveal a
+block-like structure. LD refers to the association that particular alleles at nearby sites are
+more likely to occur together than would be predicted by chance. The entire chromosome can be
+partitioned into high LD regions interspersed by low LD regions. The high LD regions are usually
+called ``haplotype blocks,'' and the low LD ones are referred to as ``recombination hotspots.''
+Since there is little or no recombination within a haplotype block, these SNPs are highly
+correlated. Consequently, a small subset of SNPs, called tag SNPs or haplotype tagging SNPs, is
+sufficient to categorize the haplotype patterns of the block. It has been shown that we can
+recast the tag SNP selection problem as \textbf{Problem W}, which is, ``Given a universal set
+$\mathcal{U}=\{u_1,u_2,\ldots,u_n\}$ and a family $\mathcal{F}=\{F_1,F_2,\ldots,F_m\}$ of subsets
+of $\mathcal{U}$, find a minimum-size subset $\widehat{\mathcal{C}}$ of $\mathcal{F}$, such that
+every element of $\mathcal{U}$ belongs to at least one subset in $\widehat{\mathcal{C}}$.''
+\begin{enumerate}[label=(\alph*)]
+\item (5 points) Prove or disprove that a greedy approach always delivers an optimal solution for
+\textbf{Problem W}.
+\item (10 points) Prove or disprove that \textbf{Problem W} is NP-complete.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 不成立，貪心不一定最佳；(b) 成立（指它的判定版本；最佳化版本是 NP 難）。
+
+題目前面一大段生物背景只是包裝，\textbf{Problem W} 就是（不加權的）集合覆蓋問題（資結書第~29.4~節）。
+
+\textbf{(a) 不成立，舉反例}。 「greedy approach」指最自然的貪心（資結書虛擬碼~29.3，每個集合成本都是
+$1$）：每一步挑「蓋住最多還沒被蓋住的元素」的集合，直到全部蓋住。 反例：
+\[
+\mathcal{U} = \{1, 2, 3, 4, 5, 6\},\quad F_1 = \{1, 2, 3\},\quad F_2 = \{4, 5, 6\},\quad F_3 = \{1, 2, 4, 5\}.
+\]
+\begin{itemize}
+\item 第一步：$F_1, F_2, F_3$ 能蓋住的新元素分別是 $3, 3, 4$ 個，挑 $F_3$（唯一最多，沒有平手的問題）。
+還沒蓋住 $\{3, 6\}$。
+\item 第二步：$F_1$、$F_2$ 各蓋住一個新元素（$3$、$6$），挑其中一個，例如 $F_1$。 剩 $\{6\}$。
+\item 第三步：只有 $F_2$ 能蓋住 $6$，挑 $F_2$。
+\end{itemize}
+貪心得到 $3$ 個集合；但 $\{F_1, F_2\}$ 兩個就蓋住 $\mathcal{U}$，而一個集合最多 $4$ 個元素、蓋不住 $6$ 個，
+所以最佳解是 $2$。 貪心不是最佳的。
+
+換成別的貪心規則也一樣：由 (b)，Problem W 是 NP 難的，如果某個多項式時間的貪心演算法永遠給出最佳解，就
+得到 $\mathrm{P} = \mathrm{NP}$。 貪心能保證的是近似：資結書定理~29.5，它的解最多是最佳解的 $H_d \le
+\ln n + 1$ 倍（$d$ 是最大集合的大小）。
+
+\textbf{(b) 成立}。 NP 完備是對判定問題說的，Problem W 是最佳化問題，先寫成判定版本（資結書第~28.1~節）：
+
+\begin{center}
+SET-COVER：給 $\mathcal{U}$、$\mathcal{F}$ 和整數 $k$，問是否存在 $\mathcal{C} \subseteq \mathcal{F}$，
+$|\mathcal{C}| \le k$，蓋住 $\mathcal{U}$ 的每個元素？
+\end{center}
+證明 SET-COVER 是 NP 完備的；能在多項式時間解 Problem W，就能解 SET-COVER（解出最小的大小，和 $k$
+比），所以 Problem W 是 NP 難的。 照資結書引理~28.6 的步驟：在 NP 裡，再從一個已知的 NP 完備問題歸約
+過來。
+
+\textbf{SET-COVER $\in$ NP}。 憑證是 $\mathcal{C}$ 本身（最多 $k \le m$ 個集合的編號）。 驗證：檢查
+$|\mathcal{C}| \le k$，再把 $\mathcal{C}$ 裡每個集合的元素標記起來，看 $\mathcal{U}$ 的每個元素是否都被標到，
+時間 $O\bigl(n + \sum_i |F_i|\bigr)$，是輸入長度的多項式。
+
+\textbf{VERTEX-COVER $\le_{\mathrm{p}}$ SET-COVER}。 VERTEX-COVER（給圖 $G = (V, E)$ 和 $k$，問有沒有
+$\le k$ 個頂點碰到每一條邊）是 NP 完備的（資結書定理~28.9）。 給一個 VERTEX-COVER 的輸入 $\langle G, k
+\rangle$，構造
+\[
+\mathcal{U} = E, \qquad \mathcal{F} = \{\, F_v : v \in V \,\}, \quad F_v = \{\, e \in E : e \text{ 碰到 } v \,\},
+\qquad k \text{ 不變}.
+\]
+構造只要掃一次相鄰串列，$O(|V| + |E|)$ 時間。 正確性：
+\begin{itemize}
+\item 若 $S \subseteq V$ 是大小 $\le k$ 的頂點覆蓋，則 $\{F_v : v \in S\}$ 有 $\le k$ 個集合；每條邊 $e$ 至少
+有一個端點 $v \in S$，$e \in F_v$，所以蓋住了 $\mathcal{U} = E$。
+\item 反過來，若 $\{F_v : v \in S\}$ 是大小 $\le k$ 的集合覆蓋，則每條邊 $e$ 在某個 $F_v$（$v \in S$）裡，
+也就是 $e$ 碰到 $v$，所以 $S$ 是大小 $\le k$ 的頂點覆蓋。
+\end{itemize}
+所以 $\langle G, k\rangle$ 的答案是「是」若且唯若構造出來的 $\langle \mathcal{U}, \mathcal{F}, k\rangle$ 的
+答案是「是」。 SET-COVER 在 NP 裡而且是 NP 難的，是 NP 完備的。 這個構造就是資結書第~29.4~節說的「頂點
+覆蓋是集合覆蓋的特例」。
+
+例如三角形 $G$：$V = \{x, y, z\}$，$E = \{xy, yz, zx\}$，$k = 2$。 構造出 $\mathcal{U} = \{xy, yz, zx\}$、
+$F_x = \{xy, zx\}$、$F_y = \{xy, yz\}$、$F_z = \{yz, zx\}$；$\{x, y\}$ 是頂點覆蓋，$\{F_x, F_y\}$ 也正好
+蓋住 $\mathcal{U}$。
+\end{pastsoln}

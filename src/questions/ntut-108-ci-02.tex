@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntut-108-ci-02}]{北科大資工所 108 學年度 第 1 題（節錄 (4) 小題）}
+（簡答）
+
+(15 pts) Please answer the following questions concisely.
+\begin{enumerate}[label=(\arabic*)]
+\setcounter{enumi}{3}
+\item (3 pts) How quickly can you multiply a $kn\times n$ matrix by an $n\times kn$ matrix, using
+Strassen's matrix multiplication algorithm as a subroutine?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\Theta(k^2 n^{\lg 7})$，約 $\Theta(k^2 n^{2.81})$。
+
+把 $kn \times n$ 的 $A$ 由上往下切成 $k$ 塊、每塊 $n \times n$；把 $n \times kn$ 的 $B$ 由左往右切成
+$k$ 塊、每塊也是 $n \times n$：
+\[
+A = \begin{bmatrix} A_1 \\ A_2 \\ \vdots \\ A_k \end{bmatrix}, \qquad
+B = \begin{bmatrix} B_1 & B_2 & \cdots & B_k \end{bmatrix}.
+\]
+乘積 $C = AB$ 是 $kn \times kn$，照分塊乘法，第 $(i, j)$ 塊是
+\[
+C_{ij} = A_i B_j, \qquad 1 \le i, j \le k .
+\]
+每一塊都是兩個 $n \times n$ 矩陣相乘，用 Strassen（資結書第~17.3.4~節）各要 $\Theta(n^{\lg 7})$，
+共 $k^2$ 塊，合計 $\Theta(k^2 n^{\lg 7})$。 切塊和把結果放回 $C$ 只是搬資料，總共 $O(k^2 n^2)$，
+比 $k^2 n^{\lg 7}$ 小，不影響答案。 $n$ 不是 $2$ 的次方時，先補零補到 $2$ 的次方，大小最多變成
+兩倍，只差常數倍。
+
+順帶一提，兩個矩陣反過來乘（$n \times kn$ 乘 $kn \times n$）時，結果只有 $n \times n$：
+$BA = B_1 A_1 + B_2 A_2 + \cdots + B_k A_k$，只要 $k$ 次 Strassen 再加 $k - 1$ 次矩陣加法，
+$\Theta(k n^{\lg 7})$。 兩種順序的答案不一樣，作答時要看清楚是哪一種。
+\end{pastsoln}

@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ccu-110-swa-09}]{中正資工所甲組 110 學年度 第 11 題}
+（問答）
+
+(5\%) Let $G = (V, E)$ be an acyclic directed graph with negative-weight edges, argue if Johnson's
+reweighting approach can solve a single source shortest path problem in $G$ faster than the
+Bellman-Ford algorithm. A simple yes/no answer will not get any point.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：照 Johnson 原本的做法，不會比 Bellman--Ford 快；而且 $G$ 無環時，最快的做法根本不需要改權重。
+
+\textbf{Johnson 的改權重要先跑一次 Bellman--Ford}（資結書第~25.7~節）。 改權重
+$\hat{w}(u, v) = w(u, v) + h(u) - h(v)$ 要求每條邊 $\hat{w} \ge 0$，也就是 $h(v) \le h(u) + w(u, v)$。
+Johnson 的做法是加一個新頂點 $q$，連權重 $0$ 的邊到每個頂點，用 Bellman--Ford 從 $q$ 算出
+$h(v) = \delta(q, v)$。 所以單一起點時 Johnson 的時間是
+\[
+\underbrace{\Theta(|V||E|)}_{\text{Bellman--Ford 算 } h}
++ \underbrace{O(|E|)}_{\text{改權重}}
++ \underbrace{O(|E| \lg |V|)}_{\text{一次 Dijkstra}},
+\]
+至少和 Bellman--Ford 一樣久。 而 $G$ 無環，沒有負環，直接從起點 $s$ 跑 Bellman--Ford 一次
+（$O(|V||E|)$，資結書第~25.3~節）就已經得到答案。 Johnson 的改權重只在要算\textbf{所有點對}時划算：
+付一次 Bellman--Ford，換來 $|V|$ 次都能用 Dijkstra。 單一起點只用一次 Dijkstra，前面那次
+Bellman--Ford 省不掉，反而白做。
+
+\textbf{利用無環也不會讓「改權重」變得有用}。 有人會想：$G$ 無環，加上 $q$ 之後 $q$ 沒有入邊，
+$G'$ 仍然無環，$h$ 可以改用 DAG 最短路徑（依拓樸順序鬆弛一遍）在 $\Theta(|V| + |E|)$ 算出來，
+這樣總時間 $O(|E| \lg |V|)$，確實比 Bellman--Ford 的 $\Theta(|V||E|)$ 快。 但是同一個 DAG 最短
+路徑演算法直接從 $s$ 出發，就在 $\Theta(|V| + |E|)$ 解完單一起點問題，有負邊也沒關係（資結書
+第~25.5~節），不必再改權重、跑 Dijkstra。
+
+\textbf{結論}：Johnson 的改權重本身靠 Bellman--Ford，用在單一起點不會比 Bellman--Ford 快；$G$
+無環時應該直接用 DAG 最短路徑，$\Theta(|V| + |E|)$，比兩者都快。
+\end{pastsoln}

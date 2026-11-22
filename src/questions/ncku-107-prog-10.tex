@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ncku-107-prog-10}]{成大資訊聯招 107 學年度 第 10 題}
+（問答）
+
+(10\%) Given a graph $G=(V,E)$, a vertex cover $C\subseteq V$ is a vertex subsetet, such that
+if $(u,v)\in E$, then $u\in C$ or $v\in C$. The minimum vertex cover problem is to find a vertex
+cover $C^*$ of $G$ with the minimum cardinality. The following algorithm is a
+$\delta$-approximation algorithm to find a vertex cover $C$ satisfying
+$|C|\le\delta\cdot|C^*|$. Please compute the minimum value of $\delta$.
+
+\begin{center}
+\fbox{\begin{minipage}{0.7\textwidth}
+APPROX\_VERTEX\_COVER(G)\\
+1 $C\leftarrow\emptyset$\\
+2 $E'\leftarrow E(G)$\\
+3 \textbf{while} $E'\neq\emptyset$\\
+4 \quad\textbf{do} let $(u,v)$ be an arbitrary edge of $G$\\
+5 \qquad $C\leftarrow C\cup\{u,v\}$\\
+6 \qquad remove from $E'$ every edge incident on either $u$ or $v$;\\
+7 \textbf{return} $C$
+\end{minipage}}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+原題第 4 行的 edge of $G$ 應是 edge of $E'$（從還沒被蓋住的邊裡任挑一條）；照字面從 $G$ 挑，可能挑到
+已經刪掉的邊，迴圈不一定會結束。 下面照 $E'$ 解。 subsetet 是 subset 的筆誤。
+
+答案：$\delta = 2$。 要證兩件事：對每張圖 $|C| \le 2|C^*|$；而且有圖讓 $|C| = 2|C^*|$，所以 $\delta$ 不能比
+$2$ 小。 這就是資結書第~29.2~節的 \proc{Approx-Vertex-Cover}（資結書定理~29.1）。
+
+\textbf{$C$ 是頂點覆蓋。} 迴圈到 $E'$ 空了才停。 一條邊從 $E'$ 刪掉，只有一種原因：它碰到某次選中的 $u$
+或 $v$，而 $u$、$v$ 都已放進 $C$。 所以結束時每條邊都至少有一端在 $C$ 裡。
+
+\textbf{$|C| \le 2|C^*|$。} 令 $M$ 是第 4 行選中的邊所成的集合。
+\begin{itemize}
+\item $M$ 的邊兩兩沒有共用端點：選中 $(u, v)$ 之後，第 6 行把所有碰到 $u$ 或 $v$ 的邊都從 $E'$ 刪掉，之後
+選中的邊不會碰到 $u$、$v$。
+\item 每選中一條邊，$C$ 多兩個頂點，而且這兩個頂點之前不在 $C$ 裡（如果在，這條邊早就被刪掉了），所以
+$|C| = 2|M|$。
+\item 任何頂點覆蓋，包括 $C^*$，都要蓋住 $M$ 的每一條邊，每條至少用掉一個端點；$M$ 的邊沒有共用端點，
+用掉的端點兩兩不同，所以 $|C^*| \ge |M|$。
+\end{itemize}
+合起來 $|C| = 2|M| \le 2|C^*|$，$\delta = 2$ 成立。
+
+\textbf{$\delta$ 不能更小。} 取只有一條邊 $(u, v)$ 的圖：演算法選中它，$C = \{u, v\}$，$|C| = 2$；但
+$\{u\}$ 就蓋住了，$|C^*| = 1$。 $|C| = 2|C^*|$，任何 $\delta < 2$ 在這張圖上都不成立。 更一般地，$k$ 條互不
+相連的邊，$|C| = 2k$、$|C^*| = k$，比值也是 $2$。 所以讓保證對所有圖都成立的最小 $\delta$ 是 $2$。
+\end{pastsoln}

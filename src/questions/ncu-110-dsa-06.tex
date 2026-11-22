@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ncu-110-dsa-06}]{中央資工所 110 學年度 複選題第 6 題}
+（複選；每題 5 分，全對才給分，答錯一個選項扣 1.5 分）
+
+Given PUSH sequence and POP sequence. Which of the following statements are false?
+\begin{enumerate}[label=(\Alph*)]
+\item PUSH 1 2 3 4; POP 1 2 3 4; It must be a Queue
+\item PUSH 1 2 3 4; POP 2 1 3 4; It must be a Stack
+\item PUSH 1 2; POP 1 2; It could be a Stack
+\item PUSH 1 2 3 4; POP 2 3 1 4; It is neither Stack nor Queue
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(D)。 題目問的是\textbf{錯}的敘述。
+
+讀法：資料依 PUSH 的順序放進一個結構，PUSH 和 POP 可以交錯進行，最後取出的順序是 POP 那一列。
+佇列不管怎麼交錯，取出的順序一定和放進去的一樣（先進先出），所以佇列只做得出 $1\,2\,3\,4$。
+堆疊做得出哪些順序，看資結書定理~6.1：$1, \ldots, n$ 依序進堆疊，輸出 $p_1, \ldots, p_n$ 做得到，
+若且唯若不存在 $i < j < k$ 使 $p_j < p_k < p_i$（沒有「$3\,1\,2$ 型」的子序列）。
+
+\textbf{(A) 錯}。 堆疊也做得出 $1\,2\,3\,4$：每放一個就馬上取出（push 1、pop、push 2、pop、……）。
+所以不一定是佇列，「must be」不成立。
+
+\textbf{(B) 對}。 佇列只能輸出 $1\,2\,3\,4$，$2\,1\,3\,4$ 不可能是佇列。 堆疊做得到：push 1、push 2、
+pop（$2$）、pop（$1$）、push 3、pop（$3$）、push 4、pop（$4$）。 在堆疊和佇列兩者之中，只能是堆疊。
+
+\textbf{(C) 對}。 push 1、pop（$1$）、push 2、pop（$2$），堆疊做得到，「could be」成立。
+
+\textbf{(D) 錯}。 $2\,3\,1\,4$ 堆疊做得到：push 1、push 2、pop（$2$）、push 3、pop（$3$）、pop（$1$）、
+push 4、pop（$4$）。 用定理檢查也一樣：要找 $p_i > p_k > p_j$（$i < j < k$），$p_j$ 只能是比前面某個數
+小的 $1$（$j = 3$），它後面只有 $4$，$4$ 不比前面的 $2$、$3$ 小，找不到。 所以它是堆疊的輸出，
+「既不是堆疊也不是佇列」不成立。
+\end{pastsoln}

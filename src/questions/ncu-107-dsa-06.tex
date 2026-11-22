@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncu-107-dsa-06}]{中央資工所 107 學年度 第 6 題}
+（單選；每題 4 分，答錯倒扣一分）
+
+Given two sequences ABACBACBBAA and BDABCBACBDA, what is the length of the LCS (Longest Common
+Subsequence) of these two sequences?
+
+(a)~5 \qquad (b)~6 \qquad (c)~7 \qquad (d)~8 \qquad (e)~9.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (d) 8。
+
+令 $X = \mathtt{ABACBACBBAA}$（$m = 11$）、$Y = \mathtt{BDABCBACBDA}$（$n = 11$），$c[i, j]$ 是
+$X[1..i]$ 和 $Y[1..j]$ 的 LCS 長度（資結書第~18.3~節，虛擬碼~18.6）：
+\[
+c[i, j] =
+\begin{cases}
+0, & i = 0 \text{ 或 } j = 0,\\
+c[i-1, j-1] + 1, & X[i] = Y[j],\\
+\max(c[i-1, j],\, c[i, j-1]), & X[i] \ne Y[j].
+\end{cases}
+\]
+一列一列、每列由左到右填（列是 $X$ 的字元，行是 $Y$ 的字元）：
+\begin{center}
+\small
+\setlength{\tabcolsep}{4.2pt}
+\begin{tabular}{c|cccccccccccc}
+ & & \texttt{B} & \texttt{D} & \texttt{A} & \texttt{B} & \texttt{C} & \texttt{B} & \texttt{A} & \texttt{C} & \texttt{B} & \texttt{D} & \texttt{A} \\ \hline
+ & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\texttt{A} & 0 & 0 & 0 & \textbf{1} & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+\texttt{B} & 0 & 1 & 1 & 1 & \textbf{2} & 2 & 2 & 2 & 2 & 2 & 2 & 2 \\
+\texttt{A} & 0 & 1 & 1 & 2 & 2 & 2 & 2 & 3 & 3 & 3 & 3 & 3 \\
+\texttt{C} & 0 & 1 & 1 & 2 & 2 & \textbf{3} & 3 & 3 & 4 & 4 & 4 & 4 \\
+\texttt{B} & 0 & 1 & 1 & 2 & 3 & 3 & \textbf{4} & 4 & 4 & 5 & 5 & 5 \\
+\texttt{A} & 0 & 1 & 1 & 2 & 3 & 3 & 4 & \textbf{5} & 5 & 5 & 5 & 6 \\
+\texttt{C} & 0 & 1 & 1 & 2 & 3 & 4 & 4 & 5 & \textbf{6} & 6 & 6 & 6 \\
+\texttt{B} & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 5 & 6 & \textbf{7} & 7 & 7 \\
+\texttt{B} & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 5 & 6 & 7 & 7 & 7 \\
+\texttt{A} & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 6 & 6 & 7 & 7 & 8 \\
+\texttt{A} & 0 & 1 & 1 & 2 & 3 & 4 & 5 & 6 & 6 & 7 & 7 & \textbf{8} \\
+\end{tabular}
+\end{center}
+右下角 $c[11, 11] = 8$，選 (d)。
+
+\textbf{還原一個 LCS}。 從右下角往回走：字元相同就往左上（粗體的格子，這個字元在 LCS 裡），不同就走
+到上面或左邊值相同的那一格（一樣大時往上）。 粗體依序對到
+$X$ 的第 $1, 2, 4, 5, 6, 7, 8, 11$ 個字元和 $Y$ 的第 $3, 4, 5, 6, 7, 8, 9, 11$ 個字元，得到
+\[
+\mathtt{A\,B\,C\,B\,A\,C\,B\,A}.
+\]
+核對（劃底線的是 LCS 用到的字元）：
+\begin{center}
+$X = \underline{\mathtt{A}}\,\underline{\mathtt{B}}\,\mathtt{A}\,\underline{\mathtt{C}}\,\underline{\mathtt{B}}\,\underline{\mathtt{A}}\,\underline{\mathtt{C}}\,\underline{\mathtt{B}}\,\mathtt{B}\,\mathtt{A}\,\underline{\mathtt{A}}$
+\qquad
+$Y = \mathtt{B}\,\mathtt{D}\,\underline{\mathtt{A}}\,\underline{\mathtt{B}}\,\underline{\mathtt{C}}\,\underline{\mathtt{B}}\,\underline{\mathtt{A}}\,\underline{\mathtt{C}}\,\underline{\mathtt{B}}\,\mathtt{D}\,\underline{\mathtt{A}}$
+\end{center}
+劃底線的字元依序都是 \texttt{ABCBACBA}。
+
+其他選項：(a)(b)(c) 都比找到的 $8$ 小。 (e) $9$ 是用字母個數估的上界（\texttt{A} 最多 $\min(5, 3) = 3$
+個、\texttt{B} 最多 $\min(4, 4) = 4$ 個、\texttt{C} 最多 $\min(2, 2) = 2$ 個），表算出來的是 $8$，這個上界達不到。
+\end{pastsoln}

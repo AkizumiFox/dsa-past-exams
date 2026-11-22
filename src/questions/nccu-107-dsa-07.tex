@@ -1,0 +1,78 @@
+\begin{pastexam}[label={px:nccu-107-dsa-07}]{政大資科所 107 學年度 第 7 題}
+（問答）
+
+(15\%) A contiguous subsequence of a list $S$ is a subsequence made up of consecutive elements of
+$S$. For instance, if $S$ is 5, 15, $-30$, 10, $-5$, 40, 10, then 15, $-30$, 10 is a contiguous
+subsequence but 5, 15, 40 is not. Design a polynomial-time algorithm for the following task:\\
+Input: A list $S$ of numbers $a_1,a_2,\ldots,a_n$.\\
+Output: The contiguous subsequence of $S$ of maximum sum.\\
+Note that a subsequence of length zero has sum zero.\\
+For the preceding example, the answer would be 10, $-5$, 40, 10, with a sum of 55.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{解讀}。 題目允許長度 $0$ 的子序列，和是 $0$。 所以全部都是負數時，答案是空的子序列（和 $0$），
+這和資結書第~17.2~節「至少一個數」的約定不同。 輸出用位置 $i..j$ 表示 $a_i, \ldots, a_j$，空的
+子序列寫成 $j = i - 1$。 多段一樣大時，回傳最先達到最大和的那一段。
+
+\textbf{想法}。 改寫資結書第~17.2.3~節的線性做法。 令
+\[
+F[j] = \text{結尾在 } j \text{ 的子序列（可以是空的）的最大和},
+\]
+$F[0] = 0$。 結尾在 $j$ 的非空子序列，是「結尾在 $j - 1$ 的子序列（可以是空的）」再接上 $a_j$，最大
+是 $F[j-1] + a_j$；再和空的比，$F[j] = \max(0,\ F[j-1] + a_j)$。 答案是所有「結尾在 $j$ 的非空最佳
+和」$F[j-1] + a_j$ 和空序列的 $0$ 之中最大的。
+
+\begin{pseudo}{最大和的連續子序列（允許空的）}
+\Function{Max-Contiguous}{$a, n$}
+    \State $\mathit{best} \gets 0$；$\mathit{bi} \gets 1$；$\mathit{bj} \gets 0$ \Comment{先記空的子序列}
+    \State $\mathit{cur} \gets 0$；$\mathit{start} \gets 1$
+    \For{$j \gets 1$ \To $n$}
+        \State $\mathit{cur} \gets \mathit{cur} + a_j$
+        \If{$\mathit{cur} > \mathit{best}$}
+            \State $\mathit{best} \gets \mathit{cur}$；$\mathit{bi} \gets \mathit{start}$；$\mathit{bj} \gets j$
+        \EndIf
+        \If{$\mathit{cur} < 0$}
+            \State $\mathit{cur} \gets 0$；$\mathit{start} \gets j + 1$ \Comment{接上前面只會更差}
+        \EndIf
+    \EndFor
+    \State \Return $(\mathit{bi}, \mathit{bj}, \mathit{best})$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 不變量：第 4 行每一輪開始時，(i) $\mathit{cur} = F[j-1] = a_{\mathit{start}} + \cdots
++ a_{j-1}$（$\mathit{start} = j$ 時是空的、和為 $0$）；(ii) $(\mathit{bi}, \mathit{bj}, \mathit{best})$
+是 $a_1, \ldots, a_{j-1}$ 裡（可以是空的）和最大的連續子序列。
+\begin{itemize}
+\item \textbf{初始}：$j = 1$，$\mathit{cur} = 0 = F[0]$，只有空的子序列，(i)(ii) 都成立。
+\item \textbf{維持}：第 5 行之後 $\mathit{cur} = F[j-1] + a_j = a_{\mathit{start}} + \cdots + a_j$，是
+結尾在 $j$ 的非空子序列的最大和。 $a_1..a_j$ 裡的子序列，不是在 $a_1..a_{j-1}$ 裡，就是結尾在 $j$
+的非空子序列，所以第 6--7 行之後 (ii) 對 $j$ 成立。 第 8--9 行把 $\mathit{cur}$ 變成
+$\max(0, \mathit{cur}) = F[j]$：小於 $0$ 時換成空的子序列，從 $j + 1$ 重新開始。 (i) 對下一輪成立。
+\item \textbf{結束}：$j = n + 1$，由 (ii)，回傳的是整個 $S$ 裡和最大的連續子序列。
+\end{itemize}
+
+\textbf{時間}。 迴圈 $n$ 輪，每輪常數個動作，$\Theta(n)$；額外空間 $\Theta(1)$。 題目只要求多項式時間，
+兩兩枚舉所有 $i \le j$ 邊走邊加的 $\Theta(n^2)$ 或資結書第~17.2~節的分治 $\Theta(n \lg n)$ 也都符合，
+但線性做法最好，而且不可能更快：每個數都可能是答案的一部分，至少要讀過一次。
+
+\textbf{追蹤題目的例子}。 $S = 5, 15, -30, 10, -5, 40, 10$。 表中「第 5 行後」是加上 $a_j$ 之後的
+$\mathit{cur}$，「本輪結束」是第 8--9 行之後的值。
+\begin{center}
+\begin{tabular}{ccccl}
+\toprule
+$j$ & $a_j$ & 第 5 行後 & 本輪結束 & $(\mathit{bi}, \mathit{bj}, \mathit{best})$ \\
+\midrule
+1 & $5$ & $5$ & $5$ & $(1, 1, 5)$ \\
+2 & $15$ & $20$ & $20$ & $(1, 2, 20)$ \\
+3 & $-30$ & $-10$ & $0$，$\mathit{start} = 4$ & $(1, 2, 20)$ \\
+4 & $10$ & $10$ & $10$ & $(1, 2, 20)$ \\
+5 & $-5$ & $5$ & $5$ & $(1, 2, 20)$ \\
+6 & $40$ & $45$ & $45$ & $(4, 6, 45)$ \\
+7 & $10$ & $55$ & $55$ & $(4, 7, 55)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $(4, 7, 55)$，也就是 $10, -5, 40, 10$，和 $55$，和題目給的答案相同。 全部是負數時，例如 $-3, -1$，
+$\mathit{best}$ 一直是 $0$，回傳 $(1, 0, 0)$，即空的子序列。
+\end{pastsoln}

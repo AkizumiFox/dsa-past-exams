@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntut-107-ci-02}]{北科大資工所 107 學年度 第 2 題}
+（簡答；只寫答案）
+
+(6 pts) It is assumed that $T(1)=d$ for some constant $d$. State, using the ``big oh'' notation,
+the solution to each of the following two recurrences. Just state the answer - you do NOT need
+to justify them.
+\begin{enumerate}[label=(\arabic*)]
+\item (3 pts) $T(n)=4T(\frac{n}{2})+n^2\sqrt{n}$
+\item (3 pts) $T(n)=10T(\frac{n}{3})+5n^2$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) $O(n^{2.5})$，即 $O(n^2\sqrt{n})$；(2) $O(n^{\log_3 10}) \approx O(n^{2.096})$。 兩個都是
+緊的界（也是 $\Theta$）。
+
+題目說不必證明，考場上寫答案即可。 下面用主定理（資結書定理~2.4）說明怎麼得到。
+
+\textbf{(1)} $a = 4$、$b = 2$，$n^{\log_2 4} = n^2$；$f(n) = n^2\sqrt{n} = n^{2.5}$。 取 $\varepsilon = 0.5$，
+$f(n) = \Omega(n^{2 + 0.5})$。 正則條件：
+\[
+a f(n/b) = 4 \left(\frac n2\right)^{2.5} = \frac{4}{2^{2.5}}\, n^{2.5} = \frac{1}{\sqrt2}\, n^{2.5},
+\qquad c = \frac{1}{\sqrt2} \approx 0.707 < 1 .
+\]
+情況 3：$T(n) = \Theta(n^{2.5})$。 根的成本比葉子多一個多項式因子，總和由根主導。
+
+\textbf{(2)} $a = 10$、$b = 3$，$\log_3 10 = 1 + \log_3 \frac{10}{3} \approx 2.096 > 2$；$f(n) = 5n^2$。 取
+$\varepsilon = 0.09$，$5n^2 = O(n^{\log_3 10 - 0.09})$。 情況 1：$T(n) = \Theta(n^{\log_3 10})$。
+
+(2) 容易看錯成 $O(n^2)$：$3^2 = 9 < 10$，所以 $\log_3 10$ 比 $2$ 大一點點，葉子的總數 $n^{\log_3 10}$
+比 $n^2$ 多一個 $n^{0.096}$ 的因子，總和由葉子主導。 換個方式看：遞迴樹第 $j$ 層的總和是
+$10^j \cdot 5(n/3^j)^2 = 5n^2 (10/9)^j$，每層乘上 $10/9 > 1$，是遞增的等比級數，由最底層決定。
+\end{pastsoln}

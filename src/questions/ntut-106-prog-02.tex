@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntut-106-prog-02}]{北科大資工所 106 學年度 第 2 題}
+（是非）
+
+\textbf{Problem 2 [8\%, each 2\%]}\\
+Mark by \textbf{T} (=true) or \textbf{F} (=false) each of the following:
+\begin{enumerate}[label=(\arabic*)]
+\item If a problem is NP-complete, this implies that such a problem is no solution at all.
+\item There are no graphs for which Prim's algorithm can run faster than Kruskal's algorithm.
+\item Suppose problem $P_1$ can be reduced to problem $P_2$ in linear time. Then, if $P_2$ is
+NP-hard then $P_1$ is NP-hard.
+\item The best asymptotic running time for determining the shortest path between a given pair c
+vertices in a directed graph with positive weights is O(m log n), given $|V|=n$ and $|E|=m$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(1) F；(2) F；(3) F；(4) F。
+
+第 (4) 小題原卷的「pair c vertices」是「pair of vertices」的筆誤，照錄。
+
+\textbf{(1) F。} NP 完備的問題都有演算法可以解，只是目前不知道有沒有\textbf{多項式時間}的演算法。 NP 裡的
+問題都可以窮舉所有可能的證書、逐一驗證，在指數時間內解出來；例如 SAT 試遍 $2^n$ 種賦值。 「沒有解」
+的是不可判定的問題（例如停機問題），那和 NP 完備是兩回事。
+
+\textbf{(2) F。} 反例是稠密圖。 完全圖有 $m = n(n-1)/2 = \Theta(n^2)$ 條邊。 Prim 用陣列存每個頂點
+到樹的最小距離（資結書虛擬碼~24.5），每一輪掃一次陣列，共 $\Theta(n^2)$；Kruskal 要先把邊排序，
+$\Theta(m \lg m) = \Theta(n^2 \lg n)$。 這類圖上 Prim 比 Kruskal 快。 Prim 用費氏堆積時是
+$O(m + n \lg n)$，只要 $m = \omega(n)$，也比 Kruskal 的 $O(m \lg m)$ 快。
+
+\textbf{(3) F。} 方向反了。 $P_1 \le P_2$ 表示「會解 $P_2$ 就會解 $P_1$」，$P_1$ 不會比 $P_2$ 難，但可以
+簡單得多。 反例：$P_1$ 是「答案永遠是 yes」的問題（任何輸入都回答 yes），$P_2$ 是 SAT。 把任何輸入
+都對應到固定的公式 $x$（可滿足），這是線性時間的歸約，所以 $P_1 \le P_2$，而 SAT 是 NP-hard 的。
+但 $P_1$ 不是 NP-hard：若 SAT $\le_{\mathrm p} P_1$，不可滿足的公式也要對應到 $P_1$ 的 yes 實例，
+「若且唯若」不可能成立。 改正：若 $P_1$ 是 NP-hard，則 $P_2$ 是 NP-hard（北科大 107 學年度
+計算機概論第 3 題第 (2) 小題）。
+
+\textbf{(4) F。} 邊權為正、求一對頂點的最短路徑，目前已知的做法就是從起點跑 Dijkstra（到終點被取出時
+就可以停），一般情況下並沒有比單一起點更快的演算法。 Dijkstra 的時間看優先佇列（資結書第~25.2~節）：
+二元堆積 $O((n + m) \lg n)$，陣列 $\Theta(n^2)$，費氏堆積 $O(m + n \lg n)$。 費氏堆積的界在
+$m = \omega(n)$ 時嚴格比 $O(m \log n)$ 好，例如 $m = \Theta(n^2)$ 時是 $O(n^2)$ 對 $O(n^2 \log n)$。
+所以 $O(m \log n)$ 不是最好的，最好的是 $O(m + n \log n)$。
+\end{pastsoln}

@@ -1,0 +1,110 @@
+\begin{pastexam}[label={px:ntu-106-dsa-05}]{臺大資工所 106 學年度 第 5 題}
+（問答；(b) 小題答錯倒扣，作答規定見下）
+
+請遵守下列規定回答以下問題，違者該題不計分。
+\begin{itemize}
+\item 不要書寫任何程式碼或代碼。請以文字，圖表，數學符號陳述你要表達的概念。
+\item 一個問題包括兩個子題。一個子題的回答以一頁為限，並請按順序寫在完整的一頁。請先想好再動筆。如果字寫太小或是太潦草或是英文文法問題導致閱卷者無法理解你的想法，該題不計分。
+\item 一個問題包括兩個子題。前一個子題是觀念的陳述，佔 10 分，後一個子題是觀念的證明，佔 15 分。證明部分有倒扣，答對得 15 分，答錯倒扣 10 分，不答得 0 分。知之為知之，不知為不知，是知也。瞎掰不能解決問題，珍惜分數，遠離倒扣。
+\end{itemize}
+
+(25 points) We are given a set of $C$ classes and $R$ classrooms and we would like to assign as
+many classes to classrooms as possible. Due to equipment constraint not every class can be
+assigned to every classroom. Instead we will be given a set $M$ of pairs $(c,r)$, and each pair
+indicates that class $c$ can be assigned to classroom $r$. In addition, a class, if assigned,
+will be assigned to a \textit{unique} classroom. Therefore it is possible that we cannot assign
+every class to a unique classroom. Our goal is to assign as many classes to classrooms as
+possible.
+
+We consider the following example. Let a lower case letter indicate a class and a positive
+integer indicate the index of a classroom. Let $M=\{(a,1),(a,2),(b,2)\}$, which means class $a$
+can be assigned to classroom 1 and 2, but class $b$ can only be assigned to classroom 2. Now
+given the set $M$, please find the \textit{maximum} number of classes that can be assigned to
+classrooms. In the previous example the answer is 2 since we can assign class $a$ to classroom
+1 and $b$ to classroom 2.
+
+We can use Ford-Fulkerson method to solve this problem. Basically the Ford-Fulkerson method
+initializes the flow to 0, then repeatedly finds an augmenting path $p$, and adjusts the
+capacity along the path found on the residual network, until no augmenting path can be found.
+\begin{enumerate}[label=(\alph*)]
+\item (10 points) Now assume that Ford-Fulkerson method can find the maximum flow in a network,
+how do we convert our problem into a network flow problem so that we can use Ford-Fulkerson
+method to solve it?
+\item (15 points) Prove that Ford-Fulkerson method can correctly solve our problem by your
+conversion. To be more specific, is it true that \textit{any} maximum flow will give you a
+correct answer for the classroom problem? Also is it true that the answer from the
+Ford-Fulkerson method will give you a correct answer in our classroom problem?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這題就是二分圖最大匹配（資結書第~26.6~節）：課是一邊、教室是另一邊，$M$ 裡的每一對是一條邊；
+「每堂課最多一間教室、每間教室最多一堂課」就是匹配的條件。 題目沒有寫明，但「unique classroom」
+要配合「每間教室只能排一堂課」才有意義（否則每堂課隨便挑一間可用的就好），這裡採用這個解讀。
+
+\textbf{(a) 轉換}。 建流網路 $N$：
+\begin{itemize}
+\item 頂點：源點 $s$、匯點 $t$、每堂課一個頂點、每間教室一個頂點，共 $C + R + 2$ 個。
+\item 對每堂課 $c$，加邊 $s \to c$，容量 $1$（一堂課最多排一次）。
+\item 對 $M$ 的每一對 $(c, r)$，加邊 $c \to r$，容量 $1$。
+\item 對每間教室 $r$，加邊 $r \to t$，容量 $1$（一間教室最多一堂課）。
+\end{itemize}
+用 Ford--Fulkerson 求 $N$ 的最大流，最大流的值就是最多能排的課數；流量是 $1$ 的 $c \to r$ 邊就是
+排法。 題目的例子：$s \to a \to 1 \to t$、$s \to b \to 2 \to t$ 各送 $1$，值 $2$；割 $\{s\}$ 的割邊是
+$s \to a$、$s \to b$，容量 $2$，所以 $2$ 是最大的，答案是 $2$。
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,>={Stealth[length=2mm]},
+    v/.style={circle,draw,inner sep=0pt,minimum size=6.4mm},
+    w/.style={inner sep=1.5pt,font=\small}]
+\node[v] (s) at (0,0) {$s$};
+\node[v] (a) at (2.2,0.8) {$a$};
+\node[v] (b) at (2.2,-0.8) {$b$};
+\node[v] (r1) at (4.6,0.8) {$1$};
+\node[v] (r2) at (4.6,-0.8) {$2$};
+\node[v] (t) at (6.8,0) {$t$};
+\draw[->] (s)--node[w,above left]{1}(a);
+\draw[->] (s)--node[w,below left]{1}(b);
+\draw[->] (a)--node[w,above]{1}(r1);
+\draw[->] (a)--node[w,above right,pos=0.3]{1}(r2);
+\draw[->] (b)--node[w,below]{1}(r2);
+\draw[->] (r1)--node[w,above right]{1}(t);
+\draw[->] (r2)--node[w,below right]{1}(t);
+\end{tikzpicture}
+\end{center}
+
+\textbf{(b) 正確性}。 先證明兩個方向，再回答題目的兩個問題。
+
+\textbf{排法對應到流。} 設某個排法排了 $k$ 堂課（每堂課一間教室、教室兩兩不同）。 對每一組
+（課 $c$、教室 $r$），在 $s \to c$、$c \to r$、$r \to t$ 上各放流量 $1$，其他是 $0$。 一堂課最多被排
+一次，所以 $s \to c$ 最多被放一次；教室兩兩不同，所以 $r \to t$ 也最多一次；每個 $c$、$r$ 流進流出
+都是 $0$ 或 $1$，守恆成立。 這是值 $k$ 的流，所以最大流的值 $\ge$ 最多能排的課數。
+
+\textbf{整數流對應到排法。} 設 $f$ 是 $N$ 的整數流。 容量都是 $1$，每條邊的流量是 $0$ 或 $1$。 每堂課
+$c$ 只有一條進來的邊 $s \to c$，流進最多 $1$，由守恆最多一條 $c \to r$ 有流；每間教室 $r$ 只有一條
+出去的邊 $r \to t$，最多一條 $c \to r$ 有流。 所以「有流的 $c \to r$」是一個合法的排法。 取割
+$S = \{s\} \cup \{\text{所有課}\}$，從 $S$ 到 $T$ 的邊正好是所有的 $c \to r$，沒有邊從 $T$ 指回 $S$，
+由資結書引理~26.4（流的值等於任何一個割的淨流量），$|f|$ 等於有流的 $c \to r$ 的條數。 所以整數流
+$f$ 對應一個排了 $|f|$ 堂課的排法。 這兩段就是資結書引理~26.7 換個名字。
+
+\textbf{問題一：任何一個最大流都給出正確答案嗎？} 要分開說。
+\begin{itemize}
+\item \textbf{最大流的值：對。} 容量是整數，由資結書定理~26.2（整數性），存在一個整數的最大流
+$f^{*}$；它對應一個排了 $|f^{*}|$ 堂課的排法，所以最多能排的課數 $\ge |f^{*}|$。 再由上面第一段，
+最多能排的課數 $\le$ 最大流的值 $= |f^{*}|$。 兩者相等。 每個最大流的值都一樣，所以不管拿到哪一個
+最大流，它的值都是正確的課數。
+\item \textbf{從最大流讀出排法：不一定。} 最大流可以不是整數流。 反例：課 $a$、$b$ 都能用教室 $1$、
+$2$，$M = \{(a, 1), (a, 2), (b, 1), (b, 2)\}$。 在 $s \to a$、$s \to b$、$1 \to t$、$2 \to t$ 上放
+$1$，四條中間的邊各放 $1/2$：容量都沒超過，每個頂點守恆，值是 $2$，而割 $\{s\}$ 的容量也是 $2$，
+所以這是最大流。 但它的每條 $c \to r$ 都只有半個單位，讀不出「$a$ 排哪一間」。 只有整數的最大流
+才能直接讀成排法。
+\end{itemize}
+
+\textbf{問題二：Ford--Fulkerson 給出的答案正確嗎？} 對。 容量都是整數，Ford--Fulkerson 從全 $0$ 的
+流開始，每次增廣的瓶頸是正整數，流量一直是整數，而且每輪值至少加 $1$、值不超過 $C$，所以一定會停
+（資結書第~26.3~節）。 停下來時剩餘網路沒有增廣路徑，由最大流最小割定理（資結書定理~26.6），手上的
+流是最大流；它又是整數流，由上面第二段，有流的 $c \to r$ 是一個排了 $|f|$ 堂課的排法，而 $|f|$ 是
+最大值。 所以 Ford--Fulkerson 同時給出正確的課數和一個最好的排法。 時間：$N$ 有 $C + R + |M|$ 條邊，
+最多增廣 $\min(C, R)$ 次，每次 $O(C + R + |M|)$，共 $O(\min(C, R) \cdot (C + R + |M|))$
+（資結書定理~26.8）。
+\end{pastsoln}

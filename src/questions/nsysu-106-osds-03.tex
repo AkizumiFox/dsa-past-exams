@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:nsysu-106-osds-03}]{中山資工所甲組 106 學年度 第 8 題}
+（計算）
+
+(10\%) Assuming $n=2^m$, write out the closed form solution for the recurrence relation
+\[
+T(n)=\begin{cases} 1 & \text{for } n=2,\\ 2T(n/2)+2 & \text{for } n>2.\end{cases}
+\]
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = \dfrac{3n}{2} - 2$（$n = 2^m$，$m \ge 1$）。 這是同時找最大值和最小值的分治法的比較次數。
+
+\textbf{展開}（反覆代入，和資結書引理~2.6 的證明同一個做法）。 $n = 2^m$，展開 $k$ 次：
+\begin{align*}
+T(n) &= 2T(n/2) + 2\\
+&= 2\bigl(2T(n/4) + 2\bigr) + 2 = 4T(n/4) + 4 + 2\\
+&= 8T(n/8) + 8 + 4 + 2\\
+&\;\;\vdots\\
+&= 2^k\, T(n/2^k) + (2^k + 2^{k-1} + \cdots + 2).
+\end{align*}
+展開到 $n/2^k = 2$，也就是 $k = m - 1$：
+\[
+T(n) = 2^{m-1} T(2) + (2^{m-1} + \cdots + 2^1) = 2^{m-1} + (2^m - 2) = \frac{n}{2} + n - 2 = \frac{3n}{2} - 2.
+\]
+等比級數 $2^1 + 2^2 + \cdots + 2^{m-1} = 2^m - 2$。
+
+\textbf{用歸納法驗證}。 $n = 2$：$\frac{3 \cdot 2}{2} - 2 = 1 = T(2)$。 設 $T(n/2) = \frac{3n}{4} - 2$，則
+$T(n) = 2\bigl(\frac{3n}{4} - 2\bigr) + 2 = \frac{3n}{2} - 2$。 成立。
+
+前幾項：$T(2) = 1$、$T(4) = 4$、$T(8) = 10$、$T(16) = 22$，都等於 $\frac{3n}{2} - 2$。
+
+注意基底是 $T(2) = 1$，不是 $T(1)$；用主定理只能得到 $T(n) = \Theta(n)$，題目要的是封閉式，要把常數算出來。
+\end{pastsoln}

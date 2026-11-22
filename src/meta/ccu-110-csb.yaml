@@ -1,0 +1,11 @@
+paper: ccu-110-csb
+volume: 1
+school: 中正
+dept: 資工所乙組
+year: 110
+subject: 計算機概論（含程式設計）
+questions:
+  - {id: ccu-110-csb-01, label: 第 1 題, chapter: 7}
+  - {id: ccu-110-csb-02, label: 第 2 題, chapter: 18}
+  - {id: ccu-110-csb-03, label: 第 3 題, chapter: 14}
+  - {id: ccu-110-csb-04, label: 第 4 題, chapter: 24}

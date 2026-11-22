@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ncku-110-prog-02}]{成大資訊聯招 110 學年度 第 2 題}
+（計算）
+
+(10\%) Let input is an array of unique characters along with their frequency of occurrences,
+shown as following table. Please show the total bits of the constructed Huffman code.
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+\hline
+Character & A & L & G & O & R & I & T & H & M\\ \hline
+Frequency & 12 & 3 & 13 & 23 & 1 & 5 & 16 & 21 & 6\\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：總共 $284$ 個位元。
+
+「total bits」指用這組霍夫曼碼把全部字元編碼後的總長度 $\sum_c f(c) \cdot d(c)$，$d(c)$ 是 $c$
+的碼長（在樹裡的深度）。 頻率總和是 $12 + 3 + 13 + 23 + 1 + 5 + 16 + 21 + 6 = 100$。
+
+\textbf{建樹}（資結書虛擬碼~19.3）：每次取出頻率最小的兩個，合併成一個新節點放回去。
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+步 & 取出的兩個 & 新節點 & 合併後剩下的 \\
+\midrule
+1 & R 1、L 3 & 4 & 4、I 5、M 6、A 12、G 13、T 16、H 21、O 23 \\
+2 & 4、I 5 & 9 & M 6、9、A 12、G 13、T 16、H 21、O 23 \\
+3 & M 6、9 & 15 & A 12、G 13、15、T 16、H 21、O 23 \\
+4 & A 12、G 13 & 25 & 15、T 16、H 21、O 23、25 \\
+5 & 15、T 16 & 31 & H 21、O 23、25、31 \\
+6 & H 21、O 23 & 44 & 25、31、44 \\
+7 & 25、31 & 56 & 44、56 \\
+8 & 44、56 & 100 & 100（根） \\
+\bottomrule
+\end{tabular}
+\end{center}
+每一步取出的兩個都比剩下的小，過程中沒有相同頻率要挑的情形，所以樹的形狀（碼長）是唯一的。
+
+\textbf{算總長}。 有兩種算法，答案一樣。
+
+(a) 每個字元的碼長等於它所在的節點被合併的次數：O、H 經過第 6、8 步，碼長 $2$；A、G 經過第 4、7、8
+步，碼長 $3$；T 經過第 5、7、8 步，碼長 $3$；M 經過第 3、5、7、8 步，碼長 $4$；I 經過第 2、3、5、7、8
+步，碼長 $5$；R、L 經過全部的第 1、2、3、5、7、8 步，碼長 $6$。
+\begin{center}
+\begin{tabular}{l*{9}{c}}
+\toprule
+字元 & O & H & T & G & A & M & I & L & R \\
+頻率 & 23 & 21 & 16 & 13 & 12 & 6 & 5 & 3 & 1 \\
+碼長 & 2 & 2 & 3 & 3 & 3 & 4 & 5 & 6 & 6 \\
+頻率 $\times$ 碼長 & 46 & 42 & 48 & 39 & 36 & 24 & 25 & 18 & 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$46 + 42 + 48 + 39 + 36 + 24 + 25 + 18 + 6 = 284$。
+
+(b) 總長等於所有內部節點（合併出來的新節點）的權重和，因為一個字元每被合併一次，碼長就多 $1$
+（資結書第~19.3.7~節）：
+\[
+4 + 9 + 15 + 25 + 31 + 44 + 56 + 100 = 284.
+\]
+兩種算法一致，總共 $284$ 個位元。 一個碼字的例子（左 $0$ 右 $1$，每次較小的放左邊）：
+H $= 00$、O $= 01$、A $= 100$、G $= 101$、M $= 1100$、R $= 110100$、L $= 110101$、I $= 11011$、
+T $= 111$。 左右怎麼排會改變碼字，但不會改變碼長和總長。
+\end{pastsoln}

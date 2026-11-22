@@ -1,0 +1,56 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-10}]{臺大資工所 109 學年度 第 10 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) A red-black tree is a binary tree where every node has a color (red or black), and has
+the following properties.
+\begin{enumerate}[label=\arabic*.]
+\item The root is black.
+\item All paths from the root to a leaf have the same number of black nodes.
+\item Every red node must have two black children.
+\end{enumerate}
+For ease of discussion we assume that all null pointers (a special pointer to ``nothing'') point
+to a special \textit{black} node. As a result all counting of the second property ends at this
+special node.
+\begin{enumerate}[label=\arabic*.]
+\item If we do \textit{not} guarantee the first property, but still guarantee the second and the
+third properties, we will \textit{not} be able to guarantee that the height of the tree is
+$O(\log n)$.
+\item It is possible that there are \textit{no} red nodes in a red-black tree of 100000 nodes.
+\item We insert a key $k$ into a \textit{non-empty} red-black tree just like into an ordinary
+binary search tree as a leaf, attach to it two null pointers to the special black node, and then
+immediately \textit{stop} without any adjustment. If we color $k$ \textit{red}, we may violate
+the second property above.
+\item Consider the scenario above. If we color $k$ \textit{red}, we may violate the third property
+above.
+\item Consider the scenario above. If we color $k$ \textit{black}, we will violate the second
+property above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：4、5。
+
+這裡的三條性質就是資結書第~10.3.1~節五條性質裡的三條（另外兩條「每個節點是紅或黑」「null 是黑的」寫在
+題目的敘述裡）。 下面說「路徑」都是從根走到某個 null 節點。
+
+\begin{itemize}
+\item 1. 錯。 只拿掉「根是黑的」，高度仍然是 $O(\log n)$。 理由：如果根是紅的，把它改成黑色。 每一條
+路徑都經過根，黑節點數一起加一，性質 2 仍然成立；性質 3 只限制紅節點的子節點，根變黑不會破壞它。 所以
+改色之後是一棵合法的紅黑樹，形狀沒變，由資結書定理~10.4，高度 $\le 2\lg(n + 1)$。 原來那棵樹的高度
+一樣，也是 $O(\log n)$。 插入修正的最後一步直接把根塗黑（資結書第~10.3.4~節），也是同樣的道理。
+\item 2. 錯。 如果沒有紅節點，所有節點都是黑的，性質 2 變成「每一條從根到 null 的路徑長度都相同」，也就是
+所有 null 節點都在同一層，這棵樹是一棵滿二元樹（perfect binary tree），節點數是 $2^k - 1$。 而
+$2^{16} - 1 = 65535 < 100000 < 131071 = 2^{17} - 1$，$100000$ 不是這個形式。 所以 $100000$ 個節點的紅黑樹
+一定有紅節點。
+\item 3. 錯。 $k$ 接在原來某個 null 的位置上，下面掛兩個黑色的 null。 原本走到那個 null 的路徑，現在變成
+經過紅色的 $k$ 再走到 $k$ 的兩個 null；紅節點不算黑節點，而 null 本來就算一個黑節點，現在也一樣算一個，
+所以這兩條路徑的黑節點數和原來那條相同，其他路徑不受影響。 性質 2 不會被破壞。 這正是插入時新節點塗紅色
+的原因（資結書第~10.3.4~節）。
+\item 4. 對。 如果 $k$ 的父節點是紅的，紅色的父節點有一個紅色的子節點 $k$，違反性質 3。 這種情形確實會
+發生：例如樹是黑色的根 $10$ 加上紅色的左子節點 $5$，插入 $3$ 會接在 $5$ 底下。 「may」成立。
+\item 5. 對。 樹不是空的，$k$ 有父節點 $p$。 原本走到 $k$ 這個位置（當時是 null）的路徑有 $b$ 個黑節點，
+$p$ 的另一邊（另一個子節點的子樹，或另一個 null）至少有一條路徑，黑節點數也是 $b$。 $k$ 塗黑之後，經過
+$k$ 的路徑多了一個黑節點，變成 $b + 1$；$p$ 另一邊的路徑沒有改變，仍然是 $b$。 兩者不同，一定違反性質 2，
+不論插在哪裡。
+\end{itemize}
+\end{pastsoln}

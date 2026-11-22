@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncu-109-dsa-07}]{中央資工所 109 學年度 第 7 題}
+（是非；答對 1 分，答錯倒扣 0.5 分）
+
+The postfix expression, \textbf{bcd+*/aefg*+*}, is valid. \qquad (A)~True. \qquad (B)~False.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) False。
+
+判斷後序式合不合法，照資結書第~6.3.2~節的後序求值，只記堆疊裡有幾個運算元：遇到運算元加一；遇到
+二元運算子，堆疊裡至少要有兩個，取出兩個、放回一個，等於減一。 合法的後序式從頭到尾不會取不到
+運算元，而且結束時剛好剩一個。
+\begin{center}
+\small
+\begin{tabular}{cccccccc}
+\toprule
+符號 & b & c & d & + & * & / & \ldots \\
+\midrule
+動作 & 推入 & 推入 & 推入 & 取 2 放 1 & 取 2 放 1 & 要取 2 個 & \\
+之後堆疊裡的個數 & 1 & 2 & 3 & 2 & 1 & \textbf{不夠} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+讀到第六個符號 / 時，堆疊裡只剩 $1$ 個運算元（$b * (c + d)$），除法缺一個運算元，不合法。
+
+另一個檢查法是數數：二元運算子有 $k$ 個時，合法的後序式要有 $k + 1$ 個運算元。 這裡運算元
+b、c、d、a、e、f、g 共 $7$ 個，運算子 +、*、/、*、+、* 共 $6$ 個，個數本身是對的；問題出在順序，
+/ 出現得太早。 所以只數總數不夠，要像上面一樣從左到右看每一個前綴：每一個前綴裡運算元都要比運算子
+至少多一個。
+\end{pastsoln}

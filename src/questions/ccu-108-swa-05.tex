@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ccu-108-swa-05}]{中正資工所甲組 108 學年度 第 6 題}
+（問答、證明）
+
+(5\%) Please answer the following questions.
+\begin{enumerate}[label=(\alph*)]
+\item (2\%) What is the maximum number of tree nodes in a $k$-ary tree of height $h$?
+\item (3\%) Prove your answer in (a).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 高度數節點（根在第 $1$ 層，資結書第~7.1~節的定義）時，$k \ge 2$ 最多
+\[
+1 + k + k^2 + \cdots + k^{h-1} = \frac{k^h - 1}{k - 1}
+\]
+個節點；$k = 1$ 時是 $h$ 個。 題目沒有定義高度。 如果高度數的是邊數（只有根的樹高度 $0$），
+同樣的樹有 $h + 1$ 層，答案是 $\dfrac{k^{h+1} - 1}{k - 1}$。 作答時先寫一句用的是哪一種定義。
+
+$k$-ary tree 指每個節點最多 $k$ 個子節點的樹。 $k = 2$、$h = 10$ 時是 $2^{10} - 1 = 1023$，就是
+二元樹的資結書定理~7.1。
+
+\textbf{(b)} 證明分兩步：先證每一層的上界，再加起來，最後說明上界達得到。
+
+\textbf{第 $i$ 層最多 $k^{i-1}$ 個節點}，對 $i$ 做數學歸納（資結書第~A.4~節）。
+\begin{itemize}
+\item 基底 $i = 1$：第 $1$ 層只有根，$1 = k^0$ 個。
+\item 歸納步驟：設第 $i$ 層最多 $k^{i-1}$ 個節點。 第 $i + 1$ 層的每個節點都是第 $i$ 層某個節點的
+子節點，而每個節點最多 $k$ 個子節點，所以第 $i + 1$ 層最多 $k \cdot k^{i-1} = k^i$ 個節點。
+\end{itemize}
+
+\textbf{加起來}。 高度 $h$ 的樹恰好有第 $1$ 到第 $h$ 層，節點總數
+\[
+n \le \sum_{i=1}^{h} k^{i-1} = 1 + k + \cdots + k^{h-1}.
+\]
+$k \ge 2$ 時，令 $S = 1 + k + \cdots + k^{h-1}$，則 $kS = k + k^2 + \cdots + k^h$，相減得
+$(k - 1)S = k^h - 1$，$S = (k^h - 1)/(k - 1)$。 $k = 1$ 時每一項都是 $1$，$S = h$。
+
+\textbf{上界達得到}。 第 $1$ 到第 $h - 1$ 層的每個節點都恰好有 $k$ 個子節點、第 $h$ 層都是葉節點的
+樹（完滿 $k$ 元樹），每一層都恰好 $k^{i-1}$ 個節點，總數正好是 $S$。 所以最大值就是
+$(k^h - 1)/(k - 1)$。 例如 $k = 3$、$h = 3$：$1 + 3 + 9 = 13 = (27 - 1)/2$。
+\end{pastsoln}

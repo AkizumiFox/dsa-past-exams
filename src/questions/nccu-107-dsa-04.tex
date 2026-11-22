@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:nccu-107-dsa-04}]{政大資科所 107 學年度 第 4 題}
+（問答）
+
+(10\%) Explain the reason that the worst-case running time of merge sort is $O(n\log n)$, where $n$
+is the number of elements to be sorted.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{合併排序}（資結書第~14.4~節）把陣列切成兩半，各自遞迴排好，再把兩個排好的半段合併。 和快速
+排序不同，它切在\textbf{正中間}，切法和資料的內容無關，所以不管輸入是什麼，遞迴的形狀都一樣，沒有
+「切得很偏」的壞輸入。
+
+\textbf{合併是線性時間}。 合併兩個排好的序列，共 $m$ 個數：每比一次就輸出一個數，最多比 $m - 1$ 次、
+搬 $m$ 個數，$\Theta(m)$。
+
+\textbf{遞迴式}。 設 $n$ 是 $2$ 的冪次（一般的 $n$ 見下面），最壞時間
+\[
+T(1) = \Theta(1), \qquad T(n) = 2T(n/2) + cn.
+\]
+
+\textbf{遞迴樹}（資結書第~2.3~節）。 第 $0$ 層是長度 $n$ 的一次合併，花 $cn$；第 $1$ 層是兩個長度
+$n/2$ 的合併，共 $2 \cdot c(n/2) = cn$；第 $j$ 層有 $2^j$ 段，每段長 $n/2^j$，合起來還是 $cn$。 每一層
+處理的數加起來都是 $n$ 個。 切到長度 $1$ 要 $\lg n$ 層，所以
+\[
+T(n) = cn \cdot \lg n + \Theta(n) = O(n \lg n).
+\]
+用主定理（資結書定理~2.4）也一樣：$a = b = 2$，$n^{\log_2 2} = n$，$f(n) = \Theta(n)$，第二種情形，
+$T(n) = \Theta(n \lg n)$。
+
+\textbf{比較次數}。 設 $C(n)$ 是最多比較幾次，$C(1) = 0$，$C(n) \le C(\lceil n/2 \rceil) +
+C(\lfloor n/2 \rfloor) + n - 1$；資結書第~14.4~節用定理~2.3 證明了對所有的 $n$（不只 $2$ 的冪次）
+$C(n) \le n \lceil \lg n \rceil$。 所以一般的 $n$ 最壞也是 $O(n \log n)$。
+
+總結原因：(1) 每次一定切成一半，遞迴深度只有 $\lceil \lg n \rceil$ 層；(2) 每一層的合併總共只處理
+$n$ 個數，花 $O(n)$。 兩者相乘就是 $O(n \log n)$，而且這和輸入的排列無關，所以最壞情況也是
+$O(n \log n)$。
+\end{pastsoln}

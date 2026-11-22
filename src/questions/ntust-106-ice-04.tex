@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntust-106-ice-04}]{臺科大資工所 106 學年度 第 4 題}
+（問答）
+
+Sorting (5\%)
+\begin{enumerate}[label=(\alph*)]
+\item For quick sort, what is its worst-case and best-case time complexity? (3\%)
+\item And describe its data property respectively for these two cases. (2\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) 最壞 $O(n^2)$，最好 $O(n\log n)$；(b) 最壞：每次的基準都是子陣列的最大或最小值，例如固定
+取第一個或最後一個當基準、而資料已經排好（正序或逆序）；最好：每次的基準都是中位數，兩邊切得一樣大。
+
+一次分割的時間和子陣列長度成正比，總時間取決於每次切得平不平均（資結書第~14.5~節「最壞和最好的
+情況」）。
+
+\textbf{最壞情況}。 每次都切成 $0$ 個和 $m - 1$ 個，
+\[
+T(n) = T(n-1) + \Theta(n) = \Theta(n) + \Theta(n-1) + \cdots + \Theta(1) = \Theta(n^2).
+\]
+資料性質：基準每次都是最大或最小值。 用課本常見的「取最後一個（或第一個）當基準」時，輸入已經
+由小到大或由大到小排好就會這樣，比較次數是 $n(n-1)/2$。 所有元素都相等時，Lomuto 分割（資結書
+虛擬碼~14.8）也會每次切成 $n - 1$ 和 $0$，同樣是最壞情況。
+
+\textbf{最好情況}。 每次都切成兩半，
+\[
+T(n) = 2T(n/2) + \Theta(n) = \Theta(n\log n)
+\]
+（主定理，資結書第~2.4~節）。 資料性質：每次選到的基準剛好是子陣列的中位數。 不必剛好一半，只要每次
+都至少切出固定比例（例如 $1:9$），遞迴深度仍是 $O(\log n)$，時間仍是 $\Theta(n\log n)$。
+
+平均情況（所有排列等可能）也是 $\Theta(n\log n)$（資結書定理~14.3）。 為了避開「已排好的輸入」這種
+常見的最壞情況，實務上用隨機選基準或三數取中位數。
+\end{pastsoln}

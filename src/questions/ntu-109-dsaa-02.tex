@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ntu-109-dsaa-02}]{臺大資工所 109 學年度 第 2 題}
+（複選；正確的選項可能有 0 到 5 個，都不對時答 none）
+
+(3 points) Given two sorted list $A$ and $B$ (in increasing key order), the following recursive
+algorithm merges $A$ and $B$ into a sorted list $C$ (also in increasing key order).
+\begin{itemize}
+\item If either $A$ or $B$ is \textit{empty} then the result is the other list.
+\item If both $A$ or $B$ are \textit{not} empty, we compare the keys of the first nodes of $A$
+and $B$, and select the \textit{smaller} one (denoted as $s$), and remove it from the list. Then
+we \textit{recursively} merge the remaining parts of $A$ and $B$ into a new sorted list $C'$,
+then we concatenate $s$ with $C'$ into the final sorted list $C$.
+\end{itemize}
+Let $f(n,m)$ be the \textit{minimum} number of comparisons of this algorithm, where $n$ and $m$
+are the numbers of nodes in $A$ and $B$ respectively. $f(n,m)$ is?
+\begin{enumerate}[label=\arabic*.]
+\item $\Omega(n)$
+\item $\Omega(m)$
+\item $\Omega(n+m)$
+\item $\Omega(mn)$
+\item $\Omega(mn(\log m+\log n))$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：none。
+
+\textbf{先求 $f(n, m)$}。 每次比較恰好拿走一個節點（較小的那個）；只要有一邊空了，另一邊直接接上，
+不再比較。 所以比較的次數等於「某一邊被拿空之前拿走的節點數」。 $A$ 先被拿空，$A$ 的 $n$ 個節點都是
+比較之後拿走的，至少 $n$ 次；$B$ 先空，至少 $m$ 次。 所以至少 $\min(n, m)$ 次。 反過來，如果比較短
+的那一邊每個鍵都比另一邊的第一個鍵小（例如 $A = \langle 1, 2 \rangle$、$B = \langle 3, 4, 5 \rangle$），
+比 $\min(n, m)$ 次之後短的那邊就空了。 因此
+\[
+f(n, m) = \min(n, m),
+\]
+這和資結書第~14.4~節說的「比較次數介於 $\min(m_1, m_2)$ 和 $m_1 + m_2 - 1$ 之間」一致。
+
+逐一看選項。
+\begin{itemize}
+\item 1. $\Omega(n)$：取 $m = 1$，對所有 $n \ge 1$ 都有 $f(n, 1) = 1$，不可能有常數 $c > 0$ 使 $1 \ge cn$
+對所有夠大的 $n$ 成立。 錯。
+\item 2. $\Omega(m)$：和 1 對稱，取 $n = 1$。 錯。
+\item 3、4、5：$n + m$、$mn$、$mn(\log m + \log n)$ 都不小於 $n$（$m \ge 1$、$n \ge 2$ 時），$f$ 連
+$\Omega(n)$ 都不是，這三個更不可能。 錯。
+\end{itemize}
+五個都錯，依題目的規定答 none。 如果題目其實假設兩個串列一樣長（$n = m$），那時 $f = n = m$，選項
+1、2、3 會成立；但題目用兩個變數，沒有這個假設。
+\end{pastsoln}

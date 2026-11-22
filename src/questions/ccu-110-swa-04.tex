@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:ccu-110-swa-04}]{中正資工所甲組 110 學年度 第 6 題}
+（單選）
+
+(5\%) (\quad) Consider the following failure function and a string ``acacabacacabacacac'' with
+18 characters. What are the values of $f(0), f(3), f(5), f(10), f(13), f(17)$?
+\[
+f(j)=\begin{cases}
+\text{largest } k<j \text{ such that } p_0p_1\ldots p_k=p_{j-k}p_{j-k+1}\ldots p_j \text{ if such a } k\ge 0 \text{ exists}\\
+\qquad\qquad -1,\quad \text{otherwise}
+\end{cases}
+\]
+
+\begin{tabular}{@{}lll@{}}
+(a)~(-1, 1, -1, 4, 7, 3) & (b)~(-1, -1, 0, 1, 2, 3) & (c)~(-1, 1, 3, 5, 8, -1) \\
+(d)~(-1, -1, -1, 4, 7, -1) & (e)~(-1. 2, 4, 0, 3, 7 ) & (f)~None of the above
+\end{tabular}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)。
+
+這是 Horowitz 等人課本的寫法：字元從 $0$ 編號，$f(j)$ 是 $p_0 \ldots p_j$ 最長邊界（同時是真前綴
+和真後綴的字串）的長度\textbf{減} $1$，沒有非空的邊界時是 $-1$。 和資結書第~27.3~節的失敗函數
+$\pi$ 的關係是 $f(j) = \pi[j + 1] - 1$（資結書附錄~B 的作答提醒總表）。
+
+\textbf{怎麼算}。 和資結書虛擬碼~27.3 同一個想法，改成這裡的記號：$f(0) = -1$；$j \ge 1$ 時令
+$i = f(j - 1)$，只要 $i \ge 0$ 而且 $p_j \ne p_{i+1}$，就令 $i \gets f(i)$ 往回退；最後若
+$p_j = p_{i+1}$ 則 $f(j) = i + 1$，否則 $f(j) = -1$。 （$i = -1$ 時比的是 $p_j$ 和 $p_0$。） 道理
+是：$p_0 \ldots p_k$ 若是 $p_0 \ldots p_j$ 的邊界，去掉最後一個字元，$p_0 \ldots p_{k-1}$ 就是
+$p_0 \ldots p_{j-1}$ 的邊界，所以只要沿著 $p_0 \ldots p_{j-1}$ 的邊界由長到短一個一個試。
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{c*{18}{c}}
+\toprule
+$j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 \\
+$p_j$ & a & c & a & c & a & b & a & c & a & c & a & b & a & c & a & c & a & c \\
+$f(j)$ & $-1$ & $-1$ & 0 & 1 & 2 & $-1$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+題目要的六個值：
+\begin{itemize}
+\item $f(0) = -1$：沒有 $k < 0$。
+\item $f(3) = 1$：$p_0 \ldots p_3 = \mathtt{acac}$，$k = 1$ 時 $\mathtt{ac} = p_2 p_3$；$k = 2$ 時
+$\mathtt{aca} \ne \mathtt{cac}$。
+\item $f(5) = -1$：$p_5 = \mathtt{b}$。 邊界的最後一個字元要等於 $p_5$，但 $p_0 \ldots p_4$ 裡沒有
+\texttt{b}，所以 $p_0 \ldots p_k$（$k < 5$）的最後一個字元 $p_k$ 都不是 \texttt{b}。 用上面的
+算法：$i = f(4) = 2$，$p_3 = \mathtt{c} \ne \mathtt{b}$；$i = f(2) = 0$，$p_1 = \mathtt{c} \ne \mathtt{b}$；
+$i = f(0) = -1$，$p_0 = \mathtt{a} \ne \mathtt{b}$，得 $-1$。
+\item $f(10) = 4$：$j = 6$ 到 $10$ 每一步都是 $p_j = p_{f(j-1)+1}$，一路加 $1$：$f(6) = 0$
+（$p_6 = p_0 = \mathtt{a}$），$f(7) = 1$，……，$f(10) = 4$。 也就是 $p_0 \ldots p_4 = \mathtt{acaca}
+= p_6 \ldots p_{10}$。
+\item $f(13) = 7$：$p_{11} = \mathtt{b} = p_5$，接著加 $1$：$f(11) = 5$，$f(12) = 6$，$f(13) = 7$，
+也就是 $p_0 \ldots p_7 = \mathtt{acacabac} = p_6 \ldots p_{13}$。
+\item $f(17) = 3$：$f(16) = 10$，要比 $p_{17} = \mathtt{c}$ 和 $p_{11} = \mathtt{b}$，不同；退到
+$i = f(10) = 4$，比 $p_5 = \mathtt{b}$，不同；退到 $i = f(4) = 2$，比 $p_3 = \mathtt{c}$，相同，
+$f(17) = 3$。 檢查：$p_0 \ldots p_3 = \mathtt{acac} = p_{14} \ldots p_{17}$。
+\end{itemize}
+所以是 $(-1, 1, -1, 4, 7, 3)$，選 (a)。
+
+其他選項：(b)、(d) 的 $f(3) = -1$，但 \texttt{acac} 有邊界 \texttt{ac}；(c) 的 $f(5) = 3$，但
+$p_5 = \mathtt{b}$ 前面沒有 \texttt{b}，$f(5)$ 只能是 $-1$；(e) 的 $f(3) = 2$，但
+$\mathtt{aca} \ne \mathtt{cac}$（(e) 的「$-1.$」是原卷的逗號印成句點）。 (a) 正確，(f) 不選。
+\end{pastsoln}

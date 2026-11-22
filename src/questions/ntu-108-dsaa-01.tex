@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-108-dsaa-01}]{臺大資工所 108 學年度 第 1 題}
+（問答）
+
+(10\%) Let $b_n$ be the number of different permutations obtainable by passing the numbers 1, 2,
+3, \ldots, $n$ through a stack and deleting in all possible ways. (a) Give the recursive formula
+for $b_n$. (b) Give the analytic formula for $b_n$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $b_0 = 1$，$b_n = \sum_{k=0}^{n-1} b_k\, b_{n-1-k}$（$n \ge 1$）。 (b) $b_n =
+\dfrac{1}{n+1}\dbinom{2n}{n} = \dfrac{(2n)!}{(n+1)!\,n!}$，即卡特蘭數。 前幾項是
+$b_1, \ldots, b_6 = 1, 2, 5, 14, 42, 132$。
+
+先說明「排列」和「操作序列」的關係。 資結書第~6.1.5~節說過，一個做得到的輸出順序只對應
+唯一的一串 push、pop：輪到要輸出的數時，它不在頂端就一定要繼續 push，在頂端就一定要 pop，
+沒有選擇。 所以 $b_n$ 也等於「$n$ 個 push、$n$ 個 pop、任何前綴的 pop 都不比 push 多」的
+序列個數。
+
+\textbf{(a) 遞迴式。} 看 $1$ 是第幾個輸出的。 設 $1$ 是第 $k + 1$ 個輸出（$0 \le k \le
+n - 1$）。 $1$ 最先 push、壓在最底下，它被 pop 時堆疊裡只剩它，所以在它之前輸出的 $k$ 個
+數，正是在它之後 push 進來、又已經 pop 掉的數。 這些數是連續 push 的 $2, 3, \ldots, k + 1$，
+它們在 $1$ 的上面進出，就像用一個空堆疊處理 $k$ 個數，有 $b_k$ 種順序。 $1$ 出來之後堆疊是
+空的，剩下的 $k + 2, \ldots, n$ 共 $n - 1 - k$ 個數從頭來過，有 $b_{n-1-k}$ 種。 前後兩段
+互不影響，相乘；再對 $k$ 加總，就是 (a) 的式子。 $b_0 = 1$ 代表「沒有數」只有一種（什麼都
+不做）。
+
+\textbf{(b) 公式。} 數合法的操作序列。 $n$ 個 push、$n$ 個 pop 任意排有 $\binom{2n}{n}$ 種。
+不合法的序列有第一個「pop 比 push 多一個」的位置；把這個位置之後的每一步 push、pop 對調，
+得到一個 $n - 1$ 個 push、$n + 1$ 個 pop 的序列。 這個對應是一對一而且映成的（反方向：
+$n + 1$ 個 pop 的序列一定也有第一個「pop 多一個」的位置，對調回去），所以不合法的有
+$\binom{2n}{n-1}$ 種，
+\[
+b_n = \binom{2n}{n} - \binom{2n}{n-1} = \binom{2n}{n} - \frac{n}{n+1}\binom{2n}{n}
+= \frac{1}{n+1}\binom{2n}{n}.
+\]
+完整的論證在資結書定理~6.2 後面的說明框。 檢查：$n = 3$ 時 $\frac{1}{4}\binom{6}{3} = 5$，
+六種排列裡只有 $3, 1, 2$ 做不到；遞迴式也給 $b_3 = b_0 b_2 + b_1 b_1 + b_2 b_0 = 2 + 1 + 2
+= 5$。
+\end{pastsoln}

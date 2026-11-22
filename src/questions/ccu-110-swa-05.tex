@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ccu-110-swa-05}]{中正資工所甲組 110 學年度 第 7 題}
+（問答）
+
+(4\%) Use substitution method to find a tight asymptotic upper bound for this recurrence:\\
+$T(n)=T(n/4)+T(n/5)+6n$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$T(n) = O(n)$，而且是緊的，$T(n) = \Theta(n)$。
+
+題目沒有寫基礎情況，照資結書第~2~章的習慣：$n$ 小於某個常數時 $T(n) = \Theta(1)$，而且是正的；
+$n/4$、$n/5$ 當成 $\lfloor n/4 \rfloor$、$\lfloor n/5 \rfloor$。
+
+\textbf{先猜}。 第 $1$ 層兩個子問題的規模加起來是 $\frac{n}{4} + \frac{n}{5} = \frac{9}{20}n$，
+遞迴樹每一層的總和是上一層的 $9/20$ 倍，越往下越小，根的工作 $6n$ 最大（資結書第~2.3~節），
+猜 $T(n) \le cn$。
+
+\textbf{再用代換法證明}（資結書第~2.2~節）。 設 $n < 5$ 時 $T(n) \le M$，$n \ge 5$ 時遞迴式成立；
+這時 $\lfloor n/4 \rfloor$、$\lfloor n/5 \rfloor$ 都在 $1$ 和 $n - 1$ 之間。 對 $n$ 做強歸納，證明
+$T(n) \le cn$。
+\begin{itemize}
+\item 基礎情況 $1 \le n \le 4$：$T(n) \le M \le cn$，只要 $c \ge M$。
+\item $n \ge 5$：由歸納假設，
+\[
+T(n) \le c \left\lfloor \frac{n}{4} \right\rfloor + c \left\lfloor \frac{n}{5} \right\rfloor
++ 6n \le \frac{9c}{20}\, n + 6n \le cn ,
+\]
+最後一步等於 $6 \le \frac{11c}{20}$，也就是 $c \ge \frac{120}{11} \approx 10.91$。
+\end{itemize}
+取 $c = \max(120/11, M)$，對所有 $n \ge 1$ 都有 $T(n) \le cn$，$T(n) = O(n)$。
+
+\textbf{為什麼是緊的}。 遞迴式右邊有 $6n$，而 $T$ 的值都是正的，所以 $n \ge 5$ 時 $T(n) \ge 6n$，
+$T(n) = \Omega(n)$。 上下界合起來 $T(n) = \Theta(n)$，任何比 $n$ 低階的上界都不成立。
+\end{pastsoln}
