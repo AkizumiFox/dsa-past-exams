@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-14}]{成大電通所 114 學年度 單選題第 14 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+For any nonempty binary tree, $T$ with n nodes, if n$_0$ is the number of leaf nodes. Please give the number of
+nodes in a binary tree with degree 1, in terms of n and n$_0$.\\
+a) n-2n$_0$,\quad b) n-2n$_0$-1,\quad c) n-2n$_0$+1,\quad d) n-n$_0$+1,\quad e) None of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：c) $n - 2n_0 + 1$。
+
+設 $n_1$、$n_2$ 是度數 1、2 的節點數。 每個節點的度數是 0、1 或 2，所以 $n = n_0 + n_1 + n_2$。 由資結書定理~7.2，非空二元樹
+$n_0 = n_2 + 1$（證明：數邊。 除了根，每個節點上面有一條邊，共 $n - 1$ 條；從上往下數，度數 1 的節點連出 1 條、度數 2 的連出 2 條，
+共 $n_1 + 2n_2$ 條。 所以 $n_0 + n_1 + n_2 - 1 = n_1 + 2n_2$，即 $n_0 = n_2 + 1$）。 代入：
+\[
+n_1 = n - n_0 - n_2 = n - n_0 - (n_0 - 1) = n - 2n_0 + 1.
+\]
+檢查：三個節點的鏈 $n = 3$、$n_0 = 1$，$n_1 = 3 - 2 + 1 = 2$，對。 選 c)。
+\end{pastsoln}

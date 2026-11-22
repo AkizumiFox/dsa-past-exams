@@ -1,0 +1,96 @@
+\begin{pastexam}[label={px:ntu-109-bime-ds-05}]{臺大生機所 109 學年度 第 5 題}
+（問答）
+
+(20\%) Write a pseudocode program to transform an \textbf{infix} expression to \textbf{postfix}
+expression. \textit{Input example:} ( 5 * ( ( 9 * 8 ) + ( 7 * ( 4 + 6 ) ) ) ). We assume that the
+integers and operators are delimited by a single blank.
+\end{pastexam}
+
+\begin{pastsoln}
+範例是完全加括號的式子，但題目沒有保證一定加滿括號，下面寫一般的版本（處理 $+$、$-$、$*$、$/$
+的優先順序與由左往右結合），完全加括號的輸入也照樣正確。 做法是資結書第~6.3.3~節（虛擬碼~6.8）。
+
+\textbf{規則}。 先用空白把輸入切成記號 $T[1..m]$（題目保證記號之間恰好一個空白）。 由左往右讀，
+運算子先放進堆疊等待：
+\begin{enumerate}
+\item 運算元（整數）：直接輸出。
+\item 左括號：push。
+\item 右括號：一直 pop 並輸出，直到遇到左括號；左括號 pop 掉，不輸出。
+\item 運算子 $\mathit{op}$：只要堆疊頂端是運算子，而且它的優先順序 $\ge$ $\mathit{op}$ 的（$\ge$ 讓同
+優先順序的由左往右結合），就 pop 並輸出；最後把 $\mathit{op}$ push。
+\item 讀完之後，把堆疊剩下的運算子依序 pop 並輸出。
+\end{enumerate}
+
+\begin{pseudo}{中序轉後序（$\mathit{prec}(+) = \mathit{prec}(-) = 1$，$\mathit{prec}(*) = \mathit{prec}(/) = 2$）}
+\Procedure{Infix-To-Postfix}{$E$}
+    \State 以空白切開 $E$，得到記號 $T[1..m]$
+    \State 建立空堆疊 $S$
+    \For{$i \gets 1$ \To $m$}
+        \If{$T[i]$ 是整數}
+            \State 輸出 $T[i]$
+        \ElsIf{$T[i] = \text{`('}$}
+            \State \Call{Push}{$S, T[i]$}
+        \ElsIf{$T[i] = \text{`)'}$}
+            \While{\Call{Top}{$S$} $\ne \text{`('}$}
+                \State 輸出 \Call{Pop}{$S$}
+            \EndWhile
+            \State \Call{Pop}{$S$} \Comment{丟掉左括號}
+        \Else \Comment{$T[i]$ 是運算子}
+            \While{$S$ 不是空的 \AND \Call{Top}{$S$} $\ne \text{`('}$ \AND $\mathit{prec}(\Call{Top}{S}) \ge \mathit{prec}(T[i])$}
+                \State 輸出 \Call{Pop}{$S$}
+            \EndWhile
+            \State \Call{Push}{$S, T[i]$}
+        \EndIf
+    \EndFor
+    \While{$S$ 不是空的}
+        \State 輸出 \Call{Pop}{$S$}
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{為什麼對}。 後序式裡運算元的順序和中序一樣，所以運算元一讀到就輸出。 運算子要等到它的
+右運算元整個輸出完才能輸出。 讀到運算子 $\mathit{op}$ 時，堆疊頂端（同一層括號內）優先順序不低於
+$\mathit{op}$ 的運算子，它們的右運算元已經讀完了（$\mathit{op}$ 不可能屬於它們的右運算元），應該先算，
+所以先輸出；優先順序比 $\mathit{op}$ 低的要等 $\mathit{op}$ 那一段算完，留在堆疊裡。 括號像一道牆：
+牆內的運算子在右括號出現時全部輸出，牆外的不受影響。 每個記號 push、pop 各最多一次，時間
+$\Theta(m)$，堆疊最多 $O(m)$ 格。
+
+\textbf{範例追蹤}（堆疊由底到頂寫）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+記號 & 動作 & 堆疊 & 輸出 \\
+\midrule
+( & push & ( & \\
+5 & 輸出 & ( & 5 \\
+* & 頂端是 (，push & ( * & 5 \\
+( & push & ( * ( & 5 \\
+( & push & ( * ( ( & 5 \\
+9 & 輸出 & ( * ( ( & 5 9 \\
+* & 頂端是 (，push & ( * ( ( * & 5 9 \\
+8 & 輸出 & ( * ( ( * & 5 9 8 \\
+) & pop 出 *，丟掉 ( & ( * ( & 5 9 8 * \\
++ & 頂端是 (，push & ( * ( + & 5 9 8 * \\
+( & push & ( * ( + ( & 5 9 8 * \\
+7 & 輸出 & ( * ( + ( & 5 9 8 * 7 \\
+* & 頂端是 (，push & ( * ( + ( * & 5 9 8 * 7 \\
+( & push & ( * ( + ( * ( & 5 9 8 * 7 \\
+4 & 輸出 & ( * ( + ( * ( & 5 9 8 * 7 4 \\
++ & 頂端是 (，push & ( * ( + ( * ( + & 5 9 8 * 7 4 \\
+6 & 輸出 & ( * ( + ( * ( + & 5 9 8 * 7 4 6 \\
+) & pop 出 +，丟掉 ( & ( * ( + ( * & 5 9 8 * 7 4 6 + \\
+) & pop 出 *，丟掉 ( & ( * ( + & 5 9 8 * 7 4 6 + * \\
+) & pop 出 +，丟掉 ( & ( * & 5 9 8 * 7 4 6 + * + \\
+) & pop 出 *，丟掉 ( & （空） & 5 9 8 * 7 4 6 + * + * \\
+\bottomrule
+\end{tabular}
+\end{center}
+輸出 \texttt{5 9 8 * 7 4 6 + * + *}。 用後序求值檢查：$9 \cdot 8 = 72$，$4 + 6 = 10$，
+$7 \cdot 10 = 70$，$72 + 70 = 142$，$5 \cdot 142 = 710$，和原式 $5 \times (72 + 70) = 710$ 相同。
+
+完全加括號時每個運算子都緊貼在自己的左括號裡，第 14 行的迴圈一定碰到 ( 就停，優先順序其實
+用不到；它是給沒加滿括號的輸入用的。 例如 \texttt{3 + 4 * 2 - 1}：讀到 $-$ 時頂端是 $*$（2 $\ge$ 1）
+和 $+$（1 $\ge$ 1），依序輸出，得到 \texttt{3 4 2 * + 1 -}。 輸出時記號之間也用一個空白隔開，多位數
+的整數（例如 $10$）才不會黏在一起。
+\end{pastsoln}

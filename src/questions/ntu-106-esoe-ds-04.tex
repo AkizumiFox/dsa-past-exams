@@ -1,0 +1,80 @@
+\begin{pastexam}[label={px:ntu-106-esoe-ds-04}]{臺大工科海洋所 106 學年度 第 4 題}
+（程式設計）
+
+\textbf{(25 \%)} Suppose that there are particles moving in a 2D space and we are interested in
+their coordinates and the associated magnitude. Let $(x,y)$ represent the particle coordinates
+with double precision and $mag$ be an integer representing the magnitude whose value is between
+0 and 255. Design data structures of your choice to fulfill the following tasks.
+\begin{enumerate}[label=\alph*.]
+\item (5 \%) Write down the name(s) of data structures you choose and all required class
+definitions.
+\item (10 \%) Write a program that outputs the number of particles that have the same given
+magnitude. Additionally, please output their coordinates.
+\item (10 \%) Write a program that finds the largest magnitude smaller than the given magnitude,
+if it is not found. Additionally, please output the number of particles with the found
+magnitude.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(c) 的句子有兩種讀法。 這裡讀成：給定強度 $m$，如果沒有粒子的強度是 $m$（it is not found），
+就找比 $m$ 小的最大強度；找到的強度要連同它的粒子數一起輸出。 $m$ 本身有粒子時，就輸出 $m$
+和它的粒子數。 如果讀成「一律找嚴格小於 $m$ 的最大強度」，下面程式只要把迴圈的起點從 $m$ 改成
+$m - 1$。 原卷規定用 C++ 或 Java，這裡用 C++。
+
+\textbf{(a) 選的資料結構：直接定址表（direct-address table），每一格是一個串列（桶子）。}
+強度只有 $0$--$255$ 共 $256$ 種，用強度當陣列索引就好，不必用雜湊函數（資結書第~12.1~節的
+直接定址表）。 第 $m$ 格存「所有強度為 $m$ 的粒子」，同一格可能有很多粒子，所以每一格是一個
+動態陣列（也可以用鏈結串列，和資結書第~12.2~節鏈結法的桶子一樣）。
+\begin{minted}[fontsize=\small]{cpp}
+struct Particle {
+    double x, y;
+    int mag;                         // 0..255
+};
+
+class ParticleTable {                // 直接定址表：每個強度一個桶子
+public:
+    static const int M = 256;
+    void add(const Particle& p) { bucket[p.mag].push_back(p); }
+    void report(int m) const;        // (b)
+    int  largestBelow(int m) const;  // (c)
+private:
+    vector<Particle> bucket[M];      // bucket[m]：強度為 m 的粒子
+};
+
+\end{minted}
+
+\textbf{(b) 輸出強度為 $m$ 的粒子個數和座標。}
+\begin{minted}[fontsize=\small]{cpp}
+void ParticleTable::report(int m) const {
+    const vector<Particle>& b = bucket[m];
+    cout << b.size() << '\n';
+    for (const Particle& p : b)
+        cout << '(' << p.x << ", " << p.y << ")\n";
+}
+\end{minted}
+直接拿第 $m$ 格，時間 $\Theta(1 + k)$，$k$ 是強度為 $m$ 的粒子數；輸出 $k$ 個座標本來就要
+$\Theta(k)$，不可能更快。
+
+\textbf{(c) 找 $\le m$ 的最大強度（$m$ 找不到時就是比 $m$ 小的最大強度）。}
+\begin{minted}[fontsize=\small]{cpp}
+int ParticleTable::largestBelow(int m) const {
+    for (int k = m; k >= 0; k--)               // m 本身有粒子就停在 m
+        if (!bucket[k].empty()) {
+            cout << k << ' ' << bucket[k].size() << '\n';
+            return k;
+        }
+    cout << "not found\n";                    // 0..m 都沒有粒子
+    return -1;
+}
+\end{minted}
+從 $m$ 往下找第一個非空的桶子。 正確性：迴圈依 $k = m, m-1, \ldots, 0$ 的順序檢查，第一個
+非空的 $k$ 就是「有粒子的強度中 $\le m$ 的最大值」；全部都空就表示找不到。 最多看 $m + 1 \le
+256$ 格，時間 $O(256) = O(1)$（和粒子總數 $n$ 無關）。 每個桶子的 \texttt{size()} 是
+$\Theta(1)$，所以輸出個數不必數一遍。
+
+\textbf{為什麼不用別的結構。} 如果強度的範圍很大（例如任意實數），就不能開一個陣列，改用平衡
+二元搜尋樹（例如 \texttt{std::map<int, vector<Particle>>}），(b) 是搜尋、(c) 是找前驅
+（資結書第~9~、10~章），都是 $O(\log n)$。 這題範圍只有 $256$，直接定址表最簡單也最快。 粒子
+移動時座標改了不影響放在哪一格；強度改了，就從舊桶子刪掉、放進新桶子。
+\end{pastsoln}

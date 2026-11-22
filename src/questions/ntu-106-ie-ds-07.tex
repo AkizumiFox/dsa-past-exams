@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-07}]{臺大工工所 106 學年度 第 7 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+Given an arbitrary directed acyclic graph (DAG) of n nodes, it takes $\Omega$(n) time to find the node
+with the minimum data (assuming the comparison of the data of two nodes has constant time complexity).
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+「任意的 DAG」只規定邊的方向不成環，節點的資料和邊沒有任何關係（不像堆積那樣規定沿著邊資料會變大）。
+所以找最小值和在 $n$ 個沒有排序的數裡找最小值是同一件事，要證明的是任何演算法都得看過每一個節點。
+
+\textbf{下界的論證（對手論證）}。 假設某個演算法在某個輸入上，沒有讀過節點 $v$ 的資料就回答了節點 $u$
+（$u \ne v$）。 把 $v$ 的資料改成比所有其他資料都小，圖和其他節點不變：演算法讀到的東西完全一樣，
+所以仍然回答 $u$，但正確答案是 $v$，矛盾。 因此任何正確的演算法都要讀過全部 $n$ 個節點的資料，至少
+$n$ 步，是 $\Omega(n)$。
+
+另一方面，依序掃描所有節點、記住目前最小的（$n - 1$ 次比較）就做得到，所以這個問題正好是 $\Theta(n)$。
+敘述「需要 $\Omega(n)$ 時間」正確。
+\end{pastsoln}

@@ -1,0 +1,93 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-17}]{成大智慧資安學程 114 學年度 簡答題第 1 題}
+（填空）
+
+\textbf{二、簡答題 (20 分)}
+
+(10 PTs) Given a circular list (or, a singly-linked circular list) that the link field of the last node
+points to the first node as shown in Fig 1, please complete the code to insert a new node to the front of
+the list in the following:
+
+\begin{minipage}[t]{0.55\textwidth}
+\begin{minted}[fontsize=\small]{cpp}
+template <class T>
+void CircularList<T>::InsertFront(const T& e)
+{
+  ChainNode <T> *n = new ChainNode <T>(e);
+  if (last) { // nonempty chain
+     _______a)_______;
+     _______b)_______;
+  } else {
+     _______c)_______;
+     _______d)_______;
+  }
+}
+\end{minted}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.4\textwidth}
+\begin{minted}[fontsize=\small]{cpp}
+template <class T> class Chain;
+
+template <class T>
+class ChainNode {
+  friend class Chain <T>;
+  private:
+    T data;
+    ChainNode <T> *link;
+};
+\end{minted}
+\end{minipage}
+
+\begin{center}
+\begin{tikzpicture}[>={Stealth[length=2.2mm]},font=\small]
+  \foreach \k/\x in {1/0,2/3.2,3/6.4} {
+    \draw[fill=black!25] (\x,0) rectangle (\x+1.7,0.6);
+    \draw (\x+1.7,0) rectangle (\x+2.4,0.6);
+    \node[fill=white,inner sep=1pt] at (\x+0.85,0.3) {$x_{\k}$};
+  }
+  \draw[->] (2.05,0.3) -- (3.2,0.3);
+  \draw[->] (5.25,0.3) -- (6.4,0.3);
+  \draw[->] (8.45,0.3) -- (9.2,0.3) -- (9.2,1.2) -- (0.85,1.2) -- (0.85,0.6);
+  \node[font=\small\sffamily] at (0.85,-0.3) {data};
+  \node[font=\small\sffamily] at (2.05,-0.3) {link};
+  \draw[->] (8.45,-0.6) -- (8.45,-0.05);
+  \node[font=\small\sffamily] at (8.45,-0.85) {last};
+  \node at (4.4,-0.85) {Fig. 1};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{itemize}
+\item a) \texttt{n->link = last->link}
+\item b) \texttt{last->link = n}
+\item c) \texttt{last = n}
+\item d) \texttt{n->link = n}
+\end{itemize}
+（c、d 兩行順序可以對調。）
+
+環狀串列只存 $\mathit{last}$，第一個節點是 \texttt{last->link}（資結書第~5.2~節）。
+
+\textbf{不是空的}（\texttt{last} 不是 \texttt{NULL}）：新節點要變成新的第一個，也就是插在最後一個和原本的
+第一個之間。
+\begin{enumerate}
+\item a) \texttt{n->link = last->link;}：新節點指向原本的第一個 $x_1$。
+\item b) \texttt{last->link = n;}：最後一個改指向新節點，環接回來。
+\end{enumerate}
+\texttt{last} 不動，因為插在前端，最後一個節點沒變。 兩行順序不能對調：先做 b) 的話，原本的第一個就
+再也找不到了，a) 會讓 \texttt{n} 指向自己。
+
+\textbf{空的}（\texttt{last} 是 \texttt{NULL}）：新節點是唯一的節點，它既是第一個也是最後一個，自己指向自己。
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item c) \texttt{last = n;}
+\item d) \texttt{n->link = n;}
+\end{enumerate}
+
+例：Fig.~1 的串列 $x_1 \to x_2 \to x_3 \to x_1$，插入 $x_0$ 後是 $x_0 \to x_1 \to x_2 \to x_3 \to x_0$，
+\texttt{last} 仍指向 $x_3$。 時間 $O(1)$。
+
+另外，原卷的 \texttt{ChainNode} 只把 \texttt{Chain<T>} 宣告成 friend，\texttt{CircularList<T>} 要直接存取
+\texttt{link} 欄位，實際編譯時還得把 \texttt{CircularList<T>} 也宣告成 friend（或提供存取函式）。 這不影響
+本題要填的邏輯。
+\end{pastsoln}

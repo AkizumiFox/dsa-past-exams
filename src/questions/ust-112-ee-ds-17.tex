@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-17}]{臺聯大電機類 112 學年度 第 17 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Which of the following data structures are linear data structures?
+
+(A)~Stack \qquad (B)~Queue \qquad (C)~Linked list \qquad (D)~Array \qquad (E)~Binary tree
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)、(D)。
+
+線性資料結構是指元素排成一列：除了第一個和最後一個，每個元素恰好有一個前一個、一個後一個。
+
+\begin{itemize}
+\item (A) Stack、(B) Queue：元素依進入的先後排成一列，只是限制只能在一端或兩端存取
+（資結書第~6~章）。 線性。
+\item (C) Linked list：每個節點用指標指向下一個，排成一列（資結書第~5~章）。 線性。
+\item (D) Array：元素依索引排在連續的記憶體裡（資結書第~4~章）。 線性。
+\item (E) Binary tree：一個節點可以有兩個子節點，是階層式的結構，屬於非線性資料結構（資結書第~7~章）。
+用陣列\textbf{存放}二元樹不會改變它是樹的事實。 錯。
+\end{itemize}
+\end{pastsoln}

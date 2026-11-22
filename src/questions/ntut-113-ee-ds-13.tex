@@ -1,0 +1,136 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-13}]{北科大電機所（戊組）113 學年度 第 III.4 題}
+（問答；15 分）
+
+For the AOE (Activity on Edge) network described in Table II, answer the following questions:\\
+{[}Note that state 1 is the starting state and state 10 is the goal state.{]}\\
+(a) What is the earliest time the project can finish? (5\%)\\
+(b) Please list all critical paths. (10\%)
+
+\begin{center}
+\textbf{Table II}\\
+\small\setlength{\tabcolsep}{4pt}\begin{tabular}{|c|c|c|c||c|c|c|c|}\hline
+\textbf{Activity} & \textbf{From state} & \textbf{To state} & \textbf{Time} & \textbf{Activity} & \textbf{From state} & \textbf{To state} & \textbf{Time}\\\hline
+A1 & 1 & 2 & 5 & A8 & 4 & 5 & 3\\\hline
+A2 & 1 & 3 & 5 & A9 & 5 & 7 & 1\\\hline
+A3 & 2 & 4 & 3 & A10 & 5 & 8 & 4\\\hline
+A4 & 3 & 4 & 6 & A11 & 6 & 10 & 4\\\hline
+A5 & 3 & 5 & 3 & A12 & 7 & 9 & 5\\\hline
+A6 & 4 & 6 & 4 & A13 & 8 & 9 & 2\\\hline
+A7 & 4 & 7 & 4 & A14 & 9 & 10 & 2\\\hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $22$；(b) 三條關鍵路徑
+$1 \to 3 \to 4 \to 7 \to 9 \to 10$、$1 \to 3 \to 4 \to 5 \to 7 \to 9 \to 10$、
+$1 \to 3 \to 4 \to 5 \to 8 \to 9 \to 10$。
+
+先把表畫成 AOE 網路（狀態是事件，活動是邊；粗線是後面求出的關鍵活動）：
+\begin{center}
+\begin{tikzpicture}[x=1.05cm, y=1cm,
+  ev/.style={circle, draw, minimum size=6.5mm, inner sep=0pt, font=\small},
+  a/.style={-{Stealth[length=2mm]}},
+  ca/.style={a, very thick},
+  al/.style={font=\scriptsize, fill=white, inner sep=1pt}]
+\node[ev] (1) at (0,0) {1};
+\node[ev] (2) at (1.8,1.3) {2};
+\node[ev] (3) at (1.8,-1.3) {3};
+\node[ev] (4) at (3.8,0) {4};
+\node[ev] (5) at (5.6,-1.3) {5};
+\node[ev] (6) at (5.6,1.7) {6};
+\node[ev] (7) at (7.4,0) {7};
+\node[ev] (8) at (7.4,-2.0) {8};
+\node[ev] (9) at (9.2,-1.0) {9};
+\node[ev] (10) at (11,0.6) {10};
+\draw[a] (1) -- node[al] {A1=5} (2);
+\draw[ca] (1) -- node[al] {A2=5} (3);
+\draw[a] (2) -- node[al] {A3=3} (4);
+\draw[ca] (3) -- node[al] {A4=6} (4);
+\draw[a] (3) -- node[al, pos=0.35] {A5=3} (5);
+\draw[a] (4) -- node[al] {A6=4} (6);
+\draw[ca] (4) -- node[al, pos=0.3] {A7=4} (7);
+\draw[ca] (4) -- node[al] {A8=3} (5);
+\draw[ca] (5) -- node[al] {A9=1} (7);
+\draw[ca] (5) -- node[al] {A10=4} (8);
+\draw[a] (6) -- node[al] {A11=4} (10);
+\draw[ca] (7) -- node[al] {A12=5} (9);
+\draw[ca] (8) -- node[al] {A13=2} (9);
+\draw[ca] (9) -- node[al] {A14=2} (10);
+\end{tikzpicture}
+\end{center}
+每條邊都從編號小的狀態指向編號大的，所以 $1, 2, \ldots, 10$ 就是一個拓樸順序，照這個順序算
+（資結書第~22.5~節）。
+
+\textbf{(a) 事件的最早發生時間} $\mathit{ee}[j] = \max\bigl(\mathit{ee}[i] + \mathit{dur}\bigr)$，
+取所有指向 $j$ 的活動：
+\begin{center}
+\begin{tabular}{ccll}
+\toprule
+事件 & 指向它的活動 & 計算 & $\mathit{ee}$ \\
+\midrule
+1 & -- & 開始 & 0 \\
+2 & A1 & $0 + 5$ & 5 \\
+3 & A2 & $0 + 5$ & 5 \\
+4 & A3、A4 & $\max(5 + 3,\ 5 + 6)$ & 11 \\
+5 & A5、A8 & $\max(5 + 3,\ 11 + 3)$ & 14 \\
+6 & A6 & $11 + 4$ & 15 \\
+7 & A7、A9 & $\max(11 + 4,\ 14 + 1)$ & 15 \\
+8 & A10 & $14 + 4$ & 18 \\
+9 & A12、A13 & $\max(15 + 5,\ 18 + 2)$ & 20 \\
+10 & A11、A14 & $\max(15 + 4,\ 20 + 2)$ & 22 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結束事件 $\mathit{ee}[10] = 22$，所以整個計畫最早在時間 $22$ 完成。
+
+\textbf{(b) 事件的最晚發生時間}：$\mathit{le}[10] = 22$，倒著做
+$\mathit{le}[i] = \min\bigl(\mathit{le}[j] - \mathit{dur}\bigr)$，取所有從 $i$ 出發的活動：
+\begin{center}
+\begin{tabular}{ccll}
+\toprule
+事件 & 從它出發的活動 & 計算 & $\mathit{le}$ \\
+\midrule
+10 & -- & 結束 & 22 \\
+9 & A14 & $22 - 2$ & 20 \\
+8 & A13 & $20 - 2$ & 18 \\
+7 & A12 & $20 - 5$ & 15 \\
+6 & A11 & $22 - 4$ & 18 \\
+5 & A9、A10 & $\min(15 - 1,\ 18 - 4)$ & 14 \\
+4 & A6、A7、A8 & $\min(18 - 4,\ 15 - 4,\ 14 - 3)$ & 11 \\
+3 & A4、A5 & $\min(11 - 6,\ 14 - 3)$ & 5 \\
+2 & A3 & $11 - 3$ & 8 \\
+1 & A1、A2 & $\min(8 - 5,\ 5 - 5)$ & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+開始事件算回 $0$，前面沒有算錯。
+
+\textbf{活動的寬裕時間}。 活動 $a = \langle i, j\rangle$ 的最早開始 $e(a) = \mathit{ee}[i]$，最晚開始
+$l(a) = \mathit{le}[j] - \mathit{dur}(a)$，寬裕時間 $l(a) - e(a)$：
+\begin{center}
+\small
+\begin{tabular}{c*{14}{c}}
+\toprule
+活動 & A1 & A2 & A3 & A4 & A5 & A6 & A7 & A8 & A9 & A10 & A11 & A12 & A13 & A14 \\
+\midrule
+$e$ & 0 & 0 & 5 & 5 & 5 & 11 & 11 & 11 & 14 & 14 & 15 & 15 & 18 & 20 \\
+$l$ & 3 & 0 & 8 & 5 & 11 & 14 & 11 & 11 & 14 & 14 & 18 & 15 & 18 & 20 \\
+$l - e$ & 3 & 0 & 3 & 0 & 6 & 3 & 0 & 0 & 0 & 0 & 3 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+寬裕時間為 $0$ 的關鍵活動是 A2、A4、A7、A8、A9、A10、A12、A13、A14（圖中的粗線）。
+
+\textbf{關鍵路徑}是從狀態 $1$ 到狀態 $10$、只走關鍵活動的路徑。 從 $1$ 出發只能走 A2 到 $3$，再走
+A4 到 $4$；在 $4$ 分成 A7（到 $7$）和 A8（到 $5$）；在 $5$ 又分成 A9（到 $7$）和 A10（到 $8$）；
+$7$ 走 A12、$8$ 走 A13 都到 $9$，最後 A14 到 $10$。 共三條：
+\begin{itemize}
+\item $1 \to 3 \to 4 \to 7 \to 9 \to 10$（A2, A4, A7, A12, A14），長度 $5 + 6 + 4 + 5 + 2 = 22$；
+\item $1 \to 3 \to 4 \to 5 \to 7 \to 9 \to 10$（A2, A4, A8, A9, A12, A14），長度
+$5 + 6 + 3 + 1 + 5 + 2 = 22$；
+\item $1 \to 3 \to 4 \to 5 \to 8 \to 9 \to 10$（A2, A4, A8, A10, A13, A14），長度
+$5 + 6 + 3 + 4 + 2 + 2 = 22$。
+\end{itemize}
+三條長度都等於 (a) 的 $22$，是從 $1$ 到 $10$ 的最長路徑。
+\end{pastsoln}

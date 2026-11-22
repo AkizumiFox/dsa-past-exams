@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-04}]{臺大電機所 112 學年度 第 4 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+If we perform the post-order traversal from the \textit{root} of a \textit{tree} and mark the visited nodes with ascending numbers, then the root will have the largest number.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確。
+
+後序走訪（資結書第~7.3~節）對每個節點是「先依序走完它的每一棵子樹，最後才拜訪它自己」。 從根開始時，
+整棵樹的其他節點都在根的子樹裡，都會在根之前被拜訪，根是最後一個。 依拜訪順序編上遞增的號碼，根拿到
+最大的號碼 $n$。 這對二元樹和一般的樹都成立（一般的樹的後序也是先走子樹、最後拜訪根）。
+
+順帶一提：前序的根號碼最小；中序的根號碼則是左子樹大小加 $1$，不一定最大或最小。
+\end{pastsoln}

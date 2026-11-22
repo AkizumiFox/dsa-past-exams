@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-18}]{臺聯大電機類 112 學年度 第 18 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Which of the following statements are true about singly linked lists?
+
+(A)~They use less memory than doubly linked lists\\
+(B)~They allow traversal in both directions\\
+(C)~They require less time to insert or delete elements than doubly linked lists\\
+(D)~They allow random access to elements\\
+(E)~All of the above is true
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+\begin{itemize}
+\item (A)：對。 單向串列的節點只有一個 next 指標，雙向串列多一個 prev 指標，存同樣多的資料，
+單向的每個節點少一個指標的空間（資結書第~5.2~節）。
+\item (B)：錯。 只有 next，只能從頭往後走，不能往回走。 能雙向走的是雙向串列。
+\item (C)：錯。 給定一個節點 $x$，要刪除 $x$ 時，單向串列必須先從頭找到 $x$ 的前一個節點，最壞
+$O(n)$；雙向串列用 $x.\mathit{prev}$ 直接拿到，$O(1)$（資結書虛擬碼~5.7）。 在某個節點\textbf{之後}
+插入，兩者都是 $O(1)$，單向只少改兩個指標，這是常數上的差別，不是「需要較少時間」。 所以這句話
+不成立；一般情況下反而是雙向串列的插入刪除比較方便。
+\item (D)：錯。 要拿第 $k$ 個節點必須從頭走 $k - 1$ 步，沒有隨機存取。 隨機存取是陣列的特性。
+\item (E)：(B)(C)(D) 都錯，所以錯。
+\end{itemize}
+\end{pastsoln}

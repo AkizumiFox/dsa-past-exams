@@ -1,0 +1,17 @@
+paper: ntu-110-esoe-ds
+volume: 3
+school: 臺大
+dept: 工科海洋所
+year: 110
+subject: 資料結構（A）
+instructions: Please use C++ (or Java) for all programming problems.
+questions:
+  - {id: ntu-110-esoe-ds-01, label: 第 1 題, chapter: 6}
+  - {id: ntu-110-esoe-ds-02, label: 第 2 題, chapter: 5}
+  - {id: ntu-110-esoe-ds-03, label: 第 3 題, chapter: 7}
+  - {id: ntu-110-esoe-ds-04, label: 第 4 題, chapter: 21}
+  - {id: ntu-110-esoe-ds-05, label: 第 5 題, chapter: 1}
+  - {id: ntu-110-esoe-ds-06, label: 第 6 題, chapter: 11}
+  - {id: ntu-110-esoe-ds-07, label: 第 7 題, chapter: 24}
+  - {id: ntu-110-esoe-ds-08, label: 第 8 題, chapter: 14}
+  - {id: ntu-110-esoe-ds-09, label: 第 9 題, chapter: 12}

@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-03}]{成大電通所 112 學年度 第 3 題}
+（問答）
+
+(10\%) Let Z( ) be a function that inputs a string and outputs a string, defined as follows:\\
+\hspace*{2em}Base Case: If the input string X is a single letter L, then Z(X)=L.\\
+\hspace*{2em}Recursive Case: If the input string X is a string of the form LS, then Z(X)=``Z(S)L''.\\
+\hspace*{2em}(a) If X=``happy'', what is Z(X)?\\
+\hspace*{2em}(b) What does the function Z( ) actually perform?
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~3~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-03}，這裡只列答案。
+
+答案：(a) $Z(\text{happy}) = \text{yppah}$。 (b) $Z$ 把字串反轉：$Z(x_1 x_2 \cdots x_n) = x_n \cdots x_2 x_1$（對長度歸納即可證明）。
+\end{pastsoln}

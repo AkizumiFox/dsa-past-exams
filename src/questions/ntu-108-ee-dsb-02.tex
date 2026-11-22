@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-02}]{臺大電機所 108 學年度（B）第 2 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+A complete binary tree can be transformed into a heap in $\Theta(n)$ steps.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，對。
+
+完全二元樹已經滿足堆積的形狀條件，只差鍵的大小關係。 由下而上建堆積（資結書第~8.2~節、
+虛擬碼~8.3）從最後一個內部節點 $\lfloor n/2 \rfloor$ 往回到根，每個節點做一次下沉。
+
+\textbf{上界}。 高度為 $h$ 的節點下沉最多走 $h$ 層，而高度為 $h$ 的節點最多
+$\lceil n/2^{h+1} \rceil$ 個，總工作量
+\[
+\sum_{h=0}^{\lfloor \lg n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil O(h)
+= O\!\left(n \sum_{h=0}^{\infty} \frac{h}{2^{h}}\right) = O(2n) = O(n)
+\]
+（資結書定理~8.1）。
+
+\textbf{下界}。 任何方法都至少要看過每一個鍵一次，否則沒看到的那個鍵可能就是最大值，該放在根
+卻沒有放。 所以要 $\Omega(n)$ 步。
+
+上下界合起來是 $\Theta(n)$，敘述正確。 注意如果改成一個一個插入（每次上浮），最壞是
+$\Theta(n \lg n)$；題目說「can be」，有 $\Theta(n)$ 的方法就成立。
+\end{pastsoln}

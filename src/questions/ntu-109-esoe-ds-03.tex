@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-03}]{臺大工科海洋所 109 學年度 第 3 題}
+（設計）
+
+\textbf{(10 \%)} Describe (not code) a single algorithm for finding the $k$th smallest key in a
+binary search tree of $n$ keys, where $1\le k\le n$.
+\end{pastexam}
+
+\begin{pastsoln}
+題目只給一般的 BST（節點沒有額外欄位），所以用中序走訪：BST 的中序就是鍵由小到大的順序（資結書
+定理~9.1），走到第 $k$ 個拜訪的節點就是答案，不必走完整棵樹。
+
+\textbf{演算法}（用堆疊的中序走訪，資結書虛擬碼~7.3，加一個計數器）：
+\begin{enumerate}
+\item 計數器 $c \gets 0$，堆疊 $S$ 清空，$x \gets$ 根。
+\item 只要 $x$ 不是空的，就把 $x$ 推入 $S$，$x \gets x$ 的左子節點，一路往左走到底。
+\item 從 $S$ 取出頂端的節點 $x$，這就是下一個中序拜訪的節點，也就是目前還沒數到的鍵裡最小的。
+$c \gets c + 1$；若 $c = k$，回傳 $x$ 的鍵，結束。
+\item 否則 $x \gets x$ 的右子節點，回到步驟 2。
+\end{enumerate}
+寫成虛擬碼：
+\begin{pseudo}{第 $k$ 小的鍵（中序走訪數到第 $k$ 個）}
+\Function{Kth-Smallest}{$T, k$}
+    \State 建立空堆疊 $S$；$c \gets 0$；$x \gets T.\mathit{root}$
+    \While{$x \ne \NIL$ \OR $S$ 不是空的}
+        \While{$x \ne \NIL$}
+            \State \Call{Push}{$S, x$}；$x \gets x.\mathit{left}$
+        \EndWhile
+        \State $x \gets$ \Call{Pop}{$S$}
+        \State $c \gets c + 1$
+        \If{$c = k$}
+            \State \Return $x.\mathit{key}$
+        \EndIf
+        \State $x \gets x.\mathit{right}$
+    \EndWhile
+\EndFunction
+\end{pseudo}
+
+例：BST 依序插入 $50, 30, 70, 20, 40, 60, 80$，找第 $3$ 小。 先推入 $50, 30, 20$；取出 $20$（$c = 1$），
+它沒有右子樹；取出 $30$（$c = 2$），往右推入 $40$；取出 $40$（$c = 3$），回傳 $40$。
+
+\textbf{正確性}。 中序走訪恰好依鍵由小到大拜訪每個節點各一次，第 $c$ 個拜訪的就是第 $c$ 小的鍵，
+所以 $c = k$ 時回傳的是第 $k$ 小。 $1 \le k \le n$ 保證一定在走完之前遇到。
+
+\textbf{複雜度}。 停下來之前拜訪了 $k$ 個節點，另外沿著左邊往下走、推入但還沒拜訪的節點最多是一條
+路徑，所以時間 $O(h + k)$（$h$ 是樹高），最壞 $O(n)$；堆疊最多 $h$ 個節點，空間 $O(h)$。 也可以寫
+成遞迴的中序走訪，用一個全域的計數器，數到 $k$ 就停止，複雜度相同。
+
+\textbf{如果允許在節點多存資料}：每個節點記子樹大小 $\mathit{size}$，從根往下比較 $k$ 和
+$r = x.\mathit{left}.\mathit{size} + 1$：相等就是 $x$，$k < r$ 往左，$k > r$ 時 $k \gets k - r$ 往右
+（資結書第~9.4~節虛擬碼~9.8 \proc{Tree-Select}）。 每一步往下一層，時間 $O(h)$，和 $k$ 無關；代價是
+插入、刪除時要沿路更新 $\mathit{size}$。 這一題的 BST 沒有這個欄位，所以主答案用中序走訪。
+\end{pastsoln}

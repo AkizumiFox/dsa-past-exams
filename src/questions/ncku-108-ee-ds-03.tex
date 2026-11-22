@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ncku-108-ee-ds-03}]{成大電機所 108 學年度 問答題第 2 題}
+（問答）
+
+Given an empty hash table of size 7 and bucket capacity 1 that uses open addressing. The following
+sequence of keys is to be inserted: (8, 17, 24, 3, 15, 5). Insert these keys using the following
+hash function and approach. Show the resulting hash table step by step. If overflow occurs,
+indicate the element that causes the overflow. (6 points)
+
+\qquad h(x) = x \% 7; quadratic probing.
+\end{pastexam}
+
+\begin{pastsoln}
+二次探測用資結書第~12.3~節的公式：第 $i$ 次試 $(h(x) + i^2) \bmod 7$，$i = 0, 1, 2, \ldots$，也就是從起始
+位置跳 $0, 1, 4, 9, \ldots$ 格。 每格（bucket）只能放 $1$ 個鍵。
+
+\textbf{用語}：題目的 bucket／overflow 是 Horowitz 課本的說法。 \textbf{碰撞}（collision）是兩個不同的鍵
+算出同一個 bucket；\textbf{溢位}（overflow）是新的鍵算到的 bucket 已經滿了。 bucket 容量是 $1$ 時，起始
+bucket 有鍵就滿了，所以碰撞一定同時是溢位，要用探測找別的位置。
+
+\begin{center}
+\small
+\begin{tabular}{cccl*{7}{c}}
+\toprule
+鍵 & $h(x)$ & 試過的位置 & 結果 & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+8 & 1 & 1 & 放在 1 & & 8 & & & & & \\
+17 & 3 & 3 & 放在 3 & & 8 & & 17 & & & \\
+24 & 3 & 3, 4 & \textbf{溢位}，放在 4 & & 8 & & 17 & 24 & & \\
+3 & 3 & 3, 4, 0 & \textbf{溢位}，放在 0 & 3 & 8 & & 17 & 24 & & \\
+15 & 1 & 1, 2 & \textbf{溢位}，放在 2 & 3 & 8 & 15 & 17 & 24 & & \\
+5 & 5 & 5 & 放在 5 & 3 & 8 & 15 & 17 & 24 & 5 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+細節：$24 \bmod 7 = 3$，位置 $3$ 被 $17$ 佔了，試 $(3 + 1) \bmod 7 = 4$。 $3 \bmod 7 = 3$，試 $3$、$4$ 都滿，
+再試 $(3 + 4) \bmod 7 = 0$。 $15 \bmod 7 = 1$，位置 $1$ 被 $8$ 佔了，試 $2$。 $5 \bmod 7 = 5$，空的。
+
+最後的雜湊表：
+\begin{center}
+\begin{tabular}{c|ccccccc}
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\hline
+鍵 & 3 & 8 & 15 & 17 & 24 & 5 & （空） \\
+\end{tabular}
+\end{center}
+
+\textbf{溢位的鍵}：$24$、$3$、$15$（起始 bucket 已滿，靠二次探測解決，最後都放進去了）。 沒有任何鍵
+「放不進表」：$7$ 是質數，表裡的鍵少於 $(7+1)/2 = 4$ 個之前，二次探測保證找得到空格（資結書
+定理~12.3）；$15$ 插入時表裡已有 $4$ 個鍵，但它第二次就找到空格。 如果題目的「overflow」指的是「表裡找不到
+位置放」，答案就是沒有發生。
+\end{pastsoln}

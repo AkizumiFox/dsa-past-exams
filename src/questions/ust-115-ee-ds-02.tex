@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-02}]{臺聯大電機類 115 學年度 第 2 題}
+（單選；2 分）
+
+What are the main disadvantages of storing a sparse matrix using a general two-dimensional array?
+\begin{enumerate}[label=(\Alph*)]
+\item Access speed is too slow
+\item The code is too complex
+\item Wasting a lot of memory space
+\item Matrix multiplication cannot be performed
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+稀疏矩陣是大部分元素為 $0$ 的矩陣。 $m \times n$ 的矩陣只有 $t$ 個非零元素（$t \ll mn$）時，
+用一般二維陣列存仍然要 $\Theta(mn)$ 的空間，絕大多數格子都在存 $0$。 改用三元組
+（列、行、值）只存非零元素，空間是 $\Theta(t)$（資結書第~4.3~節）。 例如 $1000 \times 1000$
+的矩陣只有 $2000$ 個非零元素，二維陣列要存一百萬個數，三元組只要 $3 \times 2000 = 6000$ 個。
+除了空間，轉置、相乘時也會花很多時間在處理 $0$ 上。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 二維陣列用位址公式直接算出任何一格的位置，存取是 $\Theta(1)$，反而是最快的。 錯。
+\item (B) 二維陣列的程式最簡單，三元組的轉置、相乘才複雜。 錯。
+\item (C) 對，見上。
+\item (D) 二維陣列當然可以做矩陣乘法，只是會做很多乘以 $0$ 的白工。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-07}]{成大電通所 114 學年度 單選題第 7 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+The quick sort algorithm uses the divide and conquer technique. In each recursion, it will place a pivot of an
+array at the correct location and divide the array into two parts. Please identify the correct position of a
+pivot in the following array after the first recursion. To optimize performance, we apply the strategy of
+Median-of-3: median(key[left], key[middle], key[right]) to select pivot, where the index of middle
+= $\frac{left+right}{2}$. Then, the pivot is then swapped with the key[left].
+\begin{center}
+\begin{tabular}{*{10}{|c}|}\hline - & 75 & 58 & 67 & 42 & 55 & 30 & 29 & 95 & 3 \\ \hline\end{tabular}\quad left =1, right =9\\[-2pt]
+{\small\begin{tabular}{*{10}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]&[8]&[9]\end{tabular}}\hspace{8em}
+\end{center}
+a) key[2]\quad b) key[4]\quad c) key[6]\quad d) key[8]\quad e) None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案：e) None of the above（基準最後在 key[5]）。
+
+\textbf{選基準}。 $\mathit{middle} = \lfloor (1 + 9)/2 \rfloor = 5$。 三個數是 key[1] = 75、key[5] = 55、key[9] = 3，
+中位數是 55。 把 55 和 key[1] 交換：
+\[
+55\ \ 58\ \ 67\ \ 42\ \ 75\ \ 30\ \ 29\ \ 95\ \ 3 \qquad (\text{key}[1..9]).
+\]
+
+\textbf{基準的最後位置}。 分割結束時，比基準小的都在它左邊、比它大的都在它右邊，所以基準的位置只由「有幾個比它小」
+決定，和分割的寫法無關。 其他 8 個數裡比 55 小的是 42、30、29、3，共 4 個，所以 55 落在 $1 + 4 = 5$，也就是 key[5]。
+
+照資結書第~14.5~節作答提醒的雙指標分割（$i$ 從左找 $\ge 55$ 的，$j$ 從右找 $\le 55$ 的，交換；交錯後把基準換到 $j$）
+實際做一次，粗體是交換的兩格：
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+ & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] & [9] \\
+\midrule
+開始 & 55 & 58 & 67 & 42 & 75 & 30 & 29 & 95 & 3 \\
+$i = 2$、$j = 9$ & 55 & \textbf{3} & 67 & 42 & 75 & 30 & 29 & 95 & \textbf{58} \\
+$i = 3$、$j = 7$ & 55 & 3 & \textbf{29} & 42 & 75 & 30 & \textbf{67} & 95 & 58 \\
+$i = 5$、$j = 6$ & 55 & 3 & 29 & 42 & \textbf{30} & \textbf{75} & 67 & 95 & 58 \\
+$i = 6$、$j = 5$ 交錯 & \textbf{30} & 3 & 29 & 42 & \textbf{55} & 75 & 67 & 95 & 58 \\
+\bottomrule
+\end{tabular}
+\end{center}
+基準 55 在 key[5]，左邊 30 3 29 42 都比它小，右邊 75 67 95 58 都比它大。 選項 a)--d) 都不是 5，選 e)。
+\end{pastsoln}

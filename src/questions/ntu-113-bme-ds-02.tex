@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ntu-113-bme-ds-02}]{臺大生機所 113 學年度 第 2 題}
+（設計）
+
+When a question asks for pseudocode, you can use a mixture of English and programming notation to
+describe your solution. Ensure to provide enough details so that a skilled programmer can readily
+implement your proposed solution.
+
+\textbf{(15\%)} Compose a pseudocode function designed to accept a 2-dimensional array as input,
+interpreting it as the \textbf{adjacency matrix representation} of a graph. The function's purpose is
+to transform this matrix into its equivalent \textbf{adjacency list representation.} Please clearly
+specify what the return value of your function is.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{約定。} 輸入是 $n \times n$ 的陣列 $A[1..n][1..n]$，頂點編號 $1..n$。 $A[i][j] \ne 0$
+表示有邊 $(i, j)$；加權圖時 $A[i][j]$ 就是權重（題目沒說時，以 $0$ 代表沒有邊）。 有向圖、
+無向圖都用同一個函式：無向圖的矩陣對稱，$(i, j)$ 會同時出現在 $i$ 和 $j$ 的串列裡，正好是無向
+圖鄰接串列的樣子（資結書第~21.2~節）。
+
+\textbf{回傳值}：一個陣列 $\mathit{Adj}[1..n]$，$\mathit{Adj}[i]$ 是頂點 $i$ 的鄰接串列的第一個
+節點（沒有鄰居時是 \NIL）。 每個節點有三個欄位：$\mathit{vertex}$（鄰居的編號）、
+$\mathit{weight}$（邊的權重，不加權時是 $1$）、$\mathit{next}$。 串列裡的鄰居由小到大排。
+
+\begin{pseudo}{鄰接矩陣轉鄰接串列}
+\Function{Matrix-To-List}{$A, n$}
+    \State 配置陣列 $\mathit{Adj}[1..n]$
+    \For{$i \gets 1$ \To $n$}
+        \State $\mathit{Adj}[i] \gets \NIL$
+        \For{$j \gets n$ \DownTo $1$} \Comment{倒著掃、插在前面，串列就由小到大}
+            \If{$A[i][j] \ne 0$}
+                \State 配置新節點 $x$
+                \State $x.\mathit{vertex} \gets j$；$x.\mathit{weight} \gets A[i][j]$
+                \State $x.\mathit{next} \gets \mathit{Adj}[i]$
+                \State $\mathit{Adj}[i] \gets x$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return $\mathit{Adj}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 外層固定 $i$ 時，內層把第 $i$ 列每個非零的 $A[i][j]$ 恰好做成一個節點，接到
+$\mathit{Adj}[i]$ 的最前面。 $j$ 由大到小，越後面插入的 $j$ 越小、越靠前，所以做完時
+$\mathit{Adj}[i]$ 依序是第 $i$ 列所有非零位置的行號，由小到大。 這正是「$j$ 在 $\mathit{Adj}[i]$
+裡 $\iff$ $(i, j)$ 是邊」，也就是同一張圖的鄰接串列。 自迴圈 $A[i][i] \ne 0$ 也會照樣變成
+$\mathit{Adj}[i]$ 裡的 $i$。
+
+\textbf{複雜度。} 兩層迴圈看過 $n^2$ 格，每格 $O(1)$，時間 $\Theta(n^2)$；不管邊多少，都得把整個
+矩陣看完。 新配置的空間是 $\Theta(n + m)$，$m$ 是矩陣裡非零的格數（有向圖是邊數，無向圖是
+邊數的兩倍）。
+
+例：$A = \begin{pmatrix} 0 & 1 & 1 \\ 1 & 0 & 0 \\ 1 & 0 & 0 \end{pmatrix}$ 得到
+$\mathit{Adj}[1] = 2 \to 3$、$\mathit{Adj}[2] = 1$、$\mathit{Adj}[3] = 1$。
+\end{pastsoln}

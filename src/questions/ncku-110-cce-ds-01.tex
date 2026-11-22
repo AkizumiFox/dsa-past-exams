@@ -1,0 +1,99 @@
+\begin{pastexam}[label={px:ncku-110-cce-ds-01}]{成大電通所 110 學年度 第 1 題}
+（是非改錯；30 分）
+
+(\textbf{30 pts}) True or False. Identify all errors in the sentence if it is not correct. You can get the points only when you correct all errors.
+\begin{enumerate}[label=\alph*.]
+\item Floyd-Warshall algorithm applies the dynamic programming to find all pair shortest paths and can be applied to a graph with negative weights and negative cycles.
+\item There are no back edges, no forward edges, and no cross edges after we apply the breadth-first search algorithm to an undirected graph.
+\item A biconnected graph has only one biconnected component and we can use breath-first search algorithm to find biconnected components in a graph.
+\item The access time of a hash table with open addressing is related to the load factor.
+\item There is no need for parentheses for the prefix notation because there is no ambiguity.
+\item There totally exists $n$-1 threads in a post-thread binary tree with $n$ nodes, where the left thread of a node points to its predecessor and the right thread of the node points to its successor according to the in-order.
+\item DijKstra's algorithm is a greedy algorithm which can be used to find a single source shortest path. It allows a graph G(V, E) with negative weights. The time complexity is O(E log V) when we use an adjacency matrix to implement it.
+\item The failure function of the Knuth-Morris-Pratt algorithm applied to the pattern ``abcabcacab'' is shown as follows:
+\begin{center}
+\begin{tabular}{cccccccccc}
+a & b & c & a & b & c & a & c & a & b\\
+0 & -1 & -1 & 0 & 1 & 2 & 0 & -1 & 0 & 1
+\end{tabular}
+\end{center}
+\item A circular queue can be used to resolve the problem of necessary to move data if a queue is full, where the queue is implemented by an array with size $N$. But it can only store $N$-1 data in order to distinguish whether the queue is full or empty. We can pop a data from the location ``front'' and push a data to the location ``rear+1'', where ``front'' and ``rear'' are pointers to the queue.
+\item If f(n)=$\sum_{i=1}^{n}\log i$ , then f(n)= $\theta$(log n ).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a.~F\quad b.~F\quad c.~F\quad d.~T\quad e.~T\quad f.~F\quad g.~F\quad h.~F\quad i.~T\quad j.~F。
+
+十句分屬不同章：a、g 是資結書第~25~章，b 第~21~章，c 第~23~章，d 第~12~章，e、i 第~6~章，f 第~7~章，h 第~27~章，
+j 第~1~章；放在第~25~章。 錯的句子先寫改正後的句子，再說明。
+
+\textbf{a.~F。} 改成：「\ldots can be applied to a graph with negative weights \textbf{but no} negative cycles.」 Floyd--Warshall
+是動態規劃沒錯（資結書第~25.6~節），也允許負權重的邊。 但有負環時，繞著負環多走一圈路徑就更短，最短路徑沒有定義；
+演算法跑完會出現 $d[i][i] < 0$，只能用來\textbf{偵測}負環，算出來的距離沒有意義。
+
+\textbf{b.~F。} 改成：「There are no back edges and no forward edges, \textbf{but there may be cross edges} \ldots」。 BFS 中每條邊
+$\{u, v\}$ 都有 $|d[u] - d[v]| \le 1$（資結書第~21.3~節）。 若一條非樹邊連到祖先或子孫，例如 $v$ 是 $u$ 的子孫，則
+$d[v] \ge d[u] + 1$，配合上式只能 $d[v] = d[u] + 1$，也就是 $u$ 是 $v$ 的父節點，這條邊就是樹邊，矛盾。 所以非樹邊兩
+端互不為祖先子孫，都是交叉邊（同一層或相鄰兩層之間）。 交叉邊確實會出現：三角形 $1, 2, 3$ 從 $1$ 做 BFS，
+$\{1,2\}$、$\{1,3\}$ 是樹邊，$\{2,3\}$ 是交叉邊。 （對無向圖做 \textbf{DFS} 才是只有樹邊和後向邊，資結書定理~21.8。）
+
+\textbf{c.~F。} 改成：「\ldots we can use \textbf{depth}-first search algorithm to find biconnected components \ldots」（原文的 breath
+是 breadth 的筆誤）。 前半句對：雙連通圖沒有割點，整張圖就是一個雙連通元件。 找雙連通元件要用 DFS 樹算
+$\mathit{low}$ 值（資結書第~23.5、23.6~節）：它依賴 DFS 的「非樹邊只連到祖先」（後向邊），$\mathit{low}[v]$ 才能表示
+「$v$ 的子樹能爬回多高的祖先」；BFS 樹的非樹邊是交叉邊（見 b），沒有這個性質。
+
+\textbf{d.~T。} 開放定址的探測次數由載入因子 $\alpha = n/m$ 決定：在均勻雜湊的假設下，失敗搜尋的期望探測次數至多
+$1/(1 - \alpha)$，成功搜尋至多 $\frac{1}{\alpha}\ln\frac{1}{1-\alpha}$（資結書定理~12.5、12.7）。 $\alpha$ 越接近 $1$ 越慢。
+
+\textbf{e.~T。} 每個運算子的運算元個數固定時，前序式（波蘭式）由左往右讀，每個運算子後面接著它的兩個運算元，切法唯一，
+不需要括號也沒有優先順序的問題（資結書第~6.3.5~節）。 後序式也一樣。
+
+\textbf{f.~F。} 改成：「There totally exist $n$\textbf{+}1 threads in an \textbf{in}-threaded binary tree with $n$ nodes \ldots」。 兩個錯：
+\begin{itemize}
+\item 引線指向「中序」的前驅和後繼，這是\textbf{中序}引線二元樹（in-threaded），不是 post-thread。
+\item $n$ 個節點的二元樹有 $2n$ 個指標欄，只有 $n - 1$ 個指向子節點（每個非根節點被指一次），所以有 $n + 1$ 個空指標，
+全部改成引線（資結書第~7.5~節）。 常見課本（Horowitz）用一個表頭節點，中序第一個節點的左引線和最後一個節點的右引線都
+指向表頭，引線共 $n + 1$ 條。
+\end{itemize}
+（若不用表頭節點，那兩條引線沒有東西可指，留成空指標，真正指到節點的引線才是 $n - 1$ 條；資結書就是這樣寫的。 這題
+要改的主要是 post-thread；寫 $n + 1$ 時最好註明是有表頭節點的版本。）
+
+\textbf{g.~F。} 改成：「\ldots It \textbf{does not allow} a graph G(V, E) with negative weights. The time complexity is O(E log V) when we use an
+\textbf{adjacency list (with a binary heap)} to implement it.」（或保留相鄰矩陣，把時間改成 $O(V^2)$。） Dijkstra 是貪心法、求單一
+起點最短路徑，這兩點對。 它每次確定距離最小的頂點後就不再更新，靠的是「邊權重非負，後面不可能再出現更短的路」，有負邊
+時會出錯（資結書第~25.2.5~節）。 用相鄰矩陣時，找每個頂點的鄰居要掃一整列，總共 $\Theta(V^2)$，再用陣列挑最小，總時間
+$O(V^2)$；$O(E \log V)$ 是相鄰串列配二元堆積的時間（資結書第~25.2~節）。
+
+\textbf{h.~F。} 原題的失敗函數用的是 Horowitz 的寫法：$f(j)$ 是 $p_0 \cdots p_j$ 最長的「既是前綴又是後綴的真子字串」的
+最後一個位置，沒有時是 $-1$；它等於資結書的 $\pi[j+1] - 1$（資結書第~27.3~節）。 先算 $\pi$：
+\begin{center}
+\small
+\begin{tabular}{l*{10}{c}}
+\toprule
+$j$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+$p_j$ & a & b & c & a & b & c & a & c & a & b \\
+\midrule
+最長邊界的長度 $\pi[j+1]$ & 0 & 0 & 0 & 1 & 2 & 3 & 4 & 0 & 1 & 2 \\
+正確的 $f(j)$ & $-1$ & $-1$ & $-1$ & 0 & 1 & 2 & \textbf{3} & $-1$ & 0 & 1 \\
+題目給的 & \textbf{0} & $-1$ & $-1$ & 0 & 1 & 2 & \textbf{0} & $-1$ & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+有兩格錯：$f(0)$ 應為 $-1$（單一字元沒有真的邊界）；$f(6)$ 應為 $3$（$p_0 \cdots p_6 = \mathtt{abcabca}$，前綴 $\mathtt{abca}$ 也是
+後綴，長度 $4$）。 另外看 $j = 7$：$\mathtt{abcabcac}$ 結尾是 c，從 $f(6) = 3$ 退回 $f(3) = 0$、再退到 $f(0) = -1$ 都接不上，
+所以 $f(7) = -1$，表上這格是對的。
+
+\textbf{i.~T。} 依題意，$\mathit{front}$ 指向前端元素、$\mathit{rear}$ 指向尾端元素：取出時拿 $\mathit{front}$ 那格，加入時放在
+$(\mathit{rear} + 1) \bmod N$。 用陣列做的一般佇列，$\mathit{rear}$ 到了陣列尾端就必須把資料往前搬，環狀佇列讓索引繞回
+開頭，免去搬移；只靠 $\mathit{front}$、$\mathit{rear}$ 時，空和滿無法區分，所以留一格不用，最多放 $N - 1$ 個（資結書第~6.2.2~節）。
+三件事都對。 要注意兩點：一、「rear+1」要取 $\bmod N$；二、這和 $\mathit{front}$、$\mathit{rear}$ 的定義有關，若照 Horowitz
+的寫法（$\mathit{front}$ 指向前端元素的\textbf{前一格}），取出的位置是 $\mathit{front} + 1$，這句的前半要跟著改。 而「只能放
+$N - 1$ 個」是指只用兩個索引的情形，多記元素個數或一個旗標就能放滿 $N$ 個。
+
+\textbf{j.~F。} 改成：「\ldots then f(n) = $\theta$(\textbf{n} log n).」 上界：每一項 $\log i \le \log n$，$f(n) \le n \log n$。 下界：只看後一半，
+\[
+f(n) \ge \sum_{i = \lceil n/2 \rceil}^{n} \log i \ge \frac{n}{2} \log \frac{n}{2} = \Omega(n \log n).
+\]
+所以 $f(n) = \log n! = \Theta(n \log n)$（資結書第~1.6~節；也可以用 Stirling 公式），不是 $\Theta(\log n)$。
+\end{pastsoln}

@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-05}]{臺科大電子所甲組 110 學年度 第 5 題}
+（名詞解釋）
+
+{[}20\%{]} Please explain the following terms
+\begin{enumerate}[label=(\alph*)]
+\item Queue [5\%]
+\item Circularly Linked List [5\%]
+\item Minimum Spanning Tree [5\%]
+\item Breadth-First Search [5\%]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+四個小題分屬資結書第~6~章（佇列）、第~5~章（環狀串列）、第~24~章（最小生成樹）、第~21~章
+（廣度優先搜尋），這裡放在第~6~章。 名詞解釋要寫出定義，再補一句特性或用途。
+
+\textbf{(a) Queue（佇列）}：一種先進先出（FIFO, first-in first-out）的線性資料結構。 只能從尾端
+（rear）加入元素（enqueue），從前端（front）取出元素（dequeue），先進去的先出來，像排隊。 用環狀
+陣列或帶尾指標的鏈結串列實作，兩個操作都是 $O(1)$（資結書第~6.2~節）。 用途：BFS、作業排程、
+緩衝區。
+
+\textbf{(b) Circularly Linked List（環狀鏈結串列）}：最後一個節點的 $\mathit{next}$ 不是 \NIL，而是
+指回第一個節點，整條串列首尾相接成一個環（資結書第~5.2~節）。 從任何一個節點出發都能走遍所有
+節點。 常只記一個指向\textbf{最後一個}節點的指標 $\mathit{last}$，第一個節點就是
+$\mathit{last}.\mathit{next}$，在頭或尾插入都是 $O(1)$。 走訪時要用「回到出發點」判斷結束，而不是
+遇到 \NIL。 用途：輪流排程（round-robin）、多項式的可用空間串列。
+
+\textbf{(c) Minimum Spanning Tree（最小生成樹）}：對一張連通、邊有權重的無向圖 $G = (V, E)$，
+生成樹是包含全部 $|V|$ 個頂點、用 $|V| - 1$ 條邊、沒有環的連通子圖；所有生成樹中邊權重總和最小的
+那一棵就是最小生成樹（資結書第~24.1~節）。 不一定唯一（權重有相同時可能有好幾棵），但權重都互不
+相同時唯一。 求法：Kruskal、Prim、Sollin（Borůvka）演算法，都是貪心法，依據切割性質。 用途：用
+最少的成本把所有地點連起來（網路、電路佈線）。
+
+\textbf{(d) Breadth-First Search（廣度優先搜尋，BFS）}：從起點 $s$ 開始，先拜訪 $s$ 的所有鄰居，
+再拜訪鄰居的鄰居，一層一層往外擴展的圖走訪方法（資結書第~21.3~節）。 用佇列存「已發現、還沒處理」
+的頂點，每個頂點只放進佇列一次。 用相鄰串列時時間 $O(|V| + |E|)$。 在無權重的圖上，BFS 求出的
+是 $s$ 到每個頂點的最短路徑（邊數最少），走訪的邊形成 BFS 樹。 二元樹的層序走訪就是 BFS。
+\end{pastsoln}

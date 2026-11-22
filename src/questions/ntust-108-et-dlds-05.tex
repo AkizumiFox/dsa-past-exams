@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ntust-108-et-dlds-05}]{臺科大電子所甲組 108 學年度 第 5 題}
+（問答；10 分）
+
+In computer systems, the main memory can be regarded as a one-dimensional array. Nevertheless,
+in C or other high-level programming languages, a two-dimensional or higher-dimensional array is
+often used. How would you implement (represent) a two-dimensional array with a one-dimensional
+array in such computer systems? (10\%)
+\end{pastexam}
+
+\begin{pastsoln}
+做法是把二維陣列的元素\textbf{依固定的順序排成一列}，放進一段連續的記憶體，再用一個公式
+把下標 $(i, j)$ 換成這一列裡的位置。 常用的順序有兩種（資結書第~4.1~節）。
+
+設陣列是 $A[l_1..u_1,\ l_2..u_2]$，共 $m = u_1 - l_1 + 1$ 列、$n = u_2 - l_2 + 1$ 行，每個
+元素佔 $w$ 個位元組，$A[l_1, l_2]$ 的位址是 $\alpha$。
+
+\textbf{列優先}（row-major）：先放第 $l_1$ 列的 $n$ 個元素，再放第 $l_1 + 1$ 列，依此類推。
+$A[i, j]$ 前面有完整的 $i - l_1$ 列（每列 $n$ 個），再加上同一列裡它左邊的 $j - l_2$ 個，所以
+\[
+\mathrm{loc}(A[i, j]) = \alpha + \bigl((i - l_1)\,n + (j - l_2)\bigr)\,w .
+\]
+
+\textbf{行優先}（column-major）：先放第 $l_2$ 行的 $m$ 個元素，再放下一行。 同樣的數法：
+\[
+\mathrm{loc}(A[i, j]) = \alpha + \bigl((j - l_2)\,m + (i - l_1)\bigr)\,w .
+\]
+
+以 $3 \times 4$ 的陣列 $A[0..2,\ 0..3]$ 為例，兩種排法在記憶體裡的順序是：
+\begin{center}
+\small
+\begin{tabular}{l*{12}{c}}
+\toprule
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
+\midrule
+列優先 & $a_{00}$ & $a_{01}$ & $a_{02}$ & $a_{03}$ & $a_{10}$ & $a_{11}$ & $a_{12}$ & $a_{13}$
+       & $a_{20}$ & $a_{21}$ & $a_{22}$ & $a_{23}$ \\
+行優先 & $a_{00}$ & $a_{10}$ & $a_{20}$ & $a_{01}$ & $a_{11}$ & $a_{21}$ & $a_{02}$ & $a_{12}$
+       & $a_{22}$ & $a_{03}$ & $a_{13}$ & $a_{23}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $a_{12}$：列優先在位置 $1 \times 4 + 2 = 6$，行優先在位置 $2 \times 3 + 1 = 7$，和表格一致。
+
+幾個要寫出來的重點：
+\begin{itemize}
+\item C 的多維陣列一律是列優先、下界是 $0$。 宣告 \texttt{int a[R][C]} 後，\texttt{a[i][j]}
+的位址就是 \texttt{(char *)a + (i * C + j) * sizeof(int)}；編譯器只需要知道行數 \texttt{C}，
+所以把二維陣列傳給函式時，參數要寫成 \texttt{int a[][C]}，第一維可以省略，第二維不行。
+Fortran、MATLAB 用行優先。
+\item 公式只需要一次乘法和幾次加法，所以存取任何一格都是 $\Theta(1)$，和一維陣列一樣是隨機
+存取。
+\item 更高維也一樣：列優先是「最後一個下標變得最快」。 $A[0..d_1 - 1,\ 0..d_2 - 1,\
+0..d_3 - 1]$ 的 $A[i, j, k]$ 位置是 $\alpha + \bigl((i\,d_2 + j)\,d_3 + k\bigr)w$（資結書虛擬碼~4.1
+把它推廣到 $d$ 維）。
+\item 另一種表示法是先開一個指標陣列，第 $i$ 格指向第 $i$ 列（每列各是一段一維陣列）。 這樣
+每列可以不一樣長，但要多存 $m$ 個指標，存取時多讀一次記憶體；題目問「用一維陣列表示」，
+主要的答案是上面的列優先或行優先對應公式。
+\end{itemize}
+\end{pastsoln}

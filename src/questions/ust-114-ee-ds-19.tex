@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-19}]{臺聯大電機類 114 學年度 第 19 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 17-20 according to the following C++-style pseudo-code.
+\begin{minted}[fontsize=\small]{cpp}
+int funcB(string s) {
+    stack<int> st;
+    st.push(-1);
+    int maxLen = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '(') {
+            st.push(i);
+        } else {
+            st.pop();
+            if (st.empty()) {
+                st.push(i);
+            } else {
+                maxLen = max(maxLen, i - st.top());
+            }
+        }
+    }
+    return maxLen;
+}
+\end{minted}
+
+Which of the following statements is NOT correct? Assuming s only consists of `(' and `)'.
+
+(A)~For every opening parenthesis, `(', we push its index onto the stack\\
+(B)~For every closing parenthesis, `)', we pop the stack\\
+(C)~If the stack becomes empty after popping, it means we've encountered an unmatched closing
+parenthesis `)'\\
+(D)~None of the above is correct
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+逐項對照程式：
+\begin{itemize}
+\item (A)：\texttt{if (s[i] == '(') st.push(i);}，左括號推入它的索引。 敘述正確。
+\item (B)：\texttt{else} 分支第一行就是 \texttt{st.pop();}，每個右括號都會彈出一次。 敘述正確。
+\item (C)：堆疊底下永遠墊著一個「分界」索引（一開始是 $-1$）。 彈出後變空，表示彈掉的正是這個分界，
+也就是目前這個 `)' 前面沒有還沒配對的 `('，它是多出來、配不到的右括號。 程式接著把它的索引推入，
+當作新的分界：之後的合法括號段不能跨過它。 敘述正確。
+\item (D)「以上皆不正確」：(A)(B)(C) 都正確，所以 (D) 這句話是錯的。
+\end{itemize}
+題目問哪一個敘述「不正確」，只有 (D)。
+\end{pastsoln}

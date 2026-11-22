@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-04}]{臺聯大電機類 112 學年度 第 4 題}
+（單選；3 分）
+
+According to the pseudo code given in question 3, which of the following is NOT a possible print
+out result by Line 8 print(A[p:r]) in Partition(A,p,r)?
+
+(A)~11, 12, 19, 6, 13 \qquad (B)~11, 12, 6, 13, 19\\
+(C)~6, 11,12, 13, 19 \qquad (D)~11, 6, 12, 19, 13
+
+（第 3 題的虛擬碼見歷屆試題~\ref{px:ust-112-ee-ds-03}。）
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+第 8 行印出的是分割\textbf{完成後}的 $A[p..r]$。 Lomuto 分割結束時，基準 $x$ 被換到位置
+$q = i + 1$，而且 $A[p..q-1]$ 都 $\le x$、$A[q+1..r]$ 都 $> x$（資結書第~14.5~節的迴圈不變量）。
+所以印出來的序列裡一定有一個位置，它的值\textbf{不小於前面所有的數、而且小於後面所有的數}。
+找不到這種位置的序列就不可能印出來。
+
+\textbf{(A) $11, 12, 19, 6, 13$}：逐個位置試。
+\begin{itemize}
+\item $11$、$12$：後面有 $6$ 比它小。
+\item $19$：後面的 $6$、$13$ 都比它小。
+\item $6$：前面的 $11$、$12$、$19$ 都比它大。
+\item $13$：前面有 $19$ 比它大。
+\end{itemize}
+沒有一個位置可以當基準，所以 (A) 不可能。
+
+其他三個都找得到會印出它的輸入（也是第一次呼叫 Partition$(A, 1, 5)$ 印的）：
+\begin{itemize}
+\item (B) $11, 12, 6, 13, 19$：基準 $13$ 在第 4 格。 輸入 $\langle 11, 12, 6, 19, 13\rangle$：
+$x = 13$，$11$、$12$、$6$ 都 $\le 13$，$i$ 走到 $3$（每次和自己交換）；$19 > 13$ 跳過。 第 7 行交換
+$A[4]$ 和 $A[5]$，得 $\langle 11, 12, 6, 13, 19\rangle$。
+\item (C) $6, 11, 12, 13, 19$：已經排好的輸入。 $x = 19$，前四個都 $\le 19$，$i = 4$，第 7 行把
+$A[5]$ 和自己交換，印出原陣列。
+\item (D) $11, 6, 12, 19, 13$：基準 $12$ 在第 3 格。 輸入 $\langle 11, 6, 13, 19, 12\rangle$：
+$x = 12$，$11$、$6$ 都 $\le 12$，$i = 2$；$13$、$19$ 跳過。 第 7 行交換 $A[3] = 13$ 和
+$A[5] = 12$，得 $\langle 11, 6, 12, 19, 13\rangle$。
+\end{itemize}
+(B)(C)(D) 都可能印出，只有 (A) 不可能，答案是 (A)。
+\end{pastsoln}

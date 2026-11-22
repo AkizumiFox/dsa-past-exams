@@ -1,0 +1,18 @@
+paper: ncku-108-comm-ds
+volume: 3
+school: 成大
+dept: 電通所
+year: 108
+subject: 資料結構
+instructions: ※ 考生請注意：本試題不可使用計算機。 請於答案卷（卡）作答，於本試題紙上作答者，不予計分。 一、複選題：（30 分，每題 10 分，全對才給分） 二、問答題。
+questions:
+  - {id: ncku-108-comm-ds-01, label: 複選題第 1 題, chapter: 14}
+  - {id: ncku-108-comm-ds-02, label: 複選題第 2 題, chapter: 7}
+  - {id: ncku-108-comm-ds-03, label: 複選題第 3 題, chapter: 21}
+  - {id: ncku-108-comm-ds-04, label: 問答題第 1 題, chapter: 2}
+  - {id: ncku-108-comm-ds-05, label: 問答題第 2 題, chapter: 6}
+  - {id: ncku-108-comm-ds-06, label: 問答題第 3 題, chapter: 7}
+  - {id: ncku-108-comm-ds-07, label: 問答題第 4 題, chapter: 6}
+  - {id: ncku-108-comm-ds-08, label: 問答題第 5 題, chapter: 12}
+  - {id: ncku-108-comm-ds-09, label: 問答題第 6 題, chapter: 25}
+  - {id: ncku-108-comm-ds-10, label: 問答題第 7 題, chapter: 18}

@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-21}]{臺大電信所 108 學年度（B）第 21 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of $n$ splay operations in a splay tree of $n$ items is (choose the
+tightest bound)
+
+A.~$O(n)$ \qquad B.~$O(n\log^* n)$ \qquad C.~$O(n\log n)$ \qquad D.~$O(n^2)$ \qquad
+E.~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+\textbf{上界}：伸展樹每個操作的平攤成本是 $O(\lg n)$（資結書定理~10.6，用位能
+$\Phi = \sum_x \lg s(x)$ 證明）。 $n$ 個操作的實際總成本 $\le$ 平攤成本總和 $+ \Phi_0 - \Phi_n$。
+平攤成本總和是 $O(n \lg n)$；$\Phi_0 \le n \lg n$（每個子樹大小不超過 $n$），$\Phi_n \ge 0$，所以就算
+一開始的樹長得很歪，總成本也是 $O(n \lg n)$。
+
+\textbf{不能更小}：伸展樹是以比較為基礎的二元搜尋樹。 如果 $n$ 次插入（每次插入都要伸展）能在
+$o(n \lg n)$ 時間做完，再花 $O(n)$ 做一次中序走訪，就能用 $o(n \lg n)$ 次比較排好 $n$ 個數，和比較
+排序的下界矛盾（資結書定理~15.1）。 所以 A、B 不成立；D、E 是對的上界但太鬆。 選 C。
+
+和下一題對照：單一次操作最壞可以是 $\Theta(n)$，但一連串 $n$ 次加起來只有 $O(n \lg n)$，這就是
+平攤的意思。
+\end{pastsoln}

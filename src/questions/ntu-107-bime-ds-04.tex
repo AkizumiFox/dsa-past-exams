@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-107-bime-ds-04}]{臺大生機所 107 學年度 第 4 題}
+（程式設計）
+
+(20\%) Please implement the put (insert) function of a \textbf{binary search tree (BST)} that
+maintains the symmetric order based on the \textit{keys} of the entries. Assume that each entry has
+a single key, and all the keys are distinct.\\
+Note: A node in a \textbf{BST} has two pointers, named `left' and `right', respectively, where the
+`left' pointer is used to find the left child of the node and the `right' pointer is used to find
+the right child.
+\end{pastexam}
+
+\begin{pastsoln}
+「symmetric order」就是二元搜尋樹性質：每個節點的鍵值大於它左子樹的所有鍵值、小於它右子樹的
+所有鍵值，中序走訪會由小到大列出所有鍵值（資結書第~9~章）。 每個節點有 $\mathit{key}$、
+$\mathit{val}$（這筆資料的其他內容）、$\mathit{left}$、$\mathit{right}$。 \proc{Put} 從根往下找
+新鍵值應該在的位置，走到空的地方就放一個新節點。 題目說鍵值互不相同；呼叫的人如果還是放進一個
+已經在樹裡的鍵值，下面的寫法改成更新那個節點的 $\mathit{val}$，樹的形狀不變。
+
+遞迴的寫法回傳「插入後這棵子樹的根」，呼叫端把它接回原來的指標，不必另外記父節點：
+
+\begin{pseudo}{二元搜尋樹的 \proc{Put}（遞迴）}
+\Function{Put}{$x, k, v$} \Comment{在以 $x$ 為根的子樹放入 $(k, v)$，回傳新的子樹根}
+    \If{$x = \NIL$}
+        \State 配置新節點 $z$
+        \State $z.\mathit{key} \gets k$; $z.\mathit{val} \gets v$
+        \State $z.\mathit{left} \gets \NIL$; $z.\mathit{right} \gets \NIL$
+        \State \Return $z$
+    \EndIf
+    \If{$k < x.\mathit{key}$}
+        \State $x.\mathit{left} \gets \Call{Put}{x.\mathit{left}, k, v}$
+    \ElsIf{$k > x.\mathit{key}$}
+        \State $x.\mathit{right} \gets \Call{Put}{x.\mathit{right}, k, v}$
+    \Else
+        \State $x.\mathit{val} \gets v$ \Comment{鍵值已經在樹裡（題目保證不會發生）}
+    \EndIf
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+呼叫方式是 $T.\mathit{root} \gets \proc{Put}(T.\mathit{root}, k, v)$。 樹原本是空的時，第 2--6 行
+建出一個節點當根。
+
+\textbf{正確性}。 對子樹的高度做歸納，證明：如果以 $x$ 為根的子樹是二元搜尋樹，\proc{Put}$(x, k, v)$
+回傳的子樹也是二元搜尋樹，鍵值集合多了 $k$。
+\begin{itemize}
+\item $x = \NIL$：回傳只有一個節點 $z$ 的樹，顯然是二元搜尋樹。
+\item $k < x.\mathit{key}$：由歸納假設，新的左子樹是二元搜尋樹，鍵值是原來的左子樹加上 $k$。 原來
+左子樹的鍵值都小於 $x.\mathit{key}$，$k$ 也小於 $x.\mathit{key}$，所以 $x$ 和左子樹之間仍然滿足性質；
+右子樹沒有動。 整棵子樹仍是二元搜尋樹。
+\item $k > x.\mathit{key}$：對稱。
+\end{itemize}
+新節點一定是葉節點，原有的節點之間的父子關係都沒有變。
+
+\textbf{複雜度}。 每層只往下走一步，時間 $O(h)$，$h$ 是樹高：平均（隨機順序插入）是 $O(\lg n)$，
+最壞（依鍵值大小順序插入，樹長成一條鏈）是 $\Theta(n)$。 遞迴深度也是 $O(h)$，所以堆疊空間 $O(h)$；
+改用迴圈的寫法（資結書虛擬碼~9.6 \proc{Tree-Insert}，用 $y$ 跟在 $x$ 後面一層，最後把新節點接到 $y$
+的左或右）額外空間只要 $O(1)$。
+
+例：從空樹依序放入 $50, 30, 70, 20, 40, 60$：$30 < 50$ 放 $50$ 的左邊；$70 > 50$ 放右邊；$20$ 經過
+$50 \to 30$ 放在 $30$ 的左邊；$40$ 經過 $50 \to 30$ 放在 $30$ 的右邊；$60$ 經過 $50 \to 70$ 放在 $70$
+的左邊。 中序走訪得 $20, 30, 40, 50, 60, 70$，由小到大。
+\end{pastsoln}

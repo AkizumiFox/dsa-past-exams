@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-02}]{臺大電機所 109 學年度（B）第 2 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+The worst case time complexity of constructing a binary heap from an unordered array of n items is
+
+(A)~O(n) \qquad (B)~O(n log*n) \qquad (C)~O(n log n) \qquad (D)~O(n$^2$) \qquad (E)~O(n$^2$ log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) O(n)。
+
+用由下而上的建堆積（資結書虛擬碼~8.3）：從最後一個內部節點 $\lfloor n/2 \rfloor$ 往前，每個節點
+做一次下沉。 高度為 $h$ 的節點下沉最多走 $h$ 層，而高度為 $h$ 的節點最多 $\lceil n/2^{h+1}
+\rceil$ 個（高度從葉節點的 $0$ 算起），所以總工作量
+\[
+\sum_{h=0}^{\lfloor \lg n \rfloor} \Bigl\lceil \frac{n}{2^{h+1}} \Bigr\rceil \cdot O(h)
+= O\Bigl(n \sum_{h=0}^{\infty} \frac{h}{2^{h}}\Bigr) = O(2n) = O(n),
+\]
+其中 $\sum_{h \ge 0} h/2^h = 2$。 資結書定理~8.1 把這件事寫成：交換次數小於 $2n$，
+建堆積是 $\Theta(n)$。 下界也是 $\Omega(n)$：每個元素至少要看一次。
+所以最緊的界是 $O(n)$。
+
+(B)、(C)、(D)、(E) 都是正確的上界，但不是最緊的。 $O(n \log n)$ 是「一個一個插入」的建法，
+每次插入最多上浮 $\lg n$ 層；題目要最緊的界，而由下而上的建法做得到 $O(n)$。
+\end{pastsoln}

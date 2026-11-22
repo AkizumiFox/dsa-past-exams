@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-24}]{臺聯大電機類 114 學年度 第 24 題}
+（複選；5 分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+We have an open addressing hash table. Please simulate the hash table's behavior storing integers
+given the following conditions:\\
+$\checkmark$The hash table size is 9.\\
+$\checkmark$It uses quadratic probing for collision resolution.\\
+$\checkmark$The hash function uses the int value (plus any probing needed) mod the size of the table as
+described in the following.\\
+Hashing+Probing: ((k mod m) + i$^2$) mod m, k is key, m is the size of the table, probing from i = 0,
+1, 2,\ldots\\
+What values will be in the hash table after the following sequence of insertions?\\
+18, 16, 10, 7, 26
+
+\begin{center}
+\begin{tabular}{|*{9}{p{1.1cm}|}}
+\hline
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] \\ \hline
+ & & & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+
+Which of the following statements are correct. (5\%) multiple anwsers
+\begin{enumerate}[label=(\Alph*)]
+\item 18 is stored at [0]
+\item 10 is stored at [1]
+\item 26 is stored at [8]
+\item 7 is stored at [7]
+\item 16 is stored at [7]
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)(B)(E)。
+
+$m = 9$，$h(k, i) = ((k \bmod 9) + i^2) \bmod 9$（資結書第~12.3~節的二次探測）。 逐一插入：
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+$k$ & $k \bmod 9$ & 依序試的格子 & 結果 \\
+\midrule
+18 & 0 & 0 & 放 [0] \\
+16 & 7 & 7 & 放 [7] \\
+10 & 1 & 1 & 放 [1] \\
+7 & 7 & 7（有 16）、$7 + 1 = 8$ & 放 [8] \\
+26 & 8 & 8（有 7）、$(8 + 1) \bmod 9 = 0$（有 18）、$(8 + 4) \bmod 9 = 3$ & 放 [3] \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後的表：
+\begin{center}
+\begin{tabular}{|*{9}{c|}}
+\hline
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] \\ \hline
+18 & 10 & & 26 & & & & 16 & 7 \\ \hline
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item (A) 18 在 [0]：對。
+\item (B) 10 在 [1]：對。
+\item (C) 26 在 [8]：[8] 已被 7 佔用，26 最後在 [3]。 錯。
+\item (D) 7 在 [7]：[7] 先被 16 佔用，7 在 [8]。 錯。
+\item (E) 16 在 [7]：對。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-14}]{臺大工工所 107 學年度 第 14 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Consider the following implementation of extendable array. The array starts with some small constant size with no element. It supports two operations: insert and delete. The insertion inserts an element at the end (suppose there are 4 elements in the array; the new element is inserted at the 5$^{\text{th}}$ position). When the array is full with $n$ elements, it allocates a new empty array with $2n$ slots, copies all $n$ elements to the first $n$ slots of newly allocated area, and releases the original $n$ slots. The deletion deletes an element at the end (suppose there are 6 elements; the 6$^{\text{th}}$ element is erased). When the array is half empty with $n$ elements, it allocates a new empty array with $n$ slots, copies all $n$ elements to the newly allocated area, and releases the original $2n$ slots. The following statement is True or False? Starting with empty, $n$ insertions and $n$ deletions in arbitrary order takes O($n$) time in the worst case.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。 最壞情況是 $\Theta(n^2)$。
+
+題目的規則是：滿了（$m$ 個元素、$m$ 格）再插入時，換成 $2m$ 格；刪除後剩下 $m$ 個元素、容量 $2m$
+（剛好半空）時，換成 $m$ 格。 問題出在縮小之後的陣列\textbf{剛好是滿的}，擴充之後的陣列又差一個就
+\textbf{剛好半空}，兩個門檻緊貼在一起（資結書第~3.4~節「為什麼縮到 1/4 才減半」）。
+
+設某個時候陣列有 $m$ 個元素、容量 $m$（滿的）。 接著交替做插入、刪除：
+\begin{itemize}
+\item 插入：滿了，配置 $2m$ 格，搬 $m$ 個，再放新元素。 成本 $m + 1$，之後 $m + 1$ 個元素、容量 $2m$。
+\item 刪除：剩 $m$ 個元素、容量 $2m$，剛好半空，配置 $m$ 格，搬 $m$ 個。 成本 $1 + m$，之後又是 $m$
+個元素、容量 $m$，回到起點。
+\end{itemize}
+每一對操作都花 $2m + 2$。
+
+構造最壞的操作序列：初始容量是常數 $c$，容量只會是 $c \cdot 2^j$。 取 $m$ 為不超過 $n/2$ 的最大
+$c \cdot 2^j$，所以 $m > n/4$（$n \ge 4c$ 時）。
+\begin{enumerate}
+\item 先插入 $m$ 個，陣列剛好滿。
+\item 交替「插入、刪除」$n - m$ 對。
+\item 最後刪除剩下的 $m$ 個。
+\end{enumerate}
+插入共 $m + (n - m) = n$ 次，刪除共 $(n - m) + m = n$ 次，符合題目。 第 2 步每一對至少花 $2m > n/2$，
+共 $n - m \ge n/2$ 對，總成本至少
+\[
+\frac{n}{2} \cdot \frac{n}{2} = \frac{n^2}{4} = \Omega(n^2).
+\]
+另一方面每次操作最多搬 $O(n)$ 個元素，總成本 $O(n^2)$，所以最壞是 $\Theta(n^2)$，不是 $O(n)$。
+
+把縮小的門檻改成「剩不到四分之一才減半」，換完容量後的陣列離兩個門檻都有一段距離，任意 $n$ 次操作
+的總成本就是 $O(n)$（資結書第~3.4~節用位能法證明）。
+\end{pastsoln}

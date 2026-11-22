@@ -1,0 +1,209 @@
+\begin{pastexam}[label={px:ncku-110-cce-ds-02}]{成大電通所 110 學年度 第 2 題}
+（問答；20 分）
+
+(\textbf{20 pts}) Heap
+\begin{enumerate}[label=\alph*.]
+\item (2 \textbf{pts}) Describe the properties of min heap (i.e., two conditions).
+\item (4 \textbf{pts}) Describe the properties of a binomial min heap (i.e., four conditions).
+\item (4 \textbf{pts}) Please show the resulting figure after you delete the node 1 in the following binomial min heap
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=-1cm,
+  v/.style={circle,draw,thick,inner sep=0pt,minimum size=6mm,font=\small},
+  a/.style={-{Latex[length=2.2mm]},thick}]
+\node[anchor=east] (hd) at (2.9,0.35) {Head[H]};
+\node[v] (r14) at (4.3,0.35) {14};
+\node[v] (r1) at (6.65,0.35) {1};
+\node[v] (r6) at (11.75,0.35) {6};
+\node[v] (a10) at (5.3,1.35) {10};
+\node[v] (a23) at (6.65,1.35) {23};
+\node[v] (a20) at (5.3,2.45) {20};
+\node[v] (b10) at (9.5,1.35) {10};
+\node[v] (b7) at (10.6,1.35) {7};
+\node[v] (b15) at (11.75,1.35) {15};
+\node[v] (b13) at (8.4,2.45) {13};
+\node[v] (b12) at (9.5,2.45) {12};
+\node[v] (b19) at (10.6,2.45) {19};
+\node[v] (b30) at (8.4,3.45) {30};
+\draw[a] (hd) -- (r14);
+\draw[a] (r14) -- (r1);
+\draw[a] (r1) -- (r6);
+\draw[a] (r1) -- (a10);
+\draw[a] (r1) -- (a23);
+\draw[a] (a10) -- (a20);
+\draw[a] (r6) -- (b10);
+\draw[a] (r6) -- (b7);
+\draw[a] (r6) -- (b15);
+\draw[a] (b10) -- (b13);
+\draw[a] (b10) -- (b12);
+\draw[a] (b7) -- (b19);
+\draw[a] (b13) -- (b30);
+\end{tikzpicture}
+\end{center}
+
+\item (10 \textbf{pts}) Merge the following two binomial min heap.
+
+\begin{center}
+\begin{tikzpicture}[x=0.95cm,y=-1cm,
+  v/.style={circle,draw,thick,inner sep=0pt,minimum size=6mm,font=\small},
+  a/.style={-{Latex[length=2.2mm]},thick}]
+\node[v] (s3) at (0.6,4.65) {3};
+\node[v] (s14) at (2.1,4.65) {14};
+\node[v] (s13) at (3.6,4.65) {13};
+\node[v] (s30) at (3.6,5.7) {30};
+\node[v] (t23) at (6.45,4.65) {23};
+\node[v] (t24) at (5.1,5.7) {24};
+\node[v] (t51) at (6.45,5.7) {51};
+\node[v] (t80) at (5.1,6.8) {80};
+\node[v] (u12) at (8.75,4.65) {12};
+\node[v] (u18) at (7.45,5.7) {18};
+\node[v] (u23) at (8.75,5.7) {23};
+\node[v] (u20) at (7.45,6.8) {20};
+\node[v] (r6) at (13.1,4.65) {6};
+\node[v] (b10) at (10.85,5.7) {10};
+\node[v] (b7) at (12.0,5.7) {7};
+\node[v] (b15) at (13.1,5.7) {15};
+\node[v] (b13) at (9.75,6.8) {13};
+\node[v] (b12) at (10.85,6.8) {12};
+\node[v] (b19) at (12.0,6.8) {19};
+\node[v] (b30) at (9.75,7.8) {30};
+\draw[a] (s13) -- (s30);
+\draw[a] (t23) -- (t24);
+\draw[a] (t23) -- (t51);
+\draw[a] (t24) -- (t80);
+\draw[a] (u12) -- (u18);
+\draw[a] (u12) -- (u23);
+\draw[a] (u18) -- (u20);
+\draw[a] (r6) -- (b10);
+\draw[a] (r6) -- (b7);
+\draw[a] (r6) -- (b15);
+\draw[a] (b10) -- (b13);
+\draw[a] (b10) -- (b12);
+\draw[a] (b7) -- (b19);
+\draw[a] (b13) -- (b30);
+\end{tikzpicture}
+\end{center}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(a)、(b)、(c) 是資結書第~8.1、8.5~節的內容；(b)(c) 也收在資結書第~8~章的歷屆試題。
+
+\textbf{(a)} 最小堆積的兩個條件（資結書第~8.1~節）：
+\begin{enumerate}
+\item 形狀：是一棵\textbf{完整二元樹}（除了最後一層都是滿的，最後一層的節點靠左排），所以可以存在陣列裡，位置 $i$ 的子節點
+在 $2i$、$2i+1$。
+\item 順序：每個節點的鍵\textbf{不大於}它的子節點的鍵（因此根是最小值）。
+\end{enumerate}
+
+\textbf{(b)} 二項最小堆積是一群樹，滿足（資結書第~8.5~節）：
+\begin{enumerate}
+\item 每棵樹都是二項樹 $B_k$（$B_0$ 是一個節點，$B_k$ 是兩棵 $B_{k-1}$ 把一棵的根接成另一棵根的最左邊的子節點）。
+\item 每棵樹都滿足最小堆積性質：每個節點的鍵不小於它的父節點。
+\item 每個階數 $k$ 最多只有一棵 $B_k$；所以 $n$ 個元素時有哪幾棵樹由 $n$ 的二進位決定。
+\item 各棵樹的根用根串列串起來，依階數由小到大排列（\texttt{Head[H]} 指向階數最小的那棵）。
+\end{enumerate}
+
+\textbf{(c)} 圖中的根串列是 $B_0{:}\,14$、$B_2{:}\,1[10[20],\,23]$、$B_3{:}\,6[10[13[30],\,12],\ 7[19],\ 15]$，共
+$13 = 1101_2$ 個元素（$r[\,\cdots]$ 表示根是 $r$、方括號裡由左到右是它的子樹）。 照取出最小值的做法：
+\begin{enumerate}
+\item 最小的根是 $1$，從根串列拿掉，剩下 $\{B_0{:}\,14,\ B_3{:}\,6[\ldots]\}$。
+\item $1$ 的子樹由左到右是 $B_1{:}\,10[20]$、$B_0{:}\,23$，反過來排，成為另一個二項堆積：$B_0{:}\,23$、$B_1{:}\,10[20]$。
+\item 兩個堆積合併。 階數 $0$：$14$、$23$ 兩棵，連成 $14[23]$ 進位。 階數 $1$：$10[20]$ 和進位的 $14[23]$ 兩棵，根
+$10 < 14$，$14$ 那棵掛到 $10$ 的最左邊，得到 $B_2{:}\,10[14[23],\,20]$ 進位。 階數 $2$：只有進位的那棵，留下。 階數 $3$：
+$6[\ldots]$，留下。
+\end{enumerate}
+結果有 $12 = 1100_2$ 個元素，兩棵樹：
+\begin{center}
+\begin{tikzpicture}[x=0.9cm,y=-0.9cm,
+  v/.style={circle,draw,thick,inner sep=0pt,minimum size=6mm,font=\small},
+  a/.style={-{Latex[length=2.2mm]},thick}]
+\node[anchor=east] (hd) at (2.9,0.35) {Head[H]};
+\node[v] (r10) at (4.6,0.35) {10};
+\node[v] (c14) at (3.8,1.35) {14};
+\node[v] (c20) at (5.4,1.35) {20};
+\node[v] (c23) at (3.8,2.45) {23};
+\node[v] (r6) at (9.9,0.35) {6};
+\node[v] (b10) at (7.7,1.35) {10};
+\node[v] (b7) at (8.8,1.35) {7};
+\node[v] (b15) at (9.9,1.35) {15};
+\node[v] (b13) at (6.6,2.45) {13};
+\node[v] (b12) at (7.7,2.45) {12};
+\node[v] (b19) at (8.8,2.45) {19};
+\node[v] (b30) at (6.6,3.45) {30};
+\draw[a] (hd) -- (r10);
+\draw[a] (r10) -- (r6);
+\draw[a] (r10) -- (c14);
+\draw[a] (r10) -- (c20);
+\draw[a] (c14) -- (c23);
+\draw[a] (r6) -- (b10);
+\draw[a] (r6) -- (b7);
+\draw[a] (r6) -- (b15);
+\draw[a] (b10) -- (b13);
+\draw[a] (b10) -- (b12);
+\draw[a] (b7) -- (b19);
+\draw[a] (b13) -- (b30);
+\end{tikzpicture}
+\end{center}
+也就是 $B_2{:}\,10[14[23],\,20]$ 和原本的 $B_3$。 圖中兩棵樹各有一個 $10$，鍵可以重複，不影響做法。
+
+\textbf{(d)} 題目把兩個堆積的六棵樹畫在一起，沒有標出哪幾棵屬於哪一個堆積。 同一個堆積裡每個階數最多一棵，所以兩棵
+$B_0$（$3$、$14$）分屬兩邊，兩棵 $B_2$（根 $23$、$12$）也分屬兩邊；不管 $B_1$、$B_3$ 歸哪一邊，下面的合併結果都一樣。
+六棵樹依階數排好是
+\[
+\begin{gathered}
+B_0{:}\,3,\quad B_0{:}\,14,\quad B_1{:}\,13[30],\quad B_2{:}\,23[24[80],\,51],\\
+B_2{:}\,12[18[20],\,23],\quad B_3{:}\,6[10[13[30],\,12],\ 7[19],\ 15],
+\end{gathered}
+\]
+共 $1 + 1 + 2 + 4 + 4 + 8 = 20 = 10100_2$ 個元素，結果應該是一棵 $B_2$ 和一棵 $B_4$。 從階數 $0$ 往上，像二進位加法：
+\begin{enumerate}
+\item 階數 $0$：$3$、$14$ 兩棵，連結：$3 < 14$，$14$ 掛到 $3$ 底下，得 $B_1{:}\,3[14]$，進位。
+\item 階數 $1$：$13[30]$ 和進位的 $3[14]$ 兩棵，$3 < 13$，$13$ 那棵掛到 $3$ 的最左邊，得 $B_2{:}\,3[13[30],\,14]$，進位。
+\item 階數 $2$：$23[\ldots]$、$12[\ldots]$ 和進位的 $3[\ldots]$ 三棵。 留下一棵、另外兩棵連成進位；照資結書的規則留下
+進位來的 $3[13[30],\,14]$（CLRS 的 \proc{Binomial-Heap-Union} 也是留下它，因為它排在根串列的前面），連結 $23$ 和 $12$：
+$12 < 23$，得 $B_3{:}\,12[23[24[80],\,51],\ 18[20],\ 23]$，進位。
+\item 階數 $3$：$6[\ldots]$ 和進位的 $12[\ldots]$，$6 < 12$，$12$ 那棵掛到 $6$ 的最左邊，得 $B_4$。
+\end{enumerate}
+結果（$20$ 個元素，$B_2$ 和 $B_4$ 各一棵）：
+\begin{center}
+\begin{tikzpicture}[x=0.95cm,y=-0.95cm,
+  v/.style={circle,draw,thick,inner sep=0pt,minimum size=6mm,font=\small},
+  a/.style={-{Latex[length=2.2mm]},thick}]
+\node[anchor=east] (hd) at (-1.0,0) {Head[H]};
+\node[v] (r3) at (0,0) {3};
+\node[v] (p13) at (-0.6,1) {13};
+\node[v] (p14) at (0.6,1) {14};
+\node[v] (p30) at (-0.6,2) {30};
+\node[v] (r6) at (7.4,0) {6};
+\node[v] (c12) at (3.4,1) {12};
+\node[v] (c10) at (7.0,1) {10};
+\node[v] (c7) at (8.6,1) {7};
+\node[v] (c15) at (9.7,1) {15};
+\node[v] (g23a) at (2.0,2) {23};
+\node[v] (g18) at (3.6,2) {18};
+\node[v] (g23b) at (4.7,2) {23};
+\node[v] (h24) at (1.4,3) {24};
+\node[v] (h51) at (2.6,3) {51};
+\node[v] (h20) at (3.6,3) {20};
+\node[v] (i80) at (1.4,4) {80};
+\node[v] (g13) at (6.4,2) {13};
+\node[v] (g12) at (7.6,2) {12};
+\node[v] (h30) at (6.4,3) {30};
+\node[v] (g19) at (8.6,2) {19};
+\draw[a] (hd) -- (r3);
+\draw[a] (r3) -- (r6);
+\draw[a] (r3) -- (p13); \draw[a] (r3) -- (p14); \draw[a] (p13) -- (p30);
+\draw[a] (r6) -- (c12); \draw[a] (r6) -- (c10); \draw[a] (r6) -- (c7); \draw[a] (r6) -- (c15);
+\draw[a] (c12) -- (g23a); \draw[a] (c12) -- (g18); \draw[a] (c12) -- (g23b);
+\draw[a] (g23a) -- (h24); \draw[a] (g23a) -- (h51); \draw[a] (h24) -- (i80);
+\draw[a] (g18) -- (h20);
+\draw[a] (c10) -- (g13); \draw[a] (c10) -- (g12); \draw[a] (g13) -- (h30);
+\draw[a] (c7) -- (g19);
+\end{tikzpicture}
+\end{center}
+也就是 $B_2{:}\,3[13[30],\,14]$ 和
+$B_4{:}\,6\bigl[12[23[24[80],\,51],\ 18[20],\ 23],\ 10[13[30],\,12],\ 7[19],\ 15\bigr]$。 檢查：每個子節點都不小於父節點；
+$6$ 的子樹由左到右是 $B_3, B_2, B_1, B_0$，形狀正確。 若在階數 $2$ 改成留下 $12$ 或 $23$ 那棵，會得到形狀相同、內容不同的
+另一個合法結果，作答時要寫明採用的規則。
+\end{pastsoln}

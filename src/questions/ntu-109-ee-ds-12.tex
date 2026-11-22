@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-12}]{臺大電機所 109 學年度（B）第 12 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a leftist heap of size n, the worst case time complexity of one insert operation is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) O(log n)。
+
+左傾樹的插入是把新元素當成一個節點的左傾樹，和原來的樹合併（資結書第~8.5~節，虛擬碼~8.9）。
+合併只沿著兩棵樹的最右路徑往下走，每一步 $O(1)$，回來的路上視需要交換左右子樹並更新 $s$ 值。
+$n$ 個節點的左傾樹，最右路徑最多 $\lg(n + 1)$ 個節點（資結書定理~8.2），所以插入是 $O(\log n)$。
+
+會達到：$n = 2^k - 1$ 的滿二元樹也是左傾樹，最右路徑剛好 $k$ 個節點。 如果新鍵比最右路徑上的鍵都大，
+合併每一步都留在大樹那一邊往右走，一路走到底才把新節點接上，走 $k = \lg(n+1)$ 步。
+
+(A)、(B) 太小；(D)、(E) 是上界但不緊。 注意左傾樹的高度可以到 $\Theta(n)$（例如一路往左長的
+鏈），但合併只走右路徑，所以不是 $O(n)$。
+\end{pastsoln}

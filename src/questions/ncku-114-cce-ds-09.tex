@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-09}]{成大電通所 114 學年度 單選題第 9 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Please identify the wrong descriptions in the following:
+\begin{enumerate}[label=\alph*),nosep]
+\item Heap is suitable for a priority queue.
+\item Binary search is good for a dictionary.
+\item Binary search is faster than Heap in the insert operation.
+\item Max Heap is faster than binary serach in finding the maximum value.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：c)。
+
+「Binary search」這裡指存放資料的方式：排好序的陣列，用二分搜尋找資料（資結書第~17.1~節）。
+\begin{itemize}
+\item a) 正確。 堆積插入、刪除最大（小）值都是 $O(\log n)$，取最大值 $O(1)$，正是優先佇列要的操作（資結書第~8.3~節）。
+\item b) 正確。 字典最常做的是查詢；排好序的陣列二分搜尋 $O(\log n)$，適合查詢多、更動少的字典。
+\item c) \textbf{錯誤}。 在排好序的陣列裡插入，二分搜尋可以 $O(\log n)$ 找到位置，但要把後面的元素都往後搬一格，最壞 $\Theta(n)$；
+堆積插入只要放到最後再往上調整，$O(\log n)$。 插入是堆積比較快。 （把「binary search」讀成二元搜尋樹也一樣：
+插入要 $O(h)$，不平衡時最壞 $\Theta(n)$，不比堆積快。）
+\item d) 正確。 最大堆積的最大值就在根，$O(1)$，不用搜尋。 嚴格說，排好序的陣列直接取最後一個也是 $O(1)$，兩者一樣快；
+但若用二分搜尋的思路去「找」、或用二元搜尋樹（一路往右走，$O(h)$），就比堆積慢。 這一項的意思是「找最大值是堆積的強項」，
+算正確的敘述；c) 則是明顯錯誤，單選題答 c)。
+\item e) 錯，因為 c) 是錯誤的敘述。
+\end{itemize}
+\end{pastsoln}

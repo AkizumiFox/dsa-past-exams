@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-02}]{臺大工工所 107 學年度 第 2 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+It is possible that the post-order traversal of a BST yields 1, 2, 3, 4, 5, 6, 7, 8, 9, where the numbers are keys.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確。
+
+後序最後拜訪根，所以根是 $9$。 $9$ 是最大的鍵，其他八個鍵都比它小，全部在左子樹，右子樹是空
+的。 左子樹的後序是 $1, 2, \ldots, 8$，同樣的道理，它的根是 $8$，其餘七個都在 $8$ 的左子樹。
+一路推下去，得到一棵「每個節點只有左子節點」的樹：
+\[
+9 \xrightarrow{\text{left}} 8 \xrightarrow{\text{left}} 7 \xrightarrow{\text{left}} \cdots
+\xrightarrow{\text{left}} 1.
+\]
+檢查：每個節點的左子節點都比它小，是合法的 BST；後序先走完左子樹再拜訪根，最深的 $1$ 最先印，
+$9$ 最後印，正好是 $1, 2, \ldots, 9$（資結書第~7.3~節）。
+
+一般地，BST 的後序遞增，表示每個節點都比它子樹裡的所有鍵大，右子樹只能是空的，所以這棵向左
+的鏈是唯一的一種。 依序插入 $9, 8, \ldots, 1$ 就會得到它。
+\end{pastsoln}

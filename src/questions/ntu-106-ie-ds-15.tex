@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-15}]{臺大工工所 106 學年度 第 15 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+Let H$_\mathrm{a}$ and H$_\mathrm{b}$ be two binomial heaps with numbers of nodes n$_\mathrm{a}$ and n$_\mathrm{b}$,
+respectively. Let's compose them into a new binomial heap H$_\mathrm{c}$. Which of the following is(are) true?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item If n$_\mathrm{a}$ is equal to n$_\mathrm{b}$, then the composed H$_\mathrm{c}$ contains a binomial tree of order 0.
+\item The composition takes O(log(n$_\mathrm{a}$ + n$_\mathrm{b}$)) time.
+\item H$_\mathrm{c}$ contains at least ($\lfloor\log_2$(n$_\mathrm{a}$ + n$_\mathrm{b}$)$\rfloor$ + 1) binomial tree(s),
+where ``$\lfloor\ \rfloor$'' is the floor operation.
+\item H$_\mathrm{c}$ must contain a binomial tree of order log$_2$(max(n$_\mathrm{a}$, n$_\mathrm{b}$)).
+\item Let r$_\mathrm{a}$ and r$_\mathrm{b}$ be the minimum nodes of H$_\mathrm{a}$ and H$_\mathrm{b}$, respectively.
+Then both of r$_\mathrm{a}$ and r$_\mathrm{b}$ must be roots of some binomial trees in H$_\mathrm{c}$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)。
+
+關鍵性質（資結書第~8.5~節）：$k$ 階二項樹 $B_k$ 有 $2^k$ 個節點，二項堆積裡各階最多一棵，所以 $n$ 個節點的二項堆積
+\textbf{恰好}含有 $n$ 的二進位表示中為 1 的那些位置的階數，棵數是 $n$ 的二進位裡 1 的個數。 合併兩個堆積就像二進位加法：
+把兩邊的樹依階數由小到大對齊，同階的兩棵連結（根比較大的那棵掛到另一棵的根下面）成高一階的一棵，像進位一樣。
+下面 $n = n_a + n_b$。
+
+\begin{itemize}
+\item (A) 錯。 $n_a = n_b$ 時 $n = 2n_a$ 是偶數，二進位最低位是 0，$H_c$ \textbf{沒有} $B_0$。 例如 $n_a = n_b = 1$，
+兩個 $B_0$ 連成一棵 $B_1$。
+\item (B) 對。 兩邊各有 $O(\log n_a)$、$O(\log n_b)$ 棵樹，像二進位加法那樣由低位到高位掃一遍，每一階最多做一次連結
+（$O(1)$），共 $O(\log n_a + \log n_b) = O(\log(n_a + n_b))$。
+\item (C) 錯。 棵數是 $n$ 的二進位中 1 的個數，最多 $\lfloor \lg n \rfloor + 1$ 棵（所有位都是 1 時），不是至少。
+反例：$n_a = n_b = 1$，$n = 2 = (10)_2$，$H_c$ 只有一棵 $B_1$，而 $\lfloor \lg 2 \rfloor + 1 = 2$。
+\item (D) 錯。 $\log_2 \max(n_a, n_b)$ 不一定是整數，例如 $n_a = 3$、$n_b = 1$，$\lg 3$ 不是整數，沒有這種階數的樹。
+就算是整數也不一定有：$n_a = n_b = 4$，$n = 8 = (1000)_2$，$H_c$ 只有一棵 $B_3$，沒有 $B_2$。
+\item (E) 錯。 合併時同階的兩棵要連結，根比較大的那棵會變成另一棵根的子節點，原本的最小值就不再是根。 反例：
+$H_a$ 只有一個節點 $1$，$H_b$ 只有一個節點 $2$，$r_a = 1$、$r_b = 2$。 合併時兩個 $B_0$ 連成 $B_1$，根是 $1$，
+$2$ 成為它的子節點，$r_b$ 不是根。 一定是根的只有兩者中較小的那個（整個 $H_c$ 的最小值）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,27 @@
+paper: ncku-113-isec
+volume: 3
+school: 成大
+dept: 智慧資安學程
+year: 113
+subject: 資料結構
+instructions: 本試題不可使用計算機。 請於答案卷(卡)作答，於本試題紙上作答者，不予計分。 一、是非題：(30 分，答案錯誤必須指出錯誤的原因才能得分，答錯倒扣一分)。 二、簡答題：(50 分)。 三、程式題：(20 分)。
+questions:
+  - {id: ncku-113-isec-01, label: 是非題第 1 題, chapter: 23}
+  - {id: ncku-113-isec-02, label: 是非題第 2 題, chapter: 25}
+  - {id: ncku-113-isec-03, label: 是非題第 3 題, chapter: 1}
+  - {id: ncku-113-isec-04, label: 是非題第 4 題, chapter: 14}
+  - {id: ncku-113-isec-05, label: 是非題第 5 題, chapter: 15}
+  - {id: ncku-113-isec-06, label: 是非題第 6 題, chapter: 24}
+  - {id: ncku-113-isec-07, label: 是非題第 8 題, chapter: 5}
+  - {id: ncku-113-isec-08, label: 是非題第 9 題, chapter: 22}
+  - {id: ncku-113-isec-09, label: 是非題第 10 題, chapter: 7}
+  - {id: ncku-113-isec-10, label: 簡答題第 1 題, chapter: 6}
+  - {id: ncku-113-isec-11, label: 簡答題第 2 題, chapter: 6}
+  - {id: ncku-113-isec-12, label: 簡答題第 3 題, chapter: 25}
+  - {id: ncku-113-isec-13, label: 簡答題第 4 題, chapter: 21}
+  - {id: ncku-113-isec-14, label: 簡答題第 5 題, chapter: 23}
+  - {id: ncku-113-isec-15, label: 簡答題第 6 題, chapter: 8}
+  - {id: ncku-113-isec-16, label: 簡答題第 7 題, chapter: 7}
+  - {id: ncku-113-isec-17, label: 簡答題第 8 題, chapter: 12}
+  - {id: ncku-113-isec-18, label: 簡答題第 9 題, chapter: 9}
+  - {id: ncku-113-isec-19, label: 程式題, chapter: 18}

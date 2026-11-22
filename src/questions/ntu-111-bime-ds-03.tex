@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ntu-111-bime-ds-03}]{臺大生機所 111 學年度（C）第 3 題}
+（問答）
+
+(20\%) Given a string, write a pseudocode function that finds the longest subsequences of a string
+that is a palindrome.
+\end{pastexam}
+
+\begin{pastsoln}
+題目要的是「最長回文子序列」（longest palindromic subsequence）：子序列可以不連續，但要保持原來的
+順序（資結書第~18.3~節的定義），回文是正讀反讀都一樣。 最長的可能不只一個，下面求出長度並輸出其中
+一個。 字串 $S = S[1..n]$，$n \ge 1$。
+
+\textbf{子問題。} 令 $L[i][j]$ 是 $S[i..j]$ 的最長回文子序列的長度（$i \le j$）。
+\[
+L[i][j] =
+\begin{cases}
+1 & i = j, \\
+2 & i + 1 = j \text{ 且 } S[i] = S[j], \\
+L[i+1][j-1] + 2 & i + 1 < j \text{ 且 } S[i] = S[j], \\
+\max(L[i+1][j],\ L[i][j-1]) & S[i] \ne S[j].
+\end{cases}
+\]
+\textbf{為什麼對。} 設 $P$ 是 $S[i..j]$ 的一個最長回文子序列。 若 $S[i] = S[j]$（$i < j$）：可以假設 $P$ 的頭尾分別取自 $S[i]$、$S[j]$。 因為 $P$ 若兩個都沒用到，
+它整個落在 $S[i+1..j-1]$ 裡，兩端再加上 $S[i]$、$S[j]$ 是更長的回文，矛盾；$P$ 若只用到其中一個，例如
+頭取 $S[i]$、尾取 $S[k]$（$k < j$），尾字元和頭相同，也就等於 $S[j]$，把尾改取 $S[j]$ 仍是同樣的回文。
+去掉頭尾，中間是 $S[i+1..j-1]$ 的回文子序列，而且必須是最長的，所以 $L[i][j] = L[i+1][j-1] + 2$
+（$j = i + 1$ 時中間是空的，長度 $2$）。 若 $S[i] \ne
+S[j]$：$P$ 的頭尾相同，不可能同時用到 $S[i]$ 和 $S[j]$，所以 $P$ 落在 $S[i+1..j]$ 或 $S[i..j-1]$ 裡，取
+兩者較大的。 這就是 LCS 的最佳子結構（資結書定理~18.2）用在一個字串的兩端。
+
+\begin{pseudo}{最長回文子序列}
+\Function{LPS}{$S, n$}
+    \For{$i \gets n$ \DownTo $1$} \Comment{$L[i][\cdot]$ 用到第 $i + 1$ 列，所以 $i$ 由大到小}
+        \State $L[i][i] \gets 1$
+        \For{$j \gets i + 1$ \To $n$}
+            \If{$S[i] = S[j]$}
+                \If{$j = i + 1$}
+                    \State $L[i][j] \gets 2$
+                \Else
+                    \State $L[i][j] \gets L[i+1][j-1] + 2$
+                \EndIf
+            \Else
+                \State $L[i][j] \gets \max(L[i+1][j], L[i][j-1])$
+            \EndIf
+        \EndFor
+    \EndFor
+    \State \Return \Call{Build}{$S, L, 1, n$}
+\EndFunction
+\Statex
+\Function{Build}{$S, L, i, j$} \Comment{回傳 $S[i..j]$ 的一個最長回文子序列}
+    \If{$i > j$}
+        \State \Return 空字串
+    \ElsIf{$i = j$}
+        \State \Return $S[i]$
+    \ElsIf{$S[i] = S[j]$}
+        \State \Return $S[i] \cdot \Call{Build}{S, L, i + 1, j - 1} \cdot S[j]$ \Comment{$\cdot$ 是串接}
+    \ElsIf{$L[i+1][j] \ge L[i][j-1]$}
+        \State \Return \Call{Build}{$S, L, i + 1, j$}
+    \Else
+        \State \Return \Call{Build}{$S, L, i, j - 1$}
+    \EndIf
+\EndFunction
+\end{pseudo}
+\proc{Build} 沿著當初算出 $L[1][n]$ 的那個選擇往回走，每一步都保持「回傳的長度等於 $L[i][j]$」，
+所以結果是最長的；串接的方式（兩端加同一個字元）保證是回文。
+
+\textbf{例。} $S = \texttt{AGBDBA}$。 表（列 $i$、行 $j$，只填 $i \le j$）：
+\begin{center}
+\begin{tabular}{c|cccccc}
+ & 1 (A) & 2 (G) & 3 (B) & 4 (D) & 5 (B) & 6 (A) \\
+\hline
+1 (A) & 1 & 1 & 1 & 1 & 3 & 5 \\
+2 (G) & & 1 & 1 & 1 & 3 & 3 \\
+3 (B) & & & 1 & 1 & 3 & 3 \\
+4 (D) & & & & 1 & 1 & 1 \\
+5 (B) & & & & & 1 & 1 \\
+6 (A) & & & & & & 1 \\
+\end{tabular}
+\end{center}
+例如 $L[3][5]$：$S[3] = S[5] = \texttt{B}$，$= L[4][4] + 2 = 3$；$L[1][6]$：$S[1] = S[6] = \texttt{A}$，
+$= L[2][5] + 2 = 5$。 往回建：兩端 \texttt{A} 相同，取下；$S[2..5] = \texttt{GBDB}$ 兩端不同，
+$L[3][5] = 3 \ge L[2][4] = 1$，丟掉 \texttt{G}；$S[3..5] = \texttt{BDB}$ 兩端相同，取下，中間 \texttt{D}。
+答案 \texttt{ABDBA}，長度 $5$。
+
+\textbf{複雜度。} 表有 $n(n+1)/2$ 格，每格 $O(1)$，時間 $O(n^2)$、空間 $O(n^2)$；\proc{Build} 每層
+$i$、$j$ 至少有一個往內移，最多 $n$ 層，$O(n)$（字串串接用陣列從兩端往中間填就是 $O(1)$）。 另一種
+做法：$S$ 的最長回文子序列就是 $S$ 和它反轉 $S^R$ 的 LCS 長度（資結書第~18.3~節），時間空間也是 $O(n^2)$；
+不過直接取出的 LCS 不一定是回文，要多做一步調整，所以上面的直接 DP 比較好寫。
+\end{pastsoln}

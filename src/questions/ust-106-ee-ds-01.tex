@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-01}]{臺聯大電機類 106 學年度 第一題}
+（問答）
+
+(10\%) Explain why a recursive program can always be implemented in a stack data structure? What
+is the overhead (time and space complexity) of executing a recursive program?
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{為什麼一定能用堆疊做}。 執行一個函式呼叫時，系統要記住三樣東西才能在被呼叫的函式結束後
+接著做下去：這一層的參數和區域變數、呼叫結束後要回到哪一行（返回位址）、回傳值要放哪裡。 這三樣
+合起來叫一個 frame（activation record）。
+
+呼叫和返回的順序一定是「巢狀」的：$f$ 呼叫 $g$、$g$ 再呼叫 $h$ 時，一定是 $h$ 先結束，再輪到
+$g$，最後才回到 $f$。 最晚開始的呼叫最早結束，正是後進先出。 所以：
+\begin{itemize}
+\item 呼叫時把目前這一層的 frame push 進堆疊，跳到被呼叫的函式開頭；
+\item 返回時 pop 出堆疊頂端的 frame，還原參數和區域變數，跳回它記的返回位址。
+\end{itemize}
+遞迴只是「被呼叫的函式剛好是自己」，處理方式完全一樣，堆疊裡同時存著同一個函式的好幾層 frame，
+各層有各自的參數和區域變數，不會互相蓋掉。 系統的呼叫堆疊（call stack）就是這樣運作的；反過來，
+任何遞迴程式也都能改寫成迴圈，自己用一個堆疊存「還沒做完的工作」（資結書第~6.4~節）。
+
+\textbf{額外的成本}。 和做同樣事情的迴圈相比：
+\begin{itemize}
+\item \textbf{時間}：每次呼叫要 push 一個 frame、跳躍、返回時 pop 和跳回，都是常數時間。 總共
+多花 $\Theta(\text{呼叫次數})$，也就是每次呼叫多一個常數。 漸近時間通常不變，但常數比迴圈大。
+\item \textbf{空間}：堆疊同時存著從第一層到目前這一層的所有 frame。 遞迴最深 $d$ 層、每層 frame
+大小 $s$ 時，額外空間是 $\Theta(d \cdot s)$，通常 $s$ 是常數，就是 $\Theta(d)$。 要看的是
+「最深」有幾層，不是總共呼叫幾次：已經返回的 frame 會被 pop 掉，空間可以重複用。
+\end{itemize}
+
+例子：
+\begin{itemize}
+\item 遞迴算 $n!$：呼叫 $n$ 次、最深 $n$ 層，時間 $\Theta(n)$、額外空間 $\Theta(n)$；迴圈版
+時間一樣是 $\Theta(n)$，空間只要 $\Theta(1)$。
+\item 遞迴版二分搜尋：深度 $\Theta(\lg n)$，額外空間 $\Theta(\lg n)$；迴圈版 $\Theta(1)$。
+\item 直接遞迴算費氏數 $F(n) = F(n - 1) + F(n - 2)$：呼叫次數是指數級，所以時間也是指數級，但同
+一時間堆疊裡最多 $n$ 層，空間只有 $\Theta(n)$。
+\end{itemize}
+深度太大時呼叫堆疊會用完（stack overflow），這也是遞迴額外空間的實際後果。 遞迴呼叫是函式最後
+一個動作（尾遞迴）時，這一層的資料之後用不到，可以直接改成迴圈，不需要堆疊（資結書第~6.4~節）。
+\end{pastsoln}

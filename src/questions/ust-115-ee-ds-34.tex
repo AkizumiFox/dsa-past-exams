@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-34}]{臺聯大電機類 115 學年度 第 34 題}
+（單選；2 分）
+
+The following is an oriented incidence matrix with another orientation setting. What is the result
+of the \textbf{multiplication}: \textbf{BB$^{\mathrm{T}}$} (T: transpose)
+\[ \mathtt{B}\ =\ \begin{matrix}1&-1&-1&0\\-1&0&0&0\\0&1&0&-1\\0&0&1&1\end{matrix} \]
+
+(A)~$\begin{matrix}3&-1&-1&-1\\-1&1&0&0\\-1&0&2&1\\-1&0&1&2\end{matrix}$\qquad
+(B)~$\begin{matrix}3&-1&-1&-1\\-1&1&0&0\\-1&0&2&-1\\-1&0&-1&2\end{matrix}$\qquad
+(C)~$\begin{matrix}3&-1&-1&-1\\-1&2&0&0\\-1&1&1&1\\-1&0&1&2\end{matrix}$
+
+\medskip
+(D)~$\begin{matrix}3&-1&-1&-1\\-1&2&0&0\\-1&0&1&-1\\-1&0&-1&2\end{matrix}$\qquad
+(E)~$\begin{matrix}3&1&1&0\\1&1&-1&0\\1&-1&2&-1\\0&0&-1&2\end{matrix}$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+圖和定義見上一題（歷屆試題~\ref{px:ust-115-ee-ds-33}）。 上一題已經證明，任何定向的關聯矩陣都有
+$BB^{\mathrm T} = D - A$，對角線是度數 $3, 1, 2, 2$，相鄰的兩點是 $-1$（邊 $\{1,2\}, \{1,3\},
+\{1,4\}, \{3,4\}$），其他是 $0$。 也可以直接算：$B$ 的四列是
+$r_1 = (1, -1, -1, 0)$、$r_2 = (-1, 0, 0, 0)$、$r_3 = (0, 1, 0, -1)$、$r_4 = (0, 0, 1, 1)$，
+$(BB^{\mathrm T})_{ij} = r_i \cdot r_j$：
+\[
+\begin{aligned}
+&r_1 \cdot r_1 = 3, \quad r_1 \cdot r_2 = -1, \quad r_1 \cdot r_3 = -1, \quad r_1 \cdot r_4 = -1, \\
+&r_2 \cdot r_2 = 1, \quad r_2 \cdot r_3 = 0, \quad r_2 \cdot r_4 = 0, \\
+&r_3 \cdot r_3 = 2, \quad r_3 \cdot r_4 = -1, \quad r_4 \cdot r_4 = 2 .
+\end{aligned}
+\]
+$BB^{\mathrm T}$ 是對稱矩陣，得
+\[
+\begin{pmatrix} 3 & -1 & -1 & -1 \\ -1 & 1 & 0 & 0 \\ -1 & 0 & 2 & -1 \\ -1 & 0 & -1 & 2 \end{pmatrix},
+\]
+就是 (B)。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 第 $(3,4)$、$(4,3)$ 項是 $+1$；相鄰兩點的項一定是 $-1$。 錯。
+\item (B) 對。
+\item (C) 第 $(2,2)$ 項是 $2$，但頂點 $2$ 的度數是 $1$；而且不對稱（$(3,2) = 1 \ne (2,3) = 0$）。 錯。
+\item (D) 第 $(2,2)$ 項 $2$、$(3,3)$ 項 $1$，度數放錯了。 錯。
+\item (E) 非對角線出現 $+1$，而且第 $(1,4)$ 項是 $0$，但頂點 $1, 4$ 相鄰。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-04}]{成大電機所 114 學年度 單選題第 4 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+$T(n)=3T(n/4)+n\log n$, Please give the tightly bound of T(n).
+
+a) $\theta(n)$ \quad b) $\theta(n\log n)$ \quad c) $\theta(n^2\log n)$ \quad d) $\theta(n^2)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b) $\Theta(n \log n)$。
+
+用主定理（資結書第~2.4~節定理~2.4）：$a = 3$、$b = 4$、$f(n) = n \log n$。
+$n^{\log_b a} = n^{\log_4 3} \approx n^{0.793}$。 取 $\varepsilon = 0.2$，
+$f(n) = n \log n = \Omega(n^{\log_4 3 + 0.2})$，$f$ 比 $n^{\log_4 3}$ 大了一個多項式因子，是第三種
+情形。 還要檢查正則條件：
+\[
+a f(n/b) = 3 \cdot \frac{n}{4} \log \frac{n}{4} \le \frac{3}{4} n \log n = c f(n),\qquad c = \frac{3}{4} < 1.
+\]
+所以 $T(n) = \Theta(f(n)) = \Theta(n \log n)$。
+
+直觀看遞迴樹：第 $i$ 層的成本約是 $(3/4)^i n \log(n/4^i) \le (3/4)^i n \log n$，各層成等比遞減，
+總和被第一層 $n \log n$ 的常數倍蓋住。 a) $\Theta(n)$ 太小（光是根就要 $n \log n$）；c)、d) 都太大
+（總和不超過 $4 n \log n$）。
+\end{pastsoln}

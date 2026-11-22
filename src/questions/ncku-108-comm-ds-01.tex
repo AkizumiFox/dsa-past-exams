@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-01}]{成大電通所 108 學年度 複選題第 1 題}
+（複選；10 分，全對才給分）
+
+Which of the following statements is(are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item The best case time complexity of Bubble Sort is $\Omega$(n).
+\item Quick Sort sorts in place.
+\item The worst case time complexity of Quick Sort is O(n\^{}2).
+\item To HEAPIFY a max-heap runs in O(lg n) time.
+\item Heap Sort cannot sort in place.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)(B)(C)(D)。
+\begin{itemize}
+\item (A)：任何排序都至少要把 $n$ 個數各看一次，最好情況不可能低於 $n$，所以「最好情況是 $\Omega(n)$」
+一定成立。 有「一輪沒交換就提早結束」的氣泡排序，已排好的輸入只掃一輪，最好情況正好 $\Theta(n)$
+（資結書第~14.2~節）。 對。
+\item (B)：快速排序在原陣列裡交換分割，只用常數個額外變數（遞迴堆疊另計，資結書第~14.1~節）。 對。
+\item (C)：每次基準都是最大或最小值時，$T(n) = T(n-1) + \Theta(n) = \Theta(n^2)$，最壞是 $O(n^2)$
+（而且是緊的）。 對。
+\item (D)：HEAPIFY（CLRS 的 \textsc{Max-Heapify}，資結書第~8.1~節的下沉）從一個節點往下最多走樹高
+$\lfloor \lg n \rfloor$ 層，每層常數時間，$O(\lg n)$。 對。（若把 HEAPIFY 理解成把整個陣列建成堆積，
+那是 $O(n)$，也在 $O(\lg n)$ 之外；但 HEAPIFY 這個名稱一般指單一節點的下沉。）
+\item (E)：堆積排序把堆積建在原陣列裡，每次把根換到尾端，額外空間 $O(1)$，是原地排序。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-09}]{臺大工工所 110 學年度 第 9 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 7 to 10, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra
+algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with binary heap as priority queue, then the complexity is
+
+\begin{enumerate}[label=(\Alph*)]
+\item $O(|V|^2+|E|\log|V|)$
+\item $O(|V|^2)$
+\item $O(|E|\log|V|)$
+\item $O(|E|+|V|\log|V|)$
+\item $O(|E|)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+分析方法見歷屆試題~\ref{px:ntu-110-ie-ds-07}：總時間是 $|V|$ 次 \proc{Extract-Min} 加上最多 $|E|$ 次 \proc{Decrease-Key}，再加 $O(|V| + |E|)$；題目的假設下 $|V| + |E| = \Theta(|E|)$。
+
+\textbf{二元堆積}（資結書第~8.3~節，帶索引才能做 \proc{Decrease-Key}）：\proc{Extract-Min} 和
+\proc{Decrease-Key} 都是 $O(\log|V|)$。 總時間 $O((|V| + |E|)\log|V|) = O(|E|\log|V|)$，選 (C)，和資結書
+第~25.2~節表中二元堆積那一列相同。
+
+其他選項：(A) 是上界但不緊（多了 $|V|^2$）。 (B) 在稠密圖時錯：$|E| = \Theta(|V|^2)$ 時，最壞每條邊都觸發一次
+$\Theta(\log|V|)$ 的 \proc{Decrease-Key}，總共 $\Theta(|V|^2\log|V|)$，超過 $O(|V|^2)$。 (D) 要 \proc{Decrease-Key}
+是 $O(1)$ 才成立，二元堆積做不到。 (E) 太小。
+\end{pastsoln}

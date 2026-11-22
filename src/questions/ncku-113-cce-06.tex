@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ncku-113-cce-06}]{成大電通所 113 學年度 是非題第 6 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+Kruskal algorithm always keep a tree from the beginning to the end while it tries to construct a
+minimum spanning tree.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 Kruskal 演算法過程中維持的是一個\textbf{森林}，不一定是一棵樹；一直保持一棵樹的是 Prim
+演算法。
+
+Kruskal 演算法（資結書第~24.2~節）把邊依權重由小到大排，依序檢查：兩端在不同的樹就加入，在同
+一棵樹（會形成環）就跳過。 一開始每個頂點自成一棵樹，加入的邊不必和已選的邊相連，所以中途常
+是好幾棵樹，到最後才合成一棵。
+
+具體例子：四個頂點的路徑圖，邊 $(a, b)$ 權重 $1$、$(c, d)$ 權重 $2$、$(b, c)$ 權重 $3$。
+Kruskal 先選 $(a, b)$，再選 $(c, d)$，這時已選的邊是 $\{(a, b), (c, d)\}$，是兩棵互不相連的
+樹，不是一棵樹；選了 $(b, c)$ 之後才連成一棵。
+
+Prim 演算法則從一個起點長出一棵樹，每次加一條連到樹外的最輕邊，過程中一直是一棵樹（資結書
+第~24.3~節）。
+\end{pastsoln}

@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ncku-110-ee-ds-04}]{成大電機所 110 學年度 第 4 題}
+（手算追蹤）
+
+Use the Bellman-Ford algorithm, \textbf{STEP BY STEP}, to find the shortest path and the length from
+node 0 to node 6 in the following graph. Note that you get 0 point without showing the result after
+each step. (15 \%)
+
+\begin{center}
+\begin{tikzpicture}[x=0.02cm,y=-0.02cm,>={Latex[length=4pt]},font=\sffamily\small,
+  v/.style={draw,circle,minimum size=0.72cm,inner sep=0pt}]
+  \node[v] (0) at (453,1158) {0}; \node[v] (1) at (556,1075) {1}; \node[v] (2) at (556,1158) {2};
+  \node[v] (3) at (556,1241) {3}; \node[v] (4) at (682,1075) {4}; \node[v] (5) at (682,1241) {5};
+  \node[v] (6) at (775,1158) {6};
+  \draw[->] (0)--(1); \draw[->] (0)--(2); \draw[->] (0)--(3); \draw[->] (2)--(1); \draw[->] (3)--(2);
+  \draw[->] (1)--(4); \draw[->] (2)--(4); \draw[->] (3)--(5); \draw[->] (4)--(6); \draw[->] (5)--(6);
+  \node at (497,1108) {6}; \node at (508,1147) {5}; \node at (497,1211) {5};
+  \node at (570,1117) {-2}; \node at (568,1200) {-2};
+  \node at (621,1064) {-1}; \node at (621,1140) {1}; \node at (621,1253) {-1};
+  \node at (736,1106) {3}; \node at (733,1209) {3};
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：最短路徑 $0 \to 3 \to 2 \to 1 \to 4 \to 6$，長度 $3$。
+
+邊：$0 \to 1$（6）、$0 \to 2$（5）、$0 \to 3$（5）、$2 \to 1$（$-2$）、$3 \to 2$（$-2$）、$1 \to 4$（$-1$）、
+$2 \to 4$（1）、$3 \to 5$（$-1$）、$4 \to 6$（3）、$5 \to 6$（3）。 圖沒有環，自然沒有負環。
+
+用「最多 $k$ 條邊」的寫法（資結書第~25.3~節、第~18.9~節的限制邊數 DP）：$\mathit{dist}^k[u]$ 是從 $0$
+到 $u$、最多經過 $k$ 條邊的最短路徑長，
+\[
+\mathit{dist}^1[u] = w(0, u),\qquad
+\mathit{dist}^k[u] = \min\Bigl(\mathit{dist}^{k-1}[u],\ \min_{(i, u) \in E}\bigl(\mathit{dist}^{k-1}[i] + w(i, u)\bigr)\Bigr).
+\]
+每一步只用上一步的值。 $7$ 個點，簡單路徑最多 $6$ 條邊，算到 $k = 6$ 為止。
+\begin{center}
+\begin{tabular}{c*{7}{c}}
+\toprule
+$k$ & $[0]$ & $[1]$ & $[2]$ & $[3]$ & $[4]$ & $[5]$ & $[6]$ \\
+\midrule
+1 & 0 & 6 & 5 & 5 & $\infty$ & $\infty$ & $\infty$ \\
+2 & 0 & \textbf{3} & \textbf{3} & 5 & \textbf{5} & \textbf{4} & $\infty$ \\
+3 & 0 & \textbf{1} & 3 & 5 & \textbf{2} & 4 & \textbf{7} \\
+4 & 0 & 1 & 3 & 5 & \textbf{0} & 4 & \textbf{5} \\
+5 & 0 & 1 & 3 & 5 & 0 & 4 & \textbf{3} \\
+6 & 0 & 1 & 3 & 5 & 0 & 4 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+粗體是這一步變小的值，各步的來源：
+\begin{itemize}
+\item $k = 2$：$[1] = \min(6,\ \mathit{dist}^1[2] - 2) = 5 - 2 = 3$；$[2] = \min(5,\ \mathit{dist}^1[3] - 2) = 3$；
+$[4] = \min(\mathit{dist}^1[1] - 1,\ \mathit{dist}^1[2] + 1) = \min(5, 6) = 5$；$[5] = \mathit{dist}^1[3] - 1 = 4$。
+\item $k = 3$：$[1] = \mathit{dist}^2[2] - 2 = 1$；$[4] = \min(5,\ 3 - 1,\ 3 + 1) = 2$；
+$[6] = \min(\mathit{dist}^2[4] + 3,\ \mathit{dist}^2[5] + 3) = \min(8, 7) = 7$。
+\item $k = 4$：$[4] = \mathit{dist}^3[1] - 1 = 0$；$[6] = \min(7,\ 2 + 3,\ 4 + 3) = 5$。
+\item $k = 5$：$[6] = \mathit{dist}^4[4] + 3 = 3$。
+\item $k = 6$：沒有任何值改變。
+\end{itemize}
+
+$\mathit{dist}[6] = 3$。 倒著找每個值是從哪個點來的：$6$ 來自 $4$（$0 + 3$），$4$ 來自 $1$（$1 - 1$），
+$1$ 來自 $2$（$3 - 2$），$2$ 來自 $3$（$5 - 2$），$3$ 來自 $0$。 最短路徑 $0 \to 3 \to 2 \to 1 \to 4 \to 6$，
+長度 $5 - 2 - 2 - 1 + 3 = 3$，用了 $5$ 條邊，所以要到 $k = 5$ 才出現。
+
+資結書虛擬碼~25.4 的寫法是每一輪依固定的邊順序就地鬆弛，同一輪裡剛改的值馬上被後面的邊用到，
+所以常常比上表更早收斂（中間各輪的數字和邊的順序有關），最後的距離一樣。 作答時要寫明你用的是哪
+一種、邊的順序是什麼。
+\end{pastsoln}

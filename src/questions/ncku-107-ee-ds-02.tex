@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-02}]{成大電機所 107 學年度 複選題第 3 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item Quick sort and merge sort both apply the divide-and-conquer approach to solve the sorting
+problem.
+\item Quick sort spends large effort in dividing a sequence into two parts while merge sort spends
+large effort in combining two unsorted sequence into one sorted sequence.
+\item Both of the two algorithms are stable.
+\item The expected time complexity of merge sort is O(nlogn) which is faster than quick sort in the
+worse case.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)(B)(D)。
+
+(B) 的「two unsorted sequence」用字不精確：合併排序在合併那一步拿到的兩段，已經由遞迴排好了。 這裡
+把它讀成「把原本未排序的資料分成的兩段，合併成一個排好的序列」，(B) 要表達的是「快速排序的功夫花在
+分、合併排序的功夫花在合」，這是對的。 若硬要照字面說「合併兩個未排序的序列」，(B) 就是錯的，答案
+變成 (A)(D)；下面照出題的意思作答。
+
+\textbf{(A) 對}。 兩者都是分治法（資結書第~14.4、14.5~節）：把問題分成子問題、遞迴解、再組合。 快速排序
+以基準分割成「小於等於基準」和「大於基準」兩段，分別遞迴；合併排序從中間切成兩半，分別遞迴後合併。
+
+\textbf{(B) 對（照上面的讀法）}。 快速排序的工作都在分割：分割完兩段各自排好，整個陣列就排好了，組合
+不必做任何事。 合併排序剛好相反：切一半是 $O(1)$ 的，工作都在合併兩個排好的半段，每層合併共 $\Theta(n)$。
+
+\textbf{(C) 錯}。 合併排序是穩定的（合併時兩邊鍵值相等，先取左半段的）；快速排序不穩定（資結書定義~14.1）。
+反例：用 Lomuto 分割（以最後一個為基準）排 $\langle 2_a, 2_b, 1 \rangle$，基準是 $1$，$2_a$、$2_b$ 都比它大，
+最後基準和 $A[1] = 2_a$ 交換，得到 $\langle 1, 2_b, 2_a \rangle$，兩個 $2$ 的相對順序反了。
+
+\textbf{(D) 對}。 合併排序不論輸入如何都是 $\Theta(n \lg n)$，期望時間當然也是 $O(n \lg n)$；快速排序的最壞
+情況（例如已排好的輸入、每次以最後一個為基準）分割成 $n - 1$ 和 $0$，是 $\Theta(n^2)$。 所以就最壞情況而言，
+合併排序比快速排序快。 （兩者的期望時間都是 $\Theta(n \lg n)$，快速排序常數小，實務上通常比較快。）
+\end{pastsoln}

@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-04}]{成大電機所 112 學年度 第 4 題}
+（問答）
+
+(15\%)(a) Using recursive definition (i.e., having Base case and Recursive case) to define a
+binary tree. (b) Show the maximum number of nodes in a binary tree on level i.
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~4~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-04}，這裡只列答案和重點。
+
+答案：
+\begin{itemize}
+\item (a) 基本情形：空樹（沒有節點）是二元樹。 遞迴情形：若 $T_L$、$T_R$ 是兩棵沒有共同節點的二元樹，
+$r$ 是另一個節點，則以 $r$ 為根、$T_L$ 為左子樹、$T_R$ 為右子樹的結構是二元樹。 只有這樣做出來的才是
+二元樹。 左、右子樹有分別（資結書第~7.1~節）。
+\item (b) 根在第 $1$ 層時，第 $i$ 層最多 $2^{i-1}$ 個節點（資結書定理~7.1）。 歸納：第 $1$ 層只有根；
+第 $i$ 層的節點都是第 $i - 1$ 層節點的子節點，每個最多兩個，所以最多 $2 \cdot 2^{i-2} = 2^{i-1}$。
+若根算第 $0$ 層，寫成 $2^{i}$。
+\end{itemize}
+\end{pastsoln}

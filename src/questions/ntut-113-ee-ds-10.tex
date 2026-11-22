@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-10}]{北科大電機所（戊組）113 學年度 第 III.1 題}
+（問答；5 分）
+
+What does the following function do for a given Linked List with the first node as head? (5\%)
+\begin{minted}[fontsize=\small]{c}
+void fun1(struct node* head){
+  if(head == NULL)
+    return;
+  fun1(head->next);
+  printf("%d ", head->data);
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：把串列的資料\textbf{倒過來}印出（從最後一個節點印到第一個），串列本身不變。
+
+\texttt{fun1} 先遞迴處理「從下一個節點開始的串列」，回來之後才印自己的資料。 所以後面的節點全部
+印完，才輪到目前這個節點。
+
+用串列 $1 \to 2 \to 3 \to \texttt{NULL}$ 追蹤：
+\begin{itemize}
+\item \texttt{fun1(1)} 呼叫 \texttt{fun1(2)}，\texttt{fun1(2)} 呼叫 \texttt{fun1(3)}，
+\texttt{fun1(3)} 呼叫 \texttt{fun1(NULL)}，直接返回。
+\item 回到 \texttt{fun1(3)}，印 \texttt{3}；返回 \texttt{fun1(2)}，印 \texttt{2}；返回
+\texttt{fun1(1)}，印 \texttt{1}。
+\end{itemize}
+輸出 \texttt{3 2 1 }（每個數後面一個空白）。 遞迴呼叫在印之前，等於用執行時期的堆疊把節點存
+起來再倒著取出（資結書第~6.4~節）。 $n$ 個節點時，時間 $\Theta(n)$，遞迴深度 $n + 1$，堆疊空間
+$\Theta(n)$。 如果把 \texttt{printf} 移到遞迴呼叫之前，就變成照原順序印。
+\end{pastsoln}

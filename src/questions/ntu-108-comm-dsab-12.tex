@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-12}]{臺大電信所 108 學年度（B）第 12 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+For problems 11-14, choose the appropriate tight bound for the recurrence of $T(n)$. Also note
+that in this exam, the degree of a node $x$ in a tree indicates the number of children of $x$.
+
+$T(n)=T(n/3)+T(2n/3)+n$
+
+A.~$\Theta(\lg n)$ \qquad B.~$\Theta(n)$ \qquad C.~$\Theta(n\lg n)$ \qquad D.~$\Theta(n^2)$
+\qquad E.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+兩個子問題大小不同，主定理不適用，用遞迴樹（資結書第~2.3~節）。 第 $0$ 層成本 $n$；第 $1$ 層是
+$n/3 + 2n/3 = n$；每往下一層，每個節點都拆成大小 $1/3$ 和 $2/3$ 的兩塊，加起來等於自己，所以
+\textbf{只要那一層還是滿的，每層的總和就是 $n$}。
+\begin{itemize}
+\item 最短的一條路一直走 $1/3$，深度 $\log_3 n$；在這之前的每一層都是滿的，總成本至少
+$n \log_3 n = \Omega(n \lg n)$。
+\item 最長的一條路一直走 $2/3$，深度 $\log_{3/2} n$；每層總和不超過 $n$，總成本最多
+$n \log_{3/2} n + O(n) = O(n \lg n)$（加上的 $O(n)$ 是葉節點的個數）。
+\end{itemize}
+所以 $T(n) = \Theta(n \lg n)$。 也可以用代入法驗證上界：設 $T(m) \le d\,m \lg m$，
+\[
+T(n) \le d\frac{n}{3}\lg\frac{n}{3} + d\frac{2n}{3}\lg\frac{2n}{3} + n
+= d\,n\lg n - d\,n\Bigl(\lg 3 - \frac{2}{3}\Bigr) + n \le d\,n \lg n,
+\]
+只要 $d \ge 1/(\lg 3 - 2/3) \approx 1.09$。
+
+A、B 太小（第一層就有 $n$，而且有 $\Theta(\lg n)$ 層滿的）；D 太大；C 對。
+\end{pastsoln}

@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-108-esoe-ds-06}]{臺大工科海洋所 108 學年度 第 6 題}
+（演算法描述）
+
+\textbf{(12 \%)} A graph $G$ is \textbf{bipartite} if its vertices can be partitioned into two sets $X$
+and $Y$ such that every edge in $G$ has one end vertex in $X$ and the other in $Y$. Describe (not
+code) an efficient algorithm for determining if an undirected graph $G$ is bipartite (without knowing
+the sets $X$ and $Y$ in advance).
+\end{pastexam}
+
+\begin{pastsoln}
+題目要的是文字描述，不必寫程式。 做法是用 BFS 替頂點塗兩種顏色（資結書第~21.6~節、定理~21.9）。
+設 $G$ 有 $n$ 個頂點、$m$ 條邊，用鄰接串列存。
+
+\textbf{演算法（BFS 二著色）}。
+\begin{enumerate}
+\item 所有頂點先標成「未塗色」。
+\item 依序檢查每個頂點 $s$；$s$ 還沒塗色，就表示發現一個新的連通元件，把 $s$ 塗成 $X$ 色，放進佇列，
+從 $s$ 開始 BFS。 （圖可能不連通，所以每個元件都要做一次。）
+\item BFS 每次從佇列取出一個頂點 $u$，檢查它的每個鄰居 $v$：
+\begin{itemize}
+\item $v$ 還沒塗色：塗成和 $u$ \textbf{相反}的顏色，放進佇列。
+\item $v$ 已經塗色而且和 $u$ \textbf{同色}：這條邊兩端同一組，回答「不是二分圖」並結束。
+\item $v$ 已經塗色而且和 $u$ 異色：沒有問題，繼續。
+\end{itemize}
+\item 所有元件都做完、沒有遇到同色的邊，回答「是二分圖」；$X$ 色的頂點就是 $X$，另一色就是 $Y$。
+\end{enumerate}
+
+\textbf{正確性}。
+\begin{itemize}
+\item 回答「是」時一定對：結束時每個頂點都塗了色，而每條邊 $(u, v)$ 都在從 $u$ 或 $v$ 出隊時被檢查過；
+檢查時兩端已經異色（剛塗的就是相反色），顏色之後不會再改。 所以每條邊一端在 $X$、一端在 $Y$，符合
+定義。
+\item 回答「不是」時也一定對：在同一個元件裡，$s$ 塗 $X$，BFS 樹上每往下一層顏色就換一次，所以
+頂點的顏色由它到 $s$ 的 BFS 距離 $d$ 的奇偶決定。 發現同色的邊 $(u, v)$ 時，$d[u]$ 和 $d[v]$ 同奇偶；
+無向圖 BFS 每條邊兩端的 $d$ 最多差 $1$，所以 $d[u] = d[v]$。 BFS 樹上從 $u$ 和 $v$ 往上走到最近的共同
+祖先 $w$，兩段路徑一樣長，各是 $d[u] - d[w]$；再加上邊 $(u, v)$，得到一個長度
+$2(d[u] - d[w]) + 1$ 的環，是\textbf{奇環}。 二分圖不可能有奇環：沿著環走，每走一條邊就換一組，回到起點
+要走偶數步。 所以 $G$ 不是二分圖。
+\end{itemize}
+
+\textbf{複雜度}。 每個頂點進出佇列各一次，每個頂點的鄰接串列只掃一次，無向圖的串列總長 $2m$，所以
+時間 $\Theta(n + m)$（找到同色邊提早結束時更少），額外空間是顏色陣列和佇列，$\Theta(n)$。 用鄰接矩陣
+存圖時，找鄰居要掃一整列，時間變成 $\Theta(n^2)$。
+
+把 BFS 換成 DFS 也可以：DFS 到一個沒塗色的鄰居時塗相反色，遇到同色的鄰居就不是二分圖，時間一樣
+$\Theta(n + m)$。 例：三角形 $a$--$b$--$c$--$a$，$a$ 塗 $X$，$b$、$c$ 都塗 $Y$，檢查邊 $(b, c)$ 時兩端同色，
+不是二分圖（它本身就是長度 $3$ 的奇環）；正方形 $a$--$b$--$c$--$d$--$a$ 則得到 $X = \{a, c\}$、
+$Y = \{b, d\}$，是二分圖。
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-05}]{臺大工科海洋所 110 學年度（A）第 5 題}
+（證明）
+
+\textbf{(10 \%)} Given that both $x$ and $y$ are positive variables that can grow arbitrarily
+large, prove that $\max\{x,y\}\in\Theta(x+y)$.
+\end{pastexam}
+
+\begin{pastsoln}
+兩個變數的 $\Theta$ 照一個變數的定義推廣（資結書第~1.5~節）：$f(x, y) \in \Theta(g(x, y))$ 表示存在
+正的常數 $c_1, c_2$ 和 $x_0, y_0$，使得所有 $x \ge x_0$、$y \ge y_0$ 都有
+$c_1\, g(x, y) \le f(x, y) \le c_2\, g(x, y)$。 這裡取 $c_1 = \tfrac12$、$c_2 = 1$，而且對所有正的 $x, y$
+都成立（$x_0, y_0$ 取任意正數即可）。
+
+\textbf{證明。} 設 $x, y > 0$，令 $m = \max\{x, y\}$。
+
+上界：$m$ 等於 $x$ 或 $y$ 其中一個，另一個是正的，所以 $m \le x + y$。 即 $\max\{x, y\} \le 1 \cdot (x + y)$。
+
+下界：$x \le m$ 而且 $y \le m$，兩式相加得 $x + y \le 2m$，即 $\max\{x, y\} \ge \tfrac12 (x + y)$。
+
+所以對所有 $x, y > 0$ 都有
+\[
+\tfrac12 (x + y) \le \max\{x, y\} \le x + y,
+\]
+由定義，$\max\{x, y\} \in \Theta(x + y)$。 \hfill$\blacksquare$
+
+上界那一步用到了 $x, y$ 都是正的（若 $y$ 可以是負的，$\max\{x, y\} \le x + y$ 不一定成立，例如
+$x = 5$、$y = -3$）。 這個結論常用在圖演算法：$O(\max\{n, m\})$ 和 $O(n + m)$ 是同一件事。
+\end{pastsoln}

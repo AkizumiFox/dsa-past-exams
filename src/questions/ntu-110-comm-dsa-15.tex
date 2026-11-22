@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-15}]{臺大電信所 110 學年度（B）第 15 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Consider the problem of making change for $n$ cents using the fewest number of coins. An algorithm to solve this problem is to give the coin with the highest available denomination without going over, and repeat the process until the amount of remaining change drops to 0. Which of the following sets of available coin denominations would cause this algorithm to \textit{fail} at yielding an optimal solution?
+
+A.~$\{1,3\}$ \qquad B.~$\{1,3,4,5\}$ \qquad C.~$\{1,5,10,25\}$\\
+D.~$\{c^0,c^1,\ldots,c^k\}$ for \textit{any} set of integers $c>1$ and $k\ge 1$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+\textbf{B 會失敗}：找 $7$ 元，貪心先拿 $5$，剩 $2$ 只能拿兩個 $1$，共 $3$ 枚；但 $3 + 4 = 7$ 只要 $2$ 枚。
+（$12$、$17$ 等也是反例。）
+
+其他三組貪心都是最佳的（資結書第~19.5~節）：
+\begin{itemize}
+\item A $\{1, 3\}$：最佳解裡 $1$ 元最多用 $2$ 枚（三枚 $1$ 可以換成一枚 $3$，枚數變少）。 所以最佳解是
+「盡量多拿 $3$，剩下 $n \bmod 3$ 用 $1$」，正好是貪心的結果。
+\item C $\{1, 5, 10, 25\}$：美國硬幣。 最佳解裡 $1$ 元至多 $4$ 枚、$5$ 元至多 $1$ 枚（兩枚換一枚 $10$）、
+$10$ 元至多 $2$ 枚，且 $5$ 和 $10$ 不能同時是「一枚 $5$ + 兩枚 $10$」（$=25$，換一枚 $25$ 更少）。 因此
+小於 $25$ 的零頭最多是 $24$，貪心拿 $25$ 的枚數一定和最佳解相同；遞迴地對 $10$、$5$ 同理，貪心最佳。
+\item D $\{c^0, \ldots, c^k\}$：最佳解裡每種 $c^i$（$i < k$）至多用 $c - 1$ 枚，否則 $c$ 枚 $c^i$ 可換成
+一枚 $c^{i+1}$。 這樣的組合恰好是 $n$ 的 $c$ 進位表示（最高位數可大於 $c - 1$），而 $c$ 進位表示唯一，
+貪心算出的也正是它，所以貪心最佳。
+\end{itemize}
+\end{pastsoln}

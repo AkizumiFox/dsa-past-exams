@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-01}]{臺聯大電機類 112 學年度 第 1 題}
+（單選；3 分）
+
+Let Fibonacci(0)=0, Fibonacci(1)=1, Fibonacci(2)=1, Fibonacci(3)=2, Fibonacci(4)=3, and
+Fibonacci(i+2)=Fibonacci(i)+Fibonacci(i+1), what is Fibonacci(8) equal to?
+
+(A)~34 \qquad (B)~21 \qquad (C)~8 \qquad (D)~13
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B) 21。
+
+照定義從小往大算，每一項是前兩項的和：
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\toprule
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+\midrule
+Fibonacci($i$) & 0 & 1 & 1 & 2 & 3 & 5 & 8 & 13 & 21 \\
+\bottomrule
+\end{tabular}
+\end{center}
+$F(5) = 2 + 3 = 5$，$F(6) = 3 + 5 = 8$，$F(7) = 5 + 8 = 13$，$F(8) = 8 + 13 = 21$。
+
+逐項檢查：(A) 34 是 $F(9)$；(C) 8 是 $F(6)$；(D) 13 是 $F(7)$，都是把項數算偏了一兩格。 只有
+(B) 對。 這種題目最常錯在起點：題目規定 $F(0) = 0$，所以 $F(8)$ 是第九個數，不是第八個。
+
+照定義直接寫成遞迴函式（資結書第~6.4~節）會重複算同樣的子問題，呼叫次數隨 $i$ 指數成長；像上表
+那樣由小到大填，只要 $\Theta(i)$ 次加法（資結書第~18.1.1~節）。
+\end{pastsoln}

@@ -1,0 +1,12 @@
+\begin{pastexam}[label={px:ncku-113-ee-02}]{成大電機所 113 學年度 是非題第 2 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+The time complexity of Dijkstral's algorithm is O( $n\log n$) if a graph is recorded by an
+adjacency matrix, where $n$ is the number of vertices in a graph.
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-02}。
+
+錯。 用相鄰矩陣存圖時，Dijkstra 演算法是 $O(n^2)$：$n$ 輪，每輪挑最小要 $O(n)$、掃一整列的出邊也要 $O(n)$。
+\end{pastsoln}

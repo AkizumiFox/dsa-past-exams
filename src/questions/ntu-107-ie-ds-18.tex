@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-18}]{臺大工工所 107 學年度 第 18 題}
+（複選；每題 10 分，至少一個選項正確；每個選項答對得 2 分，答錯倒扣 2 分，每題倒扣至零分為止）
+
+Which of the following statement(s) of \textbf{undirected} graph is(are) a tree?
+\begin{enumerate}[label=(\alph*),nosep]
+\item A graph with $n$ vertices and $n$-1 edges.
+\item A bipartite graph that is also planar.
+\item A clique that is also planar.
+\item A graph without any clique.
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (e)。
+
+題目問「是一棵樹」，也就是滿足這個描述的圖\textbf{一定}是樹。 樹是連通、無環的無向圖；$n$ 個頂點
+時，「連通、無環、$n - 1$ 條邊」三個條件任兩個成立就是樹（資結書定理~21.3）。 只要找到一個滿足描述
+卻不是樹的圖，那個選項就錯。
+\begin{itemize}
+\item (a) \textbf{錯}。 只說了邊數，沒有連通或無環。 反例：$4$ 個頂點，三角形 $\{1,2,3\}$ 加一個孤立
+頂點 $4$，共 $3 = n - 1$ 條邊，但有環也不連通。
+\item (b) \textbf{錯}。 反例：四個頂點的環 $C_4$。 它是二分圖（對角兩點一組），也是平面圖（本來就畫
+成一個正方形），但有環。
+\item (c) \textbf{錯}。 完全圖 $K_1$、$K_2$ 是樹，但 $K_3$（三角形）、$K_4$ 也是平面圖（$K_4$ 可以畫成
+三角形中間放一個點連到三個頂點），它們有環，不是樹。 $K_5$ 起不是平面圖。
+\item (d) \textbf{錯}。 照一般定義，任何一個頂點自己就是一個團（$K_1$），一條邊的兩端是 $K_2$，所以
+「沒有任何團」的圖只有空圖，它不是樹。 若把團理解成至少三個頂點（三角形以上），$C_4$ 沒有三角形，
+但有環，仍然不是樹。 兩種讀法都錯。
+\item (e) \textbf{對}。 (a)--(d) 都不一定是樹。
+\end{itemize}
+\end{pastsoln}

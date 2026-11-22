@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-06}]{臺大生機所 112 學年度（A）第 6 題}
+（問答）
+
+(16\%) What are the worst-time complexity of the \textbf{insert} and \textbf{delete-max}
+operations, respectively, for \textbf{priority queue} of size N in the following four
+implementations: (a) unordered linked list; (b) ordered array; (c) binary heap; and (d) binary
+search tree.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+實作 & insert & delete-max \\
+\midrule
+(a) unordered linked list & $O(1)$ & $O(N)$ \\
+(b) ordered array & $O(N)$ & $O(1)$ \\
+(c) binary heap & $O(\log N)$ & $O(\log N)$ \\
+(d) binary search tree & $O(N)$ & $O(N)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \textbf{(a) 無序串列}：insert 把新節點接在串列前端，$O(1)$。 delete-max 不知道最大值在
+哪裡，要走過全部 $N$ 個節點找出最大的，再刪掉（走的時候順便記住它的前一個節點，刪除 $O(1)$），
+$\Theta(N)$。
+\item \textbf{(b) 有序陣列}：由小到大排好，最大值在最後一格。 delete-max 直接拿走最後一格，
+$O(1)$。 insert 要維持有序：找位置可以二分搜尋 $O(\log N)$，但插進去要把比它大的元素都往後挪
+一格，最壞（新元素最小）挪 $N$ 個，$\Theta(N)$。
+\item \textbf{(c) 二元堆積}（資結書第~8.1~節）：insert 放在最後再上浮，delete-max 把最後一個
+元素搬到根再下沉，都只沿著一條根到葉的路徑走，完整二元樹的高度是 $\lfloor \lg N \rfloor$，
+所以兩者都是 $\Theta(\log N)$。
+\item \textbf{(d) 二元搜尋樹}（沒有保證平衡）：insert 沿一條路徑往下找位置；delete-max 從根一直
+往右走到最右邊的節點再刪掉（它沒有右子節點，刪除很容易）。 兩者都是 $O(h)$，$h$ 是樹高。 最壞
+情況下樹退化成一條鏈（例如依遞增順序插入），$h = N - 1$，兩者都是 $\Theta(N)$。 若改用平衡
+搜尋樹（AVL 樹、紅黑樹，資結書第~10~章），$h = O(\log N)$，兩者都降為 $O(\log N)$。
+\end{itemize}
+\end{pastsoln}

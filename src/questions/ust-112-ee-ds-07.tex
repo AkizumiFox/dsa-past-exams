@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-07}]{臺聯大電機類 112 學年度 第 7 題}
+（單選；3 分）
+
+What is the time complexity of pushing a new element onto a stack with n elements using an
+array-based implementation?
+
+(A)~O(1) \qquad (B)~O(n) \qquad (C)~O(n\^{}2) \qquad (D)~O(log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) $O(1)$。
+
+用陣列實作堆疊時，用一個變數 \textit{top} 記住頂端的位置（資結書第~6.1~節、虛擬碼~6.1）。
+push 只做三件事：檢查有沒有滿、$\mathit{top} \gets \mathit{top} + 1$、把新元素寫進
+$S[\mathit{top}]$。 這些步驟都和堆疊裡已經有幾個元素無關，不必搬動其他元素，所以是 $O(1)$。
+
+\begin{itemize}
+\item (B) $O(n)$：只有在陣列滿了、要配置更大的陣列並把 $n$ 個元素搬過去時，那一次 push 才是
+$O(n)$。 容量每次加倍時，這種搬移很少發生，平攤下來每次 push 仍是 $O(1)$（資結書第~3~章）。
+題目問的是一般的陣列堆疊 push，不選 $O(n)$。
+\item (C) $O(n^2)$、(D) $O(\log n)$：push 不需要排序或搜尋，沒有任何步驟會花這麼多時間。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-24}]{成大電機所 111 學年度 短答題第 4 題}
+（短答；每題 5 分）
+
+以下共四個 function, 請簡單回答他們的功能
+
+\textbf{What is the usage of the following function?}
+\begin{minted}[fontsize=\small]{cpp}
+// struct ListNode {
+//      int val;
+//      ListNode *next;
+//      ListNode() : val(0), next(nullptr) {}
+//      ListNode(int x) : val(x), next(nullptr) {}
+//      ListNode(int x, ListNode *next) : val(x), next(next) {}
+//};
+   ListNode* MM(ListNode* L1, ListNode* L2) {
+       if(L1 == NULL)              return L2;
+       else if(L2 == NULL)         return L1;
+
+       if(L1->val <= L2->val){
+           L1->next = MM(L1->next, L2);              return L1;
+       }
+       if(L1->val > L2->val){
+           L2->next = MM(L1, L2->next);              return L2;
+       }
+       return 0;
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：把兩個\textbf{已經由小到大排好}的單向串列 \texttt{L1}、\texttt{L2} \textbf{合併}成一個由小到大排好的串列，回傳新串列的
+第一個節點（Merge Two Sorted Lists，資結書第~5.5~節）。 原題程式最後少了函數的右大括號 \texttt{\}}，是排版漏掉的。
+
+\textbf{怎麼做（遞迴）。}
+\begin{itemize}
+\item 終點：其中一個串列是空的，合併結果就是另一個串列。
+\item 否則比較兩個串列的第一個節點，小的那個（相等時取 \texttt{L1} 的）一定是合併後的第一個節點。 把它的 \texttt{next} 接到
+「剩下的兩段再合併」的結果，回傳它。
+\end{itemize}
+最後的 \texttt{return 0;} 執行不到：兩個 \texttt{if} 的條件 \texttt{<=} 和 \texttt{>} 涵蓋了所有情況。
+
+\textbf{例子。} \texttt{L1}: $1 \to 3 \to 5$，\texttt{L2}: $1 \to 2 \to 6 \to 7$。 $1 \le 1$ 取 \texttt{L1} 的 $1$；$3 > 1$ 取 \texttt{L2}
+的 $1$；$3 > 2$ 取 $2$；$3 \le 6$ 取 $3$；$5 \le 6$ 取 $5$；\texttt{L1} 空了，接上 $6 \to 7$。 結果
+$1 \to 1 \to 2 \to 3 \to 5 \to 6 \to 7$，兩個 $1$ 中 \texttt{L1} 的在前，合併是穩定的。
+
+\textbf{正確性。} 對兩串列長度和 $m + n$ 歸納：其中一個空時直接正確。 否則較小的第一個節點不大於兩串列的所有節點，放
+在最前面；剩下的兩段仍各自排好，長度和少 $1$，由歸納假設遞迴回傳的是它們正確的合併。 接起來就是全部的正確合併。
+只改 \texttt{next} 指標，不配置新節點。
+
+\textbf{複雜度。} 每次呼叫放好一個節點，$\Theta(m + n)$ 時間；遞迴深度最多 $m + n$，呼叫堆疊 $O(m + n)$ 空間（迴圈寫法
+可以做到 $O(1)$）。
+\end{pastsoln}

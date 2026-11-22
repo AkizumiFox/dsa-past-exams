@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-07}]{臺大工科海洋所 107 學年度 第 7 題}
+（問答；10 分）
+
+\textbf{(10 \%)} Draw the 2-3-4 tree that results from inserting $o, d, j, h, s, g$, and $a$, in the
+order given, into a 2-3-4 tree that contains a single node whose value is $n$.
+\end{pastexam}
+
+\begin{pastsoln}
+用資結書第~11.1.5~節（虛擬碼~11.1）由上而下的插入：從根往下走，遇到 4-節點（$3$ 個鍵）就先
+分裂，中間的鍵送進父節點（根是 4-節點時中間鍵自己變成新根），走到葉子直接放進去。 鍵是英文
+字母，照字母順序比大小。
+
+\begin{center}
+\small
+\begin{tabular}{cp{0.72\linewidth}}
+\toprule
+插入 & 過程 \\
+\midrule
+$o$ & 根 $[n]$ 是葉子，放進去：$[n\ o]$ \\
+$d$ & $[d\ n\ o]$，根變成 4-節點 \\
+$j$ & 根是 4-節點，先分裂：$n$ 成為新根，左 $[d]$、右 $[o]$。 $j < n$ 往左：$[d\ j]$ \\
+$h$ & 根 $[n]$ 不滿；$h < n$ 往左，$[d\ j]$ 不是 4-節點，放進去：$[d\ h\ j]$ \\
+$s$ & $s > n$ 往右：$[o\ s]$ \\
+$g$ & $g < n$ 往左，左子節點 $[d\ h\ j]$ 是 4-節點，先分裂：$h$ 送進根，根變 $[h\ n]$，子節點
+$[d]$、$[j]$、$[o\ s]$。 $g < h$ 往最左：$[d\ g]$ \\
+$a$ & $a < h$ 往最左，$[d\ g]$ 不滿：$[a\ d\ g]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,rectangle,inner sep=3pt,minimum height=6mm,font=\small\itshape},
+  lab/.style={font=\small}]
+\begin{scope}
+\node[k] (R) at (0,0) {n};
+\node[k] (A) at (-0.9,-1.3) {d\;\,$|$\;\,j};
+\node[k] (B) at (0.9,-1.3) {o};
+\draw ($(R.south west)!0.15!(R.south east)$) -- (A.north);
+\draw ($(R.south west)!0.85!(R.south east)$) -- (B.north);
+\node[lab] at (0,-2.2) {(1) 插入 $j$ 之後};
+\end{scope}
+\begin{scope}[xshift=3.6cm]
+\node[k] (R) at (0,0) {n};
+\node[k] (A) at (-1,-1.3) {d\;\,$|$\;\,h\;\,$|$\;\,j};
+\node[k] (B) at (1,-1.3) {o\;\,$|$\;\,s};
+\draw ($(R.south west)!0.15!(R.south east)$) -- (A.north);
+\draw ($(R.south west)!0.85!(R.south east)$) -- (B.north);
+\node[lab] at (0,-2.2) {(2) 插入 $h$、$s$ 之後};
+\end{scope}
+\begin{scope}[xshift=8.4cm]
+\node[k] (R) at (0,0) {h\;\,$|$\;\,n};
+\node[k] (A) at (-1.6,-1.3) {a\;\,$|$\;\,d\;\,$|$\;\,g};
+\node[k] (B) at (0,-1.3) {j};
+\node[k] (C) at (1.5,-1.3) {o\;\,$|$\;\,s};
+\draw ($(R.south west)!0.1!(R.south east)$) -- (A.north);
+\draw ($(R.south west)!0.5!(R.south east)$) -- (B.north);
+\draw ($(R.south west)!0.9!(R.south east)$) -- (C.north);
+\node[lab] at (0,-2.2) {(3) 插入 $g$、$a$ 之後（答案）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+最後的樹：根 $[h\ n]$，三個子節點由左到右是 $[a\ d\ g]$、$[j]$、$[o\ s]$。 檢查：所有葉子在同
+一層；$a, d, g < h < j < n < o, s$，中序走訪是 $a, d, g, h, j, n, o, s$，八個鍵都在。
+
+如果改用「先放進葉子，滿 $4$ 個鍵才分裂」的由下而上做法，結果會不同（而且要先約定 $4$ 個鍵時
+往上送第 $2$ 個還是第 $3$ 個）。 例如送第 $2$ 個時，插入 $j$ 得 $[d\ j\ n\ o]$ 分裂成根 $[j]$，
+最後是根 $[d\ j]$，子節點 $[a]$、$[g\ h]$、$[n\ o\ s]$。 2-3-4 樹通常用由上而下的插入，作答時
+寫清楚用哪一種。
+\end{pastsoln}

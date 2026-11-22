@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-30}]{臺大電信所 108 學年度（B）第 30 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+Also note that in this exam, the degree of a node $x$ in a tree indicates the number of children
+of $x$.
+
+Let $x$ be a non-root node in a Fibonacci heap. If $x$ has degree 6, at least how many children
+of $x$ should have degree 3?
+
+A.~0 \qquad B.~1 \qquad C.~2 \qquad D.~3 \qquad E.~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+題目的「have degree 3」讀成「階數至少 $3$」。 照字面解成「階數剛好是 $3$」的話，沒有哪個子節點被
+迫剛好是 $3$（階數都可以更大），答案會是 A 的 $0$；這不像是出題的本意，本書取「至少」的讀法。
+
+把 $x$ 的 $6$ 個子節點依被連結到 $x$ 底下的先後排成 $y_1, \ldots, y_6$。 $y_i$ 被連結時，$x$ 已經有
+$y_1, \ldots, y_{i-1}$ 這 $i - 1$ 個子節點（之後可能被剪掉的也算在當時），階數至少 $i - 1$；連結只發生
+在同階的兩個根之間，所以 $y_i$ 當時的階數也至少 $i - 1$。 之後 $y_i$ 最多失去一個子節點（失去第二個
+就會被剪下、不再是 $x$ 的子節點），所以現在
+\[
+\deg(y_i) \ge i - 2.
+\]
+這個不等式對 $x$ 是不是根都成立。 $i = 1, \ldots, 6$ 時的下界是 $0, 0, 1, 2, 3, 4$（$i = 1$ 時下界
+$-1$，就是 $0$），所以至少有 $y_5$（$\ge 3$）、$y_6$（$\ge 4$）兩個子節點的階數至少 $3$。
+
+這個「至少 $2$ 個」做得到：取 $y_1, \ldots, y_6$ 的階數剛好是 $0, 0, 1, 2, 3, 4$ 的最瘦形狀（就是
+第 27 題的修剪做法造出來的樹），階數 $\ge 3$ 的子節點只有 $y_5$、$y_6$。 選 C。
+\end{pastsoln}

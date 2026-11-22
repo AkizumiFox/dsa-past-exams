@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-14}]{臺聯大電機類 114 學年度 第 14 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 14-16 according to the following C code.
+\begin{minted}[fontsize=\small]{c}
+struct Node {
+    int data;
+    struct Node* next;
+};
+int funcA(struct Node* head) {
+    struct Node *slow = head, *fast = head;
+    while (slow && fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return 1;
+        }
+    }
+    return 0;
+}
+\end{minted}
+
+What is the purpose of funcA()?
+
+(A)~Find repeated numbers in a linked list \qquad (B)~Find the unique numbers in a linked list\\
+(C)~Find a loop in a linked list \qquad (D)~Reverse a linked list
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+這是 Floyd 的快慢指標（龜兔賽跑）判環法（資結書第~5.6~節）。 \texttt{slow} 每次走一步，
+\texttt{fast} 每次走兩步。
+\begin{itemize}
+\item 沒有環：\texttt{fast} 會先走到串列尾端，\texttt{fast} 或 \texttt{fast->next} 變成
+\texttt{NULL}，迴圈結束，回傳 $0$。 兩個指標只往前走，\texttt{slow} 落後 \texttt{fast}，不會相等。
+\item 有環：兩個指標最後都進入環裡。 之後每走一輪，\texttt{fast} 和 \texttt{slow} 沿環方向的距離
+少 $1$，距離最多是環長減一，所以在環長以內的輪數裡一定相遇，回傳 $1$。
+\end{itemize}
+所以 \texttt{funcA} 判斷串列有沒有環（loop）。
+\begin{itemize}
+\item (A)(B)：程式完全沒有讀 \texttt{data}，只比較指標，和數值重不重複無關。 錯。
+\item (C)：正確。
+\item (D)：沒有改任何 \texttt{next} 指標，不會反轉串列。 錯。
+\end{itemize}
+\end{pastsoln}

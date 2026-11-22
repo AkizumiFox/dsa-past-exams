@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-31}]{臺聯大電機類 115 學年度 第 31 題}
+（單選；2 分）
+
+Given a graph \texttt{G(V,E)} where vertices \texttt{V=\{A,B,C,D,E,F\}} and Edges
+\texttt{E=\{(\_,\_),(\_,\_),...\}}. \texttt{(X,Y)} represents a directed edge from vertex \texttt{X}
+to vertex \texttt{Y}. Which of the following \texttt{E} does \textbf{NOT} form a \textbf{Directed
+Acyclic Graph (DAG)}?
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{E=\{(D,E),(B,D),(C,E),(A,B),(B,C),(E,A)\}}
+\item \texttt{E=\{(A,B),(B,C),(C,D),(D,E),(B,D),(C,E)\}}
+\item \texttt{E=\{(B,A),(A,C),(B,D),(C,E),(D,F),(E,F)\}}
+\item \texttt{E=\{(E,C),(C,D),(B,F),(E,B),(D,B),(A,E)\}}
+\item \texttt{E=\{(A,B),(B,C),(C,E),(E,F),(B,D),(D,E)\}}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+有向圖沒有環，若且唯若它有拓樸順序：把頂點排成一列，使每條邊都由前往後（資結書第~22.1~節）。
+所以對每個選項，要嘛找出一個有向環，要嘛給出一個拓樸順序（可以用 Kahn 演算法，每次拿掉一個
+入度為 $0$ 的頂點）。
+\begin{itemize}
+\item (A) $A \to B$、$B \to D$、$D \to E$、$E \to A$ 形成有向環 $A \to B \to D \to E \to A$。 不是 DAG。
+用 Kahn 演算法也看得出來：只有 $F$ 的入度是 $0$（$F$ 沒有邊），拿掉後 $A, B, C, D, E$ 的入度都
+不是 $0$，卡住。
+\item (B) 順序 $A, B, C, D, E, F$：六條邊 $AB, BC, CD, DE, BD, CE$ 都由前往後。 是 DAG。
+\item (C) 順序 $B, A, C, D, E, F$：$BA, AC, BD, CE, DF, EF$ 都由前往後。 是 DAG。
+\item (D) 順序 $A, E, C, D, B, F$：$AE, EC, CD, EB, DB, BF$ 都由前往後。 是 DAG。
+\item (E) 順序 $A, B, C, D, E, F$：$AB, BC, BD, CE, DE, EF$ 都由前往後。 是 DAG。
+\end{itemize}
+\end{pastsoln}

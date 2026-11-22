@@ -1,0 +1,81 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-21}]{臺聯大電機類 112 學年度 第 21 題}
+（問答；10 分）
+
+Compare Merge\_sort with Insertion\_sort.
+\begin{enumerate}[label=(\Alph*)]
+\item Which one is in-place sorting algorithm? (2 points)
+\item What is the memory cost of Merge\_sort in Big-O annotation with n? (2 points)
+\item A[p:q] and A[q+1:r] are sorted sub-arrays. A[p:q] represents the sub-array from A[p] to
+A[q]. A[q+1:r] represents the sub-array from A[q+1] to A[r]. Write a pseudocode to describe a
+function Merge(A,p,q,r) which merges A[p:q] and A[q+1:r] such that the resultant A[p:r] are sorted.
+Assume the array is sorted from small to large numbers. (4 points)\quad 本題應詳列過程，無過程者
+不予計分
+\item What is the computation complexity of Merge(A,p,q,r) using the Big-O annotation with n.
+(2 points)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(A)} Insertion\_sort 是就地（in-place）排序。 插入排序只在原陣列裡把元素往右挪，額外只用
+\textit{key}、$i$、$j$ 幾個變數，$O(1)$ 額外空間（資結書第~1.3~節）。 Merge\_sort 合併時需要
+一個和子陣列一樣大的暫存陣列，不是就地排序（資結書第~14.4~節）。
+
+\textbf{(B)} $O(n)$。 合併 $A[p..q]$ 和 $A[q+1..r]$ 時要把它們抄到暫存陣列，最上層合併整個陣列，
+需要 $n$ 格；暫存陣列可以在每次合併完就釋放（或整個排序共用一個長度 $n$ 的陣列），所以額外空間
+是 $\Theta(n)$。 另外遞迴深度 $\lceil \lg n \rceil$，呼叫堆疊用 $O(\log n)$，比 $n$ 小，總共 $O(n)$。
+
+\textbf{(C)} 先把兩段抄到 $L$、$R$，再用兩個指標 $i$、$j$ 從兩段的開頭往後比，每次把比較小的
+那個放回 $A[k]$（以資結書虛擬碼~14.4 為底，改成題目的參數）：
+
+\begin{pseudo}{合併 $A[p..q]$ 和 $A[q+1..r]$}
+\Procedure{Merge}{$A, p, q, r$}
+    \State $n_1 \gets q - p + 1$；$n_2 \gets r - q$
+    \State 配置新陣列 $L[1..n_1]$、$R[1..n_2]$
+    \For{$i \gets 1$ \To $n_1$}
+        \State $L[i] \gets A[p + i - 1]$
+    \EndFor
+    \For{$j \gets 1$ \To $n_2$}
+        \State $R[j] \gets A[q + j]$
+    \EndFor
+    \State $i \gets 1$；$j \gets 1$
+    \For{$k \gets p$ \To $r$}
+        \If{$i \le n_1$ \AND ($j > n_2$ \OR $L[i] \le R[j]$)}
+            \State $A[k] \gets L[i]$；$i \gets i + 1$
+        \Else
+            \State $A[k] \gets R[j]$；$j \gets j + 1$
+        \EndIf
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+第 10 行的意思是「左邊還有，而且右邊已經用完或左邊的比較小」；\textbf{and}、\textbf{or} 只在需要
+時才算右邊，所以 $j > n_2$ 時不會去讀 $R[j]$。 用 $\le$ 讓相等時先拿左邊的，合併排序因此是穩定的。
+
+正確性：第 9 行的迴圈每一圈開始時，$A[p..k-1]$ 是 $L$、$R$ 裡最小的 $k - p$ 個數、由小到大排好，
+而 $L[i]$、$R[j]$ 是兩邊還沒放回去的數裡各自最小的。 一開始 $k = p$，$A[p..p-1]$ 是空的，成立。
+這一圈放進 $A[k]$ 的是 $L[i]$、$R[j]$ 中較小的（另一邊用完時就是還有的那一邊），它是剩下的數裡
+最小的，而且不小於 $A[k-1]$，所以放完後 $A[p..k]$ 仍是最小的 $k - p + 1$ 個數、排好；取用的那一邊
+指標加 $1$，「$L[i]$、$R[j]$ 是各自最小」也保持。 迴圈結束時 $k = r + 1$，$A[p..r]$ 是全部
+$n_1 + n_2$ 個數由小到大排好。
+
+過程舉例：$A[1..6] = \langle 2, 5, 7, 1, 3, 8\rangle$，$p = 1$、$q = 3$、$r = 6$，
+$L = \langle 2, 5, 7\rangle$、$R = \langle 1, 3, 8\rangle$。
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+$k$ & 比較 & 放入 $A[k]$ & $A[1..k]$ \\
+\midrule
+1 & $L[1] = 2$ vs $R[1] = 1$ & $1$ & $1$ \\
+2 & $L[1] = 2$ vs $R[2] = 3$ & $2$ & $1, 2$ \\
+3 & $L[2] = 5$ vs $R[2] = 3$ & $3$ & $1, 2, 3$ \\
+4 & $L[2] = 5$ vs $R[3] = 8$ & $5$ & $1, 2, 3, 5$ \\
+5 & $L[3] = 7$ vs $R[3] = 8$ & $7$ & $1, 2, 3, 5, 7$ \\
+6 & $L$ 已用完 & $8$ & $1, 2, 3, 5, 7, 8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(D)} 令 $n = r - p + 1$。 兩個抄寫迴圈共 $n_1 + n_2 = n$ 次，合併迴圈恰好跑 $n$ 圈、每圈
+$O(1)$，所以 Merge 的時間是 $\Theta(n)$，即 $O(n)$。 比較次數介於 $\min(n_1, n_2)$ 和 $n - 1$
+之間，但寫回 $A$ 一定是 $n$ 次。
+\end{pastsoln}

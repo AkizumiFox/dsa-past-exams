@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-03}]{北科大電機所（戊組）115 學年度 是非題第 3 題}
+（是非）
+
+A queue can be efficiently implemented using two stacks. \textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（True）。
+
+做法：堆疊 $S_{\mathit{in}}$ 負責放入，堆疊 $S_{\mathit{out}}$ 負責取出。
+\begin{itemize}
+\item enqueue$(x)$：push $x$ 到 $S_{\mathit{in}}$。
+\item dequeue()：若 $S_{\mathit{out}}$ 是空的，先把 $S_{\mathit{in}}$ 的元素一個一個 pop 出來、push 進 $S_{\mathit{out}}$（順序倒
+過來，最早進來的跑到 $S_{\mathit{out}}$ 頂端）；然後 pop $S_{\mathit{out}}$。
+\end{itemize}
+例如 enqueue $1, 2, 3$ 後 $S_{\mathit{in}}$ 由底到頂是 $1, 2, 3$；dequeue 時搬到 $S_{\mathit{out}}$ 變成由底到頂 $3, 2, 1$，pop
+出 $1$，正是最先進來的。
+
+「efficiently」成立的理由是平攤分析（資結書第~3~章）：每個元素一生只會被 push 進 $S_{\mathit{in}}$ 一次、搬到
+$S_{\mathit{out}}$ 一次（pop 一次加 push 一次）、從 $S_{\mathit{out}}$ pop 一次，總共常數次堆疊操作。 所以 $n$ 個操作總時間
+$O(n)$，每個操作平攤 $O(1)$。 單一次 dequeue 碰到要搬家時最壞是 $O(n)$，但這種情況不會連續發生。
+\end{pastsoln}

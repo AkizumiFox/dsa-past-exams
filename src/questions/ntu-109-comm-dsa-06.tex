@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-06}]{臺大電信所 109 學年度（B）第 6 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+Dijkstra's shortest-path algorithm may relax an edge more than once in a graph with a cycle.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：F（錯）。
+
+Dijkstra 的主迴圈每一輪從優先佇列取出一個頂點 $u$，然後鬆弛 $u$ 的每一條出邊
+（資結書第~25.2~節）。 每個頂點只會被取出一次：取出之後就不在佇列裡，以後也不會再放回去
+（鬆弛只會降低佇列裡頂點的鍵）。 一條邊 $(u, v)$ 只在 $u$ 被取出的那一輪被鬆弛，所以每條邊
+\textbf{剛好}鬆弛一次，總共 $|E|$ 次，和圖有沒有環無關。
+
+有環時會發生的是：鬆弛 $(u, v)$ 時 $v$ 可能早就被取出了，這次鬆弛不會改變 $d[v]$（權重
+非負時 $d[v] \le d[u] \le d[u] + w(u, v)$），但它仍然只算一次。 無向圖把每條邊看成兩個方向
+的有向邊，兩個方向各鬆弛一次，也沒有哪個方向被鬆弛兩次。
+
+會重複鬆弛同一條邊的是 Bellman--Ford：每一輪都把所有邊鬆弛一遍，共 $|V| - 1$ 輪。
+\end{pastsoln}

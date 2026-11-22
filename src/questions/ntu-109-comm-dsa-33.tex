@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-33}]{臺大電信所 109 學年度（B）第 33 題}
+（單選；每題 2 分，答錯不倒扣）
+
+To search a specific number in a list, there are following two strategies:\\
+(a) Linear Search\\
+(b) First sort the list using merge sort, and then do binary search\\
+Which strategy is faster in average? What's its corresponding time complexity?
+\begin{enumerate}[label=(\Alph*)]
+\item (a), $O(n)$
+\item (b), $O(\log n)$
+\item (a), $O(\log n)$
+\item (b), $O(n\log n)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+只搜尋一次，兩種策略的成本：
+\begin{itemize}
+\item (a) 線性搜尋：從頭比到找到為止。 要找的數在每個位置的機率相同時，平均比
+$(n + 1)/2$ 次；找不到時比 $n$ 次。 平均 $\Theta(n)$。
+\item (b) 先合併排序再二分搜尋：排序 $\Theta(n \log n)$，二分搜尋 $O(\log n)$
+（資結書第~17.1~節），合計 $\Theta(n \log n)$。
+\end{itemize}
+$n = o(n\log n)$，所以 (a) 比較快，複雜度 $O(n)$，選 (A)。
+
+(B) 只算了二分搜尋那一段，漏了排序；(C) 線性搜尋不可能是 $O(\log n)$，連每個元素都看不完；
+(D) 的複雜度對 (b) 是對的，但 (b) 比較慢。 排序要值得，必須搜尋很多次：搜尋 $k$ 次時 (a) 是
+$\Theta(kn)$、(b) 是 $\Theta(n\log n + k\log n)$，$k$ 超過 $\Theta(\log n)$ 之後 (b) 才划算。
+\end{pastsoln}

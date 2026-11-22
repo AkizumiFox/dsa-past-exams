@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-47}]{臺聯大電機類 115 學年度 第 47 題}
+（單選；2 分）
+
+In a doubly linked list, the number of pointers affected for an insertion will be?
+
+(A)~5 \qquad (B)~4 \qquad (C)~0 \qquad (D)~1 \qquad (E)~It depends on the insertion location
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。 題目沒說串列有沒有頭節點、插在哪裡，有兩種讀法，下面說明本書的取捨。
+
+雙向串列（不帶頭節點、兩端是 \NIL）插入新節點 $x$：
+\begin{itemize}
+\item \textbf{插在中間}（$p$ 和 $q$ 之間）：要設 $x.\mathit{prev}$、$x.\mathit{next}$，改
+$p.\mathit{next}$、$q.\mathit{prev}$，共 $4$ 個指標（資結書虛擬碼~5.6，歷屆試題~\ref{px:ust-115-ee-ds-10}）。
+\item \textbf{插在最前面}：設 $x.\mathit{next}$ 指向原來的第一個節點、改那個節點的 $\mathit{prev}$，
+再改串列的 $\mathit{head}$；$x.\mathit{prev}$ 是 \NIL。 節點之間的連結只動了 $2$ 個。
+\item \textbf{插在最後面}：同理，節點之間的連結只動 $2$ 個（加上 $\mathit{tail}$ 指標，如果有的話）。
+\item \textbf{插進空串列}：沒有鄰居，只改 $\mathit{head}$（和 $\mathit{tail}$）。
+\end{itemize}
+所以一般的雙向串列，受影響的指標數依插入位置而不同，選 (E)。
+
+另一種讀法：如果用資結書第~5.2~節的\textbf{帶頭節點的環狀雙向串列}，任何位置的插入都是「插在兩個
+節點之間」，一律改 $4$ 個指標，這時答 (B)。 題目沒有提到頭節點，而且特地列出 (E)，本書採 (E)。
+
+其他選項：(A) $5$ 沒有對應的情形；(C) $0$ 不可能，至少要把新節點接上去；(D) $1$ 是單向串列插在
+尾端（只改前一個節點的 $\mathit{next}$）時才會有的數，雙向串列還要設新節點的指標。
+\end{pastsoln}

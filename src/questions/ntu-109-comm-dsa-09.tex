@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-09}]{臺大電信所 109 學年度（B）第 9 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+In a weighted directed graph $G=(V,E,w)$ containing a negative-weight cycle, running the
+Bellman-Ford algorithm from $s$ will find a shortest acyclic path from $s$ to a given destination
+vertex $t$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：F（錯）。
+
+負環從 $s$ 走得到時，Bellman--Ford 能做的只是在第 $|V|$ 輪發現還有邊可以鬆弛，回報「有
+負環」；這時 $d[t]$ 只是某條（可能繞環的）路徑的權重，不保證是哪一條簡單路徑的最小值，
+父指標甚至可能形成環（資結書第~25.3.4~節）。
+
+「最短的簡單路徑」（不重複頂點）在有負環的圖上是很難的問題：把所有邊的權重設成 $-1$，
+$s$ 到 $t$ 最短簡單路徑的權重是 $-(|V| - 1)$，當且僅當存在一條從 $s$ 到 $t$、經過每個頂點
+剛好一次的哈密頓路徑，這是 NP 完備問題（資結書第~28~章）。 所以不能期待 $O(VE)$ 的
+Bellman--Ford 解它。
+\end{pastsoln}

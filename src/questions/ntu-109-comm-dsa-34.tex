@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-34}]{臺大電信所 109 學年度（B）第 34 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Consider the following list of 9 activities with their start time $s$ and end time $t$, what's the
+maximum number of activities that can be performed by a single person? Assuming that a person can
+only work on a single activity at a time.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}\hline
+\textbf{index} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\\hline
+$s$ & 2 & 3 & 1 & 10 & 14 & 6 & 13 & 7 & 19\\\hline
+$t$ & 5 & 9 & 12 & 16 & 17 & 15 & 18 & 11 & 20\\\hline
+\end{tabular}
+\end{center}
+(A)~2 \qquad (B)~3 \qquad (C)~4 \qquad (D)~5
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+這是活動選擇問題。 貪心法：依結束時間由早到晚排，每次選「開始時間不早於上一個選中活動的
+結束時間」的第一個活動。 選最早結束的活動一定有某個最佳解包含它，所以貪心的結果是最佳解
+（資結書定理~19.1）。
+
+依結束時間排序並逐一檢查（「上一個結束」是目前已選活動中最後結束的時間）：
+\begin{center}
+\begin{tabular}{cccccl}
+\toprule
+活動 & $s$ & $t$ & 上一個結束 & 選？ & 理由 \\
+\midrule
+1 & 2 & 5 & -- & 選 & 第一個 \\
+2 & 3 & 9 & 5 & 不選 & $3 < 5$ \\
+8 & 7 & 11 & 5 & 選 & $7 \ge 5$ \\
+3 & 1 & 12 & 11 & 不選 & $1 < 11$ \\
+6 & 6 & 15 & 11 & 不選 & $6 < 11$ \\
+4 & 10 & 16 & 11 & 不選 & $10 < 11$ \\
+5 & 14 & 17 & 11 & 選 & $14 \ge 11$ \\
+7 & 13 & 18 & 17 & 不選 & $13 < 17$ \\
+9 & 19 & 20 & 17 & 選 & $19 \ge 17$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+選出活動 $1, 8, 5, 9$，時間是 $[2, 5]$、$[7, 11]$、$[14, 17]$、$[19, 20]$，兩兩不重疊，共
+$4$ 個。 貪心法是最佳的，所以最多 $4$ 個，選 (C)。 這裡沒有哪個活動的開始時間剛好等於另一個的
+結束時間，所以端點算不算重疊不影響答案。
+\end{pastsoln}

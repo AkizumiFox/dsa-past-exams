@@ -1,0 +1,32 @@
+paper: ncku-111-ee-ds
+volume: 3
+school: 成大
+dept: 電機所
+year: 111
+subject: 資料結構
+instructions: ※ 考生請注意：本試題不可使用計算機。 請於答案卷（卡）作答，於本試題紙上作答者，不予計分。 (甲) 80\% 單選題，共 20 題（每題 4 分）：一定要按照答題順序 並填上答案 (可以留空) 並如題目選項以英文大寫作答，其他表示法不予計分。 (乙) 20\% 短答題，共 4 題（每題 5 分）：以下共四個 function，請簡單回答他們的功能。
+questions:
+  - {id: ncku-111-ee-ds-01, label: 單選題第 1 題, chapter: 6}
+  - {id: ncku-111-ee-ds-02, label: 單選題第 2 題, chapter: 5}
+  - {id: ncku-111-ee-ds-03, label: 單選題第 3 題, chapter: 5}
+  - {id: ncku-111-ee-ds-04, label: 單選題第 4 題, chapter: 6}
+  - {id: ncku-111-ee-ds-05, label: 單選題第 5 題, chapter: 6}
+  - {id: ncku-111-ee-ds-06, label: 單選題第 6 題, chapter: 7}
+  - {id: ncku-111-ee-ds-07, label: 單選題第 7 題, chapter: 6}
+  - {id: ncku-111-ee-ds-08, label: 單選題第 8 題, chapter: 5}
+  - {id: ncku-111-ee-ds-09, label: 單選題第 9 題, chapter: 4}
+  - {id: ncku-111-ee-ds-10, label: 單選題第 10 題, chapter: 6}
+  - {id: ncku-111-ee-ds-11, label: 單選題第 11 題, chapter: 21}
+  - {id: ncku-111-ee-ds-12, label: 單選題第 12 題, chapter: 5}
+  - {id: ncku-111-ee-ds-13, label: 單選題第 13 題, chapter: 7}
+  - {id: ncku-111-ee-ds-14, label: 單選題第 14 題, chapter: 4}
+  - {id: ncku-111-ee-ds-15, label: 單選題第 15 題, chapter: 1}
+  - {id: ncku-111-ee-ds-16, label: 單選題第 16 題, chapter: 5}
+  - {id: ncku-111-ee-ds-17, label: 單選題第 17 題, chapter: 7}
+  - {id: ncku-111-ee-ds-18, label: 單選題第 18 題, chapter: 6}
+  - {id: ncku-111-ee-ds-19, label: 單選題第 19 題, chapter: 5}
+  - {id: ncku-111-ee-ds-20, label: 單選題第 20 題, chapter: 5}
+  - {id: ncku-111-ee-ds-21, label: 短答題第 1 題, chapter: 1}
+  - {id: ncku-111-ee-ds-22, label: 短答題第 2 題, chapter: 27}
+  - {id: ncku-111-ee-ds-23, label: 短答題第 3 題, chapter: 6}
+  - {id: ncku-111-ee-ds-24, label: 短答題第 4 題, chapter: 5}

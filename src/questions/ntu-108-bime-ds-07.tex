@@ -1,0 +1,59 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-07}]{臺大生機所 108 學年度 第 7 題}
+（設計）
+
+(15\%) Given a directed graph, check whether the graph contains a cycle or not. Your pseudo code
+should return true if the given graph contains at least one cycle, else return false.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法：DFS 遇到後向邊就有環}（資結書第~21.6~節定理~21.10）。 DFS 時每個頂點有三種
+顏色：白（還沒拜訪）、灰（已經進入、還沒結束，也就是在目前的遞迴路徑上）、黑（已經結束）。
+從 $u$ 看到一條邊 $(u, v)$，而 $v$ 是灰色，表示 $v$ 是 $u$ 的祖先，這條邊和樹上 $v \leadsto u$
+的路徑合起來就是一個環。 圖用鄰接串列存，$n$ 個頂點、$m$ 條邊。
+
+\begin{pseudo}{判斷有向圖有沒有環}
+\Function{Has-Cycle}{$G$}
+    \For{每個頂點 $u \in V$}
+        \State $\mathit{color}[u] \gets \gtrwhite$
+    \EndFor
+    \For{每個頂點 $u \in V$} \Comment{圖可能不連通，每個白點都要當起點}
+        \If{$\mathit{color}[u] = \gtrwhite$ \AND \Call{Visit}{$G, u$}}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State \Return \FALSE
+\EndFunction
+\Function{Visit}{$G, u$} \Comment{從 $u$ 出發找得到環就回傳 \TRUE}
+    \State $\mathit{color}[u] \gets \gtrgray$
+    \For{每個 $v \in \mathit{Adj}[u]$}
+        \If{$\mathit{color}[v] = \gtrgray$}
+            \State \Return \TRUE \Comment{後向邊 $(u, v)$}
+        \EndIf
+        \If{$\mathit{color}[v] = \gtrwhite$ \AND \Call{Visit}{$G, v$}}
+            \State \Return \TRUE
+        \EndIf
+    \EndFor
+    \State $\mathit{color}[u] \gets \gtrblack$
+    \State \Return \FALSE
+\EndFunction
+\end{pseudo}
+自環 $(u, u)$ 也會在第 11 行被抓到（$u$ 自己是灰色），本來就算一個環。
+
+\textbf{正確性。}
+\begin{itemize}
+\item 回傳 \TRUE 時一定有環：第 11 行看到灰色的 $v$，灰色的頂點恰好是目前遞迴堆疊上的頂點，
+所以 $v$ 是 $u$ 的祖先，樹路徑 $v \leadsto u$ 加上邊 $(u, v)$ 是一個環。
+\item 有環時一定回傳 \TRUE：設環上第一個被塗灰的頂點是 $v$，環上指向 $v$ 的那條邊是 $(u, v)$。
+$v$ 塗灰時，環上其他頂點都是白的，有一條從 $v$ 到 $u$ 的全白路徑（沿著環走），由白路徑定理
+（資結書定理~21.7），$u$ 會在 $v$ 結束之前被拜訪，成為 $v$ 的後代。 檢查邊 $(u, v)$ 時 $v$
+還是灰色，第 11 行回傳 \TRUE。（若在這之前已經因別的後向邊回傳 \TRUE，結論也一樣。）
+\end{itemize}
+
+\textbf{為什麼要分灰和黑。} 碰到黑色的鄰居不代表有環。 例如 $a \to b$、$a \to c$、$c \to b$：
+從 $a$ 先走 $b$，$b$ 結束變黑；再走 $c$，看到 $b$ 是黑色，這是前向或交叉邊，圖裡沒有環。 只用
+「拜訪過／沒拜訪過」兩種狀態，會在這裡誤判成有環。
+
+\textbf{複雜度。} 每個頂點塗灰、塗黑各一次，每條邊最多看一次，時間 $O(n + m)$，空間 $O(n)$
+（顏色和遞迴堆疊）。 另一個做法是 Kahn 的拓樸排序（資結書第~22.1~節）：反覆刪掉入度為 $0$ 的
+頂點，刪不完（剩下的頂點入度都不是 $0$）就表示有環，時間一樣是 $O(n + m)$。
+\end{pastsoln}

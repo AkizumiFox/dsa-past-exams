@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-30}]{臺聯大電機類 115 學年度 第 30 題}
+（單選；2 分）
+
+Answer \textbf{Questions 28-30} according to the following C code.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+#include <stdio.h>
+#include <stdlib.h>
+int counter=0;
+void max_heapify(int A[],int n,int i) {
+    int largest=i;
+    int left=2*i+1;
+    int right=2*i+2;
+    counter++;
+    if (left<n && A[left]>A[i])
+        largest=left;
+    if (right<n && A[right]>A[largest])
+        largest=right;
+    if (largest!=i) {
+        int temp=A[i];
+        A[i]=A[largest];
+        A[largest]=temp;
+        max_heapify(A,n,largest);
+    }
+}
+void build_heap(int A[],int n) {
+    for (int i = (n/2)-1;i>=0;i--)
+        max_heapify(A,n,i);
+}
+int main(){
+    int A[]={4,1,3,2,16,9,10,14,8,7};
+    int n = sizeof(A)/sizeof(A[0]);
+    build_heap(A,n);
+    for (int i=0;i<n;++i)
+        printf("%d,",A[i]);
+    printf("\n");
+    printf("counter:%d\n",counter);
+    return 0;
+}
+\end{minted}
+
+What is the computational complexity of \texttt{\textbf{build\_heap()}}?
+
+(A)~$O(n)$ \qquad (B)~$O(\log n)$ \qquad (C)~$O(n^2)$ \qquad (D)~$O(n^3)$ \qquad (E)~$O(n^{1/2})$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+粗估：呼叫 \texttt{max\_heapify} 約 $n/2$ 次，每次最多下沉樹高 $\lfloor \lg n \rfloor$ 層，得到
+$O(n \log n)$，但這個上界不緊。 細算（資結書定理~8.1）：高度為 $h$ 的節點最多
+$\lceil n / 2^{h+1} \rceil$ 個，從它開始的 \texttt{max\_heapify} 是 $O(h)$，所以總時間
+\[
+\sum_{h=0}^{\lfloor \lg n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil O(h)
+= O\!\left(n \sum_{h=0}^{\infty} \frac{h}{2^{h}}\right) = O(2n) = O(n) .
+\]
+直觀地說，一半的節點是葉子（不必下沉），四分之一的節點最多下沉一層，……，只有根要下沉 $\lg n$ 層，
+大部分節點都很矮。 而每個元素至少要看一次，所以是 $\Theta(n)$。
+
+其他選項：(B)(E) 比讀一遍陣列還少，不可能；(C)(D) 都不是緊的上界（(C) 雖然數學上成立，但題目問的
+是複雜度）。
+\end{pastsoln}

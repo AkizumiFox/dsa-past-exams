@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-15}]{臺大電信所 109 學年度（B）第 15 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of one delete-min operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+$n$ 個元素的二項堆積最多 $\lfloor \lg n \rfloor + 1$ 棵樹，每棵的階數不超過
+$\lfloor \lg n \rfloor$（資結書第~8.5~節）。 delete-min 分三步：
+\begin{enumerate}
+\item 掃過根串列找最小的根：$O(\log n)$。
+\item 拿掉這個根，它的子樹（最多 $\lfloor \lg n \rfloor$ 棵）反過來排成一個二項堆積：
+$O(\log n)$。
+\item 和剩下的堆積合併，像二進位加法，每個階數做常數的工作：$O(\log n)$。
+\end{enumerate}
+合計 $O(\log n)$。 $n = 2^m - 1$ 時有 $m$ 棵樹，光掃根串列就要 $\Theta(\log n)$，所以這個界是緊的；
+(A)、(B) 太小，(D)、(E) 不緊。
+\end{pastsoln}

@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncku-109-comm-ds-01}]{成大電通所 109 學年度 第 1 題}
+（挑錯並改正）
+
+Three of the following statements are incorrect. Pick out and correct them. (15 points)\\
+(A) An AVL tree is a binary search tree.\\
+(B) A B-tree of order 5 is a 2-3-4-5 tree.\\
+(C) To use binary search, sorted data must not be stored in a link list.\\
+(D) A max heap is a complete binary tree.\\
+(E) We use queue data structure to evaluate a postfis expression.\\
+(F) $n^3$+1.01$^n$=O($n^3$)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯的是 (B)、(E)、(F)。
+
+這題六個敘述分屬不同章（AVL 樹第~10~章、B 樹第~11~章、二元搜尋第~17~章、堆積第~8~章、後序式
+第~6~章、漸近符號第~1~章）；最需要想的是 (B)，所以放在第~11~章。 (E) 的 postfis 是原卷的錯字，指
+postfix。
+
+\begin{itemize}
+\item \textbf{(A) 對}。 AVL 樹是加上「每個節點左右子樹高度差不超過 $1$」的二元搜尋樹（資結書
+第~10.2~節），二元搜尋樹的性質照樣成立。
+\item \textbf{(B) 錯}。 $m$ 階 B 樹裡，根以外的內部節點至少有 $\lceil m/2 \rceil$ 個子節點（資結書
+第~11.2~節）。 $m = 5$ 時是 $3$ 到 $5$ 個子節點（$2$ 到 $4$ 個鍵），只有根可以只有 $2$ 個子節點，所以
+不是「2-3-4-5 樹」（那表示每個內部節點都可以只有 $2$ 個子節點）。
+\textbf{改正}：A B-tree of order 5 is a 3-4-5 tree（根以外的內部節點有 $3$、$4$ 或 $5$ 個子節點，根
+可以有 $2$ 到 $5$ 個）。 或者改成 A B-tree of order 4 is a 2-3-4 tree（$\lceil 4/2 \rceil = 2$）。
+\item \textbf{(C) 對}。 二元搜尋每一步要直接取中間那一個，需要隨機存取（陣列 $O(1)$ 取第 $i$ 個）。
+鏈結串列要從頭一個一個走才到得了中間，每一步 $\Theta(n)$，整個搜尋 $\Theta(n)$，比循序搜尋還慢，失去
+二元搜尋的意義。
+\item \textbf{(D) 對}。 堆積的定義就是完整二元樹加上堆積性質（資結書第~8.1~節），最大堆積是每個節點
+不小於它的子節點。
+\item \textbf{(E) 錯}。 計算後序式由左往右掃，遇到運算元就放進去，遇到運算子就拿出\textbf{最後放進去}
+的兩個運算元計算、再把結果放回去，用的是後進先出的\textbf{堆疊}（資結書第~6.3.2~節）。
+\textbf{改正}：We use stack data structure to evaluate a postfix expression.
+\item \textbf{(F) 錯}。 $1.01^n$ 是指數函數，比任何多項式長得快：$1.01^n / n^3 \to \infty$。 所以
+$n^3 + 1.01^n = \Theta(1.01^n)$，不是 $O(n^3)$。 \textbf{改正}：$n^3 + 1.01^n = O(1.01^n)$。 （$n$ 小的時候
+$n^3$ 比較大，例如 $n = 100$ 時 $1.01^{100} \approx 2.7$，但漸近符號看的是 $n$ 夠大以後；
+$n = 3000$ 時 $1.01^n \approx 9.2 \times 10^{12}$ 已經超過 $n^3 = 2.7 \times 10^{10}$。）
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-07}]{臺大生機所 114 學年度 第 7 題}
+（虛擬碼；15 分）
+
+\textbf{(15\%)} Write a function in pseudocode to calculate the number of leaf nodes of a binary
+tree. A node in a binary tree has two pointers, named `left' and `right', where the `left' pointer is
+used to find the left child of the node and the `right' pointer is used to find the right child.
+Your function will take a node as the input and return an integer representing the number of leaf
+nodes in the tree rooted at that node.
+\end{pastexam}
+
+\begin{pastsoln}
+葉節點是沒有子節點的節點：$\mathit{left}$ 和 $\mathit{right}$ 都是 \NIL。 一棵樹的葉節點數 $=$
+左子樹的葉節點數 $+$ 右子樹的葉節點數，除非根本身就是葉節點。 照這個寫成遞迴（資結書第~7.3~節的
+後序走訪）：
+
+\begin{pseudo}{計算葉節點數}
+\Function{Count-Leaves}{$x$}
+    \If{$x = \NIL$}
+        \State \Return $0$ \Comment{空樹沒有葉節點}
+    \EndIf
+    \If{$x.\mathit{left} = \NIL$ \AND $x.\mathit{right} = \NIL$}
+        \State \Return $1$ \Comment{$x$ 自己是葉節點}
+    \EndIf
+    \State \Return \Call{Count-Leaves}{$x.\mathit{left}$} $+$ \Call{Count-Leaves}{$x.\mathit{right}$}
+\EndFunction
+\end{pseudo}
+
+例：根 $A$，$A$ 的子節點 $B$、$C$，$B$ 只有左子節點 $D$。 \proc{Count-Leaves}$(D) = 1$，
+\proc{Count-Leaves}$(B) = 1 + 0 = 1$，\proc{Count-Leaves}$(C) = 1$，所以
+\proc{Count-Leaves}$(A) = 1 + 1 = 2$（葉節點是 $D$、$C$）。
+
+\textbf{正確性。} 對子樹的節點數歸納。 空樹回傳 $0$；只有一個節點的樹，那個節點是葉節點，回傳
+$1$。 根 $x$ 至少有一個子節點時，$x$ 不是葉節點，樹裡的葉節點恰好分成「左子樹裡的」和「右子樹
+裡的」兩部分，由歸納假設兩次遞迴呼叫各自算對，相加就對。
+
+\textbf{複雜度。} 每個節點各呼叫一次，另外每個 \NIL 子指標最多呼叫一次（$n$ 個節點的二元樹有
+$n + 1$ 個 \NIL 指標），每次 $O(1)$，時間 $\Theta(n)$。 遞迴深度是樹高 $h$，空間 $O(h)$，最壞
+（樹退化成一條鏈）$O(n)$。
+\end{pastsoln}

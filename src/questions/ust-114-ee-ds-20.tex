@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-20}]{臺聯大電機類 114 學年度 第 20 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 17-20 according to the following C++-style pseudo-code.
+\begin{minted}[fontsize=\small]{cpp}
+int funcB(string s) {
+    stack<int> st;
+    st.push(-1);
+    int maxLen = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (s[i] == '(') {
+            st.push(i);
+        } else {
+            st.pop();
+            if (st.empty()) {
+                st.push(i);
+            } else {
+                maxLen = max(maxLen, i - st.top());
+            }
+        }
+    }
+    return maxLen;
+}
+\end{minted}
+
+What is the purpose of funcB()?
+
+(A)~Find the length of the input string\\
+(B)~Find the maximum length of valid parentheses, having matched `(' and `)'\\
+(C)~Check if given parentheses expression is balanced or not\\
+(D)~Reverse the input string
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+\texttt{funcB} 求字串中\textbf{最長的合法括號子字串}（連續的一段）的長度。 原因：堆疊底下是目前這段
+合法括號開始前的位置 $b$，上面是還沒配對的 `(' 的索引。 讀到 `)' 時彈掉與它配對的 `('；彈出後頂端
+的索引 $t$ 是「以 $i$ 結尾的最長合法段」開始前的位置，所以 $i - t$ 就是這段的長度，取最大值即為答案。
+這是資結書第~6.1.4~節括號配對的延伸。
+\begin{itemize}
+\item (A)：例如 $s =$ ``)('' 長度 $2$，\texttt{funcB} 回傳 $0$。 錯。
+\item (B)：正確。 前兩題 ``()'' 得 $2$、``()(())'' 得 $6$ 都符合；再例如 ``)()())'' 得 $4$（中間的
+``()()''）。
+\item (C)：它回傳的是長度，不是真假；``()('' 不平衡卻回傳 $2$，``)('' 也不平衡回傳 $0$，從回傳值看不出
+整串是否平衡（要另外比較回傳值是否等於字串長度才行）。 錯。
+\item (D)：沒有產生任何字串。 錯。
+\end{itemize}
+\end{pastsoln}

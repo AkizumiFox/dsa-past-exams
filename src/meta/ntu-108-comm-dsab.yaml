@@ -1,0 +1,43 @@
+paper: ntu-108-comm-dsab
+volume: 3
+school: 臺大
+dept: 電信所
+year: 108
+subject: 資料結構與演算法（B）
+instructions: ※ 注意：請於試卷內之「非選擇題作答區」作答，並應註明作答之題號。一、(20%) 是非題（共 10 小題，每題 2 分。答錯每題倒扣 1 分至本大題 0 分為止；不作答者，得 0 分。）二、(55%) 單選題（共 22 小題，每題 2.5 分。答錯不倒扣。）三、(5%) 複選題（共 1 小題，每題 5 分。每題至少有一個正確選項。每答對一個選項得 1 分；每答錯一個選項倒扣 1 分至本大題 0 分為止；不作答者，得 0 分。）四、(20%) 簡答題（共 2 小題，每題 10 分。所有題目皆應作答於答案卷上。）
+questions:
+  - {id: ntu-108-comm-dsab-01, label: 第 1 題, chapter: 15}
+  - {id: ntu-108-comm-dsab-02, label: 第 2 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-03, label: 第 3 題, chapter: 1}
+  - {id: ntu-108-comm-dsab-04, label: 第 4 題, chapter: 18}
+  - {id: ntu-108-comm-dsab-05, label: 第 5 題, chapter: 25}
+  - {id: ntu-108-comm-dsab-06, label: 第 6 題, chapter: 21}
+  - {id: ntu-108-comm-dsab-07, label: 第 7 題, chapter: 26}
+  - {id: ntu-108-comm-dsab-08, label: 第 8 題, chapter: 3}
+  - {id: ntu-108-comm-dsab-09, label: 第 9 題, chapter: 28}
+  - {id: ntu-108-comm-dsab-10, label: 第 10 題, chapter: 28}
+  - {id: ntu-108-comm-dsab-11, label: 第 11 題, chapter: 2}
+  - {id: ntu-108-comm-dsab-12, label: 第 12 題, chapter: 2}
+  - {id: ntu-108-comm-dsab-13, label: 第 13 題, chapter: 2}
+  - {id: ntu-108-comm-dsab-14, label: 第 14 題, chapter: 2}
+  - {id: ntu-108-comm-dsab-15, label: 第 15 題, chapter: 14}
+  - {id: ntu-108-comm-dsab-16, label: 第 16 題, chapter: 6}
+  - {id: ntu-108-comm-dsab-17, label: 第 17 題, chapter: 12}
+  - {id: ntu-108-comm-dsab-18, label: 第 18 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-19, label: 第 19 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-20, label: 第 20 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-21, label: 第 21 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-22, label: 第 22 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-23, label: 第 23 題, chapter: 10}
+  - {id: ntu-108-comm-dsab-24, label: 第 24 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-25, label: 第 25 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-26, label: 第 26 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-27, label: 第 27 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-28, label: 第 28 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-29, label: 第 29 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-30, label: 第 30 題, chapter: 8}
+  - {id: ntu-108-comm-dsab-31, label: 第 31 題, chapter: 13}
+  - {id: ntu-108-comm-dsab-32, label: 第 32 題, chapter: 13}
+  - {id: ntu-108-comm-dsab-33, label: 第 33 題, chapter: 1}
+  - {id: ntu-108-comm-dsab-34, label: 第四大題第 1 題, chapter: 26}
+  - {id: ntu-108-comm-dsab-35, label: 第四大題第 2 題, chapter: 18}

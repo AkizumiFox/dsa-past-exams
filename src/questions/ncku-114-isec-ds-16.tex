@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-16}]{成大智慧資安學程 114 學年度 單選題第 16 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+How many recursive calls would the call ``Fibonacci(10)'' generate in the following program?
+\begin{minted}[fontsize=\small]{c}
+int Fibonacci(int n) {
+    if (n < 1) return 0;
+    if (n < 3 ) return 1;
+\end{minted}
+a)~55 \qquad b)~108 \qquad c)~110 \qquad d)~20 \qquad e)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b) 108。
+
+\textbf{原題的程式不完整}，只印了前兩行。 照函式名稱和選項，補上最後一行
+\texttt{return Fibonacci(n - 1) + Fibonacci(n - 2);} 和右大括號。 「recursive calls」解讀成
+\texttt{Fibonacci(10)} 本身之外，又呼叫了幾次。
+
+設 $C(n)$ 是呼叫 \texttt{Fibonacci(n)} 時，連同它自己在內總共發生的呼叫次數。 $n = 1, 2$ 直接回傳，
+$C(1) = C(2) = 1$；$n \ge 3$ 時呼叫自己一次，再呼叫 $n - 1$ 和 $n - 2$：
+\[
+C(n) = 1 + C(n - 1) + C(n - 2) .
+\]
+\begin{center}
+\small
+\begin{tabular}{l*{10}{c}}
+\toprule
+$n$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\midrule
+$C(n)$ & 1 & 1 & 3 & 5 & 9 & 15 & 25 & 41 & 67 & 109 \\
+$F(n)$ & 1 & 1 & 2 & 3 & 5 & 8 & 13 & 21 & 34 & 55 \\
+\bottomrule
+\end{tabular}
+\end{center}
+可以看出 $C(n) = 2F(n) - 1$：$n = 1, 2$ 成立，且 $1 + (2F(n-1) - 1) + (2F(n-2) - 1) = 2F(n) - 1$。
+所以 \texttt{Fibonacci(10)} 總共有 $C(10) = 2 \times 55 - 1 = 109$ 次呼叫，扣掉最外面那一次，遞迴呼叫
+$108$ 次，答案 b)。 （a) 55 是 $F(10)$ 的值，不是呼叫次數；這種重複計算正是動態規劃要避免的，見資結書
+第~18.1.1~節。）
+\end{pastsoln}

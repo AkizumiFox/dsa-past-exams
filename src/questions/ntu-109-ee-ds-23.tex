@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-23}]{臺大電機所 109 學年度（B）第 23 題}
+（複選；每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）
+
+Which of the following operations are supported by hash table?
+\begin{enumerate}[label=(\Alph*)]
+\item Find key
+\item Insert key
+\item Delete key
+\item Find-Min
+\item Delete-Min
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(B)、(C)。
+
+這裡的「supported」照一般教科書的意思讀成「雜湊表有效率地提供的操作」。 雜湊表實作的是字典
+（dictionary）：用鍵算出位置，搜尋、插入、刪除平均 $O(1)$（資結書第~12.1~、12.2~、12.3~節）。
+\begin{itemize}
+\item (A)、(B)、(C) 對。 這三個就是字典的操作。 開放定址的刪除要用墓碑標記（資結書第~12.3.4~節），
+但仍然支援。
+\item (D) Find-Min 錯。 雜湊函數故意把鍵打散，表中的位置和鍵的大小沒有關係。 要找最小的鍵只能把
+整個表掃一遍，$\Theta(m + n)$（$m$ 是表的大小），和沒有任何結構一樣，不算支援。
+\item (E) Delete-Min 錯。 理由同 (D)，先要找到最小值。 需要 Find-Min、Delete-Min 的場合用堆積
+（優先佇列）或平衡搜尋樹。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-02}]{成大電通所 108 學年度 複選題第 2 題}
+（複選；10 分，全對才給分）
+
+Which of the following statements is(are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item A binary tree, which can be empty, is always a tree.
+\item The degree, i.e., number of subtrees, of any node in a binary tree must not exceed two.
+\item The minimum number of levels of a binary tree with 8 nodes is 4.
+\item The maximum number of levels of a binary tree with 8 nodes is 8.
+\item For any nonempty binary tree, if NL is the number of leaf nodes and NT is the number of nodes with
+degree 2, then NL=NT+2.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)(C)(D)。 層數照資結書第~7.1~節：根在第 $1$ 層。
+\begin{itemize}
+\item (A)：樹的定義（有限個節點、有一個根）不允許空樹，二元樹卻可以是空的；而且二元樹的子節點分左右，
+只有一個子節點時也要分是左還是右，樹沒有這個區分。 所以二元樹不是樹的特例，「二元樹一定是樹」錯
+（資結書第~7.1~節）。
+\item (B)：二元樹每個節點最多一棵左子樹、一棵右子樹，分支度不超過 $2$。 對。
+\item (C)：$h$ 層的二元樹最多 $2^h - 1$ 個節點。 $3$ 層最多 $7$ 個，放不下 $8$ 個；$4$ 層最多 $15$ 個，
+可以。 最少 $\lceil \lg (8 + 1) \rceil = 4$ 層。 對。
+\item (D)：每層只放一個節點（每個節點只有一個子節點，排成一條鏈），$8$ 個節點就有 $8$ 層，這是最多的。
+對。
+\item (E)：正確的關係是 $n_0 = n_2 + 1$（資結書定理~7.2），即 NL $=$ NT $+ 1$，不是 $+ 2$。 反例：只有
+根和兩個子節點的樹，NL $= 2$、NT $= 1$，$2 \ne 1 + 2$。 錯。
+\end{itemize}
+\end{pastsoln}

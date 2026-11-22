@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-01}]{臺聯大電機類 113 學年度 第 1 題}
+（單選；每題 3 分，答錯不倒扣）
+
+Let A be an array of n distinct numbers. If $i<j$ and $A[i]>A[j]$, then the pair $(i, j)$ is called
+an inversion of A. What is the expected number of inversions in any permutation on n elements?
+
+(A)~n(n-1)/2 \qquad (B)~n(n-1)/4 \qquad (C)~n(n+1)/4 \qquad (D)~2n(logn) \qquad (E)~n
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+題目的「any permutation」指的是 $n$ 個相異數的隨機排列，每一種排列出現的機率相同（資結書第~1.8~節
+算插入排序平均情況時用的就是這個假設）。
+
+用指示隨機變數。 對每一對位置 $i < j$，令 $X_{ij} = 1$ 表示 $(i, j)$ 是逆序對（$A[i] > A[j]$），否則
+$X_{ij} = 0$。 逆序對總數 $X = \sum_{i<j} X_{ij}$。 對固定的一對位置，把這兩格的數交換，就得到一個
+一對一的對應：$A[i] > A[j]$ 的排列和 $A[i] < A[j]$ 的排列一樣多，所以 $\Pr[X_{ij} = 1] = 1/2$。 由期望
+值的線性（資結書第~A.5~節），
+\[
+E[X] = \sum_{i<j} E[X_{ij}] = \binom{n}{2} \cdot \frac{1}{2} = \frac{n(n-1)}{4}.
+\]
+檢查 $n = 3$：六種排列的逆序對數是 $0, 1, 1, 2, 2, 3$，平均 $9/6 = 3/2 = 3 \cdot 2/4$。
+
+逐項：
+\begin{itemize}
+\item (A) $n(n-1)/2$ 是逆序對的\textbf{最大值}（完全反序），不是期望值。 錯。
+\item (B) 對，見上。
+\item (C) $n(n+1)/4$：$n = 1$ 時是 $1/2$，但一個數不可能有逆序對。 錯。
+\item (D) $2n\log n$：期望值是 $\Theta(n^2)$，不是 $\Theta(n\log n)$。 錯。
+\item (E) $n$：同上，階數不對；$n = 3$ 時期望值是 $1.5$ 不是 $3$。 錯。
+\end{itemize}
+這個結果的意思是：插入排序、氣泡排序這類每次只消掉一個逆序對的排序，平均也要 $\Theta(n^2)$ 次挪動
+或交換。
+\end{pastsoln}

@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-08}]{臺大工科海洋所 107 學年度 第 8 題}
+（問答；15 分）
+
+\textbf{(15 \%)} Consider a modification of the quick-sort algorithm where we choose the element at
+index $\lfloor n/2\rfloor$ as our pivot. Describe the kind of sequence that would cause this version
+of quick-sort to run in $\Omega(n^2)$ time. Give an example to illustrate your argument.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{會變慢的序列。} 快速排序每次分割要比較 $\Theta(k)$ 次（$k$ 是這一段的長度），然後遞迴
+處理基準兩邊。 如果每一次選到的基準都是這一段裡\textbf{最大（或最小）}的數，分割完一邊是
+$k - 1$ 個、另一邊是空的，執行時間
+\[
+T(n) = T(n-1) + \Theta(n) = \Theta\Bigl(\sum_{k=1}^{n} k\Bigr) = \Theta(n^2),
+\]
+和資結書第~14.5~節「已經排好的序列配上取最後一個當基準」的最壞情形一樣。 所以答案是：
+\textbf{在遞迴的每一層，「中間位置」上的數都剛好是那一段的最大值（或最小值）的序列。} 取中間
+當基準，對已經排好或反序的輸入反而是最好的情形（每次對半切），所以壞的輸入不是排好的序列，
+而是中間一直放著極端值的序列。
+
+\textbf{例子。} 具體的序列要看分割怎麼搬數字。 這裡用資結書虛擬碼~14.9 的 Lomuto 分割，只改
+選基準：一段 $A[\mathit{lo}..\mathit{hi}]$（索引從 $0$ 開始，長度 $k$）取
+$A[\mathit{lo} + \lfloor k/2 \rfloor]$ 當基準，先和 $A[\mathit{hi}]$ 交換，再照原來的 Lomuto 分割。
+基準是最大值時，每個數都 $\le$ 基準，Lomuto 的 $i$、$j$ 一起前進，不搬任何數，所以下一段就是
+「交換過中間和最後一個之後，去掉最後一個」。 倒著把最大的數放到每一次的中間位置，就得到
+$n = 8$ 的壞序列 $\langle 1, 3, 5, 7, 8, 2, 6, 4 \rangle$：
+\begin{center}
+\small
+\begin{tabular}{clcl}
+\toprule
+這一段 & 內容 & 中間位置 & 基準 \\
+\midrule
+$A[0..7]$ & $1, 3, 5, 7, \mathbf{8}, 2, 6, 4$ & $0 + 4 = 4$ & $8$（最大）\\
+$A[0..6]$ & $1, 3, 5, \mathbf{7}, 4, 2, 6$ & $0 + 3 = 3$ & $7$（最大）\\
+$A[0..5]$ & $1, 3, 5, \mathbf{6}, 4, 2$ & $0 + 3 = 3$ & $6$（最大）\\
+$A[0..4]$ & $1, 3, \mathbf{5}, 2, 4$ & $0 + 2 = 2$ & $5$（最大）\\
+$A[0..3]$ & $1, 3, \mathbf{4}, 2$ & $0 + 2 = 2$ & $4$（最大）\\
+$A[0..2]$ & $1, \mathbf{3}, 2$ & $0 + 1 = 1$ & $3$（最大）\\
+$A[0..1]$ & $1, \mathbf{2}$ & $0 + 1 = 1$ & $2$（最大）\\
+\bottomrule
+\end{tabular}
+\end{center}
+每一列的「內容」是上一列把基準和最後一個交換、基準放到最後之後，剩下的前面那一段。 例如第一列
+$8$ 和 $4$ 交換，得到 $1, 3, 5, 7, 4, 2, 6, \mathbf{8}$，下一段是 $1, 3, 5, 7, 4, 2, 6$。 每一次
+右邊都是空的，左邊只少一個，比較次數是 $7 + 6 + \cdots + 1 = 28 = \binom{8}{2}$，是所有輸入裡最多
+的。 同樣的構造對任何 $n$ 都做得出來（從最後一段倒推回去，每一步把剩下最大的數放在中間位置），
+比較次數 $n(n-1)/2$，是 $\Omega(n^2)$。
+
+換成別的分割寫法（例如 Hoare 分割、不把基準換到最後），數字的搬法不同，具體的壞序列也不同，
+但判斷的條件一樣：每一層的中間位置都是極端值。
+\end{pastsoln}

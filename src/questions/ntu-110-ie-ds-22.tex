@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-22}]{臺大工工所 110 學年度 第 22 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Consider a min-heap. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item For any subtree of a min-heap, the root of the subtree contains the smallest key occurring anywhere
+in that subtree.
+\item An array that is in ascending order is a binary min-heap.
+\item The sequence [1,5,6,7,14,17,10,23,13,12] is a binary min-heap.
+\item The largest key must reside in a leaf.
+\item The smallest key must reside in a leaf
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(D)。
+
+最小堆積性質：每個節點的鍵不大於它的子節點（資結書第~8.1~節）。 陣列存法從第 $1$ 格起，第 $i$ 格的子節點是 $2i$、$2i + 1$。
+\begin{itemize}
+\item (A) 對。 子樹裡任一節點 $y$，從子樹的根 $x$ 走到 $y$ 的路上每一步鍵都不減，所以 $x$ 的鍵 $\le y$ 的鍵（對路徑長度歸納）。
+\item (B) 對。 父節點 $\lfloor i/2 \rfloor$ 的位置比 $i$ 前面，陣列由小到大時 $A[\lfloor i/2 \rfloor] \le A[i]$，每對父子都滿足性質；
+形狀本來就是完全二元樹。
+\item (C) 錯。 逐一檢查父子：第 $1$ 格 $1 \le 5, 6$；第 $2$ 格 $5 \le 7, 14$；第 $3$ 格 $6 \le 17, 10$；第 $4$ 格 $7 \le 23, 13$；第 $5$ 格
+是 $14$，它的子節點在第 $10$ 格是 $12$，$14 > 12$，違反性質。
+\item (D) 對。 設 $x$ 存著最大的鍵，如果 $x$ 不是葉節點，它有子節點 $y$，$y$ 的鍵 $\ge x$ 的鍵，又不超過最大值，所以 $y$ 也存著最大的鍵；
+一路往下走，最後一定到一個葉節點，那裡存著最大的鍵。 鍵互不相同時更直接：內部節點的子節點比它大，它就不是最大的。
+\item (E) 錯。 最小的鍵在根。 除了只有一個節點的堆積（根同時是葉節點），根都不是葉節點，所以「必定在葉節點」不成立。
+\end{itemize}
+\end{pastsoln}

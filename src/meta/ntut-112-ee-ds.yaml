@@ -1,0 +1,16 @@
+paper: ntut-112-ee-ds
+volume: 3
+school: 北科大
+dept: 電機所（戊組）
+year: 112
+subject: 資料結構
+instructions: 1. 本試題共 8 題，每題配分列於各小題題目後，共 100 分。 2. 不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。 3. 全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-112-ee-ds-01, label: 第 1 題, chapter: 1}
+  - {id: ntut-112-ee-ds-02, label: 第 2 題, chapter: 6}
+  - {id: ntut-112-ee-ds-03, label: 第 3 題, chapter: 14}
+  - {id: ntut-112-ee-ds-04, label: 第 4 題, chapter: 4}
+  - {id: ntut-112-ee-ds-05, label: 第 5 題, chapter: 12}
+  - {id: ntut-112-ee-ds-06, label: 第 6 題, chapter: 9}
+  - {id: ntut-112-ee-ds-07, label: 第 7 題, chapter: 24}
+  - {id: ntut-112-ee-ds-08, label: 第 8 題, chapter: 7}

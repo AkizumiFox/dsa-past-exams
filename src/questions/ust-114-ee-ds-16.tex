@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-16}]{臺聯大電機類 114 學年度 第 16 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 14-16 according to the following C code.
+\begin{minted}[fontsize=\small]{c}
+struct Node {
+    int data;
+    struct Node* next;
+};
+int funcA(struct Node* head) {
+    struct Node *slow = head, *fast = head;
+    while (slow && fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return 1;
+        }
+    }
+    return 0;
+}
+\end{minted}
+
+Auxiliary memory space required by funcA()?
+
+(A)~O(1) \qquad (B)~O(n) \qquad (C)~O(n$^2$) \qquad (D)~O(nlogn)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+\texttt{funcA} 只用了兩個指標變數 \texttt{slow}、\texttt{fast}，沒有遞迴、沒有配置額外的陣列或雜湊
+表，額外空間和 $n$ 無關，是 $O(1)$。 這正是 Floyd 判環法的優點：若改用「把走過的節點記在雜湊集合
+裡，看有沒有重複」的做法，時間一樣 $O(n)$，空間卻要 $O(n)$。 (B)(C)(D) 都錯。
+\end{pastsoln}

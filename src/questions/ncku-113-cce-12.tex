@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncku-113-cce-12}]{成大電通所 113 學年度 簡答題第 3 題}
+（簡答）
+
+(6 pts) Floyd-Warhsall algorithm uses the dynamic programming to find all pair shortest paths.
+Let $A^k(i,j)$ denote the value of the shortest path from node $v_i$ to node $v_i$ according to
+a vertex whose index is $k$. Please show the recursive function of $A^k(i,j)$ and give the time
+complexity of the algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+原題有兩個筆誤：``Warhsall'' 是 Warshall；``from node $v_i$ to node $v_i$'' 的終點應該是
+$v_j$。 ``according to a vertex whose index is $k$'' 照 Floyd--Warshall 的標準定義解讀成
+「中間點的編號都不超過 $k$」。
+
+\textbf{定義}。 頂點是 $v_1, \ldots, v_n$。 $A^k(i, j)$ 是從 $v_i$ 到 $v_j$、中間經過的頂點
+（不含兩端）都在 $\{v_1, \ldots, v_k\}$ 裡的最短路徑長度。 $k = 0$ 表示不能經過任何中間點，
+只能直接走邊。
+
+\textbf{遞迴式}（資結書第~18.9~節、第~25.6~節）：
+\[
+A^0(i, j) = \mathit{cost}(i, j) =
+\begin{cases}
+0, & i = j,\\
+w(v_i, v_j), & i \ne j \text{ 且有邊 } (v_i, v_j),\\
+\infty, & \text{其他},
+\end{cases}
+\]
+\[
+A^k(i, j) = \min\bigl( A^{k-1}(i, j),\ A^{k-1}(i, k) + A^{k-1}(k, j) \bigr),
+\qquad 1 \le k \le n .
+\]
+答案是 $A^n(i, j)$。
+
+\textbf{理由}。 看中間點都在 $\{v_1, \ldots, v_k\}$ 裡的一條最短路徑 $p$（沒有負環時可以取
+簡單路徑）：
+\begin{itemize}
+\item $p$ 不經過 $v_k$：它的中間點都在 $\{v_1, \ldots, v_{k-1}\}$，長度是 $A^{k-1}(i, j)$。
+\item $p$ 經過 $v_k$（簡單路徑只經過一次）：從 $v_k$ 切成 $v_i \leadsto v_k$ 和
+$v_k \leadsto v_j$ 兩段，兩段的中間點都在 $\{v_1, \ldots, v_{k-1}\}$，各自也必須最短（否則
+換成更短的那段，整條會更短），長度是 $A^{k-1}(i, k) + A^{k-1}(k, j)$。
+\end{itemize}
+兩種情形取小的，就是遞迴式。
+
+\textbf{時間複雜度}：$\Theta(n^3)$。 $k$ 從 $1$ 到 $n$，每個 $k$ 要算 $n^2$ 個 $(i, j)$，每個
+$O(1)$。 空間可以只用一個 $n \times n$ 陣列原地更新，$\Theta(n^2)$（第 $k$ 輪的
+$A(i, k)$、$A(k, j)$ 在這一輪不會變，因為沒有負環時 $A^k(i, k) = A^{k-1}(i, k)$）。
+\end{pastsoln}

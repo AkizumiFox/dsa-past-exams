@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-01}]{臺大電信所 110 學年度（B）第 1 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+$n\in O\big((\lg n)^{\lg n}\big)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（正確）。
+
+把右邊改寫成 $n$ 的次方。 因為 $x = 2^{\lg x}$，
+\[
+(\lg n)^{\lg n} = \left(2^{\lg\lg n}\right)^{\lg n} = 2^{\lg n \cdot \lg\lg n} = \left(2^{\lg n}\right)^{\lg\lg n} = n^{\lg\lg n}.
+\]
+當 $n \ge 4$ 時 $\lg\lg n \ge 1$，所以 $n^{\lg\lg n} \ge n$。 取 $c = 1$、$n_0 = 4$，對所有
+$n \ge n_0$ 都有 $0 \le n \le c\,(\lg n)^{\lg n}$，符合 $O$ 的定義（資結書第~1.5~節）。
+
+其實 $(\lg n)^{\lg n} = n^{\lg\lg n}$ 的指數 $\lg\lg n$ 會無限變大，它比任何多項式 $n^k$ 都長得快，
+但又比 $2^n$ 慢，是介於多項式和指數之間的函數（資結書第~1.6~節）。 所以 $n$ 不只是
+$O\big((\lg n)^{\lg n}\big)$，而且是 $o\big((\lg n)^{\lg n}\big)$。
+\end{pastsoln}

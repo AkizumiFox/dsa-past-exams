@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ncku-113-ee-17}]{成大電機所 113 學年度 簡答題第 8 題}
+（簡答）
+
+(5 pts) Given the following Keys 62, 104, 67, 22, 77 and a hash table with 7 buckets ($m$=7),
+where each bucket has one slot. Please write down the result using the hash function
+F(x) = (x mod $m$). It adopts open addressing and it uses the quadratic probing when a collision
+happens, where the rehashing function is defined as follows:
+\[ \mathrm{i}_n = (\mathrm{F(x)} + n^2) \bmod m \]
+where $\mathrm{i}_0 = F(x)$ and $n$ denotes the collision number.
+\begin{center}
+\begin{tabular}{*{7}{|p{1.2em}}|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} \\ \hline
+ & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-17}。
+
+答案：位置 $0$--$6$ 依序是 $104, 22, 77, \text{空}, 67, \text{空}, 62$。
+\end{pastsoln}

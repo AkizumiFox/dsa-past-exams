@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-01}]{臺大電信所 109 學年度（B）第 1 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+Given a connected graph $G=(V,E)$, if a vertex $v\in V$ is visited during level $k$ of a
+breadth-first search from source vertex $s\in V$, then every path from $s$ to $v$ has length at
+most $k$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：F（錯）。
+
+BFS 一層一層往外走，$v$ 在第 $k$ 層被走到，表示從 $s$ 到 $v$ 的\textbf{最短}路徑剛好有 $k$
+條邊（資結書定理~21.4：$d[v] = \delta(s, v)$）。 最短的是 $k$，其他路徑只會一樣長或更長，
+所以正確的說法是「每條路徑的長度\textbf{至少} $k$」，題目把方向寫反了。
+
+反例：頂點 $s, a, b, v$，邊 $\{s, v\}$、$\{s, a\}$、$\{a, b\}$、$\{b, v\}$（一個四邊形）。
+從 $s$ 做 BFS，$v$ 是 $s$ 的鄰居，在第 $1$ 層被走到，$k = 1$；但路徑 $s, a, b, v$ 的長度是
+$3 > 1$。
+\end{pastsoln}

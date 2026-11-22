@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-09}]{臺大工工所 107 學年度 第 9 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+If we use rotations to transfer a BST into an AVL-tree, at most O($\log n$) rotations are required.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。 有些 BST 要 $\Omega(n)$ 次旋轉才能變成 AVL 樹。
+
+看\textbf{右脊}：從根出發一直走右子節點，經過的節點。 一次旋轉對右脊長度的影響最多是 $1$：
+\begin{itemize}
+\item 在右脊上的節點 $x$ 做左旋（右子節點 $y$ 轉上來）：$y$ 取代 $x$，$x$ 變成 $y$ 的左子節點，
+離開右脊，右脊少 $1$ 個節點。
+\item 在右脊上的節點 $x$ 做右旋（左子節點 $w$ 轉上來）：$w$ 取代 $x$、$x$ 變成 $w$ 的右子節點，
+右脊多 $1$ 個。
+\item 在不在右脊上的節點旋轉：只改變那個節點底下的子樹，那棵子樹掛在某個右脊節點的左邊（或更
+下面），右脊不變。
+\end{itemize}
+（旋轉的定義見資結書第~10.1~節。）
+
+現在取依序插入 $1, 2, \ldots, n$ 得到的 BST，一條往右的鏈，右脊有 $n$ 個節點。 AVL 樹的高度小於
+$1.4405 \lg(n + 1)$（資結書定理~10.1），右脊長度不超過高度加 $1$，是 $O(\log n)$。 每次旋轉右脊最
+多少 $1$，所以至少要
+\[
+n - O(\log n) = \Omega(n)
+\]
+次旋轉。 不是 $O(\log n)$。
+
+反過來，任何 BST 都能在 $O(n)$ 次旋轉內變成任何另一棵同樣鍵的 BST（先全部轉成一條鏈，再轉成目
+標的形狀），所以這題的正確量級是 $\Theta(n)$。
+\end{pastsoln}

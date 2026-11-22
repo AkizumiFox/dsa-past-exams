@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-06}]{臺大工工所 106 學年度 第 6 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+A red-black tree is highly balanced -- the path from its root to the farthest leaf is no more than
+twice as long as the path from the root to the nearest leaf.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+這句話是紅黑樹教科書上的標準說法，「leaf」指 NIL（資結書第~10.3~節把空指標畫成黑色的 NIL 葉子）。 照這個讀法證明：
+設根的黑高是 $b = \mathrm{bh}(\text{根})$，也就是從根走到任一個 NIL，路上（不算根、算 NIL）的黑色節點數，
+由紅黑樹的性質 5，每條路都一樣是 $b$。 一條從根到 NIL 的路徑，邊數等於路上不算根的節點數
+$=$ 黑色節點數 $b$ $+$ 紅色節點數 $r$。
+\begin{itemize}
+\item 最短的路：$r \ge 0$，所以長度 $\ge b$。
+\item 最長的路：紅色節點的子節點一定是黑色（性質 4），每個紅色節點都可以和它下一個節點（黑色）配成一對，
+各對不重疊，所以 $r \le b$，長度 $\le 2b$。
+\end{itemize}
+因此最遠的 NIL 的路徑長 $\le 2b \le 2 \times$ 最近的 NIL 的路徑長。 這也是資結書定理~10.4
+（$h \le 2\lg(n + 1)$）的證明用到的同一個配對論證。
+
+附註：如果把「leaf」解釋成沒有子節點的內部節點、路徑長數邊，比例可以超過 $2$。 例如根黑色，左子節點是黑色葉子；
+右子節點紅色，它的兩個子節點黑色，其中一個再有一個紅色子節點。 每條到 NIL 的路上都是 2 個黑色節點，合法；
+最近的內部葉子在 1 條邊外，最遠的在 3 條邊外。 但這不是這句話通常的意思，本題照標準讀法答「對」。
+\end{pastsoln}

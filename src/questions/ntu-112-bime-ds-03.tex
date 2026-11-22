@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-03}]{臺大生機所 112 學年度（A）第 3 題}
+（問答）
+
+(10\%) Suppose that a \textbf{digraph} (directed graph) G, containing V vertices and E edges, is
+represented using the \textbf{adjacency-list} representation. What is the order of growth of the
+running time to find all vertices that have a direct edge to a given vertex v?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$\Theta(V + E)$。
+
+相鄰串列（資結書第~21.2~節）的 $\mathit{Adj}[u]$ 存的是 $u$ 的\textbf{出邊}的終點。 題目要的是
+指向 $v$ 的頂點，也就是所有 $u \to v$ 的 $u$（$v$ 的入邊）。 這些邊散在各個 $u$ 的串列裡，
+沒有辦法直接找到，只能：
+\begin{itemize}
+\item 對每個頂點 $u$（$V$ 個），走過整條 $\mathit{Adj}[u]$，看裡面有沒有 $v$；有就把 $u$ 列入答案。
+\end{itemize}
+外層看過 $V$ 個串列頭，內層總共走過 $\sum_u |\mathit{Adj}[u]| = E$ 個節點，時間 $\Theta(V + E)$。
+這是必要的：只要有一條串列沒看完，那裡就可能藏著一條 $u \to v$，所以最壞情況每個頂點、每條邊
+都得看過。
+
+對照：找 $v$ 的出邊（$v$ 指向誰）只要走 $\mathit{Adj}[v]$，$\Theta(1 + \mathrm{outdeg}(v))$。
+常常要找入邊時，可以另外建反鄰接串列（$\mathit{Adj}^{-1}[v]$ 存所有指向 $v$ 的頂點，建一次
+$\Theta(V + E)$），之後每次查詢只要 $\Theta(1 + \mathrm{indeg}(v))$；或改用相鄰矩陣，掃第 $v$
+行，$\Theta(V)$。
+\end{pastsoln}

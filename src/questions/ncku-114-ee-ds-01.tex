@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-01}]{成大電機所 114 學年度 單選題第 1 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+A is a two dimension array, the locations of A(3, 2) and A(2, 3) are 1115 and 1207,
+respectively. Assume that each element occupies two addresses. Please give the location of
+A(5, 10).
+\begin{enumerate}[label=\alph*)]
+\item 1841
+\item 1851
+\item 1861
+\item 1871
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 d) 1871。
+
+題目沒說是以列為主（row-major）還是以行為主（column-major），也沒給列數、行數，要從兩個已知
+位址推回來（資結書第~4.1~節）。 設陣列有 $R$ 列、$C$ 行，每個元素佔 $2$ 個位址。
+
+\textbf{以列為主？} 同一列相鄰兩格差 $2$，下一列差 $2C$。 $A(2, 3)$ 在 $A(3, 2)$ 的前一列、
+後一行，位址差 $\mathrm{loc}(3, 2) - \mathrm{loc}(2, 3) = 2C - 2 = 1115 - 1207 = -92$，得
+$C = -45$，不可能。
+
+\textbf{以行為主。} 同一行相鄰兩格差 $2$，下一行差 $2R$。
+\[
+\mathrm{loc}(2, 3) - \mathrm{loc}(3, 2) = 2R \cdot (3 - 2) + 2 \cdot (2 - 3) = 2R - 2 = 1207 - 1115 = 92,
+\]
+得 $R = 47$。 於是
+\[
+\mathrm{loc}(5, 10) = \mathrm{loc}(3, 2) + 2\bigl(R \cdot (10 - 2) + (5 - 3)\bigr)
+= 1115 + 2(47 \cdot 8 + 2) = 1115 + 756 = 1871.
+\]
+用另一個已知點驗算：$\mathrm{loc}(2, 3) + 2(47 \cdot 7 + 3) = 1207 + 664 = 1871$，一樣。 這個
+算法不需要知道索引的下界是 $0$ 還是 $1$，只用到兩點的差。
+
+其他選項：a) 1841、b) 1851、c) 1861 分別少了 $30, 20, 10$ 個位址，都對不上 $R = 47$；有正確答案，
+所以不是 e)。
+\end{pastsoln}

@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-14}]{臺大工工所 110 學年度 第 14 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+In this exam, unless otherwise specified, n denotes the size of the data structure.
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item Stack implements a FIFO (first-in-first-out) policy.
+\item Queue implements a LIFO (last-in-first-out) policy.
+\item Stack can be realized by deque (double-ended queue).
+\item The Find() operation in a doubly linked list takes O(n) time.
+\item The Enqueue() operation in a queue takes O(1) time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)、(D)、(E)。
+
+\begin{itemize}
+\item (A) 錯。 堆疊是後進先出（LIFO），只在頂端放入和取出（資結書第~6.1~節）。
+\item (B) 錯。 佇列是先進先出（FIFO），從後端放入、前端取出（資結書第~6.2~節）。 (A)、(B) 把兩者對調了。
+\item (C) 對。 雙端佇列兩端都能放入和取出（資結書第~6.2.6~節）；只用其中一端（例如前端放、前端取）就是堆疊。
+\item (D) 對。 串列沒有索引，找一個鍵只能從頭一個一個比，最壞要看 $n$ 個節點，$O(n)$。 雙向的
+$\mathit{prev}$ 指標只讓「已經拿到節點後的刪除」變成 $O(1)$，不會讓搜尋變快。
+\item (E) 對。 用環狀陣列（資結書第~6.2.2~節）或帶尾指標的串列實作，加入都是 $O(1)$。 （陣列滿了要擴充時，
+動態陣列的加入是平攤 $O(1)$。）
+\end{itemize}
+\end{pastsoln}

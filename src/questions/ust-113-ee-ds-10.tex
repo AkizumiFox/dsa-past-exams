@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-10}]{臺聯大電機類 113 學年度 第 10 題}
+（單選；每題 3 分，答錯不倒扣）
+
+What is the minimum number of edges in an undirected tree with 10 vertices that contains a vertex
+with a degree of 4?
+
+(A)~7 \qquad (B)~8 \qquad (C)~9 \qquad (D)~10 \qquad (E)~11
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+$n$ 個頂點的（無向）樹恰好有 $n - 1$ 條邊（資結書定理~21.3），和形狀無關，所以 $10$ 個頂點的樹一定是
+$9$ 條邊，「最少」也就是 $9$。 「有一個頂點的度數是 $4$」只是確認這樣的樹存在，例如中心頂點連 $4$ 個
+頂點，其中一個再往下接一條長 $5$ 的鏈：$1 + 4 + 5 = 10$ 個頂點、$9$ 條邊，中心的度數是 $4$。
+
+少於 $9$ 條邊的圖不連通，不是樹；超過 $9$ 條邊一定有環，也不是樹。 所以 (A)(B)(D)(E) 都錯。
+\end{pastsoln}

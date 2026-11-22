@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-01}]{成大電機所 112 學年度 第 1 題}
+（問答）
+
+(10\%) Show the asymptotic notations for the following statements.\\
+(a) n! \qquad (b) n$^3$ + 10$^6$ n$^2$
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~1~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-01}，這裡只列答案和重點。
+
+答案：
+\begin{itemize}
+\item (a) $n! = \Theta\bigl(\sqrt{n}\,(n/e)^{n}\bigr)$（斯特林公式，資結書第~A.3~節）。 不用斯特林公式時，
+常寫的界是 $n! = O(n^{n})$（每個因子都 $\le n$）和 $n! = \Omega\bigl((n/2)^{n/2}\bigr)$（後一半的因子
+都 $\ge n/2$），取對數得 $\lg(n!) = \Theta(n \log n)$。
+\item (b) $n^{3} + 10^{6} n^{2} = \Theta(n^{3})$。 $n \ge 10^{6}$ 時 $10^{6} n^{2} \le n^{3}$，所以
+$n^{3} \le n^{3} + 10^{6} n^{2} \le 2n^{3}$，取 $c_1 = 1$、$c_2 = 2$、$n_0 = 10^{6}$（資結書第~1.5~節）。
+係數 $10^{6}$ 再大也只是常數，不影響階。
+\end{itemize}
+\end{pastsoln}

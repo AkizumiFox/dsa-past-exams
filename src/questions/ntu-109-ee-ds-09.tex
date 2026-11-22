@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-09}]{臺大電機所 109 學年度（B）第 9 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of one decrease-key operations is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D) O(n)。
+
+先說明解讀：題目問「\textbf{一次} decrease-key 的最壞時間」，和第 11 題（歷屆試題~\ref{px:ntu-109-ee-ds-11}）「$n$ 次 decrease-key」分開
+問，所以這裡要的是單次的實際成本，不是平攤成本。 費氏堆積 decrease-key 的平攤成本是 $O(1)$
+（資結書第~8.6~節），但單獨一次可能很貴。 如果把題目讀成平攤，答案會是 (A)。
+
+\textbf{上界}。 decrease-key 把節點 $x$ 剪下來放進根串列；父節點已經有標記就連它也剪下來，再往上
+檢查，這是連鎖剪下（cascading cut）。 每剪一次 $O(1)$，剪的次數不超過 $x$ 的深度，深度不超過
+$n - 1$，所以是 $O(n)$。
+
+\textbf{這個界會達到}。 費氏堆積的「階數 $O(\log n)$」只限制每個節點的子節點個數，不限制樹的
+深度。 用下面這組操作可以把堆積做成一條長 $n$ 的鏈，而且鏈上除了根和最底下的節點，每個節點都有
+標記。 設目前是一條鏈，根是 $r$，$r$ 底下的節點都有標記。 每一輪：
+\begin{enumerate}
+\item 插入 $y < z$（都比鏈上的鍵大）和一個比所有鍵都小的 $m$，做 extract-min 拿掉 $m$。 整理時 $y$、
+$z$ 連成一棵 1 階的樹，再和 $r$（1 階）連結，$r$ 多了子節點 $y$。
+\item 插入 $a < p < q < s$（都比 $r$ 小）和一個更小的 $m$，做 extract-min。 整理時 $a, p, q, s$ 連成一棵
+2 階的樹，根是 $a$，再和 $r$（2 階）連結，$r$ 成為 $a$ 的子節點。
+\item 對 $y$ 做 decrease-key（減到很小）：$y$ 被剪下來，它的父節點 $r$ 不是根，第一次失去子節點，
+$r$ 被標記。 接著把 $y, z, p, q, s$ 都刪掉（減到 $-\infty$ 再 extract-min）。 $p$、$q$ 是根 $a$ 的
+子節點，根被剪掉子節點不會被標記。
+\end{enumerate}
+一輪之後堆積又是一條鏈，根是 $a$，下一個是有標記的 $r$，鏈長多 $1$。 重複 $n - 2$ 輪（從兩個節點
+的鏈開始），得到 $n$ 個節點的鏈。 這時把最底下的節點減到比根還小：它被剪下來，父節點有標記，也
+被剪下來，……，一路剪到根的子節點，共 $n - 1$ 次剪下，花 $\Theta(n)$。 所以單次 decrease-key 的
+最壞時間是 $\Theta(n)$，選 (D)。
+
+這些昂貴的剪下要先累積很多標記才會發生，平攤下來每次只要 $O(1)$，這就是第 11 題（歷屆試題~\ref{px:ntu-109-ee-ds-11}）的答案 $O(n)$。
+(A) 是平攤成本；(B)、(C) 是把費氏堆積的高度誤當成 $O(\log n)$（階數才是 $O(\log n)$）；(E) 是上界但
+不緊。
+\end{pastsoln}

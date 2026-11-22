@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-08}]{臺大工工所 107 學年度 第 8 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Answer questions 5 to 8 for the following setting.\\
+Let $s$(node) be the number of comparisons required to find the node in the BST, e.g. $s$(root) = 1. Let $t$(node) be the number of the nodes in its left subtree, e.g. $t$(leaf) = 0.
+
+\medskip
+8. If we want to maintain $s$() and $t$() for all nodes on a balanced BST such as AVL or red-black tree, insertion requires $\Theta(n)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確（指最壞情況）。
+
+兩個欄位要分開看。
+
+\textbf{$t$ 可以在 $O(\log n)$ 內維護。} $t(x)$ 是左子樹的節點數，只和 $x$ 底下的子樹有關。 插入
+一個新節點時，只有從根到新節點這條路徑上、而且新節點落在它左子樹的那些節點，$t$ 要加 $1$。
+旋轉時只有參與旋轉的兩個節點子樹變了，可以 $O(1)$ 重算（右旋把 $y$ 的左子節點 $x$ 轉上來時，
+$t(x)$ 不變，$t(y)$ 變成 $x$ 原本的右子樹大小）。 這和資結書第~9.4~節維護子樹大小是同一件事，
+插入仍是 $O(\log n)$。
+
+\textbf{$s$ 不行。} $s(x)$ 是 $x$ 的深度加 $1$，深度是由上面的祖先決定的，一次旋轉會讓一整棵子
+樹的深度同時加 $1$ 或減 $1$。 右旋節點 $y$（左子節點 $x$ 轉上來）之後：$x$ 的左子樹每個節點
+深度減 $1$，$y$ 的右子樹每個節點深度加 $1$。 如果旋轉發生在根附近，要改的節點有 $\Theta(n)$
+個。
+
+這種情況確實會出現。 例如一棵 AVL 樹，根的左子樹是高度 $k + 1$ 的滿二元樹，右子樹是高度 $k$ 的
+滿二元樹（根的平衡因子 $+1$）。 在左子樹最左邊的葉節點下面插入新節點：左子樹裡每個祖先的高度
+都加 $1$ 但仍平衡，到了根，左右高度差變成 $2$，而且是左左的情形，要在根做一次右旋。 旋轉後根的
+左子節點的左子樹（約 $n/3$ 個節點）深度全部減 $1$，原本根的右子樹（約 $n/3$ 個節點）深度全部
+加 $1$，$s$ 要改 $\Theta(n)$ 個。 紅黑樹插入時的旋轉也可能發生在根附近，情形一樣。
+
+另一方面，一次插入最多改 $n$ 個節點的 $s$，再加上原本的 $O(\log n)$，所以最壞情況正好是
+$\Theta(n)$。 資結書第~9.4~節講過同樣的對比：子樹大小可以在路徑上維護，「節點在整棵樹裡的名次」
+則一次插入可能要改 $\Theta(n)$ 個節點；深度和名次一樣，是由整棵樹決定的欄位。
+\end{pastsoln}

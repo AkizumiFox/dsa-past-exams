@@ -1,0 +1,12 @@
+paper: ntu-115-bmei-alg
+volume: 3
+school: 臺大
+dept: 生醫電資所
+year: 115
+subject: 計算機概論與演算法
+questions:
+  - {id: ntu-115-bmei-alg-01, label: 第 1 題（節錄第 (1)(5)(6)(7)(11) 小題）, chapter: 18}
+  - {id: ntu-115-bmei-alg-02, label: 第 2 題, chapter: 7}
+  - {id: ntu-115-bmei-alg-03, label: 第 3 題, chapter: 9}
+  - {id: ntu-115-bmei-alg-04, label: 第 6 題, chapter: 18}
+  - {id: ntu-115-bmei-alg-05, label: 第 10 題, chapter: 24}

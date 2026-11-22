@@ -1,0 +1,118 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-09}]{成大電通所 106 學年度 第三大題第 2 題}
+（填充；10 分）
+
+\textbf{(10 pts)} Please reference the figure in the bellow to complete the pseudo code of the
+reverse which reverses the sequence of nodes in a list.
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, columns=fullflexible, keepspaces=true]
+class Chain; // forward declaration
+class ChainNode {
+friend class Chain;
+public:
+    ChainNode (int element = 0, ChainNode* next = 0)
+        // 0 is the default value for element and next
+        {data = element; link = next;}
+private:
+    int data;
+    ChainNode *link;
+};
+class Chain { // true definition
+    ChainNode *first; // has a ChainNode pointer
+public:
+    void Reverse(); // reverse the sequence of nodes
+                    // in a list
+};
+\end{lstlisting}
+
+\begin{center}
+\begin{tikzpicture}[>={Straight Barb[length=1.6mm,width=2.4mm]},font=\small,scale=0.85]
+  \newcommand{\lnode}[2]{%
+    \fill[black!85] (#1,#2) rectangle (#1+1.1,#2+1.0);
+    \draw (#1,#2) rectangle (#1+1.6,#2+1.0);}
+  % upper row
+  \lnode{1.8}{4.6}\lnode{4.0}{4.6}\lnode{6.2}{4.6}
+  \node[font=\small\sffamily\itshape] at (2.35,6.25) {previous};
+  \draw[->] (2.35,6.05) -- (2.35,5.6);
+  \node[font=\small\sffamily\itshape] at (4.55,6.25) {current};
+  \draw[->] (4.55,6.05) -- (4.55,5.6);
+  \node at (0.8,4.75) {\textbf{...}};
+  \draw[->] (3.1,5.0) -- (3.1,3.95) -- (0.85,3.95) -- (0.85,4.55);
+  \draw[->] (5.35,5.0) -- (6.2,5.0);
+  \draw[->] (7.55,5.0) -- (8.4,5.0);
+  % big down arrow
+  \draw (4.05,3.85) -- (4.45,3.85) -- (4.45,3.45) -- (4.65,3.45) -- (4.25,3.1) -- (3.85,3.45) -- (4.05,3.45) -- cycle;
+  % lower row
+  \lnode{1.1}{-0.2}\lnode{3.5}{-0.2}\lnode{5.9}{-0.2}
+  \node[font=\small\itshape] at (1.95,1.5) {r};
+  \draw[->] (1.95,1.3) -- (1.95,0.8);
+  \node[font=\small\itshape] at (4.4,1.5) {previous};
+  \draw[->] (4.4,1.3) -- (4.4,0.8);
+  \node[font=\small\itshape] at (6.55,1.5) {current};
+  \draw[->] (6.55,1.3) -- (6.55,0.8);
+  \node at (0.5,0.1) {\textbf{...}};
+  \draw[->] (2.45,0.2) -- (2.45,-0.85) -- (0.05,-0.85) -- (0.05,-0.25);
+  \draw[->] (4.85,0.2) -- (4.85,-0.85) -- (2.65,-0.85) -- (2.65,-0.25);
+  \draw[->] (4.85,0.2) -- (5.9,0.2);
+  \draw (5.3,0.02) -- (5.45,0.38);
+  \draw[->] (7.25,0.2) -- (8.1,0.2);
+\end{tikzpicture}
+\end{center}
+
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, columns=fullflexible, keepspaces=true]
+template <class T>
+void Chain<T>::Reverse()
+{ // A chain is reversed so that (a1, ..., an) becomes (an, ..., a1)
+    ChainNode <T> *current = first,
+                  *previous = 0; // previous trails current
+    while (___A___) {
+        ChainNode <T> *___B___;
+        ___C___;
+        ___D___;
+        ___E___;
+    }
+    first = previous;
+}
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+空格 & 填入 \\
+\midrule
+A & \texttt{current} （或 \texttt{current != 0}） \\
+B & \texttt{r = previous} \\
+C & \texttt{previous = current} \\
+D & \texttt{current = current->link} \\
+E & \texttt{previous->link = r} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+原卷上半的類別定義沒有寫成樣板，下半卻用 \texttt{ChainNode<T>}、\texttt{Chain<T>}，這是出題時
+沒有統一，不影響要填的內容。
+
+做法和資結書虛擬碼~5.12 的就地反轉相同：三個指標 \textit{r}、\textit{previous}、\textit{current}
+一起往後移，每一圈把 \textit{current} 那個節點的 link 改成指向前一個節點。 對照題目的圖：
+上半是一圈開始時，\textit{previous} 以前的部分已經反轉好（指向左邊的「…」），\textit{current} 還
+指向右邊；下半是這一圈做完，\textit{r} 指向原來的 \textit{previous}，\textit{previous}、
+\textit{current} 各往右移一格，新的 \textit{previous} 的 link 改指向 \textit{r}（原本往右的箭頭打叉）。
+
+\begin{itemize}
+\item B：先用 \textit{r} 記住舊的 \textit{previous}，等一下要讓新的 \textit{previous} 指回去。
+\item C、D：\textit{previous} 前進到 \textit{current}，\textit{current} 前進到下一個節點。 D 必須在
+E 之前：E 會改掉 \texttt{previous->link}（也就是原來的 \texttt{current->link}），改了之後就找不到
+下一個節點了。
+\item E：把剛走過的節點反過來接到 \textit{r}。
+\end{itemize}
+
+迴圈不變量：每一圈開始時，\textit{previous} 指向已經反轉好的前半段的頭（原本串列的前 $k$ 個節點，
+順序相反），\textit{current} 指向還沒處理的後半段的頭。 一開始 $k = 0$，\textit{previous} 是空的；
+\textit{current} 變成 $0$ 時所有節點都反轉好了，\textit{previous} 指向原來的最後一個節點，所以最後
+\texttt{first = previous}。 空串列時迴圈不執行，\texttt{first} 仍是 $0$，也正確。 每個節點處理一次，
+時間 $O(n)$，額外空間 $O(1)$。
+
+例：$a_1 \to a_2 \to a_3$。 第一圈後 $a_1 \to 0$（\textit{previous} $= a_1$）；第二圈後
+$a_2 \to a_1 \to 0$；第三圈後 $a_3 \to a_2 \to a_1 \to 0$，\textit{current} $= 0$，結束。
+\end{pastsoln}

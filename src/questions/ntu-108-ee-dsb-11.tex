@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-11}]{臺大電機所 108 學年度（B）第 11 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*).]
+\item $f(n)\in O(g(n))$ if and only if $g(n)\in\Omega(f(n))$.
+\item $\Theta(g(n)) = O(g(n))\cap\Omega(g(n))$
+\item $o(g(n)) = O(g(n)) - \Theta(g(n))$
+\item $\omega(g(n))\cup\Theta(g(n)) = \Omega(g(n))$
+\item $\omega(g(n))\cap\Theta(g(n)) = \emptyset$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)(B)(E)。
+
+用資結書第~1.5~節的定義（$g$ 在 $n$ 夠大時為正）：
+$f \in O(g)$ 是存在 $c > 0$、$n_0$ 使 $n \ge n_0$ 時 $f(n) \le c\,g(n)$；$\Omega$ 把不等號反過來；
+$f \in o(g)$ 是\textbf{對每一個} $c > 0$ 都存在 $n_0$ 使 $n \ge n_0$ 時 $f(n) < c\,g(n)$；$\omega$
+同樣把不等號反過來。
+
+\textbf{(A) 對}。 $f(n) \le c\,g(n)$（$n \ge n_0$）和 $g(n) \ge \frac{1}{c} f(n)$（$n \ge n_0$）是
+同一件事，常數從 $c$ 換成 $1/c$ 即可，兩個方向都成立。
+
+\textbf{(B) 對}。 這就是 $\Theta$ 的定義：$f \in \Theta(g)$ 是存在 $c_1, c_2 > 0$ 和 $n_0$，使
+$c_1 g(n) \le f(n) \le c_2 g(n)$。 左邊不等式就是 $f \in \Omega(g)$，右邊就是 $f \in O(g)$；
+兩個各有自己的 $n_0$ 時取較大的那個即可。
+
+\textbf{(C) 錯}。 $o(g) \subseteq O(g) - \Theta(g)$ 是對的（$f \in o(g)$ 時 $f/g \to 0$，不可能
+有 $f \ge c_1 g$），但反過來不成立：有些函數在 $O(g)$ 裡、不在 $\Theta(g)$ 裡，卻也不在 $o(g)$ 裡。
+取 $g(n) = n$，
+\[
+f(n) = \begin{cases} n, & n \text{ 是偶數}, \\ 1, & n \text{ 是奇數}. \end{cases}
+\]
+$f(n) \le n$，所以 $f \in O(n)$。 奇數時 $f(n)/n = 1/n \to 0$，找不到 $c_1 > 0$ 使 $f(n) \ge c_1 n$
+永遠成立，所以 $f \notin \Omega(n)$，也就 $f \notin \Theta(n)$。 但取 $c = 1/2$，偶數時
+$f(n) = n > n/2$，所以 $f \notin o(n)$。 $f$ 在右邊的集合裡，不在左邊。
+
+\textbf{(D) 錯}。 同樣只有 $\omega(g) \cup \Theta(g) \subseteq \Omega(g)$。 取 $g(n) = n$，
+\[
+f(n) = \begin{cases} n^2, & n \text{ 是偶數}, \\ n, & n \text{ 是奇數}. \end{cases}
+\]
+$f(n) \ge n$，所以 $f \in \Omega(n)$。 偶數時 $f(n)/n = n$ 沒有上界，$f \notin O(n)$，所以
+$f \notin \Theta(n)$。 取 $c = 2$，奇數時 $f(n) = n < 2n$，所以 $f \notin \omega(n)$。 $f$ 在
+$\Omega(n)$ 裡，卻不在左邊的聯集裡。
+
+(C)(D) 的反例說明：兩個函數不一定能比較大小（資結書第~1.5~節），$O$ 扣掉 $\Theta$ 不一定剩下
+$o$。
+
+\textbf{(E) 對}。 假設 $f \in \omega(g) \cap \Theta(g)$。 由 $\Theta$，存在 $c_2$、$n_1$ 使
+$n \ge n_1$ 時 $f(n) \le c_2 g(n)$。 由 $\omega$ 的定義取 $c = c_2$，存在 $n_2$ 使 $n \ge n_2$ 時
+$f(n) > c_2 g(n)$。 取 $n = \max(n_1, n_2)$，兩式矛盾。 所以交集是空集合。
+\end{pastsoln}

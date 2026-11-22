@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-13}]{臺聯大電機類 114 學年度 第 13 題}
+（單選；2 分，答錯不倒扣）
+
+Let Fibonacci(0) = 0, Fibonacci(1) =1, Fibonacci(2) = 1, Fibonacci(3) = 2, Fibonacci(4) = 3, and
+Fibonacci(i+2) = Fibonacci(i) + Fibonacci(i+1), what is Fibonacci(7) equal to?
+
+(A)~34 \qquad (B)~21 \qquad (C)~8 \qquad (D)~13
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+由小到大照遞迴式算（就是資結書第~18.1.1~節由下往上的寫法，每個值只算一次）：
+\begin{center}
+\begin{tabular}{c*{8}{c}}
+\toprule
+$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\midrule
+Fibonacci$(i)$ & 0 & 1 & 1 & 2 & 3 & 5 & 8 & 13 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Fibonacci$(5) = 2 + 3 = 5$，Fibonacci$(6) = 3 + 5 = 8$，Fibonacci$(7) = 5 + 8 = 13$。
+\begin{itemize}
+\item (A) 34 是 Fibonacci$(9)$。 錯。
+\item (B) 21 是 Fibonacci$(8)$，把編號從 $1$ 開始數才會選到它。 錯。
+\item (C) 8 是 Fibonacci$(6)$。 錯。
+\item (D) 13：正確。
+\end{itemize}
+\end{pastsoln}

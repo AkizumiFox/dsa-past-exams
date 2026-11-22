@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-08}]{成大電機所 112 學年度 第 8 題}
+（問答）
+
+(15\%) The following puzzle is called a word ladder: In a word ladder puzzle, you must make the
+change occur gradually by changing one letter at a time. At each step you must transform one word
+into another word, you are not allowed to transform a word into a non-word. The following sequence
+of words shows one possible solution to the problem ``Transform the word ``FOOL'' into the word
+``SAGE''.''
+
+\hspace*{1em}Example: FOOL -> POOL -> POLL -> POLE-> PALE -> SALE -> SAGE
+
+Here, we are interested in figuring out the smallest number of transformations needed to turn the
+starting word into the ending word.
+
+(a) Construct an example graph by using these words: FOOL, POOL, POLL, POLE, PALE, SALE, SAGE, COOL,
+FOUL, FOIL, FAIL, FALL, PALL, POLE, POPE, PAGE. Represent the relationships between the words as a
+word ladder graph. (Hint: Think about the path where we get from the word ``FOOL'' to the word
+``SAGE'').
+
+(b) Discuss which search algorithm you can use to find an efficient path from the starting word to
+the ending word, why it is more efficient compared with other. Discuss the complexity.
+
+(c) There is one way to improve efficiency instead of using a graph to show the relationship.
+Suppose that we have a huge number of \textbf{buckets}, each of them with a four-letter word on the
+outside, except that one of the letters in the label has been replaced by an underscore. The labels
+on the buckets are the keys in our dictionary. The value stored for that key is a list of words.
+\textbf{Show the data structure and list the buckets using the following words} (don't list the
+buckets containing only one item): FOOL, POOL, POLL, POLE, PALE, SALE, SAGE, COOL, FOUL, FOIL, FAIL,
+FALL, PALL, POLE, POPE, PAGE
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~8~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-08}，這裡只列答案和重點。
+
+原題的單字表把 POLE 列了兩次，同一個字只算一個頂點，共 $15$ 個字。
+
+答案：
+\begin{itemize}
+\item (a) 每個字一個頂點，只差一個字母的兩個字連一條無向邊，共 $19$ 條邊（鄰接表和圖見智慧資安學程的
+那一題）。
+\item (b) 用 BFS（資結書第~21.3~節）。 每一步代價相同，BFS 依距離一層一層擴展，第一次碰到終點時的
+層數就是最少變換次數。 FOOL 到 SAGE 最少 $6$ 步，例如 FOOL $\to$ POOL $\to$ POLL $\to$ PALL
+$\to$ PALE $\to$ PAGE $\to$ SAGE（題目的範例也是 $6$ 步）。 DFS 第一次找到的路不一定最短；
+Dijkstra 可以但要優先佇列，多一個 $\log$ 因子。 圖建好後 BFS 是 $O(|V| + |E|)$。
+\item (c) 用字典（雜湊表）：鍵是把一個位置換成底線的標籤，值是符合的字的串列；每個字放進 $4$ 個桶子。
+兩個字以上的桶子有 $15$ 個：\texttt{\_OOL}：FOOL, POOL, COOL；\texttt{FO\_L}：FOOL, FOUL, FOIL；
+\texttt{PO\_L}：POOL, POLL；\texttt{P\_LL}：POLL, PALL；\texttt{POL\_}：POLL, POLE；
+\texttt{P\_LE}：POLE, PALE；\texttt{PO\_E}：POLE, POPE；\texttt{PA\_E}：PALE, PAGE；
+\texttt{PAL\_}：PALE, PALL；\texttt{SA\_E}：SALE, SAGE；\texttt{\_AGE}：SAGE, PAGE；
+\texttt{F\_IL}：FOIL, FAIL；\texttt{FA\_L}：FAIL, FALL；\texttt{\_ALL}：FALL, PALL；\texttt{\_ALE}：PALE, SALE。
+同一個桶子裡的字兩兩相鄰，建圖只要把每個字放進 $4$ 個桶子，不必兩兩比較所有的字（資結書第~12~章）。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-46}]{臺聯大電機類 115 學年度 第 46 題}
+（單選；2 分）
+
+We have implemented a method to perform basic string compression using the counts of repeated
+characters. For example, the string \texttt{"aaabbbbccccc"} would be \texttt{"a3b4c5"}. Which of the
+following strings will have the best compression ratio, which\\
+\texttt{length(compressed\_string)/length(original\_string)} is the smallest.
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{00011000011111011001101111011111}
+\item \texttt{aaaahhhhhhheeeeeeeeiiiiiiioooooo}
+\item \texttt{99911111886666666666666666688888}
+\item \texttt{\&\&\&\&\&\&\&\&\%\%\%\%\%\%\%\%\%\$\$\$\$\#\#\#\#\#\#\#\#\#\#\#}
+\item \texttt{Implementedamethodtoperformbasic}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+這種壓縮把每一段連續相同的字元（一個 run）寫成「字元＋次數」。 一段長度 $\ell$ 的 run 壓縮後佔
+$1 + (\ell \text{ 的十進位位數})$ 個字元。 五個字串長度都是 $32$，所以只要比壓縮後的長度：
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+ & 各段長度 & 壓縮後 & 長度 \\
+\midrule
+(A) & $3, 2, 4, 5, 1, 2, 2, 2, 1, 4, 1, 5$（12 段） & \texttt{031204150112021201140115} & 24 \\
+(B) & $4, 7, 8, 7, 6$ & \texttt{a4h7e8i7o6} & 10 \\
+(C) & $3, 5, 2, 17, 5$ & \texttt{93158261785} & 11 \\
+(D) & $8, 9, 4, 11$ & \texttt{\&8\%9\$4\#11} & 9 \\
+(E) & 32 段，每段長 $1$ & \texttt{I1m1p1l1e1m1}\ldots & 64 \\
+\bottomrule
+\end{tabular}
+\end{center}
+比值依序是 $24/32 = 0.75$、$10/32 \approx 0.31$、$11/32 \approx 0.34$、$9/32 \approx 0.28$、
+$64/32 = 2$。 (D) 最小。 (D) 只有 $4$ 段，雖然最後一段長 $11$ 要寫兩位數，總長還是最短。 (C) 也只有
+$5$ 段，但 $17$ 要兩位數，總長 $11$。 (E) 沒有任何重複的相鄰字元，「壓縮」後反而變成兩倍長。
+
+（資結書沒有專門講這種遊程編碼，它只是把字串掃一遍、數每段長度，$\Theta(n)$。 (C) 這種內容本身是
+數字的字串，壓縮後會無法正確還原，例如 \texttt{93} 分不出是「$9$ 出現 $3$ 次」還是別的意思，但題目
+只問壓縮比。）
+\end{pastsoln}

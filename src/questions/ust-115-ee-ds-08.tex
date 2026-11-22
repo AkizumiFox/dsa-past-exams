@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-08}]{臺聯大電機類 115 學年度 第 8 題}
+（單選；2 分）
+
+If a series of distinct numbers of length n are pushed onto a stack in sequence, and can be popped
+at any time during the process (as long as the stack is not empty), how many different valid
+permutations can be generated?
+
+(A)~$\frac{1}{n}\binom{2n}{n+1}$ \qquad (B)~$2^n$ \qquad (C)~$\frac{1}{n+1}\binom{2n}{n}$
+\qquad (D)~$(n+1)!$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。 但 (A) 化簡後和 (C) 相等，照字面兩個選項都對，這是原題的問題；下面說明。
+
+依序 push $n$ 個數、隨時可以 pop，做得到的輸出順序恰有卡特蘭數
+$C_n = \frac{1}{n+1}\binom{2n}{n}$ 種（資結書定理~6.2）。 理由是：輸出順序和「$n$ 個 push、
+$n$ 個 pop、任何前綴的 pop 數不超過 push 數」的序列一一對應，這種序列的個數就是 $C_n$。
+小的情形：$n = 1, 2, 3, 4$ 時分別是 $1, 2, 5, 14$ 種（$n = 3$ 的 $5$ 種見歷屆試題~\ref{px:ust-115-ee-ds-06}）。
+
+\textbf{(A) 和 (C) 相等}：
+\[
+\frac{1}{n}\binom{2n}{n+1} = \frac{1}{n} \cdot \frac{(2n)!}{(n+1)!\,(n-1)!}
+= \frac{(2n)!}{(n+1)!\; n!} = \frac{1}{n+1} \cdot \frac{(2n)!}{n!\, n!} = \frac{1}{n+1}\binom{2n}{n} ,
+\]
+第二步用了 $n \cdot (n-1)! = n!$，第三步用了 $(n+1)! = (n+1) \cdot n!$。 例如 $n = 3$：
+$\frac{1}{3}\binom{6}{4} = 15/3 = 5$，$\frac{1}{4}\binom{6}{3} = 20/4 = 5$。 所以 (A) 也是卡特蘭數，
+只是寫法不常見。 出題者要的應該是常見寫法 (C)；作答時選 (C)，如果有疑義可以申請釋疑，指出 (A)
+與 (C) 等值。
+
+其他兩項：
+\begin{itemize}
+\item (B) $2^n$：$n = 3$ 時是 $8$，但只有 $5$ 種做得到。 錯。
+\item (D) $(n+1)!$：連所有排列 $n!$ 都比它小，不可能。 錯。
+\end{itemize}
+\end{pastsoln}

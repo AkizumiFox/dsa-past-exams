@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-13}]{臺大電信所 108 學年度（B）第 13 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+For problems 11-14, choose the appropriate tight bound for the recurrence of $T(n)$. Also note
+that in this exam, the degree of a node $x$ in a tree indicates the number of children of $x$.
+
+$T(n)=2\cdot T(n/2)+(n/\lg n)$
+
+A.~$\Theta(\lg n)$ \qquad B.~$\Theta(n)$ \qquad C.~$\Theta(n\lg\lg n)$ \qquad D.~$\Theta(n\lg n)$
+\qquad E.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+$a = 2$、$b = 2$，$n^{\log_b a} = n$。 $f(n) = n / \lg n$ 比 $n$ 小，但只小了一個 $\lg n$ 倍，不是
+多項式倍數（$n / \lg n \ne O(n^{1 - \epsilon})$），主定理的三種情形都不適用（資結書第~2.5~節）。
+直接展開。 設 $n = 2^m$，第 $i$ 層有 $2^i$ 個子問題，大小 $n / 2^i = 2^{m - i}$，每個成本
+$2^{m-i} / (m - i)$：
+\[
+T(n) = \sum_{i=0}^{m-1} 2^i \cdot \frac{2^{m-i}}{m - i} + \Theta(n)
+= n \sum_{i=0}^{m-1} \frac{1}{m - i} + \Theta(n)
+= n \sum_{j=1}^{m} \frac{1}{j} + \Theta(n) = n H_m + \Theta(n).
+\]
+調和數 $H_m = \ln m + O(1)$，$m = \lg n$，所以 $T(n) = \Theta(n \lg \lg n)$。 （最後一項
+$\Theta(n)$ 是 $n$ 個 $T(1)$；遞迴停在 $n = 2$ 也一樣，避開 $\lg 1 = 0$ 的除法。）
+
+A、B 太小（$n H_m$ 會無限變大到超過任何 $cn$）；D 太大（$H_m$ 只有 $\ln m$，不到 $m$）；C 對。
+\end{pastsoln}

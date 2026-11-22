@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-10}]{成大電機所 114 學年度 單選題第 10 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+If Queue is implemented by the circular list, which operation requires linear time in the worst
+case.
+\begin{enumerate}[label=\alph*)]
+\item Find();
+\item isEmpty();
+\item Push();
+\item Pop();
+\item Noe of above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a) Find()。
+
+用環狀串列做佇列，只記最後一個節點 $\mathit{last}$（資結書第~5.2~節）：第一個節點就是
+$\mathit{last}.\mathit{next}$。
+\begin{itemize}
+\item a) Find()：在佇列裡找某個元素，只能從第一個節點一路往下走，最壞（找不到或在最後面）要看
+全部 $n$ 個節點，$\Theta(n)$。 \textbf{線性時間}，選它。
+\item b) isEmpty()：看 $\mathit{last}$ 是不是 \NIL，$O(1)$。
+\item c) Push()（加到尾端）：新節點接在 $\mathit{last}$ 後面，再把 $\mathit{last}$ 移到新節點，
+$O(1)$（資結書虛擬碼~5.5）。
+\item d) Pop()（從前端取出）：拿 $\mathit{last}.\mathit{next}$，再把 $\mathit{last}.\mathit{next}$
+改成它的下一個，$O(1)$。
+\end{itemize}
+有一個線性時間的操作，所以不是 e)。 如果環狀串列記的是第一個節點，Push 要先繞一圈找最後一個，
+才會變成 $\Theta(n)$；記 $\mathit{last}$ 正是為了避開這件事。
+\end{pastsoln}

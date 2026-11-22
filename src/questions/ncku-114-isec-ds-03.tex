@@ -1,0 +1,68 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-03}]{成大智慧資安學程 114 學年度 單選題第 3 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Given a directed graph in the following, please identify which edge would become a cross edge if we
+traverse the graph by the breadth first search algorithm from node C. Assume that the nodes are stored
+in the adjacent list according to alphabetic order. Please specify which edge forms a cross edge in the
+resulting breadth-first spanning tree.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=7mm,inner sep=0pt},>={Stealth[length=2.2mm]}]
+  \node[v] (A) at (0,0) {A};
+  \node[v] (B) at (1.7,0.9) {B};
+  \node[v] (C) at (2.1,-0.8) {C};
+  \node[v] (D) at (4.1,0) {D};
+  \node[v] (E) at (6.0,0) {E};
+  \node[v] (F) at (6.0,1.5) {F};
+  \draw[->] (A) -- (B);
+  \draw[->] ([yshift=1.5mm]C.west) -- ([yshift=-0.5mm]A.east);
+  \draw[->] (A.south east) -- ([yshift=-1.5mm]C.west);
+  \draw[->] ([xshift=-1mm]B.south) -- ([xshift=-2.5mm]C.north);
+  \draw[->] ([xshift=1mm]C.north) -- ([xshift=2.5mm]B.south);
+  \draw[->] (B.east) -- (D.north west);
+  \draw[->] ([yshift=2.5mm]D.north west) -- ([yshift=2.5mm]B.east);
+  \draw[->] (C) -- (D);
+  \draw[->] (D) -- (F);
+  \draw[->] (D) -- (E);
+  \draw[->] (F) -- (E);
+\end{tikzpicture}
+\end{center}
+a)~(F, E) \qquad b)~(B, D) \qquad c)~(D, B) \qquad d)~(A, B) \qquad e)~All of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 e) All of the above。
+
+圖的邊（照原圖的箭頭）：$A \to B$、$A \to C$、$B \to C$、$B \to D$、$C \to A$、$C \to B$、$C \to D$、
+$D \to B$、$D \to E$、$D \to F$、$F \to E$。 鄰接串列照字母順序：
+$A: B, C$；$B: C, D$；$C: A, B, D$；$D: B, E, F$；$E$：無；$F: E$。
+
+\textbf{BFS 從 C 開始}（資結書第~21.3~節），$d$ 是層數：
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+取出 & 檢查的邊 & 佇列 \\
+\midrule
+（開始） & & C \\
+C（$d = 0$） & $C \to A$、$C \to B$、$C \to D$ 都是新點，成為樹邊 & A, B, D \\
+A（$d = 1$） & $A \to B$、$A \to C$ 都已發現 & B, D \\
+B（$d = 1$） & $B \to C$、$B \to D$ 都已發現 & D \\
+D（$d = 1$） & $D \to B$ 已發現；$D \to E$、$D \to F$ 是新點，成為樹邊 & E, F \\
+E（$d = 2$） & 沒有出邊 & F \\
+F（$d = 2$） & $F \to E$ 已發現 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+廣度優先生成樹：C 的子節點是 A、B、D，D 的子節點是 E、F。
+
+\textbf{分類非樹邊}（資結書第~21.5~節）：$(u, v)$ 不是樹邊時，$v$ 是 $u$ 的祖先就是後向邊，$v$ 是 $u$ 的
+子孫就是前向邊（BFS 不會出現），兩者都不是就是交叉邊。
+\begin{itemize}
+\item $(A, C)$、$(B, C)$：C 是根，是 A、B 的祖先，後向邊。
+\item $(A, B)$：A、B 都是 C 的子節點，互不為祖先，\textbf{交叉邊}。
+\item $(B, D)$、$(D, B)$：B、D 是兄弟，\textbf{交叉邊}。
+\item $(F, E)$：E、F 都是 D 的子節點，\textbf{交叉邊}。
+\end{itemize}
+選項 a) 到 d) 的四條邊都是交叉邊，答案 e)。
+\end{pastsoln}

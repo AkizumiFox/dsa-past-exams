@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-37}]{臺大電信所 110 學年度（B）第 37 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Which of the following statements are true?
+\begin{enumerate}[label=\Alph*.]
+\item Stack implements a FIFO (first-in-first-out) policy.
+\item Queue implements a LIFO (last-in-first-out) policy.
+\item Stack can be realized by deque (double-ended queue).
+\item The Find() operation in a doubly linked list takes O(n) time.
+\item The Enqueue() operation in a queue takes O(1) time.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C、D、E。
+\begin{itemize}
+\item A 錯：堆疊是後進先出（LIFO），先進先出的是佇列（資結書第~6.1~節）。
+\item B 錯：佇列是先進先出（FIFO），反過來了（資結書第~6.2~節）。
+\item C 對：雙端佇列兩端都能進出，只用其中一端（例如只用 push-back、pop-back）就是堆疊；只從一端進、
+另一端出就是佇列（資結書第~6.2.6~節）。
+\item D 對：鏈結串列不能隨機存取，找一個值要從頭一個一個比，最壞 $O(n)$；雙向串列多了往回的指標，但
+搜尋還是要走過每個節點（資結書第~5.2~節）。
+\item E 對：用環狀陣列（容量足夠時）或帶尾指標的鏈結串列實作，加入只動尾端，$O(1)$（資結書第~6.2.2~節）。
+\end{itemize}
+\end{pastsoln}

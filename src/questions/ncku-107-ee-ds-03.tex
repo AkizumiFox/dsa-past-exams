@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-03}]{成大電機所 107 學年度 複選題第 4 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item A \textbf{back} edge or a \textbf{cross} edge happen when a non-tree edge is found when we apply
+\textbf{DFS} algorithm to search a graph.
+\item We can apply \textbf{BFS} based algorithm to traverse a graph in order to find biconnected
+components in it.
+\item We have to apply \textbf{topological sorting} algorithm before we build an activity-on-edge
+(\textbf{AOE}) network.
+\item \textbf{Dijkstra's} algorithm can be applied to a directed acyclic graph of edges with negative
+weights.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)。
+
+四個選項分屬資結書第~21~章（(A)）、第~23~章（(B)）、第~22~章（(C)）、第~25~章（(D)）。 (A) 要看「graph」
+指哪一種圖：這份考卷用的是 Horowitz 課本的說法（雙連通元件那一節），圖是無向圖，非樹邊只分成 back edge
+和 cross edge 兩種。 下面照無向圖作答；若是有向圖，非樹邊還可能是 forward edge，(A) 就不完整了。
+
+\textbf{(A) 對}。 對無向圖做 DFS，碰到一條不是樹邊的邊 $(u, v)$，它一定是 back edge（$u$、$v$ 一個是另一個
+的祖先）；DFS 樹沒有 cross edge（資結書第~21.5~節）。 所以非樹邊屬於「back edge 或 cross edge」，敘述成立。
+（照 Horowitz 的定義，非樹邊不是 back edge 就叫 cross edge，這句話本來就成立；DFS 的特點是只會出現前者。）
+有向圖的 DFS 則有 back、forward、cross 三種非樹邊，例如 $a \to b$、$b \to c$、$a \to c$ 從 $a$ 開始、先走 $b$，
+$(a, c)$ 是 forward edge。
+
+\textbf{(B) 錯}。 找雙連通元件（以及割點）的演算法（資結書虛擬碼~23.4）靠 DFS 樹的性質：非樹邊只連接祖先
+和子孫，所以「子樹能不能經由 back edge 繞回 $u$ 的上方」可以用 $\mathit{low}$ 值判斷。 BFS 樹的非樹邊會連接
+沒有祖孫關係的頂點，$\mathit{low}$ 的判斷不成立。 反例：環 $1\!-\!2\!-\!3\!-\!4\!-\!1$ 從 $1$ 做 BFS，樹邊是
+$(1,2)$、$(1,4)$、$(2,3)$，非樹邊 $(3,4)$ 連的是兩個不同分支，若照 DFS 的規則把 $1$ 當根看「是否有兩個以上
+子節點」，會誤判 $1$ 是割點，但環沒有割點。
+
+\textbf{(C) 錯}。 AOE 網路（資結書第~22.5~節）是直接由工程的活動和先後關係建出來的有向圖：邊是活動，
+頂點是事件。 拓樸排序是建好網路\textbf{之後}，算最早、最晚發生時間時用的（依拓樸順序往前推、反過來往後推），
+也可以順便檢查有沒有環；不是建網路之前必須先做的步驟。
+
+\textbf{(D) 錯}。 Dijkstra 演算法正確的前提是邊的權重非負（資結書第~25.2.5~節）：一個頂點被取出之後，它的
+距離就不會再變小。 有負權重時，就算圖沒有環也會錯。 反例（有向無環圖）：邊 $s \to a$ 權重 $2$、$s \to b$
+權重 $3$、$b \to a$ 權重 $-2$、$a \to c$ 權重 $1$。 Dijkstra 先取出 $s$，$d[a] = 2$、$d[b] = 3$；取出 $a$，
+$d[c] = 3$；再取出 $b$，$a$ 的距離應該變成 $3 - 2 = 1$，但 $a$ 的出邊已經處理過了，$c$ 停在 $3$，而真正的
+最短距離是 $s \to b \to a \to c = 2$。 有向無環圖有負權重時，應該用依拓樸順序鬆弛的演算法（資結書第~25.5~節），
+時間 $O(V + E)$。
+\end{pastsoln}

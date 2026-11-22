@@ -1,0 +1,17 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-09}]{臺大電信所 110 學年度（B）第 9 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Given a weighted directed graph $G=(V,E,w)$, we can determine whether a negative-weight cycle exists in $G$ in $O(V+E)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+標準做法是 Bellman--Ford：做 $|V| - 1$ 輪鬆弛，再多做一輪，若還有邊能讓距離變小，就有負環
+（資結書第~25.3~節）。 每輪掃過全部的邊，共 $O(VE)$。 要偵測圖中任何地方的負環（不限於從某個起點
+走得到的），可以加一個超級起點連到所有頂點、權重 $0$，再跑一次 Bellman--Ford，仍是 $O(VE)$。
+
+$O(V + E)$ 只夠做 DFS 一類的走訪。 走訪找得到「有沒有環」，但判斷環的總權重是否為負，需要比較
+不同路徑的長短，這正是最短路徑問題本身；目前沒有已知的線性時間演算法。 只有圖是 DAG 時，因為沒有環，
+答案直接是「沒有負環」。
+\end{pastsoln}

@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-19}]{成大電機所 111 學年度 單選題第 19 題}
+（單選；每題 4 分）
+
+Linked lists are best suited
+
+A.~for relatively permanent collections of data
+
+B.~for the size of the structure and the data in the structure are constantly changing
+
+C.~for both of above situation
+
+D.~for none of above situation
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+串列的節點可以隨時配置、釋放，插入和刪除只要改指標（已經找到位置時 $\Theta(1)$），不必搬動其他元素，也不必預先決定
+大小（資結書第~5.1~節）。 所以最適合「大小和內容常常變動」的資料。
+\begin{itemize}
+\item A.~相對固定、不太變動的資料：用陣列比較好，連續存放、可以用索引 $O(1)$ 取值，也不用多存指標。 錯。
+\item B.~對。
+\item C.~A 不是。 錯。
+\item D.~B 就是。 錯。
+\end{itemize}
+\end{pastsoln}

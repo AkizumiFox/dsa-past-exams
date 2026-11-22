@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-11}]{臺大電信所 110 學年度（B）第 11 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which of the following is correct?
+
+A.~$n^2\in\Theta(2^{\lg^2 n})$ \qquad B.~$\lg(n!)\in\Theta(n\lg n)$ \qquad C.~$n\lg n\in\Omega(n^{\lg 3})$ \qquad D.~$n^2\in O(n\lg^4 n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+\begin{itemize}
+\item A 錯：$2^{\lg^2 n} = 2^{\lg n \cdot \lg n} = (2^{\lg n})^{\lg n} = n^{\lg n}$。 指數 $\lg n$ 會無限變大，
+$n^{\lg n}$ 比 $n^2$ 大得多（$n \ge 8$ 時 $\lg n \ge 3$），$n^2 = o(n^{\lg n})$，不是 $\Theta$。
+\item B 對：上界 $n! \le n^n$，$\lg(n!) \le n\lg n$。 下界取後半段的因數，
+$n! \ge (n/2)^{n/2}$，$\lg(n!) \ge \tfrac{n}{2}\lg\tfrac{n}{2} = \tfrac{n}{2}(\lg n - 1)$，$n \ge 4$ 時
+$\ge \tfrac{n}{4}\lg n$。 兩邊夾住，$\lg(n!) = \Theta(n\lg n)$（資結書第~1.6~節）。
+\item C 錯：$\lg 3 \approx 1.585$。 $\dfrac{n\lg n}{n^{\lg 3}} = \dfrac{\lg n}{n^{0.585}} \to 0$（對數比任何正次方
+都慢），所以 $n\lg n = o(n^{\lg 3})$，不是 $\Omega(n^{\lg 3})$。
+\item D 錯：$\dfrac{n^2}{n\lg^4 n} = \dfrac{n}{\lg^4 n} \to \infty$，$n^2$ 不是 $O(n\lg^4 n)$。
+\end{itemize}
+\end{pastsoln}

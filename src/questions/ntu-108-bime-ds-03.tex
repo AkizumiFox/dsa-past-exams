@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-03}]{臺大生機所 108 學年度 第 3 題}
+（問答）
+
+(15\%) The following postfix expression with single digit operands is evaluated using a stack:
+
+\hspace*{2em}8 2 3 \^{} / 2 3 $\times$ + 5 1 $\times$ -
+
+Note that \^{} is the exponentiation operator. What are the top two elements of the stack after
+the first $\times$, the multiplication operator, is evaluated?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：堆疊頂端是 $6$，下面一個是 $1$。
+
+後序求值（資結書第~6.3.2~節虛擬碼~6.7）：遇到運算元就 push；遇到運算子就 pop 兩次，先 pop 出來
+的是\textbf{右}運算元 $b$，後 pop 的是左運算元 $a$，算 $a \mathbin{\mathrm{op}} b$ 再 push 回去。
+次方要算 $a^b$，順序不能反。 堆疊由底到頂：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+讀到 & 動作 & 堆疊（底 $\to$ 頂） \\
+\midrule
+8 & push & $8$ \\
+2 & push & $8, 2$ \\
+3 & push & $8, 2, 3$ \\
+\^{} & $2^3 = 8$ & $8, 8$ \\
+/ & $8 / 8 = 1$ & $1$ \\
+2 & push & $1, 2$ \\
+3 & push & $1, 2, 3$ \\
+$\times$ & $2 \times 3 = 6$ & $1, \mathbf{6}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+第一個 $\times$ 算完後堆疊只有兩個元素：頂端 $6$，下面 $1$。
+
+把式子算完：$+$ 得 $7$；push $5$、$1$，$\times$ 得 $5$；$-$ 得 $7 - 5 = 2$。 整個式子是
+$8 / 2^3 + 2 \times 3 - 5 \times 1 = 2$。 如果把次方的順序弄反算成 $3^2 = 9$，第二步會變成
+$8 / 9$，就看得出錯了。
+\end{pastsoln}

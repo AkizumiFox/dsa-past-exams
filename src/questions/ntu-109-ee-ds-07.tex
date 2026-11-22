@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-07}]{臺大電機所 109 學年度（B）第 7 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a binomial heap of size n, the worst case time complexity of one find-min operation is
+
+(A)~O(1) \qquad (B)~O(log*n) \qquad (C)~O(log n) \qquad (D)~O(n) \qquad (E)~O(n log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C) O(log n)。
+
+說明解讀：二項堆積的標準結構（資結書第~8.5~節）只存根串列，最小值一定在某一棵樹的根，find-min
+要把所有的根掃一遍。 $n$ 個元素最多 $\lfloor \lg n \rfloor + 1$ 棵樹（$n$ 的二進位有幾個 $1$
+就有幾棵），所以是 $O(\log n)$；$n = 2^k - 1$ 時剛好 $k$ 棵，要比 $k - 1$ 次，界是緊的。 本書
+採用這個標準結構，選 (C)。
+
+如果另外維護一個指向最小根的指標，find-min 可以 $O(1)$（資結書第~8.5~節的比較表下面有提到），
+代價是插入、合併、取出最小值時都要順便更新它。 題目問的是一般的二項堆積，而且同一份考卷第 13 題（歷屆試題~\ref{px:ntu-109-ee-ds-13}）
+另外問左傾樹的 find-min（那個是真正的 $O(1)$），看得出這兩題要區分，所以不選 (A)。
+
+(B) 沒有對應的做法；(D)、(E) 是上界但不緊。
+\end{pastsoln}

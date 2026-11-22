@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-30}]{臺大電信所 109 學年度（B）第 30 題}
+（單選；每題 2 分，答錯不倒扣）
+
+If $T(n)=2T(\sqrt{n})+\log n$, where $T(2)=0$, then $T(n)=$?
+\begin{enumerate}[label=(\Alph*)]
+\item $n/\log n$
+\item $\log n\,(\log\log n)$
+\item $\log\log n$
+\item $\log n$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+用換變數（資結書第~2.2~節）。 只看 $n = 2^{2^k}$ 這些值，開根號後還是同樣的形式。 令
+$m = \lg n$，$S(m) = T(2^m)$。 $\sqrt{n} = 2^{m/2}$，遞迴式變成
+\[
+S(m) = 2S(m/2) + m, \qquad S(1) = T(2) = 0.
+\]
+這是合併排序的遞迴式。 $m = 2^k$ 時直接展開：每一層總和都是 $m$，共 $k = \lg m$ 層，最底層
+$S(1) = 0$，所以
+\[
+S(m) = m \lg m .
+\]
+驗算：$S(2) = 2S(1) + 2 = 2 = 2 \lg 2$；$S(4) = 2 \cdot 2 + 4 = 8 = 4 \lg 4$。 換回 $n$：
+$T(n) = S(\lg n) = \lg n \cdot \lg\lg n$，對 $n = 2^{2^k}$ 是等式，一般的 $n$ 是
+$\Theta(\log n \log\log n)$。
+
+其他選項：(C) $\log\log n$ 是 $T(n) = T(\sqrt{n}) + 1$ 的解；(D) $\log n$ 是
+$T(n) = 2T(\sqrt{n}) + 1$ 的階；(A) 和這個遞迴式無關。
+\end{pastsoln}

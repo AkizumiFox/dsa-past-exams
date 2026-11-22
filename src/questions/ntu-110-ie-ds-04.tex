@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-04}]{臺大工工所 110 學年度 第 4 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In this exam, the height of a leaf (in either a tree or heap) is defined as 0; the size of a tree/heap is
+defined as the total number of keys (items) it stores.
+
+For a binary heap of height 2021, let x be the minimum possible size, y be the maximum possible size,
+then (3x+y) mod 5 is
+
+(A)~0 \qquad (B)~1 \qquad (C)~2 \qquad (D)~3 \qquad (E)~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+二元堆積是完全二元樹（資結書第~8.1~節）：除了最後一層都是滿的，最後一層的節點靠左排。 高度 $h$（葉節點
+高度 $0$）表示有第 $0$ 到第 $h$ 層。
+\begin{itemize}
+\item 最少：第 $0$ 到 $h - 1$ 層全滿（$2^h - 1$ 個），第 $h$ 層只有最左邊一個，$x = 2^h$。
+\item 最多：第 $0$ 到 $h$ 層全滿，$y = 2^{h+1} - 1$。
+\end{itemize}
+$h = 2021$：$x = 2^{2021}$、$y = 2^{2022} - 1$，
+\[
+  3x + y = 3 \cdot 2^{2021} + 2 \cdot 2^{2021} - 1 = 5 \cdot 2^{2021} - 1 .
+\]
+$5 \cdot 2^{2021}$ 是 $5$ 的倍數，所以 $3x + y \equiv -1 \equiv 4 \pmod 5$，選 (E)。
+
+不必算 $2^{2021}$ 除以 $5$ 的餘數：$3x + y$ 恰好湊成 $5 \cdot 2^{2021} - 1$，這是題目設計的地方。 如果直接
+算也可以：$2^k \bmod 5$ 以 $2, 4, 3, 1$ 循環，$2021 \equiv 1 \pmod 4$，$2^{2021} \equiv 2$、$2^{2022} \equiv 4$，
+$3 \cdot 2 + 4 - 1 = 9 \equiv 4$，一樣。
+\end{pastsoln}

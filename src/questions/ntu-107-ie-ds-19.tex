@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-19}]{臺大工工所 107 學年度 第 19 題}
+（複選；每題 10 分，至少一個選項正確；每個選項答對得 2 分，答錯倒扣 2 分，每題倒扣至零分為止）
+
+Consider the spare matrix of size $n$ by $n$ and $n$ non-zero entries. We store the non-zero entries by a linked list per row (list-per-row representation). Specifically, the whole matrix is stored in a one dimensional array containing linked lists, where lists are indexed by the column number. Which of the following statement(s) about matrix multiplication is(are) true?
+\begin{enumerate}[label=(\alph*),nosep]
+\item The running time for the best case is $\Theta(n)$
+\item The running time for the best case is $\Theta(n\log n)$
+\item The running time for the worst case is $\Theta(n\log n)$
+\item The running time for the worst case is $\Theta(n^2)$
+\item The running time for the worst case is $\Theta(n^2\log n)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (a)(d)。
+
+先說明題目的讀法。 「spare matrix」是 sparse matrix 的筆誤。 「lists are indexed by the column number」
+和前面的 list-per-row 矛盾；照 list-per-row 的意思，以下讀成：長度 $n$ 的陣列 $\mathit{row}[1..n]$，
+$\mathit{row}[i]$ 是第 $i$ 列非零項的串列，每個串列節點記（行號、值），依行號排好（串列「依行號」排序，
+可能就是原文想說的）。 兩個矩陣 $A$、$B$ 都是 $n \times n$、各有 $n$ 個非零項，求 $C = AB$，結果也用
+同樣的格式存。
+
+\textbf{做法：一列一列算。} $C$ 的第 $i$ 列是 $\sum_{k} A[i][k] \cdot (B \text{ 的第 } k \text{ 列})$。
+所以對 $A$ 第 $i$ 列的每個非零項 $A[i][k]$，把 $B$ 第 $k$ 列的串列走一遍，乘上 $A[i][k]$ 累加到一個長度
+$n$ 的暫存陣列 $\mathit{acc}$，同時把第一次被碰到的行號記進一個串列 $\mathit{touched}$。 這一列做完，
+把 $\mathit{touched}$ 裡的格子取出（非零的）接成 $C$ 第 $i$ 列的串列，並把這些格子歸零，下一列再用。
+$\mathit{acc}$ 只在一開始清一次，$O(n)$。
+
+設 $a_k$ 是 $A$ 第 $k$ 行的非零項數、$b_k$ 是 $B$ 第 $k$ 列的非零項數，$\sum_k a_k = \sum_k b_k = n$。
+每個 $A[i][k]$ 會走 $B$ 第 $k$ 列一次，所以乘法次數是
+\[
+F = \sum_{k=1}^{n} a_k b_k .
+\]
+總時間是 $\Theta(n + F)$：$n$ 是走過所有列的串列頭、讀過兩個矩陣的非零項、清暫存陣列；$F$ 是乘法和累加，
+$C$ 的非零項數不超過 $F$。 （$\mathit{touched}$ 若要依行號排好，可以在全部算完之後對 $C$ 做兩次「轉置」，
+每次是對行號做一次計數排序，$O(n + F)$，不影響量級。）
+
+\textbf{最好情況：$\Theta(n)$。} 至少要把輸入的 $2n$ 個非零項讀一遍，所以 $\Omega(n)$。 例如 $A$、$B$
+都是對角矩陣，$a_k = b_k = 1$，$F = n$，時間 $\Theta(n)$；甚至 $A$ 的非零項都在第 $1$ 行、$B$ 的非零項都
+不在第 $1$ 列時，$F = 0$，仍然是讀輸入的 $\Theta(n)$。 所以 (a) 對、(b) 錯。
+
+\textbf{最壞情況：$\Theta(n^2)$。} 上界：
+\[
+F = \sum_k a_k b_k \le \Bigl(\max_k b_k\Bigr) \sum_k a_k \le n \cdot n = n^2 ,
+\]
+時間 $O(n + n^2) = O(n^2)$。 下界：$A$ 的 $n$ 個非零項全在第 $1$ 行（$A[i][1] = 1$），$B$ 的 $n$ 個非零
+項全在第 $1$ 列（$B[1][j] = 1$）。 $C[i][j] = A[i][1] B[1][j] = 1$，$C$ 的 $n^2$ 格全部非零，光是建出
+結果就要 $\Omega(n^2)$。 所以最壞是 $\Theta(n^2)$：(d) 對，(c)(e) 錯。
+
+這裡假設實作是像上面那樣直接累加。 若每算出一個乘積就到 $C$ 的串列裡從頭找位置插入，最壞會變成
+$\Theta(n^3)$；那是寫法不好，不是這個表示法本身的限制。 稀疏矩陣的表示法見資結書第~4.3~節，串列版的
+寫法見第~5.3~節。
+\end{pastsoln}

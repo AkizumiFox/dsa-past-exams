@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-04}]{成大電機所 107 學年度 複選題第 5 題}
+（複選；每題 5 分，全對才給分）
+
+Which of the following statement(s) is (are) true (assume the number of nodes in a maximum heap and
+in a binary search trees are both $n$)?
+\begin{enumerate}[label=(\Alph*)]
+\item We have go through a path from the root to a leaf when we insert a node in a maximum heap.
+\item It takes O($n$) time to insert a node into a binary search tree.
+\item It takes O($\log n$) time to obtain the maximum value in a maximum heap.
+\item Max heapfiy is an operation to maintain the maximum heap property which starts from a node and
+goes through a path to a leaf.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)(D)。
+
+這題的 $O$ 要照出題的意思讀成「這個操作要花的時間（最壞情況）」：(B) 的 $O(n)$ 是 BST 插入的最壞情況，
+對；(C) 取最大值只要常數時間，寫 $O(\log n)$ 雖然不算錯的上界，但不是這個操作的時間，出題者要的是錯。
+(A)、(D) 的差別在方向：插入是從下往上，heapify 是從上往下。
+
+\textbf{(A) 錯}。 最大堆積的插入（資結書虛擬碼~8.2）把新元素放在陣列最後一格，也就是一個新的葉節點，
+再\textbf{往上}和父節點比、必要時交換（上浮），一碰到父節點不比它小就停。 走的是從葉節點往根的方向，
+而且不一定走到根，不是「從根走到葉」。 例如在 $\langle 9, 5, 7 \rangle$ 插入 $1$，$1$ 放在位置 $4$，比父節點
+$5$ 小，一步都不用走。
+
+\textbf{(B) 對}。 BST 插入的時間是樹高 $O(h)$；最壞情況樹是一條鏈，$h = n$，要 $\Theta(n)$。 不論樹長怎樣
+$h \le n$，所以 $O(n)$ 一定成立。
+
+\textbf{(C) 錯}。 最大值就在根 $A[1]$，直接讀出來是 $O(1)$（資結書第~8.1~節的 \proc{Heap-Maximum}）。
+要「取出並刪除」最大值才需要下沉，那才是 $O(\log n)$；題目說的是 obtain（取得），不是 extract。
+
+\textbf{(D) 對}。 Max-Heapify（資結書虛擬碼~8.1 的 \proc{Sift-Down}）從一個節點開始，和較大的子節點比，
+必要時交換，再往下一層繼續，沿著一條往葉節點的路徑走，直到它不比子節點小或到達葉節點為止。 它的前提
+是該節點的兩棵子樹已經是堆積，做完之後以它為根的子樹恢復成堆積，時間是 $O(\text{該節點的高度}) = O(\log n)$。
+\end{pastsoln}

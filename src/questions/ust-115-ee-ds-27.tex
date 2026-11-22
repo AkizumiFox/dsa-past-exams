@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-27}]{臺聯大電機類 115 學年度 第 27 題}
+（單選；2 分）
+
+\textbf{Which of the following arrays in NOT a valid Max-Heap or Min-Heap?}
+\begin{enumerate}[label=(\Alph*)]
+\item \texttt{int A[]=\{10,7,9,4,1\};}
+\item \texttt{int A[]=\{16,14,9,2,4,1,8,3\};}
+\item \texttt{int A[]=\{25,20,24,10,15,20,8,5\};}
+\item \texttt{int A[]=\{50,45,30,15,20,10\};}
+\item \texttt{int A[]=\{3,6,4,10,7,9\};}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+C 陣列從 $0$ 開始，$A[i]$ 的孩子是 $A[2i+1]$、$A[2i+2]$。 最大堆積要求每個父節點 $\ge$ 孩子，
+最小堆積要求 $\le$（資結書第~8.1~節）。 逐一檢查每個有孩子的節點：
+\begin{itemize}
+\item (A) $A[0] = 10 \ge 7, 9$；$A[1] = 7 \ge 4, 1$。 最大堆積。
+\item (B) $A[0] = 16 \ge 14, 9$；$A[1] = 14 \ge 2, 4$；$A[2] = 9 \ge 1, 8$；但 $A[3] = 2$ 的孩子是
+$A[7] = 3 > 2$，不是最大堆積。 根 $16$ 比孩子大，也不是最小堆積。 \textbf{兩者都不是}，選它。
+\item (C) $A[0] = 25 \ge 20, 24$；$A[1] = 20 \ge 10, 15$；$A[2] = 24 \ge 20, 8$；$A[3] = 10 \ge 5$。
+最大堆積（重複的 $20$ 不影響）。
+\item (D) $A[0] = 50 \ge 45, 30$；$A[1] = 45 \ge 15, 20$；$A[2] = 30 \ge 10$。 最大堆積。
+\item (E) $A[0] = 3 \le 6, 4$；$A[1] = 6 \le 10, 7$；$A[2] = 4 \le 9$。 最小堆積。
+\end{itemize}
+（題目的 ``in NOT'' 是原卷的錯字，應為 ``is NOT''。）
+\end{pastsoln}

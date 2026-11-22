@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-02}]{成大電通所 112 學年度 第 2 題}
+（問答）
+
+(10\%) Write the prefix and postfix form of the following expressions:\\
+(a) (A*B)/D+E*(f*A+D)-C\\
+(b) \texttt{!((a \&\& c) || (c > d))} \qquad\qquad // assuming C precedence
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~2~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-02}，這裡只列答案。
+
+答案：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & 前序（prefix） & 後序（postfix） \\
+\midrule
+(a) & \texttt{- + / * A B D * E + * f A D C} & \texttt{A B * D / E f A * D + * + C -} \\
+(b) & \texttt{! || \&\& a c > c d} & \texttt{a c \&\& c d > || !} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{pastsoln}

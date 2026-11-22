@@ -1,0 +1,47 @@
+\begin{pastexam}[label={px:ncku-112-isec-ds-03}]{成大智慧資安學程 112 學年度 第 3 題}
+（問答）
+
+(10\%) Let Z( ) be a function that inputs a string and outputs a string, defined as follows:\\
+\hspace*{2em}Base Case: If the input string X is a single letter L, then Z(X)=L.\\
+\hspace*{2em}Recursive Case: If the input string X is a string of the form LS, then Z(X)=``Z(S)L''.\\
+\hspace*{2em}(a) If X=``happy'', what is Z(X)?\\
+\hspace*{2em}(b) What does the function Z( ) actually perform?
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 LS 指「第一個字母 L 接上其餘的字串 S」（S 至少一個字母，否則就是基本情形），
+``Z(S)L'' 指把 Z(S) 的結果後面接上字母 L。
+
+\textbf{(a)} $Z(\text{happy}) = \text{yppah}$。
+
+照定義一層一層展開（每一層把第一個字母留到最後接上去）：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+呼叫 & 拆成 $L$、$S$ & 結果 \\
+\midrule
+$Z(\text{happy})$ & h、appy & $Z(\text{appy})\,\text{h}$ \\
+$Z(\text{appy})$ & a、ppy & $Z(\text{ppy})\,\text{a}$ \\
+$Z(\text{ppy})$ & p、py & $Z(\text{py})\,\text{p}$ \\
+$Z(\text{py})$ & p、y & $Z(\text{y})\,\text{p}$ \\
+$Z(\text{y})$ & 基本情形 & y \\
+\bottomrule
+\end{tabular}
+\end{center}
+再由下往上回傳：$Z(\text{y}) = \text{y}$，$Z(\text{py}) = \text{yp}$，
+$Z(\text{ppy}) = \text{ypp}$，$Z(\text{appy}) = \text{yppa}$，
+$Z(\text{happy}) = \text{yppah}$。 呼叫時一路往下壓了五層，回傳時依相反的順序接字母，
+這正是資結書第~6.4~節說的：遞迴靠系統堆疊保存每一層還沒做完的工作（這裡是「最後要接上
+的那個字母」）。
+
+\textbf{(b)} $Z$ 把字串\textbf{反轉}：輸入 $x_1x_2\cdots x_n$，輸出 $x_nx_{n-1}\cdots x_1$。
+
+證明（對長度 $n \ge 1$ 歸納）：$n = 1$ 時 $Z(x_1) = x_1$，就是自己的反轉。 設長度 $n - 1$
+的字串都成立，長度 $n \ge 2$ 時 $X = x_1 S$，$S = x_2 \cdots x_n$，由歸納假設
+$Z(S) = x_n \cdots x_2$，所以 $Z(X) = Z(S)\,x_1 = x_n \cdots x_2 x_1$。 \hfill$\blacksquare$
+
+補充：長度 $n$ 的字串遞迴深度是 $n$；如果每一層都把整個 $Z(S)$ 複製一份再接字母，複製的
+字元數是 $1 + 2 + \cdots + n = \Theta(n^2)$。 用一個迴圈從兩端往中間交換，或把字元依序推進
+堆疊再依序彈出，都只要 $\Theta(n)$。 另外定義只處理「至少一個字母」的字串，空字串的
+$Z$ 沒有定義。
+\end{pastsoln}

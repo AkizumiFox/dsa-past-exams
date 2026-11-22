@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-37}]{臺聯大電機類 115 學年度 第 37 題}
+（單選；2 分）
+
+A magic square is an $n\times n$ matrix of the integers from 1 to $n^2$ such that the sum of each
+row and column and the two major diagonals is the same. The following figure shows a magic square
+for the case $n=5$ where the common sum is 65.
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}\hline
+15 & 8 & 1 & 24 & 17\\\hline
+16 & 14 & 7 & 5 & 23\\\hline
+22 & 20 & 13 & 6 & 4\\\hline
+3 & 21 & 19 & 12 & 10\\\hline
+9 & 2 & 25 & 18 & 11\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{Coxeter} has given the following rule for generating a magic square when $n$ is odd:\\
+1. Put a \textbf{one} (\texttt{// 1.}) in the middle box of the top row.\\
+2. Go up (\texttt{// 2.1}) and left (\texttt{// 2.2}) assigning numbers in increasing order to
+empty boxes. If your move causes you to jump off the square (that is, you go beyond the square's
+boundaries), figure out where you would be if you landed on a box on the opposite side of the
+square. Continue with this box.\\
+3. If a box is occupied (\texttt{// 3.1}), go down (\texttt{// 3.2}) instead of up and continue.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\footnotesize]{c}
+square[0][(n-1)/2]=1;            // 1. Top row [0]; middle box [(n-1)/2]
+/* i and j are current position */
+i=0;
+j=(n-1)/2;
+for (count=2;count<=n*n;count++) {
+  row=(i-1<0)?(n-1):(i-1);         // 2.1 up
+  column=(j-1<0)?(n-1):(j-1);      // 2.2 left
+  if(square[row][column])          // 3.1 occupied
+    i=(++i)%n;                     // 3.2 down
+  else{
+    i=_______ ;                    // 3.3 _______
+    j=(j-1<0)?(n-1):--j;
+  }
+  square[i][j]=count;
+}
+\end{minted}
+Fill the blank \texttt{i=\_\_\_\_\_\_\_;} with correct code at the location annotated by
+\texttt{//3.3}.
+
+(A)~\texttt{n} \qquad (B)~\texttt{row} \qquad (C)~\texttt{column} \qquad (D)~\texttt{count}
+\qquad (E)~\texttt{i\%n}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+每一輪先算出「往上、往左一格」的位置 \texttt{(row, column)}，超出邊界就繞到對面（第 6、7 行）。
+如果那一格已經有數（第 8 行），就改成往下一格：列加一、行不變（第 9 行）。 否則（第 10 行的
+\texttt{else}）就移到那一格，列要變成 \texttt{row}、行變成 \texttt{column}。 第 12 行的
+\texttt{j=(j-1<0)?(n-1):--j;} 算的正是 \texttt{column}，所以空格要填 \texttt{row}，註解 3.3 是
+``up''。
+
+用 $n = 5$ 追蹤前幾步，和題目的方陣對照（列、行從 $0$ 數）：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+\texttt{count} & 上一格 & \texttt{(row, column)} & 結果 \\
+\midrule
+1 & & & $(0, 2)$，第 1 行 \\
+2 & $(0, 2)$ & $(4, 1)$，空 & 放在 $(4, 1)$ \\
+3 & $(4, 1)$ & $(3, 0)$，空 & 放在 $(3, 0)$ \\
+4 & $(3, 0)$ & $(2, 4)$，空 & 放在 $(2, 4)$ \\
+5 & $(2, 4)$ & $(1, 3)$，空 & 放在 $(1, 3)$ \\
+6 & $(1, 3)$ & $(0, 2)$，有 $1$ & 往下，放在 $(2, 3)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+題目的方陣中 $2$ 在第 5 列第 2 行、$3$ 在第 4 列第 1 行、$4$ 在第 3 列第 5 行、$5$ 在第 2 列第 4 行、
+$6$ 在第 3 列第 4 行，全部吻合；填 \texttt{row} 一路做完，得到的正是題目那個方陣。
+
+逐項檢查：
+\begin{itemize}
+\item (A) \texttt{n}：索引超出 $0..n-1$。 錯。
+\item (B) \texttt{row}：對。
+\item (C) \texttt{column}：把行號當成列號，位置錯。 錯。
+\item (D) \texttt{count}：是要填的數字，不是位置；$\texttt{count} \ge 2$ 很快就超出範圍。 錯。
+\item (E) \texttt{i\%n}：等於 \texttt{i}，列不動，只往左移，不是「往上往左」。 錯。
+\end{itemize}
+（附註：第 9 行 \texttt{i=(++i)\%n;} 在同一個運算式裡改了 \texttt{i} 兩次，嚴格說在 C 裡是未定義
+行為，應寫成 \texttt{i=(i+1)\%n;}。 題目的意思是往下一格，不影響本題。）
+\end{pastsoln}

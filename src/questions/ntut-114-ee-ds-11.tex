@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-11}]{北科大電機所（戊組） 114 學年度 第 III-3 題}
+（追蹤＋問答；20 分）
+
+You have a hash table with 19 slots and the following hash function: $h(k)=(k+10)\ mod\ 19$. Insert
+the following keys in order: 10, 29, 47, 38, 24, 5, 28, 9, 17.
+\begin{enumerate}[label=(\alph*)]
+\item How many collisions occurred when using chaining versus linear probing for collision resolution?
+Compare and explain the difference. \textbf{(6\%)}
+\item If you want to search for key 19, analyze its possible position(s) under both chaining and linear
+probing methods. Which method would be more efficient for this search and why? \textbf{(6\%)}
+\item The density of the hash table is 47.4\%. Explain how this density affects the search performance
+in chaining and linear probing methods. Which method would you recommend for this density and why?
+\textbf{(8\%)}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+先算每個鍵的雜湊值 $h(k) = (k + 10) \bmod 19$：
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+$k$ & 10 & 29 & 47 & 38 & 24 & 5 & 28 & 9 & 17 \\
+$k + 10$ & 20 & 39 & 57 & 48 & 34 & 15 & 38 & 19 & 27 \\
+$h(k)$ & 1 & 1 & 0 & 10 & 15 & 15 & 0 & 0 & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(a)} 「碰撞」算成：要放的位置已經有別的鍵。
+
+\textbf{鏈結法}（資結書第~12.2~節）：每格是一條串列，鍵一定放在自己的那格。 放進時那格已經有鍵的是
+$29$（第 1 格有 10）、$5$（第 15 格有 24）、$28$（第 0 格有 47）、$9$（第 0 格有 47、28），共 \textbf{4 次}。
+最後：第 0 格 $47, 28, 9$；第 1 格 $10, 29$；第 8 格 $17$；第 10 格 $38$；第 15 格 $24, 5$。
+
+\textbf{線性探測}（資結書第~12.3~節）：位置被占就往下一格找（第 18 格的下一格是第 0 格）。
+\begin{center}
+\small
+\begin{tabular}{rcll}
+\toprule
+$k$ & $h(k)$ & 探測經過的格子 & 碰撞次數 \\
+\midrule
+10 & 1 & 1 & 0 \\
+29 & 1 & 1（有 10）$\to$ 2 & 1 \\
+47 & 0 & 0 & 0 \\
+38 & 10 & 10 & 0 \\
+24 & 15 & 15 & 0 \\
+5 & 15 & 15（有 24）$\to$ 16 & 1 \\
+28 & 0 & 0（47）$\to$ 1（10）$\to$ 2（29）$\to$ 3 & 3 \\
+9 & 0 & 0 $\to$ 1 $\to$ 2 $\to$ 3（28）$\to$ 4 & 4 \\
+17 & 8 & 8 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+探測到已占用的格子共 $1 + 1 + 3 + 4 =$ \textbf{9 次}（發生過碰撞的鍵是 4 個，和鏈結法一樣）。 最後的表：
+第 0--4 格依序是 $47, 10, 29, 28, 9$，第 8 格 $17$，第 10 格 $38$，第 15、16 格 $24, 5$，其餘空著。
+
+\textbf{差別在哪。} 鏈結法只會和「雜湊值相同」的鍵碰撞。 線性探測的鍵會占走別人的家：$29$ 放到第 2 格，
+$28$ 的起點雖然是第 0 格，卻得一路經過 $10$、$29$（它們的雜湊值是 1）；第 0--4 格連成一大段，任何落在
+這一段的鍵都要走到段尾，段又再變長。 這就是主要群聚（primary clustering），所以同樣的資料，線性
+探測的碰撞次數比較多（9 比 4）。
+
+\textbf{(b)} $h(19) = 29 \bmod 19 = 10$。
+\begin{itemize}
+\item 鏈結法：$19$ 如果在表裡，只可能在第 10 格的串列裡。 那條串列只有 $38$，比較 $1$ 次就知道 $19$ 不在表裡。
+\item 線性探測：$19$ 可能在第 10 格，或是從第 10 格往後、第一個空格之前的任何一格。 第 10 格是 $38$，不是；
+第 11 格是空的，搜尋停止，$19$ 不在表裡。 共探測 $2$ 格（比較一個鍵、看到一個空格）。
+\end{itemize}
+這次鏈結法比較有效率（比較 1 個鍵，線性探測要看 2 格）。 原因是鏈結法只看雜湊值相同的鍵；線性探測要
+一直走到空格才能確定找不到，若起點落在第 0--4 格那種長段裡，要走更多格（例如找一個雜湊值是 $0$ 的
+不存在的鍵，要看第 0--5 格共 6 格）。
+
+\textbf{(c)} 密度（負載因子）$\alpha = 9/19 \approx 0.474$。
+\begin{itemize}
+\item 鏈結法：串列的平均長度是 $\alpha$。 失敗搜尋平均比較 $\alpha \approx 0.47$ 個鍵；成功搜尋平均比較
+$1 + \frac{n - 1}{2m} = 1 + \frac{8}{38} \approx 1.21$ 個鍵（資結書定理~12.2）。 效能隨 $\alpha$ 線性變差，
+$\alpha$ 超過 $1$ 也還能用。 本題這張表實際的成功搜尋平均是 $(1 + 2 + 3 + 1 + 2 + 1 + 1 + 1 + 2)/9 = 14/9 \approx 1.56$。
+\item 線性探測：照 Knuth 的近似（資結書第~12.4~節），成功搜尋約
+$\frac{1}{2}\bigl(1 + \frac{1}{1 - \alpha}\bigr) = \frac{1}{2}(1 + 1.9) = 1.45$ 次探測，失敗搜尋約
+$\frac{1}{2}\bigl(1 + \frac{1}{(1 - \alpha)^2}\bigr) = \frac{1}{2}(1 + 3.61) \approx 2.31$ 次。 $\alpha$ 越接近 $1$，
+$\frac{1}{(1-\alpha)^2}$ 爆增，而且表滿了就放不下。 本題實際的成功搜尋平均是
+$(1 + 2 + 1 + 1 + 1 + 2 + 4 + 5 + 1)/9 = 18/9 = 2$ 次，已經看得到第 0--4 格的群聚。
+\end{itemize}
+\textbf{建議用鏈結法。} 在 $\alpha \approx 0.47$ 時兩種方法都還算快，但這組資料雜湊值集中在 $0$、$1$，線性
+探測已經形成 5 格長的群聚，搜尋成本比鏈結法高（成功搜尋平均 2 比 1.56，碰撞 9 比 4），再插入更多鍵會
+惡化得更快。 鏈結法只受同一格的鍵影響，效能穩定，刪除也簡單（線性探測刪除要用墓碑）。 線性探測的
+優點是不需要指標、記憶體連續、快取友善；若記憶體很緊、而且能保證 $\alpha$ 維持在 $0.5$ 以下、雜湊值分布
+均勻，也可以選它。
+\end{pastsoln}

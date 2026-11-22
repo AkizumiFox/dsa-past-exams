@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-23}]{臺聯大電機類 112 學年度 第 23 題}
+（問答；10 分）
+
+Given the following pseudo code of Dijkstra algorithm, please point out the errors of the pseudo
+code. (10 points)
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, mathescape=true, xleftmargin=3em, xrightmargin=3em]
+1   procedure Dijkstra(Graph, source):
+2       create vertex set Q
+3       for each vertex v in Graph:
+4           distance[v] $\leftarrow$ INFINITY
+5           previous[v] $\leftarrow$ UNDEFINED
+6           if source!=v:
+7               add v to Q
+8       distance[source] $\leftarrow$ 0
+9       while Q is not empty:
+10          u $\leftarrow$ vertex in Q with max_distance[u]
+11          remove u from Q
+12          for each neighbor v of u:
+13              alternative $\leftarrow$ distance[u] - length(u, v)
+14              if alternative < distance[v]:
+15                  alternative $\leftarrow$ distance[v]
+16                  u $\leftarrow$ previous[v]
+17      return distance[], previous[]
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+共有五個錯誤，在第 6--7、10、13、15、16 行。 Dijkstra 演算法的正確流程（資結書第~25.2~節、
+虛擬碼~25.3）：所有頂點放進 $Q$；每次從 $Q$ 取出 \textit{distance} 最\textbf{小}的頂點 $u$，對它的
+每條出邊 $(u, v)$ 做鬆弛（relax）：若 $\mathit{distance}[u] + w(u, v) < \mathit{distance}[v]$，就
+更新 $\mathit{distance}[v]$ 並記 $v$ 的前驅是 $u$（資結書虛擬碼~25.2）。 邊的權重必須非負。
+
+\begin{enumerate}
+\item \textbf{第 6--7 行}：起點 \textit{source} 沒有放進 $Q$。 這樣起點永遠不會被取出，它的出邊
+不會被鬆弛；其他頂點的 \textit{distance} 一直是 INFINITY，算不出任何最短距離。 應該把每個頂點都
+加進 $Q$：刪掉第 6 行的條件，第 7 行改成對每個 $v$ 都做 add $v$ to $Q$。
+\item \textbf{第 10 行}：應該取 \textit{distance} \textbf{最小}的頂點，不是最大。 Dijkstra 的正確性
+靠的就是「$Q$ 裡距離最小的頂點，它的距離已經是最短距離」（資結書定理~25.6）；取最大的就沒有這個
+性質。 改成 u $\leftarrow$ vertex in $Q$ with min distance[u]。
+\item \textbf{第 13 行}：經過 $u$ 到 $v$ 的路徑長是 $\mathit{distance}[u]$ \textbf{加上}邊長，不是減。
+改成 alternative $\leftarrow$ distance[u] + length(u, v)。
+\item \textbf{第 15 行}：方向寫反了。 找到更短的路徑時要更新的是 $\mathit{distance}[v]$，改成
+distance[v] $\leftarrow$ alternative。 原本的寫法把 alternative 改掉，distance 陣列從頭到尾都不會變。
+\item \textbf{第 16 行}：同樣寫反了。 要記錄的是「$v$ 的前一個頂點是 $u$」，改成
+previous[v] $\leftarrow$ u。 原本的寫法還會在迴圈中途改掉 $u$，之後第 12 行的迴圈和第 13 行的
+distance[u] 都用錯頂點。
+\end{enumerate}
+
+改正後：
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, mathescape=true, xleftmargin=3em, xrightmargin=3em]
+1   procedure Dijkstra(Graph, source):
+2       create vertex set Q
+3       for each vertex v in Graph:
+4           distance[v] $\leftarrow$ INFINITY
+5           previous[v] $\leftarrow$ UNDEFINED
+6           add v to Q
+7       distance[source] $\leftarrow$ 0
+8       while Q is not empty:
+9           u $\leftarrow$ vertex in Q with min distance[u]
+10          remove u from Q
+11          for each neighbor v of u:
+12              alternative $\leftarrow$ distance[u] + length(u, v)
+13              if alternative < distance[v]:
+14                  distance[v] $\leftarrow$ alternative
+15                  previous[v] $\leftarrow$ u
+16      return distance[], previous[]
+\end{lstlisting}
+第 14 行的比較（alternative $<$ distance[v]）本身沒有錯，保留。 $Q$ 用陣列時每次找最小值要
+$O(|V|)$，總時間 $O(|V|^2)$；用二元堆積時是 $O((|V| + |E|) \log |V|)$。
+\end{pastsoln}

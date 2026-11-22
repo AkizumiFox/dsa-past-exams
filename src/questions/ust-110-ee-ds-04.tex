@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-04}]{臺聯大電機類 110 學年度 第 4 題}
+（問答）
+
+The available-space lists for linked lists are used to "recycle" unused list items instead of releasing
+their memory.
+
+(3\%) (a) Describe the advantage of using available-space lists.
+
+(3\%) (b) Describe in pseudo-code of how to implement the function \texttt{clear}, which should run in O(1)
+time complexity. This function clears the content of a list so that its size becomes zero.
+
+(4\%) (c) Describe in pseudo-code of how to implement the function \texttt{add\_space(N)}, where \texttt{N}
+is a positive integer. This function adds \texttt{N} items to the available-space list. It should use
+memory allocation call only once.
+\end{pastexam}
+
+\begin{pastsoln}
+可用空間串列（資結書第~5.4~節）是一條把閒置節點串起來的單向串列，開頭記在 $\mathit{avail}$。
+要節點時從 $\mathit{avail}$ 拿第一個（\proc{Get-Node}，資結書虛擬碼~5.9），不要的節點放回
+$\mathit{avail}$ 的最前面（\proc{Ret-Node}，虛擬碼~5.10），兩者都是 $\Theta(1)$。
+
+\textbf{(a) 優點。}
+\begin{itemize}
+\item \textbf{快}：\texttt{malloc}／\texttt{free} 要在記憶體管理器裡找合適的空間、維護它自己的資料結構，
+相對慢，而且時間不固定；從可用空間串列拿或還一個節點只改兩個指標，固定 $\Theta(1)$。
+\item \textbf{減少零碎}：節點大小都一樣，回收的節點直接給下一次用，不會在堆積區留下一堆零碎的小洞。
+\item \textbf{可以整批回收}：一整條串列可以一次接回可用空間串列（見 (b)），不必一個一個 \texttt{free}。
+\end{itemize}
+
+\textbf{(b) \texttt{clear} 在 $O(1)$。} 一個一個還節點要 $\Theta(n)$。 要 $O(1)$，就得在常數時間找到
+串列的\textbf{最後一個}節點，把整條串列直接接到 $\mathit{avail}$ 前面。 所以串列要記尾端：用環狀串列
+（記 $\mathit{last}$，$\mathit{last}.\mathit{next}$ 就是第一個），或在一般串列裡同時記 $\mathit{head}$
+和 $\mathit{tail}$。 下面用後者，串列 $L$ 另外記長度 $L.\mathit{size}$。
+\begin{pseudo}[unbreakable]{把整條串列還給可用空間串列}
+\Procedure{Clear}{$L$}
+    \If{$L.\mathit{head} \ne \NIL$}
+        \State $L.\mathit{tail}.\mathit{next} \gets \mathit{avail}$ \Comment{串列尾接上原本的可用空間串列}
+        \State $\mathit{avail} \gets L.\mathit{head}$ \Comment{可用空間串列從串列頭開始}
+        \State $L.\mathit{head} \gets \NIL$；$L.\mathit{tail} \gets \NIL$
+    \EndIf
+    \State $L.\mathit{size} \gets 0$
+\EndProcedure
+\end{pseudo}
+做完之後，原本 $L$ 的節點全部排在可用空間串列的最前面，後面接著原本那些閒置節點，一個都沒有遺失；
+$L$ 變成空串列。 只改了固定幾個指標，$\Theta(1)$。 用環狀串列的寫法就是資結書虛擬碼~5.11：
+$\mathit{first} \gets L.\mathit{last}.\mathit{next}$，$L.\mathit{last}.\mathit{next} \gets \mathit{avail}$，
+$\mathit{avail} \gets \mathit{first}$，$L.\mathit{last} \gets \NIL$。
+
+\textbf{(c) \texttt{add\_space(N)}，只配置一次。} 一次配置一個能放 $N$ 個節點的陣列，再把陣列裡的節點
+依序串起來，最後一個接到原本的 $\mathit{avail}$ 前面。
+\begin{pseudo}[unbreakable]{一次配置 $N$ 個節點加入可用空間串列}
+\Procedure{Add-Space}{$N$}
+    \State $B \gets$ 配置 $N$ 個節點大小的連續空間 $B[1..N]$ \Comment{唯一一次配置}
+    \If{配置失敗}
+        \State \Error{記憶體不足}
+    \EndIf
+    \For{$i \gets 1$ \To $N - 1$}
+        \State $B[i].\mathit{next} \gets$ $B[i + 1]$ 的位址
+    \EndFor
+    \State $B[N].\mathit{next} \gets \mathit{avail}$
+    \State $\mathit{avail} \gets$ $B[1]$ 的位址
+\EndProcedure
+\end{pseudo}
+C 的寫法是 \texttt{B = malloc(N * sizeof(struct Node));}，迴圈裡 \texttt{B[i].next = \&B[i+1];}，
+最後 \texttt{avail = \&B[0];}（C 的陣列從 $0$ 開始）。 做完後可用空間串列多了 $B[1], \ldots, B[N]$ 這
+$N$ 個節點，原本的節點接在後面。 時間 $\Theta(N)$，\texttt{malloc} 只呼叫一次。
+
+要注意的是：這 $N$ 個節點是同一塊配置出來的，之後不能對其中單獨一個節點呼叫 \texttt{free}；要釋放
+只能整塊 \texttt{free(B)}，所以程式要另外記住每一塊 $B$ 的開頭。
+\end{pastsoln}

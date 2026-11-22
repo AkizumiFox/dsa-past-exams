@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-23}]{臺大工工所 110 學年度 第 23 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+In this exam, the height of a leaf (in either a tree or heap) is defined as 0; the degree of a node (in
+either a tree or heap) is defined as the number of its children.
+
+Consider a Fibonacci heap that results from successively inserting 929 (distinct) keys into an initially
+empty heap, followed by deleting the minimum key. Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item The Fibonacci heap is of degree 9.
+\item The Fibonacci heap is of height 12.
+\item There are 5 trees in the Fibonacci heap.
+\item With one additional decrease key operation, the Fibonacci heap can have 6 trees.
+\item With two additional decrease key operations, the Fibonacci heap can have 7 trees.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(E)。
+
+費氏堆積（資結書第~8.6~節）的插入只把新節點放進根串列，不做整理；$929$ 次插入後有 $929$ 棵只有一個節點的樹。 刪除最小值時
+拿掉最小的根（它沒有子節點），剩下 $928$ 個根，然後\textbf{合併（consolidate）}：同度數的兩棵樹一直兩兩合併，直到每種度數最多
+一棵。 從單一節點開始兩兩合併，得到的都是二項樹 $B_k$（$2^k$ 個節點、根的度數 $k$、高度 $k$），而且結果和二進位表示一致：
+\[
+  928 = 512 + 256 + 128 + 32 = (1110100000)_2 ,
+\]
+所以剩下 $B_9, B_8, B_7, B_5$ 四棵樹。 合併時被接到別人底下的根都清除標記，所以此時沒有任何節點被標記。
+\begin{itemize}
+\item (A) 對。 最大的度數是 $B_9$ 的根，有 $9$ 個子節點；把堆積的度數理解為節點的最大度數，就是 $9$。
+\item (B) 錯。 $B_9$ 的高度是 $9$（葉節點高度 $0$），不是 $12$。
+\item (C) 錯。 只有 $4$ 棵樹。
+\item (D) 錯。 一次 \proc{Decrease-Key}：若被減的節點 $x$ 是根，或減完仍不小於父節點，樹的數目不變；否則把 $x$ 剪下成為新的根，
+$x$ 的父節點 $y$ 原本沒有標記，只會被標記，不會連鎖剪下。 所以最多變成 $4 + 1 = 5$ 棵，不可能 $6$ 棵。
+\item (E) 對。 第一次對某個非根節點 $y$ 的子節點 $x$ 減到比 $y$ 小，$x$ 被剪下（$5$ 棵），$y$ 被標記（$y$ 本身不是根，例如 $B_9$ 根底下
+度數 $8$ 的那個子節點）。 第二次對 $y$ 的另一個子節點 $x'$ 做同樣的事：$x'$ 被剪下（$6$ 棵），$y$ 已有標記，連鎖剪下 $y$（$7$ 棵），
+$y$ 的父節點是根，不再往上。 所以兩次之後可以有 $7$ 棵樹。 （$x'$ 要是 $y$ 的子節點，$y$ 的度數至少要 $2$，選 $B_9$ 根底下度數
+$8$ 的子節點就可以。）
+\end{itemize}
+\end{pastsoln}

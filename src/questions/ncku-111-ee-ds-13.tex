@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-13}]{成大電機所 111 學年度 單選題第 13 題}
+（單選；每題 4 分）
+
+The post-order traversal of a binary tree is CDBFGEA. Find out the pre-order traversal.
+
+A.~CBDAFEG \qquad B.~ADBFECG \qquad C.~CBDGAEF \qquad D.~CDBFGEA
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（題目本身有問題，見下）。
+
+\textbf{題目的問題。} 只給後序，二元樹的形狀不能唯一決定，前序也就不唯一：用程式列出所有後序是 CDBFGEA 的二元樹，
+共有 $51$ 種不同的前序。 要唯一決定一棵二元樹，必須是中序配上前序或後序（資結書第~7.4~節）。 而且下面會看到，四個
+選項其實都不是任何一棵這種樹的前序。 這裡用唯一說得通的方法作答：根一定排在後序的最後、前序的最前。
+
+\textbf{用根判斷。} 後序最後一個是根 $A$，所以前序必須以 $A$ 開頭。 只有 B.~ADBFECG 以 $A$ 開頭；A、C 以 $C$ 開頭，
+D 就是把後序照抄。 依這個條件只能選 B。
+
+\textbf{但 B 其實也不可能。} 前序 ADBFECG 表示 $A$ 之後第一個拜訪 $D$，$D$ 是 $A$ 的子節點。
+\begin{itemize}
+\item 若 $D$ 是 $A$ 的左子節點：左子樹在後序裡是開頭的一段、而且以 $D$ 結尾，只能是 CD，所以左子樹是 $\{C, D\}$，前序
+在 $D$ 之後應該接著 $C$，但 B 接的是 $B$，矛盾。
+\item 若 $A$ 沒有左子樹、$D$ 是右子節點：右子樹包含其他 $6$ 個節點，它的後序 CDBFGE 以 $E$ 結尾，右子樹的根是 $E$
+不是 $D$，矛盾。
+\end{itemize}
+所以沒有任何二元樹同時有後序 CDBFGEA 和前序 ADBFECG。 出題者大概是想考「前序第一個就是後序最後一個（根）」，
+照這個意思選 B。
+\end{pastsoln}

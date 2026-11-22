@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-01}]{北科大電機所（戊組） 114 學年度 第 I-1 題}
+（單選；4 分）
+
+\textbf{I.\quad Single-select Multiple Choice:}
+
+Which of the following NOT typically implemented using a stack data structure? \textbf{(4\%)}
+\begin{enumerate}[label=\alph*)]
+\item Undo/Redo operations in a text editor.
+\item Queue management in a restaurant waiting system.
+\item Function call management in program execution.
+\item Syntax checking for matching parentheses in a compiler.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b)。
+
+\begin{itemize}
+\item a) 用堆疊：每做一個動作就 push，Undo 時 pop 出最近的那一個（後做的先復原）；Redo 再用另一個
+堆疊存被復原的動作。
+\item b) \textbf{不用堆疊}：餐廳排隊是先來先服務，先到的人先帶位，是佇列（FIFO，資結書第~6.2~節），
+不是後進先出。
+\item c) 用堆疊：函式呼叫時把返回位址、參數、區域變數 push 成一個堆疊框，返回時 pop，最後呼叫的
+最先返回（資結書第~6.4~節）。
+\item d) 用堆疊：左括號 push，遇到右括號就 pop 出最近的左括號比對（資結書第~6.1.4~節）。
+\end{itemize}
+\end{pastsoln}

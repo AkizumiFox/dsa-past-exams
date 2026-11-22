@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:ust-110-ee-ds-02}]{臺聯大電機類 110 學年度 第 2 題}
+（問答）
+
+(10\%) The C structures of a singly linked list and its list items are given below:
+\begin{minted}[fontsize=\small]{c}
+struct IntListItem {
+  int value;
+  struct IntListItem * link;
+};
+struct IntList {
+  struct IntListItem *front;
+};
+\end{minted}
+Give the C implementation of a function\\
+\texttt{void smallest\_to\_front(IntList *list)}\\
+that moves the item with the smallest \texttt{value} to the front of the list, and leave the relative
+orders of the other list items unchanged.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的函數原型寫 \texttt{IntList *list}，在 C 裡要先有 \texttt{typedef struct IntList IntList;}
+才能這樣寫（C++ 可以直接寫）。 下面照原型寫，假設有這個 \texttt{typedef}。 最小值有好幾個時，搬
+第一個出現的那個。
+
+\textbf{想法。} 一次走訪找出最小的節點 \texttt{minItem}，同時記住它的\textbf{前一個節點}
+\texttt{minPrev}（單向串列要改前一個節點的 \texttt{link} 才能把它拿出來）。 然後把 \texttt{minItem}
+從原位置拆下來，接到最前面。 只改指標、不搬 \texttt{value}，其他節點的相對順序自然不變。
+\begin{minted}[fontsize=\small]{c}
+typedef struct IntListItem IntListItem;
+typedef struct IntList IntList;
+
+void smallest_to_front(IntList *list)
+{
+    IntListItem *prev, *cur, *minPrev, *minItem;
+
+    if (list->front == NULL)            /* 空串列：不用做 */
+        return;
+    minPrev = NULL;                     /* 目前最小的是第一個，它沒有前一個 */
+    minItem = list->front;
+    prev = list->front;
+    cur = list->front->link;
+    while (cur != NULL) {
+        if (cur->value < minItem->value) {  /* 嚴格小於：相同時留第一個 */
+            minPrev = prev;
+            minItem = cur;
+        }
+        prev = cur;
+        cur = cur->link;
+    }
+    if (minPrev != NULL) {              /* 最小的不在最前面才要搬 */
+        minPrev->link = minItem->link;  /* 1. 從原位置拆下 */
+        minItem->link = list->front;    /* 2. 接到原本的第一個前面 */
+        list->front = minItem;          /* 3. 成為新的第一個 */
+    }
+}
+\end{minted}
+
+\textbf{正確性。} 迴圈不變量：\texttt{minItem} 是從第一個到 \texttt{prev} 這一段裡第一個出現的最小值，
+\texttt{minPrev} 是它的前一個節點（它是第一個時為 \texttt{NULL}），\texttt{cur == prev->link}。
+一開始這一段只有第一個節點，成立；每次看 \texttt{cur} 時，只有它嚴格更小才更新，所以仍成立。
+迴圈結束時這一段就是整個串列。 \texttt{minPrev == NULL} 表示最小值本來就在最前面，什麼都不用做。
+否則三行指標修改：註解標 1 的那行讓 \texttt{minPrev} 跳過 \texttt{minItem}，剩下的節點仍照原順序串著；
+標 2、3 的兩行把 \texttt{minItem} 放在它們前面。 三行的順序不能換：先做標 2 的那行會蓋掉
+\texttt{minItem->link}，就找不到它原本後面的節點了。 \texttt{minItem} 是最後一個節點時，標 1 的那行讓
+\texttt{minPrev->link} 變成 \texttt{NULL}，也對。
+
+例如 $5 \to 3 \to 8 \to 1 \to 7 \to 4$：最小的 $1$，前一個是 $8$。 拆下後是
+$5 \to 3 \to 8 \to 7 \to 4$，接到前面得 $1 \to 5 \to 3 \to 8 \to 7 \to 4$，其他五個的順序沒變。
+
+\textbf{複雜度。} 走訪一次 $\Theta(n)$，搬移 $\Theta(1)$，額外空間 $\Theta(1)$。
+\end{pastsoln}

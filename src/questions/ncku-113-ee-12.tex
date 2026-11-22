@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ncku-113-ee-12}]{成大電機所 113 學年度 簡答題第 3 題}
+（簡答）
+
+(6 pts) Floyd-Warhsall algorithm uses the dynamic programming to find all pair shortest paths.
+Let $A^k(i,j)$ denote the value of the shortest path from node $v_i$ to node $v_i$ according to
+a vertex whose index is $k$. Please show the recursive function of $A^k(i,j)$ and give the time
+complexity of the algorithm.
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-12}。
+
+答案：$A^0(i, j) = \mathit{cost}(i, j)$（$i = j$ 為 $0$，沒有邊為 $\infty$），
+$A^k(i, j) = \min\bigl(A^{k-1}(i, j),\ A^{k-1}(i, k) + A^{k-1}(k, j)\bigr)$，$1 \le k \le n$；答案是 $A^n(i, j)$，時間 $\Theta(n^3)$。
+\end{pastsoln}

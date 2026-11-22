@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-05}]{臺大工科海洋所 109 學年度 第 5 題}
+（設計）
+
+\textbf{(15 \%)} Propose a data structure that supports the stack \textsf{push} and \textsf{pop}
+operations and a third operation \textsf{findMin}, which returns the smallest element in the data
+structure, all in $O(1)$ worst-case time.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{結構}：用兩個堆疊（資結書第~6.1~節）。 $S$ 是一般的堆疊，存所有元素；$M$ 是「最小值堆疊」，
+$M$ 的頂端永遠是 $S$ 目前所有元素的最小值。 做法是每次 push 時，把「新元素和舊的最小值比較小的那
+個」也推入 $M$，pop 時兩個一起 pop。 這樣 $M$ 的第 $i$ 格（由底往上）存的就是 $S$ 底下 $i$ 個元素
+的最小值。
+
+\begin{pseudo}{支援 findMin 的堆疊}
+\Procedure{MS-Push}{$x$}
+    \State \Call{Push}{$S, x$}
+    \If{$M$ 是空的}
+        \State $m \gets x$
+    \Else
+        \State $m \gets \min(x, \textsc{Top}(M))$ \Comment{新的最小值}
+    \EndIf
+    \State \Call{Push}{$M, m$}
+\EndProcedure
+\Statex
+\Function{MS-Pop}{}
+    \If{$S$ 是空的}
+        \State \Error{underflow}
+    \EndIf
+    \State \Call{Pop}{$M$}
+    \State \Return \Call{Pop}{$S$}
+\EndFunction
+\Statex
+\Function{MS-FindMin}{}
+    \If{$M$ 是空的}
+        \State \Error{empty}
+    \EndIf
+    \State \Return \Call{Top}{$M$}
+\EndFunction
+\end{pseudo}
+
+例：依序 push $5, 3, 7, 2$，再 pop 兩次。
+\begin{center}
+\begin{tabular}{lll c}
+\toprule
+操作 & $S$（底 $\to$ 頂） & $M$（底 $\to$ 頂） & findMin \\
+\midrule
+push 5 & 5 & 5 & 5 \\
+push 3 & 5 3 & 5 3 & 3 \\
+push 7 & 5 3 7 & 5 3 3 & 3 \\
+push 2 & 5 3 7 2 & 5 3 3 2 & 2 \\
+pop（得 2） & 5 3 7 & 5 3 3 & 3 \\
+pop（得 7） & 5 3 & 5 3 & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+pop 掉 $2$ 之後最小值自動回到 $3$，不必重新找，這是只用一個變數記最小值做不到的地方。
+
+\textbf{正確性}。 不變量：$S$ 和 $M$ 一樣高，而且對每個 $i$，$M$ 由底往上第 $i$ 格等於 $S$ 由底往上
+前 $i$ 個元素的最小值。 空的時候成立。 push $x$ 時，前 $i + 1$ 個元素的最小值是
+$\min(x, \text{前 } i \text{ 個的最小值}) = \min(x, \textsc{Top}(M))$，正是推入 $M$ 的值；下面的格子沒變。
+pop 時兩邊各拿掉頂端一格，剩下的格子仍然對應。 所以 $\textsc{Top}(M)$ 永遠是 $S$ 全部元素的最小值，
+FindMin 正確。
+
+\textbf{複雜度}。 每個操作只做常數次堆疊的 push、pop、top，用陣列或串列實作的堆疊每個都是最壞
+$O(1)$（陣列要事先配夠大，或用串列，才不會有擴充陣列的平攤成本），所以三個操作都是最壞 $O(1)$。
+空間是 $2n$ 格，$O(n)$。
+
+\textbf{省空間的變形}：$M$ 只在 $x \le \textsc{Top}(M)$ 時才推入，pop 時只有彈出的值等於
+$\textsc{Top}(M)$ 才把 $M$ 也 pop。 比較要用 $\le$，否則有重複的最小值時，pop 掉一個就會把 $M$ 的
+最小值提早拿掉。 這個版本仍然是最壞 $O(1)$，只是 $M$ 通常比較短。
+\end{pastsoln}

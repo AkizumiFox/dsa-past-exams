@@ -1,0 +1,72 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-29}]{臺聯大電機類 115 學年度 第 29 題}
+（單選；2 分）
+
+Answer \textbf{Questions 28-30} according to the following C code.
+\begin{minted}[linenos, numbersep=1.5mm, xleftmargin=2em, fontsize=\small]{c}
+#include <stdio.h>
+#include <stdlib.h>
+int counter=0;
+void max_heapify(int A[],int n,int i) {
+    int largest=i;
+    int left=2*i+1;
+    int right=2*i+2;
+    counter++;
+    if (left<n && A[left]>A[i])
+        largest=left;
+    if (right<n && A[right]>A[largest])
+        largest=right;
+    if (largest!=i) {
+        int temp=A[i];
+        A[i]=A[largest];
+        A[largest]=temp;
+        max_heapify(A,n,largest);
+    }
+}
+void build_heap(int A[],int n) {
+    for (int i = (n/2)-1;i>=0;i--)
+        max_heapify(A,n,i);
+}
+int main(){
+    int A[]={4,1,3,2,16,9,10,14,8,7};
+    int n = sizeof(A)/sizeof(A[0]);
+    build_heap(A,n);
+    for (int i=0;i<n;++i)
+        printf("%d,",A[i]);
+    printf("\n");
+    printf("counter:%d\n",counter);
+    return 0;
+}
+\end{minted}
+
+What does the code at \textbf{Line 31} print? Counter：\underline{\hspace{2em}}
+
+(A)~6 \qquad (B)~10 \qquad (C)~12 \qquad (D)~14 \qquad (E)~16
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+\texttt{counter} 在 \texttt{max\_heapify} 的開頭加一，所以它等於 \texttt{max\_heapify} 被呼叫的
+總次數，包括遞迴呼叫。 \texttt{build\_heap} 對 $i = 4, 3, 2, 1, 0$ 各呼叫一次，每次往下沉幾層，
+就多幾次遞迴呼叫（最後一次是發現不必交換、直接結束的那一次）。 沿用上一題（歷屆試題~\ref{px:ust-115-ee-ds-28}）
+的追蹤：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+$i$ & 呼叫的足標 & 次數 \\
+\midrule
+4 & 4 & 1 \\
+3 & 3, 7 & 2 \\
+2 & 2, 6 & 2 \\
+1 & 1, 4, 9 & 3 \\
+0 & 0, 1, 3, 8 & 4 \\
+\midrule
+合計 & & 12 \\
+\bottomrule
+\end{tabular}
+\end{center}
+所以印出 \texttt{counter:12}。
+
+其他選項：(A) $6$ 只比外層的 $5$ 次多一次，漏算了大部分遞迴呼叫；(B) $10$ 是 $n$，不是呼叫次數；
+(D)(E) 都比實際多。 另一種數法：交換共 $7$ 次，外層呼叫 $5$ 次，每次交換恰好多一次遞迴呼叫，$5 + 7 = 12$，和表格一致。
+\end{pastsoln}

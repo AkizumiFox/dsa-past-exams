@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-12}]{臺聯大電機類 113 學年度 第 12 題}
+（複選；每題 5 分，每個選項單獨計分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+Below is an algorithm in pseudocode that sorts a stack of integers. S1 is the input stack and S2 is
+an additional temporary stack for storing and moving items. The stack supports the following
+operations: push, pop, peek, and isEmpty.
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{java}
+void sort(S1){
+    S2 = new Stack<integer>;//an empty stack for integers
+    while(!S1.isEmpty()){
+        int tmp = S1.pop();
+        while(!S2.isEmpty() && S2.peek() > tmp) {
+            S1.push(S2.pop());
+        }
+        S2.push(tmp);
+    }
+    While (!S2.isEmpty()) {
+        S1.push(S2.pop());
+    }
+}
+\end{minted}
+Which of the following is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item The algorithm is O(nlogn) time-efficiency
+\item The algorithm is O(n) space-efficiency
+\item The algorithm sorts the stack in ascending order
+\item The algorithm sorts the stack in descending order
+\item The algorithm is O(n$^2$) time-efficiency
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(C)、(E)。（(C)、(D) 的「升冪」「降冪」要看從哪一端讀，見下面的說明。）
+
+\textbf{做了什麼}。 不變量：S2 由底到頂是遞增的（頂端最大）。 每次從 S1 拿出 \texttt{tmp}，把 S2 頂端
+比它大的數一個個搬回 S1，直到 S2 的頂端 $\le$ \texttt{tmp}（或 S2 空了），再把 \texttt{tmp} 推入 S2，
+S2 仍然由底到頂遞增。 搬回 S1 的數之後會再被拿出來重新插入。 這其實就是用兩個堆疊做的插入排序：S2 是
+排好的部分，\texttt{tmp} 是要插入的數，搬回 S1 是在「挪位置」。 S1 空了以後，S2 的頂端（最大）最先被
+推回 S1，所以最後 S1 由底到頂是遞減的，\textbf{頂端是最小值}。
+
+例：S1 由底到頂是 $3, 1, 2$。 拿出 $2$，S2 = $\langle 2\rangle$；拿出 $1$，$2 > 1$ 搬回 S1，S2 =
+$\langle 1\rangle$，S1 = $3, 2$；拿出 $2$，S2 = $\langle 1, 2\rangle$；拿出 $3$，S2 = $\langle 1, 2, 3\rangle$。
+最後倒回 S1：由底到頂 $3, 2, 1$，從頂端依序 pop 得到 $1, 2, 3$。
+
+逐項：
+\begin{itemize}
+\item (A) 最壞情況不是 $O(n\log n)$。 S1 由底到頂已經是遞增時（頂端最大），每拿出一個數，都比 S2 裡
+所有的數小，S2 裡的 $k$ 個數全部要搬回 S1、之後又一個個放回來，搬動次數 $0 + 1 + \cdots + (n-1) =
+n(n-1)/2$，$\Theta(n^2)$。 錯。
+\item (B) 除了輸入的 S1，只用了一個堆疊 S2，最多裝 $n$ 個數，額外空間 $O(n)$（總空間也是
+$O(n)$）。 對。
+\item (C) 對（照常見的讀法）。 堆疊的使用方式是從頂端拿，排好之後依序 pop 出來是由小到大，
+也就是頂端最小的「升冪」。
+\item (D) 錯（照同一個讀法）。 若改從底部往頂端讀，序列是由大到小，這時說成「降冪」也說得通；本書
+採用「依 pop 出來的順序」判斷，選 (C) 不選 (D)。 作答時把「頂端是最小值」寫出來最清楚。
+\item (E) 每搬一次，記在「被搬的數 $x$」和「當時的 \texttt{tmp}」這一對上，$x > \texttt{tmp}$。 同一對不會
+被記兩次：\texttt{tmp} 放進 S2 之後，$x$ 回到 S2 時一定在它上面；之後就算兩個一起被更小的數搬回 S1，
+也是 \texttt{tmp} 先被拿出、先放回 S2，$x$ 再放在它上面，不會因為 \texttt{tmp} 再被搬一次。 所以搬動總數
+不超過 $\binom{n}{2} = n(n-1)/2$，每次搬動和每次外層迴圈都是 $O(1)$，外層迴圈的次數是 $n$ 加上搬動次數，
+總時間 $O(n^2)$。 對。
+\end{itemize}
+\end{pastsoln}

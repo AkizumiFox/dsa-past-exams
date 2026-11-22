@@ -1,0 +1,70 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-04}]{臺科大電子所甲組 110 學年度 第 4 題}
+（問答）
+
+Suppose we have three functions:
+\begin{minted}[fontsize=\small]{text}
+foo(int N)
+    do something in A steps
+    for i equals 1 to N
+        do something in B steps
+        for j equals 1 to N
+            do something in C steps
+
+goo(int N)
+    do something in A steps
+    for i equals 1 to N
+        do something in B step
+        for j equals 1 to i
+            do something in C steps
+
+poo(int N)
+    do something in A steps
+    for i equals 1 to N
+        do something in B steps
+        for j equals 1 to 250
+            do something in C steps
+\end{minted}
+\begin{enumerate}[label=(\alph*)]
+\item (6\%) For each of the three methods above (foo(), goo(), and poo()), what is the exact
+runtime for each method (in steps) in terms of A,B,C, and N? You should not count loop related
+operations.
+\item (4\%) For N = 100, which one is the fastest algorithm? Why?
+\item (6\%) Assuming that A, B, and C are constants, what is the asymptotic runtime of each method
+in terms of N?
+\item (4\%) As N grows infinitely large, which one is the fastest algorithm?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+題目說不計迴圈本身的操作，所以只數三種 do something 各做幾次，再乘上各自的步數，和資結書
+第~1.3.3~節的逐行計算一樣。 原題 goo 第 4 行的 ``B step'' 應該是 ``B steps''，不影響答案。
+
+(a)
+\begin{itemize}
+\item foo：A 做 $1$ 次；外層 $i$ 從 $1$ 到 $N$，B 做 $N$ 次；內層每輪跑 $N$ 次，C 做
+$N \cdot N$ 次。 $T_{\mathrm{foo}}(N) = A + NB + N^2 C$。
+\item goo：內層 $j$ 從 $1$ 到 $i$，跑 $i$ 次，C 共做
+$\sum_{i=1}^{N} i = N(N+1)/2$ 次。 $T_{\mathrm{goo}}(N) = A + NB + N(N+1)C/2$。
+\item poo：內層固定跑 $250$ 次，C 共做 $250N$ 次。
+$T_{\mathrm{poo}}(N) = A + NB + 250NC$。
+\end{itemize}
+
+(b) 代 $N = 100$：
+\[
+T_{\mathrm{foo}} = A + 100B + 10000C,\quad
+T_{\mathrm{goo}} = A + 100B + 5050C,\quad
+T_{\mathrm{poo}} = A + 100B + 25000C .
+\]
+三者的 A、B 部分相同，只比 C 的次數：$5050 < 10000 < 25000$，所以 goo 最快（假設
+$C > 0$；$C = 0$ 時三者一樣）。
+
+(c) A、B、C 是正的常數。 foo 的最高次項是 $CN^2$，是 $\Theta(N^2)$（資結書第~1.5~節：多項式只看
+最高次項）。 goo 是 $\frac{C}{2}N^2 + (B + \frac{C}{2})N + A$，也是 $\Theta(N^2)$。 poo 是
+$(B + 250C)N + A$，是 $\Theta(N)$。
+
+(d) poo。 它是 $\Theta(N)$，另外兩個是 $\Theta(N^2)$，$N$ 夠大以後一定是 poo 最快。
+交叉點也算得出來：poo 的 C 比 foo 少，等於 $250N < N^2$，也就是 $N > 250$；比 goo
+少，等於 $250N < N(N+1)/2$，也就是 $N > 499$。 所以 $N \ge 500$ 時 poo 最快，
+$N = 499$ 時 poo 和 goo 的 C 都做 $124750$ 次。 (b) 和 (d) 的答案不同，因為漸近的
+比較只管 $N$ 夠大的情形，$N = 100$ 時常數 $250$ 還佔上風。
+\end{pastsoln}

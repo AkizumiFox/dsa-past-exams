@@ -1,0 +1,22 @@
+paper: ntut-114-ee-ds
+volume: 3
+school: 北科大
+dept: 電機所（戊組）
+year: 114
+subject: 資料結構
+instructions: 注意事項：1.本試題分為三大部分，共 14 題，每題配分標註於題後，共 100 分。2.不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。3.全部答案均須在答案卷之答案欄內作答，否則不予計分。
+questions:
+  - {id: ntut-114-ee-ds-01, label: 第 I-1 題, chapter: 6}
+  - {id: ntut-114-ee-ds-02, label: 第 I-2 題, chapter: 10}
+  - {id: ntut-114-ee-ds-03, label: 第 I-3 題, chapter: 21}
+  - {id: ntut-114-ee-ds-04, label: 第 I-4 題, chapter: 7}
+  - {id: ntut-114-ee-ds-05, label: 第 II-1 題, chapter: 6}
+  - {id: ntut-114-ee-ds-06, label: 第 II-2 題, chapter: 9}
+  - {id: ntut-114-ee-ds-07, label: 第 II-3 題, chapter: 21}
+  - {id: ntut-114-ee-ds-08, label: 第 II-4 題, chapter: 1}
+  - {id: ntut-114-ee-ds-09, label: 第 III-1 題, chapter: 5}
+  - {id: ntut-114-ee-ds-10, label: 第 III-2 題, chapter: 5}
+  - {id: ntut-114-ee-ds-11, label: 第 III-3 題, chapter: 12}
+  - {id: ntut-114-ee-ds-12, label: 第 III-4 題, chapter: 22}
+  - {id: ntut-114-ee-ds-13, label: 第 III-5 題, chapter: 8}
+  - {id: ntut-114-ee-ds-14, label: 第 III-6 題, chapter: 14}

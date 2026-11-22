@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-09}]{臺聯大電機類 115 學年度 第 9 題}
+（單選；2 分）
+
+Given a ``Perfect Binary Tree'' (i.e., every level is full), with a height of h (total number of
+nodes n $\approx 2^{h+1}$), compare the worst-case space complexity of using a stack for depth-first
+search (DFS) versus using a queue for breadth-first search (BFS).
+\begin{enumerate}[label=(\Alph*)]
+\item Depth-first search (DFS) is relatively memory-intensive because of its deep recursion depth.
+\item BFS is relatively memory-intensive because a queue needs to store all the leaf nodes at the
+lowest level.
+\item Both consume roughly the same amount of memory O($n$).
+\item Both consume roughly the same amount of memory O($\log n$)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+高度 $h$ 的完美二元樹有 $n = 2^{h+1} - 1$ 個節點，$h = \Theta(\log n)$，最底層有
+$2^h = (n + 1)/2$ 個葉子。
+
+\textbf{DFS（堆疊）}：不論用遞迴還是自己的堆疊，堆疊裡放的是從根到目前節點那條路徑上的節點
+（自己用堆疊、一次把兩個孩子都 push 時，再加上路徑旁邊還沒走的兄弟，每層最多一個）。 路徑最長
+$h + 1$ 個節點，所以堆疊大小是 $O(h) = O(\log n)$。
+
+\textbf{BFS（佇列）}：層序走訪（資結書第~7.3.2~節）把第 $d$ 層全部取出時，第 $d + 1$ 層的
+$2^{d+1}$ 個節點都已經進了佇列。 處理完倒數第二層時，佇列裡剛好是最底層全部 $2^h = (n+1)/2$ 個
+葉子，所以佇列大小是 $\Theta(n)$。
+
+所以 BFS 比較吃記憶體，原因正是 (B) 說的要同時存最底層的葉子。
+\begin{itemize}
+\item (A) 完美二元樹的深度只有 $\Theta(\log n)$，DFS 的遞迴並不深。 錯。
+\item (B) 對。
+\item (C) DFS 只要 $O(\log n)$，不是 $O(n)$。 錯。
+\item (D) BFS 要 $\Theta(n)$，不是 $O(\log n)$。 錯。
+\end{itemize}
+（如果樹退化成一條鏈，情況反過來：DFS 的堆疊是 $\Theta(n)$、BFS 的佇列只有 $O(1)$。 題目限定是
+完美二元樹。）
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-08}]{臺大電信所 108 學年度（B）第 8 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+For a $k$-bit binary counter that supports two operations: \textsc{Increment} and
+\textsc{Decrement}, the worst-case amortized cost of randomly performing $n$ operations is
+$\Theta(nk)$. (Assume that each bit-flip costs 1 unit of time, and that the value of the counter
+is always positive and never exceeds $2^k-1$.)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對。
+
+題目說的是「做 $n$ 個操作」的成本，也就是最壞情況下 $n$ 個操作的總成本（平均到每個操作是
+$\Theta(k)$）。 「randomly」指操作的順序任意。
+
+\textbf{上界}：一次 \textsc{Increment} 或 \textsc{Decrement} 最多翻 $k$ 個位元，$n$ 次最多 $nk$，
+是 $O(nk)$。
+
+\textbf{下界}：讓計數器從 $2^{k-1} = 100\cdots0_2$ 開始，交替做 \textsc{Decrement} 和
+\textsc{Increment}：
+\[
+100\cdots0_2 \xrightarrow{\textsc{Decrement}} 011\cdots1_2 \xrightarrow{\textsc{Increment}}
+100\cdots0_2 \to \cdots
+\]
+每一次都翻全部 $k$ 個位元。 數值在 $2^{k-1} - 1$ 和 $2^{k-1}$ 之間來回，一直是正的，也不超過
+$2^k - 1$，符合題目的假設（$k \ge 2$）。 $n$ 次共翻 $nk$ 個位元，是 $\Omega(nk)$。
+
+所以最壞是 $\Theta(nk)$。 只有 \textsc{Increment} 時，$n$ 次的總成本是 $O(n)$、平攤 $O(1)$
+（資結書第~3.1.2~節），那個分析靠的是「低位元翻得多、高位元翻得少」；加上 \textsc{Decrement}
+以後，在進位的邊界來回就能讓每次都翻 $k$ 個位元，平攤的好處就沒了。
+\end{pastsoln}

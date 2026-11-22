@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ncku-113-ee-10}]{成大電機所 113 學年度 簡答題第 1 題}
+（簡答）
+
+(8 pts) Please show the locations of the points---\textit{front} and \textit{rear} in the
+following array for a circular queue. Moreover, give the mechanism to check if a queue is
+empty or is full by the data structure?
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{*{16}{|c}|}
+\multicolumn{1}{c}{[0]} & \multicolumn{1}{c}{[1]} & \multicolumn{1}{c}{[2]} &
+\multicolumn{1}{c}{[3]} & \multicolumn{1}{c}{[4]} & \multicolumn{1}{c}{[5]} &
+\multicolumn{1}{c}{[6]} & \multicolumn{1}{c}{[7]} & \multicolumn{1}{c}{[8]} &
+\multicolumn{1}{c}{[9]} & \multicolumn{1}{c}{[10]} & \multicolumn{1}{c}{[11]} &
+\multicolumn{1}{c}{[12]} & \multicolumn{1}{c}{[13]} & \multicolumn{1}{c}{[14]} &
+\multicolumn{1}{c}{[15]} \\ \hline
+$C$ & $D$ & $E$ & $F$ & $G$ & & & & & & & & & & $A$ & $B$ \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-10}。
+
+答案（照資結書第~6.2.2~節的約定，\textit{front} 指向前端元素、\textit{rear} 指向下一個要放的位置）：
+$\mathit{front} = 14$、$\mathit{rear} = 5$；空：$\mathit{front} = \mathit{rear}$；滿：$(\mathit{rear} + 1) \bmod 16 = \mathit{front}$
+（留一格不用，最多 $15$ 個）。 若 \textit{front} 指向前端的前一格、\textit{rear} 指向尾端元素，則是 $13$、$4$，條件相同。
+\end{pastsoln}

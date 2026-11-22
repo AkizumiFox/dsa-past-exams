@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:ntut-112-ee-ds-02}]{北科大電機所（戊組）112 學年度 第 2 題}
+（追蹤）
+
+Convert the following conversion to postfix:\\
+(a)Infix: $a/b\times(c+d-e)-(f-g)$ (6\%)\\
+(b)Prefix: $\times/a-\times cb+de-fg$ (6\%)
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 答案：$a\,b\,/\,c\,d\,+\,e\,-\,\times\,f\,g\,-\,-$。
+
+用資結書第~6.3.3~節的堆疊方法（虛擬碼~6.8）：運算元直接輸出；左括號推入；右括號把堆疊彈到左括號為止；
+運算子先把堆疊頂端優先順序\textbf{大於或等於}它的運算子彈出（左結合），再推入。 $\times$、$/$ 高於
+$+$、$-$。
+
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+讀到 & 堆疊（底 $\to$ 頂） & 輸出 \\
+\midrule
+$a$ & & $a$ \\
+$/$ & $/$ & $a$ \\
+$b$ & $/$ & $a\,b$ \\
+$\times$ & $\times$ & $a\,b\,/$ \quad（$/$ 和 $\times$ 同級，先彈出 $/$） \\
+$($ & $\times\ ($ & $a\,b\,/$ \\
+$c$ & $\times\ ($ & $a\,b\,/\,c$ \\
+$+$ & $\times\ (\ +$ & $a\,b\,/\,c$ \\
+$d$ & $\times\ (\ +$ & $a\,b\,/\,c\,d$ \\
+$-$ & $\times\ (\ -$ & $a\,b\,/\,c\,d\,+$ \quad（$+$ 同級，先彈出） \\
+$e$ & $\times\ (\ -$ & $a\,b\,/\,c\,d\,+\,e$ \\
+$)$ & $\times$ & $a\,b\,/\,c\,d\,+\,e\,-$ \\
+$-$ & $-$ & $a\,b\,/\,c\,d\,+\,e\,-\,\times$ \quad（$\times$ 較高，彈出） \\
+$($ & $-\ ($ & $a\,b\,/\,c\,d\,+\,e\,-\,\times$ \\
+$f$ & $-\ ($ & $\ldots\,f$ \\
+$-$ & $-\ (\ -$ & $\ldots\,f$ \\
+$g$ & $-\ (\ -$ & $\ldots\,f\,g$ \\
+$)$ & $-$ & $\ldots\,f\,g\,-$ \\
+結束 & & $a\,b\,/\,c\,d\,+\,e\,-\,\times\,f\,g\,-\,-$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+檢查：照左結合加括號是 $\bigl((a/b) \times ((c+d)-e)\bigr) - (f-g)$，逐層寫成後序得到同樣的結果。
+
+\textbf{(b)} 答案：$a\,c\,b\,\times\,d\,e\,+\,-\,/\,f\,g\,-\,\times$。
+
+前序轉後序：從\textbf{右往左}讀，運算元推入堆疊；遇到運算子就彈出兩個，先彈出的是\textbf{左}運算元
+$X$、再彈出的是右運算元 $Y$，把「$X\,Y\,\mathrm{op}$」推回去（資結書第~6.3.5~節）。
+
+\begin{center}
+\small
+\begin{tabular}{cl}
+\toprule
+讀到 & 堆疊（底 $\to$ 頂，每一格是一個已轉好的後序片段） \\
+\midrule
+$g$ & $g$ \\
+$f$ & $g \mid f$ \\
+$-$ & $f\,g\,-$ \\
+$e$ & $f\,g\,- \mid e$ \\
+$d$ & $f\,g\,- \mid e \mid d$ \\
+$+$ & $f\,g\,- \mid d\,e\,+$ \\
+$b$ & $f\,g\,- \mid d\,e\,+ \mid b$ \\
+$c$ & $f\,g\,- \mid d\,e\,+ \mid b \mid c$ \\
+$\times$ & $f\,g\,- \mid d\,e\,+ \mid c\,b\,\times$ \\
+$-$ & $f\,g\,- \mid c\,b\,\times\,d\,e\,+\,-$ \\
+$a$ & $f\,g\,- \mid c\,b\,\times\,d\,e\,+\,- \mid a$ \\
+$/$ & $f\,g\,- \mid a\,c\,b\,\times\,d\,e\,+\,-\,/$ \\
+$\times$ & $a\,c\,b\,\times\,d\,e\,+\,-\,/\,f\,g\,-\,\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+對應的中序是 $\bigl(a / ((c \times b) - (d + e))\bigr) \times (f - g)$。 前序有 $6$ 個運算子、$7$ 個運算元，讀完
+堆疊剩一個片段，表示原式是合法的前序式。
+\end{pastsoln}

@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-03}]{臺聯大電機類 112 學年度 第 3 題}
+（單選；3 分）
+
+Given the following pseudo code of Quicksort algorithm, which statement is true?
+
+(A)~The output of Quicksort() is a non-increasing sorted sequence.\\
+(B)~The Quicksort() is a stable sorting algorithm\\
+(C)~The worst time performance for the Quicksort() is O($n^2$)\\
+(D)~None of the above
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, xleftmargin=6em, xrightmargin=6em]
+Quicksort(A,p,r)
+1   if p<r
+2       q=Partition(A,p,r)
+3       Quicksort(A,p,q-1)
+4       Quicksort(A,q+1,r)
+
+Partition(A,p,r)
+1   x = A[r]
+2   i = p-1
+3   for j = p to r-1
+4       if A[j] <= x
+5           i = i+1
+6           exchange A[i] with A[j]
+7     exchange A[i+1] with A[r]
+8     print(A[p:r])
+9     return i+1
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+原卷第 7--9 行的縮排比第 3 行（for）多一點點，但比第 4 行（if）少，照文意是 for 迴圈結束以後才做的
+三行，和資結書虛擬碼~14.8 的 Lomuto 分割相同。 第 8 行的 print 只是印出來，不影響排序。
+
+\begin{itemize}
+\item (A)：錯。 第 4 行把 $\le x$ 的元素換到左邊，所以分割後基準左邊的都 $\le$ 基準、右邊的都
+$>$ 基準，遞迴排完是由小到大（non-decreasing），不是由大到小（non-increasing）。
+\item (B)：錯，Lomuto 分割的快速排序不穩定。 反例：$\langle 2_a, 2_b, 1\rangle$（$2_a$、$2_b$
+鍵相同，$2_a$ 在前）。 基準 $x = 1$，$2_a$、$2_b$ 都不 $\le 1$，$i$ 停在 $p - 1$，第 7 行把
+$A[p] = 2_a$ 和 $A[r] = 1$ 交換，得 $\langle 1, 2_b, 2_a\rangle$。 之後遞迴排 $\langle 2_b, 2_a\rangle$：
+基準 $2_a$，$2_b \le 2_a$ 留在原位，結果仍是 $\langle 1, 2_b, 2_a\rangle$，兩個 $2$ 的順序顛倒了。
+\item (C)：對。 每次分割的基準都是子陣列的最大值或最小值時（例如輸入已經排好），每層只少一個
+元素，$T(n) = T(n - 1) + \Theta(n)$，$T(n) = \Theta(n^2)$（資結書第~14.5~節）。 任何輸入都不會
+比這更差，所以最壞情況是 $\Theta(n^2)$，當然也是 $O(n^2)$。
+\item (D)：(C) 是對的，所以錯。
+\end{itemize}
+\end{pastsoln}

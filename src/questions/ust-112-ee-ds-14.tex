@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-14}]{臺聯大電機類 112 學年度 第 14 題}
+（複選；3 分，每一選項單獨計分，不倒扣）
+
+Which of the following data structures have constant or nearly constant data element access time
+O(1)?
+
+(A)~stack \qquad (B)~linked list \qquad (C)~array \qquad (D)~hash table \qquad (E)~AVL tree
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)、(D)。
+
+「存取一個資料元素」指的是存取結構裡\textbf{任意指定}的那一個（依位置或依鍵），不只是某個特定的
+元素。
+
+\begin{itemize}
+\item (A) stack：只能直接看頂端；要拿到底下第 $k$ 個，得先 pop 掉上面的 $k - 1$ 個，最壞
+$O(n)$。 push、pop、看頂端是 $O(1)$，但那不是任意元素的存取。 錯。
+\item (B) linked list：要從頭沿著指標走，第 $k$ 個要走 $k - 1$ 步，最壞 $O(n)$（資結書第~5.1~節）。 錯。
+\item (C) array：第 $i$ 個元素的位址是 $\text{base} + (i - 1) \times \text{size}$，算一次就到，
+$O(1)$（資結書第~4.1~節）。 對。
+\item (D) hash table：用雜湊函數直接算出位置。 負載因子 $\alpha$ 維持在常數時，期望搜尋時間是
+$O(1 + \alpha) = O(1)$（資結書第~12.2.2~節），這就是題目說的「nearly constant」。 最壞情況（全部碰撞）
+是 $O(n)$，但平均是常數。 對。
+\item (E) AVL tree：高度 $\Theta(\log n)$，搜尋要從根走到節點，$O(\log n)$（資結書第~10.2~節）。 錯。
+\end{itemize}
+\end{pastsoln}

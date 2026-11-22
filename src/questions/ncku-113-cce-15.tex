@@ -1,0 +1,58 @@
+\begin{pastexam}[label={px:ncku-113-cce-15}]{成大電通所 113 學年度 簡答題第 6 題}
+（簡答）
+
+(5 pts) Show the resulting \textbf{MIN Heap} for the following data: 7, 3, 17, 10, 4, 19, 33 in
+a complete binary tree recorded by an array, whose capacity is 8 and index 0 is empty.
+\begin{center}
+\begin{tabular}{*{8}{|p{1.2em}}|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} \\ \hline
+ & & & & & & & \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：
+\begin{center}
+\begin{tabular}{*{8}{|c}|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} \\ \hline
+ & 3 & 4 & 17 & 10 & 7 & 19 & 33 \\ \hline
+\end{tabular}
+\end{center}
+
+題目沒有說是「依序一個一個插入」還是「由下而上建堆積」。 這組資料兩種做法的結果剛好一樣，
+下面兩種都寫出來。 位置 $i$ 的子節點是 $2i$、$2i+1$，父節點是 $\lfloor i/2 \rfloor$（資結書
+第~8.1~節）。
+
+\textbf{依序插入}：新的數放在最後一格，比父節點小就往上換（上浮）。
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+插入 & 過程 & 陣列 $[1..]$ \\
+\midrule
+7 & 放在 $[1]$ & 7 \\
+3 & 放在 $[2]$，$3 < 7$ 和 $[1]$ 交換 & 3, 7 \\
+17 & 放在 $[3]$，$17 > 3$ 不動 & 3, 7, 17 \\
+10 & 放在 $[4]$，$10 > 7$ 不動 & 3, 7, 17, 10 \\
+4 & 放在 $[5]$，$4 < 7$ 和 $[2]$ 交換；$4 > 3$ 停 & 3, 4, 17, 10, 7 \\
+19 & 放在 $[6]$，$19 > 17$ 不動 & 3, 4, 17, 10, 7, 19 \\
+33 & 放在 $[7]$，$33 > 17$ 不動 & 3, 4, 17, 10, 7, 19, 33 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{由下而上建堆積}（資結書第~8.2~節）：先照順序放成 $7, 3, 17, 10, 4, 19, 33$，再從最後
+一個內部節點 $\lfloor 7/2 \rfloor = 3$ 往回對每個節點做下沉。
+\begin{itemize}
+\item $i = 3$：$17$ 的子節點 $19$、$33$ 都比它大，不動。
+\item $i = 2$：$3$ 的子節點 $10$、$4$ 都比它大，不動。
+\item $i = 1$：$7$ 的子節點 $3$、$17$，較小的是 $3$，交換得 $3, 7, 17, 10, 4, 19, 33$；$7$ 到了
+$[2]$，子節點 $10$、$4$，較小的 $4 < 7$，再交換得 $3, 4, 17, 10, 7, 19, 33$；$7$ 到了 $[5]$，
+沒有子節點，停。
+\end{itemize}
+結果同上。 對應的樹：根 $3$；$3$ 的子節點 $4$、$17$；$4$ 的子節點 $10$、$7$；$17$ 的子節點
+$19$、$33$。 每個節點都不大於它的子節點，是最小堆積。
+\end{pastsoln}

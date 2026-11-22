@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-22}]{臺大電信所 108 學年度（B）第 22 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of one delete operation in a splay tree of $n$ items is (choose
+the tightest bound)
+
+A.~$O(1)$ \qquad B.~$O(\log^* n)$ \qquad C.~$O(\log n)$ \qquad D.~$O(n)$ \qquad E.~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+伸展樹沒有任何平衡條件，可以長成一條鏈。 例如把 $1, 2, \ldots, n$ 依序插入空的伸展樹：每次新插入
+的是目前最大的鍵，它掛在最右邊，伸展到根以後，原來的整棵樹變成它的左子樹，結果是一條往左下延伸
+的鏈，$1$ 在深度 $n - 1$。 這時刪除 $1$：先要找到它（或把它伸展上來），走過 $n - 1$ 條邊，是
+$\Theta(n)$。 另一方面，任何操作走的路徑都不超過樹高 $n - 1$，伸展和刪除的其他步驟都和路徑長成正比
+（資結書第~10.6.2~節），所以單次最壞 $O(n)$，而且做得到。
+
+A、B、C 都太小（$O(\lg n)$ 只是平攤成本，不是單次最壞）；E 太鬆。
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-03}]{成大電通所 106 學年度 第一大題第 3 題}
+（複選；5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+
+(A)~Merge sort is faster than the insertion sort algorithm in all conditions.\\
+(B)~The expected time complexity of the quick sort algorithm is O(nlogn) when using
+RANDOMIZED-PARTION.\\
+(C)~The complexity of a comparison based algorithm cannot be faster than O(nlogn).\\
+(D)~A LSD Radix sort is not a stable sort.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(C)。
+
+原卷的 RANDOMIZED-PARTION 是 RANDOMIZED-PARTITION 的筆誤。 (C) 的寫法不精確，照出題的意思讀成
+「以比較為基礎的\textbf{排序}演算法，最壞情況不可能比 $n \log n$ 快」，也就是下界 $\Omega(n \log n)$。
+
+\begin{itemize}
+\item (A)：錯。 輸入已經排好時，插入排序每個元素只比一次，$\Theta(n)$；合併排序不管輸入都是
+$\Theta(n \log n)$。 $n$ 很小時插入排序的常數也比較小，實務上合併排序在子陣列很短時常改用插入
+排序。 所以不是「所有情況」都比較快。
+\item (B)：對。 隨機選基準時，對任何輸入，期望比較次數是 $2n \ln n + O(n) = O(n \log n)$
+（資結書定理~14.3）。 最壞仍是 $\Theta(n^2)$，但期望值是 $O(n \log n)$。
+\item (C)：對（照上面的解讀）。 以比較為基礎的排序可以看成決策樹，樹葉至少要有 $n!$ 片才能區分
+所有排列，高度至少 $\lg(n!) = \Omega(n \log n)$，所以最壞情況至少要 $\Omega(n \log n)$ 次比較
+（資結書定理~15.1）。 嚴格說，下界該用 $\Omega$ 而不是 $O$；而且說的是最壞情況，插入排序的最好情況
+$\Theta(n)$ 並不違反。
+\item (D)：錯。 LSD 基數排序是穩定的：它從最低位往最高位，每一位都用穩定的排序（通常是計數
+排序）。 它的正確性正是靠每一趟穩定：高位相同時，保留前一趟依低位排好的順序（資結書第~15.2.2~節）。
+\end{itemize}
+\end{pastsoln}

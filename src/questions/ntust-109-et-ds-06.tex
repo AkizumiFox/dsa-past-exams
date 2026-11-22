@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ntust-109-et-ds-06}]{臺科大電子所甲組 109 學年度 第 6 題}
+（問答；10 分）
+
+(10\%) What are the average time and worst time to sort $n$ objects using bubble sort, quick sort,
+heap sort, merge sort, and radix sort?
+\end{pastexam}
+
+\begin{pastsoln}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+排序法 & 平均 & 最壞 \\
+\midrule
+氣泡排序 & $\Theta(n^2)$ & $\Theta(n^2)$ \\
+快速排序 & $\Theta(n\log n)$ & $\Theta(n^2)$ \\
+堆積排序 & $\Theta(n\log n)$ & $\Theta(n\log n)$ \\
+合併排序 & $\Theta(n\log n)$ & $\Theta(n\log n)$ \\
+基數排序 & $\Theta(d(n + r))$ & $\Theta(d(n + r))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+基數排序的 $d$ 是鍵的位數、$r$ 是基數（每一位可能的值有幾種）。 理由（資結書第~14、15~章）：
+\begin{itemize}
+\item \textbf{氣泡排序}：平均有 $n(n - 1)/4$ 個逆序對，每次相鄰交換只消掉一個，所以平均
+$\Theta(n^2)$；最壞（由大到小）要比 $n(n - 1)/2$ 次。 加上「一輪沒有交換就停止」的版本，最好
+情形是 $\Theta(n)$，但平均和最壞不變。
+\item \textbf{快速排序}：平均每次分割大致均衡，$\Theta(n\log n)$（資結書定理~14.3）；最壞每次都
+切成 $0$ 和 $n - 1$（例如固定取第一個當基準，輸入已排序），$T(n) = T(n - 1) + \Theta(n) =
+\Theta(n^2)$。
+\item \textbf{堆積排序}：建堆積 $O(n)$，再做 $n - 1$ 次取出最大值，每次 $O(\log n)$，不管輸入
+如何都是 $O(n\log n)$（資結書第~14.6~節）。
+\item \textbf{合併排序}：$T(n) = 2T(n/2) + \Theta(n)$，和輸入無關，$\Theta(n\log n)$（資結書
+第~14.4~節）。
+\item \textbf{基數排序}（LSD）：每一位用計數排序做一次穩定排序，$\Theta(n + r)$，共 $d$ 位，
+$\Theta(d(n + r))$，和輸入順序無關（資結書第~15.2.2~節）。 $d$、$r$ 是常數時是 $\Theta(n)$；
+它不靠比較，所以不受 $\Omega(n\log n)$ 下界限制。
+\end{itemize}
+\end{pastsoln}

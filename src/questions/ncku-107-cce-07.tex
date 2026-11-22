@@ -1,0 +1,148 @@
+\begin{pastexam}[label={px:ncku-107-cce-07}]{成大電通所 107 學年度 問答題第 3 題}
+（問答；16 分）
+
+\textbf{3. A Mazing Problem} (16 pts)
+
+The rat in a maze experiment is a classical one from experimental psychology, where a map is recorded by a two-dimensional array, \textit{maze}[$i$][$j$], where $1\le i\le m$ and $1\le j\le p$. A value of 1 implies a blocked path, and a 0 means one can walk right on through. The data types needed are
+
+\quad \textbf{struct} \textit{offsets} \{ int \textit{a}, \textit{b}; \}\\
+\quad \textbf{enum} directions \{N, NW, W, SW, S, SE, E, NE\};\\
+\quad offsets \textit{move}[8];
+
+For example, if we are at \textit{maze}[$i$][$j$] and we wish to find the new position \textit{maze} [$g$][$h$] that is southwest of us, then we set $g$= $i$ + move[SW].a and h = $j$+move[SW].b (see Fig. (a) and (b)).
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,>={Stealth[length=2mm]},scale=1.15]
+\draw (-0.5,-1.6)--(-0.5,1.6); \draw (0.5,-1.6)--(0.5,1.6);
+\draw (-1.4,0.65)--(1.4,0.65); \draw (-1.4,-0.65)--(1.4,-0.65);
+\node[ellipse,draw,thick,fill=black!25,minimum width=5mm,minimum height=6.5mm,inner sep=0pt] (c) at (0,0) {};
+\node[below right=-1pt,inner sep=1pt,fill=white] at (-0.22,-0.36) {[i][j]};
+\draw[thick,->] (c)--(0,1.25);
+\draw[thick,->] (c)--(0,-1.05);
+\draw[thick,->] (c)--(0.62,0);
+\draw[thick,->] (c)--(-0.62,0);
+\draw[thick,->] (c)--(1.15,1.25);
+\draw[thick,->] (c)--(-1.1,1.25);
+\draw[thick,->] (c)--(1.1,-1.05);
+\draw[thick,->] (c)--(-1.1,-1.05);
+\node at (0,1.42) {[i-1][j]};
+\node at (-1.15,1.42) {[i-1][j-1]};
+\node at (1.2,1.42) {[i-1][j+1]};
+\node at (0,-1.3) {[i+1][j]};
+\node at (-1.15,-1.3) {[i+1][j-1]};
+\node at (1.2,-1.3) {[i+1][j+1]};
+\node[left] at (-0.6,0) {W\, [i][j-1]};
+\node[right] at (0.6,0) {[i][j+1]\, E};
+\node at (0,1.85) {N}; \node at (-1.6,1.85) {NW}; \node at (1.6,1.85) {NE};
+\node at (0,-1.75) {S}; \node at (-1.6,-1.75) {SW}; \node at (1.6,-1.75) {SE};
+\end{tikzpicture}
+\\ (a)\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}\hline
+$q$ & \textit{move}[$q$].a & \textit{move}[$q$].b\\\hline
+N & $-1$ & 0\\
+NE & $-1$ & 1\\
+E & 0 & 1\\
+SE & 1 & 1\\
+S & 1 & 0\\
+SW & 1 & $-1$\\
+W & 0 & $-1$\\
+NW & $-1$ & $-1$\\\hline
+\end{tabular}\\ (b)
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>={Stealth[length=1.8mm]}]
+\begin{scope}[xshift=0.00cm]
+\draw (0.00,0)--(0.00,-3.00); \draw (0,0.00)--(3.00,0.00);
+\draw (0.60,0)--(0.60,-3.00); \draw (0,-0.60)--(3.00,-0.60);
+\draw (1.20,0)--(1.20,-3.00); \draw (0,-1.20)--(3.00,-1.20);
+\draw (1.80,0)--(1.80,-3.00); \draw (0,-1.80)--(3.00,-1.80);
+\draw (2.40,0)--(2.40,-3.00); \draw (0,-2.40)--(3.00,-2.40);
+\draw (3.00,0)--(3.00,-3.00); \draw (0,-3.00)--(3.00,-3.00);
+\node at (-0.4,-0.30) {0};
+\node at (0.30,-0.30) {0};
+\node at (0.90,-0.30) {0};
+\node at (1.50,-0.30) {0};
+\node at (2.10,-0.30) {1};
+\node at (2.70,-0.30) {1};
+\node at (-0.4,-0.90) {1};
+\node at (0.30,-0.90) {0};
+\node at (0.90,-0.90) {1};
+\node at (1.50,-0.90) {1};
+\node at (2.10,-0.90) {0};
+\node at (2.70,-0.90) {1};
+\node at (-0.4,-1.50) {2};
+\node at (0.30,-1.50) {0};
+\node at (0.90,-1.50) {0};
+\node at (1.50,-1.50) {0};
+\node at (2.10,-1.50) {0};
+\node at (2.70,-1.50) {0};
+\node at (-0.4,-2.10) {3};
+\node at (0.30,-2.10) {1};
+\node at (0.90,-2.10) {1};
+\node at (1.50,-2.10) {1};
+\node at (2.10,-2.10) {0};
+\node at (2.70,-2.10) {1};
+\node at (-0.4,-2.70) {4};
+\node at (0.30,-2.70) {0};
+\node at (0.90,-2.70) {1};
+\node at (1.50,-2.70) {1};
+\node at (2.10,-2.70) {0};
+\node at (2.70,-2.70) {0};
+\node at (0.30,0.35) {0};
+\node at (0.90,0.35) {1};
+\node at (1.50,0.35) {2};
+\node at (2.10,0.35) {3};
+\node at (2.70,0.35) {4};
+\draw[<-] (3.15,0.35)--++(0.45,0) node[right] {$j$};
+\draw[<-] (-0.4,-3.15)--++(0,-0.4) node[below] {$i$};
+\node at (1.50,-3.90) {};
+\end{scope}
+\draw[<-] (-0.03,0.03)--++(-0.3,0.45) node[above,font=\footnotesize] {exit};
+\draw[<-] (3.03,-3.03)--++(0.4,-0.3) node[below,font=\footnotesize] {entrance};
+\end{tikzpicture}
+\\ (c)\end{center}
+
+The pseudo code is shown in the following:
+\begin{minted}[fontsize=\small,linenos,numbersep=6pt,xleftmargin=2em]{text}
+initialize list to the maze entrance coordinates and direction north;
+while (list is not empty)
+{
+  (i, j, dir) = coordinates and direction from end of list;
+  delete last element of list;
+  while (there are more moves from (i, j)) // i.e., dir < 8
+  {
+     (g, h) = coordinates of next move;
+     if ((g == m) && (h == p)) success;
+     if ((!maze[g][h] && (!mark[g][h]))
+     {
+         mark[g][h] = 1;
+         dir = next direction to try;
+         add (i, j, dir) to end of list;
+         (i, j, dir) = (g, h, N);   //move to new location
+     }
+  }
+}
+cout << "No path in maze." << endl;
+\end{minted}
+\begin{enumerate}[label=\alph*.]
+\item (\textbf{2 pts}) What kind of the data structure that you can use it to implement the \textit{list} in the above pseudo code? Why?
+\item (\textbf{2 pts}) How do you handle the problem when a rat touches the boundary of a maze?
+\item (\textbf{2 pts}) What is the purpose of the matrix \textit{mark} which appears in Line 10 and Line 12?
+\item (\textbf{5 pts}) Please show the path that is found by the program in the map of Fig. (c) in term of the index of the matrix.
+\item (\textbf{2 pts}) Can you find the path if there exists at least one route from entrance to exit according to the algorithm?
+\item (\textbf{3 pts}) Assume the cost will be increased by one if you go through a grid in the maze, and the cost of a path is the number of grids in the path. Dose the proposed algorithm find the path with the smallest cost? If the answer is No, what kind of algorithm and the data structure that you should use in order to find the path with the smallest cost?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電機所 107 學年度的「資料結構」是同一份（兩系所共用），完整詳解見歷屆試題~\ref{px:ncku-107-ee-ds-07}。
+
+答案：a. 堆疊（從 list 尾端放、尾端取，後進先出，走進死路時退回最近一個還有方向沒試的位置）。
+b. 迷宮外圍一圈 $1$（宣告 \texttt{maze[m+2][p+2]}），就不會走出邊界。 c. 記錄走過的格子，避免來回繞圈、
+每格最多進去一次。 d. 入口 $(4,4)$、出口 $(0,0)$，照 \texttt{enum} 的方向順序：
+$(4,4) \to (3,3) \to (2,3) \to (1,3) \to (0,2) \to (0,1) \to (0,0)$。 e. 可以，有路就一定找得到。
+f. 不一定；這張圖最短的是 $(4,4) \to (3,3) \to (2,2) \to (2,1) \to (1,0) \to (0,0)$，要改用 BFS 配佇列。
+\end{pastsoln}

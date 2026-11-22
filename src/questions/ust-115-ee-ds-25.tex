@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-25}]{臺聯大電機類 115 學年度 第 25 題}
+（單選；2 分）
+
+\textbf{To find the top 100 words by appearance frequency in a book, which of the following data
+structures will offer the best computational time for counting the word frequency?}
+
+(A)~list of linked lists \qquad (B)~queue \qquad (C)~tree \qquad (D)~array \qquad (E)~hash table
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (E)。
+
+題目問的是「計算字頻」這一步。 書裡共有 $N$ 個字、其中 $m$ 個不同的字。 每讀到一個字 $w$，要找到
+$w$ 目前的計數加一，第一次出現就新增一筆。 這是以字為鍵值的「搜尋＋插入」，雜湊表每次期望
+$\Theta(1)$（算雜湊值要看過整個字，和字長成正比），總共期望 $\Theta(N)$（資結書第~12.1~節、
+第~12.2~節）。 算完字頻後，再用大小 $100$ 的最小堆積挑出前 $100$ 名（歷屆試題~\ref{px:ust-115-ee-ds-24}
+的方法）。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 一串串列（例如依字首分組）：每次在一條串列裡循序找，$O(m)$。 錯。
+\item (B) 佇列只能從前端取、後端放，不能依鍵值找。 錯。
+\item (C) 樹：平衡搜尋樹每次 $O(\log m)$ 次字串比較，比雜湊表慢；普通 BST 最壞 $O(m)$。 錯。
+\item (D) 陣列：沒有把字對到索引的方法，只能循序找 $O(m)$；排序好的陣列二分找 $O(\log m)$，但
+插入新字要搬移 $O(m)$。 錯。
+\item (E) 對。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-19}]{臺大電信所 109 學年度（B）第 19 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of one delete-min operations is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+題目問的是\textbf{最壞}，不是平攤。 delete-min 的\textbf{平攤}成本是 $O(\log n)$，但單獨一次
+可以很貴（資結書第~8.6~節）：
+\begin{itemize}
+\item \textbf{下界}：從空堆積連續插入 $n$ 個元素，插入不做任何連結，根串列有 $n$ 棵單節點的
+樹。 接下來第一次 delete-min 拿掉最小的根後，要把剩下的 $n - 1$ 棵整理到每個階數只剩一棵，
+光是看過每一棵就要 $\Theta(n)$。
+\item \textbf{上界}：整理時每棵樹看一次、每次連結讓樹少一棵，樹的總數不超過 $n$，所以
+$O(n)$。
+\end{itemize}
+最壞是 $\Theta(n)$，選 (D)。 選 (C) 是把平攤當成最壞了。
+\end{pastsoln}

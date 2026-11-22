@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-04}]{成大電通所 108 學年度 問答題第 1 題}
+（問答；5 分）
+
+What are the best-case time complexity using ``$\Theta$'' notation to move n (n>0) plates from one of
+the three Hanoi towers to another? (5 points)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 $\Theta(2^n)$。
+
+河內塔的規則是一次搬一個盤子、大盤不能壓在小盤上。 搬 $n$ 個盤子時，最大的盤子要從起點柱移到目標柱，
+那一刻其餘 $n - 1$ 個盤子必須全部在第三根柱子上；之後還要再把這 $n - 1$ 個搬到目標柱上。 所以最少的
+搬動次數 $T(n)$ 滿足
+\[
+T(1) = 1, \qquad T(n) = 2T(n - 1) + 1 \quad (n \ge 2).
+\]
+展開（資結書第~2.1~節）：$T(n) = 2T(n-1) + 1 = 4T(n-2) + 2 + 1 = \cdots = 2^{n-1}T(1) + 2^{n-2} + \cdots
++ 1 = 2^n - 1$。 驗證：$T(1) = 1$、$T(2) = 3$、$T(3) = 7$。
+
+上面的論證說明\textbf{任何}正確的搬法都至少要 $2^n - 1$ 步，而遞迴解法（資結書虛擬碼~6.11）恰好用
+$2^n - 1$ 步，所以沒有「比較好的輸入」可以更快：最好、最壞情況都是 $2^n - 1$ 次搬動，時間
+$\Theta(2^n)$。
+\end{pastsoln}

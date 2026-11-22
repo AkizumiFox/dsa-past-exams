@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-113-ee-13}]{成大電機所 113 學年度 簡答題第 4 題}
+（簡答）
+
+(6 pts) Please show the data structures to record the following graph in the form of adjacency
+matrix and the inversed adjacency list.
+
+\begin{center}
+\begin{tikzpicture}[>={Latex[length=5pt]},thick,v/.style={draw,circle,minimum size=0.8cm,inner sep=0pt,font=\sffamily\large}]
+  \node[v] (0) at (0,0) {0}; \node[v] (1) at (1.5,0) {1}; \node[v] (2) at (3.1,0) {2};
+  \draw[->] ([yshift=0.22cm]1.west)--([yshift=0.22cm]0.east);
+  \draw[->] ([yshift=-0.22cm]0.east)--([yshift=-0.22cm]1.west);
+  \draw[->] (1)--(2);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-13}。
+
+答案：相鄰矩陣的三列是 $0\,1\,0$、$1\,0\,1$、$0\,0\,0$；反鄰接串列是 $0\colon 1$；$1\colon 0$；$2\colon 1$。
+\end{pastsoln}

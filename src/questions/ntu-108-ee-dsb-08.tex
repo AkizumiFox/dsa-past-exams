@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-08}]{臺大電機所 108 學年度（B）第 8 題}
+（是非；答對 4 分，答錯倒扣 4 分）
+
+If a binary tree has 1,000 nodes, it has a minimum height of 10. (The height of a tree with one
+node is 0.)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯。 最小高度是 $9$。
+
+高度為 $h$ 的二元樹（只有根時高度 $0$）共有 $h + 1$ 層，第 $j$ 層（根是第 $0$ 層）最多 $2^j$
+個節點，所以最多有
+\[
+1 + 2 + \cdots + 2^h = 2^{h+1} - 1
+\]
+個節點（資結書定理~7.1）。 要放下 $1000$ 個節點，需要 $2^{h+1} - 1 \ge 1000$：
+\begin{itemize}
+\item $h = 8$：最多 $2^9 - 1 = 511 < 1000$，放不下。
+\item $h = 9$：最多 $2^{10} - 1 = 1023 \ge 1000$，放得下。 例如 $1000$ 個節點的完全二元樹，
+高度是 $\lfloor \lg 1000 \rfloor = 9$（資結書定理~7.3）。
+\end{itemize}
+所以最小高度是 $\lceil \lg(1000 + 1) \rceil - 1 = 9$，不是 $10$。 會答 $10$ 通常是把「層數」
+（$10$ 層）當成高度，題目已經註明單一節點的高度是 $0$，高度比層數少 $1$。
+\end{pastsoln}

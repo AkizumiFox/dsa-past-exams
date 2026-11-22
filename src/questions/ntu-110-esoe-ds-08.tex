@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-08}]{臺大工科海洋所 110 學年度（A）第 8 題}
+（追蹤）
+
+\textbf{(15 \%)} Sorting.
+\begin{enumerate}[label=(\alph*)]
+\item (5 \%) Apply mergesort and trace it on arrays A = [1 \ 6 \ 25 \ 30] and B = [3 \ 14 \ 28 \ 32 \ 36].
+\item (10 \%) Trace the heapsort as it sorts the following array into ascending order:\\
+{[9 \ 12 \ 4 \ 8 \ 3 \ 11 \ 6 \ 15]}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} $A$、$B$ 都已經排好，合併排序在這裡要做的就是最後一步「合併」（資結書第~14.4~節）：
+$i$、$j$ 分別指著 $A$、$B$ 目前最前面的元素，每次比較 $A[i]$ 和 $B[j]$，把小的放進結果 $C$，相等時
+取 $A$ 的（保持穩定）。
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+步驟 & 比較 & 放入 & $C$ \\
+\midrule
+1 & $1$ vs $3$ & $1$（$A$） & $1$ \\
+2 & $6$ vs $3$ & $3$（$B$） & $1, 3$ \\
+3 & $6$ vs $14$ & $6$（$A$） & $1, 3, 6$ \\
+4 & $25$ vs $14$ & $14$（$B$） & $1, 3, 6, 14$ \\
+5 & $25$ vs $28$ & $25$（$A$） & $1, 3, 6, 14, 25$ \\
+6 & $30$ vs $28$ & $28$（$B$） & $1, 3, 6, 14, 25, 28$ \\
+7 & $30$ vs $32$ & $30$（$A$） & $1, 3, 6, 14, 25, 28, 30$ \\
+8 & $A$ 用完 & $32, 36$（$B$ 剩下的） & $1, 3, 6, 14, 25, 28, 30, 32, 36$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+共比較 $7$ 次，結果 $C = [1\ 3\ 6\ 14\ 25\ 28\ 30\ 32\ 36]$。 （如果題目要的是把 $A$、$B$ 各自從頭做合併
+排序：$A$ 分成 $[1\ 6]$、$[25\ 30]$，各自再分成單一元素、合併回 $[1\ 6]$、$[25\ 30]$，再合併成 $[1\ 6\ 25\ 30]$；
+$B$ 分成 $[3\ 14]$、$[28\ 32\ 36]$，同樣合併回原樣。 因為兩個陣列本來就排好，每次合併都不會改變
+順序，最後一步就是上表。）
+
+\textbf{(b)} 由小到大排，用最大堆積（資結書第~14.6~節）：先由下而上建最大堆積，再重複「根和最後
+一格交換、堆積大小減 $1$、根往下沉」。 位置從 $1$ 編號，$i$ 的子節點是 $2i$、$2i + 1$。
+
+\textbf{建堆積}：從 $\lfloor 8/2 \rfloor = 4$ 往前到 $1$，每個位置往下沉（和較大的子節點比，比它小就交換）。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+下沉的位置 & 交換 & 陣列 \\
+\midrule
+初始 & & $9, 12, 4, 8, 3, 11, 6, 15$ \\
+4（值 8） & $8 \leftrightarrow 15$ & $9, 12, 4, 15, 3, 11, 6, 8$ \\
+3（值 4） & $4 \leftrightarrow 11$ & $9, 12, 11, 15, 3, 4, 6, 8$ \\
+2（值 12） & $12 \leftrightarrow 15$ & $9, 15, 11, 12, 3, 4, 6, 8$ \\
+1（值 9） & $9 \leftrightarrow 15$，$9 \leftrightarrow 12$ & $15, 12, 11, 9, 3, 4, 6, 8$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{排序}：每一輪把根（目前最大）換到堆積的最後一格，那一格之後就不動了（用 $|$ 隔開）。
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+輪 & 交換根和最後一格 & 根下沉時的交換 & 陣列 \\
+\midrule
+1 & $15 \leftrightarrow 8$ & $8 \leftrightarrow 12$，$8 \leftrightarrow 9$ & $12, 9, 11, 8, 3, 4, 6 \mid 15$ \\
+2 & $12 \leftrightarrow 6$ & $6 \leftrightarrow 11$ & $11, 9, 6, 8, 3, 4 \mid 12, 15$ \\
+3 & $11 \leftrightarrow 4$ & $4 \leftrightarrow 9$，$4 \leftrightarrow 8$ & $9, 8, 6, 4, 3 \mid 11, 12, 15$ \\
+4 & $9 \leftrightarrow 3$ & $3 \leftrightarrow 8$，$3 \leftrightarrow 4$ & $8, 4, 6, 3 \mid 9, 11, 12, 15$ \\
+5 & $8 \leftrightarrow 3$ & $3 \leftrightarrow 6$ & $6, 4, 3 \mid 8, 9, 11, 12, 15$ \\
+6 & $6 \leftrightarrow 3$ & $3 \leftrightarrow 4$ & $4, 3 \mid 6, 8, 9, 11, 12, 15$ \\
+7 & $4 \leftrightarrow 3$ & 無 & $3 \mid 4, 6, 8, 9, 11, 12, 15$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 $[3\ 4\ 6\ 8\ 9\ 11\ 12\ 15]$。 第 1 輪：$8$ 換到根，子節點 $12$、$11$ 較大的是 $12$，交換；再和子節點
+$9$、$3$ 比，$9$ 較大，交換；$8$ 到了位置 $4$，子節點位置 $8$ 已經不在堆積裡，停。 其他輪同理，每次
+都和\textbf{較大}的子節點交換。
+\end{pastsoln}

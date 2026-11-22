@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-15}]{臺聯大電機類 114 學年度 第 15 題}
+（單選；2 分，答錯不倒扣）
+
+Answer questions 14-16 according to the following C code.
+\begin{minted}[fontsize=\small]{c}
+struct Node {
+    int data;
+    struct Node* next;
+};
+int funcA(struct Node* head) {
+    struct Node *slow = head, *fast = head;
+    while (slow && fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return 1;
+        }
+    }
+    return 0;
+}
+\end{minted}
+
+Time complexity of funcA()?
+
+(A)~O(1) \qquad (B)~O(n) \qquad (C)~O(n$^2$) \qquad (D)~O(nlogn)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。 $n$ 是串列的節點數。
+\begin{itemize}
+\item 沒有環：\texttt{fast} 每輪走兩步，大約 $n/2$ 輪就走到尾端，$O(n)$。
+\item 有環：設環前面有 $\mu$ 個節點、環長 $\lambda$，$\mu + \lambda = n$。 \texttt{slow} 走 $\mu$ 步
+進入環時 \texttt{fast} 已經在環裡；之後兩者距離每輪少 $1$，最多 $\lambda$ 輪內相遇。 總輪數不超過
+$\mu + \lambda = n$（資結書定理~5.4 給出精確的輪數：$\lambda$ 的倍數中不小於 $\max(\mu, 1)$ 的
+最小者，且 $\le n$）。
+\end{itemize}
+每輪 $O(1)$，所以是 $O(n)$。 最壞也要走到 $\Theta(n)$ 個節點（例如沒有環的長串列），所以 (A) 錯；
+(C)(D) 比實際慢，不是這個函式的複雜度。
+\end{pastsoln}

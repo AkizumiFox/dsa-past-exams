@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-08}]{臺大電信所 110 學年度（B）第 8 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+Given a weighted directed graph $G=(V,E,w)$ with no negative-weight edges, we can solve its single source shortest path problem in $O(V+E)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+邊權非負時用 Dijkstra 演算法，時間取決於優先佇列：二元堆積 $O((V + E)\lg V)$，費氏堆積
+$O(E + V\lg V)$（資結書第~25.2~節）。 兩者都比 $O(V + E)$ 多了 $\lg V$ 的因子，在一般的比較模型下
+沒有已知的 $O(V + E)$ 演算法。 以 Dijkstra 來說，它依距離由小到大確定頂點，等於順便把頂點依距離
+排好序，只靠比較的優先佇列做這件事至少要 $\Omega(V\lg V)$。
+
+只有特殊情形才是線性：
+\begin{itemize}
+\item 所有邊權都相同（例如都是 $1$）：BFS 就是最短路徑，$O(V + E)$。
+\item 圖沒有環（DAG）：依拓樸順序鬆弛一次，$O(V + E)$，邊權正負都可以（資結書第~25.5~節）。
+\end{itemize}
+題目說的是一般的有向圖，所以不成立。
+\end{pastsoln}

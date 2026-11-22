@@ -1,0 +1,33 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-36}]{臺大電信所 110 學年度（B）第 36 題}
+（複選；每題 2.5 分，每答錯一個選項倒扣 0.5 分至該題 0 分止）
+
+Which of the following statements are true?
+\begin{enumerate}[label=\Alph*.]
+\item $\lceil\log n\rceil!=O(n^2)$
+\item $(\log n)^n=O(n!)$
+\item $\log(n!)=O(n\log n)$
+\item $\log^* n=O(\log^*\log n)$
+\item $3^{\log_9 n}=O(\sqrt{n})$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B、C、D、E。
+
+\textbf{A 錯}。 令 $m = \lceil\lg n\rceil$，則 $n \le 2^m$，$n^2 \le 4^m$，所以
+$\dfrac{m!}{n^2} \ge \dfrac{m!}{4^m}$。 $m$ 每加 $1$，$m!/4^m$ 就乘上 $(m + 1)/4$，$m \ge 4$ 以後只增不減而且
+沒有上界，所以 $\lceil\lg n\rceil!$ 不是 $O(n^2)$。 換個看法：$\lg(m!) = \Theta(m\lg m) = \Theta(\lg n\cdot\lg\lg n)$，
+$m! = n^{\Theta(\lg\lg n)}$，比任何多項式都大。 對數換成別的底，只差常數倍，結論相同。
+
+\textbf{B 對}。 $n! \ge (n/e)^n$（史特靈公式的下界），所以
+$\dfrac{(\log n)^n}{n!} \le \left(\dfrac{e\log n}{n}\right)^n$。 $n$ 夠大時 $e\log n / n < 1$，比值趨近 $0$，
+$(\log n)^n = o(n!)$，當然是 $O(n!)$。
+
+\textbf{C 對}。 $n! \le n^n$，$\log(n!) \le n\log n$（其實是 $\Theta(n\log n)$，資結書第~1.6~節）。
+
+\textbf{D 對}。 由 $\log^*$ 的定義，$n > 1$ 時 $\log^* n = 1 + \log^*(\log n)$。 $n$ 夠大時
+$\log^*\log n \ge 1$，所以 $\log^* n = 1 + \log^*\log n \le 2\log^*\log n$。 兩者只差 $1$，同階。
+
+\textbf{E 對}。 $\log_9 n = \dfrac{\log_3 n}{\log_3 9} = \dfrac{\log_3 n}{2}$，
+$3^{\log_9 n} = \left(3^{\log_3 n}\right)^{1/2} = \sqrt n$，所以是 $O(\sqrt n)$（等號成立）。
+\end{pastsoln}

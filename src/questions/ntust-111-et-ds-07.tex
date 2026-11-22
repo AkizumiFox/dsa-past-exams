@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntust-111-et-ds-07}]{臺科大電子所甲組 111 學年度 第 7 題}
+（演算法設計）
+
+(10\%) Write an algorithm for finding the maximum number in a binary search tree.
+\end{pastexam}
+
+\begin{pastsoln}
+二元搜尋樹裡，每個節點右子樹的鍵都比它大（資結書第~9~章）。 所以從根一路往右走，走到沒有右子節點的節點，
+就是最大值（資結書第~9.1~節，虛擬碼~9.3 \proc{Tree-Maximum}）。
+
+\begin{pseudo}{二元搜尋樹的最大值}
+\Function{Tree-Maximum}{$T$}
+    \If{$T.\mathit{root} = \NIL$}
+        \State \Error{空樹，沒有最大值}
+    \EndIf
+    \State $x \gets T.\mathit{root}$
+    \While{$x.\mathit{right} \ne \NIL$}
+        \State $x \gets x.\mathit{right}$
+    \EndWhile
+    \State \Return $x.\mathit{key}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 迴圈不變量：最大的鍵在以 $x$ 為根的子樹裡。 一開始 $x$ 是根，成立。 每輪 $x$ 有右子節點時，
+$x$ 和它整棵左子樹的鍵都小於右子樹的鍵，最大值只可能在右子樹，所以 $x \gets x.\mathit{right}$ 後仍成立。 迴圈停下時
+$x$ 沒有右子節點，以 $x$ 為根的子樹只剩 $x$ 和它的左子樹，左子樹的鍵都比 $x$ 小，所以 $x.\mathit{key}$ 就是最大值。
+注意最大值不一定是葉節點：它可以有左子樹（例如依序插入 $50, 70, 60$，最大的 $70$ 有左子節點 $60$）。
+
+例：依序插入 $50, 30, 70, 60, 80, 75$ 的樹，從 $50$ 往右到 $70$、再往右到 $80$；$80$ 沒有右子節點，最大值是 $80$
+（它的左子節點是 $75$）。
+
+\textbf{複雜度}。 每輪往下一層，時間 $O(h)$，$h$ 是樹高：平衡時 $O(\lg n)$，最壞（例如依遞增順序插入，樹長成一條
+往右的鏈）$\Theta(n)$。 額外空間 $O(1)$。 也可以寫成遞迴：$x.\mathit{right} = \NIL$ 時回傳 $x.\mathit{key}$，否則回傳
+\proc{Max}$(x.\mathit{right})$，時間相同，但遞迴深度 $O(h)$。
+\end{pastsoln}

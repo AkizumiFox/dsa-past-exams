@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-06}]{臺大工工所 107 學年度 第 6 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Answer questions 5 to 8 for the following setting.\\
+Let $s$(node) be the number of comparisons required to find the node in the BST, e.g. $s$(root) = 1. Let $t$(node) be the number of the nodes in its left subtree, e.g. $t$(leaf) = 0.
+
+\medskip
+6. The summation of $s$ for all nodes can be as small as O($n$ log $n$).
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確。
+
+$s(x)$ 是 $x$ 的深度加 $1$。 取一棵完整二元樹形狀的 BST（例如把排好的鍵取中間當根、兩半遞迴
+建樹），高度是 $\lfloor \lg n \rfloor$（資結書定理~7.3），每個 $s(x) \le \lfloor \lg n \rfloor + 1$，
+\[
+\sum_{x} s(x) \le n(\lfloor \lg n \rfloor + 1) = O(n \log n).
+\]
+所以總和可以小到 $O(n \log n)$。
+
+這也是最小的量級：深度 $d$ 最多 $2^d$ 個節點，要放下 $n$ 個節點，至少有一半的節點深度
+$\ge \lfloor \lg n \rfloor - 1$，總和是 $\Omega(n \log n)$。 合起來，$s$ 的總和最小是
+$\Theta(n \log n)$，平均每個節點 $\Theta(\log n)$ 次比較；這正是隨機建的 BST 平均搜尋成本的量級
+（資結書第~9.3~節）。
+\end{pastsoln}

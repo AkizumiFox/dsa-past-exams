@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-13}]{臺聯大電機類 115 學年度 第 13 題}
+（單選；2 分）
+
+Skip List is a probabilistic data structure based on linked lists. What is its main purpose in
+addressing the shortcomings of standard linked lists?
+\begin{enumerate}[label=(\Alph*)]
+\item Solving the problem of slow insertion
+\item Solving the problem of not being able to perform fast searches
+\item Solving the problem of excessive memory usage
+\item Solving the problem of being unable to traverse in reverse
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+排序好的串列不能隨機存取，找一個鍵值只能從頭一個一個走，要 $\Theta(n)$，不能像陣列那樣二分搜尋。
+跳躍串列在原來的串列上面加幾層「快速道路」：每個節點隨機決定高度，第 $i$ 層大約每 $2^i$ 個節點
+留一個。 搜尋從最高層開始往右走，走過頭就往下一層，期望時間是 $O(\log n)$（資結書第~10.7~節、
+定理~10.7）。 它的目的是讓串列也能快速搜尋。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 串列在已知位置插入本來就是 $\Theta(1)$；慢的是「找到插入位置」，那正是搜尋的問題。
+跳躍串列的插入也要先搜尋。 主要目的不是插入。 錯。
+\item (B) 對。
+\item (C) 跳躍串列多了每層的指標，期望大約 $2n$ 個指標，記憶體反而比單一串列多。 錯。
+\item (D) 往回走要靠雙向串列，跳躍串列的指標都是往右的。 錯。
+\end{itemize}
+\end{pastsoln}

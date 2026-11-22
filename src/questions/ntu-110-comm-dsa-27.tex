@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-27}]{臺大電信所 110 學年度（B）第 27 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In this exam,
+\begin{itemize}
+\item The height of a leaf (in either a tree or heap) is defined as 0.
+\item The depth of the root (in either a tree or heap) is defined as 0.
+\item The degree of a node (in either a tree or heap) is defined as the number of its children.
+\item The size of a tree/heap is defined as the total number of keys (items) it stores.
+\item All heaps, unless otherwise specified, are min heaps.
+\end{itemize}
+
+For an AVL tree with 2021 nodes, let x be the minimum possible height, y be the maximum height, then (y-x) mod 5 is
+
+A.~0 \qquad B.~1 \qquad C.~2 \qquad D.~3 \qquad E.~4
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 E（4）。
+
+本卷規定葉子的高度是 $0$，所以高度 $h$ 的樹最長的根到葉路徑有 $h$ 條邊。
+
+\textbf{最小高度 $x$}。 高度 $h$ 的二元樹最多 $2^{h+1} - 1$ 個節點。 $2^{10} - 1 = 1023 < 2021 \le 2^{11} - 1 = 2047$，
+所以高度至少 $10$。 高度 $10$ 做得到：$2021$ 個節點的完整二元樹（各層由左到右填滿）高度 $10$，任一節點
+左右子樹高度差至多 $1$，是 AVL 樹。 $x = 10$。
+
+\textbf{最大高度 $y$}。 令 $N(h)$ 為高度 $h$ 的 AVL 樹最少的節點數。 最省節點的做法是根的一邊高度
+$h - 1$、另一邊 $h - 2$，兩邊也都最省（資結書第~10.2.2~節）：
+\[
+N(0) = 1,\quad N(1) = 2,\quad N(h) = N(h-1) + N(h-2) + 1.
+\]
+\begin{center}
+\begin{tabular}{c*{9}{c}}
+\toprule
+$h$ & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\
+\midrule
+$N(h)$ & 54 & 88 & 143 & 232 & 376 & 609 & 986 & 1596 & 2583 \\
+\bottomrule
+\end{tabular}
+\end{center}
+（前面是 $N(0..6) = 1, 2, 4, 7, 12, 20, 33$。） 高度 $h$ 的 AVL 樹至少要 $N(h)$ 個節點，$N(15) = 2583 > 2021$，
+所以高度不可能到 $15$。 高度 $14$ 做得到：用歸納法可以證明，高度 $h$ 的 AVL 樹節點數可以是
+$N(h)$ 到 $2^{h+1} - 1$ 之間的\textbf{任何}整數。 $h = 0, 1$ 直接檢查；$h \ge 2$ 時，根的左右子樹取高度
+$(h-1, h-2)$，節點數能湊出 $N(h)$ 到 $1 + (2^{h} - 1) + (2^{h-1} - 1)$ 的每個值，取 $(h-1, h-1)$ 能湊出
+$1 + 2N(h-1)$ 到 $2^{h+1} - 1$ 的每個值，因為 $1 + 2N(h-1) \le 2^{h} + 2^{h-1} - 1$，兩段接得起來。
+$N(14) = 1596 \le 2021 \le 2^{15} - 1$，所以 $y = 14$。
+
+$y - x = 14 - 10 = 4$，$4 \bmod 5 = 4$，選 E。
+\end{pastsoln}

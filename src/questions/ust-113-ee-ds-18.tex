@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-18}]{臺聯大電機類 113 學年度 問答題第 2 題}
+（問答；10 分）
+
+Analyze the characteristics and functionalities of hash tables, where $\alpha$ is the load factor of
+the hash table.
+\begin{enumerate}[label=(\Alph*)]
+\item Which collision resolution technique can lead to primary clustering? (3 points)
+\item What is the average-case time complexity of search operations in a hash table using chaining
+for collision resolution, in Big-O notation, assuming a good hash function? (3 points)
+\item Consider a hash table using linear probing for collision resolution where n is the number of
+elements in the hash table. What happens to the average-case time complexity of search operations
+as the load factor $\alpha$ approaches 1? (4 points)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+設表有 $m$ 格、$n$ 個鍵，載入因子 $\alpha = n/m$。
+
+\textbf{(A)} 線性探測（linear probing）。 碰撞時依序試下一格 $h(k) + 1, h(k) + 2, \ldots$（都 $\bmod m$），
+被佔的格子連成一段之後，落在這一段任何一格的鍵都要走到段尾才放得下，又把段尾加長一格；段越長，被
+打中的機率越大，長得越快。 這種連成一長段的現象叫主要群聚（資結書第~12.3~節）。 二次探測和雙重雜湊
+跳開了，沒有主要群聚（二次探測有較輕微的次要群聚）。
+
+\textbf{(B)} $O(1 + \alpha)$。 在簡單均勻雜湊的假設下，每條串列的期望長度是 $\alpha$，失敗的搜尋要走完一條
+串列，期望 $\Theta(1 + \alpha)$；成功的搜尋期望比較 $1 + \alpha/2 - \alpha/(2n)$ 次，也是 $\Theta(1 + \alpha)$
+（資結書第~12.2.2~節）。 表的大小和 $n$ 成正比（$\alpha = O(1)$）時就是 $O(1)$。 「$1$」是算雜湊值和存取
+那一格的時間，不能省略：$\alpha$ 很小時時間不會趨近 $0$。
+
+\textbf{(C)} 時間會急遽變大，$\alpha \to 1$ 時趨向 $O(n)$。 依 Knuth 的分析（資結書第~12.4~節引用），線性探測
+的期望探測次數約為
+\[
+\text{成功：} \frac{1}{2}\left(1 + \frac{1}{1 - \alpha}\right), \qquad
+\text{失敗：} \frac{1}{2}\left(1 + \frac{1}{(1 - \alpha)^2}\right).
+\]
+$\alpha = 0.5$ 時是 $1.5$ 和 $2.5$；$\alpha = 0.9$ 時是 $5.5$ 和 $50.5$；$\alpha \to 1$ 時兩個式子都趨向無限大。
+當然實際的探測次數不會超過 $m$：表快滿時，群聚連成幾乎整張表，一次搜尋要掃過大部分的格子，平均情況
+也退化成 $\Theta(n)$（$n \approx m$）；表完全滿時，找不到的鍵要掃完整張表。 所以實務上線性探測的表要把
+$\alpha$ 控制在大約 $0.5$ 到 $0.75$ 以下，超過就擴表再雜湊（資結書第~12.5~節）。
+\end{pastsoln}

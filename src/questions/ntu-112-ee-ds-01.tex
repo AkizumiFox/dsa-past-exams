@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-01}]{臺大電機所 112 學年度 第 1 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+If a program has the computational complexity \texttt{$\Omega$(X(n))}, where \texttt{X} is an exponential function of the program input size n, then the program must also have the computational complexity \texttt{O(X(n))}.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+$\Omega(X(n))$ 是下界：執行時間 $T(n) \ge c\,X(n)$；$O(X(n))$ 是上界：$T(n) \le c'\,X(n)$（資結書
+第~1.5~節）。 有下界推不出有上界。 反例：$X(n) = 2^n$，一個程式的執行時間是 $T(n) = 4^n$。 $4^n \ge 2^n$，
+所以 $T(n) = \Omega(2^n)$；但 $4^n / 2^n = 2^n \to \infty$，找不到常數 $c'$ 讓 $4^n \le c' \cdot 2^n$，所以
+$T(n) \ne O(2^n)$。 $X$ 是指數函數並不會讓 $\Omega$ 變成 $\Theta$，比它更大的函數（更大的指數、$n!$、$n^n$）
+多的是。
+\end{pastsoln}

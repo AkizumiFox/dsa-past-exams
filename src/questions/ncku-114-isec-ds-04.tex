@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-04}]{成大智慧資安學程 114 學年度 單選題第 4 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+$T(n)=3T(n/4)+n\log n$, Please give the tightly bound of T(n).
+
+a)~$\theta(n)$ \qquad b)~$\theta(n\log n)$ \qquad c)~$\theta(n^2\log n)$ \qquad d)~$\theta(n^2)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 b) $\Theta(n \log n)$。
+
+用主定理（資結書第~2.4~節）：$a = 3$、$b = 4$、$f(n) = n \log n$。 $n^{\log_b a} = n^{\log_4 3}$，
+$\log_4 3 \approx 0.793$。 取 $\varepsilon = 0.2$，$f(n) = n \log n = \Omega(n^{0.793 + 0.2})$，屬於第三種
+情況，還要檢查正則條件：
+\[
+a f(n/b) = 3 \cdot \frac{n}{4} \log \frac{n}{4} \le \frac{3}{4} n \log n = \frac{3}{4} f(n),
+\]
+取 $c = 3/4 < 1$ 成立。 所以 $T(n) = \Theta(f(n)) = \Theta(n \log n)$。
+
+直觀上，遞迴樹第 $j$ 層的總成本大約是 $(3/4)^j n \log n$，等比遞減，總和由第一層決定。 a) 太小
+（光是最上層就要 $n \log n$）；c)、d) 太大。
+\end{pastsoln}

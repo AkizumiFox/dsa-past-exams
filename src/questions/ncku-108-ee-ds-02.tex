@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ncku-108-ee-ds-02}]{成大電機所 108 學年度 問答題第 1 題}
+（問答）
+
+What are the contents from Front to Rear in a circular queue with size 4 after the following
+operations, [enqueue(A), enqueue(B), dequeue(), enqueue(C), enqueue(D), enqueue(E), dequeue(),
+dequeue(), enqueue(B), enqueue(A)]? (4 points)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：由 Front 到 Rear 是 \textbf{D, E, B, A}。
+
+「size 4」照字面讀成可以放 $4$ 個元素。 用資結書第~6.2.2~節的第二種做法（多記一個個數
+$\mathit{count}$，$4$ 格都能用），陣列 $Q[0..3]$，$\mathit{front}$ 是前端的位置，下一個要放的位置是
+$(\mathit{front} + \mathit{count}) \bmod 4$。 灰字是已經取出、還沒被蓋掉的值。
+
+\begin{center}
+\small
+\begin{tabular}{lllllccl}
+\toprule
+操作 & $Q[0]$ & $Q[1]$ & $Q[2]$ & $Q[3]$ & $\mathit{front}$ & $\mathit{count}$ & 佇列（Front $\to$ Rear） \\
+\midrule
+enqueue(A) & A & & & & 0 & 1 & A \\
+enqueue(B) & A & B & & & 0 & 2 & A B \\
+dequeue()，取出 A & \textcolor{black!40}{A} & B & & & 1 & 1 & B \\
+enqueue(C) & \textcolor{black!40}{A} & B & C & & 1 & 2 & B C \\
+enqueue(D) & \textcolor{black!40}{A} & B & C & D & 1 & 3 & B C D \\
+enqueue(E) & E & B & C & D & 1 & 4 & B C D E \\
+dequeue()，取出 B & E & \textcolor{black!40}{B} & C & D & 2 & 3 & C D E \\
+dequeue()，取出 C & E & \textcolor{black!40}{B} & \textcolor{black!40}{C} & D & 3 & 2 & D E \\
+enqueue(B) & E & B & \textcolor{black!40}{C} & D & 3 & 3 & D E B \\
+enqueue(A) & E & B & A & D & 3 & 4 & D E B A \\
+\bottomrule
+\end{tabular}
+\end{center}
+enqueue(E) 放在 $(1 + 3) \bmod 4 = 0$，繞回陣列開頭；最後 $\mathit{front} = 3$，依序讀 $Q[3], Q[0], Q[1], Q[2]$
+得 D, E, B, A，佇列剛好是滿的。 整個過程沒有溢位，也沒有對空佇列 dequeue。
+
+\textbf{另一種讀法}：如果用「留一格不用」的環狀佇列（資結書虛擬碼~6.4，很多課本的寫法），size 4 的陣列
+最多只能放 $3$ 個。 那麼做到 enqueue(D) 時佇列是 B C D，已經滿了，enqueue(E) 會溢位（E 放不進去）；之後
+兩次 dequeue 剩 D，再加入 B、A，最後是 \textbf{D, B, A}。 作答時要寫出用的是哪一種；題目說 size 4 而
+且操作序列剛好讓佇列在 enqueue(E) 和最後一步時是 $4$ 個，比較像是指容量 $4$。
+\end{pastsoln}

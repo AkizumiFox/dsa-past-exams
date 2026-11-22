@@ -1,0 +1,103 @@
+\begin{pastexam}[label={px:ntust-108-et-dlds-06}]{臺科大電子所甲組 108 學年度 第 6 題}
+（問答；30 分）
+
+Stacks are a data structure widely used in computer systems. For example, a stack is used to pass
+arguments from one function to another in C-language programs.
+\begin{enumerate}[label=(\alph*)]
+\item Explain what is a stack. (5\%)
+\item Define the two basic operations of stacks. (5\%)
+\item How would you implement a stack with an array? (10\%)
+\item How would you implement a stack with a linked list? (10\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這題的內容就是資結書第~6.1~節。
+
+\textbf{(a)} 堆疊是一串資料，加入和取出都只能在同一端進行；這一端叫頂端（top），另一端叫
+底部（bottom）。 最後放進去的元素最先被取出，所以堆疊是\textbf{後進先出}（LIFO）的結構。
+題目提到的函式呼叫就是例子：C 程式呼叫函式時，把參數、返回位址、區域變數放成一個「框」
+（stack frame）壓到呼叫堆疊上；函式返回時把這個框拿掉，回到呼叫者。 後呼叫的函式先返回，
+正好是後進先出。
+
+\textbf{(b)} 兩個基本操作：
+\begin{itemize}
+\item \proc{Push}$(S, x)$：把 $x$ 放到 $S$ 的頂端，$x$ 成為新的頂端元素。 堆疊容量有限而且
+已經滿時再 \proc{Push}，叫\textbf{溢位}（overflow）。
+\item \proc{Pop}$(S)$：把頂端的元素取出並回傳，它下面的那個元素成為新的頂端。 堆疊是空的
+時候 \proc{Pop}，叫\textbf{下溢}（underflow）。
+\end{itemize}
+通常再加兩個輔助操作：\proc{Top}$(S)$ 回傳頂端元素但不取出，\proc{Stack-Empty}$(S)$ 判斷
+是不是空的。 例如依序 \proc{Push}$(S, 4)$、\proc{Push}$(S, 7)$、\proc{Push}$(S, 1)$，再
+\proc{Pop} 兩次，回傳 $1$、$7$，堆疊剩下 $\langle 4\rangle$。
+
+\textbf{(c) 用陣列。} 用陣列 $S.\mathit{item}[1..S.\mathit{cap}]$ 存元素，整數
+$S.\mathit{top}$ 記目前有幾個元素：$S.\mathit{item}[1]$ 是底部，$S.\mathit{item}[S.\mathit{top}]$
+是頂端，$S.\mathit{top} = 0$ 表示空（資結書虛擬碼~6.1）。
+\begin{pseudo}{陣列堆疊}
+\Function{Stack-Empty}{$S$}
+    \State \Return $S.\mathit{top} = 0$
+\EndFunction
+\Statex
+\Procedure{Push}{$S, x$}
+    \If{$S.\mathit{top} = S.\mathit{cap}$}
+        \State \Error{overflow}
+    \EndIf
+    \State $S.\mathit{top} \gets S.\mathit{top} + 1$
+    \State $S.\mathit{item}[S.\mathit{top}] \gets x$
+\EndProcedure
+\Statex
+\Function{Pop}{$S$}
+    \If{\Call{Stack-Empty}{$S$}}
+        \State \Error{underflow}
+    \EndIf
+    \State $S.\mathit{top} \gets S.\mathit{top} - 1$
+    \State \Return $S.\mathit{item}[S.\mathit{top} + 1]$
+\EndFunction
+\end{pseudo}
+用容量 $3$ 的陣列追蹤 \proc{Push}$(S, 4)$、\proc{Push}$(S, 7)$、\proc{Pop}$(S)$、
+\proc{Push}$(S, 6)$：
+\begin{center}
+\begin{tabular}{llcccc}
+\toprule
+操作 & 回傳 & $S.\mathit{item}[1]$ & $[2]$ & $[3]$ & $S.\mathit{top}$ \\
+\midrule
+\proc{Push}$(S, 4)$ & & 4 & & & 1 \\
+\proc{Push}$(S, 7)$ & & 4 & 7 & & 2 \\
+\proc{Pop}$(S)$ & 7 & 4 & \textcolor{black!40}{7} & & 1 \\
+\proc{Push}$(S, 6)$ & & 4 & 6 & & 2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+灰字是還在陣列裡、但已經不屬於堆疊的值，下一次 \proc{Push} 會蓋掉它。 每個操作都只做固定
+幾步，$\Theta(1)$。 缺點是容量固定：開太大浪費空間，開太小會溢位；可以改成「滿了就換一個
+兩倍大的陣列」，單次 \proc{Push} 最壞 $\Theta(n)$，平攤仍是 $\Theta(1)$（資結書第~3~章）。
+
+\textbf{(d) 用鏈結串列。} 每個元素放一個節點，$\mathit{next}$ 指向它下面的元素；
+$S.\mathit{top}$ 指向頂端節點，空堆疊時是 \NIL。 \proc{Push}、\proc{Pop} 都只動串列的頭
+（資結書虛擬碼~6.2）：
+\begin{pseudo}{串列堆疊}
+\Procedure{Push-List}{$S, x$}
+    \State 配置一個新節點 $p$
+    \State $p.\mathit{key} \gets x$
+    \State $p.\mathit{next} \gets S.\mathit{top}$
+    \State $S.\mathit{top} \gets p$
+\EndProcedure
+\Statex
+\Function{Pop-List}{$S$}
+    \If{$S.\mathit{top} = \NIL$}
+        \State \Error{underflow}
+    \EndIf
+    \State $p \gets S.\mathit{top}$
+    \State $x \gets p.\mathit{key}$
+    \State $S.\mathit{top} \gets p.\mathit{next}$
+    \State 釋放 $p$
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+頂端放在串列的頭而不放在尾巴，是因為單向串列刪掉最後一個節點得先從頭走到它前面那個節點，
+要 $\Theta(n)$；放在頭，加入和刪除都只改一兩個指標，$\Theta(1)$。 \proc{Push-List} 先接
+$p.\mathit{next}$ 再改 $S.\mathit{top}$，順序不能反，否則原來的串列就找不到了。 串列堆疊
+沒有容量上限（只受記憶體限制），代價是每個元素多存一個指標，並且每次 \proc{Push}、
+\proc{Pop} 都要配置或釋放記憶體。
+\end{pastsoln}

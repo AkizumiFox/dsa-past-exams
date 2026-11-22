@@ -1,0 +1,89 @@
+\begin{pastexam}[label={px:ncku-115-ee-ds-02}]{成大電機所 115 學年度 第 2 題}
+（問答）
+
+\textbf{Problem 2: Lists (Undo/Redo) (20 pts)}
+
+\textit{A text editor supports Undo/Redo operations.}
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{[6 pts] Complexity Analysis:}\\
+Suppose the text cursor is positioned in the \textbf{middle} of a large document ($n$ characters).
+The user types a character and then immediately presses \texttt{Undo}.
+\begin{enumerate}[label=\arabic*.]
+\item State the Time Complexity of this \texttt{Undo} for an \textbf{Array List}.
+\item State the Time Complexity of this \texttt{Undo} for a \textbf{Linked List}.
+\item Briefly explain \textbf{why} the Array List has this complexity:
+\end{enumerate}
+\item \textbf{[4 pts]} Draw the logical structure of the list after the following sequence.
+\textbf{Clearly indicate where the ``Current'' pointer is located.}\\
+Sequence: \texttt{Type A} $\rightarrow$ \texttt{Type B} $\rightarrow$ \texttt{Type C} $\rightarrow$
+\texttt{Undo} $\rightarrow$ \texttt{Undo} $\rightarrow$ \texttt{Type D}
+\item \textbf{[4 pts]} A user performs an \texttt{Undo}, and then immediately types a new character.
+What happens to the ``Redo'' history? (Answer in 1 sentence).
+\item \textbf{[6 pts]} Compare the Time Complexity in the table below:
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+Operation & Linked List & Array List \\ \hline
+Insert at Current Pointer & & \\ \hline
+Access $i$-th element & & \\ \hline
+\end{tabular}
+\end{center}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+文件存成一個字元的串列；Array List 是連續存放、可以自動擴大的陣列（C++ 的 \texttt{vector}、Java 的
+\texttt{ArrayList}），Linked List 是雙向鏈結串列，游標記住目前字元所在的節點。
+
+\textbf{(a)}
+\begin{enumerate}
+\item Array List：$O(n)$。
+\item Linked List：$O(1)$。
+\item Undo 要把剛打的字元刪掉，它在文件中間（第 $n/2$ 個位置附近）。 陣列的元素必須連續存放，
+刪掉一個之後，後面約 $n/2$ 個字元都要往前挪一格把空位補起來，所以是 $O(n)$。 （打字的那一下也一樣，
+要把後面的字元往後挪一格。） 鏈結串列只要改前後兩個節點的指標（資結書第~5.2~節雙向串列的刪除），
+節點的位置游標已經握在手上，$O(1)$。
+\end{enumerate}
+
+\textbf{(b)} 解讀：題目的「list」是編輯動作的\textbf{歷史串列}（undo/redo 用的雙向串列），每個節點是一個
+動作，Current 指向最後一個生效的動作；Current 之後的節點是可以 redo 的動作。 逐步：
+\begin{itemize}
+\item Type A、Type B、Type C：依序接到尾端，串列 $A \leftrightarrow B \leftrightarrow C$，Current 指向 $C$。
+\item Undo：撤銷 $C$，Current 退到 $B$（$C$ 還留著，可以 redo）。
+\item Undo：撤銷 $B$，Current 退到 $A$（$B$、$C$ 可以 redo）。
+\item Type D：新的動作。 Current 之後的 $B$、$C$ 被丟掉，$D$ 接在 $A$ 後面，Current 指向 $D$。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[n/.style={draw,minimum width=9mm,minimum height=7mm,font=\small},>={Stealth[length=2mm]}]
+\node (h) at (0,0) {head};
+\node[n] (A) at (1.6,0) {A};
+\node[n] (D) at (3.4,0) {D};
+\node (nil) at (5.0,0) {\NIL};
+\draw[->] (h) -- (A);
+\draw[->] ([yshift=1.5mm]A.east) -- ([yshift=1.5mm]D.west);
+\draw[->] ([yshift=-1.5mm]D.west) -- ([yshift=-1.5mm]A.east);
+\draw[->] (D) -- (nil);
+\node (cur) at (3.4,1.2) {Current};
+\draw[->] (cur) -- (D);
+\end{tikzpicture}
+\end{center}
+文件內容是 \texttt{AD}，Redo 的歷史是空的。 （如果把題目的 list 讀成文件本身的字元串列，結果一樣是
+$A \leftrightarrow D$，游標在 $D$ 之後。）
+
+\textbf{(c)} Redo 的歷史會被清掉：新打的字是從較早的狀態分出去的新動作，原本被撤銷、排在 Current
+之後的那些動作再也不能 redo。
+
+\textbf{(d)}
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+Operation & Linked List & Array List \\ \hline
+Insert at Current Pointer & $O(1)$ & $O(n)$ \\ \hline
+Access $i$-th element & $O(n)$ & $O(1)$ \\ \hline
+\end{tabular}
+\end{center}
+理由：鏈結串列插入只改相鄰節點的指標（資結書第~5.1~節），但找第 $i$ 個要從頭（或尾）一個一個走，
+最壞 $O(n)$。 陣列插入要挪動後面的元素，最壞 $O(n)$（插在尾端才是平攤 $O(1)$），但第 $i$ 個的位址是
+起始位址加 $i$ 乘元素大小，直接算出來，$O(1)$。 這也是 (a) 的根源：編輯器在游標處頻繁插入刪除，
+適合鏈結串列（或 gap buffer 這類專用結構），需要隨機存取時陣列較好。
+\end{pastsoln}

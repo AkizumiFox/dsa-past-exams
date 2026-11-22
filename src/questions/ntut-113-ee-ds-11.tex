@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-11}]{北科大電機所（戊組）113 學年度 第 III.2 題}
+（問答；5 分）
+
+Consider the singly linked list shown in Table I whose head is item R. Assume the item S is added
+physically to the bottom of the list and inserted logically between R and Q. Show the link column
+entry after insertion. (5\%)
+
+\begin{center}
+\textbf{Table I.}\\
+\begin{tabular}{c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{data} & \multicolumn{1}{c}{link}\\\cline{2-3}
+1 & L & 2\\\cline{2-3}
+2 & P & 4\\\cline{2-3}
+3 & R & 5\\\cline{2-3}
+4 & B & Null\\\cline{2-3}
+5 & Q & 1\\\cline{2-3}
+6 & & \\\cline{2-3}
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{插入前的邏輯順序}。 從串列頭 R（第 $3$ 列）沿 link 走：
+R（$3$）$\to$ Q（$5$）$\to$ L（$1$）$\to$ P（$2$）$\to$ B（$4$）$\to$ Null。
+所以串列是 R, Q, L, P, B。
+
+\textbf{插入 S}。 S 實體上放在表的最後一列（第 $6$ 列），邏輯上要接在 R 和 Q 之間。 和指標版的
+插入一樣（資結書第~5.1~節）改兩個連結，而且順序是先設新節點的 link：
+\begin{enumerate}
+\item S 的 link 設成 R 原本的 link，也就是 Q 的位置 $5$：第 $6$ 列 link $= 5$。
+\item R 的 link 改成 S 的位置：第 $3$ 列 link $= 6$。
+\end{enumerate}
+如果先改 R 的 link，Q 的位置 $5$ 就找不到了，所以先做第 1 步。
+
+\textbf{插入後的 link 欄}：
+\begin{center}
+\begin{tabular}{c|c|c|}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{data} & \multicolumn{1}{c}{link}\\\cline{2-3}
+1 & L & 2\\\cline{2-3}
+2 & P & 4\\\cline{2-3}
+3 & R & \textbf{6}\\\cline{2-3}
+4 & B & Null\\\cline{2-3}
+5 & Q & 1\\\cline{2-3}
+6 & S & \textbf{5}\\\cline{2-3}
+\end{tabular}
+\end{center}
+也就是 link 欄由上而下為 $2, 4, 6, \text{Null}, 1, 5$。 檢查：從 R 走起是
+R（$3$）$\to$ S（$6$）$\to$ Q（$5$）$\to$ L（$1$）$\to$ P（$2$）$\to$ B（$4$）$\to$ Null，S 正好在 R 和
+Q 之間，其他節點的順序不變。
+\end{pastsoln}

@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ncku-110-ee-ds-01}]{成大電機所 110 學年度 第 1 題}
+（計算）
+
+For a two dimensional array $A$, if the location of $A$(4,3) is 1000 and $A$(3,5) is 1013. Assume
+that each element occupies 1 address. What is the location of $A$(2,2)? \hfill (10 \%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$991$（陣列以\textbf{行為主}存放，每一行有 $7$ 個元素）。
+
+題目沒有說是以列為主還是以行為主，也沒有給大小，要從兩個已知的位址推（資結書第~4.1~節）。 設每列
+有 $C$ 個元素、每行有 $R$ 個元素，下標下界不影響位址的差。
+
+\textbf{以列為主}：$\mathrm{loc}(i, j) = \alpha + (i - i_0)C + (j - j_0)$。
+\[
+\mathrm{loc}(3, 5) - \mathrm{loc}(4, 3) = (3 - 4)C + (5 - 3) = 2 - C = 1013 - 1000 = 13,
+\]
+得 $C = -11$，不可能。 所以不是以列為主。
+
+\textbf{以行為主}：$\mathrm{loc}(i, j) = \alpha + (j - j_0)R + (i - i_0)$。
+\[
+\mathrm{loc}(3, 5) - \mathrm{loc}(4, 3) = (5 - 3)R + (3 - 4) = 2R - 1 = 13,
+\]
+得 $R = 7$，每一行有 $7$ 個元素。 於是
+\[
+\mathrm{loc}(2, 2) = \mathrm{loc}(4, 3) + (2 - 3) \cdot 7 + (2 - 4) = 1000 - 7 - 2 = 991.
+\]
+驗算：下標從 $1$ 開始時 $\alpha = \mathrm{loc}(1, 1) = 1000 - 2 \cdot 7 - 3 = 983$，
+$\mathrm{loc}(3, 5) = 983 + 4 \cdot 7 + 2 = 1013$，和題目一致；$\mathrm{loc}(2, 2) = 983 + 7 + 1 = 991$。
+\end{pastsoln}

@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-07}]{臺聯大電機類 111 學年度 第 7 題}
+（證明＋問答）
+
+(10\%) In what condition (worst case) the time complexity of quick sort will be O($n^2$)? Please
+provide the detailed proof of this result. Under the same condition, what modification of quick sort
+can turn the worst case into the best case? What is the best-case time complexity?
+\end{pastexam}
+
+\begin{pastsoln}
+以資結書虛擬碼~14.8 的 Lomuto 分割、取最後一個元素當基準為準（取第一個當基準時情形相同）。
+
+\textbf{條件。} 每一次分割都切成大小 $0$ 和 $m - 1$ 的兩段（$m$ 是這次的範圍大小），也就是基準每次
+都是範圍裡的最大值或最小值。 典型的輸入是\textbf{已經排好序}（由小到大或由大到小）的陣列：取最後
+一個當基準時，由小到大排好的陣列每次的基準都是最大值。 所有鍵值都相同時，Lomuto 分割也會每次
+切成 $m - 1$ 和 $0$。
+
+\textbf{證明。} 分割一段 $m$ 個元素，要拿基準和其餘 $m - 1$ 個各比一次，花 $\Theta(m)$。 每次都切成
+$0$ 和 $m - 1$ 時，
+\[
+T(n) = T(n - 1) + T(0) + \Theta(n), \qquad T(0) = T(1) = \Theta(1).
+\]
+展開：$T(n) = \Theta\bigl(n + (n - 1) + \cdots + 2\bigr) + \Theta(n) = \Theta(n^2)$。 精確地算比較次數，
+第一層 $n - 1$ 次、第二層 $n - 2$ 次……到 $1$ 次，共
+\[
+(n - 1) + (n - 2) + \cdots + 1 = \frac{n(n - 1)}{2} = \Theta(n^2).
+\]
+以由小到大排好的 $A[1..n]$ 為例：基準 $A[n]$ 是最大值，其他元素都比它小，分割後基準留在第 $n$ 格，
+左段 $A[1..n-1]$ 仍然排好序、右段是空的，下一層又是同樣的情況，所以每一層都只少一個元素，上式
+成立。
+
+這也是最壞的情況：任何分割都至多花 $c\,n$，遞迴式是
+$T(n) = \max_{0 \le q \le n-1}\bigl(T(q) + T(n - 1 - q)\bigr) + c\,n$。 用代入法假設 $T(k) \le d\,k^2$
+（$k < n$），則 $T(q) + T(n-1-q) \le d\bigl(q^2 + (n-1-q)^2\bigr) \le d (n - 1)^2$（凸函數在端點
+$q = 0$ 或 $n - 1$ 取最大），所以 $T(n) \le d(n-1)^2 + c\,n \le d\,n^2$，只要 $d \ge c$。 因此快速排序
+最壞是 $O(n^2)$，而上面的輸入達到 $\Theta(n^2)$（資結書第~14.5~節）。
+
+\textbf{同樣的條件下怎麼改成最好情況。} 改用\textbf{中間的元素}當基準：每次取範圍中間
+$A[\lfloor (p + r)/2 \rfloor]$，先和 $A[r]$ 交換，再照常分割（三數取中 median-of-three 也一樣，對
+排好序的陣列，頭、中、尾三數的中位數就是中間那個）。 對排好序的輸入，中間的元素正好是中位數，
+每次都切成兩半。 而且分割後左段是原本比基準小的那些元素，順序沒變；右段是原本比基準大的元素，
+只有第一個（被換到中間格的原 $A[r]$）回到最後一格，仍然排好序，所以每一層都是同樣的情形，一路
+切成兩半。
+
+\textbf{最好情況的複雜度。} 每次切成兩半時
+\[
+T(n) = 2T(n/2) + \Theta(n) = \Theta(n \log n)
+\]
+（主定理第二種情況，資結書第~2.4~節）。 遞迴深度是 $\lceil \lg n \rceil$ 左右，每一層合計做
+$\Theta(n)$ 次比較。 快速排序在任何輸入下都至少要做這麼多：每一層分割合計 $\Theta(n)$，而切得最平均時
+深度最小，所以最好情況就是 $\Theta(n \log n)$。
+
+注意：改用中間元素只是讓「排好序」不再是最壞的輸入，最壞情況仍然是 $\Theta(n^2)$，只是換成別的
+特殊輸入；要讓任何輸入的期望時間都是 $O(n \log n)$，用隨機選基準（資結書虛擬碼~14.12）。
+\end{pastsoln}

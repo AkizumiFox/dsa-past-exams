@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-21}]{臺大電信所 110 學年度（B）第 21 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Let $S$ be an NP-complete problem and $Q$ and $R$ be two other problems not known to be in NP. $Q$ is polynomial-time reducible to $S$ and $S$ is polynomial-time reducible to $R$. Which of the following statements is true?
+
+A.~$R$ is NP-complete. \qquad B.~$R$ is NP-hard.\\
+C.~$Q$ is NP-complete. \qquad D.~$Q$ is NP-hard.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+歸約 $X \le_P Y$ 的意思是「$Y$ 至少和 $X$ 一樣難」，難度往箭頭的終點傳（資結書第~28.3~節）。
+\begin{itemize}
+\item $S \le_P R$：任何 NP 問題 $L$ 都有 $L \le_P S$（$S$ 是 NP 完備），歸約可以串接，所以 $L \le_P S \le_P R$，
+$R$ 是 NP-hard。 B 對。
+\item A 錯：NP 完備要求 NP-hard \textbf{而且}屬於 NP。 題目說 $R$ 不知道是否在 NP，所以不能說它是 NP 完備。
+\item C、D 錯：$Q \le_P S$ 只說明 $Q$ 不比 $S$ 難（$Q$ 可以很簡單，例如屬於 P 的問題也能歸約到 $S$），
+推不出 $Q$ 是 NP-hard，更推不出 NP 完備。
+\end{itemize}
+\end{pastsoln}

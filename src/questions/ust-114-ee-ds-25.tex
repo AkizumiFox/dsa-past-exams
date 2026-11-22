@@ -1,0 +1,46 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-25}]{臺聯大電機類 114 學年度 問答題第 1 題}
+（問答；10 分）
+
+Consider the following function, where n is a positive integer:
+\begin{minted}[fontsize=\small]{text}
+Function mystery(n):
+    If n <= 1:
+        Return 1
+    Else:
+        Return mystery(n / 2) + mystery(n / 2) + n
+\end{minted}
+Please (A) answer the time complexity of this function (4 points) and (B) justify your answer with a
+detailed explanation (6 points).
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒說 \texttt{n / 2} 是整數除法還是實數除法；以下取整數除法 $\lfloor n/2 \rfloor$（實數除法時
+遞迴的層數最多差一層，結論一樣）。
+
+\textbf{(A)} 時間複雜度是 $\Theta(n)$。
+
+\textbf{(B)} 令 $T(n)$ 是 \texttt{mystery(n)} 的執行時間。 $n \le 1$ 時直接回傳，$T(n) = c$。
+$n \ge 2$ 時，函式呼叫自己\textbf{兩次}（兩個 \texttt{mystery(n / 2)} 各算一次，程式沒有把第一次的結果
+存起來重用），再做兩次加法，所以
+\[
+T(n) = 2T(n/2) + c' , \qquad c' \text{ 是常數}.
+\]
+注意加上的 \texttt{n} 只是把一個數加進回傳值，花的時間是常數，不是 $\Theta(n)$；回傳的\textbf{值}會
+變大，執行的\textbf{時間}不受影響。
+
+\textbf{用主定理}（資結書定理~2.4）：$a = 2$，$b = 2$，$n^{\log_b a} = n$，$f(n) = c' =
+O(n^{1 - \varepsilon})$（取 $\varepsilon = 1$），屬第一種情形，$T(n) = \Theta(n)$。
+
+\textbf{用遞迴樹直接數}（$n = 2^k$）：第 $i$ 層有 $2^i$ 個呼叫，每個做常數的工作，共 $k + 1 = \lg n + 1$
+層。 呼叫總數
+\[
+1 + 2 + 4 + \cdots + 2^{k} = 2^{k+1} - 1 = 2n - 1 ,
+\]
+每個呼叫 $O(1)$，總時間 $\Theta(n)$。 $n$ 不是 $2$ 的次方時，呼叫次數夾在 $n$ 之下、之上兩個 $2$ 的
+次方對應的次數之間，仍是 $\Theta(n)$。 例如 $n = 8$ 時呼叫 $15$ 次，$n = 100$ 時呼叫 $127$ 次。
+
+補充：回傳值滿足 $M(n) = 2M(n/2) + n$，是 $\Theta(n \log n)$（$n = 2^k$ 時
+$M(n) = n\lg n + n$）。 題目問的是時間，不要和回傳值混在一起。 如果改成
+\texttt{x = mystery(n / 2); return x + x + n}，只遞迴一次，時間變成 $T(n) = T(n/2) + c$，
+$\Theta(\log n)$。
+\end{pastsoln}

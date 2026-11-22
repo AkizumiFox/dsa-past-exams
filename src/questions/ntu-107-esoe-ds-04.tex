@@ -1,0 +1,40 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-04}]{臺大工科海洋所 107 學年度 第 4 題}
+（程式設計；10 分）
+
+\textbf{(10 \%)} Write a program called \textsf{nodesAtLevel} that returns the number of nodes at a
+particular level of a binary tree. Assume root of the tree is at level 0.
+\end{pastexam}
+
+\begin{pastsoln}
+卷首規定用 C++。 題目沒給節點的宣告，假設是一般的鏈結表示（資結書第~7~章）：
+\begin{minted}[fontsize=\small]{cpp}
+struct Node {
+    int key;
+    Node *left, *right;
+};
+
+// 回傳以 t 為根的二元樹裡，第 level 層（根是第 0 層）有幾個節點
+int nodesAtLevel(Node *t, int level) {
+    if (t == nullptr || level < 0)
+        return 0;
+    if (level == 0)
+        return 1;                       // t 自己就在要找的那一層
+    return nodesAtLevel(t->left, level - 1)
+         + nodesAtLevel(t->right, level - 1);
+}
+\end{minted}
+
+\textbf{為什麼對。} 對樹的高度歸納。 $t$ 的子樹裡，在整棵（以 $t$ 為根的）樹第 $k$ 層的節點，
+$k \ge 1$ 時恰好是左子樹的第 $k - 1$ 層加上右子樹的第 $k - 1$ 層，兩邊沒有重疊；$k = 0$ 時只有
+$t$ 自己。 空樹任何一層都是 $0$ 個。 這三種情形就是程式的三個分支。 \texttt{level} 是負數時
+直接回傳 $0$，避免呼叫端傳錯值時無窮遞迴。
+
+\textbf{例子。} 根 $1$ 的左子節點 $2$、右子節點 $3$，$2$ 的子節點是 $4$、$5$，$3$ 只有右子節點
+$6$：\texttt{nodesAtLevel(root, 0)}、\texttt{(root, 1)}、\texttt{(root, 2)}、\texttt{(root, 3)}
+分別回傳 $1, 2, 3, 0$。
+
+\textbf{複雜度。} 遞迴只會走到第 \texttt{level} 層為止，拜訪的是第 $0$ 到第 \texttt{level} 層的
+節點（加上它們下面的空指標），最壞 $O(n)$；遞迴深度最多 $\texttt{level} + 1$。 也可以用資結書
+虛擬碼~7.2 的層序走訪，佇列裡記每個節點的層數，數到 \texttt{level} 層，同樣 $O(n)$，但要多一個
+佇列的空間。
+\end{pastsoln}

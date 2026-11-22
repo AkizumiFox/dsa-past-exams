@@ -1,0 +1,14 @@
+paper: ust-108-ee-ds
+volume: 3
+school: 臺聯大
+dept: 電機類
+year: 108
+subject: 資料結構
+instructions: 類組：電機類。 ※請在答案卷內作答。 問答題。
+questions:
+  - {id: ust-108-ee-ds-01, label: 第 1 題, chapter: 6}
+  - {id: ust-108-ee-ds-02, label: 第 2 題, chapter: 5}
+  - {id: ust-108-ee-ds-03, label: 第 3 題, chapter: 14}
+  - {id: ust-108-ee-ds-04, label: 第 4 題, chapter: 12}
+  - {id: ust-108-ee-ds-05, label: 第 5 題, chapter: 7}
+  - {id: ust-108-ee-ds-06, label: 第 6 題, chapter: 21}

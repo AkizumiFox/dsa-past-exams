@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-08}]{臺大工工所 110 學年度 第 8 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 7 to 10, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra
+algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with Fibonacci heap as priority queue, then the complexity is
+
+\begin{enumerate}[label=(\Alph*)]
+\item $O(|V|^2+|E|\log|V|)$
+\item $O(|V|^2)$
+\item $O(|E|\log|V|)$
+\item $O(|E|+|V|\log|V|)$
+\item $O(|E|)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+分析方法見歷屆試題~\ref{px:ntu-110-ie-ds-07}：總時間是 $|V|$ 次 \proc{Extract-Min} 加上最多 $|E|$ 次 \proc{Decrease-Key}，再加 $O(|V| + |E|)$；題目的假設下 $|V| + |E| = \Theta(|E|)$。
+
+\textbf{費氏堆積}（資結書第~8.6~節）：\proc{Extract-Min} 平攤 $O(\log|V|)$，\proc{Decrease-Key} 平攤 $O(1)$，
+\proc{Insert} 也是 $O(1)$。 平攤成本的總和是實際總成本的上界，所以總時間
+\[
+  |V| \cdot O(\log|V|) + |E| \cdot O(1) = O(|E| + |V|\log|V|) ,
+\]
+選 (D)。 這是資結書第~25.2~節表裡最快的一列。
+
+其他選項：(C) $O(|E|\log|V|)$ 是二元堆積、二項堆積的界，比 (D) 鬆（例如 $|E| = \Theta(|V|^2)$ 時，(D) 是
+$\Theta(|V|^2)$，(C) 是 $\Theta(|V|^2\log|V|)$）。 (A) 更鬆。 (B) $O(|V|^2)$ 在稠密圖時和 (D) 一樣，但稀疏圖時
+(D) 是 $O(|V|\log|V|)$，比 $|V|^2$ 緊得多，(B) 不是最緊的。 (E) 不對：$|V|$ 次 \proc{Extract-Min} 一共要
+$\Omega(|V|\log|V|)$（否則可以用它在 $o(n\log n)$ 時間內做比較排序），稀疏圖時超過 $O(|E|) = O(|V|)$。
+\end{pastsoln}

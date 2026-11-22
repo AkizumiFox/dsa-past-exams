@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-29}]{臺大電信所 108 學年度（B）第 29 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of one decrease key operation in a Fibonacci heap of $n$ items is
+(choose the tightest bound)
+
+A.~$O(1)$ \qquad B.~$O(\log^* n)$ \qquad C.~$O(\log n)$ \qquad D.~$O(n)$ \qquad E.~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+一次 \proc{Decrease-Key} 的實際成本和剪下的次數成正比：先剪下自己，再沿著父節點往上，遇到有標記的
+就剪下、繼續往上（連鎖剪下）。 剪下的次數不超過樹高，所以是 $O(n)$。
+
+這個上界做得到，因為費氏堆積的樹高可以是 $\Theta(n)$，而且整條路徑上的節點都可以有標記。 一種
+做法：維持「一個根底下掛一條鏈，鏈上除了根以外都有標記」。 每一輪：
+\begin{enumerate}
+\item 插入兩個比目前的根 $r$ 大的節點和一個極小的節點，取出最小值：兩個新節點連成階數 $1$ 的樹，
+再連到 $r$ 底下，$r$ 的階數變成 $2$。
+\item 插入四個比 $r$ 小的節點和一個極小的節點，取出最小值：四個新節點連成階數 $2$ 的樹，再和 $r$
+連結，$r$ 變成新根 $b$ 的子節點。
+\item 刪掉第 1 步掛到 $r$ 底下的那棵小樹：$r$ 不是根，失去一個子節點而被標記。 再刪掉 $b$ 底下除了
+$r$ 以外的節點（$b$ 是根，失去子節點不會被標記，也不會往上剪）。
+\end{enumerate}
+一輪之後鏈長加一，新的根 $b$ 底下是一條全部有標記的鏈。 做 $k$ 輪得到 $k + 2$ 個節點的鏈，對最底下
+的節點做一次 \proc{Decrease-Key}（減到比根還小），會一路剪下 $k + 1$ 次，是 $\Theta(n)$。
+
+所以單次最壞是 $\Theta(n)$，選 D。 A 是平攤成本，不是最壞；C 的 $O(\lg n)$ 是二元堆積或二項堆積的
+\proc{Decrease-Key}，費氏堆積的樹沒有 $O(\lg n)$ 的高度保證（它保證的是階數 $O(\lg n)$）。
+\end{pastsoln}

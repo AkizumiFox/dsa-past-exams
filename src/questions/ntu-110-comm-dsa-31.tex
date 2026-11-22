@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-31}]{臺大電信所 110 學年度（B）第 31 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In this exam,
+\begin{itemize}
+\item The height of a leaf (in either a tree or heap) is defined as 0.
+\item The depth of the root (in either a tree or heap) is defined as 0.
+\item The degree of a node (in either a tree or heap) is defined as the number of its children.
+\item The size of a tree/heap is defined as the total number of keys (items) it stores.
+\item All heaps, unless otherwise specified, are min heaps.
+\end{itemize}
+
+A binomial heap contains 2021 items. How many among them have depth 7?
+
+A.~165 \qquad B.~170 \qquad C.~175 \qquad D.~180 \qquad E.~185
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A（165）。
+
+二項堆積由不同階的二項樹組成，$n$ 個元素時，$B_k$ 出現若且唯若 $n$ 的二進位第 $k$ 位是 $1$
+（資結書第~8.5~節）。
+\[
+2021 = 1024 + 512 + 256 + 128 + 64 + 32 + 4 + 1 = (11111100101)_2,
+\]
+所以有 $B_{10}, B_9, B_8, B_7, B_6, B_5, B_2, B_0$ 各一棵。
+
+二項樹 $B_k$ 在深度 $d$ 有 $\binom{k}{d}$ 個節點：$B_k$ 由兩棵 $B_{k-1}$ 組成，一棵的根接到另一棵的根下面，
+所以 $B_k$ 深度 $d$ 的節點數 $= B_{k-1}$ 深度 $d$ 的節點數 $+$ $B_{k-1}$ 深度 $d - 1$ 的節點數，正是巴斯卡
+公式 $\binom{k}{d} = \binom{k-1}{d} + \binom{k-1}{d-1}$（資結書附錄~A.3）。 每棵樹的根深度為 $0$。
+
+深度 $7$ 只出現在 $k \ge 7$ 的樹：
+\[
+\binom{10}{7} + \binom{9}{7} + \binom{8}{7} + \binom{7}{7} = 120 + 36 + 8 + 1 = 165,
+\]
+選 A。
+\end{pastsoln}

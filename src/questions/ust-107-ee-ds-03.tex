@@ -1,0 +1,126 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-03}]{臺聯大電機類 107 學年度 第三題}
+（問答；10 分）
+
+(10\%) Construct a generalized list for a given polynomial $\big((x^9+3x^6)y+5x^6y^3\big)z^2+\big((x^5+2x^4)y^3+5y\big)z$ with the node data structure: (* means pointer)
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+variable/down*/coefficient & exponent & next* \\ \hline
+\end{tabular}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+多變數多項式用廣義串列表示的想法（Horowitz 等人的資料結構課本的寫法；資結書第~5.3~節只講單變數的多項式串列）：
+把多項式看成\textbf{最外層變數}的多項式，每一項的係數本身又是「少一個變數」的多項式，用向下的指標指到另一個串列。
+
+\textbf{先把多項式整理成巢狀的形式}，每一層依指數由大到小排：
+\[
+P = \underbrace{\bigl(5x^6\, y^3 + (x^9 + 3x^6)\, y\bigr)}_{z^2 \text{ 的係數}} z^2
+  + \underbrace{\bigl((x^5 + 2x^4)\, y^3 + 5\, y\bigr)}_{z^1 \text{ 的係數}} z .
+\]
+注意原式 $z^2$ 那一項寫成 $(x^9+3x^6)y + 5x^6y^3$，$y$ 的指數 $1$ 在前；串列裡依指數遞減，所以 $y^3$ 那項排在前面。
+
+\textbf{節點的用法}：
+\begin{itemize}
+\item 每個串列的第一個節點是\textbf{表頭}，第一欄放這一層的變數名稱（$z$、$y$ 或 $x$），指數欄不用。
+\item 其餘每個節點是一項：第二欄是這個變數的指數；第一欄若係數是常數就直接放係數（coefficient），若係數是多項式
+就放向下的指標（down*），指到那個係數多項式的串列。
+\item 第三欄 next* 指到同一層的下一項，最後一項是 $0$（空指標）。
+\end{itemize}
+
+\textbf{結果}（黑點表示指標，箭頭是它指的地方）：
+\begin{center}
+\small
+\begin{tikzpicture}[gc/.style={draw,thick,minimum height=5mm,inner sep=1pt,outer sep=0pt},
+  gl/.style={-{Stealth[length=2mm]},thick}]
+\node[gc,minimum width=0.6cm] (Z0a) at (0.30,0) {\textit{z}};
+\node[gc,minimum width=0.5cm,anchor=west] (Z0b) at (Z0a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (Z0c) at (Z0b.east) {};
+\node[gc,minimum width=0.6cm] (Z1a) at (2.20,0) {};
+\node[gc,minimum width=0.5cm,anchor=west] (Z1b) at (Z1a.east) {2};
+\node[gc,minimum width=0.45cm,anchor=west] (Z1c) at (Z1b.east) {};
+\node[gc,minimum width=0.6cm] (Z2a) at (11.90,0) {};
+\node[gc,minimum width=0.5cm,anchor=west] (Z2b) at (Z2a.east) {1};
+\node[gc,minimum width=0.45cm,anchor=west] (Z2c) at (Z2b.east) {0};
+\node[gc,minimum width=0.6cm] (A0a) at (2.20,-1.3) {\textit{y}};
+\node[gc,minimum width=0.5cm,anchor=west] (A0b) at (A0a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (A0c) at (A0b.east) {};
+\node[gc,minimum width=0.6cm] (A1a) at (4.10,-1.3) {};
+\node[gc,minimum width=0.5cm,anchor=west] (A1b) at (A1a.east) {3};
+\node[gc,minimum width=0.45cm,anchor=west] (A1c) at (A1b.east) {};
+\node[gc,minimum width=0.6cm] (A2a) at (6.00,-1.3) {};
+\node[gc,minimum width=0.5cm,anchor=west] (A2b) at (A2a.east) {1};
+\node[gc,minimum width=0.45cm,anchor=west] (A2c) at (A2b.east) {0};
+\node[gc,minimum width=0.6cm] (X10a) at (4.10,-3.9) {\textit{x}};
+\node[gc,minimum width=0.5cm,anchor=west] (X10b) at (X10a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (X10c) at (X10b.east) {};
+\node[gc,minimum width=0.6cm] (X11a) at (6.00,-3.9) {5};
+\node[gc,minimum width=0.5cm,anchor=west] (X11b) at (X11a.east) {6};
+\node[gc,minimum width=0.45cm,anchor=west] (X11c) at (X11b.east) {0};
+\node[gc,minimum width=0.6cm] (X20a) at (6.00,-2.6) {\textit{x}};
+\node[gc,minimum width=0.5cm,anchor=west] (X20b) at (X20a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (X20c) at (X20b.east) {};
+\node[gc,minimum width=0.6cm] (X21a) at (7.90,-2.6) {1};
+\node[gc,minimum width=0.5cm,anchor=west] (X21b) at (X21a.east) {9};
+\node[gc,minimum width=0.45cm,anchor=west] (X21c) at (X21b.east) {};
+\node[gc,minimum width=0.6cm] (X22a) at (9.80,-2.6) {3};
+\node[gc,minimum width=0.5cm,anchor=west] (X22b) at (X22a.east) {6};
+\node[gc,minimum width=0.45cm,anchor=west] (X22c) at (X22b.east) {0};
+\node[gc,minimum width=0.6cm] (B0a) at (2.20,-5.3) {\textit{y}};
+\node[gc,minimum width=0.5cm,anchor=west] (B0b) at (B0a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (B0c) at (B0b.east) {};
+\node[gc,minimum width=0.6cm] (B1a) at (4.10,-5.3) {};
+\node[gc,minimum width=0.5cm,anchor=west] (B1b) at (B1a.east) {3};
+\node[gc,minimum width=0.45cm,anchor=west] (B1c) at (B1b.east) {};
+\node[gc,minimum width=0.6cm] (B2a) at (6.00,-5.3) {5};
+\node[gc,minimum width=0.5cm,anchor=west] (B2b) at (B2a.east) {1};
+\node[gc,minimum width=0.45cm,anchor=west] (B2c) at (B2b.east) {0};
+\node[gc,minimum width=0.6cm] (X30a) at (4.10,-6.6) {\textit{x}};
+\node[gc,minimum width=0.5cm,anchor=west] (X30b) at (X30a.east) {};
+\node[gc,minimum width=0.45cm,anchor=west] (X30c) at (X30b.east) {};
+\node[gc,minimum width=0.6cm] (X31a) at (6.00,-6.6) {1};
+\node[gc,minimum width=0.5cm,anchor=west] (X31b) at (X31a.east) {5};
+\node[gc,minimum width=0.45cm,anchor=west] (X31c) at (X31b.east) {};
+\node[gc,minimum width=0.6cm] (X32a) at (7.90,-6.6) {2};
+\node[gc,minimum width=0.5cm,anchor=west] (X32b) at (X32a.east) {4};
+\node[gc,minimum width=0.45cm,anchor=west] (X32c) at (X32b.east) {0};
+\fill (Z0c.center) circle (1.3pt); \draw[gl] (Z0c.center) -- (Z1a.west);
+\fill (Z1c.center) circle (1.3pt); \draw[gl] (Z1c.center) -- (Z2a.west);
+\fill (Z1a.center) circle (1.3pt);
+\fill (Z2a.center) circle (1.3pt);
+\fill (A0c.center) circle (1.3pt); \draw[gl] (A0c.center) -- (A1a.west);
+\fill (A1c.center) circle (1.3pt); \draw[gl] (A1c.center) -- (A2a.west);
+\fill (A1a.center) circle (1.3pt);
+\fill (A2a.center) circle (1.3pt);
+\fill (X10c.center) circle (1.3pt); \draw[gl] (X10c.center) -- (X11a.west);
+\fill (X20c.center) circle (1.3pt); \draw[gl] (X20c.center) -- (X21a.west);
+\fill (X21c.center) circle (1.3pt); \draw[gl] (X21c.center) -- (X22a.west);
+\fill (B0c.center) circle (1.3pt); \draw[gl] (B0c.center) -- (B1a.west);
+\fill (B1c.center) circle (1.3pt); \draw[gl] (B1c.center) -- (B2a.west);
+\fill (B1a.center) circle (1.3pt);
+\fill (X30c.center) circle (1.3pt); \draw[gl] (X30c.center) -- (X31a.west);
+\fill (X31c.center) circle (1.3pt); \draw[gl] (X31c.center) -- (X32a.west);
+\draw[gl] (Z1a.center) -- (A0a.north);
+\draw[gl] (Z2a.center) -- (Z2a.center |- 0,-4.6) -| (B0a.north);
+\draw[gl] (A1a.center) -- (X10a.north);
+\draw[gl] (A2a.center) -- (X20a.north);
+\draw[gl] (B1a.center) -- (X30a.north);
+
+\end{tikzpicture}
+\end{center}
+
+逐層對照：
+\begin{itemize}
+\item 第一層（$z$）：表頭 $z$，兩項：$(\downarrow, 2)$ 指到 $z^2$ 的係數，$(\downarrow, 1)$ 指到 $z^1$ 的係數。
+\item $z^2$ 的係數 $5x^6y^3 + (x^9+3x^6)y$：表頭 $y$，兩項 $(\downarrow, 3)$、$(\downarrow, 1)$。 $y^3$ 的係數 $5x^6$ 是
+表頭 $x$ 加一個節點 $(5, 6)$；$y^1$ 的係數 $x^9 + 3x^6$ 是表頭 $x$ 加 $(1, 9)$、$(3, 6)$。
+\item $z^1$ 的係數 $(x^5+2x^4)y^3 + 5y$：表頭 $y$，兩項。 $y^3$ 的係數 $x^5 + 2x^4$ 是多項式，用向下指標指到表頭
+$x$、$(1, 5)$、$(2, 4)$；$y^1$ 的係數是常數 $5$，直接寫成 $(5, 1)$，不用再往下。
+\end{itemize}
+檢查：所有 $x$ 那一層的節點把係數和指數放回去，再乘上路徑上的 $y^{e}$、$z^{e}$，得到 $5x^6y^3z^2$、$x^9yz^2$、
+$3x^6yz^2$、$x^5y^3z$、$2x^4y^3z$、$5yz$ 六項，正好是原式展開後的六項。
+
+實作時第一欄要再加一個標記（tag）區分它存的是變數名稱、向下指標還是係數，題目的節點把三者畫成同一欄
+（「variable/down*/coefficient」），就是這個意思。
+\end{pastsoln}

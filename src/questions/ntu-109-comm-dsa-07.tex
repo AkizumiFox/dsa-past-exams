@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-07}]{臺大電信所 109 學年度（B）第 7 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+Given a weighted directed graph $G=(V,E,w)$ and a source $s\in V$, if $G$ has a negative-weight
+cycle somewhere, then the Bellman-Ford algorithm will always compute an incorrect result for some
+$\delta(s,v)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：F（錯）。
+
+關鍵是「somewhere」：負環不一定從 $s$ 走得到。 從 $s$ 走不到負環時，對每個 $v$，$s$ 到
+$v$ 的路徑都碰不到那個環，$\delta(s, v)$ 有定義，Bellman--Ford 照樣算對（資結書定理~25.7
+只要求從 $s$ 可到達的部分沒有負環）。
+
+反例：$V = \{s, a, b, c\}$，邊 $(s, a)$ 權重 $1$，$(b, c)$ 權重 $1$，$(c, b)$ 權重 $-3$。
+$b \to c \to b$ 是權重 $-2$ 的負環，但從 $s$ 只走得到 $a$。 Bellman--Ford 的結果：
+$d[s] = 0$、$d[a] = 1$、$d[b] = d[c] = \infty$，正好是 $\delta(s, \cdot)$。 最後檢查負環的
+那一輪，$(b, c)$、$(c, b)$ 兩端都是 $\infty$，不會被鬆弛，所以也不會回報負環。
+
+負環從 $s$ 走得到時，環上和環之後的頂點 $\delta = -\infty$，這時 Bellman--Ford 會在最後一輪
+偵測到並回報，而不是給出數值（資結書第~25.3.4~節）。
+\end{pastsoln}

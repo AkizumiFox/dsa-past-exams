@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-11}]{臺大電信所 109 學年度（B）第 11 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binary heap of size n, the worst case time complexity of one insert operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+插入時把新元素放在陣列最後一格，再往上換（sift-up），每換一次往上一層（資結書第~8.1~節）。
+$n$ 個元素的二元堆積是完全二元樹，高度 $\lfloor \lg n \rfloor$，所以最多換
+$\lfloor \lg n \rfloor$ 次，$O(\log n)$。 這個界是緊的：新元素比堆積裡所有元素都小（最小
+堆積）時，會從最底層一路換到根，剛好 $\lfloor \lg n \rfloor$ 次，所以最壞是
+$\Theta(\log n)$。
+
+逐項：(A) $O(1)$ 是平均情形的結果（隨機插入平均只上浮常數層），不是最壞；(B) $O(\log^* n)$
+太小；(D)、(E) 是對的上界但不是最緊的。
+\end{pastsoln}

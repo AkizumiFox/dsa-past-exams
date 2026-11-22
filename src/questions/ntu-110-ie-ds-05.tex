@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-05}]{臺大工工所 110 學年度 第 5 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In this exam, the depth of the root (in either a tree or heap) is defined as 0; all heaps, unless
+otherwise specified, are min heaps.
+
+Consider a binary heap that results from successively inserting keys 6, 3, 7, 8, 5, 1, 2, 4, 9 into an
+initially empty heap. Then the depth of key 5 is
+
+(A)~0 \qquad (B)~1 \qquad (C)~2 \qquad (D)~3 \qquad (E)~None of above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+最小堆積，每次插入放在陣列最後一格，再往上浮：比父節點小就交換（資結書第~8.1~節）。 陣列從第 $1$ 格起，
+第 $i$ 格的父節點是 $\lfloor i/2 \rfloor$。
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+插入 & 上浮過程 & 陣列 \\
+\midrule
+6 & & $6$ \\
+3 & $3 < 6$，換到第 1 格 & $3, 6$ \\
+7 & $7 > 3$，不動 & $3, 6, 7$ \\
+8 & $8 > 6$，不動 & $3, 6, 7, 8$ \\
+5 & 第 5 格，$5 < 6$ 換到第 2 格；$5 > 3$ 停 & $3, 5, 7, 8, 6$ \\
+1 & 第 6 格，$1 < 7$ 換到第 3 格；$1 < 3$ 換到第 1 格 & $1, 5, 3, 8, 6, 7$ \\
+2 & 第 7 格，$2 < 3$ 換到第 3 格；$2 > 1$ 停 & $1, 5, 2, 8, 6, 7, 3$ \\
+4 & 第 8 格，$4 < 8$ 換到第 4 格；$4 < 5$ 換到第 2 格；$4 > 1$ 停 & $1, 4, 2, 5, 6, 7, 3, 8$ \\
+9 & 第 9 格，$9 > 5$，不動 & $1, 4, 2, 5, 6, 7, 3, 8, 9$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+插入 $4$ 時，$5$ 從第 $2$ 格被換到第 $4$ 格。 最後 $5$ 在第 $4$ 格；第 $1$ 格是深度 $0$，第 $2$、$3$ 格是深度 $1$，
+第 $4$ 到 $7$ 格是深度 $2$，所以 $5$ 的深度是 $2$，選 (C)。
+
+只看插入 $5$ 當下（它在第 $2$ 格、深度 $1$）會選錯成 (B)，後面插入 $4$ 時它又被往下換了一層。
+\end{pastsoln}

@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-17}]{臺聯大電機類 113 學年度 問答題第 1 題}
+（問答；10 分）
+
+\begin{enumerate}[label=(\Alph*)]
+\item The minimum number of comparisons required to determine if an integer appears more than n/2
+times in a sorted array of n integers is \underline{\hspace{2.5cm}} (O(n), O(logn), O(n*logn), or
+O(1)). (2 points)
+\item Write a solution in C language as a function to find how many times an integer ``key''
+appears in a sorted array A sized N. (8 points) (Code is graded based on correctness and
+computational efficiency)(A is sorted from lowest to highest).
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{c}
+int Func(const int *A, int N, int key);
+//input: an integer array A sized N, key is the integer to be searched
+//output: integer value "key" appearance times
+\end{minted}
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(A)} $O(\log n)$。
+
+陣列排好了，同一個數一定連成一段。 出現超過 $n/2$ 次的數（如果有）一定蓋住正中間那一格（下標從 $0$
+算是 $A[\lfloor n/2\rfloor]$）：長度超過 $n/2$ 的一段，不可能整段落在中間格的左邊或右邊。 所以候選人只有
+$x = A[\lfloor n/2\rfloor]$，作法是：
+\begin{enumerate}
+\item 用二分搜尋找 $x$ 第一次出現的位置 $i$（資結書第~17.1~節），$O(\log n)$ 次比較。
+\item $x$ 出現超過 $n/2$ 次，等於出現至少 $\lfloor n/2\rfloor + 1$ 次，等於
+$i + \lfloor n/2\rfloor < n$ 而且 $A[i + \lfloor n/2\rfloor] = x$。 再比較一次。
+\end{enumerate}
+總共 $O(\log n)$ 次比較。 如果題目指的是「某一個給定的整數」，就用 (B) 的方法算出次數再和 $n/2$ 比，一樣
+$O(\log n)$。 $O(1)$ 做不到：只看常數格，無法知道 $x$ 那一段從哪裡開始；二分搜尋找邊界本身就需要
+$\Theta(\log n)$ 次比較。
+
+\textbf{(B)} 次數 $=$（第一個 $> \mathit{key}$ 的位置）$-$（第一個 $\ge \mathit{key}$ 的位置），兩個位置各用
+一次二分搜尋找。
+
+\begin{minted}[fontsize=\small, style=perldoc, breaklines]{c}
+/* 回傳第一個 A[i] >= key 的 i（upper 為 0），
+   或第一個 A[i] > key 的 i（upper 為 1）；都沒有時回傳 N。 */
+static int bound(const int *A, int N, int key, int upper)
+{
+    int lo = 0, hi = N;              /* 答案在 [lo, hi] 裡 */
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (A[mid] < key || (upper && A[mid] == key))
+            lo = mid + 1;            /* A[mid] 在答案的左邊 */
+        else
+            hi = mid;                /* A[mid] 可能就是答案 */
+    }
+    return lo;
+}
+
+int Func(const int *A, int N, int key)
+{
+    return bound(A, N, key, 1) - bound(A, N, key, 0);
+}
+\end{minted}
+
+\textbf{正確性}。 以 $\mathit{upper} = 0$ 為例，令 $P(i)$ 為「$A[i] \ge \mathit{key}$」。 陣列由小到大，$P$ 在
+$0..N-1$ 上是「前面一段假、後面一段真」，要找的是第一個真的位置（全假時是 $N$）。 迴圈維持：答案在
+$[\mathit{lo}, \mathit{hi}]$ 裡。 $A[\mathit{mid}] < \mathit{key}$ 時 $\mathit{mid}$ 和它左邊都是假，答案在
+$[\mathit{mid}+1, \mathit{hi}]$；否則 $\mathit{mid}$ 是真，答案在 $[\mathit{lo}, \mathit{mid}]$。 $\mathit{mid} <
+\mathit{hi}$，每輪區間都變小，$\mathit{lo} = \mathit{hi}$ 時就是答案。 $\mathit{upper} = 1$ 時把條件換成
+$A[i] > \mathit{key}$，道理相同。 $\mathit{key}$ 的那一段恰好是這兩個位置之間，所以相減就是次數；
+$\mathit{key}$ 不存在時兩個位置相同，回傳 $0$。 $\mathit{mid}$ 寫成 \texttt{lo + (hi - lo) / 2} 避免
+\texttt{lo + hi} 溢位；$N = 0$ 時迴圈不執行，回傳 $0$。
+
+例：$A = \langle 1, 2, 2, 2, 5, 7\rangle$，$\mathit{key} = 2$：第一個 $\ge 2$ 的位置是 $1$，第一個 $> 2$ 的位置
+是 $4$，次數 $4 - 1 = 3$。 $\mathit{key} = 3$：兩個位置都是 $4$，次數 $0$。
+
+\textbf{複雜度}。 兩次二分搜尋，時間 $O(\log N)$，額外空間 $O(1)$。 先二分找到一個 $\mathit{key}$ 再往兩邊
+一格一格數的寫法，在 $\mathit{key}$ 出現很多次時是 $O(N)$，這題特別註明效率也算分，要用兩次二分搜尋。
+\end{pastsoln}

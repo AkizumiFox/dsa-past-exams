@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-04}]{成大電通所 106 學年度 第一大題第 4 題}
+（複選；5 分，全對才給分）
+
+Which of the following statement(s) is (are) true?
+
+(A)~If n1 and n2 are the left child and right child of a node n in a max heap, the value of n2
+cannot be larger than n2.\\
+(B)~It takes O(logn) to search a maximum value in a binary search tree if the tree has n nodes.\\
+(C)~A binary search tree is usually implemented by a complete binary tree.\\
+(D)~The time complexity to perform Max Heapify can be as fast as O(n).
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)。
+
+(A) 原卷寫「n2 不大於 n2」，字面上恆真，顯然是筆誤。 題目特地定義了左、右兩個子節點 n1、n2，
+這裡讀成「右子節點 n2 不能比左子節點 n1 大」，考的是堆積對兄弟節點有沒有大小規定。
+
+\begin{itemize}
+\item (A)：錯（照上面的解讀）。 最大堆積只規定父節點不小於子節點，兩個兄弟之間沒有大小關係
+（資結書第~8.1~節）。 例：$[10, 3, 7]$ 是最大堆積，右子節點 $7$ 比左子節點 $3$ 大。 （若讀成「n2 不能
+比父節點 n 大」，那句是對的；但那樣就不需要 n1。）
+\item (B)：錯。 在 BST 找最大值是從根一路往右走到底，時間是 $O(h)$，$h$ 是樹高（資結書虛擬碼~9.3）。
+BST 沒有保證平衡，依序插入 $1, 2, \ldots, n$ 會變成一條往右的鏈，$h = n - 1$，要 $O(n)$。 只有平衡
+的 BST（AVL 樹、紅黑樹）才保證 $O(\log n)$。
+\item (C)：錯。 BST 的形狀由插入順序決定，一般用鏈結的節點（左、右指標）實作，不會是完全二元樹。
+用陣列存完全二元樹的是堆積。
+\item (D)：對。 Max-Heapify（從一個節點往下調整）最壞是 $O(\log n)$，當然在 $O(n)$ 以內；若 Max
+Heapify 指的是把整個陣列調整成堆積（Build-Max-Heap，常也叫 heapify），由下往上做是 $O(n)$
+（資結書定理~8.1）。 兩種讀法都成立。
+\end{itemize}
+\end{pastsoln}

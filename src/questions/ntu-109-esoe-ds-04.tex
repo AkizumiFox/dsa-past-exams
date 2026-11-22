@@ -1,0 +1,62 @@
+\begin{pastexam}[label={px:ntu-109-esoe-ds-04}]{臺大工科海洋所 109 學年度 第 4 題}
+（證明）
+
+\textbf{(15 \%)} Asymptotic analysis.
+\begin{enumerate}[label=(\alph*)]
+\item (8 \%) Which of the following functions grows faster: $n\log n$ or
+$n^{1+\alpha/\sqrt{\log n}}$ with $\alpha>0$? Why?
+\item (7 \%) Show that if $p(n)$ is a polynomial in $n$, then $\log p(n)$ is $O(\log n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+$\log$ 取以 $2$ 為底，記作 $\lg$；換成別的底只差常數倍，下面的結論不變（資結書第~1.6~節）。
+
+\textbf{(a)} $n^{1+\alpha/\sqrt{\log n}}$ 長得比較快。
+
+令 $f(n) = n \lg n$，$g(n) = n^{1 + \alpha/\sqrt{\lg n}}$。 兩個都有因子 $n$，比較剩下的部分。 把
+$g$ 的指數寫成以 $2$ 為底：
+\[
+\frac{g(n)}{n} = n^{\alpha/\sqrt{\lg n}} = 2^{\lg n \cdot \alpha/\sqrt{\lg n}} = 2^{\alpha\sqrt{\lg n}},
+\qquad
+\frac{f(n)}{n} = \lg n = 2^{\lg\lg n}.
+\]
+所以
+\[
+\frac{g(n)}{f(n)} = 2^{\,\alpha\sqrt{\lg n} - \lg\lg n}.
+\]
+令 $t = \lg n$，$n \to \infty$ 時 $t \to \infty$。 指數是 $\alpha\sqrt{t} - \lg t = \sqrt{t}\,(\alpha - \lg t/\sqrt{t})$，
+而 $\lg t / \sqrt{t} \to 0$（對數比任何正次方都長得慢），所以括號趨近 $\alpha > 0$，指數趨近
+$+\infty$，$g(n)/f(n) \to \infty$。 因此 $n\lg n = o\bigl(n^{1+\alpha/\sqrt{\lg n}}\bigr)$，後者長得比較快。
+
+小的 $n$ 可能相反。 例如 $\alpha = 1$：$2^{\sqrt{t}}$ 和 $t$ 在 $t = 4$、$t = 16$ 時相等，$t$ 在
+$(4, 16)$ 之間時 $n\lg n$ 比較大（$t = 9$：$2^3 = 8 < 9$），$t > 16$（$n > 2^{16}$）之後 $g$ 一直比較
+大。 漸近比較只看夠大的 $n$。
+
+補充：對任何常數 $\varepsilon > 0$，$\alpha/\sqrt{\lg n}$ 最後會小於 $\varepsilon$，所以
+$g(n) = o(n^{1+\varepsilon})$。 $g$ 夾在 $n\lg n$ 和所有 $n^{1+\varepsilon}$ 之間。
+
+\textbf{(b)} 設 $p(n) = a_d n^d + a_{d-1} n^{d-1} + \cdots + a_0$，$a_d > 0$（領導係數是正的，$n$ 夠大
+時 $p(n) > 0$，$\log p(n)$ 才有定義）。
+
+\textbf{證明。} 令 $A = |a_0| + |a_1| + \cdots + |a_d|$，$A \ge a_d > 0$。 $n \ge 1$ 時 $n^i \le n^d$
+（$0 \le i \le d$），所以
+\[
+p(n) \le |a_d| n^d + |a_{d-1}| n^d + \cdots + |a_0| n^d = A n^d .
+\]
+在 $p(n) > 0$ 的範圍內取對數（$\lg$ 是遞增函數）：
+\[
+\lg p(n) \le \lg A + d \lg n .
+\]
+取 $n_0 = \max(2, \lceil A\rceil)$，再大到讓 $n \ge n_0$ 時 $p(n) \ge 1$（$d \ge 1$ 時
+$p(n) \to \infty$，這樣的 $n_0$ 存在；$d = 0$ 時 $p(n) = a_0$ 是常數，下面另外說）。 $n \ge n_0$ 時
+$\lg A \le \lg n$，而且 $\lg p(n) \ge 0$，所以
+\[
+0 \le \lg p(n) \le (d + 1)\lg n ,
+\]
+由 $O$ 的定義（$c = d + 1$），$\lg p(n) = O(\lg n)$。 $d = 0$ 時 $\lg p(n) = \lg a_0$ 是常數，
+$n \ge 2$ 時 $|\lg a_0| \le |\lg a_0| \cdot \lg n$，也是 $O(\lg n)$。\hfill$\blacksquare$
+
+意思是：多項式取對數之後只剩「次數乘上 $\lg n$」，例如 $\lg(n^3 + 5n) = \Theta(\lg n)$。 所以分析時
+$O(\lg n^k)$ 和 $O(\lg n)$ 是同一件事，例如 $\lg (n^2) = 2\lg n$。
+\end{pastsoln}

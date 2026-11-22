@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-11}]{北科大電機所（戊組）115 學年度 選擇題第 1 題}
+（單選）
+
+What is the time complexity of inserting an element at the beginning of a singly linked list?
+\textbf{(3\%)}\\
+a) $O(1)$ \qquad b) $O(n)$ \qquad c) $O(\log n)$ \qquad d) $O(n^2)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：a) $O(1)$。
+
+在單向鏈結串列的開頭插入（資結書第~5.1~節）只要三步：配置新節點 $x$、令 $x.\mathit{next} \gets \mathit{head}$、令
+$\mathit{head} \gets x$。 不管串列多長都是固定的步數，和 $n$ 無關。
+\begin{itemize}
+\item b) $O(n)$ 是在\textbf{尾端}插入而且沒有尾指標時的時間（要先走到最後一個節點），或在中間某個位置插入、要先
+找到那個位置的時間。
+\item c) $O(\log n)$：串列不能隨機存取，沒有二分的結構，不會出現這個時間。
+\item d) $O(n^2)$：單一次插入不會這麼慢。
+\end{itemize}
+\end{pastsoln}

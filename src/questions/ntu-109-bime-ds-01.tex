@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ntu-109-bime-ds-01}]{臺大生機所 109 學年度 第 1 題}
+（問答）
+
+(20\%) Provide a procedure to build a \textbf{binary heap} in O($N$) when given $N$ integers.
+Prove the correctness of your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有指定最大堆積或最小堆積，下面做最大堆積（最小堆積把比較全部反過來）。 「Prove the
+correctness」要證兩件事：做出來的真的是堆積，以及時間真的是 $O(N)$。 做法是資結書第~8.2~節
+由下而上建堆積。
+
+\textbf{做法}。 把 $N$ 個整數照原順序放進 $A[1..N]$，看成一棵完整二元樹：$A[i]$ 的子節點是
+$A[2i]$、$A[2i+1]$。 葉節點（位置 $\lfloor N/2 \rfloor + 1$ 到 $N$）自己就是堆積；從最後一個
+有子節點的位置 $\lfloor N/2 \rfloor$ 開始，倒著對每個位置做下沉。
+\begin{pseudo}{由下而上建最大堆積}
+\Procedure{Sift-Down}{$A, i, N$}
+    \While{$2i \le N$}
+        \State $j \gets 2i$ \Comment{左子節點}
+        \If{$j + 1 \le N$ \AND $A[j + 1] > A[j]$}
+            \State $j \gets j + 1$ \Comment{改看較大的子節點}
+        \EndIf
+        \If{$A[i] \ge A[j]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[j]$
+        \State $i \gets j$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Build-Max-Heap}{$A, N$}
+    \For{$i \gets \lfloor N/2 \rfloor$ \DownTo $1$}
+        \State \Call{Sift-Down}{$A, i, N$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+例如 $\langle 4, 1, 3, 2, 16, 9, 10 \rangle$，$N = 7$：$i = 3$ 時 $3$ 和 $10$ 交換；$i = 2$ 時
+$1$ 和 $16$ 交換；$i = 1$ 時 $4$ 先和 $16$ 換，再和 $2$、$1$ 裡較大的 $2$ 比，$4 \ge 2$，停。
+結果是 $\langle 16, 4, 10, 2, 1, 9, 3 \rangle$，每個節點都不小於它的子節點。
+
+\textbf{引理（下沉）}。 呼叫 \proc{Sift-Down}$(A, i, N)$ 時，如果 $i$ 的左右子樹都已經是最大
+堆積，那麼結束時以 $i$ 為根的子樹是最大堆積，而且子樹裡的數只是換了位置。
+
+\textbf{證明。} 對 $i$ 的子樹高度做歸納。 $i$ 沒有子節點時迴圈不執行，成立。 否則令 $j$ 是較大
+的子節點。 若 $A[i] \ge A[j]$，$A[i]$ 不小於兩個子節點，而兩個子節點又分別是兩棵堆積的最大值，
+整棵子樹已經是堆積。 若 $A[i] < A[j]$，交換後位置 $i$ 放的是原本三個數裡最大的，不小於兩
+個子節點；沒被換到的那棵子樹完全沒動，仍是堆積；被換到的位置 $j$ 現在放著原本的 $A[i]$，
+而 $j$ 的兩棵子樹沒動過，仍是堆積，正好符合引理的前提，而且 $j$ 的子樹比 $i$ 的矮，由歸納
+假設，迴圈接著從 $j$ 做下去，結束時 $j$ 的子樹是堆積。 位置 $i$ 的值不比 $j$ 子樹原本的最大值
+小，所以整棵子樹是堆積。 每一步都是交換，數沒有增減。\hfill$\blacksquare$
+
+\textbf{正確性（迴圈不變量）}。 \proc{Build-Max-Heap} 的迴圈每一輪開始時：位置
+$i + 1, i + 2, \ldots, N$ 的每一個節點都是一棵最大堆積的根。
+\begin{itemize}
+\item \textbf{初始}：$i = \lfloor N/2 \rfloor$，大於 $i$ 的位置都沒有子節點（$2(i+1) > N$），
+只有一個節點的樹是堆積。
+\item \textbf{維持}：位置 $i$ 的子節點 $2i$、$2i+1$ 都大於 $i$，由不變量，兩棵子樹都是堆積；
+由引理，下沉之後 $i$ 的子樹是堆積。 下沉只動 $i$ 的子樹裡的位置，其他已經是堆積的子樹
+（大於 $i$ 而不在 $i$ 底下的位置）不受影響。 $i$ 減一之後不變量仍成立。
+\item \textbf{結束}：$i = 0$，代進不變量，位置 $1$ 是一棵最大堆積的根，也就是整個 $A[1..N]$
+是最大堆積，裡面的數就是原本的 $N$ 個整數。
+\end{itemize}
+
+\textbf{時間是 $O(N)$}。 令節點 $x$ 的高度 $h(x)$ 是以 $x$ 為根的子樹有幾層（葉節點是 $1$）。
+對 $x$ 下沉每一輪往下走一層，最多 $h(x) - 1$ 輪，每輪是常數時間，所以總時間是
+$O\bigl(N + \sum_x (h(x) - 1)\bigr)$。 下面證明 $\sum_x (h(x) - 1) < 2N$。
+
+先看 $k$ 層的滿二元樹，共 $2^k - 1$ 個節點。 對 $\ell = 2, 3, \ldots, k$ 數「高度至少 $\ell$」
+的節點：它們就是最上面 $k - \ell + 1$ 層，有 $2^{k-\ell+1} - 1$ 個。 每個高度 $h$ 的節點在
+$\ell = 2, \ldots, h$ 各被數一次，恰好 $h - 1$ 次，所以
+\[
+\sum_x \bigl(h(x) - 1\bigr) = \sum_{\ell=2}^{k} \bigl(2^{k-\ell+1} - 1\bigr)
+= (2^k - 2) - (k - 1) = 2^k - k - 1 .
+\]
+$N$ 個節點的完整二元樹有 $k = \lfloor \lg N \rfloor + 1$ 層，它是 $k$ 層滿二元樹的前 $N$ 個
+位置；每個節點的子樹只會比在滿二元樹裡小，高度不會變大，少掉的節點也只讓和變小。 所以
+\[
+\sum_x \bigl(h(x) - 1\bigr) \le 2^k - k - 1 < 2^{\lfloor \lg N \rfloor + 1} \le 2N .
+\]
+總時間是 $O(N + 2N) = O(N)$。 這就是資結書定理~8.1。
+
+\textbf{為什麼不是 $O(N \lg N)$}。 一個一個插入（每次上浮）也能建堆積，但輸入由小到大時，第
+$i$ 個數要浮 $\lfloor \lg i \rfloor$ 層，總共 $\Theta(N \lg N)$。 由下而上快，是因為一半的節點是
+葉節點，根本不用動；需要走很遠的節點（靠近根的）很少。 作答時寫「$\lfloor N/2 \rfloor$ 次下沉、
+每次 $O(\lg N)$」只能得到 $O(N \lg N)$ 這個不夠緊的上界，題目要的 $O(N)$ 一定要用上面的加總。
+\end{pastsoln}

@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-05}]{臺聯大電機類 107 學年度 第五題}
+（問答；10 分）
+
+(10\%) There are three towers and 64 disks of different diameters placed on the first tower. The disks are in order of decreasing diameter as one scans up the tower. Monks were reputedly supposed to move the disk from tower 1 to tower 3 obeying the rules:
+\begin{enumerate}[label=(\roman*)]
+\item Only one disk can be moved at any time.
+\item No disk can be placed on top of a disk with a smaller diameter.
+\end{enumerate}
+Write a non-recursive algorithm that prints out the sequence of moves needed to accomplish this task by using stack data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}（資結書第~6.4~節）。 遞迴版是：要把 $k$ 個盤子從 $a$ 搬到 $c$（$b$ 暫放），先把上面 $k - 1$ 個從 $a$ 搬
+到 $b$，再把最大的從 $a$ 搬到 $c$，最後把那 $k - 1$ 個從 $b$ 搬到 $c$。 改成迴圈時，堆疊裡放「還沒做的工作」
+$(k, x, z, y)$，意思是「把 $k$ 個盤子從 $x$ 搬到 $z$，$y$ 暫放」。 每次 pop 一個工作：$k = 1$ 就直接印出這一步；
+否則拆成三個小工作放回堆疊。 堆疊是後進先出，三個工作要\textbf{倒過來} push，最先要做的最後放。
+
+\begin{pseudo}{河內塔：用堆疊的非遞迴版}
+\Procedure{Hanoi-Iter}{$n, a, c, b$} \Comment{$n$ 個盤子從 $a$ 搬到 $c$，$b$ 暫放}
+    \State 建立空堆疊 $S$
+    \State \Call{Push}{$S, (n, a, c, b)$}
+    \While{$S$ 不是空的}
+        \State $(k, x, z, y) \gets$ \Call{Pop}{$S$}
+        \If{$k = 1$}
+            \State 印出「move a disk from tower $x$ to tower $z$」
+        \Else
+            \State \Call{Push}{$S, (k - 1, y, z, x)$} \Comment{第三步，最後做}
+            \State \Call{Push}{$S, (1, x, z, y)$} \Comment{第二步：搬最大的}
+            \State \Call{Push}{$S, (k - 1, x, y, z)$} \Comment{第一步，最先做}
+        \EndIf
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+本題呼叫 \proc{Hanoi-Iter}$(64, 1, 3, 2)$。
+
+\textbf{正確性。} 對 $k$ 歸納可以證明：工作 $(k, x, z, y)$ 被 pop 出來之後，到堆疊回到「它底下原本的那些工作」
+為止，印出的正好是遞迴版 \proc{Hanoi}$(k, x, z, y)$ 的搬動序列。 $k = 1$ 時印一步。 $k > 1$ 時三個小工作依
+「$(k-1, x, y, z)$、搬最大的、$(k-1, y, z, x)$」的順序被 pop 出來，由歸納假設，第一、三個各自印出遞迴版的序
+列，合起來就是遞迴版的三步。 遞迴版合乎兩條規則（搬第 $k$ 個盤子時，比它小的 $k - 1$ 個都在暫放的柱子上，
+$x$、$z$ 上只有比它大的盤子），所以印出的序列也合乎規則。
+
+\textbf{追蹤 $n = 3$}（從 1 搬到 3，2 暫放；工作簡寫成 $k{:}x{\to}z$，堆疊由底到頂）：
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+輪 & pop 出的工作 & 做的事 & 之後的堆疊（底 $\to$ 頂）\\
+\midrule
+1 & $3{:}1{\to}3$ & 拆成三個 & $2{:}2{\to}3$\quad $1{:}1{\to}3$\quad $2{:}1{\to}2$ \\
+2 & $2{:}1{\to}2$ & 拆成三個 & $2{:}2{\to}3$\quad $1{:}1{\to}3$\quad $1{:}3{\to}2$\quad $1{:}1{\to}2$\quad $1{:}1{\to}3$ \\
+3 & $1{:}1{\to}3$ & 搬 1$\to$3 & $2{:}2{\to}3$\quad $1{:}1{\to}3$\quad $1{:}3{\to}2$\quad $1{:}1{\to}2$ \\
+4 & $1{:}1{\to}2$ & 搬 1$\to$2 & $2{:}2{\to}3$\quad $1{:}1{\to}3$\quad $1{:}3{\to}2$ \\
+5 & $1{:}3{\to}2$ & 搬 3$\to$2 & $2{:}2{\to}3$\quad $1{:}1{\to}3$ \\
+6 & $1{:}1{\to}3$ & 搬 1$\to$3 & $2{:}2{\to}3$ \\
+7 & $2{:}2{\to}3$ & 拆成三個 & $1{:}1{\to}3$\quad $1{:}2{\to}3$\quad $1{:}2{\to}1$ \\
+8 & $1{:}2{\to}1$ & 搬 2$\to$1 & $1{:}1{\to}3$\quad $1{:}2{\to}3$ \\
+9 & $1{:}2{\to}3$ & 搬 2$\to$3 & $1{:}1{\to}3$ \\
+10 & $1{:}1{\to}3$ & 搬 1$\to$3 & （空）\\
+\bottomrule
+\end{tabular}
+\end{center}
+七步依序是 1$\to$3、1$\to$2、3$\to$2、1$\to$3、2$\to$1、2$\to$3、1$\to$3，和遞迴版相同。
+
+\textbf{複雜度。} $n$ 個盤子要搬 $2^n - 1$ 次（$T(n) = 2T(n-1) + 1$），每個 $k > 1$ 的工作 pop 一次、push 三次，
+總時間 $\Theta(2^n)$；$n = 64$ 時是 $2^{64} - 1$ 步，這是輸出本身的長度，任何做法都省不掉。 堆疊裡同時最多有
+$O(n)$ 個工作：每拆一次只讓 $k$ 減一的那一支往上長，每一層最多留下兩個待做的工作，最多 $2n - 1$ 個（$n = 64$ 時 $127$ 個）。
+\end{pastsoln}

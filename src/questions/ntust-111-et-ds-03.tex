@@ -1,0 +1,84 @@
+\begin{pastexam}[label={px:ntust-111-et-ds-03}]{臺科大電子所甲組 111 學年度 第 3 題}
+（程式設計）
+
+(15\%) A queue is an array in which insertions and deletions take place at different ends. The end
+index at which a new element is added is rear, and another end index at which an element is deleted
+is front. Assume that addq() and deleteq() are two functions to add a new element to a queue and
+delete an element from a queue. Please rewrite addq() and deleteq() if a circular queue is used.
+\begin{minted}[fontsize=\small]{c}
+void addq(element item) {
+    if (rear==MAX_QUEUE_SIZE)
+        queueFull(); // print an error message
+    else
+        queue[rear++]=item;
+}
+element deleteq(){
+    if(front==rear)
+        return queueEmpty(); // return an error key
+    return queue[front++];
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{原本的問題}。 題目的版本中 \texttt{front}、\texttt{rear} 只會往右走：\texttt{rear} 到了
+\texttt{MAX\_QUEUE\_SIZE} 就回報滿了，即使前面已經有元素被刪掉、空出了位置也用不到。 例如
+\texttt{MAX\_QUEUE\_SIZE} 是 $5$，加入 $5$ 個、刪掉 $5$ 個之後佇列是空的，卻再也加不進任何元素。
+
+\textbf{環狀佇列}（資結書第~6.2.2~節，虛擬碼~6.4）：把陣列的最後一格和第 $0$ 格接起來，索引超過最後一格就繞回
+$0$，也就是每次加一之後取 \texttt{\% MAX\_QUEUE\_SIZE}。 沿用原程式的意義：\texttt{front} 是第一個元素的位置，
+\texttt{rear} 是下一個要放入的位置，一開始 \texttt{front = rear = 0}。
+\begin{itemize}
+\item 空：\texttt{front == rear}（和原程式相同）。
+\item 滿：如果放滿 \texttt{MAX\_QUEUE\_SIZE} 個，\texttt{rear} 繞一圈又等於 \texttt{front}，和「空」分不出來。 所以
+\textbf{留一格不用}，\texttt{rear} 再前進一格就碰到 \texttt{front} 時算滿：
+\texttt{(rear + 1) \% MAX\_QUEUE\_SIZE == front}。 最多存 \texttt{MAX\_QUEUE\_SIZE - 1} 個元素。
+\end{itemize}
+
+\begin{minted}[fontsize=\small]{c}
+int front = 0, rear = 0;
+
+void addq(element item) {
+    if ((rear + 1) % MAX_QUEUE_SIZE == front)
+        queueFull();              // print an error message
+    else {
+        queue[rear] = item;
+        rear = (rear + 1) % MAX_QUEUE_SIZE;
+    }
+}
+
+element deleteq() {
+    element item;
+    if (front == rear)
+        return queueEmpty();      // return an error key
+    item = queue[front];
+    front = (front + 1) % MAX_QUEUE_SIZE;
+    return item;
+}
+\end{minted}
+
+\texttt{deleteq} 不能再寫成 \texttt{return queue[front++];}：\texttt{front} 要取餘數繞回 $0$，所以先把元素存到
+\texttt{item}，更新 \texttt{front} 之後再回傳。
+
+\textbf{追蹤}（\texttt{MAX\_QUEUE\_SIZE} $= 4$，最多放 $3$ 個）：
+\begin{center}
+\begin{tabular}{lccl}
+\toprule
+操作 & \texttt{front} & \texttt{rear} & 佇列內容（由前到後） \\
+\midrule
+一開始 & 0 & 0 & （空） \\
+\texttt{addq(A)}、\texttt{addq(B)}、\texttt{addq(C)} & 0 & 3 & A, B, C \\
+\texttt{addq(D)}：$(3 + 1) \bmod 4 = 0 =$ \texttt{front}，滿 & 0 & 3 & A, B, C \\
+\texttt{deleteq()} 回傳 A & 1 & 3 & B, C \\
+\texttt{addq(D)}：放在第 3 格，\texttt{rear} 繞回 $0$ & 1 & 0 & B, C, D \\
+\texttt{deleteq()} 回傳 B、\texttt{deleteq()} 回傳 C & 3 & 0 & D \\
+\texttt{addq(E)}：放在第 0 格 & 3 & 1 & D, E \\
+\bottomrule
+\end{tabular}
+\end{center}
+原程式在第二次 \texttt{addq(D)} 時就會因為 \texttt{rear} 到底而回報滿，環狀版本則把第 $3$、$0$ 格重複利用。
+兩個函式都是 $O(1)$。
+
+另一種做法是多記一個計數 \texttt{count}：\texttt{count == 0} 是空、\texttt{count == MAX\_QUEUE\_SIZE} 是滿，
+這樣陣列的每一格都能用，代價是加入、刪除時都要多更新一個變數。
+\end{pastsoln}

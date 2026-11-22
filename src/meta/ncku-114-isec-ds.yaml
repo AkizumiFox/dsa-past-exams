@@ -1,0 +1,26 @@
+paper: ncku-114-isec-ds
+volume: 3
+school: 成大
+dept: 智慧資安學程
+year: 114
+subject: 資料結構
+instructions: 注意：1.不可使用計算機 2.請於答案卷(卡)作答，於試題上作答，不予計分。 一、單選題 (80 分，每題 5 分，答錯到扣2分)：第 1–16 題。 二、簡答題 (20 分)：第 1–2 題。
+questions:
+  - {id: ncku-114-isec-ds-01, label: 單選題第 1 題, chapter: 4}
+  - {id: ncku-114-isec-ds-02, label: 單選題第 2 題, chapter: 7}
+  - {id: ncku-114-isec-ds-03, label: 單選題第 3 題, chapter: 21}
+  - {id: ncku-114-isec-ds-04, label: 單選題第 4 題, chapter: 2}
+  - {id: ncku-114-isec-ds-05, label: 單選題第 5 題, chapter: 8}
+  - {id: ncku-114-isec-ds-06, label: 單選題第 6 題, chapter: 15}
+  - {id: ncku-114-isec-ds-07, label: 單選題第 7 題, chapter: 14}
+  - {id: ncku-114-isec-ds-08, label: 單選題第 8 題, chapter: 24}
+  - {id: ncku-114-isec-ds-09, label: 單選題第 9 題, chapter: 8}
+  - {id: ncku-114-isec-ds-10, label: 單選題第 10 題, chapter: 6}
+  - {id: ncku-114-isec-ds-11, label: 單選題第 11 題, chapter: 12}
+  - {id: ncku-114-isec-ds-12, label: 單選題第 12 題, chapter: 12}
+  - {id: ncku-114-isec-ds-13, label: 單選題第 13 題, chapter: 25}
+  - {id: ncku-114-isec-ds-14, label: 單選題第 14 題, chapter: 7}
+  - {id: ncku-114-isec-ds-15, label: 單選題第 15 題, chapter: 26}
+  - {id: ncku-114-isec-ds-16, label: 單選題第 16 題, chapter: 18}
+  - {id: ncku-114-isec-ds-17, label: 簡答題第 1 題, chapter: 5}
+  - {id: ncku-114-isec-ds-18, label: 簡答題第 2 題, chapter: 23}

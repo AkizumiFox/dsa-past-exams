@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-06}]{北科大電機所（戊組）115 學年度 是非題第 6 題}
+（是非）
+
+In a doubly linked list, each node contains pointers to both the next and previous nodes.
+\textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（True）。
+
+雙向鏈結串列（資結書第~5.2~節）的每個節點除了資料，還有兩個指標：$\mathit{next}$ 指向下一個節點，$\mathit{prev}$ 指向
+前一個節點（第一個節點的 $\mathit{prev}$、最後一個節點的 $\mathit{next}$ 是 \NIL，或在環狀、有表頭節點的版本指向表頭）。
+好處是可以雙向走訪，而且手上有某個節點的指標時，可以 $O(1)$ 刪除它（不必從頭找前一個節點）；代價是每個節點
+多一個指標，插入、刪除要多改兩個指標。
+\end{pastsoln}

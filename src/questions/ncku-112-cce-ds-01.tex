@@ -1,0 +1,13 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-01}]{成大電通所 112 學年度 第 1 題}
+（問答）
+
+(10\%) Show the asymptotic notations for the following statements.\\
+(a) n! \qquad (b) n$^3$ + 10$^6$ n$^2$
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~1~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-01}，這裡只列答案。
+
+答案：(a) $n! = \Theta\bigl(\sqrt{n}\,(n/e)^n\bigr)$（斯特林公式），常用的寬鬆界是 $n! = O(n^n)$、$n! = \Omega(2^n)$，
+取對數 $\lg(n!) = \Theta(n \lg n)$。 (b) $n^3 + 10^6 n^2 = \Theta(n^3)$（取 $c_1 = 1$、$c_2 = 2$、$n_0 = 10^6$）。
+\end{pastsoln}

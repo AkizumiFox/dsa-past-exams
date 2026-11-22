@@ -1,0 +1,113 @@
+\begin{pastexam}[label={px:ncku-112-isec-ds-07}]{成大智慧資安學程 112 學年度 第 7 題}
+（問答）
+
+(15\%) A word-chain automaton is a directed graph with a finite number of vertices V, satisfying the
+following properties. (i) There is a specified initial node $v_0\in \boldsymbol{V}$. (ii) There is
+subset \textbf{F} of set $V$ which contains terminal nodes. (iii) Each edge is labeled with a symbol
+from a finite set \textbf{W}. A string \textbf{w$_1$w$_2$\ldots w$_k$} of symbols in \textbf{W} is
+recognized by the automaton if there is a directed path starting at the initial node $v_0$ and
+ending at a terminal node w $\in \boldsymbol{F}$ such that the sequence of edges in this directed
+path is \textbf{w$_1$w$_2$\ldots w$_k$}. The set \textbf{L} of all strings recognized by the
+automaton is called the language recognized by the automaton. A word-chain automaton is a special
+type of finite-state automaton, which in turn, is a type of finite-sate machine.
+
+(a) Draw a word-chain automaton such that the following five sentences can be recognized: 1. I like
+his rabbit. 2. They hate his cat. 3. I think that his hamster is cute. 4. I know that his rabbit
+is soft. 5. They hate to have a hamster.
+
+(b) Explain how the above automaton is used to check whether a sentence is recognized or not.
+\end{pastexam}
+
+\begin{pastsoln}
+這題是有限自動機（資結書第~27.4~節）的另一種用法：字母表 $W$ 的符號是「單字」而不是字元，
+一個句子就是一個由單字組成的字串。 句尾的句點當成句子結束，不算一個符號（也可以把「.」當成
+最後一個符號，圖上每條進終點的邊後面多一條「.」邊，道理一樣）。 原題的「finite-sate」是
+「finite-state」的筆誤。
+
+\textbf{(a)} 下圖的自動機恰好辨識這五個句子：$v_0$ 是 $0$ 號，終點集合 $F = \{20\}$（雙圈）。
+\begin{center}
+\begin{tikzpicture}[x=1.9cm,y=1cm,>={Stealth[length=1.8mm]},
+  s/.style={circle,draw,inner sep=0pt,minimum size=5mm,font=\scriptsize},
+  f/.style={s,double,double distance=1pt},
+  e/.style={font=\footnotesize,inner sep=1.5pt}]
+\node[s] (0) at (0,0.5) {0};
+\node[s] (1) at (1,2) {1};
+\node[s] (2) at (1,-1.5) {2};
+\node[s] (4) at (2,3.2) {4};  \node[s] (8) at (3,3.2) {8};  \node[s] (9) at (4,3.2) {9};
+\node[s] (10) at (5,3.2) {10}; \node[s] (11) at (6,3.2) {11};
+\node[s] (5) at (2,2) {5};  \node[s] (12) at (3,2) {12}; \node[s] (13) at (4,2) {13};
+\node[s] (14) at (5,2) {14}; \node[s] (15) at (6,2) {15};
+\node[s] (3) at (2,0.8) {3}; \node[s] (7) at (3,0.8) {7};
+\node[s] (6) at (2,-1.5) {6};
+\node[s] (16) at (3,-0.9) {16};
+\node[s] (17) at (3,-2.1) {17}; \node[s] (18) at (4,-2.1) {18}; \node[s] (19) at (5,-2.1) {19};
+\node[f] (20) at (7,0.5) {20};
+\draw[<-] (0) -- ++(-0.45,0);
+\draw[->] (0) -- node[e,above left] {I} (1);
+\draw[->] (0) -- node[e,below left] {They} (2);
+\draw[->] (1) -- node[e,above left] {think} (4);
+\draw[->] (1) -- node[e,above] {know} (5);
+\draw[->] (1) -- node[e,below left] {like} (3);
+\draw[->] (4) -- node[e,above] {that} (8);
+\draw[->] (8) -- node[e,above] {his} (9);
+\draw[->] (9) -- node[e,above] {hamster} (10);
+\draw[->] (10) -- node[e,above] {is} (11);
+\draw[->] (11) -- node[e,above right] {cute} (20);
+\draw[->] (5) -- node[e,above] {that} (12);
+\draw[->] (12) -- node[e,above] {his} (13);
+\draw[->] (13) -- node[e,above] {rabbit} (14);
+\draw[->] (14) -- node[e,above] {is} (15);
+\draw[->] (15) -- node[e,below left] {soft} (20);
+\draw[->] (3) -- node[e,above] {his} (7);
+\draw[->] (7) -- node[e,above,pos=0.6] {rabbit} (20);
+\draw[->] (2) -- node[e,above] {hate} (6);
+\draw[->] (6) -- node[e,above left] {his} (16);
+\draw[->] (16) -- node[e,below,pos=0.6] {cat} (20);
+\draw[->] (6) -- node[e,below left] {to} (17);
+\draw[->] (17) -- node[e,above] {have} (18);
+\draw[->] (18) -- node[e,above] {a} (19);
+\draw[->] (19) -- node[e,below right] {hamster} (20);
+\end{tikzpicture}
+\end{center}
+建法：先把五個句子當成單字串，建一棵以單字為邊的 trie（共同的前綴共用一條路，資結書第~11.5~節）：
+1、3、4 句共用開頭的 I，2、5 句共用開頭的 They hate。 再把五個句尾節點合併成同一個終點 $20$。
+逐句核對：
+\begin{itemize}
+\item I like his rabbit：$0 \to 1 \to 3 \to 7 \to 20$。
+\item They hate his cat：$0 \to 2 \to 6 \to 16 \to 20$。
+\item I think that his hamster is cute：$0 \to 1 \to 4 \to 8 \to 9 \to 10 \to 11 \to 20$。
+\item I know that his rabbit is soft：$0 \to 1 \to 5 \to 12 \to 13 \to 14 \to 15 \to 20$。
+\item They hate to have a hamster：$0 \to 2 \to 6 \to 17 \to 18 \to 19 \to 20$。
+\end{itemize}
+五條路徑都從 $0$ 出發、停在終點 $20$，所以五句都被辨識。 從 $0$ 到 $20$ 的有向路徑只有這五條，
+所以這台自動機的語言 $L$ 恰好是這五句。 而且它是確定的：每個節點出去的邊標籤都不相同，
+讀到一個單字最多只有一條邊可走。
+
+題目只要求這五句「能被辨識」，不要求別的句子不被辨識。 若想把圖畫小一點，例如讓 3 號節點和
+12 號節點共用「his rabbit」那一段，就會多辨識「I like his rabbit is soft」這種句子。 這樣的答案
+也符合題目的字面要求，但作答時要說明 $L$ 比這五句大；上面的畫法沒有這個問題。
+
+\textbf{(b)} 檢查句子 $w_1 w_2 \cdots w_k$ 時，從起點 $v_0$ 出發，依序讀單字，每讀一個就沿著
+標籤是這個單字的邊走一步；中途找不到可走的邊就拒絕；讀完最後一個單字時停在終點集合 $F$ 裡就
+接受（辨識），否則拒絕。
+\begin{pseudo}{用 word-chain 自動機檢查句子}
+\Function{Recognize}{$w_1, \ldots, w_k$}
+    \State $q \gets v_0$
+    \For{$i \gets 1$ \To $k$}
+        \If{$q$ 沒有標籤為 $w_i$ 的出邊}
+            \State \Return \FALSE
+        \EndIf
+        \State $q \gets$ 沿標籤 $w_i$ 的邊到達的節點
+    \EndFor
+    \State \Return $q \in F$
+\EndFunction
+\end{pseudo}
+例子：「They hate his cat」走 $0 \to 2 \to 6 \to 16 \to 20$，停在 $20 \in F$，接受。
+「I like his cat」走到 $7$ 時讀到 cat，$7$ 只有 rabbit 這條出邊，拒絕。 「I like his」讀完時停在
+$7 \notin F$，也拒絕：路徑一定要停在終點，走到一半不算。
+
+每個節點的出邊用雜湊表（鍵是單字）存，找出邊是期望 $O(1)$，整句檢查期望 $O(k)$，和自動機的大小
+無關，這和資結書虛擬碼~27.5 用轉移表比對是同一個做法。 如果自動機不是確定的（同一個節點有兩條
+相同標籤的出邊），就改成同時維護「目前可能在的節點集合」，每讀一個單字把集合裡每個節點沿該
+標籤走一步得到新集合，最後集合和 $F$ 有交集就接受。
+\end{pastsoln}

@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncku-114-cce-ds-05}]{成大電通所 114 學年度 單選題第 5 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+What will the array look like after a delete operation is applied on the maximum heap stored in the array?
+\begin{center}
+\begin{tabular}{*{8}{|c}|}\hline - & 75 & 58 & 67 & 42 & 55 & 30 & 29 \\ \hline\end{tabular}\\[-2pt]
+{\small\begin{tabular}{*{8}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]\end{tabular}}
+\end{center}
+\begin{enumerate}[label=\alph*),itemsep=2pt]
+\item \begin{tabular}[t]{@{}l@{}}\begin{tabular}{*{8}{|c}|}\hline - & 67 & 58 & 30 & 55 & 42 & 29 &  \\ \hline\end{tabular}\\[-2pt]
+{\small\begin{tabular}{*{8}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]\end{tabular}}\end{tabular}
+\item \begin{tabular}[t]{@{}l@{}}\begin{tabular}{*{8}{|c}|}\hline - & 67 & 58 & 55 & 42 & 30 & 29 &  \\ \hline\end{tabular}\\[-2pt]
+{\small\begin{tabular}{*{8}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]\end{tabular}}\end{tabular}
+\item \begin{tabular}[t]{@{}l@{}}\begin{tabular}{*{8}{|c}|}\hline - & 67 & 58 & 30 & 42 & 55 & 29 &  \\ \hline\end{tabular}\\[-2pt]
+{\small\begin{tabular}{*{8}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]\end{tabular}}\end{tabular}
+\item \begin{tabular}[t]{@{}l@{}}\begin{tabular}{*{8}{|c}|}\hline - & 67 & 58 & 29 & 42 & 55 & 30 &  \\ \hline\end{tabular}\\[-2pt]
+{\small\begin{tabular}{*{8}{c}}[0]&[1]&[2]&[3]&[4]&[5]&[6]&[7]\end{tabular}}\end{tabular}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：c)。
+
+堆積存在 $[1..7]$，節點 $i$ 的子節點是 $2i$、$2i+1$。 刪除指的是刪除最大值（資結書第~8.1~節，虛擬碼~8.2）：拿走根 75，
+把最後一個 29 搬到根，大小變 6，再往下調整。
+\begin{itemize}[nosep]
+\item 29 在 [1]，子節點 [2]、[3] 是 58、67，較大的是 67，$29 < 67$，交換：67 58 29 42 55 30。
+\item 29 在 [3]，子節點只有 [6]（$[7]$ 已超出大小 6）是 30，$29 < 30$，交換：67 58 30 42 55 29。
+\item 29 在 [6]，沒有子節點，停。
+\end{itemize}
+結果 $[1..6]$ = 67 58 30 42 55 29，[7] 空出來，就是 c)。
+
+其他選項：a) 把 [4]、[5] 的 42、55 對調了，但這兩個位置在調整時沒有被碰到；b) 是把剩下的數由大到小排好，不是堆積
+刪除的結果；d) 是 29 換到 [3] 就停了，沒有和子節點 30 比較，[3] 的 29 比子節點 30 小，違反最大堆積的性質。
+\end{pastsoln}

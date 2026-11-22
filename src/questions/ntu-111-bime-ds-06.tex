@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ntu-111-bime-ds-06}]{臺大生機所 111 學年度（C）第 6 題}
+（程式設計）
+
+(20\%) Write a recursive function to calculate the height of a binary tree
+
+Note: A node in a binary tree has two pointers, named `left' and `right', respectively, where the
+`left' pointer is used to find the left child of the node and the `right' pointer is used to find
+the right child. Your function will take a node as the input and return an integer.
+\end{pastexam}
+
+\begin{pastsoln}
+高度的定義有兩種，題目沒有指定。 本書（資結書第~7.1~節）數\textbf{節點}：空樹高度 $0$，只有一個節點
+高度 $1$，非空的樹高度是 $1 + \max(\text{左子樹高度}, \text{右子樹高度})$。 這個定義可以直接遞迴，空
+指標就是基底：
+\begin{minted}[fontsize=\small]{c}
+struct Node {
+    int key;
+    struct Node *left, *right;
+};
+
+int height(struct Node *t) {
+    if (t == NULL) return 0;            /* 空樹 */
+    int hl = height(t->left);           /* 左子樹的高度 */
+    int hr = height(t->right);          /* 右子樹的高度 */
+    return 1 + (hl > hr ? hl : hr);     /* 自己這一層加上較高的子樹 */
+}
+\end{minted}
+
+\textbf{為什麼對。} 對子樹的節點數歸納。 空樹回傳 $0$，符合定義。 非空的樹 $t$：兩棵子樹的節點數都比 $t$
+少，由歸納假設 \texttt{hl}、\texttt{hr} 是它們的高度；$t$ 最深的那條路徑是 $t$ 本身加上較高那棵子樹最深
+的路徑，節點數 $1 + \max(\mathit{hl}, \mathit{hr})$，就是回傳值。
+
+\textbf{例。} 根 $1$ 只有右子節點 $2$，$2$ 只有左子節點 $3$。 \texttt{height(3)} $= 1 + \max(0, 0) = 1$，
+\texttt{height(2)} $= 1 + \max(1, 0) = 2$，\texttt{height(1)} $= 1 + \max(0, 2) = 3$。
+
+\textbf{複雜度。} 每個節點呼叫一次，每次 $O(1)$ 加上遞迴，時間 $O(n)$。 遞迴深度等於樹高 $h$，堆疊空間
+$O(h)$，最壞（一條鏈）是 $O(n)$。
+
+如果採用數\textbf{邊}的定義（只有一個節點高度 $0$，CLRS 等多數英文教科書的寫法），只要把空樹的回傳值
+改成 $-1$，其他不變：只有根時回傳 $1 + \max(-1, -1) = 0$。 作答時先寫明採用哪一種定義。
+\end{pastsoln}

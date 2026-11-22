@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-16}]{臺大電信所 110 學年度（B）第 16 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which of the following algorithms can be used to most efficiently determine the presence of a cycle in a given graph?
+
+A.~Depth First Search (DFS)\\
+B.~Breadth First Search (BFS)\\
+C.~Prim's Minimum Spanning Tree (MST) Algorithm\\
+D.~Kruskal's Minimum Spanning Tree (MST) Algorithm
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+DFS 在 $O(V + E)$ 時間內判斷有沒有環（資結書第~21.6~節）：
+\begin{itemize}
+\item 有向圖：有環若且唯若 DFS 時遇到「後向邊」，也就是走到一個還是灰色（還在遞迴堆疊上）的頂點。
+\item 無向圖：有環若且唯若 DFS 時遇到一個已經拜訪過、而且不是父節點的鄰居。
+\end{itemize}
+
+其他選項：
+\begin{itemize}
+\item B：BFS 在無向圖上也能用「碰到已拜訪而非父節點的頂點」判斷有環，時間同樣 $O(V + E)$；但在有向圖上，
+BFS 碰到已拜訪的頂點不代表有環（可能只是兩條路匯合），不能直接用。 題目說 a given graph，沒說無向，
+所以 DFS 是兩種圖都適用的那個。
+\item C：Prim 求的是最小生成樹，本身不回答有沒有環；時間是 $O(E\lg V)$（二元堆積）或 $O(V^2)$（陣列），
+都不比 $O(V + E)$ 好。
+\item D：Kruskal 用互斥集合，碰到兩端已在同一集合的邊就代表有環，可以判斷無向圖的環，但要先把邊排序，
+$O(E\lg E)$，不如 DFS 快；也不適用有向圖。
+\end{itemize}
+\end{pastsoln}

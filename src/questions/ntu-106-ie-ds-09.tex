@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-09}]{臺大工工所 106 學年度 第 9 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+If it takes O(1) time to find the minimum node of a heap, then it must take O(n) time to find the
+maximum node of this heap.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+這句話有兩種讀法，先說明。 照字面，$O(n)$ 是上界：任何存了 $n$ 個節點的結構，把全部節點掃一遍就找到最大值，
+花 $O(n)$，所以字面上一定對。 出題者比較可能的意思是「找最大值要花線性時間」，這時要看是哪一種堆積：
+\begin{itemize}
+\item 一般的二元最小堆積（資結書第~8.1~節）：最大值一定在葉子（任何內部節點都比它的子節點小，不可能是最大），
+但葉子之間沒有大小關係。 $n$ 個節點的完全二元樹有 $\lceil n/2 \rceil$ 個葉子，任何一個都可能是最大值，
+用和上一題一樣的對手論證，每個葉子都得看過，要 $\Theta(n)$。 敘述對。
+\item 如果「heap」也包含最小最大堆積（min-max heap）或雙堆積（deap）這類雙端優先佇列（資結書第~8.5~節），
+它們找最小、最大都是 $O(1)$。 但 $O(1)$ 也屬於 $O(n)$，照字面仍然對；只有把「O(n)」讀成「需要線性時間」
+時才會錯。
+\end{itemize}
+題目是「if 找最小值 $O(1)$」，指的是一般的最小堆積，兩種讀法下都對，本題答 (A)。
+\end{pastsoln}

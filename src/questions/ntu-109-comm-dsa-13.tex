@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-13}]{臺大電信所 109 學年度（B）第 13 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a binary heap of size n, the worst case time complexity of one decrease-key operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+decrease-key 的前提是已經知道要改的元素在陣列哪一格（用位置陣列記，資結書第~8.3~節）。
+鍵變小只可能違反它和父節點之間的大小關係，和子節點的關係不受影響，所以只要往上換，
+最多 $\lfloor \lg n \rfloor$ 層，$O(\log n)$；鍵減成比根還小時真的要換到根，最壞
+$\Theta(\log n)$。
+
+如果只給鍵值、不知道位置，要先花 $\Theta(n)$ 在陣列裡找，那就變成 $O(n)$；一般講堆積的
+decrease-key 都假設位置已知，所以選 (C)。
+\end{pastsoln}

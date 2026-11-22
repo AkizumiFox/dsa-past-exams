@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-04}]{臺大電信所 109 學年度（B）第 4 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+In a weighted undirected \textbf{tree} $G=(V,E,w)$, breadth-first search from a vertex $s$ finds
+single-source shortest paths from $s$ (via parent pointers) in $O(V+E)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：T（對）。
+
+和第~3~題的差別在「tree」。 樹的任兩個頂點之間\textbf{剛好有一條}簡單路徑（資結書定理~21.3），
+所以從 $s$ 到 $v$ 只有一條候選，它就是最短路徑，權重是多少都無所謂。
+
+從 $s$ 做 BFS 時，每個 $v \ne s$ 第一次被發現是從某個鄰居 $u$ 走過來，設 $\pi[v] = u$。 父
+指標構成一棵以 $s$ 為根、包含所有頂點的樹，它的邊全是 $G$ 的邊；$G$ 本身有 $|V| - 1$ 條邊，
+這棵樹也有 $|V| - 1$ 條邊，所以就是 $G$ 本身。 沿著 $\pi$ 從 $v$ 走回 $s$ 得到的是 $G$ 裡
+$s$ 到 $v$ 的簡單路徑，也就是那唯一的一條。 時間是 BFS 的 $O(V + E) = O(V)$（樹的
+$E = V - 1$）。
+
+補充：如果權重可以是負的，無向邊可以來回走，讓「路徑」的權重沒有下界；這時講最短路徑只
+考慮簡單路徑，樹上的簡單路徑唯一，結論不變。
+\end{pastsoln}

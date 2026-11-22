@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-01}]{臺大工工所 107 學年度 第 1 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+In a circular doubly linked list, deleting a node other than the head needs to modify at least 4 links.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+設要刪除的節點是 $x$（不是 head），它的前一個是 $p = x.\mathit{prev}$、後一個是
+$q = x.\mathit{next}$。 刪除只要改兩個連結（資結書虛擬碼~5.7 \proc{DList-Remove}）：
+\[
+p.\mathit{next} \gets q, \qquad q.\mathit{prev} \gets p.
+\]
+$x$ 自己的 $\mathit{prev}$、$\mathit{next}$ 不必改，$x$ 接著就被釋放了。 環狀雙向串列沒有 \NIL
+的端點，$p$、$q$ 一定存在，所以不用分「刪頭、刪尾」的情況。 就算串列只剩 head 和 $x$ 兩個
+節點，$p = q = \text{head}$，改的仍然是 head 的 $\mathit{next}$ 和 $\mathit{prev}$ 這兩個連結。
+
+所以刪除恰好改 $2$ 個連結，不是「至少 $4$ 個」。 要改 $4$ 個的是插入：新節點自己的兩個，加上
+前一個的 $\mathit{next}$ 和後一個的 $\mathit{prev}$（資結書第~5.2~節）。
+\end{pastsoln}

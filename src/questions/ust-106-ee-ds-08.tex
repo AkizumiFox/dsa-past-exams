@@ -1,0 +1,43 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-08}]{臺聯大電機類 106 學年度 第八題}
+（問答）
+
+(10\%) We have five records `Fred,' `Alex,' `Diana,' `Byron,' and `Carol.' The \textit{key} of each
+record is defined by the sum of the ASCII code of each character (ASCII of `A' is 65 and `a' is 97) in
+the record. We would like to use the hash function $h(\mathit{key}) = \mathit{key}\ \%\ 13$ to add these
+records into an array of size 13 (array index starts from 0). Please determine the array index of each
+record.
+\end{pastexam}
+
+\begin{pastsoln}
+大寫字母的 ASCII 碼是 $65 + (\text{字母序} - 1)$，小寫是 $97 + (\text{字母序} - 1)$。 先把每個字元
+換成 ASCII 碼加總得到 key，再除以 $13$ 取餘數（除法雜湊，資結書第~12.1~節）。
+
+\begin{center}
+\begin{tabular}{llrr}
+\toprule
+記錄 & 各字元的 ASCII 碼 & key & key $\bmod$ 13 \\
+\midrule
+Fred  & $70 + 114 + 101 + 100$ & $385$ & $385 - 13 \times 29 = 8$ \\
+Alex  & $65 + 108 + 101 + 120$ & $394$ & $394 - 13 \times 30 = 4$ \\
+Diana & $68 + 105 + 97 + 110 + 97$ & $477$ & $477 - 13 \times 36 = 9$ \\
+Byron & $66 + 121 + 114 + 111 + 110$ & $522$ & $522 - 13 \times 40 = 2$ \\
+Carol & $67 + 97 + 114 + 111 + 108$ & $497$ & $497 - 13 \times 38 = 3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+各字母的碼：F $70$、A $65$、D $68$、B $66$、C $67$；r $114$、e $101$、d $100$、l $108$、x $120$、
+i $105$、a $97$、n $110$、y $121$、o $111$。
+
+所以 Fred 放在索引 $8$、Alex 在 $4$、Diana 在 $9$、Byron 在 $2$、Carol 在 $3$。 五個位置都不同，
+沒有碰撞，不需要處理溢位，陣列是
+\begin{center}
+\begin{tabular}{*{13}{c}}
+\toprule
+0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+\midrule
+ & & Byron & Carol & Alex & & & & Fred & Diana & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{pastsoln}

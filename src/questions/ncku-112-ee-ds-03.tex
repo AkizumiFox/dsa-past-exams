@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ncku-112-ee-ds-03}]{成大電機所 112 學年度 第 3 題}
+（問答）
+
+(10\%) Let Z( ) be a function that inputs a string and outputs a string, defined as follows:\\
+\hspace*{2em}Base Case: If the input string X is a single letter L, then Z(X)=L.\\
+\hspace*{2em}Recursive Case: If the input string X is a string of the form LS, then Z(X)=``Z(S)L''.\\
+\hspace*{2em}(a) If X=``happy'', what is Z(X)?\\
+\hspace*{2em}(b) What does the function Z( ) actually perform?
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~3~題相同（電機所、電通所、智慧資安學程三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-03}，這裡只列答案和重點。
+
+答案：(a) $Z(\text{happy}) = \text{yppah}$。 展開：$Z(\text{happy}) = Z(\text{appy})\,\text{h}
+= Z(\text{ppy})\,\text{ah} = Z(\text{py})\,\text{pah} = Z(\text{y})\,\text{ppah} = \text{yppah}$。
+(b) $Z$ 把字串\textbf{反轉}。 對長度歸納：一個字母時反轉就是自己；$X = x_1 S$ 時，由歸納假設 $Z(S)$
+是 $S$ 的反轉，後面接上 $x_1$，正好是 $X$ 的反轉（資結書第~6.4~節）。
+\end{pastsoln}

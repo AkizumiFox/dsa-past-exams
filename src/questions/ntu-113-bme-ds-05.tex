@@ -1,0 +1,160 @@
+\begin{pastexam}[label={px:ntu-113-bme-ds-05}]{臺大生機所 113 學年度 第 5 題}
+（追蹤＋設計）
+
+When a question asks for pseudocode, you can use a mixture of English and programming notation to
+describe your solution. Ensure to provide enough details so that a skilled programmer can readily
+implement your proposed solution.
+
+\textbf{a. (10\%)} Draw the \textbf{binary min heap} that emerges from sequentially inserting the
+elements 11, 9, 12, 14, 3, 15, 7, 8, 1 into an initially empty binary heap. Illustrate the
+intermediate results as you insert each element, and provide the array representation of the final
+heap.\\
+\textbf{b (15\%)} Write a pseudocode function that transforms a \textbf{min heap} (stored in an array)
+to a \textbf{max heap}. Store the result in the same array. No return values are expected. Please
+justify the correctness of your function.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{a.} 插入的做法（資結書第~8.1~節）：新元素放在陣列最後一格（樹最底層最左邊的空位），然後
+往上冒：比父節點小就交換，直到不比父節點小或到了根。 陣列從 $1$ 開始，$i$ 的父節點是
+$\lfloor i/2 \rfloor$。
+
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+插入 & 往上冒的過程 & 陣列 $A[1..]$ \\
+\midrule
+11 & 空的堆積，放在根 & 11 \\
+9 & $9 < 11$，交換 & 9, 11 \\
+12 & $12 > 9$，不動 & 9, 11, 12 \\
+14 & $14 > 11$，不動 & 9, 11, 12, 14 \\
+3 & 放在 $A[5]$；$3 < 11$ 換到 $A[2]$；$3 < 9$ 換到 $A[1]$ & 3, 9, 12, 14, 11 \\
+15 & 放在 $A[6]$；$15 > 12$，不動 & 3, 9, 12, 14, 11, 15 \\
+7 & 放在 $A[7]$；$7 < 12$ 換到 $A[3]$；$7 > 3$ 停 & 3, 9, 7, 14, 11, 15, 12 \\
+8 & 放在 $A[8]$；$8 < 14$ 換到 $A[4]$；$8 < 9$ 換到 $A[2]$；$8 > 3$ 停 & 3, 8, 7, 9, 11, 15, 12, 14 \\
+1 & 放在 $A[9]$；$1 < 9$ 換到 $A[4]$；$1 < 8$ 換到 $A[2]$；$1 < 3$ 換到 $A[1]$ & 1, 3, 7, 8, 11, 15, 12, 14, 9 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+每次插入後的堆積：
+
+\begin{center}
+\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {11};
+\node[font=\footnotesize] at (0,-0.6) {(1) 插入 11};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {9} child {node[btn] {11}} child[missing];
+\node[font=\footnotesize] at (0,-1.3) {(2) 插入 9};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {9} child {node[btn] {11}} child {node[btn] {12}};
+\node[font=\footnotesize] at (0,-1.3) {(3) 插入 12};
+\end{tikzpicture}\\[4mm]
+\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {9} child {node[btn] {11} child {node[btn] {14}} child[missing]} child {node[btn] {12}};
+\node[font=\footnotesize] at (0,-2.0) {(4) 插入 14};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {3} child {node[btn] {9} child {node[btn] {14}} child {node[btn] {11}}} child {node[btn] {12}};
+\node[font=\footnotesize] at (0,-2.0) {(5) 插入 3};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {3} child {node[btn] {9} child {node[btn] {14}} child {node[btn] {11}}} child {node[btn] {12} child {node[btn] {15}} child[missing]};
+\node[font=\footnotesize] at (0,-2.0) {(6) 插入 15};
+\end{tikzpicture}\\[4mm]
+\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {3} child {node[btn] {9} child {node[btn] {14}} child {node[btn] {11}}} child {node[btn] {7} child {node[btn] {15}} child {node[btn] {12}}};
+\node[font=\footnotesize] at (0,-2.0) {(7) 插入 7};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {3} child {node[btn] {8} child {node[btn] {9} child {node[btn] {14}} child[missing]} child {node[btn] {11}}} child {node[btn] {7} child {node[btn] {15}} child {node[btn] {12}}};
+\node[font=\footnotesize] at (0,-2.7) {(8) 插入 8};
+\end{tikzpicture}\hspace{3mm}\begin{tikzpicture}[baseline=(current bounding box.north),btn/.style={circle, draw=black!65, line width=0.4pt, minimum size=5.5mm, inner sep=0pt, font=\scriptsize},
+    level distance=7mm, edge from parent/.style={draw=black!60},
+    level 1/.style={sibling distance=20mm}, level 2/.style={sibling distance=12mm}, level 3/.style={sibling distance=7mm}]
+\node[btn] {1} child {node[btn] {3} child {node[btn] {8} child {node[btn] {14}} child {node[btn] {9}}} child {node[btn] {11}}} child {node[btn] {7} child {node[btn] {15}} child {node[btn] {12}}};
+\node[font=\footnotesize] at (0,-2.7) {(9) 插入 1};
+\end{tikzpicture}
+\end{center}
+
+最後的陣列是
+\[
+A[1..9] = \langle 1, 3, 7, 8, 11, 15, 12, 14, 9 \rangle .
+\]
+
+\textbf{b.} 最小堆積的順序對最大堆積沒有幫助（例如把陣列倒過來不一定是最大堆積：
+$\langle 1, 2, 5, 3, 4 \rangle$ 是最小堆積，倒過來 $\langle 4, 3, 5, 2, 1 \rangle$ 的根 $4$ 比子節點 $5$
+小）。 所以直接把整個陣列當成任意陣列，用由下往上建堆積（資結書第~8.2~節）建成最大堆積，
+$O(n)$，而且就在原陣列裡做。
+
+\begin{pseudo}{最小堆積就地改成最大堆積}
+\Procedure{Max-Heapify}{$A, i, n$} \Comment{$i$ 的兩棵子樹已經是最大堆積}
+    \While{$2i \le n$}
+        \State $c \gets 2i$ \Comment{左子節點}
+        \If{$c + 1 \le n$ \AND $A[c + 1] > A[c]$}
+            \State $c \gets c + 1$ \Comment{取比較大的子節點}
+        \EndIf
+        \If{$A[i] \ge A[c]$}
+            \State \Return
+        \EndIf
+        \State 交換 $A[i]$ 和 $A[c]$
+        \State $i \gets c$
+    \EndWhile
+\EndProcedure
+\Statex
+\Procedure{Min-Heap-To-Max-Heap}{$A, n$}
+    \For{$i \gets \lfloor n/2 \rfloor$ \DownTo $1$}
+        \State \Call{Max-Heapify}{$A, i, n$}
+    \EndFor
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性。} \proc{Max-Heapify}$(A, i, n)$ 的前提是 $i$ 的左右子樹都已經是最大堆積。 它把
+$A[i]$ 和比較大的子節點比：$A[i]$ 不比它小，$i$ 這棵樹已經是最大堆積；否則交換，新的 $A[i]$ 是三者
+最大的，比兩棵子樹的所有元素都大，而被換下去的那棵子樹只有根可能出錯，繼續往下修。 每次往下
+一層，最多 $\lfloor \lg n \rfloor$ 層，一定會停。
+
+\proc{Min-Heap-To-Max-Heap} 的迴圈不變量：每一輪開始時，$i + 1, i + 2, \dots, n$ 各自為根的子樹都是
+最大堆積。
+\begin{itemize}
+\item 開始時 $i = \lfloor n/2 \rfloor$，$\lfloor n/2 \rfloor + 1..n$ 都是葉子，一個元素的樹本身就是最大
+堆積。
+\item 處理 $i$ 時，它的子節點 $2i$、$2i + 1$ 都大於 $i$，依不變量已經是最大堆積的根，滿足
+\proc{Max-Heapify} 的前提，做完 $i$ 這棵子樹也是最大堆積；比 $i$ 大的其他節點的子樹沒有被動到。
+所以進入下一輪（$i - 1$）時不變量仍然成立。
+\item 結束時 $i = 0$，不變量說 $1..n$ 為根的子樹都是最大堆積，特別是整棵樹（根 $1$）。
+\end{itemize}
+過程只交換陣列裡的元素，所以結果是原本那 $n$ 個數排成的最大堆積，存在同一個陣列裡。
+
+\textbf{複雜度。} 由下往上建堆積總共 $O(n)$（資結書定理~8.1），額外空間 $O(1)$。
+
+\textbf{例子}：把 a 的結果 $\langle 1, 3, 7, 8, 11, 15, 12, 14, 9 \rangle$ 轉成最大堆積，$n = 9$，$i$ 從
+$4$ 做到 $1$：
+\begin{center}
+\small
+\begin{tabular}{cll}
+\toprule
+$i$ & 調整 & 陣列 \\
+\midrule
+4 & $A[4] = 8$ 和較大的子節點 $14$ 交換 & 1, 3, 7, 14, 11, 15, 12, 8, 9 \\
+3 & $7$ 和 $15$ 交換 & 1, 3, 15, 14, 11, 7, 12, 8, 9 \\
+2 & $3$ 和 $14$ 交換，再和 $9$ 交換 & 1, 14, 15, 9, 11, 7, 12, 8, 3 \\
+1 & $1$ 和 $15$ 交換，再和 $12$ 交換 & 15, 14, 12, 9, 11, 7, 1, 8, 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{pastsoln}

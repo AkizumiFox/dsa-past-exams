@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-113-bme-ds-01}]{臺大生機所 113 學年度 第 1 題}
+（問答）
+
+\textbf{(10\%)} For a \textbf{linked list} implementation of a \textbf{stack}, what do you think the
+easiest and most efficient implementation of the \textbf{push} (to the front of the linked list or to
+the end) and \textbf{pop} (from the front of the linked list or from the end) operations? Please
+justify your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+答：push 和 pop 都在串列的\textbf{前端}做，兩個都是 $\Theta(1)$，而且只用單向串列加一個
+$\mathit{head}$ 指標就夠了（資結書第~6.1~節、虛擬碼~6.2）。
+
+\textbf{前端的做法。} 設串列是單向的，$L.\mathit{head}$ 指向第一個節點。
+\begin{itemize}
+\item push$(x)$：$x.\mathit{next} \gets L.\mathit{head}$，$L.\mathit{head} \gets x$。 改兩個指標。
+\item pop：$x \gets L.\mathit{head}$，$L.\mathit{head} \gets x.\mathit{next}$，回傳 $x$。 改一個指標
+（串列空的時候回報 underflow）。
+\end{itemize}
+不管串列有多長，都只做固定幾步，$\Theta(1)$。 最後 push 進去的節點一定在最前面，pop 拿到的
+正是它，符合後進先出。
+
+\textbf{為什麼不放在尾端。} 堆疊的 push 和 pop 必須在同一端，否則就變成佇列了。 如果兩個都在
+尾端：
+\begin{itemize}
+\item push 到尾端：要先走到最後一個節點，$\Theta(n)$；多存一個 $\mathit{tail}$ 指標可以降到
+$\Theta(1)$。
+\item pop 尾端：拿掉最後一個節點後，要把\textbf{倒數第二個}節點的 $\mathit{next}$ 設成 \NIL，並把
+$\mathit{tail}$ 移到它。 單向串列的節點不知道前一個是誰，只能從頭走過去找，$\Theta(n)$；
+就算有 $\mathit{tail}$ 也一樣。
+\end{itemize}
+要讓尾端的 pop 也是 $\Theta(1)$，得改用雙向串列（每個節點多一個 $\mathit{prev}$），再維護
+$\mathit{tail}$，空間和程式都比較多。 所以前端最簡單、也最有效率：兩個操作都是 $\Theta(1)$，
+不需要額外的指標。
+\end{pastsoln}

@@ -1,0 +1,50 @@
+\begin{pastexam}[label={px:ntu-108-bime-ds-02}]{臺大生機所 108 學年度 第 2 題}
+（設計）
+
+(15\%) Provide a pseudo code that reverses a singly linked list. Your code should take the head of
+the linked list as the input. No output.
+\end{pastexam}
+
+\begin{pastsoln}
+題目說「沒有輸出」，所以不能像資結書虛擬碼~5.12 \proc{List-Reverse} 那樣回傳新的開頭，而要
+直接改掉呼叫者手上的 head。 這裡把 head 當成「傳參考」的參數 $L.\mathit{head}$（C 語言就是傳
+\texttt{Node **}），做法和資結書第~5.5~節一樣：從頭一個一個拆下來，放到另一條串列的最前面。
+
+\begin{pseudo}{就地反轉，直接改 head}
+\Procedure{Reverse}{$L$} \Comment{$L.\mathit{head}$ 指向第一個節點}
+    \State $d \gets \NIL$ \Comment{已經反轉好的一段}
+    \State $h \gets L.\mathit{head}$ \Comment{還沒處理的一段}
+    \While{$h \ne \NIL$}
+        \State $r \gets h.\mathit{next}$ \Comment{先記住下一個，改了 next 就找不到了}
+        \State $h.\mathit{next} \gets d$
+        \State $d \gets h$
+        \State $h \gets r$
+    \EndWhile
+    \State $L.\mathit{head} \gets d$
+\EndProcedure
+\end{pseudo}
+
+\textbf{追蹤}，串列 $a \to b \to c$，每一列是一輪做完後：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+輪 & $d$ 那一段 & $h$ 那一段 \\
+\midrule
+開始 & （空） & $a \to b \to c$ \\
+1 & $a$ & $b \to c$ \\
+2 & $b \to a$ & $c$ \\
+3 & $c \to b \to a$ & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後 $L.\mathit{head} \gets d$，$L$ 變成 $c \to b \to a$。
+
+\textbf{正確性。} 設原串列是 $x_1 \to \cdots \to x_n$。 不變量：第 $i$ 輪開始時，$d$ 是
+$x_{i-1} \to \cdots \to x_1 \to \NIL$，$h$ 是 $x_i \to \cdots \to x_n \to \NIL$。 開始時 $i = 1$，
+$d$ 空、$h$ 是整條，成立。 一輪把 $x_i$ 從 $h$ 的前面拆下、接到 $d$ 的前面，第 $i + 1$ 輪開始時
+仍成立。 迴圈在 $h = \NIL$ 時結束，此時 $d = x_n \to \cdots \to x_1$，正是反轉後的串列。 空串列
+（$L.\mathit{head} = \NIL$）和只有一個節點的串列也對：迴圈做 $0$ 或 $1$ 輪，head 不變。
+
+\textbf{複雜度。} 每個節點處理一次，時間 $\Theta(n)$；只用 $d, h, r$ 三個指標，額外空間
+$\Theta(1)$。 第 5 行一定要在第 6 行之前，這是最常寫錯的地方。
+\end{pastsoln}

@@ -1,0 +1,14 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-05}]{北科大電機所（戊組）115 學年度 是非題第 5 題}
+（是非）
+
+A complete binary tree with n nodes has a height of $O(\log n)$. \textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（True）。
+
+完整二元樹除了最後一層，每一層都填滿。 高度（層數）是 $k$ 時，前 $k - 1$ 層全滿，至少有
+$2^{k-1} - 1 + 1 = 2^{k-1}$ 個節點，所以 $n \ge 2^{k-1}$，$k \le \lg n + 1$。 精確地說，$n$ 個節點的完整二元樹高度是
+$\lfloor \lg n \rfloor + 1$ 層（資結書定理~7.3），用邊數算是 $\lfloor \lg n \rfloor$，兩種算法都是 $O(\log n)$。 這也是
+二元堆積的插入、刪除是 $O(\log n)$ 的原因。
+\end{pastsoln}

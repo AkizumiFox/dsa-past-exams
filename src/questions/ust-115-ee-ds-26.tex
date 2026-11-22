@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-26}]{臺聯大電機類 115 學年度 第 26 題}
+（單選；2 分）
+
+\textbf{Which of the following traversal methods takes a Breadth-First search (BFS) approach?}
+
+(A)~pre-order traversal \qquad (B)~in-order traversal \qquad (C)~post-order traversal \qquad
+(D)~level-order traversal \qquad (E)~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+廣度優先是「先處理離起點近的，再處理遠的」，在樹上就是一層一層由上往下、每層由左往右，也就是
+層序走訪。 它用佇列實作：取出一個節點、把它的孩子放進佇列尾端（資結書第~7.3.2~節，虛擬碼~7.2）；
+在圖上就是 BFS（資結書第~21.3~節）。
+
+逐項檢查：
+\begin{itemize}
+\item (A)(B)(C) 前序、中序、後序都是先沿一個孩子走到底再回頭，是深度優先，用遞迴或堆疊實作，三者
+只差在「根」在什麼時候被處理。 錯。
+\item (D) 對。
+\item (E) (D) 就是，錯。
+\end{itemize}
+\end{pastsoln}

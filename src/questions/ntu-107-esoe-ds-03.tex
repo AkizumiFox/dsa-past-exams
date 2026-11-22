@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-107-esoe-ds-03}]{臺大工科海洋所 107 學年度 第 3 題}
+（問答；15 分）
+
+\textbf{(15 \%)} Consider the following algorithm to evaluate a polynomial
+$f(x)=\sum_{i=0}^{n} a_i x^i$,
+\begin{minted}[fontsize=\small]{c}
+poly = 0;
+for (i = n; i >= 0; --i)
+    poly = x * poly + a[i];
+\end{minted}
+\begin{enumerate}[label=\alph*.]
+\item (5 \%) Show how the steps are performed by this algorithm for $x=2$, $f(x)=3x^4-5x^3+6x-4$.
+\item (5 \%) Explain or show why this algorithm works.
+\item (5 \%) What is the running time of this algorithm.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這是 \textbf{Horner 法則}（Horner's rule）。 資結書第~4.4~節講多項式的表示和加法、乘法，沒有
+講求值，這題把它補上。
+
+\textbf{a.} $n = 4$，係數照次方排：$a_4 = 3$、$a_3 = -5$、$a_2 = 0$（$x^2$ 項不見了，係數是
+$0$，不能漏掉）、$a_1 = 6$、$a_0 = -4$。 $x = 2$：
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+$i$ & $a[i]$ & $\mathit{poly} \gets 2 \cdot \mathit{poly} + a[i]$ & 這時的 $\mathit{poly}$ 代表 \\
+\midrule
+開始 & & $0$ & \\
+4 & $3$ & $2 \cdot 0 + 3 = 3$ & $3$ \\
+3 & $-5$ & $2 \cdot 3 - 5 = 1$ & $3x - 5$ \\
+2 & $0$ & $2 \cdot 1 + 0 = 2$ & $3x^2 - 5x$ \\
+1 & $6$ & $2 \cdot 2 + 6 = 10$ & $3x^3 - 5x^2 + 6$ \\
+0 & $-4$ & $2 \cdot 10 - 4 = 16$ & $3x^4 - 5x^3 + 6x - 4$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果 $f(2) = 16$。 直接代入檢查：$3 \cdot 16 - 5 \cdot 8 + 6 \cdot 2 - 4 = 48 - 40 + 12 - 4 = 16$。
+
+\textbf{b.} 把多項式一層一層提出 $x$：
+\[
+f(x) = a_0 + x\Bigl(a_1 + x\bigl(a_2 + \cdots + x(a_{n-1} + x\,a_n)\cdots\bigr)\Bigr).
+\]
+程式從最裡面那層算到最外面。 精確地說，用迴圈不變量：
+
+\textbf{不變量}：第 $i$ 輪開始前（$i = n, n-1, \ldots, 0, -1$），
+$\mathit{poly} = \sum_{j=i+1}^{n} a_j x^{\,j-i-1}$。
+
+\begin{itemize}
+\item \textbf{初始}：$i = n$ 時和式是空的，等於 $0$，和 $\mathit{poly} = 0$ 一致。
+\item \textbf{維持}：這一輪做 $\mathit{poly} \gets x \cdot \mathit{poly} + a_i$，得到
+$x\sum_{j=i+1}^{n} a_j x^{\,j-i-1} + a_i = \sum_{j=i+1}^{n} a_j x^{\,j-i} + a_i x^0
+= \sum_{j=i}^{n} a_j x^{\,j-i}$，正是下一輪（$i - 1$）開始前要求的式子。
+\item \textbf{結束}：$i = -1$ 時迴圈停，$\mathit{poly} = \sum_{j=0}^{n} a_j x^{j} = f(x)$。
+\end{itemize}
+a 小題表格最右欄就是每一輪結束時的這個式子。
+
+\textbf{c.} 迴圈做 $n + 1$ 次，每次一個乘法、一個加法，共 $n + 1$ 次乘法和 $n + 1$ 次加法
+（第一次的 $x \cdot 0$ 其實可以省），時間 $\Theta(n)$，額外空間 $\Theta(1)$。 對照一下：
+每一項各自算 $x^i$（$i - 1$ 次乘法）再乘係數，總共要 $\sum_{i=1}^{n} i = n(n+1)/2$ 次乘法，
+是 $\Theta(n^2)$；就算邊算邊累乘 $x^i$，也要 $2n$ 次乘法。 Horner 法則只要 $n$ 次（扣掉乘
+$0$ 那次）。
+\end{pastsoln}

@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-19}]{臺聯大電機類 115 學年度 第 19 題}
+（單選；2 分）
+
+2-3 Tree is a special type of B-Tree. What conditions must all its leaf nodes satisfy?
+
+(A)~In the Same level \qquad (B)~It must contain 3 key-value pairs. \qquad
+(C)~In different level only l and l+1. \qquad (D)~Must be filled from left to right
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+2-3 樹是 $3$ 階的 B 樹：每個內部節點是 2-節點（$1$ 個鍵值、$2$ 個孩子）或 3-節點（$2$ 個鍵值、
+$3$ 個孩子），而且\textbf{所有葉子都在同一層}（資結書第~11.1~節）。 插入時節點滿了就分裂、把中間
+的鍵值往上推，樹只會從根長高，所以所有葉子永遠一起往下一層，維持同一層。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 對。
+\item (B) 2-3 樹的節點只放 $1$ 或 $2$ 個鍵值，放 $3$ 個就要分裂。 錯。
+\item (C) 葉子分布在相鄰兩層是完全二元樹（例如堆積）的性質，2-3 樹要求全部在同一層。 錯。
+\item (D) 「由左而右填滿」也是完全二元樹的性質，2-3 樹沒有這個要求。 錯。
+\end{itemize}
+\end{pastsoln}

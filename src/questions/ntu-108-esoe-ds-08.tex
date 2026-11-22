@@ -1,0 +1,65 @@
+\begin{pastexam}[label={px:ntu-108-esoe-ds-08}]{臺大工科海洋所 108 學年度 第 8 題}
+（追蹤、問答）
+
+\textbf{(12 \%)} Suppose you insert a set of keys \{4, 6, 12, 15, 3, 5\} into an initially empty 2-3-4
+tree in that order. Now, you do the same insertion to an empty 2-3-4 tree with the same keys but a
+different order, say \{12, 3, 6, 4, 5, 15\}.\quad Can these two trees have the same
+structure?\quad Draw both trees to justify your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：可以。 用 2-3-4 樹標準的由上而下插入，兩種順序建出來的樹完全一樣：根是 $[6]$，左子節點
+$[3\ 4\ 5]$，右子節點 $[12\ 15]$。
+
+插入用資結書第~11.1.5~節的由上而下（top-down）做法（虛擬碼~11.1）：從根往下走的路上遇到 4-節點
+（$3$ 個鍵）就先分裂，中間的鍵送進父節點；根是 4-節點時，中間鍵自己成為新的根。 下面 $[\,a\ b\,]$ 表示
+一個節點裡的鍵。
+
+\textbf{順序一：$4, 6, 12, 15, 3, 5$}
+\begin{enumerate}
+\item 插入 $4, 6, 12$：都放進根，根是 $[4\ 6\ 12]$。
+\item 插入 $15$：根是 4-節點，先分裂，$6$ 成為新根，左右是 $[4]$、$[12]$；$15 > 6$，放進右邊，得 $[12\ 15]$。
+\item 插入 $3$：$3 < 6$，左邊 $[4]$ 不是 4-節點，放進去得 $[3\ 4]$。
+\item 插入 $5$：$5 < 6$，左邊 $[3\ 4]$ 不是 4-節點，放進去得 $[3\ 4\ 5]$。
+\end{enumerate}
+
+\textbf{順序二：$12, 3, 6, 4, 5, 15$}
+\begin{enumerate}
+\item 插入 $12, 3, 6$：根是 $[3\ 6\ 12]$。
+\item 插入 $4$：根是 4-節點，先分裂，$6$ 成為新根，左右是 $[3]$、$[12]$；$4 < 6$，放進左邊得 $[3\ 4]$。
+\item 插入 $5$：$5 < 6$，左邊 $[3\ 4]$ 放得下，得 $[3\ 4\ 5]$。
+\item 插入 $15$：$15 > 6$，右邊 $[12]$ 放得下，得 $[12\ 15]$。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[k/.style={draw,minimum width=6mm,minimum height=5mm,inner sep=0pt,font=\small}]
+\begin{scope}
+\node[k] (r) at (0,0) {6};
+\node[k] (a1) at (-1.6,-1.2) {3}; \node[k,right=0pt of a1] (a2) {4}; \node[k,right=0pt of a2] (a3) {5};
+\node[k] (b1) at (1.0,-1.2) {12}; \node[k,right=0pt of b1] (b2) {15};
+\draw (r.south west) -- (a2.north); \draw (r.south east) -- (b1.north east);
+\node at (0,-2.0) {\small 順序一};
+\end{scope}
+\begin{scope}[xshift=6cm]
+\node[k] (r) at (0,0) {6};
+\node[k] (a1) at (-1.6,-1.2) {3}; \node[k,right=0pt of a1] (a2) {4}; \node[k,right=0pt of a2] (a3) {5};
+\node[k] (b1) at (1.0,-1.2) {12}; \node[k,right=0pt of b1] (b2) {15};
+\draw (r.south west) -- (a2.north); \draw (r.south east) -- (b1.north east);
+\node at (0,-2.0) {\small 順序二};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+兩棵樹的形狀（一個 2-節點的根，下面接一個 4-節點和一個 3-節點）相同，連每個節點裡的鍵都相同。 這說明
+不同的插入順序\textbf{有可能}得到同一棵 2-3-4 樹，雖然一般而言插入順序會影響結果。
+
+\textbf{如果用由下而上的插入}。 有些課本的 2-3-4 樹是由下而上分裂：先放進葉子，葉子有 $4$ 個鍵時才分裂，
+往上送一個鍵。 $4$ 個鍵沒有正中間，要約定送第 $2$ 個還是第 $3$ 個（資結書第~11.1.5~節），結果就不同：
+\begin{itemize}
+\item 送第 $2$ 個：順序一得到 $[6]$ 下接 $[3\ 4\ 5]$、$[12\ 15]$（和上面一樣）；順序二在插入 $4$ 時
+$[3\ 4\ 6\ 12]$ 分裂送上 $4$，最後得到根 $[4\ 6]$，下接 $[3]$、$[5]$、$[12\ 15]$。
+\item 送第 $3$ 個：順序一在插入 $15$ 時送上 $12$，最後得到根 $[5\ 12]$，下接 $[3\ 4]$、$[6]$、$[15]$；
+順序二得到 $[6]$ 下接 $[3\ 4\ 5]$、$[12\ 15]$。
+\end{itemize}
+在這兩種約定下，這兩個順序建出的樹不一樣（根的鍵數就不同）。 所以答題時要寫明用的是哪一種插入；
+用 2-3-4 樹最常見的由上而下插入，答案是「可以，兩棵樹相同」，如上圖。
+\end{pastsoln}

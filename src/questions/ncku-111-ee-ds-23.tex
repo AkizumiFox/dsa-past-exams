@@ -1,0 +1,66 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-23}]{成大電機所 111 學年度 短答題第 3 題}
+（短答；每題 5 分）
+
+以下共四個 function, 請簡單回答他們的功能
+
+\textbf{What is the usage of the following function?}
+\begin{minted}[fontsize=\small]{cpp}
+bool isValid(string s) {
+    stack<char> save;
+    char current;
+    if (s.size()%2==1) return false;
+    if(s[s.size()-1]=='('||s[s.size()-1]=='{'||s[s.size()-1]=='[')   return false;
+    for(int i=0;i<s.size();i++) {
+             current=s[i];
+             switch (current) {
+              case '(':
+                     save.push(current);   break;
+              case '{':
+                     save.push(current);   break;
+              case '[':
+                     save.push(current);   break;
+              case ')':
+                     if(save.size()==0||save.top()!='(')   return false;
+                     save.pop(); break;
+              case '}':
+                     if(save.size()==0||save.top()!='{')   return false;
+                     save.pop(); break;
+              case ']':
+                     if(save.size()==0||save.top()!='[')   return false;
+                     save.pop(); break;
+              default :
+                     return false; break;
+          } // end switch
+     } // end for
+     if(save.size()!=0) {
+          if(save.top()=='('||save.top()=='{'||save.top()=='[')   return false;
+      }
+     return true;
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：檢查一個只由 \texttt{()[]\{\}} 組成的字串，括號是不是\textbf{正確配對}（每個左括號都有同種類的右括號、而且巢狀順序
+正確）。 是就回傳 \texttt{true}。 例如 \texttt{"()[]\{\}"}、\texttt{"\{[]\}"} 是 \texttt{true}；\texttt{"(]"}、\texttt{"([)]"} 是
+\texttt{false}。 這是資結書第~6.1.4~節的括號配對（虛擬碼~6.3），LeetCode 的 Valid Parentheses。
+
+\textbf{怎麼做。} 由左往右掃：
+\begin{itemize}
+\item 遇到左括號就 push 進堆疊。
+\item 遇到右括號，堆疊頂端必須是同種類的左括號，是就 pop（配對成功），否則（堆疊空了，或頂端種類不同）立刻回傳
+\texttt{false}。
+\item 遇到其他字元，回傳 \texttt{false}。
+\end{itemize}
+掃完後堆疊裡還有左括號，表示有左括號沒配到，回傳 \texttt{false}；堆疊是空的才回傳 \texttt{true}。 用堆疊的原因是：最晚
+出現、還沒配對的左括號，必須最先被配對（後進先出），\texttt{"([)]"} 就是在 \texttt{)} 時頂端是 \texttt{[} 而失敗。
+
+\textbf{前面兩個提早判斷。} 長度是奇數一定無法兩兩配對；最後一個字元是左括號，它後面沒有字可以配對。 這兩個檢查只是
+提早結束，拿掉也不影響結果。 最後的 \texttt{if} 也可以直接寫成 \texttt{return save.empty();}：堆疊裡只會有左括號，不是空的
+就一定會回傳 \texttt{false}。 （對所有長度 $1$ 到 $8$ 的括號字串，這個函數和「堆疊空才算對」的標準寫法結果都相同。）
+
+\textbf{複雜度。} 每個字元 push、pop 最多各一次，$\Theta(n)$ 時間，堆疊最多 $n$ 個，$O(n)$ 空間。
+
+小缺陷：\texttt{s} 是空字串時，長度 $0$ 是偶數，接著讀 \texttt{s[s.size()-1]}，\texttt{s.size()-1} 是無號數的最大值，越界。
+要先判斷空字串（空字串應該算配對正確）。
+\end{pastsoln}

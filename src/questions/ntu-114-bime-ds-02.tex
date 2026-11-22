@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntu-114-bime-ds-02}]{臺大生機所 114 學年度 第 2 題}
+（虛擬碼；10 分）
+
+\textbf{(10\%)} Write a recursive function in pseudocode that takes a reference (or pointer) to the
+first node of a linked list as argument and returns the value of the maximum key in the list.
+Assume that the keys in the linked list are all positive integers. If the linked list is empty, the
+function should return 0.
+\end{pastexam}
+
+\begin{pastsoln}
+節點有欄位 $\mathit{key}$ 和 $\mathit{next}$（資結書第~5.1~節），$x$ 指向第一個節點，空串列是
+$x = \NIL$。
+
+遞迴的想法：串列的最大值是「第一個節點的鍵值」和「其餘部分的最大值」兩者中較大的。 其餘部分
+是以 $x.\mathit{next}$ 開頭的串列，長度少一，交給遞迴。 空串列回傳 $0$；鍵值都是正整數，所以
+$0$ 比任何鍵值都小，拿來和第一個鍵值比不會出錯，最後一個節點也不用特別處理。
+
+\begin{pseudo}{遞迴求串列的最大鍵值}
+\Function{List-Max}{$x$}
+    \If{$x = \NIL$}
+        \State \Return $0$ \Comment{空串列}
+    \EndIf
+    \State $m \gets$ \Call{List-Max}{$x.\mathit{next}$} \Comment{其餘部分的最大值}
+    \If{$x.\mathit{key} > m$}
+        \State \Return $x.\mathit{key}$
+    \Else
+        \State \Return $m$
+    \EndIf
+\EndFunction
+\end{pseudo}
+
+例：串列 $3 \to 9 \to 4$。 \proc{List-Max}$(\NIL) = 0$；節點 $4$：$\max(4, 0) = 4$；節點 $9$：
+$\max(9, 4) = 9$；節點 $3$：$\max(3, 9) = 9$，回傳 $9$。
+
+\textbf{正確性。} 對串列長度 $L$ 歸納。 $L = 0$：回傳 $0$，符合題目要求。 $L \ge 1$：由歸納假設
+$m$ 是後面 $L - 1$ 個鍵值的最大值（$L = 1$ 時 $m = 0$，小於任何正整數鍵值），函式回傳
+$\max(x.\mathit{key}, m)$，正是全部 $L$ 個鍵值的最大值。
+
+\textbf{複雜度。} 每個節點呼叫一次，加上最後的 \NIL 一次，共 $L + 1$ 次呼叫，每次 $O(1)$，時間
+$\Theta(L)$。 遞迴深度 $L + 1$，呼叫堆疊用 $\Theta(L)$ 空間；同樣的事用迴圈寫只要 $O(1)$ 空間，
+但題目要求遞迴。
+\end{pastsoln}

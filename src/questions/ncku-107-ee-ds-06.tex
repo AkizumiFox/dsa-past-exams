@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ncku-107-ee-ds-06}]{成大電機所 107 學年度 問答題第 2 題}
+（問答）
+
+\textbf{2. Matrix (10 pts)}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(5 pts)} A matrix is said to be \textbf{lower triangular} when all elements below the
+main diagonal of square matrix is zero. Given a lower triangle \textbf{A}, each non-zero element is
+stored by rows in a one-dimensional array \textbf{B} with $a$[0][0] being stored in $b$[0] (see Fig.
+(a)). Give a single expression for $k$ in terms of $i$ and $j$ if an element $a_{i,j}$ is stored at
+$b[k]$.
+\item \textbf{(5 pts)} A matrix is said to be a \textbf{symmetric matrix} if it is a square matrix and
+its transpose is equal to itself. Similarly, each element of a symmetric matrix is stored by rows in
+a one-dimensional array \textbf{B} with $a$[0][0] being stored in $b$[0]. EX: a$_{10}$ =a$_{01}$ is
+stored in b(1); a$_{11}$ is stored in b(2); a$_{21}$ =a$_{12}$ is stored in b(3) and so on (see Fig.
+(b)). Write a single expression for $k$ in terms of $i$ and $j$ if an element $a_{i,j}$ is stored at
+$b[k]$ (\textbf{hint}: the functions Max($i,j$) and Min($i,j$) could be used in the expression).
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[x=0.62cm,y=0.62cm,font=\small,>={Stealth[length=1.8mm]}]
+\foreach \off/\lab/\rows in {0/(a)/{{b_0,0,0,0},{b_1,b_2,0,0},{b_3,b_4,b_5,0},{b_6,b_7,b_8,b_9}},
+                             9/(b)/{{b_0,b_1,b_3,b_6},{b_1,b_2,b_4,b_7},{b_3,b_4,b_5,b_8},{b_6,b_7,b_8,b_9}}} {
+  \begin{scope}[xshift=\off*0.62cm]
+    \draw[step=1] (0,0) grid (5,-5);
+    \foreach \row [count=\r from 0] in \rows {
+      \node at (-0.7,-\r-0.5) {\r};
+      \foreach \v [count=\c from 0] in \row { \node at (\c+0.5,-\r-0.5) {$\mathrm{\v}$}; }
+    }
+    \foreach \c in {0,1,2,3} { \node at (\c+0.5,0.6) {\c}; }
+    \draw[->] (5.6,0.6) -- (4.6,0.6);
+    \node at (6,0.6) {$j$};
+    \draw[->] (-0.7,-5.2) -- (-0.7,-4.4);
+    \node at (-0.7,-5.8) {$i$};
+    \node at (2.5,-5.8) {\lab};
+  \end{scope}
+}
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這題和資結書歷屆試題 4.3（成大電通所同一份考卷）是同一題。
+
+原題 a 小題的定義寫反了：「主對角線\textbf{以下}全是 $0$」說的是上三角矩陣。 題目的名稱 lower triangular
+和圖 (a)（$i \ge j$ 的格子有值）都表示要的是「主對角線\textbf{以上}全是 $0$」，也就是資結書第~4.2~節的
+下三角矩陣。 下面照圖的意思作答。 下標和 $b$ 都從 $0$ 開始。 圖裡多畫了一列、一行空格，是原卷的畫法，
+矩陣本身是 $4 \times 4$。
+
+\textbf{a.} $k = \dfrac{i(i+1)}{2} + j$（$i \ge j$；$i < j$ 的元素是 $0$，不存）。
+
+推導：一列一列存，$a_{i,j}$ 前面有第 $0$ 到第 $i - 1$ 列，第 $r$ 列有 $r + 1$ 個非零元素，共
+$1 + 2 + \cdots + i = i(i+1)/2$ 個；同一列裡排在它前面的是 $a_{i,0}, \ldots, a_{i,j-1}$，共 $j$ 個。 兩者相加就是
+$a_{i,j}$ 前面的元素個數，因為 $b$ 從 $0$ 開始編號，這個個數正好是它的下標。 對照圖 (a)：$a_{2,1}$ 是
+$3 + 1 = 4$，$a_{3,3}$ 是 $6 + 3 = 9$，都相符。
+
+\textbf{b.} $k = \dfrac{\mathrm{Max}(i,j)\,\bigl(\mathrm{Max}(i,j) + 1\bigr)}{2} + \mathrm{Min}(i,j)$。
+
+對稱矩陣只存下三角（含對角線），存法和 a 一樣。 $i \ge j$ 時直接用 a 的公式；$i < j$ 時 $a_{i,j} = a_{j,i}$，
+改用 $(j, i)$ 代進公式。 兩種情形合起來，就是把較大的下標放在 $i$ 的位置、較小的放在 $j$ 的位置。 對照
+圖 (b)：$a_{0,3}$ 是 $6 + 0 = 6$，$a_{1,2}$ 是 $3 + 1 = 4$，$a_{2,3}$ 是 $6 + 2 = 8$，都相符。 $n \times n$ 的對稱矩陣
+只要 $n(n+1)/2$ 格，比 $n^2$ 省了將近一半。
+\end{pastsoln}

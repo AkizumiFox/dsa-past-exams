@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ncku-107-cce-10}]{成大電通所 107 學年度 問答題第 6 題}
+（問答；9 分）
+
+\textbf{6. (9 pts) Set}
+
+There exist two sets which have five members and four members, respectively, which are recorded by the tree structure. Let the number in the root as ID of a set.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,minimum size=5mm,inner sep=0pt,font=\small\sffamily},w/.style={font=\footnotesize,inner sep=1.5pt},>={Stealth[length=2mm]}]
+\node[v] (1) at (7.13,-28.36) {1};
+\node[v] (4) at (5.70,-29.55) {4};
+\node[v] (2) at (6.60,-29.55) {2};
+\node[v] (3) at (7.43,-29.55) {3};
+\node[v] (5) at (8.39,-29.55) {5};
+\node[v] (6) at (10.05,-28.29) {6};
+\node[v] (7) at (9.31,-29.49) {7};
+\node[v] (0) at (10.92,-29.44) {0};
+\node[v] (8) at (10.17,-30.82) {8};
+\draw[->] (4) to (1);
+\draw[->] (2) to (1);
+\draw[->] (3) to (1);
+\draw[->] (5) to (1);
+\draw[->] (7) to (6);
+\draw[->] (0) to (6);
+\draw[->] (8) to (7);
+\node[font=\small\sffamily] at (7.01,-31.85) {Set \{1, 4, 2, 3, 5\}};
+\node[font=\small\sffamily] at (11.04,-31.85) {Set \{6, 7, 0, 8\}};
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=\alph*.]
+\item (\textbf{6 pts}) Union is an operation to merge two sets. Please respectively show the resulting data structures after the function WeightUnion1(1, 6) is called when you use number of nodes as the weight and when you use height as the weight.
+\item (\textbf{3 pts}) Find is an operation to find an ID which contains a member. Please show the resulting data structure if the function \textit{CollaspingFind}(8) is called in the second set, where collapse aims to reduce the height of a tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電機所 107 學年度的「資料結構」是同一份（兩系所共用），完整詳解見歷屆試題~\ref{px:ncku-107-ee-ds-10}。
+
+答案：a. 依節點數：$5 > 4$，$6$ 接到 $1$ 底下（根 $1$，高度 $4$）；依高度：$2 < 3$，$1$ 接到 $6$ 底下（根 $6$，
+高度仍是 $3$）。 b. CollapsingFind$(8)$ 走 $8 \to 7 \to 6$，把 $8$ 直接改接到根 $6$，結果是 $6$ 底下接 $7, 0, 8$。
+\end{pastsoln}

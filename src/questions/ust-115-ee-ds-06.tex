@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-06}]{臺聯大電機類 115 學年度 第 6 題}
+（單選；2 分）
+
+Given an input sequence of 1, 2, 3 (pushed into the stack in that order), which of the following is
+``not possible'' the order in which the elements are popped out?
+
+(A)~3, 2, 1 \qquad (B)~1, 2, 3 \qquad (C)~2, 3, 1 \qquad (D)~3, 1, 2
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+逐項用 push、pop 模擬（資結書第~6.1.5~節）：
+\begin{itemize}
+\item (A) 3, 2, 1：push 1、push 2、push 3、pop 3、pop 2、pop 1。 做得到。
+\item (B) 1, 2, 3：push 1、pop 1、push 2、pop 2、push 3、pop 3。 做得到。
+\item (C) 2, 3, 1：push 1、push 2、pop 2、push 3、pop 3、pop 1。 做得到。
+\item (D) 3, 1, 2：要先 pop 3，就得先 push 1、2、3，pop 3 之後堆疊由下而上是 $1, 2$，頂端是
+$2$。 下一個能 pop 的只有 $2$，不可能先輸出 $1$。 做不到。
+\end{itemize}
+用資結書定理~6.1 也能直接判斷：輸出順序做不到，若且唯若裡面有「大、小、中」的樣子
+（$i < j < k$ 且 $p_j < p_k < p_i$）。 $3, 1, 2$ 本身就是這個樣子，其他三個都沒有。
+三個數共有 $3! = 6$ 種排列，做得到的有 $C_3 = 5$ 種，唯一做不到的就是 $3, 1, 2$。
+\end{pastsoln}

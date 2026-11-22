@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-04}]{臺大工工所 106 學年度 第 4 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+A binomial heap is composed of at most O(log n) binomial trees. Therefore, it takes O(log n) time to
+find an arbitrary data in the heap.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) 錯。
+
+前半句對：$n$ 個節點的二項堆積裡，$k$ 階的二項樹 $B_k$ 有 $2^k$ 個節點，各階最多一棵，對應 $n$ 的二進位表示裡的 1，
+所以最多 $\lfloor \lg n \rfloor + 1$ 棵（資結書第~8.5~節）。
+
+後半句不成立。 $O(\log n)$ 棵樹只保證「看完所有的根」是 $O(\log n)$，所以找\textbf{最小值}是 $O(\log n)$
+（最小值一定是某一棵樹的根）。 找任意一個資料 $d$ 就不同了：堆積性質只規定父節點不大於子節點，兄弟之間、
+不同子樹之間沒有大小關係，沒辦法像二元搜尋樹那樣決定往哪邊找。 例如 $d$ 比所有的根都大時，任何一個非根節點都可能是 $d$，
+最壞要檢查全部 $n$ 個節點，時間 $\Theta(n)$。 前半句推不出後半句，敘述錯。
+\end{pastsoln}

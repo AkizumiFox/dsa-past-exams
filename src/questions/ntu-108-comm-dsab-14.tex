@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-14}]{臺大電信所 108 學年度（B）第 14 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+For problems 11-14, choose the appropriate tight bound for the recurrence of $T(n)$. Also note
+that in this exam, the degree of a node $x$ in a tree indicates the number of children of $x$.
+
+$T(n)=4\cdot T(n/3)+n^{\log_3 4}$
+
+A.~$\Theta(\lg n)$ \qquad B.~$\Theta(n)$ \qquad C.~$\Theta(n^{\log_3 4})$ \qquad
+D.~$\Theta(n^{\log_3 4}\lg n)$ \qquad E.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+$a = 4$、$b = 3$，$n^{\log_b a} = n^{\log_3 4}$，和 $f(n) = n^{\log_3 4}$ 一樣大，是主定理的第二種
+情形（資結書定理~2.4），$T(n) = \Theta(n^{\log_3 4} \lg n)$。 直觀上，遞迴樹第 $i$ 層有 $4^i$ 個
+子問題，每個成本 $(n/3^i)^{\log_3 4} = n^{\log_3 4} / 4^i$，每層總和都是 $n^{\log_3 4}$，一共
+$\log_3 n + 1$ 層。
+
+A、B 太小（$\log_3 4 \approx 1.26 > 1$）；C 少了 $\lg n$ 這個層數的因子；D 對。
+\end{pastsoln}

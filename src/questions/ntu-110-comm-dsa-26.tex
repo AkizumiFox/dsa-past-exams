@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-26}]{臺大電信所 110 學年度（B）第 26 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Consider the following five recursive functions:
+\begin{enumerate}[label=\Alph*.]
+\item $\mathrm{T(n)}=64\mathrm{T}\left(\frac{n}{16}\right)+n(\log n)^4+n\sqrt{n}(\log n)^4$
+\item $\mathrm{T(n)}=27\mathrm{T}\left(\frac{n}{8}\right)+65n\log(\log n)+3\sqrt{n}(\log n)^3+\log(n!)$
+\item $\mathrm{T(n)}=11\mathrm{T}\left(\frac{n}{5}\right)+2\log^* n$
+\item $\mathrm{T(n)}=\mathrm{T}(n-1)+\sqrt{n}(\log n)^2$
+\item $\mathrm{T(n)}=T(\sqrt[3]{n})+1$
+\end{enumerate}
+Which recursion yields the highest asymptotic complexity for T(n)?
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B。
+
+逐一求解，每個的額外工作先化成最大的那一項（資結書第~2.4、2.5~節）：
+\begin{itemize}
+\item \textbf{A}：$n^{\log_{16} 64} = n^{1.5}$（$16^{1.5} = 64$）。 額外工作的主項是
+$n\sqrt n(\log n)^4 = n^{1.5}\log^4 n$，正好是 $n^{\log_b a}$ 乘上 $\log^4 n$，用主定理第二種情形的推廣
+（$f(n) = \Theta(n^{\log_b a}\log^k n)$ 時 $T(n) = \Theta(n^{\log_b a}\log^{k+1} n)$），
+$T(n) = \Theta(n^{1.5}\log^5 n)$。
+\item \textbf{B}：$n^{\log_8 27} = n^{\log_2 3} \approx n^{1.585}$（$8^{\log_2 3} = 2^{3\log_2 3} = 27$）。 額外工作
+$65n\log\log n + 3\sqrt n\log^3 n + \log(n!)$，其中 $\log(n!) = \Theta(n\log n)$ 最大，所以 $f(n) = \Theta(n\log n)
+= O(n^{1.585 - \varepsilon})$，第一種情形，$T(n) = \Theta(n^{\log_2 3})$。
+\item \textbf{C}：$n^{\log_5 11} \approx n^{1.490}$，$f(n) = 2\log^* n$ 遠小於它，第一種情形，
+$T(n) = \Theta(n^{\log_5 11})$。
+\item \textbf{D}：展開 $T(n) = \sum_{k=1}^{n}\sqrt k\log^2 k$。 上界 $\le n \cdot \sqrt n\log^2 n$；下界取後一半
+$k \ge n/2$，每項 $\ge \sqrt{n/2}\log^2(n/2)$，共 $n/2$ 項。 所以 $T(n) = \Theta(n^{1.5}\log^2 n)$。
+\item \textbf{E}：令 $n = 2^m$、$S(m) = T(2^m)$，$S(m) = S(m/3) + 1$，$S(m) = \Theta(\log m)$，
+$T(n) = \Theta(\log\log n)$。
+\end{itemize}
+比較：E 最小；C 的 $n^{1.490}$ 小於 A、D 的 $n^{1.5}\cdot\text{polylog}$；A 的 $n^{1.5}\log^5 n$ 大於 D 的
+$n^{1.5}\log^2 n$；而 B 的 $n^{1.585}$ 比 A 多了 $n^{0.085}$ 倍，任何 $\log$ 的次方都追不上正的次方：
+$\dfrac{n^{1.5}\log^5 n}{n^{1.585}} = \dfrac{\log^5 n}{n^{0.085}} \to 0$。 所以最高的是 B。
+\end{pastsoln}

@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-12}]{北科大電機所（戊組）113 學年度 第 III.3 題}
+（問答；15 分）
+
+You have a hash table with 8 slots and the following hash function: $h(k)=(3k+7)\ mod\ 8$ with
+collisions resolved by using chaining.\\
+(a) What is the probability that the first 3 slots are unfilled after the first 3 insertions? (5\%)\\
+(b) If you want to search for the key 5, what index is it could be located in the hash table? (5\%)\\
+(c) What is the time complexity? (5\%)
+\end{pastexam}
+
+\begin{pastsoln}
+題目沒有說鍵怎麼來，(a) 採用簡單均勻雜湊的假設：每個鍵獨立、等可能落在 $8$ 格中的任一格
+（資結書第~12.2.2~節）。 這個 $h$ 和這個假設相容：$3$ 和 $8$ 互質，$k \mapsto (3k + 7) \bmod 8$
+把 $k \bmod 8 = 0, 1, \ldots, 7$ 一對一地對到 $7, 2, 5, 0, 3, 6, 1, 4$，八格都用得到；鍵的
+$k \bmod 8$ 均勻分布時，$h(k)$ 也均勻分布。 「first 3 slots」指第 $0, 1, 2$ 格。
+
+\textbf{(a)} 每次插入落在第 $3$ 到第 $7$ 格（共 $5$ 格）的機率是 $5/8$。 鏈結法每個鍵各自放進自己
+那一格的鏈，三次插入互相獨立，所以三次都沒有落在第 $0, 1, 2$ 格的機率是
+\[
+\left(\frac{5}{8}\right)^3 = \frac{125}{512} \approx 0.244.
+\]
+
+\textbf{(b)} $h(5) = (3 \cdot 5 + 7) \bmod 8 = 22 \bmod 8 = 6$。 鏈結法裡鍵只會放在自己雜湊到的
+那一格的鏈上，所以 $5$ 若在表裡，一定在第 $6$ 格的串列上；搜尋時只要掃第 $6$ 格的鏈。
+
+\textbf{(c)} 鏈結法的時間（$n$ 個鍵、$m = 8$ 格，載入因子 $\alpha = n/8$；資結書第~12.2~節）：
+\begin{itemize}
+\item 插入：算 $h(k)$ 後接到鏈的開頭，$O(1)$（若要先檢查有沒有重複，就和搜尋一樣）。
+\item 搜尋、刪除：期望 $\Theta(1 + \alpha) = \Theta(1 + n/8)$（資結書定理~12.2）。 $n$ 和表的大小
+同階時（$\alpha = O(1)$）是 $O(1)$。
+\item 最壞情況：所有鍵都雜湊到同一格，鏈長 $n$，搜尋、刪除是 $\Theta(n)$。
+\end{itemize}
+以 (b) 為例：搜尋 $5$ 要花 $O(1)$ 算出第 $6$ 格，再掃那條鏈，時間和鏈長成正比，期望
+$O(1 + \alpha)$，最壞 $O(n)$。
+\end{pastsoln}

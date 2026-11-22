@@ -1,0 +1,17 @@
+paper: ust-107-ee-ds
+volume: 3
+school: 臺聯大
+dept: 電機類
+year: 107
+subject: 資料結構
+instructions: ※請在答案卷內作答
+questions:
+  - {id: ust-107-ee-ds-02, label: 第二題, chapter: 6}
+  - {id: ust-107-ee-ds-03, label: 第三題, chapter: 5}
+  - {id: ust-107-ee-ds-04, label: 第四題, chapter: 6}
+  - {id: ust-107-ee-ds-05, label: 第五題, chapter: 6}
+  - {id: ust-107-ee-ds-06, label: 第六題, chapter: 17}
+  - {id: ust-107-ee-ds-07, label: 第七題, chapter: 21}
+  - {id: ust-107-ee-ds-08, label: 第八題, chapter: 21}
+  - {id: ust-107-ee-ds-09, label: 第九題, chapter: 9}
+  - {id: ust-107-ee-ds-10, label: 第十題, chapter: 21}

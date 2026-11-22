@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-14}]{成大智慧資安學程 114 學年度 單選題第 14 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+For any nonempty binary tree, $T$ with n nodes, if n$_0$ is the number of leaf nodes. Please give the
+number of nodes in a binary tree with degree 1, in terms of n and n$_0$.
+
+a)~n-2n$_0$, \qquad b)~n-2n$_0$-1, \qquad c)~n-2n$_0$+1, \qquad d)~n-n$_0$+1, \qquad e)~None of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c) $n - 2n_0 + 1$。
+
+設度數 $0, 1, 2$ 的節點各有 $n_0, n_1, n_2$ 個。
+\begin{itemize}
+\item 節點總數：$n = n_0 + n_1 + n_2$。
+\item 數邊：除了根，每個節點恰好有一條邊連到父節點，邊數是 $n - 1$；從父節點這邊數，邊數是
+$n_1 + 2n_2$。 所以 $n - 1 = n_1 + 2n_2$。
+\end{itemize}
+兩式相減得 $n_0 = n_2 + 1$（資結書定理~7.2），即 $n_2 = n_0 - 1$。 代回第一式：
+\[
+n_1 = n - n_0 - n_2 = n - n_0 - (n_0 - 1) = n - 2n_0 + 1 .
+\]
+檢查：只有根的樹，$n = 1$、$n_0 = 1$，$n_1 = 0$，對；一條長度 $2$ 的鏈 $n = 3$、$n_0 = 1$，$n_1 = 2$，對。
+答案 c)。
+\end{pastsoln}

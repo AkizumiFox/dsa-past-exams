@@ -1,0 +1,146 @@
+\begin{pastexam}[label={px:ncku-111-cce-ds-06}]{成大電通所 111 學年度 第 6 題}
+（簡答）
+
+(20 \textbf{pts}) 簡答題:
+\begin{enumerate}[label=\alph*.]
+\item (5 \textbf{pts}) For any nonempty binary tree, $T$, if $n_0$ is the number of leaf nodes and
+$n_2$ is the number of nodes of degree 2. Pleases show the relation between $n_0$ and $n_2$ and
+prove it.
+\item (5 \textbf{pts}) Given the following Keys 62, 104, 67, 22, 103 and a hash table with 10
+buckets, where each bucket has one slot. Please write down the result using the hash function
+F(x) = (x mod 10). It adopts open addressing when a collision happens according to the quadratic
+residue as follows:
+\[
+i_n=\begin{cases}
+\left(F(x)+\left(\frac{n+1}{2}\right)^2\right) mod\ 10 & ,if\ n \text{ is odd}\\[4pt]
+\left(F(x)-\left(\frac{n}{2}\right)^2\right) mod\ 10 & ,if\ n \text{ is even}
+\end{cases}
+\]
+where $i_0=F(x)$ and $n$ denotes the collision number.
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} &
+\multicolumn{1}{c}{8} & \multicolumn{1}{c}{9}\\ \hline
+\phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} & \phantom{00} &
+\phantom{00} & \phantom{00} & \phantom{00} & \phantom{00}\\ \hline
+\end{tabular}
+\end{center}
+\end{enumerate}
+
+The following figure describes a flow assignment in a flow network G(V, E). The $a/b$ notation in
+each edge respectively denotes the current flow $a$ and capacity $b$ of the edge.
+\begin{enumerate}[label=\alph*.]
+\setcounter{enumi}{2}
+\item (5 \textbf{pts}) Please show the residual network of the graph. Which algorithm can be used
+to find an augmenting path in the residual network and what is its time complexity?
+\item (5 \textbf{pts}) Please find the minimum cut of a network of the graph and what is the
+maximum flow from S to T?
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6mm},l/.style={inner sep=1.5pt,font=\small},>={Stealth[length=2mm]}]
+\node[v] (S) at (0,0) {S}; \node[v] (x) at (1.8,1.2) {x}; \node[v] (y) at (1.8,-1.2) {y};
+\node[v] (z) at (4.4,1.2) {z}; \node[v] (P) at (4.4,-1.2) {P}; \node[v] (T) at (6.2,0) {T};
+\draw[->] (S) -- node[l,above left] {2/4} (x);
+\draw[->] (S) -- node[l,below left] {6/6} (y);
+\draw[->] (x) -- node[l,above] {5/5} (z);
+\draw[->] (x) -- node[l,left] {3/7} (y);
+\draw[->] (y) -- node[l,pos=0.42,above left] {0/2} (z);
+\draw[->] (z) -- (P);
+\draw[->] (z) -- node[l,above right] {4/6} (T);
+\draw[->] (y) -- node[l,below] {3/3} (P);
+\draw[->] (P) -- node[l,below right] {4/4} (T);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) $n_0 = n_2 + 1$；(b) 第 2、3、4、7、9 格依序是 62、22、104、67、103；(c)(d) 見下（採用的
+解讀下最大流 $10$，最小割容量 $10$）。 (a) 屬資結書第~7~章，(b) 屬第~12~章，(c)(d) 屬第~26~章，
+本題放在第~26~章。
+
+\textbf{(a)}（資結書第~7.1~節定理~7.2）\textbf{$n_0 = n_2 + 1$。}
+
+\textbf{證明。} 設 $n_1$ 是度數 $1$ 的節點數，總節點數 $n = n_0 + n_1 + n_2$。 再數邊：除了根，
+每個節點恰有一條連到父節點的邊，所以邊數是 $n - 1$；從父節點這邊數，度數 $i$ 的節點貢獻 $i$
+條邊，邊數也等於 $n_1 + 2n_2$。 所以 $n_0 + n_1 + n_2 - 1 = n_1 + 2n_2$，化簡得
+$n_0 = n_2 + 1$。 \hfill$\blacksquare$
+
+\textbf{(b) 二次探測。} 第 $n$ 次碰撞後的位置依序是 $F,\ F + 1,\ F - 1,\ F + 4,\ F - 4,\ \ldots$
+（模 $10$）；$F - k^2$ 是負數時取 $\bmod$ 的非負值（例如 $-1 \bmod 10 = 9$）。
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+鍵值 & $F(x)$ & 探測的位置 & 結果 \\
+\midrule
+62 & 2 & 2 & 放第 2 格 \\
+104 & 4 & 4 & 放第 4 格 \\
+67 & 7 & 7 & 放第 7 格 \\
+22 & 2 & 2（滿），$2 + 1 = 3$ & 放第 3 格 \\
+103 & 3 & 3, 4, 2, 7 都滿，$3 - 4 = -1 \equiv 9$ & 放第 9 格 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\multicolumn{1}{c}{0} & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} &
+\multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} & \multicolumn{1}{c}{6} & \multicolumn{1}{c}{7} &
+\multicolumn{1}{c}{8} & \multicolumn{1}{c}{9}\\ \hline
+\phantom{00} & \phantom{00} & 62 & 22 & 104 & \phantom{00} & \phantom{00} & 67 & \phantom{00} & 103\\ \hline
+\end{tabular}
+\end{center}
+$103$ 依序試了 $i_0 = 3$、$i_1 = 3 + 1 = 4$、$i_2 = 3 - 1 = 2$、$i_3 = 3 + 4 = 7$，都已經有資料，碰撞
+$4$ 次後 $i_4 = (3 - 4) \bmod 10 = 9$ 才是空的。 這種 $\pm k^2$ 交錯的探測見資結書第~12.3~節。
+
+\textbf{(c)(d) 原圖的問題。} 照圖上的方向（x$\to$y），給的流不滿足流量守恆：x 流入 $2$、流出
+$5 + 3 = 8$；y 流入 $6 + 3 = 9$、流出 $0 + 3 = 3$。 另外 z$\to$P 這條邊沒有標數字。 如果 x、y 之間
+的邊其實是 \textbf{y$\to$x}（流量 $3$、容量 $7$），而 z$\to$P 的流量是 $1$，每個點都守恆：
+x 流入 $2 + 3 = 5$ = 流出 $5$；y 流入 $6$ = 流出 $3 + 0 + 3$；z 流入 $5 + 0$ = 流出 $4 + 1$；P 流入
+$1 + 3$ = 流出 $4$；流量值是 $8$。 題目明說這是一個 flow assignment，所以下面採用這個解讀：
+x--y 的邊是 y$\to$x，z$\to$P 的流量 $1$、容量記為 $c$（$c \ge 1$，原圖沒給，不影響答案）。 最後也
+附上照原圖方向的答案。
+
+\textbf{(c) 剩餘網路}（資結書第~26.2~節）。 每條邊 $(u, v)$ 流量 $f$、容量 $b$：剩餘容量
+$b - f > 0$ 時畫順向邊 $u \to v$，$f > 0$ 時畫反向邊 $v \to u$（容量 $f$）。
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6mm},l/.style={inner sep=1.5pt,font=\small},>={Stealth[length=2mm]},x=1.25cm,y=1.1cm]
+\node[v] (S) at (0,0) {S}; \node[v] (x) at (1.8,1.2) {x}; \node[v] (y) at (1.8,-1.2) {y};
+\node[v] (z) at (4.4,1.2) {z}; \node[v] (P) at (4.4,-1.2) {P}; \node[v] (T) at (6.2,0) {T};
+\draw[->] (S) to[bend left=18] node[l,above left] {2} (x);
+\draw[->] (x) to[bend left=18] node[l,below right] {2} (S);
+\draw[->] (y) -- node[l,below left] {6} (S);
+\draw[->] (z) -- node[l,above] {5} (x);
+\draw[->] (y) to[bend left=18] node[l,left] {4} (x);
+\draw[->] (x) to[bend left=18] node[l,right] {3} (y);
+\draw[->] (y) -- node[l,pos=0.42,above left] {2} (z);
+\draw[->] (z) to[bend left=18] node[l,pos=0.6,right] {$c-1$} (P);
+\draw[->] (P) to[bend left=18] node[l,left] {1} (z);
+\draw[->] (z) to[bend left=18] node[l,above right] {2} (T);
+\draw[->] (T) to[bend left=18] node[l,pos=0.22,below=1pt] {4} (z);
+\draw[->] (P) -- node[l,below] {3} (y);
+\draw[->] (T) -- node[l,below right] {4} (P);
+\end{tikzpicture}
+\end{center}
+（$c = 1$ 時沒有 z$\to$P 那條邊。）
+
+找增廣路徑就是在剩餘網路上找一條 S 到 T 的路徑，用 \textbf{BFS}（或 DFS），時間 $O(V + E)$，
+這張圖 $V = 6$。 每次都用 BFS 找最短的增廣路徑就是 \textbf{Edmonds--Karp} 演算法，最多增廣
+$O(VE)$ 次，總時間 $O(VE^2)$（資結書第~26.4~節定理~26.3）。 這張剩餘網路上 BFS 找到
+S$\to$x$\to$y$\to$z$\to$T，瓶頸 $\min(2, 3, 2, 2) = 2$；其中 x$\to$y 是反向邊，意思是把原本
+y$\to$x 的 $3$ 單位退回 $2$ 單位。 增廣後流量值 $8 + 2 = 10$。
+
+\textbf{(d) 最小割與最大流。} 增廣後 S$\to$x（$4/4$）、S$\to$y（$6/6$）都滿了，剩餘網路裡 S 走不
+出去，可達集合是 $\{S\}$，所以最小割是
+\[
+(\{S\},\ \{x, y, z, P, T\}),\qquad \text{容量} = c(S, x) + c(S, y) = 4 + 6 = 10.
+\]
+由最大流最小割定理（資結書定理~26.6），最大流是 $\mathbf{10}$。 最小割不唯一：
+$(\{S, x, y\}, \{z, P, T\})$ 的容量 $5 + 2 + 3 = 10$，$(\{S, x, y, z, P\}, \{T\})$ 的容量
+$6 + 4 = 10$，也都是最小割。 增廣後的流量值 $10$ 等於這些割的容量，流不能再大、割也不能再小。
+
+\textbf{照原圖方向（x$\to$y）的答案。} 這時 y 只能從 y$\to$z（$2$）、y$\to$P（$3$）送出，x 送給 y
+的流也只會擠在這兩條邊上。 割 $(\{S, y\}, \{x, z, P, T\})$ 切到 S$\to$x、y$\to$z、y$\to$P
+（x$\to$y 是從 T 側指回 S 側，不算），容量 $4 + 2 + 3 = 9$；而 S$\to$x$\to$z$\to$T 送 $4$、
+S$\to$y$\to$z$\to$T 送 $2$、S$\to$y$\to$P$\to$T 送 $3$ 是一個值 $9$ 的流，所以最大流是 $9$，這個
+割是最小割。 作答時把採用的方向寫清楚。
+\end{pastsoln}

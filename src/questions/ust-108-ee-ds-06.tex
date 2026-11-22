@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ust-108-ee-ds-06}]{臺聯大電機類 108 學年度 第 6 題}
+（問答）
+
+(15\%)What's the two common data structure to store Graph ? Compare the pros and cons in using memory
+between this two data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：\textbf{相鄰矩陣}（adjacency matrix）和\textbf{相鄰串列}（adjacency list）。 相鄰矩陣用
+$\Theta(n^2)$ 的記憶體，和邊數無關；相鄰串列用 $\Theta(n + m)$，邊少的時候省很多（資結書第~21.2~節）。
+下面 $n = |V|$、$m = |E|$。
+
+\textbf{相鄰矩陣。} 開一個 $n \times n$ 的陣列 $M$，$(u, v)$ 是邊就令 $M[u][v] = 1$（加權圖存
+權重），否則為 $0$（或 $\infty$）。 無向圖的矩陣對稱。
+
+\textbf{相鄰串列。} 開一個長度 $n$ 的陣列，第 $u$ 格是一條串列，串著 $u$ 的所有鄰居。 無向圖的每條
+邊在兩端各出現一次，共 $2m$ 個節點；有向圖共 $m$ 個節點。
+
+\textbf{記憶體上的比較。}
+\begin{center}
+\begin{tabular}{p{0.16\linewidth}p{0.36\linewidth}p{0.36\linewidth}}
+\toprule
+& 相鄰矩陣 & 相鄰串列 \\
+\midrule
+空間 & $\Theta(n^2)$，不管有幾條邊 & $\Theta(n + m)$：$n$ 個串列開頭加 $2m$（無向）或 $m$（有向）個節點 \\
+優點 & 每格只要 $1$ 個位元（不加權時）或一個數，沒有指標的額外負擔；稠密圖（$m$ 接近 $n^2$）時
+不比串列浪費，甚至更省 & 稀疏圖（$m$ 和 $n$ 同級，例如路網、樹）省很多：$n = 10^5$、$m = 3 \times 10^5$
+時只要幾十萬個節點，矩陣要 $10^{10}$ 格，根本放不下 \\
+缺點 & 稀疏圖時絕大多數格子是 $0$，浪費 & 每個節點除了鄰居編號，還要一個 \texttt{next} 指標（加權
+圖再加權重），每條邊的成本是矩陣一格的好幾倍；稠密圖時反而比矩陣大 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{連帶影響到時間。} 記憶體的配置方式也決定了操作的速度：
+\begin{itemize}
+\item 問「$(u, v)$ 是不是邊」：矩陣 $\Theta(1)$；串列要掃 $u$ 的串列，$\Theta(\deg u)$。
+\item 列出 $u$ 的所有鄰居：矩陣要掃整列，$\Theta(n)$；串列 $\Theta(\deg u)$。 所以 BFS、DFS 用
+矩陣是 $\Theta(n^2)$，用串列是 $\Theta(n + m)$。
+\end{itemize}
+
+\textbf{怎麼選。} 稠密圖、或常常要查某兩點之間有沒有邊（例如 Floyd--Warshall）用相鄰矩陣；稀疏圖、
+主要是走訪鄰居（BFS、DFS、Dijkstra）用相鄰串列。 考試要寫出兩者的空間 $\Theta(n^2)$ 和
+$\Theta(n + m)$，並說出「看圖稠密還是稀疏」這個判斷標準。
+\end{pastsoln}

@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-11}]{成大智慧資安學程 114 學年度 單選題第 11 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+Given a hash table with 11 buckets; labeled from 0 to 10. The hash function h(key)= key \% 11 allocates
+data into a hash table. The chaining strategy is used to store data in each bucket. Please show the total
+number of comparisons required to store the numbers ``3, 41, 15, 36, 74, 58, 91, 45, 48, 64''.
+
+a)~20 \qquad b)~16 \qquad c)~22 \qquad d)~14 \qquad e)~None of the above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 e) None of the above。
+
+\textbf{題目的歧義。} 「存入時的比較次數」沒有定義怎麼算。 鏈結法插入時，通常要先在那條串列裡找一遍，
+確認沒有重複（或找到串列尾端再接上），所以比較次數就是插入當時串列裡已經有的元素數（資結書
+第~12.2~節）。 也有人把「檢查到串列尾」或「計算雜湊後看桶子」各算一次。 下面先算雜湊值，再用兩種
+算法算。
+
+\begin{center}
+\small
+\begin{tabular}{rcc}
+\toprule
+key & key \% 11 & 放進去之前，桶子裡已有幾個 \\
+\midrule
+3 & 3 & 0 \\
+41 & 8 & 0 \\
+15 & 4 & 0 \\
+36 & 3 & 1 \\
+74 & 8 & 1 \\
+58 & 3 & 2 \\
+91 & 3 & 3 \\
+45 & 1 & 0 \\
+48 & 4 & 1 \\
+64 & 9 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+最後桶子 $3$：$3, 36, 58, 91$；桶子 $8$：$41, 74$；桶子 $4$：$15, 48$；桶子 $1$：$45$；桶子 $9$：$64$。
+\begin{itemize}
+\item 只算和已存在元素的比較：$1 + 1 + 2 + 3 + 1 = 8$ 次。
+\item 每次插入再多算一次（例如和空串列或串列尾的那一次）：$8 + 10 = 18$ 次。
+\end{itemize}
+兩種常見算法得到 $8$ 或 $18$，都不在 a)--d) 裡，答案 e)。 （若把成功搜尋這十個數的比較次數加起來：
+桶子 $3$ 是 $1 + 2 + 3 + 4$，桶子 $8$、$4$ 各是 $1 + 2$，其餘各 $1$，共 $10 + 3 + 3 + 2 = 18$，也是 $18$。）
+\end{pastsoln}

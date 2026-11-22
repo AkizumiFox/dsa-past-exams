@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-24}]{臺大工工所 110 學年度 第 24 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Which of the following are desirable properties of a hash function $\mathrm{h(x)}$?
+\begin{enumerate}[label=(\Alph*)]
+\item If $x_1,\ldots,x_n$ are the items to be hashed, then the numbers $h(x_1),\ldots,h(x_n)$ should be
+uniformly distributed over the integers.
+\item The range of h(x) should include a wide range of integers.
+\item The range of h(x) should stay within the desired hash-table size.
+\item It should be computable in O(1) time.
+\item It should take distinct values over all possible items to be hashed.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(C)、(D)。 (A) 的「over the integers」照上下文應該是指雜湊函數的值域（也就是表的位置 $0..m-1$）；
+若字面解讀成「均勻分布在所有整數上」，它和 (C) 矛盾，所以這裡採前一種讀法。
+
+雜湊函數把鍵對應到表的位置 $0..m-1$，好的雜湊函數算得快、而且讓鍵盡量均勻地分散到各個位置（資結書第~12.1~節）。
+\begin{itemize}
+\item (A) 對。 均勻分布在表的各個位置，碰撞才少；這正是簡單均勻雜湊的假設，鏈結法的平均搜尋時間 $\Theta(1 + \alpha)$ 靠的就是它。
+\item (B) 錯。 值域要剛好是表的位置，不是越大越好；值域超出表的大小，算出來的位置根本不能用。
+\item (C) 對。 $h(x)$ 是用來當表的索引，必須落在 $0..m-1$。 常見的做法是最後取 $\bmod m$。
+\item (D) 對。 雜湊表要的是 $O(1)$ 的平均存取，算雜湊值本身就要是常數時間（鍵的長度固定時），否則雜湊表失去意義。
+\item (E) 錯。 可能的鍵通常遠多於表的位置數（例如所有字串對到 $m$ 個位置），由鴿籠原理一定有碰撞，不可能對所有鍵都取不同的值；
+雜湊表本來就要處理碰撞（鏈結法、開放定址）。 只有鍵的集合事先固定時才能設計完美雜湊，那不是一般雜湊函數要求的性質。
+\end{itemize}
+\end{pastsoln}

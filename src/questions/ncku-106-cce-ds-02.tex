@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-02}]{成大電通所 106 學年度 第一大題第 2 題}
+（複選；5 分，全對才給分）
+
+Which of the following statement(s) is (are) true (assume each set contains an unique element
+initially and it is implemented by the disjoint-set forest while the weight rule is applied)?
+
+(A)~In the worst case, find an element in a set of size n take $\Theta$(logn).\\
+(B)~The weight rule is to make the taller tree as a subtree of the shorter tree during union.\\
+(C)~p unions and q finds can be done in O(p+q).\\
+(D)~The kruskal algorithm is implemented by set and the data structure is used to check if the two
+nodes of a new found edge will form a cycle.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A)、(D)。
+
+weight rule 就是依大小合併（union by size）：合併時把節點數少的樹接到節點數多的樹的根下面
+（資結書第~13.2.1~節）。 題目只用 weight rule，沒有路徑壓縮。
+
+\begin{itemize}
+\item (A)：對。 用 weight rule 時，$n$ 個節點的樹，從任何節點走到根最多經過 $\lfloor \lg n \rfloor$
+條邊（資結書定理~13.2 用層數算，寫成高度不超過 $\lfloor \lg n \rfloor + 1$）：一個節點每往下多一層，
+它所在的樹大小至少加倍。 這個上界達得到：兩棵同樣大小 $2^{k}$、最深節點離根 $k$ 條邊的樹合併，
+得到大小 $2^{k+1}$、最深節點離根 $k + 1$ 條邊的樹；從單一節點一路這樣合併上去，$n = 2^{k}$ 時最深
+的節點離根恰好 $\lg n$ 條邊，對它做 find 要 $\Theta(\log n)$。 所以最壞是 $\Theta(\log n)$。
+\item (B)：錯，方向反了。 是把\textbf{小}（節點數少）的樹接到大的樹下面，這樣才不會讓樹變高；
+而且 weight 指節點數，不是高度。
+\item (C)：錯。 只用 weight rule 時，每個 find 最壞是 $\Theta(\log n)$，$p$ 次 union、$q$ 次 find 是
+$O(p + q \log n)$，不是 $O(p + q)$。 例如先用 union 建出一棵高度 $\lg n$ 的樹，再對最深的節點
+做 $q$ 次 find，就要 $\Theta(q \log n)$。 再加上路徑壓縮也只能到 $O((p + q)\,\alpha(n))$，
+仍然不是嚴格的 $O(p + q)$（資結書第~13.3~節）。
+\item (D)：對。 Kruskal 演算法用互斥集合記錄目前的元件：檢查新的邊 $(u, v)$ 時，若
+$\text{find}(u) = \text{find}(v)$，兩端已經連通，加入就會成環，捨棄；否則加入並 union
+（資結書第~24.2~節）。
+\end{itemize}
+\end{pastsoln}

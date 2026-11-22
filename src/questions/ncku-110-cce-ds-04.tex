@@ -1,0 +1,113 @@
+\begin{pastexam}[label={px:ncku-110-cce-ds-04}]{成大電通所 110 學年度 第 4 題}
+（追蹤；10 分）
+
+(\textbf{10 pts}) \textbf{Selection tree for minimal values}
+\begin{enumerate}[label=\alph*.]
+\item (2 \textbf{pts}) Show the initial status of the binary tree after the first node in each sequence is processed by a \textbf{winner tree}.
+\item (2 \textbf{pts}) Show the status of the binary tree after the next node is processed by a \textbf{winner tree}.
+\item (2 \textbf{pts}) Show the initial status of the binary tree after the first node in each sequence is processed in a \textbf{loser tree}.
+\item (2 \textbf{pts}) Show the status of the binary tree after the next node is processed by a \textbf{loser tree}.
+\item (2 \textbf{pts}) Compared the two trees, which method is faster? Briefly justify your answer.
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=2.4cm,y=-2.4cm,
+  v/.style={circle,draw,thick,inner sep=0pt,minimum size=5mm},
+  c/.style={draw,thick,minimum width=8mm,minimum height=7mm,inner sep=0pt,font=\small}]
+\node[v,label=left:1] (n1) at (4.30,4.35) {};
+\node[v,label=left:2] (n2) at (3.35,4.70) {};
+\node[v,label=right:3] (n3) at (5.28,4.70) {};
+\node[v,label=left:4] (n4) at (2.87,5.07) {};
+\node[v,label=right:5] (n5) at (3.83,5.07) {};
+\node[v,label=left:6] (n6) at (4.80,5.07) {};
+\node[v,label=right:7] (n7) at (5.77,5.07) {};
+\draw[thick] (n1) -- (n2) (n1) -- (n3) (n2) -- (n4) (n2) -- (n5) (n3) -- (n6) (n3) -- (n7);
+\foreach \n/\p/\q in {4/16/,5/15/,6/8/15,7/10/}{
+  \node[c,anchor=north] (s\n a) at ([yshift=-1.5mm]n\n.south) {\p};
+  \node[c,anchor=north] (s\n b) at (s\n a.south) {\q};
+}
+\node[font=\small] (sq) at (3.35,6.3) {sequences};
+\draw[-{Latex[length=2.2mm]},thick] (sq.north west) -- ([xshift=1.5mm,yshift=-1.5mm]s4b.south);
+\draw[-{Latex[length=2.2mm]},thick] (sq.north east) -- ([xshift=-0.5mm,yshift=-1.5mm]s5b.south);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+依題意，節點 $4$ 到 $7$ 是葉節點，各接一個已排好的串（sequence），葉節點放的是那個串目前最前面的鍵：串 $4$、$5$、$6$、$7$
+的第一個鍵分別是 $16, 15, 8, 10$，串 $6$ 的下一個鍵是 $15$（其他串的第二格空白，以下用不到）。 選擇樹找的是最小值，比較小的
+贏（資結書第~15.3.4~節）。 下圖右上角的小字是節點編號，灰底是這一步改變的節點。
+
+\textbf{(a) 勝者樹，初始。} 每個內部節點記那場比賽的\textbf{贏家}：節點 $2 = \min(16, 15) = 15$，節點 $3 = \min(8, 10) = 8$，
+節點 $1 = \min(15, 8) = 8$。 根是 $8$，輸出 $8$（來自串 $6$）。
+
+\textbf{(b) 勝者樹，下一個鍵進來。} 串 $6$ 補上 $15$，從葉節點 $6$ 沿路徑往上重賽，每一層和\textbf{兄弟}比：節點 $3$：$15$ 和兄弟
+節點 $7$ 的 $10$ 比，$10$ 贏；節點 $1$：$10$ 和兄弟節點 $2$ 的 $15$ 比，$10$ 贏。 根是 $10$，下一個輸出 $10$。
+\begin{center}
+\begin{tabular}{c@{\hspace{1cm}}c}
+\begin{tikzpicture}[x=0.85cm,y=-0.95cm,v/.style={circle,draw,thick,inner sep=0pt,minimum size=6.5mm,font=\small},ch/.style={v,fill=black!12},lb/.style={font=\scriptsize,text=black!60}]
+\node[v] (n1) at (0,0) {8}; \node[lb,above right=-1.5mm and -0.5mm of n1] {1};
+\node[v] (n2) at (-1.6,1) {15}; \node[lb,above right=-1.5mm and -0.5mm of n2] {2};
+\node[v] (n3) at (1.6,1) {8}; \node[lb,above right=-1.5mm and -0.5mm of n3] {3};
+\node[v] (n4) at (-2.4,2) {16}; \node[lb,above right=-1.5mm and -0.5mm of n4] {4};
+\node[v] (n5) at (-0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n5] {5};
+\node[v] (n6) at (0.8,2) {8}; \node[lb,above right=-1.5mm and -0.5mm of n6] {6};
+\node[v] (n7) at (2.4,2) {10}; \node[lb,above right=-1.5mm and -0.5mm of n7] {7};
+\draw[thick] (n1)--(n2) (n1)--(n3) (n2)--(n4) (n2)--(n5) (n3)--(n6) (n3)--(n7);
+\path (0,-1) node[minimum size=6mm] {};
+\end{tikzpicture} & \begin{tikzpicture}[x=0.85cm,y=-0.95cm,v/.style={circle,draw,thick,inner sep=0pt,minimum size=6.5mm,font=\small},ch/.style={v,fill=black!12},lb/.style={font=\scriptsize,text=black!60}]
+\node[ch] (n1) at (0,0) {10}; \node[lb,above right=-1.5mm and -0.5mm of n1] {1};
+\node[v] (n2) at (-1.6,1) {15}; \node[lb,above right=-1.5mm and -0.5mm of n2] {2};
+\node[ch] (n3) at (1.6,1) {10}; \node[lb,above right=-1.5mm and -0.5mm of n3] {3};
+\node[v] (n4) at (-2.4,2) {16}; \node[lb,above right=-1.5mm and -0.5mm of n4] {4};
+\node[v] (n5) at (-0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n5] {5};
+\node[ch] (n6) at (0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n6] {6};
+\node[v] (n7) at (2.4,2) {10}; \node[lb,above right=-1.5mm and -0.5mm of n7] {7};
+\draw[thick] (n1)--(n2) (n1)--(n3) (n2)--(n4) (n2)--(n5) (n3)--(n6) (n3)--(n7);
+\path (0,-1) node[minimum size=6mm] {};
+\end{tikzpicture} \\
+\small (a) 勝者樹，初始 & \small (b) 串 $6$ 補上 $15$ 之後
+\end{tabular}
+\end{center}
+
+\textbf{(c) 敗者樹，初始。} 每個內部節點記那場比賽的\textbf{輸家}，另外用節點 $0$ 記總冠軍：節點 $2$：$16$ 對 $15$，記輸家 $16$；
+節點 $3$：$8$ 對 $10$，記輸家 $10$；節點 $1$：兩邊的贏家 $15$ 對 $8$，記輸家 $15$；冠軍 $8$ 放在節點 $0$，輸出 $8$。 題目的圖沒有
+節點 $0$，冠軍也可以另外記在旁邊。
+
+\textbf{(d) 敗者樹，下一個鍵進來。} 串 $6$ 補上 $15$，沿路徑往上，每一層只和\textbf{這個節點記的輸家}比（資結書虛擬碼~15.5
+\proc{Adjust}）：節點 $3$ 記的是 $10$，$15$ 對 $10$，$10$ 贏，$15$ 留在節點 $3$、$10$ 往上；節點 $1$ 記的是 $15$，$10$ 對 $15$，
+$10$ 贏，$15$ 留在節點 $1$；冠軍 $10$ 放進節點 $0$。
+\begin{center}
+\begin{tabular}{c@{\hspace{1cm}}c}
+\begin{tikzpicture}[x=0.85cm,y=-0.95cm,v/.style={circle,draw,thick,inner sep=0pt,minimum size=6.5mm,font=\small},ch/.style={v,fill=black!12},lb/.style={font=\scriptsize,text=black!60}]
+\node[v] (n1) at (0,0) {15}; \node[lb,above right=-1.5mm and -0.5mm of n1] {1};
+\node[v] (n2) at (-1.6,1) {16}; \node[lb,above right=-1.5mm and -0.5mm of n2] {2};
+\node[v] (n3) at (1.6,1) {10}; \node[lb,above right=-1.5mm and -0.5mm of n3] {3};
+\node[v] (n4) at (-2.4,2) {16}; \node[lb,above right=-1.5mm and -0.5mm of n4] {4};
+\node[v] (n5) at (-0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n5] {5};
+\node[v] (n6) at (0.8,2) {8}; \node[lb,above right=-1.5mm and -0.5mm of n6] {6};
+\node[v] (n7) at (2.4,2) {10}; \node[lb,above right=-1.5mm and -0.5mm of n7] {7};
+\draw[thick] (n1)--(n2) (n1)--(n3) (n2)--(n4) (n2)--(n5) (n3)--(n6) (n3)--(n7);
+\node[draw,thick,minimum size=6mm,font=\small] (n0) at (0,-1) {8}; \node[lb,above right=-1.5mm and -0.5mm of n0] {0}; \draw[thick] (n0)--(n1);
+\end{tikzpicture} & \begin{tikzpicture}[x=0.85cm,y=-0.95cm,v/.style={circle,draw,thick,inner sep=0pt,minimum size=6.5mm,font=\small},ch/.style={v,fill=black!12},lb/.style={font=\scriptsize,text=black!60}]
+\node[v] (n1) at (0,0) {15}; \node[lb,above right=-1.5mm and -0.5mm of n1] {1};
+\node[v] (n2) at (-1.6,1) {16}; \node[lb,above right=-1.5mm and -0.5mm of n2] {2};
+\node[ch] (n3) at (1.6,1) {15}; \node[lb,above right=-1.5mm and -0.5mm of n3] {3};
+\node[v] (n4) at (-2.4,2) {16}; \node[lb,above right=-1.5mm and -0.5mm of n4] {4};
+\node[v] (n5) at (-0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n5] {5};
+\node[ch] (n6) at (0.8,2) {15}; \node[lb,above right=-1.5mm and -0.5mm of n6] {6};
+\node[v] (n7) at (2.4,2) {10}; \node[lb,above right=-1.5mm and -0.5mm of n7] {7};
+\draw[thick] (n1)--(n2) (n1)--(n3) (n2)--(n4) (n2)--(n5) (n3)--(n6) (n3)--(n7);
+\node[draw,thick,minimum size=6mm,font=\small,fill=black!12] (n0) at (0,-1) {10}; \node[lb,above right=-1.5mm and -0.5mm of n0] {0}; \draw[thick] (n0)--(n1);
+\end{tikzpicture} \\
+\small (c) 敗者樹，初始 & \small (d) 串 $6$ 補上 $15$ 之後
+\end{tabular}
+\end{center}
+（葉節點照樣寫出各串目前的鍵。 (d) 的節點 $1$ 仍是 $15$，那是重賽後留下的輸家，碰巧和原本的值一樣。）
+
+\textbf{(e) 敗者樹比較快。} 兩種樹每輸出一個鍵，都只沿著一條從葉到根的路徑重賽，比較次數都是 $\lceil \lg k \rceil$（$k$ 是串數），
+量級一樣。 差在每一層要讀的東西：勝者樹在節點 $t$ 要拿新的贏家和\textbf{兄弟節點}的贏家比，得先找到兄弟、讀它，再把結果寫回父節點；
+敗者樹的對手就記在路徑上的節點裡（冠軍在每一層打敗的，正好是另一邊的贏家，也就是那裡記的輸家），只要沿著父節點往上走、
+和路徑上的節點比，不用讀兄弟。 每一層少讀一個節點、程式也比較簡單，所以 $k$ 路合併時敗者樹比較快；這個差別是常數倍，
+在外部排序、$k$ 很大時比較明顯。
+\end{pastsoln}

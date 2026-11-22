@@ -1,0 +1,69 @@
+\begin{pastexam}[label={px:ust-106-ee-ds-05}]{臺聯大電機類 106 學年度 第五題}
+（問答）
+
+(10\%) The period of a string $x_1 \ldots x_n$ is the smallest $k > 0$ such that
+$x_1 \ldots x_{n-k} = x_{k+1} \ldots x_n$. That is, removing the first $k$ characters yields the same
+string as removing the last $k$ characters. For example, the period of string \textit{abcabcab} is 3, since you
+get \textit{abcab} both by removing the first 3 characters and by removing the last 3 characters. Describe an
+algorithm to compute the period of a length $n$ string that runs in time $O(n)$.
+\end{pastexam}
+
+\begin{pastsoln}
+臺聯大電機類 109 學年度第 3 題是同一題，資結書第~27~章的歷屆試題收了那一題，這裡的寫法以那份詳解為底。
+
+\textbf{想法}。 把字串記為 $P = x_1 \cdots x_n$。 $1 \le k < n$ 時，條件
+「$x_1 \cdots x_{n-k} = x_{k+1} \cdots x_n$」是說長度 $n - k$ 的前綴同時也是後綴，也就是 $P$ 有長度
+$n - k$ 的\textbf{邊界}（border，既是真前綴又是真後綴的字串，資結書定義~27.2）。 $k = n$ 時兩邊都是空
+字串，一定成立，對應長度 $0$ 的邊界。 所以 $k$ 越小、對應的邊界越長；最小的 $k$ 對應最長的邊界。
+KMP 的失敗函數 $\pi[q]$ 正是 $P[1..q]$ 最長邊界的長度（資結書第~27.3~節），所以
+\[
+\text{週期} = n - \pi[n].
+\]
+這也是資結書第~27~章觀念題第~10~題。
+
+\begin{pseudo}{字串的週期}
+\Function{Period}{$P, n$}
+    \State $\pi[1] \gets 0$；$b \gets 0$ \Comment{$b$：目前最長邊界的長度}
+    \For{$q \gets 2$ \To $n$}
+        \While{$b > 0$ \AND $P[b + 1] \ne P[q]$}
+            \State $b \gets \pi[b]$
+        \EndWhile
+        \If{$P[b + 1] = P[q]$}
+            \State $b \gets b + 1$
+        \EndIf
+        \State $\pi[q] \gets b$
+    \EndFor
+    \State \Return $n - \pi[n]$
+\EndFunction
+\end{pseudo}
+\textbf{for} 迴圈和它前面那一行就是資結書虛擬碼~27.3 的 \proc{Compute-Failure}，計算失敗函數。
+
+\textbf{正確性}。 令 $b = \pi[n]$，$P[1..b]$ 是 $P$ 最長的邊界。
+\begin{itemize}
+\item $k = n - b$ 滿足條件：$b \ge 1$ 時 $P[1..b]$ 是 $P$ 的後綴，$P[1..b] = P[n - b + 1..n]$，這就是
+$x_1 \cdots x_{n-k} = x_{k+1} \cdots x_n$ 取 $k = n - b$；$b = 0$ 時 $k = n$，兩邊都是空字串。
+\item 沒有更小的：若 $k' < n - b$ 也滿足條件，則 $1 \le k' < n$，$P[1..n - k']$ 同時是前綴和後綴，
+長度 $n - k' < n$，是 $P$ 的邊界；但 $n - k' > b$，和 $b$ 是最長邊界的長度矛盾。
+\end{itemize}
+失敗函數本身算得對：$P[1..q]$ 的邊界去掉最後一個字元，是 $P[1..q-1]$ 的邊界，而 $P[1..q-1]$ 的所有邊界
+就是 $\pi[q-1], \pi[\pi[q-1]], \ldots$ 這條鏈（資結書引理~27.2），\textbf{while} 迴圈正是由長到短沿著這條鏈
+找第一個能再接上 $P[q]$ 的邊界。
+
+\textbf{時間}。 $b$ 每輪 \textbf{for} 最多加 $1$，共加不超過 $n - 1$ 次；\textbf{while} 每做一次
+$b$ 至少減 $1$，而 $b \ge 0$，所以 \textbf{while} 全部加起來也不超過 $n - 1$ 次。 總時間
+$\Theta(n)$（資結書定理~27.4），最後一行 $O(1)$。 額外空間是陣列 $\pi$，$\Theta(n)$。
+
+\textbf{例子}。 $P = \mathtt{abcabcab}$：
+\begin{center}
+\begin{tabular}{c*{8}{c}}
+\toprule
+$q$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+$P[q]$ & a & b & c & a & b & c & a & b \\
+$\pi[q]$ & 0 & 0 & 0 & 1 & 2 & 3 & 4 & 5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+週期 $8 - 5 = 3$，和題目的例子相同：最長邊界 \texttt{abcab}，就是去掉前 $3$ 個或後 $3$ 個字元得到
+的字串。 $P = \mathtt{abcd}$ 時 $\pi[4] = 0$，週期是 $4$；$P = \mathtt{aaaa}$ 時 $\pi[4] = 3$，
+週期是 $1$。
+\end{pastsoln}

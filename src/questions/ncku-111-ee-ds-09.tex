@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-09}]{成大電機所 111 學年度 單選題第 9 題}
+（單選；每題 4 分）
+
+Which of the following data structure can't store the heterogeneous data elements?
+
+A.~Arrays \qquad B.~Records \qquad C.~Pointers \qquad D.~None
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+heterogeneous 是「不同型別的」。
+\begin{itemize}
+\item A.~陣列：所有元素同一個型別、同樣大小，第 $i$ 個的位址才能用「起點 $+ i \times$ 元素大小」算出來（資結書第~4.1~節），
+所以不能放不同型別的資料。 對。
+\item B.~記錄（record，C 的 \texttt{struct}）：各欄位可以是不同型別，例如學號（整數）、姓名（字串）、成績（實數）放在同一筆
+記錄裡。 錯。
+\item C.~指標：指標存位址，可以指向任何型別的資料（例如 C 的 \texttt{void *}），用指標可以把不同型別的資料串在一起。 錯。
+\item D.~A 就是。 錯。
+\end{itemize}
+\end{pastsoln}

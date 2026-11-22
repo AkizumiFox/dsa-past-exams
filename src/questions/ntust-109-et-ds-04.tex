@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ntust-109-et-ds-04}]{臺科大電子所甲組 109 學年度 第 4 題}
+（問答；10 分）
+
+(10\%) Please order the following 5 growth rates in increasing order.\\
+$n!$, $n^{0.0001n}$, $n^2$, $2^{n\log n}$, $(1.01)^n$\\
+where log is taken base 2.
+\end{pastexam}
+
+\begin{pastsoln}
+答案（由小到大）：
+\[
+n^2 \;<\; (1.01)^n \;<\; n^{0.0001n} \;<\; n! \;<\; 2^{n\log n}.
+\]
+這裡的「$<$」是漸近的意思：$f < g$ 表示 $f(n) = o(g(n))$，也就是 $f(n)/g(n) \to 0$（資結書
+第~1.6~節）。
+
+把每個函數寫成 $2$ 的次方比較方便，比較指數就好（指數的差趨於無限大，比值就趨於 $0$）：
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+函數 & 寫成 $2^{(\cdot)}$ 的指數 \\
+\midrule
+$n^2$ & $2\lg n$ \\
+$(1.01)^n$ & $n \lg 1.01 \approx 0.01436\,n$ \\
+$n^{0.0001n}$ & $0.0001\, n \lg n$ \\
+$n!$ & $\lg n! = n\lg n - n\lg e + O(\log n)$ \\
+$2^{n\log n} = n^n$ & $n \lg n$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+逐一比較相鄰的兩個：
+\begin{itemize}
+\item $n^2$ 和 $(1.01)^n$：$0.01436\,n - 2\lg n \to \infty$，多項式比不過底數大於 $1$ 的指數。
+\item $(1.01)^n$ 和 $n^{0.0001n}$：$0.0001\,n\lg n - 0.01436\,n = n(0.0001\lg n - 0.01436) \to \infty$，
+因為 $\lg n$ 終究會超過 $143.6$。 這要 $n > 2^{143.6}$ 才看得出來，但漸近的比較只看 $n$ 夠大的
+時候。
+\item $n^{0.0001n}$ 和 $n!$：$\lg n! - 0.0001\, n\lg n = 0.9999\, n\lg n - n\lg e + O(\log n) \to \infty$
+（由 Stirling 公式，或用 $n! \ge (n/2)^{n/2}$ 得 $\lg n! \ge \frac{n}{2}\lg\frac{n}{2}$，同樣比
+$0.0001 n\lg n$ 大得多）。
+\item $n!$ 和 $n^n$：$n!/n^n = \frac{1}{n}\cdot\frac{2}{n}\cdots\frac{n}{n} \le \frac{1}{n} \to 0$。
+\end{itemize}
+所以順序如上。 容易弄錯的是 $(1.01)^n$ 和 $n^{0.0001n}$：小的 $n$ 時 $n^{0.0001n}$ 小得多，但
+$\lg n$ 會無限長大，指數上的 $\lg n$ 最後一定贏過常數 $\lg 1.01 / 0.0001$。
+\end{pastsoln}

@@ -1,0 +1,54 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-01}]{臺聯大電機類 111 學年度 第 1 題}
+（設計）
+
+\textbf{問答題}
+
+(10\%)Please write a function to delete a selected node in a given singly linked list. For example,
+given a linked list: 1->3->4->2 and the selected node of 4, your function should return the list as
+1->3->2.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的「selected node of 4」可以讀成「值是 $4$ 的節點」或「指向那個節點的指標」。 下面先寫
+給值的版本（最常見的讀法），再說明只給節點指標時怎麼做。 節點有 $\mathit{key}$、$\mathit{next}$
+兩個欄位，函式回傳刪除後串列的第一個節點。
+
+\textbf{給值 $k$，刪掉第一個值是 $k$ 的節點。} 單向串列要刪一個節點，必須改它\textbf{前一個}節點的
+$\mathit{next}$（資結書第~5.1~節、虛擬碼~5.3），所以走的時候同時記著前一個節點 $p$。 要刪的是第一個
+節點時沒有前一個，改 $\mathit{head}$。
+
+\begin{pseudo}{刪除值為 $k$ 的節點}
+\Function{Delete-Key}{$\mathit{head}, k$}
+    \State $p \gets \NIL$；$x \gets \mathit{head}$
+    \While{$x \ne \NIL$ \AND $x.\mathit{key} \ne k$}
+        \State $p \gets x$；$x \gets x.\mathit{next}$
+    \EndWhile
+    \If{$x = \NIL$}
+        \State \Return $\mathit{head}$ \Comment{沒有這個值，串列不變}
+    \EndIf
+    \If{$p = \NIL$}
+        \State $\mathit{head} \gets x.\mathit{next}$ \Comment{刪的是第一個節點}
+    \Else
+        \State $p.\mathit{next} \gets x.\mathit{next}$
+    \EndIf
+    \State 釋放 $x$
+    \State \Return $\mathit{head}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性。} 迴圈結束時，$x$ 是第一個值為 $k$ 的節點（或 \NIL），而且 $p$ 一直是 $x$ 的前一個
+節點（$x$ 是第一個時 $p = \NIL$）。 讓前一個節點（或 $\mathit{head}$）直接指向 $x.\mathit{next}$，
+$x$ 就不在串列裡了，其他節點的順序不變。
+
+\textbf{例子}：$1 \to 3 \to 4 \to 2$，$k = 4$。 走到 $x = 4$ 時 $p = 3$，令 $3.\mathit{next} \gets 2$，
+串列變成 $1 \to 3 \to 2$，回傳的 $\mathit{head}$ 仍是 $1$。
+
+\textbf{複雜度}：最壞走過整條串列，$O(n)$；額外空間 $O(1)$。
+
+\textbf{只給節點指標 $x$（拿不到前一個節點）時。} 單向串列從 $x$ 往回找不到前一個節點。 如果 $x$
+不是最後一個節點，可以把下一個節點的內容抄到 $x$，再刪掉下一個節點：$y \gets x.\mathit{next}$，
+$x.\mathit{key} \gets y.\mathit{key}$，$x.\mathit{next} \gets y.\mathit{next}$，釋放 $y$，$O(1)$。
+例子裡 $x$ 是 $4$ 那個節點：抄進 $2$、拿掉原本的 $2$，得到 $1 \to 3 \to 2$。 這招對最後一個節點沒用
+（沒有下一個可以抄），而且外面如果有指標指著原本的 $y$ 會失效，這時只能從頭走，回到上面的
+做法。
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-17}]{臺大工工所 110 學年度 第 17 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+In this exam, unless otherwise specified, n denotes the size of the data structure.
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item An insertion in AVL tree requires $\Omega(\log n)$ single- and double-rotations in the worst case.
+\item An insertion in AVL tree requires $O(1)$ single- and double-rotations in the worst case.
+\item A deletion in AVL tree requires $\Omega(\log n)$ single- and double-rotations in the worst case.
+\item A deletion in AVL tree requires $O(1)$ single- and double-rotations in the worst case.
+\item There is no red left child in AA tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)、(C)、(E)。
+
+\begin{itemize}
+\item (A) 錯、(B) 對。 AVL 樹插入後，從新節點往上找到第一個失衡的節點 $z$，做一次單旋轉或雙旋轉，$z$ 這棵子樹的高度
+就恢復成插入前的高度，再往上的祖先都不受影響（資結書第~10.2.3~節、定理~10.2）。 所以一次插入最多一次單旋轉或一次雙旋轉，
+$O(1)$；最壞也不需要 $\Omega(\log n)$ 次。 （往上更新高度、檢查平衡仍要 $O(\log n)$ 時間，但旋轉次數是常數。）
+\item (C) 對、(D) 錯。 刪除後旋轉一次，子樹的高度可能比刪除前少 $1$，失衡會一路往上傳，每一層都可能要再旋轉
+（資結書第~10.2.6~節）。 最壞的例子是費氏樹（每個節點右子樹比左子樹矮一層的最瘦 AVL 樹）：刪除最矮那一側的一個葉節點，
+從底到根每一層都要旋轉一次，共 $\Theta(\log n)$ 次。 資結書第~10.5~節的比較表也寫：AVL 樹刪除的旋轉最壞 $\Theta(\lg n)$ 次。
+\item (E) 對。 AA 樹（Andersson 樹）是紅黑樹的簡化版，資結書沒有專節：它多加一條規定，\textbf{紅色節點只能是右子節點}。
+用「層級」（level）表示時，水平連結（子節點和父節點同一層，相當於紅色子節點）只能往右。 插入、刪除時用 skew（右旋，消掉
+往左的水平連結）和 split（左旋並把中間節點升一層，消掉連續兩條往右的水平連結）維持這條規定，所以 AA 樹裡沒有紅色的左子節點。
+它也等價於 2-3 樹：每個 3-節點都用「黑父、紅右子」表示。
+\end{itemize}
+\end{pastsoln}

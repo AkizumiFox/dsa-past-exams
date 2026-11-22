@@ -1,0 +1,81 @@
+\begin{pastexam}[label={px:ust-111-ee-ds-03}]{臺聯大電機類 111 學年度 第 3 題}
+（追蹤）
+
+Please convert an infix expression (a/b)+c-(f/d)*g to the postfix (5\%) and prefix (5\%) expressions
+by using a stack. Your answer should include the detailed input, stack, and output in each step.
+\end{pastexam}
+
+\begin{pastsoln}
+答：後序 \texttt{a b / c + f d / g * -}；前序 \texttt{- + / a b c * / f d g}。
+
+\textbf{後序。} 用資結書虛擬碼~6.8：由左往右讀；運算元直接輸出；左括號 push；右括號就一直 pop 輸出
+到左括號為止；運算子要 push 之前，先把堆疊頂端「優先順序大於或等於它」的運算子 pop 出來輸出
+（同級的 $+$、$-$ 和 $*$、$/$ 都是左結合，所以等於也要先 pop）。 $*$、$/$ 比 $+$、$-$ 優先。
+堆疊欄左邊是底。
+\begin{center}
+\small
+\begin{tabular}{rcll}
+\toprule
+步 & 輸入 & 堆疊 & 輸出 \\
+\midrule
+1 & ( & ( & \\
+2 & a & ( & a \\
+3 & / & ( / & a \\
+4 & b & ( / & a b \\
+5 & ) & & a b / \\
+6 & + & + & a b / \\
+7 & c & + & a b / c \\
+8 & $-$ & $-$ & a b / c + \\
+9 & ( & $-$ ( & a b / c + \\
+10 & f & $-$ ( & a b / c + f \\
+11 & / & $-$ ( / & a b / c + f \\
+12 & d & $-$ ( / & a b / c + f d \\
+13 & ) & $-$ & a b / c + f d / \\
+14 & * & $-$ * & a b / c + f d / \\
+15 & g & $-$ * & a b / c + f d / g \\
+16 & （結束） & & a b / c + f d / g * $-$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 8 步：頂端的 $+$ 和 $-$ 同級，先 pop 出 $+$ 再 push $-$。 第 14 步：$*$ 比頂端的 $-$ 優先，直接
+push。 結束時依序 pop 出 $*$、$-$。
+
+\textbf{前序。} 用堆疊做時，把運算式\textbf{由右往左}讀，左右括號的角色對調，輸出完再整個倒過來
+（資結書第~6.3.5~節提到這個做法要注意結合性）：
+\begin{itemize}
+\item 運算元直接輸出；右括號 push；遇到左括號就 pop 輸出到右括號為止。
+\item 運算子 push 之前，只 pop 頂端「優先順序\textbf{嚴格大於}它」的運算子。 由右往左讀時，左結合
+的同級運算子不能先 pop，否則 $a - b - c$ 會變成 $a - (b - c)$。
+\end{itemize}
+\begin{center}
+\small
+\begin{tabular}{rcll}
+\toprule
+步 & 輸入 & 堆疊 & 輸出（倒過來之前） \\
+\midrule
+1 & g & & g \\
+2 & * & * & g \\
+3 & ) & * ) & g \\
+4 & d & * ) & g d \\
+5 & / & * ) / & g d \\
+6 & f & * ) / & g d f \\
+7 & ( & * & g d f / \\
+8 & $-$ & $-$ & g d f / * \\
+9 & c & $-$ & g d f / * c \\
+10 & + & $-$ + & g d f / * c \\
+11 & ) & $-$ + ) & g d f / * c \\
+12 & b & $-$ + ) & g d f / * c b \\
+13 & / & $-$ + ) / & g d f / * c b \\
+14 & a & $-$ + ) / & g d f / * c b a \\
+15 & ( & $-$ + & g d f / * c b a / \\
+16 & （結束） & & g d f / * c b a / + $-$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 8 步：頂端的 $*$ 比 $-$ 優先，先 pop 出來。 第 10 步：頂端的 $-$ 和 $+$ 同級，不 pop，直接 push。
+最後把輸出 \texttt{g d f / * c b a / + -} 倒過來，得到前序 \texttt{- + / a b c * / f d g}。
+
+\textbf{檢查}：原式依優先順序和左結合，是 $\bigl((a/b) + c\bigr) - \bigl((f/d) * g\bigr)$。 前序把每個
+運算子寫在它的兩個運算元前面：$-\;\bigl(+\;(/\;a\;b)\;c\bigr)\;\bigl(*\;(/\;f\;d)\;g\bigr)$，去掉括號就是
+上面的答案；後序同理是 $\bigl((a\,b\,/)\,c\,+\bigr)\bigl((f\,d\,/)\,g\,*\bigr)\,-$。
+\end{pastsoln}

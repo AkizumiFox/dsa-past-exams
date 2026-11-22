@@ -1,0 +1,37 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-21}]{成大電機所 111 學年度 短答題第 1 題}
+（短答；每題 5 分）
+
+以下共四個 function, 請簡單回答他們的功能
+
+\textbf{What is the usage of the following function?}
+
+\textbf{(You can use Input: nums = [2,7,8,13], target = 10 to explain)}
+\begin{minted}[fontsize=\small]{cpp}
+vector<int> twoSum(vector<int>& nums, int target) {
+    for(int i=0;i<nums.size();i++)     {
+        for(int j=i+1;j<nums.size();j++)       {
+            if(nums[i]+nums[j]==target)   {
+                return {i,j};
+            }
+        }
+    }
+    return {};
+}
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：在陣列 \texttt{nums} 裡找\textbf{兩個不同位置}的數，使它們的和等於 \texttt{target}，回傳這兩個位置的索引
+$\{i, j\}$（$i < j$）；找不到就回傳空的 \texttt{vector}。 這是 LeetCode 的 Two Sum。 例子的答案是 $\{0, 2\}$。
+
+\textbf{用例子說明。} \texttt{nums = [2, 7, 8, 13]}、\texttt{target = 10}。 外層 $i$ 固定一個數，內層 $j$ 試它後面的每個數：
+\begin{itemize}
+\item $i = 0$（$2$）：$j = 1$，$2 + 7 = 9 \ne 10$；$j = 2$，$2 + 8 = 10$，相等，回傳 $\{0, 2\}$。
+\end{itemize}
+函數在第一次找到時就結束，後面的組合不再檢查。 $j$ 從 $i + 1$ 開始，所以同一個位置不會用兩次，每一對也只檢查一次。
+有好幾組答案時，回傳的是 $i$ 最小、其次 $j$ 最小的那一組。
+
+\textbf{複雜度。} 最壞情況（沒有答案）要檢查全部 $\binom{n}{2} = n(n-1)/2$ 對，$\Theta(n^2)$ 時間（資結書第~1.7~節的巢狀迴圈
+分析），$O(1)$ 額外空間。 改用雜湊表記錄「看過的數 $\to$ 位置」，掃一次、每個數查 \texttt{target - nums[j]} 有沒有出現過，
+期望 $\Theta(n)$ 時間（資結書第~12~章）。
+\end{pastsoln}

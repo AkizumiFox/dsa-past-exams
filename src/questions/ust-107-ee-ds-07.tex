@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-107-ee-ds-07}]{臺聯大電機類 107 學年度 第七題}
+（問答；10 分）
+
+(10\%) Answer the following questions about a certain type of data structures.
+\begin{enumerate}
+\item[(一)] (2\%) Which data structure is often used to capture relationships among entities?
+\item[(二)] (4\%) Entities are represented as \blank{1} and relationships are represented as \blank{2}.
+\item[(三)] (4\%) Depending on whether or not the relationships are symmetric, the data structure can be divided into two subtypes \blank{3} and \blank{4}.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+（空格的編號 (1)--(4) 是本書加的，方便對答案。）
+
+(一)~圖（graph）。
+
+(二)~(1) 頂點（vertices，也叫 nodes）；(2) 邊（edges）。 圖 $G = (V, E)$，$V$ 是頂點集合，每個實體是一個頂點；
+$E$ 是邊的集合，兩個實體之間有關係，就在對應的兩個頂點之間連一條邊（資結書第~21.1~節）。
+
+(三)~(3) 無向圖（undirected graph）；(4) 有向圖（directed graph，digraph）。 關係是對稱的（$u$ 和 $v$ 有關係就表示
+$v$ 和 $u$ 有關係，例如「是朋友」「有道路相連」），邊沒有方向，用無序對 $\{u, v\}$ 表示，是無向圖；關係不一定對稱
+（例如「追蹤」「單行道」「是先修課」），邊有方向，用有序對 $(u, v)$ 表示，是有向圖。 無向圖的相鄰矩陣是對稱的，
+有向圖則不一定。
+\end{pastsoln}

@@ -1,0 +1,71 @@
+\begin{pastexam}[label={px:ntu-108-esoe-ds-01}]{臺大工科海洋所 108 學年度 第 1 題}
+（計算）
+
+\textbf{(10 \%)} Please convert the following infix expressions to postfix:\\
+(a) (5 \%) a * (b $-$ c) / d\\
+(b) (5 \%) a + (b * c $-$ d) * (e + f / g)
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(a) \texttt{a b c - * d /}；(b) \texttt{a b c * d - e f g / + * +}。
+
+用資結書虛擬碼~6.8 的堆疊轉換（資結書第~6.3.3~節）：運算元直接輸出；左括號推入；右括號把堆疊
+彈到左括號為止；運算子先把堆疊頂端優先序\textbf{大於或等於}自己的運算子彈出（左結合），再推入
+自己。 \texttt{*}、\texttt{/} 的優先序高於 \texttt{+}、\texttt{-}。 讀完後把堆疊剩下的依序彈出。
+下表的堆疊從底寫到頂。
+
+\textbf{(a)} \texttt{a*(b-c)/d}
+\begin{center}
+\small
+\begin{tabular}{cllc}
+\toprule
+讀入 & 動作 & 輸出 & 堆疊 \\
+\midrule
+\texttt{a} & 輸出 & \texttt{a} & \\
+\texttt{*} & 堆疊空，推入 & \texttt{a} & \texttt{*} \\
+\texttt{(} & 推入 & \texttt{a} & \texttt{* (} \\
+\texttt{b} & 輸出 & \texttt{a b} & \texttt{* (} \\
+\texttt{-} & 頂端是 \texttt{(}，推入 & \texttt{a b} & \texttt{* ( -} \\
+\texttt{c} & 輸出 & \texttt{a b c} & \texttt{* ( -} \\
+\texttt{)} & 彈出 \texttt{-}，丟掉 \texttt{(} & \texttt{a b c -} & \texttt{*} \\
+\texttt{/} & \texttt{*} 和 \texttt{/} 同級，彈出 \texttt{*}；推入 \texttt{/} & \texttt{a b c - *} & \texttt{/} \\
+\texttt{d} & 輸出 & \texttt{a b c - * d} & \texttt{/} \\
+結束 & 彈出 \texttt{/} & \texttt{a b c - * d /} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+檢查：\texttt{*}、\texttt{/} 同級、由左往右算，原式是 $(a \times (b - c)) / d$。 後序式先算 $b - c$，
+乘 $a$，再除以 $d$，和原式相同。 讀到 \texttt{/} 時如果沒有先彈出同級的 \texttt{*}，會得到
+\texttt{a b c - d / *}，那是 $a \times ((b - c)/d)$，運算順序不同（整數除法時結果可能不同）。
+
+\textbf{(b)} \texttt{a+(b*c-d)*(e+f/g)}
+\begin{center}
+\small
+\begin{tabular}{cllc}
+\toprule
+讀入 & 動作 & 輸出 & 堆疊 \\
+\midrule
+\texttt{a} & 輸出 & \texttt{a} & \\
+\texttt{+} & 堆疊空，推入 & \texttt{a} & \texttt{+} \\
+\texttt{(} & 推入 & \texttt{a} & \texttt{+ (} \\
+\texttt{b} & 輸出 & \texttt{a b} & \texttt{+ (} \\
+\texttt{*} & 頂端是 \texttt{(}，推入 & \texttt{a b} & \texttt{+ ( *} \\
+\texttt{c} & 輸出 & \texttt{a b c} & \texttt{+ ( *} \\
+\texttt{-} & \texttt{*} 比 \texttt{-} 高，彈出；推入 \texttt{-} & \texttt{a b c *} & \texttt{+ ( -} \\
+\texttt{d} & 輸出 & \texttt{a b c * d} & \texttt{+ ( -} \\
+\texttt{)} & 彈出 \texttt{-}，丟掉 \texttt{(} & \texttt{a b c * d -} & \texttt{+} \\
+\texttt{*} & \texttt{+} 比 \texttt{*} 低，推入 & \texttt{a b c * d -} & \texttt{+ *} \\
+\texttt{(} & 推入 & \texttt{a b c * d -} & \texttt{+ * (} \\
+\texttt{e} & 輸出 & \texttt{a b c * d - e} & \texttt{+ * (} \\
+\texttt{+} & 頂端是 \texttt{(}，推入 & \texttt{a b c * d - e} & \texttt{+ * ( +} \\
+\texttt{f} & 輸出 & \texttt{a b c * d - e f} & \texttt{+ * ( +} \\
+\texttt{/} & \texttt{+} 比 \texttt{/} 低，推入 & \texttt{a b c * d - e f} & \texttt{+ * ( + /} \\
+\texttt{g} & 輸出 & \texttt{a b c * d - e f g} & \texttt{+ * ( + /} \\
+\texttt{)} & 彈出 \texttt{/}、\texttt{+}，丟掉 \texttt{(} & \texttt{a b c * d - e f g / +} & \texttt{+ *} \\
+結束 & 彈出 \texttt{*}、\texttt{+} & \texttt{a b c * d - e f g / + * +} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+檢查：原式是 $a + \bigl((b \times c - d) \times (e + f / g)\bigr)$。 後序式依序算出 $b \times c$、減 $d$；
+再算 $f / g$、加 $e$；兩者相乘，最後加上 $a$，和原式相同。
+\end{pastsoln}

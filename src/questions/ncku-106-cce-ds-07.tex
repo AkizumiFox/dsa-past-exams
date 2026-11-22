@@ -1,0 +1,134 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-07}]{成大電通所 106 學年度 第二大題第 3 題}
+（簡答；25 分）
+
+\textbf{(25 pts) Active On Edge (AOV) network.}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(2 pts)} Please show the adjacency list of the figure (assume the sequence of nodes in
+a list are arranged according to their numbers in increasing order).
+\item \textbf{(2 pts)} Find a topological sequence of nodes according to the data structure obtained
+in a.
+\item \textbf{(6 pts)} Find the earliest even occurrence time $ee(i)$ and the latest even occurrence
+time $le(i)$ for each even $i$ and show the results in a table according to the sequence of the
+index of even $i$.
+\item \textbf{(8 pts)} Find the earliest time, $e(i)$, and latest time, $l$(i), for each activity and
+shows the result in a table according to the sequence of the index of activity $i$.
+\item \textbf{(1 pts)} What is the earliest time when the project can be finished?
+\item \textbf{(2 pts)} Please show the slack of each activity.
+\item \textbf{(2 pts)} Which activities are critical and why they are critical?
+\item \textbf{(2 pts)} Please show the activities which can result in reduction of the project length
+if they speed up.
+\end{enumerate}
+
+$e(i)=ee[k]=\max_{<j,k>\in E}\{ee[j]+\text{duration\_on\_}<j,k>\}$
+
+$l(i)=le[l]-\text{duration\_of\_}a_i$
+
+$\phantom{l(i)}=\min_{<l,j>\in E}\{le[j]-\text{duration\_on\_}<l,j>\}-\text{duration\_of\_}a_i$
+
+\begin{center}
+\begin{tikzpicture}[v/.style={draw,circle,minimum size=7mm,inner sep=0pt,font=\small},>={Stealth[length=2.4mm]},thick]
+  \node[v] (1) at (0,0) {V$_1$};
+  \node[v] (2) at (2.0,1.1) {V$_2$};
+  \node[v] (3) at (2.0,-1.1) {V$_3$};
+  \node[v] (5) at (4.4,1.1) {V$_5$};
+  \node[v] (4) at (4.4,-1.1) {V$_4$};
+  \node[v] (6) at (6.4,0) {V$_6$};
+  \draw[->] (1) -- node[above left=-1pt] {a$_1$=5} (2);
+  \draw[->] (1) -- node[below left=-1pt] {a$_2$=4} (3);
+  \draw[->] (2) -- node[above] {a$_3$=2} (5);
+  \draw[->] (3) -- node[below] {a$_4$=4} (4);
+  \draw[->] (3) -- node[right] {a$_5$=9} (2);
+  \draw[->] (5) -- node[left] {a$_6$=7} (4);
+  \draw[->] (5) -- node[above right=-1pt] {a$_7$=10} (6);
+  \draw[->] (4) -- node[below right=-1pt] {a$_8$=2} (6);
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+原卷有幾個筆誤：標題的 AOV 應為 AOE（activity on edge，活動在邊上、頂點是事件，資結書第~22.5~節）；
+「even」應為 event（事件）。 題目附的公式把兩件事寫在一起，這裡用標準的定義：活動 $a_i$ 是邊
+$\langle k, l\rangle$、長度 $d_i$ 時，
+\[
+e(i) = ee[k], \qquad l(i) = le[l] - d_i ,
+\]
+\[
+ee[j] = \max_{\langle i, j\rangle \in E} \{ ee[i] + d(i, j) \}, \qquad
+le[j] = \min_{\langle j, m\rangle \in E} \{ le[m] - d(j, m) \} .
+\]
+起點 $ee[V_1] = 0$，終點 $le[V_6] = ee[V_6]$。
+
+\textbf{a.} 鄰接串列（括號裡是活動和長度；最左欄是入分支度 count，拓樸排序要用）：
+\begin{center}
+\begin{tabular}{ccl}
+\toprule
+頂點 & count & 串列 \\
+\midrule
+$V_1$ & 0 & $\to V_2\,(a_1 = 5) \to V_3\,(a_2 = 4)$ \\
+$V_2$ & 2 & $\to V_5\,(a_3 = 2)$ \\
+$V_3$ & 1 & $\to V_2\,(a_5 = 9) \to V_4\,(a_4 = 4)$ \\
+$V_4$ & 2 & $\to V_6\,(a_8 = 2)$ \\
+$V_5$ & 1 & $\to V_4\,(a_6 = 7) \to V_6\,(a_7 = 10)$ \\
+$V_6$ & 2 & （空） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{b.} 用入分支度為 $0$ 的頂點逐一輸出（Kahn 演算法，資結書第~22.1~節）：
+\begin{itemize}
+\item 只有 $V_1$ 的 count 是 $0$，輸出 $V_1$；$V_2$ 的 count 變 $1$，$V_3$ 變 $0$。
+\item 輸出 $V_3$；$V_2$ 變 $0$，$V_4$ 變 $1$。
+\item 輸出 $V_2$；$V_5$ 變 $0$。
+\item 輸出 $V_5$；$V_4$ 變 $0$，$V_6$ 變 $1$。
+\item 輸出 $V_4$；$V_6$ 變 $0$。 輸出 $V_6$。
+\end{itemize}
+拓樸順序：$V_1, V_3, V_2, V_5, V_4, V_6$。 每一步都只有一個 count 為 $0$ 的頂點，所以不管用堆疊
+或佇列存放，這個順序都是唯一的。
+
+\textbf{c.} 依拓樸順序算 $ee$，依反方向算 $le$：
+\begin{itemize}
+\item $ee$：$V_1 = 0$；$V_3 = 0 + 4 = 4$；$V_2 = \max(0 + 5,\ 4 + 9) = 13$；$V_5 = 13 + 2 = 15$；
+$V_4 = \max(4 + 4,\ 15 + 7) = 22$；$V_6 = \max(15 + 10,\ 22 + 2) = 25$。
+\item $le$：$V_6 = 25$；$V_4 = 25 - 2 = 23$；$V_5 = \min(23 - 7,\ 25 - 10) = 15$；
+$V_2 = 15 - 2 = 13$；$V_3 = \min(13 - 9,\ 23 - 4) = 4$；$V_1 = \min(13 - 5,\ 4 - 4) = 0$。
+\end{itemize}
+\begin{center}
+\begin{tabular}{ccccccc}
+\toprule
+事件 & $V_1$ & $V_2$ & $V_3$ & $V_4$ & $V_5$ & $V_6$ \\
+\midrule
+$ee$ & 0 & 13 & 4 & 22 & 15 & 25 \\
+$le$ & 0 & 13 & 4 & 23 & 15 & 25 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{d.、f.} $e(i) = ee[\text{起點}]$，$l(i) = le[\text{終點}] - d_i$，寬裕（slack）$= l(i) - e(i)$：
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+活動 & 邊 & 長度 & $e(i)$ & $l(i)$ & slack \\
+\midrule
+$a_1$ & $V_1 \to V_2$ & 5  & 0  & $13 - 5 = 8$   & 8 \\
+$a_2$ & $V_1 \to V_3$ & 4  & 0  & $4 - 4 = 0$    & 0 \\
+$a_3$ & $V_2 \to V_5$ & 2  & 13 & $15 - 2 = 13$  & 0 \\
+$a_4$ & $V_3 \to V_4$ & 4  & 4  & $23 - 4 = 19$  & 15 \\
+$a_5$ & $V_3 \to V_2$ & 9  & 4  & $13 - 9 = 4$   & 0 \\
+$a_6$ & $V_5 \to V_4$ & 7  & 15 & $23 - 7 = 16$  & 1 \\
+$a_7$ & $V_5 \to V_6$ & 10 & 15 & $25 - 10 = 15$ & 0 \\
+$a_8$ & $V_4 \to V_6$ & 2  & 22 & $25 - 2 = 23$  & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{e.} 最早完工時間是 $ee[V_6] = 25$。
+
+\textbf{g.} 關鍵活動是 slack $= 0$ 的 $a_2$、$a_5$、$a_3$、$a_7$，它們組成關鍵路徑
+$V_1 \to V_3 \to V_2 \to V_5 \to V_6$，長度 $4 + 9 + 2 + 10 = 25$。 slack $= 0$ 表示最早可以開始的
+時間等於最晚必須開始的時間，只要延誤一點，終點 $V_6$ 就會晚於 $25$，整個工程延後（資結書定理~22.6）。
+
+\textbf{h.} 關鍵路徑只有一條，上面的 $a_2$、$a_5$、$a_3$、$a_7$ 任一個加快，都會縮短工程。 但能縮短
+多少有限：次長的路徑 $V_1 \to V_3 \to V_2 \to V_5 \to V_4 \to V_6$ 長度 $4 + 9 + 2 + 7 + 2 = 24$，
+它和關鍵路徑共用 $a_2$、$a_5$、$a_3$，不含 $a_7$，所以只加快 $a_7$ 最多縮短 $1$（之後這條路徑變成
+關鍵路徑）；加快 $a_2$、$a_5$、$a_3$ 則兩條路徑一起縮短。 其他活動（slack $> 0$）加快不會縮短工程。
+\end{pastsoln}

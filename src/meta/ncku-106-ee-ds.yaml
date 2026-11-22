@@ -1,0 +1,16 @@
+paper: ncku-106-ee-ds
+volume: 3
+school: 成大
+dept: 電機所
+year: 106
+subject: 資料結構
+instructions: ※ 考生請注意：本試題不可使用計算機。 請於答案卷（卡）作答，於本試題紙上作答者，不予計分。 一、複選題：(20 分，全對才給分，每題 5 分)。 二、簡答題：(60 分)。 三、填充題 (20 分，每小題 2 分)。
+questions:
+  - {id: ncku-106-ee-ds-01, label: 複選題第 1 題, chapter: 1}
+  - {id: ncku-106-ee-ds-02, label: 複選題第 2 題, chapter: 7}
+  - {id: ncku-106-ee-ds-03, label: 複選題第 3 題, chapter: 21}
+  - {id: ncku-106-ee-ds-04, label: 複選題第 4 題, chapter: 14}
+  - {id: ncku-106-ee-ds-05, label: 簡答題第 1 題, chapter: 14}
+  - {id: ncku-106-ee-ds-06, label: 簡答題第 2 題, chapter: 23}
+  - {id: ncku-106-ee-ds-07, label: 簡答題第 3 題, chapter: 7}
+  - {id: ncku-106-ee-ds-08, label: 填充題, chapter: 5}

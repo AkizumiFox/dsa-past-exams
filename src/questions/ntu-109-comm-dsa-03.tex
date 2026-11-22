@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-03}]{臺大電信所 109 學年度（B）第 3 題}
+（是非；每題 2 分，答錯倒扣 1 分）
+
+In a weighted undirected graph $G=(V,E,w)$, breadth-first search from a vertex $s$ finds
+single-source shortest paths from $s$ (via parent pointers) in $O(V+E)$ time.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：F（錯）。
+
+BFS 完全不看權重，它找到的是\textbf{邊數}最少的路徑（資結書定理~21.4 的 $\delta$ 是邊數）。
+有權重時，邊數少不代表權重和小。
+
+反例：三個頂點 $s, a, t$，$w(s, a) = 1$、$w(a, t) = 1$、$w(s, t) = 5$。 從 $s$ 做 BFS，$t$
+是 $s$ 的鄰居，$\pi[t] = s$，父指標給出的路徑是 $s, t$，權重 $5$；但 $s, a, t$ 的權重只有
+$2$。
+
+有權重的單源最短路徑要用 Dijkstra（權重非負）或 Bellman--Ford（資結書第~25.2、25.3~節）。
+只有所有權重都相同時，BFS 才剛好是答案。
+\end{pastsoln}

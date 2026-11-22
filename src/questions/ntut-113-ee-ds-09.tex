@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-09}]{北科大電機所（戊組）113 學年度 第 II.5 題}
+（簡答；8 分）
+
+Order the following functions by their growth rate from slowest to fastest: $\sqrt{n}$, $n^{1.5}$,
+$n^2$, $n\log n$, $n\log\log n$, $n\log^2 n$, $2^n$, $2^{\log n}$. (8\%)
+\end{pastexam}
+
+\begin{pastsoln}
+答案（由慢到快）：
+\[
+\sqrt{n},\quad 2^{\log n},\quad n \log\log n,\quad n \log n,\quad n \log^2 n,\quad n^{1.5},\quad n^2,\quad 2^n.
+\]
+
+先處理 $2^{\log n}$。 $\log$ 以 $2$ 為底時 $2^{\lg n} = n$。 如果 $\log$ 是自然對數，
+$2^{\ln n} = e^{(\ln 2)(\ln n)} = n^{\ln 2} \approx n^{0.693}$。 兩種讀法下它都比 $\sqrt{n} = n^{0.5}$
+快、比 $n \log\log n$ 慢，所以位置不變。
+
+其餘相鄰兩個逐一比較（資結書第~1.6~節）：
+\begin{itemize}
+\item $\sqrt{n}$ 和 $n$：$n / \sqrt{n} = \sqrt{n} \to \infty$。
+\item $n$ 和 $n \log\log n$：比值 $\log\log n \to \infty$。
+\item $n \log\log n$ 和 $n \log n$：比值 $\log n / \log\log n \to \infty$。
+\item $n \log n$ 和 $n \log^2 n$：比值 $\log n \to \infty$。
+\item $n \log^2 n$ 和 $n^{1.5}$：比值 $n^{0.5} / \log^2 n \to \infty$，因為任何正次方都比對數的
+任何次方長得快。
+\item $n^{1.5}$ 和 $n^2$：比值 $n^{0.5} \to \infty$。
+\item $n^2$ 和 $2^n$：指數函數比任何多項式長得快，$n^2 / 2^n \to 0$。
+\end{itemize}
+每一對的比值都趨於無限大，所以順序是嚴格的，沒有兩個是同一個 $\Theta$。
+\end{pastsoln}

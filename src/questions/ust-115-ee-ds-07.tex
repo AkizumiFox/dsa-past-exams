@@ -1,0 +1,48 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-07}]{臺聯大電機類 115 學年度 第 7 題}
+（單選；2 分）
+
+How do we use a stack structure when evaluating postfix expressions (e.g., 3 4 + 5 * 7 / 2-)?
+\begin{enumerate}[label=(\Alph*)]
+\item When encountering an operand, push; when encountering an operator, pop two numbers. Perform
+the operation on the two numbers and then push the result.
+\item When encountering an operator, use Push; when encountering an operand, use Pop.
+\item Push all operands and operators encountered, and then calculate again at the end.
+\item This requires using columns, not stacks.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+後序式求值（資結書第~6.3.2~節、虛擬碼~6.7）：由左往右讀，遇到運算元就 push；遇到運算子就 pop
+兩次，先 pop 出來的是\textbf{右}運算元、後 pop 的是左運算元，算完把結果 push 回去。 讀完時堆疊裡
+剩下的一個數就是答案。 追蹤題目的例子：
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+讀到 & 動作 & 堆疊（左邊是底） \\
+\midrule
+3 & push & 3 \\
+4 & push & 3, 4 \\
+$+$ & pop 4、3，算 $3 + 4$ & 7 \\
+5 & push & 7, 5 \\
+$*$ & pop 5、7，算 $7 \times 5$ & 35 \\
+7 & push & 35, 7 \\
+$/$ & pop 7、35，算 $35 / 7$ & 5 \\
+2 & push & 5, 2 \\
+$-$ & pop 2、5，算 $5 - 2$ & 3 \\
+\bottomrule
+\end{tabular}
+\end{center}
+結果是 $3$，也就是中序式 $(3 + 4) \times 5 / 7 - 2$。
+
+逐項檢查：
+\begin{itemize}
+\item (A) 正是上面的做法。 對。
+\item (B) 反過來了：運算子不必進堆疊，運算元才要進堆疊等著被用。 錯。
+\item (C) 全部 push 完再算，等於沒有利用後序式「讀到運算子時兩個運算元剛好在頂端」的性質；而且
+算的時候還是要用上面的規則。 錯。
+\item (D) 後序求值的標準工具就是堆疊。 「columns」大概是「佇列」之類的誤譯，不論哪一種，都不是
+必須的。 錯。
+\end{itemize}
+\end{pastsoln}

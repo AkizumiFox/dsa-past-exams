@@ -1,0 +1,104 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-27}]{臺聯大電機類 114 學年度 問答題第 3 題}
+（問答；10 分）
+
+Based on the following code, please answer the questions below:
+\begin{enumerate}[label=(\Alph*)]
+\item Why can the hasCycle function successfully detect the presence of a cycle in the linked list
+when link node4.next to node2? Please explain in detail how the slow and fast pointers work and at
+which node they meet. (5 point)
+\item If the assignment link node4.next to node2 is removed and the program is executed, what will be
+the output of the hasCycle function? Please explain the reason for this situation and how the
+algorithm handles it. (5 point)
+\end{enumerate}
+
+\begin{minted}[fontsize=\small]{text}
+Class ListNode
+    Attributes: value, next
+
+    Constructor(value):
+        value = value
+        next = null
+
+Function hasCycle(head):
+    If head is null or head.next is null:
+        Return false
+
+    slowPointer = head
+    fastPointer = head
+
+    While fastPointer is not null and fastPointer.next is not null:
+        slowPointer = slowPointer.next
+        fastPointer = fastPointer.next.next
+
+        If slowPointer == fastPointer:
+            Return true
+
+    Return false
+
+Main:
+    Create node1 with value 1
+    Create node2 with value 2
+    Create node3 with value 3
+    Create node4 with value 4
+
+    Link node1.next to node2
+    Link node2.next to node3
+    Link node3.next to node4
+    Link node4.next to node2
+
+    result = hasCycle(node1)
+    Print "Does the linked list have a cycle? " + result
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+串列是 node1 $\to$ node2 $\to$ node3 $\to$ node4 $\to$ node2（回到 node2），環前面有 $\mu = 1$ 個
+節點（node1），環長 $\lambda = 3$（node2、node3、node4）。
+
+\textbf{(A)} 快慢指標（Floyd 判環法，資結書第~5.6~節）：slow 每輪走一步，fast 每輪走兩步。
+\begin{itemize}
+\item 沒有環時 fast 一定先碰到 null，迴圈結束回傳 false；只要有環，fast 進環後就永遠在環裡繞，不會碰到
+null。
+\item slow 也進入環之後，把它看成 fast 在環上「追」slow。 每一輪 fast 比 slow 多走一步，兩者沿環方向的
+距離減少 $1$。 距離一開始在 $0$ 到 $\lambda - 1$ 之間，所以最多 $\lambda - 1$ 輪就減到 $0$，兩個指標
+指到同一個節點，回傳 true。 不會「跳過」對方，因為距離每次只少 $1$。
+\end{itemize}
+追蹤這個例子：
+\begin{center}
+\small
+\begin{tabular}{ccccc}
+\toprule
+輪 & slow & fast & 說明 & 相等？ \\
+\midrule
+開始 & node1 & node1 & & （迴圈前不比） \\
+1 & node2 & node3 & fast：node1 $\to$ node2 $\to$ node3 & 否 \\
+2 & node3 & node2 & fast：node3 $\to$ node4 $\to$ node2 & 否 \\
+3 & node4 & node4 & fast：node2 $\to$ node3 $\to$ node4 & 是 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 3 輪兩者在 \textbf{node4} 相遇，回傳 true，印出
+``Does the linked list have a cycle? true''。 輪數 $3$ 符合資結書定理~5.4：$\lambda = 3$ 的倍數中不小於
+$\max(\mu, 1) = 1$ 的最小者。
+
+\textbf{(B)} 拿掉 node4.next = node2 之後，node4.next 是 null，串列 node1 $\to$ node2 $\to$ node3
+$\to$ node4 $\to$ null 沒有環。
+\begin{center}
+\small
+\begin{tabular}{cccl}
+\toprule
+輪 & slow & fast & 迴圈條件 \\
+\midrule
+開始 & node1 & node1 & fast、fast.next 都不是 null，進入 \\
+1 & node2 & node3 & fast.next = node4，繼續 \\
+2 & node3 & null & fast 是 null，離開 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第 2 輪 fast 從 node3 走兩步：node4，再到 node4.next = null。 迴圈條件
+「fastPointer is not null」不成立，結束，回傳 false，印出 ``Does the linked list have a cycle? false''。
+這也說明迴圈條件為什麼要同時檢查 fastPointer 和 fastPointer.next：fast 一次跳兩步，先確定
+fastPointer.next 不是 null，才能安全地取 fastPointer.next.next，否則會對 null 取欄位而出錯。 開頭的
+「head 是 null 或 head.next 是 null 就回傳 false」處理空串列和只有一個節點（沒有自己指向自己）的情形。
+整個函式時間 $O(n)$、額外空間 $O(1)$。
+\end{pastsoln}

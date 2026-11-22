@@ -1,0 +1,39 @@
+\begin{pastexam}[label={px:ntu-110-esoe-ds-04}]{臺大工科海洋所 110 學年度（A）第 4 題}
+（問答）
+
+\textbf{(10 \%)} A binary search tree is a special instance of a graph. Describe (no code) an
+algorithm that takes a binary search tree as input and produces an adjacency list, which represents
+it as an undirected graph.
+\end{pastexam}
+
+\begin{pastsoln}
+一棵 $n$ 個節點的樹看成無向圖，頂點是節點，邊是「父節點—子節點」這 $n - 1$ 對。 相鄰串列是每個
+頂點一個串列，列出它的所有鄰居（資結書第~21.2~節）；無向圖的一條邊 $\{u, v\}$ 要在 $u$ 的串列和
+$v$ 的串列各出現一次。
+
+\textbf{做法。}
+\begin{enumerate}
+\item \textbf{編號}：用中序走訪把節點依序編成 $0, 1, \ldots, n - 1$，記在節點上（或另外用一個陣列
+$\mathit{key}[i]$ 記第 $i$ 號頂點的鍵）。 二元搜尋樹的中序是由小到大，所以編號 $i$ 就是第 $i$ 小
+的鍵，之後要從鍵找頂點，可以在 $\mathit{key}$ 上二分搜尋。
+\item \textbf{建空串列}：開一個長度 $n$ 的陣列 $\mathit{Adj}$，每格是空串列。
+\item \textbf{加邊}：再走訪一次樹（前序、中序、後序或層序都可以），對每個節點 $v$，如果它有左子節點
+$\ell$，把 $\ell$ 的編號加進 $\mathit{Adj}[v]$，把 $v$ 的編號加進 $\mathit{Adj}[\ell]$；右子節點 $r$
+同樣處理。
+\item 回傳 $\mathit{Adj}$（和 $\mathit{key}$）。
+\end{enumerate}
+樹是空的就回傳空的相鄰串列。
+
+\textbf{為什麼對。} 樹的每一條邊恰好是某個節點和它的一個子節點，第 3 步每個節點都會走到，它的每個
+子節點都會被處理一次，所以每條邊被加進兩端的串列各一次，不多也不少。 不是邊的兩個節點之間不會
+加任何東西。
+
+\textbf{複雜度。} 兩次走訪各 $O(n)$，每條邊加兩次、每次 $O(1)$（加在串列前端），共 $O(n)$ 時間；
+相鄰串列有 $n$ 個表頭和 $2(n - 1)$ 個串列節點，空間 $O(n)$。
+
+例：根 $8$，左子節點 $3$（子節點 $1$、$6$），右子節點 $10$。 中序 $1, 3, 6, 8, 10$ 編號 $0$--$4$。
+相鄰串列：$1\colon 3$；$3\colon 8, 1, 6$；$6\colon 3$；$8\colon 3, 10$；$10\colon 8$（串列裡寫的是鍵，
+實際存的是編號；順序不重要）。
+
+只想要以鍵當頂點名稱時，也可以用雜湊表從鍵對到串列，省掉編號那一步，時間仍是平均 $O(n)$。
+\end{pastsoln}

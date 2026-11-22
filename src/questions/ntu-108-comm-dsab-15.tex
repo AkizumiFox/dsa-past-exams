@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-15}]{臺大電信所 108 學年度（B）第 15 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The average case time complexity of quick sort over $n$ items is (choose the tightest bound)
+
+A.~$O(n)$ \qquad B.~$O(n\log^* n)$ \qquad C.~$O(n\log n)$ \qquad D.~$O(n^2)$ \qquad
+E.~$O(n^2\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 C。
+
+快速排序的平均比較次數是 $2n \ln n + O(n) \approx 1.39\, n \lg n$，平均時間 $\Theta(n \lg n)$
+（資結書定理~14.3）。
+\begin{itemize}
+\item A、B：比 $n \lg n$ 小。 任何以比較為基礎的排序，平均也要 $\Omega(n \lg n)$ 次比較
+（資結書定理~15.3），所以不可能。
+\item C：正好是 $\Theta(n \lg n)$，最緊。
+\item D、E：是對的上界（D 是最壞情況），但不是最緊的。
+\end{itemize}
+\end{pastsoln}

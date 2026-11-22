@@ -1,0 +1,91 @@
+\begin{pastexam}[label={px:ust-112-ee-ds-22}]{臺聯大電機類 112 學年度 第 22 題}
+（問答；10 分）
+
+Given the following pseudo codes, Insertion-sort2 improves the performance of Insertion-sort1 by
+using a binary search strategy. Please write a binary search algorithm,
+j=Binary-search(A,p,q,key), that returns the insertion location index j. The resultant
+Binary-search has to be in-place, stable, and O(log n) for arrays with repeating/duplicate numbers.
+For example, A = \{2,3,3,3,4,5,3\}, Binary-search(A,1,6,3) return 5. Answer in pseudocode or
+C-style code with index beginning at 1. (10\%)
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, xleftmargin=5em, xrightmargin=5em]
+Insertion-sort1(A)
+1   for j=2 to A.length
+2       key=A[j]
+3       i=j-1
+4       while i>0 and A[i]>key
+5           A[i+1]=A[i]
+6           i=i-1
+7       A[i+1]=key
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, columns=fullflexible,
+    keepspaces=true, xleftmargin=1em, xrightmargin=1em]
+Insertion-sort2(A)
+1   for j=2 to A.length
+2       key=A[j]
+3       i=Binary-search(A,1,j-1,key) // provide code for Binary-search
+4       A[i+1:j]=A[i:j-1] // move A[i:j-1] to A[i+1:j]
+5       A[i]=key
+\end{lstlisting}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{要找的位置}。 Insertion-sort2 第 4、5 行把 $A[i..j-1]$ 往右移一格，再把 \textit{key} 放到
+$A[i]$。 $A[1..j-1]$ 已經排好；要穩定，\textit{key} 必須放在所有和它相等的元素\textbf{後面}（那些
+元素在原輸入裡比較早出現）。 所以 $i$ 應該是 $A[p..q]$ 裡\textbf{第一個大於 key 的位置}；如果沒有
+比 \textit{key} 大的，就回傳 $q + 1$（放在最後面）。 這就是資結書虛擬碼~17.2 的 Upper-Bound，
+改成範圍 $[p..q]$：
+
+\begin{pseudo}{第一個大於 \textit{key} 的位置}
+\Function{Binary-Search}{$A, p, q, \mathit{key}$}
+    \State $\mathit{lo} \gets p$；$\mathit{hi} \gets q + 1$
+    \While{$\mathit{lo} < \mathit{hi}$}
+        \State $\mathit{mid} \gets \lfloor (\mathit{lo} + \mathit{hi}) / 2 \rfloor$
+        \If{$A[\mathit{mid}] \le \mathit{key}$}
+            \State $\mathit{lo} \gets \mathit{mid} + 1$
+        \Else
+            \State $\mathit{hi} \gets \mathit{mid}$
+        \EndIf
+    \EndWhile
+    \State \Return $\mathit{lo}$
+\EndFunction
+\end{pseudo}
+
+\textbf{正確性}。 迴圈不變量：$A[p..\mathit{lo}-1]$ 都 $\le \mathit{key}$，$A[\mathit{hi}..q]$ 都
+$> \mathit{key}$。 一開始兩段都是空的，成立。 $\mathit{lo} < \mathit{hi}$ 時
+$\mathit{lo} \le \mathit{mid} < \mathit{hi} \le q + 1$，$A[\mathit{mid}]$ 在範圍內。 若
+$A[\mathit{mid}] \le \mathit{key}$，因為 $A[p..q]$ 排好了，$A[p..\mathit{mid}]$ 都 $\le \mathit{key}$，
+令 $\mathit{lo} \gets \mathit{mid} + 1$ 保持不變量；否則 $A[\mathit{mid}..q]$ 都 $> \mathit{key}$，令
+$\mathit{hi} \gets \mathit{mid}$ 也保持。 每圈 $\mathit{hi} - \mathit{lo}$ 嚴格變小，最後
+$\mathit{lo} = \mathit{hi}$，這時 $A[p..\mathit{lo}-1] \le \mathit{key} < A[\mathit{lo}..q]$，
+$\mathit{lo}$ 正是第一個大於 \textit{key} 的位置（全部都 $\le \mathit{key}$ 時是 $q + 1$）。
+
+\textbf{題目的例子}。 $A = \{2, 3, 3, 3, 4, 5, 3\}$，Binary-Search$(A, 1, 6, 3)$：
+\begin{center}
+\begin{tabular}{ccccc}
+\toprule
+$\mathit{lo}$ & $\mathit{hi}$ & $\mathit{mid}$ & $A[\mathit{mid}]$ & 動作 \\
+\midrule
+1 & 7 & 4 & 3 & $3 \le 3$，$\mathit{lo} \gets 5$ \\
+5 & 7 & 6 & 5 & $5 > 3$，$\mathit{hi} \gets 6$ \\
+5 & 6 & 5 & 4 & $4 > 3$，$\mathit{hi} \gets 5$ \\
+5 & 5 & & & 結束，回傳 $5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+回傳 $5$，和題目一致：$A[7] = 3$ 會插到三個 $3$ 的後面、$4$ 的前面。
+
+\textbf{三個要求}。
+\begin{itemize}
+\item 就地：只用 $\mathit{lo}$、$\mathit{hi}$、$\mathit{mid}$ 三個變數，不搬動陣列，$O(1)$ 額外空間。
+\item 穩定：相等時（$A[\mathit{mid}] = \mathit{key}$）往右找，回傳的位置在所有等於 \textit{key} 的
+元素之後，相等元素的先後順序不變。 若把第 5 行改成 $<$，會回傳第一個 $\ge \mathit{key}$ 的位置
+（例子會回傳 $2$），\textit{key} 跑到相等元素前面，就不穩定了。
+\item $O(\log n)$：設 $m = q - p + 1$，每圈之後區間長度 $\mathit{hi} - \mathit{lo}$ 至多變成原來的
+一半，最多 $\lfloor \lg m \rfloor + 1$ 圈。 有重複值也不影響圈數，因為相等時同樣砍掉一半，不會
+一個一個往右掃。
+\end{itemize}
+
+補充：Insertion-sort2 的比較次數從 $\Theta(n^2)$ 降到 $O(n \log n)$，但第 4 行的搬移在最壞情況
+（反序輸入）仍要搬 $\Theta(n^2)$ 次，整體時間還是 $\Theta(n^2)$。
+\end{pastsoln}

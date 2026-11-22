@@ -1,0 +1,53 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-23}]{北科大電機所（戊組）115 學年度 問答題第 3 題}
+（問答）
+
+Consider a hash table of size 11 using the hash function $h(k) = k\%11$. Use linear probing to resolve
+collisions.\\
+Insert the following keys in order: 23, 45, 12, 67, 34, 78, 56, 89, 31.\\
+(a) Show the final state of the hash table after all insertions. \textbf{(5\%)}\\
+(b) How many collisions occurred during the insertion process? \textbf{(5\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+先算每個鍵的起始位置 $h(k) = k \bmod 11$：
+$23 = 2 \cdot 11 + 1$，$45 = 4 \cdot 11 + 1$，$12 = 11 + 1$，$67 = 6 \cdot 11 + 1$，$34 = 3 \cdot 11 + 1$，
+$78 = 7 \cdot 11 + 1$，$56 = 5 \cdot 11 + 1$，$89 = 8 \cdot 11 + 1$，$31 = 2 \cdot 11 + 9$。 前八個鍵全部是 $1$，只有 $31$ 是 $9$。
+這是故意設計的：線性探測（資結書第~12.3~節）碰到被占的格子就往下一格找，起始位置相同的鍵會排成一長串。
+\begin{center}
+\small
+\begin{tabular}{crll}
+\toprule
+鍵 & $h(k)$ & 探測的格子（$\times$ 表示被占） & 放在 \\
+\midrule
+23 & 1 & 1 & 1 \\
+45 & 1 & 1$\times$, 2 & 2 \\
+12 & 1 & 1$\times$, 2$\times$, 3 & 3 \\
+67 & 1 & 1$\times$, 2$\times$, 3$\times$, 4 & 4 \\
+34 & 1 & 1--4 都 $\times$, 5 & 5 \\
+78 & 1 & 1--5 都 $\times$, 6 & 6 \\
+56 & 1 & 1--6 都 $\times$, 7 & 7 \\
+89 & 1 & 1--7 都 $\times$, 8 & 8 \\
+31 & 9 & 9 & 9 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{(a)} 最後的雜湊表：
+\begin{center}
+\begin{tabular}{c|ccccccccccc}
+位置 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+\hline
+鍵 & — & 23 & 45 & 12 & 67 & 34 & 78 & 56 & 89 & 31 & — \\
+\end{tabular}
+\end{center}
+
+\textbf{(b)} 題目沒有說碰撞怎麼數，常見的有兩種：
+\begin{itemize}
+\item \textbf{以鍵計}：插入時起始位置已經被占，就算這個鍵發生一次碰撞（資結書第~12.9~節歷屆試題的數法）。 $45$、$12$、
+$67$、$34$、$78$、$56$、$89$ 都碰撞，$23$ 和 $31$ 沒有，共 \textbf{$7$ 次}。
+\item \textbf{以探測計}：每探測到一個被占的格子算一次。 第 $i$ 個起始位置是 $1$ 的鍵要越過前面 $i - 1$ 個，共
+$0 + 1 + 2 + \cdots + 7 = 28$ 次。
+\end{itemize}
+作答寫 $7$ 次，並註明數法；若題目的意思是後者，答案是 $28$。 這個例子也說明線性探測的主群聚：起始位置相同的鍵越多，
+後面的鍵要走越遠，$89$ 要探測 $8$ 次才放進去。
+\end{pastsoln}

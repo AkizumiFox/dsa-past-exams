@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-31}]{臺大電信所 109 學年度（B）第 31 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which is the tight lower bound for any comparison based sorting algorithms?
+\begin{enumerate}[label=(\Alph*)]
+\item $\Omega(n)$
+\item $\Omega(n^2)$
+\item $\Omega(n\log n\log n)$
+\item $\Omega(n\log n)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+比較排序的執行過程可以畫成決策樹：每個內部節點是一次比較，每個葉節點是一種輸出的排列。
+$n$ 個相異的數有 $n!$ 種排列，每一種都要對到某個葉節點，所以至少 $n!$ 個葉節點；高度 $h$ 的
+二元樹最多 $2^h$ 個葉節點，得 $h \ge \lg(n!) = \Theta(n \log n)$（資結書定理~15.1）。 最壞情形
+的比較次數就是決策樹的高度，所以下界是 $\Omega(n \log n)$。 合併排序、堆積排序最壞
+$O(n \log n)$，達到這個下界，所以它是緊的。
+
+逐項：(A) $\Omega(n)$ 是對的下界但不緊；(B)、(C) 比合併排序的 $O(n\log n)$ 還大，不是所有
+比較排序都得花這麼多時間，不是下界。
+\end{pastsoln}

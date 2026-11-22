@@ -1,0 +1,27 @@
+paper: ntu-107-ie-ds
+volume: 3
+school: 臺大
+dept: 工工所
+year: 107
+subject: 資料結構（B）
+instructions: "※ 注意：請用 2B 鉛筆作答於答案卡，並先詳閱答案卡上之「畫記說明」。 ※ $n$ refers to the number of elements in the data structure unless told otherwise. ※ In the data structure, numerical values refer to keys unless told otherwise. 一、是非題(共 15 小題，每題 4 分，答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分為止。)命題正確請填(A)，錯誤請填(B)。 二、複選題(每題 10 分 5 個選項，其中至少有一個是正確的答案。各題獨立計分，每答對一個選項，得 2 分；每答錯一個選項時，倒扣 2 分。每題倒扣至零分為止。不作答者，得零分。)"
+questions:
+  - {id: ntu-107-ie-ds-01, label: 第 1 題, chapter: 5}
+  - {id: ntu-107-ie-ds-02, label: 第 2 題, chapter: 9}
+  - {id: ntu-107-ie-ds-03, label: 第 3 題, chapter: 8}
+  - {id: ntu-107-ie-ds-04, label: 第 4 題, chapter: 8}
+  - {id: ntu-107-ie-ds-05, label: 第 5 題, chapter: 9}
+  - {id: ntu-107-ie-ds-06, label: 第 6 題, chapter: 9}
+  - {id: ntu-107-ie-ds-07, label: 第 7 題, chapter: 9}
+  - {id: ntu-107-ie-ds-08, label: 第 8 題, chapter: 10}
+  - {id: ntu-107-ie-ds-09, label: 第 9 題, chapter: 10}
+  - {id: ntu-107-ie-ds-10, label: 第 10 題, chapter: 10}
+  - {id: ntu-107-ie-ds-11, label: 第 11 題, chapter: 10}
+  - {id: ntu-107-ie-ds-12, label: 第 12 題, chapter: 10}
+  - {id: ntu-107-ie-ds-13, label: 第 13 題, chapter: 10}
+  - {id: ntu-107-ie-ds-14, label: 第 14 題, chapter: 3}
+  - {id: ntu-107-ie-ds-15, label: 第 15 題, chapter: 12}
+  - {id: ntu-107-ie-ds-16, label: 第 16 題, chapter: 10}
+  - {id: ntu-107-ie-ds-17, label: 第 17 題, chapter: 21}
+  - {id: ntu-107-ie-ds-18, label: 第 18 題, chapter: 21}
+  - {id: ntu-107-ie-ds-19, label: 第 19 題, chapter: 4}

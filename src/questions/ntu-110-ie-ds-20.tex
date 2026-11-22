@@ -1,0 +1,94 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-20}]{臺大工工所 110 學年度 第 20 題}
+（複選；每題 5 分，每答錯一個選項倒扣 1 分至該題 0 分止）
+
+Consider the red-black tree in Figure 2, which of the following statements are true?\\
+(Assume bottom-up insertion/deletion)
+\begin{enumerate}[label=(\Alph*)]
+\item In Figure 2, after inserting key 14, then there are 6 red nodes.
+\item In Figure 2, after inserting key 54, then key 49 and key 54 are siblings.
+\item In Figure 2, after deleting key 22, then key 25 and key 73 are siblings.
+\item In Figure 2, after deleting key 66, then key 35 is red.
+\item In Figure 2, after deleting key 83, then key 89 is red.
+\end{enumerate}
+\begin{center}
+\begin{tikzpicture}[b/.style={circle,draw,thick,inner sep=1pt,minimum size=6mm,font=\small\sffamily},
+  r/.style={b,draw=red,dotted,very thick},>={Stealth[length=2mm]},
+  eb/.style={thick,->},er/.style={very thick,red,dotted,->}]
+\node[b] (58) at (0,0) {58};
+\node[r] (35) at (-2.4,-1.1) {35}; \node[r] (73) at (2.4,-1.1) {73};
+\node[b] (22) at (-3.45,-2.5) {22}; \node[b] (49) at (-1.35,-2.5) {49};
+\node[b] (66) at (1.3,-2.5) {66}; \node[b] (83) at (3.5,-2.5) {83};
+\node[r] (25) at (-2.85,-3.7) {25}; \node[r] (50) at (-0.75,-3.7) {50}; \node[r] (89) at (4.25,-3.7) {89};
+\foreach \a/\b in {58/35,58/73,22/25,49/50,83/89} \draw[er] (\a) -- (\b);
+\foreach \a/\b in {35/22,35/49,73/66,73/83} \draw[eb] (\a) -- (\b);
+\end{tikzpicture}
+\\*[4pt] Figure 2: Red-black tree
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)、(B)、(D)。
+
+圖中虛線紅框是紅色節點：$35$、$73$、$25$、$50$、$89$ 是紅的，其他是黑的。 先確認它是合法的紅黑樹：紅色節點的子節點都是黑的
+（或 NIL），每條從根到 NIL 的路徑都經過 $2$ 個黑節點（NIL 不算；例如 $58 \to 35 \to 22 \to$ NIL 經過 $58, 22$）。
+每個選項都從 Figure 2 的原樹開始，插入、刪除用資結書第~10.3.4、10.3.7~節的由下而上做法（虛擬碼~10.6、10.7、10.8）；
+刪除有兩個子節點的節點時改刪後繼，但本題刪的節點最多只有一個子節點，用不到。 下圖中紅色節點同樣畫成虛線紅框。
+
+\begin{center}
+\begin{tikzpicture}[level distance=0.85cm,level 1/.style={sibling distance=2.4cm},level 2/.style={sibling distance=1.2cm},
+  level 3/.style={sibling distance=0.7cm},
+  b/.style={circle,draw=black,solid,thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  r/.style={circle,draw=red,dotted,very thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  eb/.style={draw=black,solid,thick},er/.style={draw=red,dotted,very thick}]
+\node[b] {58} child {node[r] {35} child {node[b] {22} child {node[r] {14} child[missing] child[missing] edge from parent[er]} child {node[r] {25} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} child {node[b] {49} child[missing] child {node[r] {50} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]} child {node[r] {73} child {node[b] {66} child[missing] child[missing] edge from parent[eb]} child {node[b] {83} child[missing] child {node[r] {89} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]};
+\node[font=\small] at (0,-3.2) {(A) 插入 14};
+\end{tikzpicture}\hspace{0.4cm}\begin{tikzpicture}[level distance=0.85cm,level 1/.style={sibling distance=2.4cm},level 2/.style={sibling distance=1.2cm},
+  level 3/.style={sibling distance=0.7cm},
+  b/.style={circle,draw=black,solid,thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  r/.style={circle,draw=red,dotted,very thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  eb/.style={draw=black,solid,thick},er/.style={draw=red,dotted,very thick}]
+\node[b] {58} child {node[r] {35} child {node[b] {22} child[missing] child {node[r] {25} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} child {node[b] {50} child {node[r] {49} child[missing] child[missing] edge from parent[er]} child {node[r] {54} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]} child {node[r] {73} child {node[b] {66} child[missing] child[missing] edge from parent[eb]} child {node[b] {83} child[missing] child {node[r] {89} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]};
+\node[font=\small] at (0,-3.2) {(B) 插入 54};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (A) 對。 $14$ 沿 $58 \to 35 \to 22$ 走，放在 $22$ 的左邊，塗紅。 父節點 $22$ 是黑的，不必修正。 紅色節點變成原來的 $5$ 個加上
+$14$，共 $6$ 個。
+\item (B) 對。 $54$ 沿 $58 \to 35 \to 49 \to 50$ 走，放在 $50$ 的右邊，塗紅。 父節點 $50$ 是紅的，要修正：祖父 $49$，叔叔是 $49$ 的左邊
+（NIL，黑的）。 $54$ 是右子節點、$50$ 也是右子節點，是情況 3 的鏡像：$50$ 改黑、$49$ 改紅，對 $49$ 左旋。 $50$ 成為 $35$ 的右子節點，
+左右是 $49$、$54$（都是紅的），$49$ 和 $54$ 是兄弟。
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[level distance=0.85cm,level 1/.style={sibling distance=2.4cm},level 2/.style={sibling distance=1.2cm},
+  level 3/.style={sibling distance=0.7cm},
+  b/.style={circle,draw=black,solid,thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  r/.style={circle,draw=red,dotted,very thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  eb/.style={draw=black,solid,thick},er/.style={draw=red,dotted,very thick}]
+\node[b] {58} child {node[r] {35} child {node[b] {25} child[missing] child[missing] edge from parent[eb]} child {node[b] {49} child[missing] child {node[r] {50} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]} child {node[r] {73} child {node[b] {66} child[missing] child[missing] edge from parent[eb]} child {node[b] {83} child[missing] child {node[r] {89} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]};
+\node[font=\small] at (0,-3.2) {(C) 刪除 22};
+\end{tikzpicture}\hspace{0.3cm}\begin{tikzpicture}[level distance=0.85cm,level 1/.style={sibling distance=2.4cm},level 2/.style={sibling distance=1.2cm},
+  level 3/.style={sibling distance=0.7cm},
+  b/.style={circle,draw=black,solid,thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  r/.style={circle,draw=red,dotted,very thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  eb/.style={draw=black,solid,thick},er/.style={draw=red,dotted,very thick}]
+\node[b] {58} child {node[r] {35} child {node[b] {22} child[missing] child {node[r] {25} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} child {node[b] {49} child[missing] child {node[r] {50} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]} child {node[r] {83} child {node[b] {73} child[missing] child[missing] edge from parent[eb]} child {node[b] {89} child[missing] child[missing] edge from parent[eb]} edge from parent[er]};
+\node[font=\small] at (0,-3.2) {(D) 刪除 66};
+\end{tikzpicture}\hspace{0.3cm}\begin{tikzpicture}[level distance=0.85cm,level 1/.style={sibling distance=2.4cm},level 2/.style={sibling distance=1.2cm},
+  level 3/.style={sibling distance=0.7cm},
+  b/.style={circle,draw=black,solid,thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  r/.style={circle,draw=red,dotted,very thick,inner sep=0pt,minimum size=5.5mm,font=\footnotesize\sffamily},
+  eb/.style={draw=black,solid,thick},er/.style={draw=red,dotted,very thick}]
+\node[b] {58} child {node[r] {35} child {node[b] {22} child[missing] child {node[r] {25} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} child {node[b] {49} child[missing] child {node[r] {50} child[missing] child[missing] edge from parent[er]} edge from parent[eb]} edge from parent[er]} child {node[r] {73} child {node[b] {66} child[missing] child[missing] edge from parent[eb]} child {node[b] {89} child[missing] child[missing] edge from parent[eb]} edge from parent[er]};
+\node[font=\small] at (0,-3.2) {(E) 刪除 83};
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item (C) 錯。 $22$ 是黑的，只有一個子節點 $25$（紅）。 拿掉 $22$，$25$ 接到它的位置；被拿掉的是黑節點、接上來的 $x = 25$ 是紅的，
+把 $25$ 改黑就恢復黑高度。 $25$ 是 $35$ 的左子節點，兄弟是 $49$；$73$ 是 $35$ 的兄弟，深度不同，不是 $25$ 的兄弟。
+\item (D) 對。 $66$ 是黑色的葉節點，拿掉後 $x = $ NIL（雙重黑），$p = 73$，$x$ 是左子節點，兄弟 $s = 83$ 是黑的，$s$ 的右子節點 $89$
+是紅的：情況 4。 $s$ 改成 $p$ 的顏色（紅），$p = 73$ 改黑，$89$ 改黑，對 $73$ 左旋。 $83$ 成為 $58$ 的右子節點（紅），左右是 $73$、$89$
+（黑）。 整個過程只動了 $58$ 的右子樹，$35$ 仍然是紅的。
+\item (E) 錯。 $83$ 是黑的，只有一個子節點 $89$（紅）。 拿掉 $83$，$89$ 接上來；被拿掉的是黑節點，$x = 89$ 是紅的，改黑即可。 所以
+$89$ 變成黑的。
+\end{itemize}
+\end{pastsoln}

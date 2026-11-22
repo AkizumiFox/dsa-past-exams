@@ -1,0 +1,41 @@
+\begin{pastexam}[label={px:ncku-109-ee-ds-02}]{成大電機所 109 學年度 第 2 題}
+（問答；10 分）
+
+Suppose that you are asked to code a C function subprogram to compute the Fibonacci sequence,
+which is recursively defined as $F_n=F_{n\text{-}1}$+$F_{n\text{-}2}$, $F_0$=$F_1$=1. In particular,
+you are asked to get the value of $F_{500}$. Will you code it as a recursive function or an
+iterative function? Why? \quad (10 points)
+\end{pastexam}
+
+\begin{pastsoln}
+寫成\textbf{迭代}函式。
+
+\textbf{直接照定義寫遞迴太慢}。 \texttt{F(n)} 呼叫 \texttt{F(n-1)} 和 \texttt{F(n-2)}，兩個再各自
+往下呼叫，同樣的子問題被重複算很多次（資結書第~18.1.1~節的「子問題重疊」）。 設 $C(n)$ 是算
+$F_n$ 的總呼叫次數，$C(0) = C(1) = 1$，
+\[
+C(n) = 1 + C(n - 1) + C(n - 2) .
+\]
+令 $D(n) = C(n) + 1$，得 $D(n) = D(n - 1) + D(n - 2)$、$D(0) = D(1) = 2$，所以 $D(n) = 2F_n$，
+$C(n) = 2F_n - 1$。 $F_n$ 以 $\phi^{n}$（$\phi \approx 1.618$）的速度成長，$F_{500}$ 是 $105$ 位數，
+呼叫次數大約 $4.5 \times 10^{104}$，不可能算完。
+
+\textbf{迭代}：用兩個變數記住前兩項，由小往大算：
+\begin{pseudo}{迭代算 $F_n$（$F_0 = F_1 = 1$）}
+\Function{Fib}{$n$}
+    \State $a \gets 1$；$b \gets 1$ \Comment{$a = F_{i-1}$，$b = F_i$}
+    \For{$i \gets 2$ \To $n$}
+        \State $c \gets a + b$；$a \gets b$；$b \gets c$
+    \EndFor
+    \State \Return $b$
+\EndFunction
+\end{pseudo}
+只做 $n - 1$ 次加法、$O(1)$ 額外空間；也沒有遞迴呼叫的堆疊開銷（每次呼叫要存返回位址、參數、區域
+變數，資結書第~6.4~節）。 加上記憶化（memoization）的遞迴也只要 $O(n)$ 次加法，但要 $O(n)$ 的表格
+和深度 $n$ 的呼叫堆疊，仍然不如迭代簡單。
+
+\textbf{另一個要注意的地方}：$F_{500} \approx 2.26 \times 10^{104}$，C 的 \texttt{long long}（$64$
+位元）最大約 $9.2 \times 10^{18}$，照這個定義只能存到 $F_{91}$。 所以真的要得到 $F_{500}$，還要用
+陣列存大數（每格存幾位數，自己做進位的加法）。 這和選遞迴或迭代無關，但不處理的話不管哪一種寫法
+都會溢位。
+\end{pastsoln}

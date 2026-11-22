@@ -1,0 +1,61 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-12}]{臺大工工所 106 學年度 第 12 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+Given a set of data of size n, let an unbalanced binary search tree be built by randomly inserted these
+data to the tree, one at a time. Which of the following is(are) true?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item For n large enough, the probability to obtaining a tree with height of $\lceil \log_2 \mathrm{n}\rceil$
+is more than 0.5. (note: $\lceil\ \rceil$ is the ceiling operation)
+\item The amortized time complexity of inserting a new data to the resultant tree is O(log n).
+\item Let n be an exponential of 2 and let n = 2$^{\mathrm{k}}$. If we randomly insert another set of data of
+size n to this tree, then the depth of any of its leaf nodes must be equal to or greater than 2*k.
+\item It takes O(n) to find the minimum data.
+\item It takes O(n log n) to make this unbalanced binary search tree balanced.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(D)(E)。
+
+「隨機插入」照資結書第~9.3~節的意思：$n$ 個相異的資料，$n!$ 種插入順序機率相同。
+
+\textbf{(A) 錯}。 隨機建立的二元搜尋樹，期望高度約 $4.311 \ln n \approx 2.99 \lg n$（資結書定理~9.2），大約是最矮可能高度的
+三倍。 要高度只有 $\lceil \lg n \rceil$，樹必須幾乎是完全二元樹，每個節點都要把底下的資料切得很平均，這種事的機率隨 $n$ 變大
+急速趨近 0。 可以精確算出來：令 $P(n, H)$ 是 $n$ 個資料隨機建出的樹高度（數邊）$\le H$ 的機率。 第一個插入的資料當根，
+它的名次 $r$ 在 $1..n$ 之間均勻分布，左右子樹分別是 $r - 1$ 個、$n - r$ 個資料的隨機樹，彼此獨立，所以
+\[
+P(n, H) = \frac{1}{n} \sum_{r=1}^{n} P(r - 1, H - 1)\, P(n - r, H - 1),
+\]
+起始值是 $P(0, H) = 1$（空樹，$H \ge -1$）、$P(n, -1) = 0$（$n \ge 1$）。
+用這個遞迴算 $H = \lceil \lg n \rceil$：
+\begin{center}
+\small
+\begin{tabular}{l*{6}{c}}
+\toprule
+$n$ & 8 & 16 & 32 & 64 & 128 & 1024 \\
+\midrule
+$P(n, \lceil \lg n \rceil)$ & $0.28$ & $0.041$ & $6.6 \times 10^{-4}$ & $1.2 \times 10^{-7}$ & $3.2 \times 10^{-15}$ & $4.7 \times 10^{-123}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+這是「高度數邊」的算法，對題目最有利；照資結書第~7.1~節的約定數層數的話，$n = 2^k$ 時 $\lceil \lg n \rceil = k$ 層最多放
+$2^k - 1 < n$ 個節點，機率直接是 0。 不論哪種算法，$n$ 夠大時機率都趨近 0，不會超過 0.5。
+
+\textbf{(B) 錯}。 「平攤」（amortized）是對\textbf{最壞的}操作序列保證平均成本（資結書第~3~章），和「隨機輸入的期望值」是兩回事。
+建好的樹之後不會再調整，對手可以專挑壞的資料插入：例如接下來依序插入 $m$ 個比樹裡所有資料都大、而且遞增的資料，
+每一個都接在前一個的右邊，第 $i$ 個要走過至少 $i - 1$ 個節點，總共 $\Omega(m^2)$，平攤每次 $\Omega(m)$，不是 $O(\log n)$。
+再說，建好的樹本身就可能是一條鏈（機率 $2^{n-1}/n!$，雖小但不是 0），這時插入一筆就要 $\Theta(n)$。 隨機建的樹只保證
+\textbf{期望}深度 $O(\log n)$。
+
+\textbf{(C) 錯}。 「must」要對每一種插入順序都成立，舉一個反例就夠。 $2n$ 個資料裡最小的叫 $x_1$、第二小的叫 $x_2$。 若
+第一個插入的是 $x_2$、第二個是 $x_1$（隨機順序裡這是機率為正的情形），$x_1$ 成為根的左子節點；之後不會有比 $x_1$ 小的資料，
+也沒有介於 $x_1$、$x_2$ 之間的資料，所以 $x_1$ 一直是葉子，深度 1，而 $2k \ge 2$（$k \ge 1$）。 葉子的深度一般差很多，
+最淺的葉子常常比 $\lg(2n)$ 還淺，更不可能每個都 $\ge 2k = 2\lg n$。
+
+\textbf{(D) 對}。 最小值在一路往左走的最後一個節點（資結書虛擬碼~9.3），走的步數不超過樹高 $\le n$，所以 $O(n)$
+（樹是鏈時正好 $\Theta(n)$）。
+
+\textbf{(E) 對}。 中序走訪得到排好序的序列，$O(n)$（資結書定理~9.1）；再取中間的當根、左右兩半遞迴建樹，每個資料處理一次，
+$O(n)$，得到高度 $\lceil \lg(n + 1) \rceil$ 的平衡樹。 總共 $O(n)$，當然也是 $O(n \log n)$。 （把資料逐一插入 AVL 樹
+也可以，$O(n \log n)$。）
+\end{pastsoln}

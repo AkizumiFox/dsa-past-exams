@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ncku-108-comm-ds-03}]{成大電通所 108 學年度 複選題第 3 題}
+（複選；10 分，全對才給分）
+
+Given an undirected graph G=(V, E), where V is a finite, nonempty set of vertices and E is a set of pairs
+of vertices called edges, with no self-edge and multi-occurrence of the same edge, which of the
+following statements is(are) true?
+\begin{enumerate}[label=(\Alph*)]
+\item The maximum number of distinct edges in E in a graph with n vertices is n(n-1).
+\item If G is a connected graph with n vertices, G must have at least n edges.
+\item The number of nodes in a spanning tree of G with n vertices is n-1.
+\item The maximum clique of a complete graph with n vertices has n nodes.
+\item A complete graph must be connected.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)(E)。 圖的名詞見資結書第~21.1~節。
+\begin{itemize}
+\item (A)：無向圖、沒有自環和重邊時，每條邊是一對不同的頂點，最多 $\binom{n}{2} = n(n-1)/2$ 條。
+$n(n-1)$ 是有向圖的最大邊數。 錯。
+\item (B)：連通圖最少要 $n - 1$ 條邊，樹就是例子（例如 $3$ 個頂點的路徑只有 $2$ 條邊，仍然連通）。 錯。
+\item (C)：生成樹包含 G 的\textbf{全部} $n$ 個頂點，有 $n - 1$ 條\textbf{邊}。 題目把節點數說成 $n - 1$，
+錯。
+\item (D)：完全圖任兩個頂點都相鄰，全部 $n$ 個頂點本身就是一個團（clique），而且不可能更大，所以最大團
+有 $n$ 個頂點。 對。
+\item (E)：完全圖任兩點之間都有邊，當然有路徑相連；$n = 1$ 時只有一個頂點，也算連通。 對。
+\end{itemize}
+\end{pastsoln}

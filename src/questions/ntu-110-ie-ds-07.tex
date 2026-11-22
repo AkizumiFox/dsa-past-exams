@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntu-110-ie-ds-07}]{臺大工工所 110 學年度 第 7 題}
+（單選；每題 3 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+For problems 7 to 10, please consider a graph with $|V|$ vertices and $|E|$ edges, to which the Dijkstra
+algorithm is applied to find the shortest path. Assume $|E|$ is both $O(|V|^2)$ and $\Omega(|V|)$.
+
+If Dijkstra algorithm is implemented with Binomial heap as priority queue, then the complexity is
+
+\begin{enumerate}[label=(\Alph*)]
+\item $O(|V|^2+|E|\log|V|)$
+\item $O(|V|^2)$
+\item $O(|E|\log|V|)$
+\item $O(|E|+|V|\log|V|)$
+\item $O(|E|)$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+Dijkstra 演算法（資結書第~25.2~節）對優先佇列做 $|V|$ 次 \proc{Insert}（或一開始建好）、$|V|$ 次
+\proc{Extract-Min}，以及最多 $|E|$ 次 \proc{Decrease-Key}（每條邊鬆弛成功一次）。 總時間是
+\[
+  |V| \cdot T_{\text{extract}} + |E| \cdot T_{\text{decrease}} + O(|V| + |E|) ,
+\]
+最後一項是掃鄰接串列。 題目假設 $|V| = O(|E|)$、$|E| = O(|V|^2)$，所以 $|V| + |E| = \Theta(|E|)$，
+$\log|E| = \Theta(\log|V|)$。 題目要最緊的界。
+
+\textbf{二項堆積}（資結書第~8.5~節）：\proc{Extract-Min} 和 \proc{Decrease-Key} 最壞都是 $O(\log|V|)$
+（樹高不超過 $\lg n$，\proc{Decrease-Key} 沿著樹往上換；要先用指標找到該元素）。 總時間
+\[
+  |V| \cdot O(\log|V|) + |E| \cdot O(\log|V|) = O((|V| + |E|)\log|V|) = O(|E|\log|V|) ,
+\]
+選 (C)。
+
+其他選項：(A) $O(|V|^2 + |E|\log|V|)$ 雖然也是上界，但 $|E|$ 遠小於 $|V|^2$ 時不緊，不是最緊的界。
+(B) $O(|V|^2)$：稀疏圖（$|E| = \Theta(|V|)$）時總時間是 $O(|V|\log|V|)$，在 $|V|^2$ 之內；
+但稠密圖（$|E| = \Theta(|V|^2)$）用二項堆積最壞要 $\Theta(|V|^2 \log|V|)$，超過 $O(|V|^2)$，所以 (B) 不是正確的
+上界。 (D) 是費氏堆積才有的界（\proc{Decrease-Key} 要平攤 $O(1)$）。 (E) 連 \proc{Extract-Min} 的成本都不夠付。
+\end{pastsoln}

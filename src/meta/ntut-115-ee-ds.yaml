@@ -1,0 +1,32 @@
+paper: ntut-115-ee-ds
+volume: 3
+school: 北科大
+dept: 電機所（戊組）
+year: 115
+subject: 資料結構
+instructions: 1. 本試題分為四大部分，共 24 題，每題配分標註於題後，共 100 分。 2. 不必抄題，作答時請將試題題號及答案依照順序寫在答案卷上。 3. 全部答案均須在答案卷之答案欄內作答，否則不予計分。 I. True or False（30%）；II. Multiple Choice（15%）；III. Short answers（20%）；IV. Answer the following questions（35%）。
+questions:
+  - {id: ntut-115-ee-ds-01, label: 是非題第 1 題, chapter: 6}
+  - {id: ntut-115-ee-ds-02, label: 是非題第 2 題, chapter: 9}
+  - {id: ntut-115-ee-ds-03, label: 是非題第 3 題, chapter: 6}
+  - {id: ntut-115-ee-ds-04, label: 是非題第 4 題, chapter: 12}
+  - {id: ntut-115-ee-ds-05, label: 是非題第 5 題, chapter: 7}
+  - {id: ntut-115-ee-ds-06, label: 是非題第 6 題, chapter: 5}
+  - {id: ntut-115-ee-ds-07, label: 是非題第 7 題, chapter: 6}
+  - {id: ntut-115-ee-ds-08, label: 是非題第 8 題, chapter: 21}
+  - {id: ntut-115-ee-ds-09, label: 是非題第 9 題, chapter: 7}
+  - {id: ntut-115-ee-ds-10, label: 是非題第 10 題, chapter: 10}
+  - {id: ntut-115-ee-ds-11, label: 選擇題第 1 題, chapter: 5}
+  - {id: ntut-115-ee-ds-12, label: 選擇題第 2 題, chapter: 6}
+  - {id: ntut-115-ee-ds-13, label: 選擇題第 3 題, chapter: 8}
+  - {id: ntut-115-ee-ds-14, label: 選擇題第 4 題, chapter: 11}
+  - {id: ntut-115-ee-ds-15, label: 選擇題第 5 題, chapter: 25}
+  - {id: ntut-115-ee-ds-16, label: 簡答題第 1 題, chapter: 6}
+  - {id: ntut-115-ee-ds-17, label: 簡答題第 2 題, chapter: 9}
+  - {id: ntut-115-ee-ds-18, label: 簡答題第 3 題, chapter: 2}
+  - {id: ntut-115-ee-ds-19, label: 簡答題第 4 題, chapter: 12}
+  - {id: ntut-115-ee-ds-20, label: 簡答題第 5 題, chapter: 1}
+  - {id: ntut-115-ee-ds-21, label: 問答題第 1 題, chapter: 8}
+  - {id: ntut-115-ee-ds-22, label: 問答題第 2 題, chapter: 21}
+  - {id: ntut-115-ee-ds-23, label: 問答題第 3 題, chapter: 12}
+  - {id: ntut-115-ee-ds-24, label: 問答題第 4 題, chapter: 6}

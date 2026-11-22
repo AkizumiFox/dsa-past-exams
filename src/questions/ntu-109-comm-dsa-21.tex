@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-21}]{臺大電信所 109 學年度（B）第 21 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+In a leftist heap of size n, the worst case time complexity of one delete-min operation is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+最小左傾堆積的最小值在根。 delete-min 拿掉根，把左右兩棵子樹（都是左傾堆積）合併
+（資結書第~8.5~節）。 合併只沿著兩棵樹的最右邊路徑往下走，而 $m$ 個節點的左傾樹最右邊路徑
+最多 $\lg(m + 1)$ 個節點（資結書定理~8.2），所以合併是 $O(\log n)$，delete-min 也是
+$O(\log n)$。 兩棵子樹都是完全平衡的形狀時，最右邊路徑長 $\Theta(\log n)$，界是緊的。
+
+注意左傾樹本身可以很不平衡（左邊可以很深），但操作只走右邊路徑，所以不受影響。
+\end{pastsoln}

@@ -1,0 +1,133 @@
+\begin{pastexam}[label={px:ntu-106-im-it-02}]{臺大資管所 106 學年度 問答題第 2 題}
+（問答；20 分）
+
+Balanced search trees, such as AVL, 2-3, and red-black trees, are very efficient data structures for
+storing and searching key values.
+\begin{enumerate}[label=(\alph*)]
+\item Insert the key values 1, 2, 5, 7, 6, 4, and 3 (in this order) into an empty AVL (or 2-3 or
+red-black) tree. Please show the resulting tree after the insertion of each key value.
+\item Prove that the height of an AVL (or 2-3 or red-black) tree storing $n$ key values is
+O($\log n$).
+\end{enumerate}
+Note again that you only need to complete the above tasks for one of the three kinds (AVL, 2-3, and
+red-black) of balanced search trees.
+\end{pastexam}
+
+\begin{pastsoln}
+題目只要求三種樹選一種，以下用 AVL 樹。 平衡因子 $=$ 左子樹高度 $-$ 右子樹高度，高度照資結書
+第~10.2~節的算法：空樹高度 $0$，只有一個節點的樹高度 $1$。 插入後從新節點往上找第一個平衡
+因子變成 $\pm 2$ 的節點 $A$，依新節點落在 $A$ 的哪一側決定 LL、RR、LR、RL 旋轉（資結書第
+~10.2.3~節）。
+
+\textbf{(a)}
+\begin{enumerate}
+\item 插入 $1$：只有根 $1$。
+\item 插入 $2$：接在 $1$ 的右邊，$1$ 的平衡因子 $-1$，不用旋轉。
+\item 插入 $5$：接在 $2$ 的右邊。 $1$ 的平衡因子變成 $-2$，新節點在 $1$ 的右子節點的右子樹，
+\textbf{RR}，對 $1$ 左旋：根 $2$，子節點 $1$、$5$。
+\item 插入 $7$：$7 > 2$、$7 > 5$，接在 $5$ 的右邊。 $5$ 是 $-1$，$2$ 是 $-1$，不用旋轉。
+\item 插入 $6$：$6 > 2$、$6 > 5$、$6 < 7$，接在 $7$ 的左邊。 $7$ 是 $+1$，$5$ 是 $-2$（左空、右
+高 $2$），新節點在 $5$ 的右子節點 $7$ 的左子樹，\textbf{RL}：先對 $7$ 右旋，再對 $5$ 左旋，
+$6$ 升上來，子節點 $5$、$7$。 $2$ 的平衡因子回到 $-1$。
+\item 插入 $4$：$4 > 2$、$4 < 6$、$4 < 5$，接在 $5$ 的左邊。 $5$ 是 $+1$，$6$ 是 $+1$，$2$ 是
+$1 - 3 = -2$。 新節點在 $2$ 的右子節點 $6$ 的左子樹，\textbf{RL}：先對 $6$ 右旋（$5$ 升上來，
+$6$ 成為 $5$ 的右子節點，$5$ 原本的左子樹 $4$ 留在 $5$ 的左邊），再對 $2$ 左旋（$5$ 成為根，
+$5$ 的左子樹 $\{4\}$ 改掛到 $2$ 的右邊）。 結果：根 $5$；$5$ 的左子節點 $2$（子節點 $1$、$4$），
+右子節點 $6$（只有右子節點 $7$）。
+\item 插入 $3$：$3 < 5$、$3 > 2$、$3 < 4$，接在 $4$ 的左邊。 $4$ 是 $+1$，$2$ 是 $1 - 2 = -1$，
+$5$ 是 $3 - 2 = +1$，都不超過 $1$，不用旋轉。
+\end{enumerate}
+
+每次插入後的樹（第 3、5、6 步畫出旋轉前後）：
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small},
+  level distance=9mm, level 1/.style={sibling distance=10mm}, level 2/.style={sibling distance=8mm},
+  lab/.style={draw=none,rectangle,font=\small}]
+\node at (0,0) {1};
+\node[lab] at (0,-3.2) {插入 $1$};
+\begin{scope}[xshift=22mm]
+\node {1} child[missing] child {node {2}};
+\node[lab] at (0,-3.2) {插入 $2$};
+\end{scope}
+\begin{scope}[xshift=46mm]
+\node {1} child[missing] child {node {2} child[missing] child {node {5}}};
+\node[lab] at (0.4,-3.2) {插入 $5$，旋轉前};
+\end{scope}
+\begin{scope}[xshift=74mm]
+\node {2} child {node {1}} child {node {5}};
+\node[lab] at (0,-3.2) {RR 旋轉後};
+\end{scope}
+\begin{scope}[xshift=100mm]
+\node {2} child {node {1}} child {node {5} child[missing] child {node {7}}};
+\node[lab] at (0,-3.2) {插入 $7$};
+\end{scope}
+\end{tikzpicture}
+
+\bigskip
+\begin{tikzpicture}[every node/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small},
+  level distance=9mm, level 1/.style={sibling distance=14mm}, level 2/.style={sibling distance=9mm},
+  level 3/.style={sibling distance=8mm}, lab/.style={draw=none,rectangle,font=\small}]
+\node {2} child {node {1}}
+  child {node {5} child[missing] child {node {7} child {node {6}} child[missing]}};
+\node[lab] at (0,-3.6) {插入 $6$，旋轉前};
+\begin{scope}[xshift=36mm]
+\node {2} child {node {1}} child {node {6} child {node {5}} child {node {7}}};
+\node[lab] at (0,-3.6) {RL 旋轉後};
+\end{scope}
+\begin{scope}[xshift=72mm]
+\node {2} child {node {1}}
+  child {node {6} child {node {5} child {node {4}} child[missing]} child {node {7}}};
+\node[lab] at (0,-3.6) {插入 $4$，旋轉前};
+\end{scope}
+\end{tikzpicture}
+
+\bigskip
+\begin{tikzpicture}[every node/.style={circle,draw,minimum size=6mm,inner sep=0pt,font=\small},
+  level distance=9mm, level 1/.style={sibling distance=18mm}, level 2/.style={sibling distance=9mm},
+  level 3/.style={sibling distance=8mm}, lab/.style={draw=none,rectangle,font=\small}]
+\node {5} child {node {2} child {node {1}} child {node {4}}}
+  child {node {6} child[missing] child {node {7}}};
+\node[lab] at (0,-3.6) {RL 旋轉後};
+\begin{scope}[xshift=50mm]
+\node {5} child {node {2} child {node {1}} child {node {4} child {node {3}} child[missing]}}
+  child {node {6} child[missing] child {node {7}}};
+\node[lab] at (0,-3.6) {插入 $3$（最後結果）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+最後的 AVL 樹：根 $5$；左子節點 $2$（子節點 $1$、$4$，$4$ 只有左子節點 $3$），右子節點 $6$（只有
+右子節點 $7$）。 中序是 $1, 2, 3, 4, 5, 6, 7$，各節點平衡因子：$5$ 是 $+1$，$2$ 是 $-1$，$4$ 是
+$+1$，$6$ 是 $-1$，其餘是 $0$。
+
+\textbf{(b)} 證明 $n$ 個節點的 AVL 樹高度是 $O(\log n)$。
+
+\textbf{證明。} 令 $N(h)$ 是高度 $h$ 的 AVL 樹最少有幾個節點。 $N(1) = 1$，$N(2) = 2$。 當
+$h \ge 3$ 時，高度 $h$ 的 AVL 樹的根有一棵子樹高度是 $h - 1$；根的平衡因子絕對值不超過 $1$，所
+以另一棵子樹高度至少 $h - 2$。 兩棵子樹也都是 AVL 樹，因此
+\[
+N(h) \ge N(h-1) + N(h-2) + 1 .
+\]
+（取最少的情形就是等號，資結書第~10.2.2~節。） $N$ 是遞增的：高度 $h$ 的樹裡含有一棵高度
+$h - 1$ 的子樹，所以 $N(h) > N(h-1)$。 於是
+\[
+N(h) \ge N(h-1) + N(h-2) + 1 > 2N(h-2), \qquad h \ge 3 .
+\]
+用歸納法證明 $N(h) \ge 2^{\lceil h/2 \rceil - 1}$：$h = 1$ 時 $N(1) = 1 = 2^{0}$，$h = 2$ 時
+$N(2) = 2 \ge 2^{0}$；$h \ge 3$ 時由歸納假設 $N(h) > 2N(h-2) \ge 2 \cdot 2^{\lceil (h-2)/2 \rceil - 1}
+= 2^{\lceil h/2 \rceil - 1}$。
+
+一棵有 $n$ 個節點、高度 $h$ 的 AVL 樹至少有 $N(h)$ 個節點，所以
+\[
+n \ge N(h) \ge 2^{\lceil h/2 \rceil - 1} \ge 2^{h/2 - 1}
+\quad\Longrightarrow\quad h \le 2\lg n + 2 ,
+\]
+即 $h = O(\log n)$。 \hfill$\blacksquare$
+
+更精確的界：等號的遞迴式解出來是 $N(h) = F_{h+2} - 1$（$F_k$ 是費氏數），$F_{h+2} \ge
+\varphi^{h}$，$\varphi = (1 + \sqrt 5)/2$，所以 $h \le \log_{\varphi}(n + 1) \approx 1.44 \lg(n + 1)$
+（資結書定理~10.1）。
+
+如果選 2-3 樹，證明更短：2-3 樹所有葉節點在同一層，每個內部節點至少有 $2$ 個子節點，高度 $h$
+（$h$ 層）的 2-3 樹至少有 $2^{h} - 1$ 個節點、每個節點至少存 $1$ 個鍵值，所以
+$n \ge 2^{h} - 1$，$h \le \lg(n + 1)$。
+\end{pastsoln}

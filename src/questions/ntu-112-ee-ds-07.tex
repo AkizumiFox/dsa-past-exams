@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-07}]{臺大電機所 112 學年度 第 7 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+Given a \textit{strongly connected graph} (i.e. a tree with only one \textit{strongly connected component}), we can find a trace that traverses from a starting vertex, goes through each edge exactly once, and terminates at the starting vertex.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。
+
+括號裡寫「a tree with only one strongly connected component」，tree 應該是 graph 的筆誤（樹沒有有向環，
+除了單一頂點以外不可能強連通），以下照「只有一個強連通元件的有向圖」解讀。
+
+題目描述的走法就是歐拉迴路（資結書第~21.7~節）。 由資結書定理~21.12，有向圖有歐拉迴路的條件是（有邊的
+頂點）弱連通，而且\textbf{每個頂點的出度等於入度}。 強連通只保證了第一個條件。 反例：三個頂點，邊
+$1 \to 2$、$2 \to 3$、$3 \to 1$、$1 \to 3$。 環 $1 \to 2 \to 3 \to 1$ 經過全部頂點，所以強連通；但
+$\deg^{+}(1) = 2$、$\deg^{-}(1) = 1$。 歐拉迴路每經過 $1$ 一次，進、出各用一條邊，用掉的出邊和入邊一樣多，
+不可能把 $1$ 的兩條出邊和一條入邊都恰好用一次。
+
+反方向是對的：有歐拉迴路的有向圖，有邊的頂點都在迴路上，沿著迴路彼此可達，一定強連通（孤立頂點除外）。
+所以強連通是必要條件，不是充分條件。
+\end{pastsoln}

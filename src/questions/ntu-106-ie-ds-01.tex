@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-01}]{臺大工工所 106 學年度 第 1 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+If a computer program has the worst case runtime of n*n!, where n is the program input size, then the
+program has the runtime complexity O(n$^{\mathrm{n}}$).
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(A) 對。
+
+要找到常數 $c$、$n_0$，使 $n \cdot n! \le c \cdot n^n$ 對所有 $n \ge n_0$ 成立（資結書第~1.5~節的定義）。
+\[
+n! = 1 \cdot 2 \cdot 3 \cdots n \le 1 \cdot \underbrace{n \cdot n \cdots n}_{n-1\ \text{個}} = n^{n-1},
+\]
+因為第一個因數是 $1$，其餘 $n - 1$ 個因數每個都 $\le n$。 兩邊乘以 $n$ 得 $n \cdot n! \le n^n$，
+取 $c = 1$、$n_0 = 1$ 即可。 所以 $n \cdot n! = O(n^n)$，最壞情況的執行時間是 $O(n^n)$。
+
+附帶一提，這個上界不緊：由 Stirling 公式 $n! \approx \sqrt{2\pi n}\,(n/e)^n$，
+$n \cdot n! / n^n \approx \sqrt{2\pi}\, n^{3/2} e^{-n} \to 0$，所以 $n \cdot n! = o(n^n)$，不是 $\Theta(n^n)$。
+但題目問的是 $O$，敘述對。
+\end{pastsoln}

@@ -1,0 +1,26 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-11}]{臺大電信所 108 學年度（B）第 11 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+For problems 11-14, choose the appropriate tight bound for the recurrence of $T(n)$. Also note
+that in this exam, the degree of a node $x$ in a tree indicates the number of children of $x$.
+
+$T(n)=25\cdot T(n/5)+n^4\lg n$
+
+A.~$\Theta(n)$ \qquad B.~$\Theta(n^2)$ \qquad C.~$\Theta(n^2\lg n)$ \qquad D.~$\Theta(n^4\lg n)$
+\qquad E.~None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+用主定理（資結書定理~2.4）：$a = 25$、$b = 5$、$f(n) = n^4 \lg n$，$n^{\log_b a} = n^{\log_5 25} =
+n^2$。 $f(n) = n^4 \lg n = \Omega(n^{2 + \epsilon})$（取 $\epsilon = 1$），$f$ 比 $n^2$ 大一個多項式
+倍數，是第三種情形。 還要檢查規律性條件：
+\[
+a f(n/b) = 25 \cdot \Bigl(\frac{n}{5}\Bigr)^4 \lg \frac{n}{5} = \frac{n^4}{25}\,\lg\frac{n}{5}
+\le \frac{1}{25}\, n^4 \lg n = \frac{1}{25} f(n),
+\]
+取 $c = 1/25 < 1$ 成立。 所以 $T(n) = \Theta(f(n)) = \Theta(n^4 \lg n)$。
+
+A、B、C 都比 $T(n) \ge n^4 \lg n$（只看第一層的非遞迴部分）小，不可能；D 對，E 就不選。
+\end{pastsoln}

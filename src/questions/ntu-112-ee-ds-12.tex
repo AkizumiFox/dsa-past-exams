@@ -1,0 +1,34 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-12}]{臺大電機所 112 學年度 第 12 題}
+（複選；每題 15 分，題內每個選項單獨計分，答對得 3 分，答錯倒扣 3 分，倒扣至複選題總分 0 分為止；未作答得 0 分，不倒扣）
+
+Which of the following statement(s) about the \textit{tree} data structure is (are) correct?
+\begin{enumerate}[label=(\Alph*)]
+\item (Number of edges) = (Number of nodes) - 1
+\item (Number of leaf nodes) = (Number of internal nodes) + 1\\
+// Note: Leaf nodes are those with no child node. Nodes that are not leaf nodes are internal nodes.
+\item (Number of paths from the root to the leaf nodes) is O(Number of leaf nodes).
+\item (Height of a \textit{tree}) is $\Omega$(log(Number of nodes)).
+\item (Number of subtrees) = O((Number of nodes)$^2$)\\
+// A \textit{subtree} \texttt{T}$_{\texttt{s}}$ of a tree \texttt{T} is a \textit{tree} formed by a subset of nodes in \texttt{T} and with the edges that connect these nodes.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)(C)。
+
+以下的「樹」是一般的有根樹（子節點個數不限），$n$ 是節點數。
+\begin{itemize}
+\item (A) \textbf{對}。 除了根，每個節點恰好有一條邊連到它的父節點，邊和非根節點一一對應，邊數 $= n - 1$
+（$n \ge 1$；資結書第~7.1~節）。
+\item (B) \textbf{錯}。 只有\textbf{滿}二元樹（每個內部節點恰好兩個子節點）才有「葉 $=$ 內部 $+ 1$」（資結書定理~7.2：
+$n_0 = n_2 + 1$）。 反例：三個節點的一條鏈，葉節點 $1$ 個、內部節點 $2$ 個；或一個根帶三個子節點，葉 $3$ 個、
+內部 $1$ 個。
+\item (C) \textbf{對}。 從根到某一片葉子的路徑只有一條（樹沒有環），所以路徑數剛好等於葉節點數，當然是
+$O(\text{葉節點數})$。
+\item (D) \textbf{錯}。 一般的樹可以很矮：一個根帶 $n - 1$ 個子節點（星形），高度是 $1$，不是
+$\Omega(\log n)$。 （若限定是二元樹，第 $i$ 層最多 $2^i$ 個節點，高度 $\ge \lfloor \lg n \rfloor$，就會成立；但題目
+說的是 tree。）
+\item (E) \textbf{錯}。 照題目的定義，子樹是「一部分節點和連接它們的邊形成的樹」，也就是一組彼此連通的節點。
+星形樹中，根加上任意一部分葉節點都是連通的，光這些就有 $2^{n-1}$ 個子樹，是指數個，不是 $O(n^2)$。
+\end{itemize}
+\end{pastsoln}

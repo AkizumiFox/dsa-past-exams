@@ -1,0 +1,85 @@
+\begin{pastexam}[label={px:ntu-113-bme-ds-03}]{臺大生機所 113 學年度 第 3 題}
+（設計＋分析）
+
+When a question asks for pseudocode, you can use a mixture of English and programming notation to
+describe your solution. Ensure to provide enough details so that a skilled programmer can readily
+implement your proposed solution.
+
+\textbf{a. (15\%)} Please write a pseudocode function that takes a \textbf{doubly circular linked
+list} as input, and removes all the duplicate elements. For example, if the content of the
+\textbf{doubly circular linked list} is `1, 3, 3, 2, 4, 2', it becomes `1, 3, 2, 4' after your
+function is executed. No return values are expected. You have two options to store a set of unique
+elements: \textbf{binary search tree} and \textbf{balanced search tree}. You can directly use either
+of them, without explaining how they are implemented.\\
+Note: A node in a \textbf{doubly circular linked list} has two pointers, named `next' and `prev',
+respectively, where the `next' pointer is used to find the next node and the `prev' pointer is used to
+find the previous one.\\
+\textbf{b. (10\%)} Please analyze the complexity of your function when \textbf{binary search tree} is
+used to store the set of unique elements.\\
+\textbf{c. (5\%)} Please analyze the complexity of your function when \textbf{balanced search tree} is
+used to store the set of unique elements.
+\end{pastexam}
+
+\begin{pastsoln}
+三個小題都在處理串列（資結書第~5~章），搜尋樹只是拿來當集合用。 設串列有 $n$ 個節點，其中
+不同的值有 $d$ 個（$d \le n$）。 $L.\mathit{head}$ 指向第一個節點，沒有哨兵；串列空的時候
+$L.\mathit{head} = \NIL$。
+
+\textbf{a.} 從頭走一圈，用搜尋樹 $S$ 記「已經出現過的值」。 走到一個節點時，值已經在 $S$ 裡就
+把節點拿掉，否則把值放進 $S$、保留節點。 這樣每個值留下的是第一次出現的那個節點，其餘的順序
+不變，例題的 $1, 3, 3, 2, 4, 2$ 會變成 $1, 3, 2, 4$。
+
+\begin{pseudo}{雙向環狀串列去掉重複}
+\Procedure{Remove-Duplicates}{$L$}
+    \If{$L.\mathit{head} = \NIL$}
+        \State \Return
+    \EndIf
+    \State $S \gets$ 空的搜尋樹
+    \State $x \gets L.\mathit{head}$
+    \Repeat
+        \State $y \gets x.\mathit{next}$ \Comment{先記下一個，$x$ 可能被拿掉}
+        \If{\Call{Tree-Search}{$S, x.\mathit{key}$} $\ne \NIL$} \Comment{重複的值}
+            \State $x.\mathit{prev}.\mathit{next} \gets x.\mathit{next}$
+            \State $x.\mathit{next}.\mathit{prev} \gets x.\mathit{prev}$
+            \State 釋放 $x$
+        \Else
+            \State \Call{Tree-Insert}{$S, x.\mathit{key}$}
+        \EndIf
+        \State $x \gets y$
+    \Until{$x = L.\mathit{head}$}
+    \State 釋放 $S$
+\EndProcedure
+\end{pseudo}
+
+第 9、10 行就是資結書虛擬碼~5.7 的雙向串列刪除；環狀串列沒有 \NIL，前後一定都有節點，
+不用分頭尾的情況（只剩一個節點時它的前後都是自己，這時它也不會被刪）。
+
+\textbf{為什麼會停、而且不會讀到被釋放的節點。} 第一個節點處理時 $S$ 是空的，一定保留，所以
+$L.\mathit{head}$ 自始至終都指向一個還在串列裡的節點，不需要更新。 第 7 行先把下一個節點記在
+$y$，就算 $x$ 被釋放，接下來用的也是 $y$。 被刪的節點前後重新接好，所以從 $y$ 繼續往下走，
+走過的是原串列裡 $x$ 後面的節點；走完最後一個節點時 $y$ 是 $L.\mathit{head}$，迴圈結束，每個
+節點恰好處理一次。
+
+\textbf{正確性。} 迴圈不變量：處理完原串列的前 $k$ 個節點後，(1) 這 $k$ 個節點裡留下來的，正好是
+每個值第一次出現的那一個，順序和原來一樣；(2) $S$ 恰好是這 $k$ 個節點的值的集合。 $k = 0$ 時
+成立。 處理第 $k+1$ 個節點 $x$ 時，如果它的值在 $S$ 裡，表示前面已經有同值的節點留下來，$x$
+不是第一次出現，刪掉它，$S$ 不變；否則 $x$ 是這個值第一次出現，保留，並把值加進 $S$。 兩種情況
+(1)(2) 都維持。 $k = n$ 時就是題目要的結果。
+
+\textbf{b. 用一般的二元搜尋樹。} 每個節點做一次搜尋，保留的節點再做一次插入，搜尋和插入的時間
+都和樹高成正比（資結書第~9.3~節）。 樹裡最多 $d$ 個值，樹高最多 $d - 1$。 刪掉一個串列節點
+只改兩個指標，$O(1)$。
+\begin{itemize}
+\item \textbf{最壞情況}：值已經排好序且都不同，例如 $1, 2, \dots, n$。 每次插入都接在最右邊，樹
+變成一條鏈；處理第 $i$ 個節點時要和前面 $i - 1$ 個值比較，總共
+$\sum_{i=1}^{n} (i - 1) = n(n-1)/2$ 次，$\Theta(n^2)$。 一般地說，時間是 $O(nd)$，最壞
+$\Theta(n^2)$。
+\item \textbf{平均情況}：值的出現順序是隨機的，樹高期望是 $O(\log d)$（資結書定理~9.2），總時間
+期望 $O(n \log d) \subseteq O(n \log n)$。
+\end{itemize}
+額外空間是樹的 $d$ 個節點，$O(d)$。
+
+\textbf{c. 用平衡搜尋樹}（AVL 樹、紅黑樹等，資結書第~10~章）。 樹高保證是 $O(\log d)$，每次搜尋、
+插入最壞 $O(\log d)$。 $n$ 個節點各做一次，總時間最壞 $O(n \log d)$；值都不同時（$d = n$）是
+$\Theta(n \log n)$。 不管輸入怎麼排都成立，不會出現 b 的 $\Theta(n^2)$。 額外空間一樣是 $O(d)$。
+\end{pastsoln}

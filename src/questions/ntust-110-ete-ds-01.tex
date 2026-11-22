@@ -1,0 +1,51 @@
+\begin{pastexam}[label={px:ntust-110-ete-ds-01}]{臺科大電子所甲組 110 學年度 第 1 題}
+（問答）
+
+(10\%) Explain how to implement two stacks in one array $A$[1..$n$] in such a way that neither
+stack overflows unless the total number of elements in both stacks together is $n$. The PUSH and
+POP operations should run in $O$(1) time.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法}（資結書第~6.5~節）：兩個堆疊從陣列的兩端往中間長。 一號堆疊的底在 $A[1]$，往右長；
+二號堆疊的底在 $A[n]$，往左長。 兩個頂端在中間碰頭時，陣列 $n$ 格剛好全部用完，這才算滿。
+
+\textbf{資料}：一號堆疊佔 $A[1..t_1]$，二號堆疊佔 $A[t_2..n]$。 一開始兩個都空：$t_1 = 0$、
+$t_2 = n + 1$。 一號有 $t_1$ 個元素，二號有 $n - t_2 + 1$ 個。
+
+\begin{pseudo}{一個陣列放兩個堆疊}
+\Procedure{Push}{$s, x$} \Comment{$s = 1$ 或 $2$}
+    \If{$t_1 + 1 = t_2$}
+        \State \Error{overflow} \Comment{兩個堆疊合計 $n$ 個}
+    \EndIf
+    \If{$s = 1$}
+        \State $t_1 \gets t_1 + 1$;\ $A[t_1] \gets x$
+    \Else
+        \State $t_2 \gets t_2 - 1$;\ $A[t_2] \gets x$
+    \EndIf
+\EndProcedure
+\Function{Pop}{$s$}
+    \If{$s = 1$}
+        \If{$t_1 = 0$} \Error{underflow} \EndIf
+        \State $x \gets A[t_1]$;\ $t_1 \gets t_1 - 1$
+    \Else
+        \If{$t_2 = n + 1$} \Error{underflow} \EndIf
+        \State $x \gets A[t_2]$;\ $t_2 \gets t_2 + 1$
+    \EndIf
+    \State \Return $x$
+\EndFunction
+\end{pseudo}
+
+\textbf{為什麼滿足要求}：
+\begin{itemize}
+\item 兩個堆疊的元素合計 $t_1 + (n - t_2 + 1)$ 個。 第 2 行的溢位條件 $t_1 + 1 = t_2$ 代進去，
+合計正好是 $t_1 + n - t_1 = n$。 所以只有兩個堆疊合計已經有 $n$ 個時才會溢位，不管元素在兩個
+堆疊之間怎麼分配。
+\item 兩個堆疊不會互相蓋掉：push 之前都確認 $t_1 < t_2 - 1$，一號放進的 $A[t_1 + 1]$ 和二號
+放進的 $A[t_2 - 1]$ 都在兩個頂端之間的空格裡，一號始終在 $A[1..t_1]$、二號在 $A[t_2..n]$，兩段
+不重疊。
+\item 每個操作只做常數次比較和指派，PUSH、POP 都是 $O(1)$。
+\end{itemize}
+對照：如果把陣列平分成兩半，各給一個堆疊，一號已經放滿 $n/2$ 個時就會溢位，即使二號還是空的，
+不符合題目的要求。
+\end{pastsoln}

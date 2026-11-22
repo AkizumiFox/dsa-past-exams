@@ -1,0 +1,45 @@
+\begin{pastexam}[label={px:ncku-109-ee-ds-04}]{成大電機所 109 學年度 第 4 題}
+（問答；20 分）
+
+\begin{enumerate}[label=(\alph*)]
+\item Give conditions under which quick sort algorithm has the worst case behavior in terms of time
+complexity. Explain your answer. (10 points)
+\item Which sorting algorithm(s) is (are) stable, bubble sort, quick sort, merge sort, heap sort?
+\quad (10 points)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{(a)} 快速排序的時間由每次分割切得多平均決定。 \textbf{最壞情況發生在每次分割選到的基準都是
+這段子陣列的最大值或最小值}：分割後一邊有 $m - 1$ 個、另一邊是空的，每一層只少一個元素。 分割
+長度 $m$ 的子陣列要 $\Theta(m)$ 次比較，所以
+\[
+T(n) = T(n - 1) + \Theta(n) = \Theta(n) + \Theta(n - 1) + \cdots + \Theta(1) = \Theta(n^2),
+\]
+比較次數是 $(n - 1) + (n - 2) + \cdots + 1 = n(n - 1)/2$（資結書第~14.5~節）。 遞迴深度也是
+$n - 1$，堆疊空間 $\Theta(n)$。
+
+會讓這件事發生的具體條件：
+\begin{itemize}
+\item 固定取第一個（或最後一個）元素當基準，而輸入\textbf{已經由小到大排好}或\textbf{由大到小排好}。
+例如取第一個、輸入已排好時，每次的基準都是最小值。
+\item 用 Lomuto 分割（$A[j] \le x$ 的放左邊），而\textbf{所有鍵都相同}：每次基準右邊都是空的，同樣
+切成 $m - 1$ 和 $0$。
+\item 更一般地說，只要輸入的排列讓每次選到的基準恰好是極值，就會最壞；選基準的規則固定時，總找得到
+這種輸入。 隨機選基準（或三數取中）可以讓這種情形極不可能發生，期望時間 $O(n \log n)$。
+\end{itemize}
+
+\textbf{(b)} 穩定的是 \textbf{bubble sort} 和 \textbf{merge sort}。 穩定是指鍵相同的資料排序後保持原來的
+先後順序（資結書第~14.1~節）。 下面用 $2_a$、$2_b$ 表示鍵相同、原本 $2_a$ 在前的兩筆。
+\begin{itemize}
+\item Bubble sort：穩定。 只在相鄰兩個\textbf{嚴格大於}（$A[j] > A[j + 1]$）時才交換，相等的兩筆
+不會互換，也不會越過彼此（資結書虛擬碼~14.1）。
+\item Quick sort：不穩定。 分割時的交換會把元素長距離搬動。 例：$\langle 2_a, 2_b, 1\rangle$ 用
+Lomuto 分割（基準是最後的 $1$），最後把基準和 $A[1] = 2_a$ 交換，得 $\langle 1, 2_b, 2_a\rangle$。
+\item Merge sort：穩定。 合併時兩邊相等先取左半邊的（比較寫成 $L[i] \le R[j]$），左半邊的資料原本
+就在前面（資結書第~14.4~節）。
+\item Heap sort：不穩定。 例：$\langle 2_a, 2_b, 1\rangle$ 已是最大堆積，第一次把根 $2_a$ 換到最後，
+剩下 $\langle 1, 2_b\rangle$ 調整成 $\langle 2_b, 1\rangle$，再把 $2_b$ 換到第 2 格，結果
+$\langle 1, 2_b, 2_a\rangle$，順序顛倒。
+\end{itemize}
+\end{pastsoln}

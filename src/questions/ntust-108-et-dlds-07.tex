@@ -1,0 +1,42 @@
+\begin{pastexam}[label={px:ntust-108-et-dlds-07}]{臺科大電子所甲組 108 學年度 第 7 題}
+（問答；10 分）
+
+A queue is a kind of data structure. In practice, it can be either an ordinary queue or a priority
+queue.
+\begin{enumerate}[label=(\alph*)]
+\item What is a queue? Define it. (5\%)
+\item What is a priority queue? Define it. (5\%)
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+(a) 是資結書第~6.2~節的內容，(b) 是第~8.3~節；本題放在第~6~章。
+
+\textbf{(a)} 佇列是一串資料，加入在一端（後端，rear），取出在另一端（前端，front）。 先放進去
+的元素先被取出，所以佇列是\textbf{先進先出}（FIFO）的結構，就像排隊。 基本操作：
+\begin{itemize}
+\item \proc{Enqueue}$(Q, x)$：把 $x$ 放到後端。
+\item \proc{Dequeue}$(Q)$：取出前端的元素並回傳；佇列空時是下溢。
+\end{itemize}
+另有 \proc{Queue-Empty}、看前端元素但不取出的 \proc{Front}。 例：依序 \proc{Enqueue} $4$、
+$7$、$1$，再 \proc{Dequeue} 兩次，回傳 $4$、$7$，佇列剩 $\langle 1\rangle$。 實作常用環狀
+陣列（$\mathit{front}$、$\mathit{rear}$ 兩個索引對陣列長度取餘數往前走，資結書虛擬碼~6.4）
+或帶尾指標的串列，兩種都讓每個操作是 $\Theta(1)$。
+
+\textbf{(b)} 優先佇列的每個元素帶一個\textbf{鍵值}（優先權）。 取出時不看放進來的順序，
+而是取出鍵值最大（最大優先佇列）或最小（最小優先佇列）的那一個。 以最大優先佇列為例，
+基本操作：
+\begin{itemize}
+\item \proc{Insert}$(Q, x)$：放進元素 $x$。
+\item \proc{Maximum}$(Q)$：回傳鍵值最大的元素，不取出。
+\item \proc{Extract-Max}$(Q)$：取出並回傳鍵值最大的元素。
+\item \proc{Increase-Key}$(Q, x, k)$：把 $x$ 的鍵值提高成 $k$（$k$ 不小於原來的鍵值）。
+\end{itemize}
+例：依序放進鍵值 $4$、$7$、$1$，\proc{Extract-Max} 兩次回傳 $7$、$4$，和放進去的順序無關。
+
+兩者的差別在「誰先出來」：普通佇列由到達順序決定，優先佇列由鍵值決定。 普通佇列可以看成
+優先佇列的特例：把到達時間當鍵值，取出時間最早（最小）的那個。 優先佇列通常用二元堆積
+實作，\proc{Insert} 和 \proc{Extract-Max} 都是 $O(\log n)$，\proc{Maximum} 是 $\Theta(1)$
+（資結書第~8.1~節、第~8.3~節）；用無序陣列或排序好的串列也可以，但總有一個操作要
+$\Theta(n)$。
+\end{pastsoln}

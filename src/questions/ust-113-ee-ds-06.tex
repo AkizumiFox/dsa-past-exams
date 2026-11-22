@@ -1,0 +1,27 @@
+\begin{pastexam}[label={px:ust-113-ee-ds-06}]{臺聯大電機類 113 學年度 第 6 題}
+（單選；每題 3 分，答錯不倒扣）
+
+After partitioning in a Quick Sort, the array (20, 7, 12, 15, 6, 11, 9) becomes (7, 6, 9, 20, 12, 15,
+11). Which following statement is correct?
+
+(A)~The pivot could be 6. \qquad (B)~The pivot could be 9.\\
+(C)~The pivot could be 12. \qquad (D)~The pivot could be 20.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+一次分割結束時，基準已經在它最後的位置：左邊都不大於它，右邊都不小於它（資結書第~14.5~節）。 所以
+看分割後的陣列 $\langle 7, 6, 9, 20, 12, 15, 11\rangle$，基準 $x$ 必須滿足「左邊的數都 $< x$、右邊的數都
+$> x$」。 逐一檢查（數都不同）：
+\begin{itemize}
+\item (A) $6$ 在第 2 格，左邊有 $7 > 6$。 不可能。
+\item (B) $9$ 在第 3 格，左邊 $7, 6$ 都 $< 9$，右邊 $20, 12, 15, 11$ 都 $> 9$。 可以。
+\item (C) $12$ 在第 5 格，左邊有 $20 > 12$，右邊有 $11 < 12$。 不可能。
+\item (D) $20$ 在第 4 格，右邊有 $12, 15, 11 < 20$。 不可能。
+\end{itemize}
+而且這正是以 $9$ 為基準、「保持原本先後順序」的分割結果：原陣列裡小於 $9$ 的依序是 $7, 6$，大於 $9$ 的
+依序是 $20, 12, 15, 11$，接成 $\langle 7, 6, 9, 20, 12, 15, 11\rangle$。 （用 Lomuto 分割、基準取最後的
+$9$，得到的是 $\langle 7, 6, 9, 15, 20, 11, 12\rangle$，右邊的順序不同，但 $9$ 一樣在第 3 格；題目只問
+誰可能是基準。）
+\end{pastsoln}

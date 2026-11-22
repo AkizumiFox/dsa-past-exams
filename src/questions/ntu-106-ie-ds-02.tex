@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-02}]{臺大工工所 106 學年度 第 2 題}
+（是非；對填 (A)、錯填 (B)；答對 4 分，答錯倒扣 4 分）
+
+The data in a linked list are usually connected by ``pointers'' in implementation. Therefore, its
+``find(Data d)'' operation (i.e.\ to find whether the data `d' is in the linked list) is usually more
+efficient (in terms of runtime) than the ``find(Data d)'' operation of an array.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B) 錯。
+
+指標讓串列的\textbf{插入、刪除}方便（知道位置後 $\Theta(1)$，不必搬動資料），但對\textbf{搜尋}沒有幫助。
+\begin{itemize}
+\item 資料沒有排序時，兩者都只能從頭一個一個比，最壞 $\Theta(n)$，漸近上一樣。 實際執行時陣列還比較快：
+元素連續存放，快取命中率高；串列每走一步都要經過一次指標，節點散在記憶體各處（資結書第~5.1~節）。
+\item 資料有排序時，陣列可以二分搜尋，$\Theta(\log n)$（資結書第~17.1~節）；串列不能直接取第 $k$ 個元素，
+要取中間那個得從頭走，仍然是 $\Theta(n)$。
+\end{itemize}
+所以串列的 find 通常不比陣列快，反而比較慢；「用指標連起來，所以搜尋比較快」的推論不成立。
+\end{pastsoln}

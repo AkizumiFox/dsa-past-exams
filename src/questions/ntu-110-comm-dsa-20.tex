@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-20}]{臺大電信所 110 學年度（B）第 20 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Assume P $\neq$ NP. Which of the following is true?
+
+A.~(NP-complete $\cap$ P) $=\emptyset$ \qquad B.~NP-complete $=$ NP\\
+C.~NP-hard $=$ NP \qquad D.~P $=$ NP-complete
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+\textbf{A 對}。 用反證：若某個 NP 完備問題 $L$ 屬於 P，任何 NP 問題 $L'$ 都能在多項式時間歸約到 $L$
+（NP 完備的定義），先歸約再用 $L$ 的多項式演算法，$L'$ 也在 P，於是 $\mathrm{NP} \subseteq \mathrm{P}$，
+$\mathrm{P} = \mathrm{NP}$，和假設矛盾（資結書第~28.4~節）。 所以 P 和 NP 完備沒有交集。
+
+\textbf{B 錯}：P 的問題都在 NP 裡，而由 A，P 的問題都不是 NP 完備，所以 NP 裡有不是 NP 完備的問題
+（例如「這個數列是否已經由小到大排好」）。
+
+\textbf{C 錯}：NP-hard 不必在 NP 裡，例如停機問題是 NP-hard 但不可判定，不在 NP；反過來 P 裡的問題在 NP
+裡卻不是 NP-hard（同 B 的理由）。
+
+\textbf{D 錯}：由 A，兩者交集為空，P 又不是空集合，不可能相等。
+\end{pastsoln}

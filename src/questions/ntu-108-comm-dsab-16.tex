@@ -1,0 +1,20 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-16}]{臺大電信所 108 學年度（B）第 16 題}
+（單選；每題 2.5 分，答錯不倒扣）
+
+The worst-case time complexity of one push/pop operation in a stack of $n$ items is (choose the
+tightest bound)
+
+A.~$O(1)$ \qquad B.~$O(\log^* n)$ \qquad C.~$O(\log n)$ \qquad D.~$O(n)$ \qquad E.~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 A。
+
+用陣列存堆疊時，push 是 $\mathit{top} \gets \mathit{top} + 1$ 再寫入，pop 是讀出再
+$\mathit{top} \gets \mathit{top} - 1$；用鏈結串列時，push、pop 都只動串列頭（資結書第~6.1~節，
+虛擬碼~6.1、6.2）。 兩種都只做常數個動作，和 $n$ 無關，最壞 $O(1)$。 B 到 E 都是對的上界，但不是
+最緊的。
+
+補充：如果陣列滿了要倍增搬家（動態陣列），單次 push 最壞是 $\Theta(n)$，平攤才是 $O(1)$（資結書
+第~3.4~節）。 題目問的是一般的堆疊操作，取 A。
+\end{pastsoln}

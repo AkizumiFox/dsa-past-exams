@@ -1,0 +1,73 @@
+\begin{pastexam}[label={px:ncku-107-cce-08}]{成大電通所 107 學年度 問答題第 4 題（節錄 (a)(b)(c)(e)(f) 小題）}
+（問答；14 分，本書收其中 12 分）
+
+\textbf{4. Tree} (14 pts)
+
+Given the following pseudo code whose input includes two trees which are pointed by $s$ and $t$,
+respectively, the algorithm checks equality of the two trees.
+\begin{minted}[fontsize=\small,escapeinside=@@]{text}
+1. bool operator==(const Tree& s, const Tree& t) { // Driver
+2.        return Equal(s.root, t.root);
+3. }
+
+4. bool Tree <T>::Equal(TreeNode <T> *a, TreeNode <T> *b) { // Workhorse
+5.     @\underline{\textbf{Terminal Condition}}@
+6.     else return  ( a && b
+7.                  && (a->data == b->data)
+8.                  && Equal(a->leftChild, b->leftChild)
+9.                  && Equal(a->rightChild, b->rightChild));   }
+\end{minted}
+\begin{enumerate}[label=\alph*.]
+\item (\textbf{2 pts}) Please complete the terminal condition in \textbf{Line} 5.
+\item (\textbf{2 pts}) What is the purpose of \textbf{Line} 6?
+\item (\textbf{3 pts}) Can we obtain a correct answer if we change the sequence of Lines 7 to 9? Why?
+\end{enumerate}
+
+The \textbf{satisfiability (SAT)} is an important problem to answer the question if there exists an
+assignment to make a boolean expression true.
+\begin{minted}[fontsize=\small]{text}
+9.  enum Operator {Not, And, Or, True, False};
+10. class SatTree; // forward declaration
+11. class SatNode {
+12.           friend class SatTree;
+13.           Operator data;
+14.           bool value;
+15.           SatNode *leftChild;
+16            SatNode *rightChild;     }
+\end{minted}
+\begin{minted}[fontsize=\small]{text}
+17. void SatTree::PostOrderEval() {PostOrderEval(root);}
+
+18. void SatTree::PostOrderEval(SatNode *s) {
+19.    if (s) { // not null
+          ??????????????????
+20.  }
+\end{minted}
+\begin{enumerate}[label=\alph*.,start=5]
+\item (\textbf{2 pts}) What is the correct sequence inside \textbf{Lines} 19-20 according to the following
+codes? (A) 甲 乙 丙 (B) 甲 丙 乙 (C) 乙 甲 丙 (D) None of above
+
+甲、\texttt{PostOrderEval(s->leftChild);}\\
+乙、
+\begin{minted}[fontsize=\footnotesize]{text}
+switch(s->data) {
+  b.1  case Not:   s->value = !s->rightChild->value; break;
+  b.2  case And:   s->value = s->leftChild->value && s->rightChild->value; break;
+  b.3  case Or:    s->value = s->leftChild->value || s->rightChild->value;; break;
+  b.4  case True:  s->value = true; break; // terminal node
+  b.5  case False: s->value = false; // terminal node
+}
+\end{minted}
+丙、\texttt{PostOrderEval(s->rightChild);}
+\item (\textbf{3 pts}) Please give the reason for your choice in the last question.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電機所 107 學年度的「資料結構」是同一份（兩系所共用），完整詳解見歷屆試題~\ref{px:ncku-107-ee-ds-08}。
+
+答案：a. \texttt{if ((!a) \&\& (!b)) return true;}；b. 確認兩個指標都不是空的，恰好一邊是空的就回傳
+\texttt{false}，也避免後面對空指標取值；c. 可以，三個條件都沒有副作用，\texttt{\&\&} 的結果和順序無關，
+只影響效率；e. (B) 甲 丙 乙；f. 節點的值要用子節點的值算，必須先算左、右子樹再算自己，是後序走訪。
+(d) 小題考 C++ 的 \texttt{friend}，本書不收。
+\end{pastsoln}

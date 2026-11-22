@@ -1,0 +1,86 @@
+\begin{pastexam}[label={px:ust-114-ee-ds-21}]{臺聯大電機類 114 學年度 第 21 題}
+（複選；5 分，答錯倒扣 1 分，倒扣至本大題 0 分為止）
+
+A version of quicksort is given in the following C code.
+\begin{minted}[fontsize=\small,linenos,firstnumber=0,xleftmargin=2em]{c}
+void quicksort(int v[], int left, int right) {
+    int pivot, i, j, tmp;
+    if (left < right) {
+        i = left;
+        j = right + 1;
+        pivot = v[left]; // used as a pivot value
+        do {
+            do i++; while (v[i] < pivot);
+            do j--; while (v[j] > pivot);
+            if (i < j) {
+                tmp = v[i];
+                v[i] = v[j];
+                v[j] = tmp;
+            }
+        } while (i<j);
+        tmp = v[left];
+        v[left] = v[j];
+        v[j] = tmp;
+        quicksort(v, left, j-1);
+        quicksort(v, j+1, right)
+    }
+}
+int main() {
+    int V[] = {12,2,16,30,8,28,4,10,20,6};
+    quicksort(V,0,9);
+}
+\end{minted}
+Which of the following statements are true: (5\%) multiple anwsers
+\begin{enumerate}[label=(\Alph*)]
+\item The quicksort() function sorts the given array in a non-increasing order.
+\item The quicksort() function is a stable sorting algorithm.
+\item The quicksort() function is an in-place sorting algorithm
+\item 28 is used as a pivot value during the sorting process
+\item 8 is used as a pivot value during the sorting process
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)(D)。
+
+原卷第 19 行 \texttt{quicksort(v, j+1, right)} 少了分號，照錄；以下當作有分號。 另外第 7 行
+\texttt{do i++; while (v[i] < pivot);} 沒有檢查 \texttt{i <= right}，基準是這一段最大值時 \texttt{i}
+會讀到 \texttt{v[right+1]}。 本題每次分割時，$i$ 都停在陣列之內（有時停在範圍右邊一格、比基準大的
+數上），沒有讀出陣列外，所以不影響結果。
+
+這是取第一個當基準、兩個指標往中間找、交錯後把基準換到 \texttt{v[j]} 的分割（資結書第~14.5~節）。
+每次呼叫的過程（粗體是這次歸位的基準）：
+\begin{center}
+\small
+\begin{tabular}{cclc}
+\toprule
+範圍 & 基準 & 分割中的交換 & 分割後的陣列 \\
+\midrule
+$[0..9]$ & 12 & 16$\leftrightarrow$6，30$\leftrightarrow$10，28$\leftrightarrow$4 &
+4, 2, 6, 10, 8, \textbf{12}, 28, 30, 20, 16 \\
+$[0..4]$ & 4 & 無 & 2, \textbf{4}, 6, 10, 8, 12, 28, 30, 20, 16 \\
+$[2..4]$ & 6 & 無 & 2, 4, \textbf{6}, 10, 8, 12, 28, 30, 20, 16 \\
+$[3..4]$ & 10 & 無 & 2, 4, 6, 8, \textbf{10}, 12, 28, 30, 20, 16 \\
+$[6..9]$ & 28 & 30$\leftrightarrow$16 & 2, 4, 6, 8, 10, 12, 20, 16, \textbf{28}, 30 \\
+$[6..7]$ & 20 & 無 & 2, 4, 6, 8, 10, 12, 16, \textbf{20}, 28, 30 \\
+\bottomrule
+\end{tabular}
+\end{center}
+第一次分割的細節：$i$ 停在 16（第 2 格）、$j$ 停在 6（第 9 格），交換；$i$ 停在 30（第 3 格）、$j$ 停
+在 10（第 7 格），交換；$i$ 停在 28（第 5 格）、$j$ 停在 4（第 6 格），交換；接著 $i$ 走到第 6 格的
+28 停下，$j$ 走到第 5 格的 4 停下，$i > j$ 結束，把 \texttt{v[0]} 的 12 和 \texttt{v[5]} 的 4 交換，
+回傳 $j = 5$。 其餘範圍只有一個元素（例如 $[0..0]$、$[5..5]$）或空的，不再分割。 用到的基準依序是
+$12, 4, 6, 10, 28, 20$，最後是 $2, 4, 6, 8, 10, 12, 16, 20, 28, 30$。
+\begin{itemize}
+\item (A)：結果由小到大（non-decreasing），不是 non-increasing。 錯。
+\item (B)：分割最後會把基準和 \texttt{v[j]} 交換，相同的鍵可能被換到前面。 最小的例子是
+$\langle 1_a, 1_b \rangle$（下標只是標記原本的先後）：基準 $1_a$；$i$ 停在第 1 格（$1_b < 1$ 不成立），
+$j$ 也停在第 1 格（$1_b > 1$ 不成立）；$i < j$ 不成立，結束，把 \texttt{v[0]} 和 \texttt{v[1]} 交換，
+得到 $\langle 1_b, 1_a \rangle$，兩個 $1$ 的先後顛倒了。 不穩定，錯。
+\item (C)：只在陣列裡交換，額外空間是常數個變數加上遞迴堆疊，照一般課本的說法是原地排序（資結書第~14.1~節
+把 $O(\lg n)$～$O(n)$ 的呼叫堆疊另外算）。 對。
+\item (D)：分割 $[6..9]$ 時基準是 28。 對。
+\item (E)：8 在第一次分割後落在第 4 格，屬於 $[3..4]$ 這段，而這段的基準是 \texttt{v[3]} 的 10；分割後
+8 單獨一格，不再呼叫分割。 8 從來不是基準。 錯。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,132 @@
+\begin{pastexam}[label={px:ncku-111-cce-ds-04}]{成大電通所 111 學年度 第 4 題}
+（問答）
+
+(25 \textbf{pts}) Shortest path algorithm
+
+Bellman and Ford algorithm and Floyd-Warshall algorithm both apply the dynamic programming to
+find shortest paths. Let $D^k$ denote the matrix constructed in the $k$-th iteration, which is
+constructed from the previous matrix $D^{k-1}$. Let $w_{i,j}$ denote the weight of an edge
+$e_{i,j}$.
+\begin{enumerate}[label=\alph*.]
+\item (3 \textbf{pts}) Let $d_i^k$ denote the shortest path of a node $i$ from source in the
+$k$-th iteration in Bellman and Ford algorithm. Please list the equation to estimate an entry
+$d_i^k$ in $D^k$ and explain the equation shortly.
+\item (3 \textbf{pts}) Let $d_{i,j}^k$ denote the shortest path between node $i$ and node $j$ in
+the $k$-th iteration in the Floy-Warshall Algorithm. Please list the equation to estimate an
+entry $d_{i,j}^k$ in $D^k$ and explain the equation shortly.
+\item (2 \textbf{pts}) How can you know the graph has a negative cycle in the Bellman and Ford
+Algorithm? Why?
+\end{enumerate}
+
+Johnson's Algorithm finds the shortest paths between all pairs by transforming an original graph
+G to a new graph G' by adding an additional node 0 and connecting node 0 to each node in $G$.
+
+\begin{center}
+\begin{tikzpicture}[v/.style={circle,draw,inner sep=1pt,minimum size=6mm},l/.style={inner sep=1.5pt,font=\small},>={Stealth[length=2mm]}]
+\node[v] (1) at (2,3.3) {1}; \node[v] (2) at (0,1.9) {2};
+\node[v] (3) at (1.2,0) {3}; \node[v] (4) at (3.3,0) {4};
+\draw[->] (2) -- node[l,above left] {8} (1);
+\draw[->] (1) -- node[l,pos=0.3,left=2pt] {3} (3);
+\draw[->] (1) -- node[l,right=2pt] {$-7$} (4);
+\draw[->] (4) -- node[l,pos=0.3,above right] {6} (2);
+\draw[->] (2) -- node[l,below left] {$-4$} (3);
+\draw[->] (3) -- node[l,below] {1} (4);
+\end{tikzpicture}
+\end{center}
+\begin{enumerate}[label=\alph*.]
+\setcounter{enumi}{3}
+\item (10 \textbf{pts}) Please show the value of $h(v)$ of each node v in G' which is the
+shortest path from node 0 (you have to show the value of each node in G' in each iteration).
+\item (5 \textbf{pts}) Please show the equation to estimate the new weight $\widehat{w}$ of each
+edge $e_{i,j}$ in G' according h($v$).
+\item (2 \textbf{pts}) In which condition that the Johnson's algorithm can perform fater than
+Floyd- Warshall's algorithm?
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(d) $h(1), h(2), h(3), h(4) = 0, -1, -5, -7$（$h(0) = 0$）；(e)
+$\widehat{w}(i, j) = w_{i,j} + h(i) - h(j)$；(f) 稀疏圖。 題目的 ``shortest path'' 指最短路徑的
+\textbf{長度}。
+
+\textbf{(a) Bellman--Ford}（資結書第~25.3~節）。 $d_i^k$ 定義成「從起點 $s$ 到 $i$、\textbf{最多
+用 $k$ 條邊}的最短路徑長度」：
+\[
+d_i^0 = \begin{cases} 0 & i = s \\ \infty & i \ne s \end{cases}, \qquad
+d_i^k = \min\Bigl( d_i^{k-1},\ \min_{(j, i) \in E} \bigl\{ d_j^{k-1} + w_{j,i} \bigr\} \Bigr).
+\]
+最多用 $k$ 條邊到 $i$ 的路徑，要嘛其實最多用 $k - 1$ 條（第一項），要嘛最後一條邊是某個
+$(j, i)$，前面那段是最多 $k - 1$ 條邊到 $j$ 的最短路徑（第二項）。 沒有負環時最短路徑是簡單
+路徑，最多 $n - 1$ 條邊，所以 $D^{n-1}$ 就是答案。
+
+\textbf{(b) Floyd--Warshall}（資結書第~25.6~節）。 $d_{i,j}^k$ 是「從 $i$ 到 $j$、中間點只能用
+$1, \ldots, k$」的最短路徑長度：
+\[
+d_{i,j}^0 = \begin{cases} 0 & i = j \\ w_{i,j} & (i, j) \in E \\ \infty & \text{其他} \end{cases},
+\qquad
+d_{i,j}^k = \min\bigl( d_{i,j}^{k-1},\ d_{i,k}^{k-1} + d_{k,j}^{k-1} \bigr).
+\]
+中間點只能用 $1..k$ 的最短路徑，要嘛根本沒經過 $k$（第一項），要嘛經過 $k$ 恰好一次（沒有負環時
+不必繞回 $k$），在 $k$ 切成 $i \leadsto k$、$k \leadsto j$ 兩段，兩段的中間點都只在
+$1..k-1$ 裡（第二項）。 $D^n$ 就是所有點對的答案。
+
+\textbf{(c) 負環。} 做完 $n - 1$ 輪之後再檢查一輪：如果還有某條邊 $(j, i)$ 滿足
+$d_j + w_{j,i} < d_i$（也就是 $D^n \ne D^{n-1}$），就有從起點走得到的負環（資結書第~25.3.4~節）。
+理由：沒有負環時，每個點的最短路徑都是最多 $n - 1$ 條邊的簡單路徑，$D^{n-1}$ 已經是最終答案，
+再放鬆任何邊都不會變小（三角不等式成立）。 反過來，有一個走得到的負環 $v_0 v_1 \cdots v_{t-1}
+v_0$ 時，如果所有環上的邊都滿足 $d_{v_{i+1}} \le d_{v_i} + w(v_i, v_{i+1})$，繞一圈加起來得到
+$0 \le \sum w$，和環的權重為負矛盾，所以一定還有邊可以放鬆。
+
+\textbf{(d) 求 $h(v)$。} $G'$ 多了頂點 $0$ 和邊 $0 \to v$（權重 $0$，$v = 1, 2, 3, 4$），對 $G'$
+從 $0$ 做 Bellman--Ford，$h(v) = \delta(0, v)$。 每一輪照 (a) 的式子，用上一輪的值算這一輪（$G'$
+有 $5$ 個頂點，做 $4$ 輪）：
+\begin{center}
+\begin{tabular}{ccccccl}
+\toprule
+$k$ & $d_0^k$ & $d_1^k$ & $d_2^k$ & $d_3^k$ & $d_4^k$ & 這一輪變小的原因 \\
+\midrule
+0 & 0 & $\infty$ & $\infty$ & $\infty$ & $\infty$ & \\
+1 & 0 & 0 & 0 & 0 & 0 & 邊 $0 \to v$ \\
+2 & 0 & 0 & 0 & $-4$ & $-7$ & $d_2^1 + (-4)$；$d_1^1 + (-7)$ \\
+3 & 0 & 0 & $-1$ & $-4$ & $-7$ & $d_4^2 + 6 = -1$ \\
+4 & 0 & 0 & $-1$ & $-5$ & $-7$ & $d_2^3 + (-4) = -5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+逐格看第 $4$ 輪：$d_1^4 = \min(0,\ d_2^3 + 8 = 7) = 0$；$d_2^4 = \min(-1,\ d_4^3 + 6 = -1) = -1$；
+$d_3^4 = \min(-4,\ d_1^3 + 3 = 3,\ d_2^3 - 4 = -5) = -5$；$d_4^4 = \min(-7,\ d_1^3 - 7 = -7,\
+d_3^3 + 1 = -3) = -7$。 再做一輪檢查也不會變（例如 $d_4 = \min(-7, -7, -5 + 1) = -7$），所以沒有
+負環。 結果
+\[
+h(0) = 0,\quad h(1) = 0,\quad h(2) = -1,\quad h(3) = -5,\quad h(4) = -7.
+\]
+（如果每一輪是「依序放鬆每條邊、當場更新」的寫法，中間各輪的數字會隨邊的順序不同，但最後的
+$h$ 一樣。）
+
+\textbf{(e) 新的權重}（資結書第~25.7~節引理~25.11）：
+\[
+\widehat{w}(i, j) = w_{i,j} + h(i) - h(j).
+\]
+三角不等式 $h(j) \le h(i) + w_{i,j}$ 保證 $\widehat{w} \ge 0$；而任一條 $u \leadsto v$ 路徑的新長度
+等於舊長度加上 $h(u) - h(v)$（中間的 $h$ 一正一負消掉），和路徑無關，所以最短路徑不變，
+$\delta(u, v) = \widehat{\delta}(u, v) - h(u) + h(v)$。 這張圖的新權重：
+\begin{center}
+\begin{tabular}{ccc|ccc}
+\toprule
+邊 & $w + h(i) - h(j)$ & $\widehat{w}$ & 邊 & $w + h(i) - h(j)$ & $\widehat{w}$ \\
+\midrule
+$2 \to 1$ & $8 + (-1) - 0$ & $7$ & $4 \to 2$ & $6 + (-7) - (-1)$ & $0$ \\
+$1 \to 3$ & $3 + 0 - (-5)$ & $8$ & $2 \to 3$ & $-4 + (-1) - (-5)$ & $0$ \\
+$1 \to 4$ & $-7 + 0 - (-7)$ & $0$ & $3 \to 4$ & $1 + (-5) - (-7)$ & $3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+（邊 $0 \to v$ 變成 $0 - h(v)$，即 $0, 1, 5, 7$，之後用不到。）全部非負，接著從每個頂點做一次
+Dijkstra。
+
+\textbf{(f) 什麼時候比 Floyd--Warshall 快。} Johnson 是一次 Bellman--Ford（$O(VE)$）加上 $V$ 次
+Dijkstra：用二元堆積共 $O(VE \log V)$，用費氏堆積共 $O(V^2 \log V + VE)$。 Floyd--Warshall 不論
+圖長怎樣都是 $\Theta(V^3)$。 所以\textbf{圖稀疏}時 Johnson 比較快：例如 $E = O(V)$ 時是
+$O(V^2 \log V)$；用二元堆積時條件是 $E = o(V^2 / \log V)$。 稠密圖（$E = \Theta(V^2)$）時
+Johnson 是 $O(V^3 \log V)$（二元堆積）或 $O(V^3)$（費氏堆積），不會比較快。
+\end{pastsoln}

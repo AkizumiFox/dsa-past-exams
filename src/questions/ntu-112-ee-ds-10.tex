@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-112-ee-ds-10}]{臺大電機所 112 學年度 第 10 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，未填答不計分，倒扣至是非題總分 0 分為止）
+
+A perfect \textit{hash function} is a function that can transform the key of a data into an integer between 0 and \texttt{B} - 1 with equal probabilities, where \texttt{B} is the number of buckets in the \textit{hash}. Therefore, for a \textit{hash} with a perfect \textit{hash function}, its \texttt{find()}, \texttt{insertData()}, and \texttt{deleteMin()} have the time complexities \texttt{O(1)}, \texttt{O(1)}, and \texttt{O(log B)}, respectively, assuming \texttt{B} is large enough so that collisions seldom occur.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)，錯誤。 兩個地方錯。
+
+\textbf{一、完美雜湊函數的定義不對。} 「把鍵均勻地對應到 $0$ 到 $B - 1$」是均勻雜湊的假設（資結書
+第~12.2.2~節的簡單均勻雜湊），即使完全均勻，不同的鍵仍會碰撞。 \textbf{完美雜湊函數}（perfect hash
+function）是指對一組事先知道、不再改變的鍵，函數是一對一的，\textbf{完全沒有碰撞}；表的大小剛好等於鍵的
+個數時叫最小完美雜湊。 這時搜尋最壞也是 $O(1)$。
+
+\textbf{二、雜湊表沒有辦法 $O(\log B)$ 做 \texttt{deleteMin()}。} 雜湊函數把鍵打散，最小的鍵可能在任何一個
+桶子裡，鍵的大小順序完全沒有保留。 要找最小值只能把所有桶子掃一遍，$\Theta(B + n)$（$n$ 是鍵數）。
+\texttt{find()} 和 \texttt{insertData()} 在碰撞很少時是 $O(1)$ 沒錯，但 \texttt{deleteMin()} 不是
+$O(\log B)$。 需要同時有快速搜尋和快速取最小值，要另外用堆積或平衡搜尋樹。
+\end{pastsoln}

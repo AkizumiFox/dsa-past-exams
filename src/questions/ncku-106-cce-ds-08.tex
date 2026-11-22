@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ncku-106-cce-ds-08}]{成大電通所 106 學年度 第三大題第 1 題}
+（填充；10 分）
+
+Give the following algorithm whose input is a graph G, an edge weight w, and a vertex r in G.
+\begin{quote}
+WeightGraph(G, w, r)\\
+\hspace*{1em}for each u $\in$ V(G)\\
+\hspace*{2em}key[u] = $\infty$\\
+\hspace*{1em}Insert all nodes into Q; \quad // Q denotes a priority queue.\\
+\hspace*{1em}key[r] = 0;\\
+\hspace*{1em}while (Q is not empty)\\
+\hspace*{2em}u = ExtractMin(Q)\\
+\hspace*{2em}for each neighbor v of u and v $\in$ Q\\
+\hspace*{3em}if(\underline{\hspace{2em}A\hspace{2em}})\\
+\hspace*{4em}\underline{\hspace{3em}B\hspace{3em}}
+\end{quote}
+\begin{enumerate}[label=\alph*.]
+\item \textbf{(4 pts)} Please list the answers of A and B if the algorithm is to find the minimum
+spanning tree.
+\item \textbf{(4 pts)} Please list the answers of A and B if the algorithm is to find the single
+source shortest tree.
+\item \textbf{(1 pts)} Please give the time complexity in term of V and E.
+\item \textbf{(1 pts)} Please give the time complexity if we replace Q by an array A.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+這個框架就是 Prim 和 Dijkstra 共同的樣子：每次從 $Q$ 取出 key 最小的頂點 $u$，再用 $u$ 的邊去更新
+鄰居的 key。 兩者只差在 key 的意義。 要得到樹，B 除了改 key，也要記下 $v$ 的父節點
+$\pi[v] = u$（框架裡沒有宣告 $\pi$，這裡補上；只填 key 的更新也算答對主要部分）。
+
+\textbf{a.} 最小生成樹（Prim，資結書第~24.3~節）：$\mathit{key}[v]$ 是「把 $v$ 接到目前這棵樹上
+最便宜的邊」的權重。
+\begin{itemize}
+\item A：\texttt{w(u, v) < key[v]}
+\item B：\texttt{key[v] = w(u, v); }$\pi[v] = u$（優先佇列做 DecreaseKey）
+\end{itemize}
+
+\textbf{b.} 單一起點最短路徑樹（Dijkstra，資結書第~25.2~節）：$\mathit{key}[v]$ 是目前找到從 $r$ 到
+$v$ 的最短距離。 這就是鬆弛（資結書虛擬碼~25.2）。
+\begin{itemize}
+\item A：\texttt{key[u] + w(u, v) < key[v]}
+\item B：\texttt{key[v] = key[u] + w(u, v); }$\pi[v] = u$
+\end{itemize}
+Dijkstra 需要邊的權重非負。 框架只看還在 $Q$ 裡的鄰居，對 Dijkstra 也沒有問題：已經取出的頂點
+距離已經是最短的，不會再被改小（資結書定理~25.6）。
+
+\textbf{c.} $Q$ 用二元堆積：ExtractMin $V$ 次、每次 $O(\log V)$；DecreaseKey 最多 $E$ 次（無向圖每條
+邊從兩端各看一次，$2E$ 次）、每次 $O(\log V)$；建堆積 $O(V)$。 總共 $O((V + E) \log V)$，連通圖時
+就是 $O(E \log V)$。 （用 Fibonacci 堆積可以降到 $O(E + V \log V)$。）
+
+\textbf{d.} 改用陣列存 key：ExtractMin 要掃整個陣列找最小值，$O(V)$，做 $V$ 次共 $O(V^2)$；更新
+key 是直接改陣列的一格，$O(1)$，共 $O(E)$。 總共 $O(V^2 + E) = O(V^2)$。 稠密圖（$E$ 接近 $V^2$）
+時這反而比堆積版的 $O(V^2 \log V)$ 快。
+\end{pastsoln}

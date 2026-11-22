@@ -1,0 +1,29 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-11}]{臺大電機所 109 學年度（B）第 11 題}
+（單選；每題 4 分，答錯不倒扣）
+
+Please choose the best possible answer in each of the following questions. In questions that ask
+for time complexities, please choose the tightest bound.
+
+In a Fibonacci heap of size n, the worst case time complexity of n decrease-key operations is
+
+(A)~O(n) \qquad (B)~O(n log*n) \qquad (C)~O(n log n) \qquad (D)~O(n$^2$) \qquad (E)~O(n$^2$ log n)
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A) O(n)。
+
+用資結書第~8.6~節的位能 $\Phi(H) = t(H) + 2m(H)$。 一次 decrease-key 如果連鎖剪下 $c$ 次：實際成本
+$O(c)$；每剪一次根串列多一棵樹，最多 $c$ 棵；被剪下的 $c - 1$ 個父節點原本都有標記，剪下時標記
+清掉，最後最多新標一個節點。 所以
+\[
+\Delta\Phi \le c + 2\bigl(-(c - 1) + 1\bigr) = 4 - c,
+\]
+平攤成本 $O(c) + 4 - c = O(1)$（把位能單位放大到能抵銷一次剪下的常數）。
+
+$n$ 次 decrease-key 的實際總成本不超過平攤總和加上開始時的位能：$\Phi(H_0) \le n + 2n = 3n$
+（樹最多 $n$ 棵，標記最多 $n$ 個），所以總時間 $\le n \cdot O(1) + 3n = O(n)$。 每次至少 $O(1)$，
+$n$ 次至少 $\Omega(n)$，最緊的界是 $O(n)$。
+
+和第 9 題（歷屆試題~\ref{px:ntu-109-ee-ds-09}）對照：單次 decrease-key 最壞可以剪 $n - 1$ 次，但剪下會把標記清掉，標記要一次一次慢慢
+累積，所以長的連鎖剪下不會一直發生，$n$ 次加起來只有 $O(n)$。 (B)--(E) 都是上界但不緊。
+\end{pastsoln}

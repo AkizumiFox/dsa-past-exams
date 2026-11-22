@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-04}]{臺大生機所 112 學年度（A）第 4 題}
+（問答）
+
+(10\%) How many strongly connected components (SCC) does a \textbf{DAG} (directed acyclic graph)
+on V vertices and E edges have?
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$V$ 個，每個頂點自己是一個強連通元件，和 $E$ 無關。
+
+強連通元件是兩兩互相可達的極大頂點集合（資結書第~23.1~節）。 假設 DAG 裡有一個強連通元件含
+兩個不同的頂點 $u \ne w$。 互相可達表示有路徑 $u \leadsto w$ 和 $w \leadsto u$，兩條接起來是一條
+從 $u$ 出發回到 $u$ 的封閉路徑，至少有一條邊，所以圖裡有環，和「無環」矛盾。 因此每個強連通元件
+只有一個頂點；每個頂點都屬於某個強連通元件（至少它自己和自己互相可達），所以剛好 $V$ 個。
+
+反過來也成立：一個有向圖的強連通元件數等於 $V$，若且唯若它沒有環。 這也是為什麼把強連通元件
+縮成一個點後得到的分量圖一定是 DAG（資結書第~23.4~節）；原本就是 DAG 的圖，縮完還是自己。
+\end{pastsoln}

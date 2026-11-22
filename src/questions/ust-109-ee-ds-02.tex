@@ -1,0 +1,44 @@
+\begin{pastexam}[label={px:ust-109-ee-ds-02}]{臺聯大電機類 109 學年度 第 2 題}
+（問答；8 分）
+
+(8\%) Convert a prefix expression -+*ABC/EF to an infix expression using a stack. Your answer
+should include step-by-step status of input, stack, and output.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：$((A*B)+C)-(E/F)$，去掉多餘的括號是 $A*B+C-E/F$。
+
+\textbf{做法。} 和資結書第~6.3.5~節前序求值的第一種做法一樣\textbf{由右往左}讀：讀到運算元
+就 push；讀到運算子就 pop 兩次，\textbf{先 pop 出來的是左運算元}、後 pop 的是右運算元，組成
+「(左 運算子 右)」再 push 回去。 讀完時堆疊裡剩下的一個字串就是中序式。
+
+\begin{center}
+\small
+\begin{tabular}{clll}
+\toprule
+步 & 剩下的輸入 & 讀到／動作 & 堆疊（底 $\to$ 頂） \\
+\midrule
+0 & \texttt{-+*ABC/EF} & & （空） \\
+1 & \texttt{-+*ABC/E} & \texttt{F}，push & $F$ \\
+2 & \texttt{-+*ABC/} & \texttt{E}，push & $F$,\ $E$ \\
+3 & \texttt{-+*ABC} & \texttt{/}，pop $E$（左）、$F$（右） & $(E/F)$ \\
+4 & \texttt{-+*AB} & \texttt{C}，push & $(E/F)$,\ $C$ \\
+5 & \texttt{-+*A} & \texttt{B}，push & $(E/F)$,\ $C$,\ $B$ \\
+6 & \texttt{-+*} & \texttt{A}，push & $(E/F)$,\ $C$,\ $B$,\ $A$ \\
+7 & \texttt{-+} & \texttt{*}，pop $A$（左）、$B$（右） & $(E/F)$,\ $C$,\ $(A*B)$ \\
+8 & \texttt{-} & \texttt{+}，pop $(A*B)$（左）、$C$（右） & $(E/F)$,\ $((A*B)+C)$ \\
+9 & （空） & \texttt{-}，pop $((A*B)+C)$（左）、$(E/F)$（右） & $(((A*B)+C)-(E/F))$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+輸入讀完，堆疊剩一個元素，pop 出來就是輸出：$(((A*B)+C)-(E/F))$。 去掉最外層，並依「先乘除後
+加減、同級由左往右」去掉不需要的括號，得 $A*B+C-E/F$。 注意 $E/F$ 外面的括號可以去掉，是因為
+$/$ 的優先順序比 $-$ 高；如果右邊是加減（例如 \texttt{-A+BC}），$A-(B+C)$ 的括號就不能拿掉。
+
+\textbf{檢查。} 前序式的結構是 $-\;(+\;(*\;A\;B)\;C)\;(/\;E\;F)$：最外層運算子 $-$ 的左運算元是
+$+\,{*}AB\,C$，右運算元是 $/EF$，和上面的結果一致。 每一步的堆疊大小是 $1,2,1,2,3,4,3,2,1$，最後
+剩一個，表示前序式合法。
+
+常見的錯是 pop 的順序弄反：由右往左讀時，先 pop 出來的是比較晚 push、也就是在原式裡比較左邊
+的運算元。 寫反會得到 $(F/E)-(C+(B*A))$。
+\end{pastsoln}

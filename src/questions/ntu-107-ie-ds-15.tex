@@ -1,0 +1,22 @@
+\begin{pastexam}[label={px:ntu-107-ie-ds-15}]{臺大工工所 107 學年度 第 15 題}
+（是非；命題正確填 (A)，錯誤填 (B)；答對得 4 分，答錯倒扣 4 分，至多扣到該大題零分）
+
+Concerning open addressing techniques for the hash table, linear probing suffers from the primary clustering, while quadratic probing suffers from the secondary clustering.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)，正確。
+
+兩種群聚的意思（資結書第~12.3~節）：
+\begin{itemize}
+\item \textbf{主要群聚}（primary clustering）：線性探測 $h(k, i) = (h'(k) + i) \bmod m$，佔用的格子
+會連成一長串；只要落在這一串的任何一格，就要走到串尾才放得下，放下之後串又變長。 不同起點的探測
+序列一旦走進同一串就會重疊，串越長越容易被打中。
+\item \textbf{次要群聚}（secondary clustering）：二次探測 $h(k, i) = (h'(k) + c_1 i + c_2 i^2) \bmod m$
+的位移只和 $i$ 有關。 起點不同的鍵，探測序列不會像線性探測那樣接在一起，所以沒有主要群聚；但兩個
+鍵的起點 $h'(k)$ 相同時，整條探測序列完全一樣，後來的鍵要把前面的鍵走過的格子全部重走一次，這就是
+次要群聚。
+\end{itemize}
+所以「線性探測有主要群聚、二次探測有次要群聚」正確。 雙重雜湊的位移也由第二個雜湊函數決定，起點
+相同的鍵探測序列通常也不同，兩種群聚都避開了。
+\end{pastsoln}

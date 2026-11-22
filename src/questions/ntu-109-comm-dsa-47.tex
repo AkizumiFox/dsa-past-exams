@@ -1,0 +1,30 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-47}]{臺大電信所 109 學年度（B）第 47 題}
+（複選；每題 2 分，每答錯一個選項倒扣 0.4 分）
+
+Which of the followings are balanced trees?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item Binary search tree.
+\item AVL tree.
+\item Red-black tree.
+\item Splay tree.
+\item 2-3-4 tree.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)(C)(E)。
+
+平衡樹指的是結構本身保證 $n$ 個節點時高度是 $O(\log n)$，因此搜尋、插入、刪除在最壞情形下都是
+$O(\log n)$（資結書第~10.5~節的比較）。
+\begin{itemize}
+\item (A) 錯：一般的二元搜尋樹不做任何調整，依序插入 $1, 2, \ldots, n$ 會變成一條鏈，高度
+$n - 1$（資結書第~9.3~節）。
+\item (B) 對：每個節點左右子樹高度差不超過 $1$，高度不超過 $\log_\varphi(n + 1) < 1.4405\lg(n + 1)$
+（資結書定理~10.1）。
+\item (C) 對：高度不超過 $2\lg(n + 1)$（資結書定理~10.4）。
+\item (D) 錯：伸展樹不限制形狀，高度可以是 $n - 1$（見第~44~題），它保證的是平攤
+$O(\log n)$，叫\textbf{自我調整}（self-adjusting）樹，不算平衡樹。
+\item (E) 對：所有葉節點在同一層，每個內部節點至少 $2$ 個子節點，高度 $h$（以邊數計）的樹至少
+有 $2^{h+1} - 1$ 個節點，所以高度是 $O(\log n)$（資結書第~11.1.5~節）。
+\end{itemize}
+\end{pastsoln}

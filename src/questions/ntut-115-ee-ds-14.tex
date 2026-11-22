@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-14}]{北科大電機所（戊組）115 學年度 選擇題第 4 題}
+（單選）
+
+In a B-tree of order m, what is the maximum number of children a non-root internal node can have?
+\textbf{(3\%)}\\
+a) $m-1$ \qquad b) $m$ \qquad c) $m+1$ \qquad d) $2m$
+\end{pastexam}
+
+\begin{pastsoln}
+答案：b) $m$。
+
+$m$ 階 B 樹（資結書定義~11.2）的定義：每個節點最多有 $m$ 個子節點，也就是最多 $m - 1$ 個鍵；根以外的內部節點
+至少有 $\lceil m/2 \rceil$ 個子節點；根若不是葉節點至少有 $2$ 個子節點；所有葉節點在同一層。 所以非根的內部節點，子節點
+數在 $\lceil m/2 \rceil$ 到 $m$ 之間，最多 $m$ 個。
+\begin{itemize}
+\item a) $m - 1$ 是一個節點最多的\textbf{鍵}數，不是子節點數。
+\item c) $m + 1$：節點插入後暫時有 $m$ 個鍵、$m + 1$ 個子節點時就要分裂，不會保留下來。
+\item d) $2m$ 是把「最小分支度 $t$」寫成 $m$ 的另一種定義（CLRS：每個節點最多 $2t$ 個子節點）。 題目說的是「order $m$」，
+照 Knuth 的定義，最多 $m$ 個。
+\end{itemize}
+\end{pastsoln}

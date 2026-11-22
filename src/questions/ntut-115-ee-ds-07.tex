@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntut-115-ee-ds-07}]{北科大電機所（戊組）115 學年度 是非題第 7 題}
+（是非）
+
+A circular queue eliminates the problem of wasted space that occurs in a linear queue.
+\textbf{(3\%)}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：對（True）。
+
+用陣列做的線性佇列，$\mathit{front}$ 和 $\mathit{rear}$ 都只會往右走。 取出幾個元素之後，陣列前面空出來的格子再也用不到，
+$\mathit{rear}$ 走到陣列尾端時就算前面還有空位，也不能再放（不然就要把所有元素往前搬，$O(n)$）。 環狀佇列
+（資結書第~6.2.2~節）把陣列頭尾接起來，下標用 $(\mathit{rear} + 1) \bmod n$ 計算，走到尾端就繞回 $0$，前面空出的格子
+可以重複使用，解決了這個浪費。
+
+補充：常見的環狀佇列寫法為了分辨「空」和「滿」（兩者都是 $\mathit{front} = \mathit{rear}$），會刻意空一格，大小 $n$
+的陣列最多放 $n - 1$ 個；另外記一個元素個數就不必空這一格。 這是固定一格，和線性佇列越用越多的浪費不同，
+題目的敘述仍然成立。
+\end{pastsoln}

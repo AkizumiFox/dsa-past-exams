@@ -1,0 +1,14 @@
+\begin{pastexam}[label={px:ncku-112-cce-ds-06}]{成大電通所 112 學年度 第 6 題}
+（問答）
+
+(15\%) (a) Given a graph G=(V,E), write a \textbf{pseudo-code} to generate all pairs shortest
+paths. (b) Also, you need to define the input, and output of the data structure.
+\end{pastexam}
+
+\begin{pastsoln}
+本題和成大智慧資安學程同年的第~6~題相同（三個系所共用同一份考卷），完整的詳解見歷屆試題~\ref{px:ncku-112-isec-ds-06}，這裡只列答案。
+
+答案：用 Floyd--Warshall 演算法（資結書第~25.6~節，虛擬碼~25.8）。 輸入是 $n \times n$ 的權重矩陣 $W$（$W[i, i] = 0$，
+沒有邊是 $\infty$，假設沒有負環）；輸出是距離矩陣 $D$（$D[i, j] = \delta(i, j)$）和前驅矩陣 $\Pi$（用來印出路徑）。
+三層迴圈 $k, i, j$，$k$ 在最外層，時間 $\Theta(n^3)$，空間 $\Theta(n^2)$。
+\end{pastsoln}

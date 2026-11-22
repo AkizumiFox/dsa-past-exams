@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-33}]{臺大電信所 108 學年度（B）第 33 題}
+（複選；5 分，每題至少一個正確選項，每個選項答對得 1 分、答錯倒扣 1 分）
+
+Suppose $f(n)$ is positive function of $n$, which of the following statement(s) are true?
+\begin{enumerate}[label=\Alph*.]
+\item If $f(n)$ is $\Omega(n^2)$ and that $\frac{f(n)}{n^2}$ exists, then $\frac{f(n)}{n^2}>0$.
+\item If $f(n)$ is $O(n^2)$ and that $\frac{f(n)}{n^2}$ exists, then $\frac{f(n)}{n^2}<\infty$.
+\item If $f(n)$ is $\Theta(n^2)$, then $\frac{f(2n)}{f(n)}$ exists, and $\frac{f(2n)}{f(n)}=4$.
+\item If $f(n)$ is $O(n!)$ then $\log f(n)$ is $O(n\log n)$.
+\item If $f(n)$ is $O(\log_2 n)$ then $2^{f(n)}$ is $O(n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：A、B、D。
+
+原卷 A、B、C 的分數前面都沒有寫極限符號。 照字面，$f(n)/n^2$ 對每個 $n$ 都「存在」，A、B 就變成
+沒有意義的敘述；這裡依題意讀成 $\lim_{n\to\infty}$，例如 A 是「若
+$\lim_{n\to\infty} f(n)/n^2$ 存在，則它 $> 0$」。
+
+\begin{itemize}
+\item \textbf{A 對}。 $f \in \Omega(n^2)$：存在 $c > 0$、$n_0$，$n \ge n_0$ 時 $f(n)/n^2 \ge c$。 極限
+存在的話，極限 $\ge c > 0$（極限是 $+\infty$ 也 $> 0$）。
+\item \textbf{B 對}。 $f \in O(n^2)$：$n \ge n_0$ 時 $0 < f(n)/n^2 \le c$，極限存在的話 $\le c < \infty$。
+\item \textbf{C 錯}。 $\Theta$ 只要求夾在兩個常數倍之間，可以上下跳。 反例：$n$ 是偶數時 $f(n) = n^2$，
+奇數時 $f(n) = 2n^2$，$f \in \Theta(n^2)$。 但 $2n$ 一定是偶數，$f(2n) = 4n^2$；$n$ 偶數時
+$f(2n)/f(n) = 4$，$n$ 奇數時 $= 4n^2 / 2n^2 = 2$，在 $2$ 和 $4$ 之間跳，極限不存在。
+\item \textbf{D 對}。 $f(n) \le c \cdot n!$（$n \ge n_0$），兩邊取對數：$\log f(n) \le \log c + \log n!$，
+而 $\log n! \le \log n^n = n \log n$，所以 $\log f(n) \le \log c + n \log n = O(n \log n)$。
+（$f < 1$ 時 $\log f$ 是負的，上界仍然成立。）
+\item \textbf{E 錯}。 $O(\log_2 n)$ 允許常數倍，指數裡的常數倍會變成次方。 反例：$f(n) = 2\log_2 n
+\in O(\log_2 n)$，但 $2^{f(n)} = n^2 \notin O(n)$。 （只有 $f(n) \le \log_2 n + c$ 這種「加常數」的情形，
+$2^{f(n)} \le 2^c n$ 才成立。）
+\end{itemize}
+\end{pastsoln}

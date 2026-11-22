@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-26}]{臺大電信所 109 學年度（B）第 26 題}
+（單選；每題 2 分，答錯不倒扣）
+
+How many binomial trees are there in a binomial heap with 2020 items?
+
+(A)~1 \qquad (B)~3 \qquad (C)~5 \qquad (D)~7 \qquad (E)~9
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+二項堆積每個階數最多一棵樹，$B_k$ 有 $2^k$ 個元素，所以 $n$ 個元素的二項堆積有哪幾棵樹，
+就是 $n$ 的二進位哪幾位是 $1$（資結書第~8.5~節）。 把 $2020$ 寫成二進位：
+\[
+2020 = 1024 + 512 + 256 + 128 + 64 + 32 + 4 = 11111100100_2 .
+\]
+有 $7$ 個 $1$，所以有 $B_{10}, B_9, B_8, B_7, B_6, B_5, B_2$ 共 $7$ 棵樹。
+\end{pastsoln}

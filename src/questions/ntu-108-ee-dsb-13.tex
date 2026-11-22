@@ -1,0 +1,49 @@
+\begin{pastexam}[label={px:ntu-108-ee-dsb-13}]{臺大電機所 108 學年度（B）第 13 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+A graph is a pair $(V,E)$, where $V$ is a set of nodes, called vertices, and $E$ is a collection of
+pairs of vertices, called edges. There are several ways to represent a graph, among them Adjacency
+Matrix and Adjacency List.
+\begin{itemize}
+\item Adjacency Matrix: Let $A$ be a matrix of size $|V|\times|V|$. $A[u,v]=1$ if there is an edge
+between vertex $u$ and $v$, and 0, otherwise.
+\item Adjacency List: All vertices connected to a vertex $v$ are listed on an adjacency list for
+vertex $v$.
+\end{itemize}
+Which of the following are correct?
+\begin{enumerate}[label=(\Alph*).]
+\item Adjacency List is more suitable for dense graph.
+\item Using Adjacency Matrix, checking edge between vertices $u$ and $v$ takes constant time.
+\item The big advantage of BFS is that it has much lower memory requirement than DFS.
+\item BFS is better in finding shortest paths than DFS.
+\item Using Adjacency List, the time complexity of topological sort on a directed graph is
+$O(|E|+|V|)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)(D)(E)。
+
+\textbf{(A) 錯}。 相鄰串列的空間是 $\Theta(|V| + |E|)$，相鄰矩陣是 $\Theta(|V|^2)$（資結書
+第~21.2~節）。 稀疏圖（$|E|$ 遠小於 $|V|^2$）用串列省空間；稠密圖 $|E| = \Theta(|V|^2)$，兩者
+空間同階，矩陣每條邊只佔一個位元、查邊 $O(1)$，又沒有指標的額外負擔，比較適合。 所以串列適合的
+是稀疏圖。
+
+\textbf{(B) 對}。 直接讀 $A[u, v]$，一次陣列存取，$O(1)$。 用相鄰串列則要掃 $u$ 的串列，
+$O(\deg(u))$。
+
+\textbf{(C) 錯}。 BFS 的佇列裡可能同時放著一整層的頂點，DFS 的堆疊（或遞迴）只放目前這條路徑。
+例如星形圖（中心連到其他 $|V| - 1$ 個頂點）從中心出發：BFS 的佇列一下子放進 $|V| - 1$ 個頂點，
+DFS 的堆疊深度只有 $2$。 反過來在一條長鏈上 DFS 的堆疊比較深。 最壞情況兩者都是 $\Theta(|V|)$；
+硬要比的話，分支多的圖（例如搜尋樹）通常是 DFS 比較省記憶體。 「BFS 的一大優點是記憶體用量
+比 DFS 低很多」不成立。
+
+\textbf{(D) 對}。 在無權重的圖（或每條邊等長）上，BFS 依距離由近到遠一層一層發現頂點，得到的
+$d[v]$ 就是起點到 $v$ 的最短距離（資結書第~21.3.4~節、定理~21.4）。 DFS 沿一條路一直走下去，
+第一次走到 $v$ 的路徑不一定最短，例如三角形 $s$–$a$–$v$ 加上邊 $s$–$v$，DFS 可能先走
+$s \to a \to v$，長度 $2$，但最短是 $1$。
+
+\textbf{(E) 對}。 Kahn 演算法先算所有入分支度（掃過每個串列，$O(|V| + |E|)$），之後每個頂點
+進出佇列一次、每條邊在它的起點出佇列時被處理一次，總共 $O(|V| + |E|)$（資結書第~22.1~節）。
+用 DFS 完成時間排序也是 $O(|V| + |E|)$（資結書第~22.2~節）。
+\end{pastsoln}

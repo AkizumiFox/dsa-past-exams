@@ -1,0 +1,74 @@
+\begin{pastexam}[label={px:ntu-106-ie-ds-14}]{臺大工工所 106 學年度 第 14 題}
+（複選；每題 10 分，每個選項單獨計分，答對 2 分，答錯倒扣 2 分）
+
+Let the \texttt{struct OPair} store an ordered pair of numbers as follows:
+\begin{minted}[fontsize=\small]{cpp}
+struct OPair {
+   int _first;
+   int _second;
+};
+\end{minted}
+Let \texttt{n(a, b)} denote an object of this type, where \texttt{n} is the name of the object, and
+\texttt{a} and \texttt{b} are the \texttt{\_first} and \texttt{\_second} data members of \texttt{n}.
+Sometimes we may just use \texttt{(a, b)} to represent the pair of numbers when the name of the object
+is not of concern.
+
+Given a hash of \texttt{OPair} with number of buckets equal to 100 and with the hash function defined as:
+\begin{minted}[fontsize=\small]{cpp}
+int hashFunction(const OPair& n)
+{
+   int t = n._first;
+   t += ((n._second << 8) % 37);
+   return (t % 100);
+}
+\end{minted}
+Clearly, given an \texttt{OPair} object \texttt{n}, this function will return the index of bucket for
+inserting the object to the hash (i.e.\ between 0 and 99). For example, \texttt{hashFunction((12, 34))}
+should return 21.
+
+Which of the following statement(s) is(are) true?
+\begin{enumerate}[label=(\Alph*),nosep]
+\item \texttt{hashFunction((100, 100))} returns 37.
+\item \texttt{hashFunction((55, 66))} is smaller than \texttt{hashFunction((94, 87))}.
+\item \texttt{hashFunction((12345, 0))} is smaller than \texttt{hashFunction((23456, 37))}.
+\item Inserting \texttt{(55, 66)} and \texttt{(66, 55)} will introduce a collision.
+\item If we change the number of buckets to 200, the truthfulness of the above 4 statements remains the
+same since the hash function does not change.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)。
+
+函式算的是 $h(a, b) = \bigl(a + (256b \bmod 37)\bigr) \bmod 100$：\texttt{b << 8} 是 $b \times 2^8 = 256b$（這些數都是小的正整數，
+不會溢位），先對 37 取餘數，加上 $a$，再對 100 取餘數。 先驗證題目的例子：$256 \times 34 = 8704 = 37 \times 235 + 9$，
+$12 + 9 = 21$，對。 各個要用到的值：
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+$(a, b)$ & $256b$ & $256b \bmod 37$ & $t$ & $t \bmod 100$ & $t \bmod 200$ \\
+\midrule
+$(100, 100)$ & 25600 & 33 & 133 & 33 & 133 \\
+$(55, 66)$ & 16896 & 24 & 79 & 79 & 79 \\
+$(94, 87)$ & 22272 & 35 & 129 & 29 & 129 \\
+$(12345, 0)$ & 0 & 0 & 12345 & 45 & 145 \\
+$(23456, 37)$ & 9472 & 0 & 23456 & 56 & 56 \\
+$(66, 55)$ & 14080 & 20 & 86 & 86 & 86 \\
+\bottomrule
+\end{tabular}
+\end{center}
+例如 $25600 = 37 \times 691 + 33$，$16896 = 37 \times 456 + 24$，$22272 = 37 \times 601 + 35$，$14080 = 37 \times 380 + 20$；
+$b = 37$ 時 $256b$ 是 37 的倍數，餘 0。
+
+\begin{itemize}
+\item (A) 錯。 回傳 33，不是 37。
+\item (B) 錯。 $79$ 不比 $29$ 小。
+\item (C) 對。 $45 < 56$。
+\item (D) 錯。 $79 \ne 86$，放在不同的桶子，沒有碰撞。
+\item (E) 錯。 函式最後的 \texttt{\% 100} 就是「對桶子數取餘數」，桶子改成 200 個，這一步要跟著改成 \texttt{\% 200}，
+否則只會用到前 100 個桶子。 改了之後看最後一欄：(A) 133 仍不是 37，錯；(B) 變成 $79 < 129$，\textbf{變成對}；
+(C) 變成 $145 < 56$，\textbf{變成錯}；(D) 仍然不碰撞。 (B)、(C) 的真假都變了，所以「真假不變」不成立。 理由
+「hash function does not change」也不對：雜湊函數的最後一步和桶子數綁在一起，桶子數變了函數就變了。 （如果硬要
+完全不改函數，前四項的值不變，但那時 200 個桶子只用到 100 個，不是合理的設計。）
+\end{itemize}
+\end{pastsoln}

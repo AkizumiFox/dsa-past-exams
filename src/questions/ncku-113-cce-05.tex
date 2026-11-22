@@ -1,0 +1,23 @@
+\begin{pastexam}[label={px:ncku-113-cce-05}]{成大電通所 113 學年度 是非題第 5 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+Radix sort algorithm can be used to sort multiple keys. Its time complexity in O($n$) since it
+will allocate the most significant key into multiple piles in every iteration.
+\end{pastexam}
+
+\begin{pastsoln}
+錯。 前半句對，後半句的時間和理由都不對。 原題的 ``in O($n$)'' 是 is O($n$)。
+
+\textbf{可以排多鍵}：對。 基數排序把每一位數（或每一個欄位，例如先比年、再比月、日）當成一個
+鍵，逐鍵分配，本來就是多鍵排序。
+
+\textbf{時間不是無條件 $O(n)$}：$n$ 筆資料、$d$ 個鍵、每個鍵有 $r$ 種可能值（$r$ 個桶子）時，
+LSD 基數排序做 $d$ 趟，每趟分配 $\Theta(n)$、收集 $\Theta(r)$，總時間 $\Theta(d(n + r))$
+（資結書第~15.2.2~節）。 只有 $d$ 和 $r$ 都是常數時才是 $O(n)$；例如排 $n$ 個 $0$ 到 $n^3 - 1$
+的整數，以 $10$ 為底要 $d = \Theta(\log n)$ 趟，總時間 $\Theta(n \log n)$。
+
+\textbf{理由不對}：常用的 LSD 基數排序每一趟依「最不重要」的鍵分堆，從最低位做到最高位，靠每趟
+都穩定來保證結果正確。 MSD 基數排序才是先依最重要的鍵分堆，但它只在第一趟用最高位，之後在
+每一堆裡遞迴依次一位的鍵排（資結書第~15.2.4~節），不是「每一趟都依最重要的鍵分堆」。 而且分堆
+的方式也不是時間為 $O(n)$ 的原因，原因是趟數 $d$ 和桶子數 $r$ 固定。
+\end{pastsoln}

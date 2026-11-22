@@ -1,0 +1,101 @@
+\begin{pastexam}[label={px:ntu-108-im-it-01}]{臺大資管所 108 學年度 問答題第 1 題}
+（問答；30 分）
+
+HEAP is a complete binary tree that provides an efficient implementation of priority queues.
+Suppose we use a heap to manage a list of positive integers that large values mean high priority.
+The following C++ code fragment shows the class definition of the heap.
+\begin{enumerate}[label=(\alph*)]
+\item (15 points) Write the member function \texttt{delete()} that removes the integer in the root
+of the heap.
+\item (15 points) Write the member function \texttt{insert()} that inserts a new integer into the
+heap.
+\end{enumerate}
+\begin{minted}[fontsize=\small]{cpp}
+class HEAP
+{
+  public:
+     int delete();
+        // return and delete the integer in the root of the heap
+        // return -1 if there is nothing to delete
+     bool insert(int newValue);
+        // insert newValue into the heap
+        // return false if the insertion is not successful
+     ...
+  private:
+     int itemCount;   // number of heap items
+     int items[100];  // array of heap items
+     ...
+};
+\end{minted}
+\end{pastexam}
+
+\begin{pastsoln}
+先說明一個小問題：\texttt{delete} 是 C++ 的保留字，不能當函式名稱，照原題寫成
+\texttt{int delete();} 是編譯不過的。 下面把它改名為 \texttt{deleteRoot()}，功能完全照題目的
+註解。 作答時寫 \texttt{delete()} 再加一句說明，或像這裡改名，都可以。
+
+大的優先，所以是\textbf{最大堆積}（資結書第~8.1~節）。 用陣列存完整二元樹，從 \texttt{items[0]}
+開始放：節點 $i$ 的左、右子節點是 $2i + 1$、$2i + 2$，父節點是 $\lfloor (i - 1)/2 \rfloor$；
+目前有 \texttt{itemCount} 個元素，放在 \texttt{items[0..itemCount-1]}。 堆積性質：每個節點都
+不小於它的子節點，所以最大值在根 \texttt{items[0]}。
+
+\textbf{(a) 刪除根。} 空的就回傳 $-1$。 否則記下根的值；把最後一個元素 $x$ 拿出來（元素數減
+一），從根開始往下找 $x$ 的位置：每一層比較兩個子節點取較大的 $c$，若 $x \ge$ \texttt{items[c]}
+就停在這裡，否則把 \texttt{items[c]} 搬上來、繼續往下（資結書虛擬碼~8.1 的往下調整，這裡用
+「搬移」代替「交換」，少寫一些賦值）。
+
+\begin{minted}[fontsize=\small]{cpp}
+int HEAP::deleteRoot()
+{
+    if (itemCount == 0)
+        return -1;                     // nothing to delete
+    int top = items[0];
+    int x = items[--itemCount];        // take out the last item
+    int i = 0;                         // find a place for x, from the root down
+    while (2 * i + 1 < itemCount) {
+        int c = 2 * i + 1;             // left child
+        if (c + 1 < itemCount && items[c + 1] > items[c])
+            c = c + 1;                 // the right child is larger
+        if (x >= items[c])
+            break;
+        items[i] = items[c];           // move the larger child up
+        i = c;
+    }
+    items[i] = x;
+    return top;
+}
+\end{minted}
+
+只剩一個元素時：\texttt{itemCount} 變成 $0$，迴圈不執行，\texttt{items[0] = x} 寫入的位置已經
+不算在堆積裡，不影響結果。
+
+\textbf{(b) 插入。} 陣列滿了（$100$ 個）就回傳 \texttt{false}；題目說存的是正整數，$-1$ 又被
+用來表示「空」，所以非正數也拒收。 否則新元素放在最後一格，往上和父節點比：父節點比它小就
+把父節點搬下來，一直到父節點不比它小或到了根為止（資結書虛擬碼~8.2）。
+
+\begin{minted}[fontsize=\small]{cpp}
+bool HEAP::insert(int newValue)
+{
+    if (itemCount == 100 || newValue <= 0)
+        return false;                  // full, or not a positive integer
+    int i = itemCount++;               // the new leaf
+    while (i > 0 && items[(i - 1) / 2] < newValue) {
+        items[i] = items[(i - 1) / 2]; // move the parent down
+        i = (i - 1) / 2;
+    }
+    items[i] = newValue;
+    return true;
+}
+\end{minted}
+
+\textbf{正確性。} 兩個函式都保持「元素放在 \texttt{items[0..itemCount-1]}、形狀是完整二元樹」：
+刪除拿掉的是最後一格，插入加在最後一格。 插入時，迴圈不變量是「把 \texttt{newValue} 放在洞
+$i$ 時，除了 $i$ 和它父節點之間以外，其他父子關係都滿足堆積性質」；搬下來的父節點比 $i$ 原來
+的子節點大（它原本就是那些節點的祖先），所以搬下去不會出錯；迴圈停下時父節點 $\ge$
+\texttt{newValue}，放進去後整棵樹都滿足。 刪除時對稱：洞 $i$ 往下移，搬上來的是兩個子節點中
+較大的，它比另一個子節點大、也不比原本在它上面的值大；停下時 $x$ 不小於兩個子節點，又因為
+$x$ 原本在堆積裡、不比沿路搬上去的值大，放進洞裡後性質成立。
+
+\textbf{複雜度。} $n$ 個元素的完整二元樹有 $\lfloor \lg n \rfloor + 1$ 層，兩個函式各沿一條根到葉
+的路徑走一次，時間都是 $O(\log n)$，額外空間 $O(1)$。
+\end{pastsoln}

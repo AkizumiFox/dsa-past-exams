@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-07}]{成大電機所 114 學年度 單選題第 7 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+The quick sort algorithm uses the divide and conquer technique. In each recursion, it will place a
+pivot of an array at the correct location and divide the array into two parts. Please identify
+the correct position of a pivot in the following array after the first recursion. To optimize
+performance, we apply the strategy of Median-of-3: median(key[left], key[middle], key[right]) to
+select pivot, where the index of middle $=\frac{left+right}{2}$. Then, the pivot is then swapped
+with the key[left].
+
+\begin{center}
+\begin{tabular}{*{10}{c}}
+\cline{1-10}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{75} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{95} & \multicolumn{1}{c|}{3}\\
+\cline{1-10}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7] & [8] & [9]
+\end{tabular}
+\qquad left =1, right =9
+\end{center}
+
+a) key[2] \quad b) key[4] \quad c) key[6] \quad d) key[8] \quad e) None of the above
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 e) None of the above：基準最後在 key[5]。
+
+\textbf{選基準。} $\mathit{middle} = (1 + 9) / 2 = 5$，三個候選是 key[1] $= 75$、key[5] $= 55$、
+key[9] $= 3$，中位數是 $55$（資結書第~14.5~節的三數取中）。 把 $55$ 和 key[1] 交換，得到
+55, 58, 67, 42, 75, 30, 29, 95, 3。
+
+\textbf{基準的最後位置只看它的名次。} 分割做完後，基準左邊都 $\le$ 它、右邊都 $\ge$ 它，所以它
+落在「排好之後它應該在的位置」，不管用哪一種分割的寫法都一樣（鍵值互不相同時）。 比 $55$ 小的
+有 $42, 30, 29, 3$ 共 $4$ 個，所以 $55$ 在 key[1..9] 裡排第 $5$，落在 key[$1 + 4$] = key[5]。
+
+用基準在最左、兩指標往中間掃的分割追一次：$i$ 從左找 $\ge 55$、$j$ 從右找 $\le 55$。
+\begin{center}
+\small
+\begin{tabular}{l*{9}{c}}
+\toprule
+索引 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule
+基準換到最左 & 55 & 58 & 67 & 42 & 75 & 30 & 29 & 95 & 3 \\
+$i = 2, j = 9$，交換 & 55 & \textbf{3} & 67 & 42 & 75 & 30 & 29 & 95 & \textbf{58} \\
+$i = 3, j = 7$，交換 & 55 & 3 & \textbf{29} & 42 & 75 & 30 & \textbf{67} & 95 & 58 \\
+$i = 5, j = 6$，交換 & 55 & 3 & 29 & 42 & \textbf{30} & \textbf{75} & 67 & 95 & 58 \\
+$i = 6, j = 5$，停；基準和 key[5] 交換 & \textbf{30} & 3 & 29 & 42 & \textbf{55} & 75 & 67 & 95 & 58 \\
+\bottomrule
+\end{tabular}
+\end{center}
+基準 $55$ 在 key[5]，四個選項 key[2]、key[4]、key[6]、key[8] 都不是，選 e)。 如果沒做三數取中、
+直接用 key[1] $= 75$ 當基準，它的名次是第 $8$，會落在 key[8]，那是 d) 這個陷阱。
+\end{pastsoln}

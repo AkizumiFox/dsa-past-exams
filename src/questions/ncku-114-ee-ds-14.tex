@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ncku-114-ee-ds-14}]{成大電機所 114 學年度 單選題第 14 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+For any nonempty binary tree, $T$ with n nodes, if n$_0$ is the number of leaf nodes. Please give
+the number of nodes in a binary tree with degree 1, in terms of n and n$_0$.
+
+a) n-2n$_0$, \quad b) n-2n$_0$-1, \quad c) n-2n$_0$+1, \quad d) n-n$_0$+1, \quad e) None of above.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c) $n - 2n_0 + 1$。
+
+設度數 $0, 1, 2$ 的節點數是 $n_0, n_1, n_2$。 兩個關係：
+\begin{itemize}
+\item 節點總數：$n = n_0 + n_1 + n_2$。
+\item $n_0 = n_2 + 1$（資結書第~7.1~節定理~7.2）。 理由：邊數從子節點數是 $n - 1$，從父節點數是
+$n_1 + 2n_2$，所以 $n_0 + n_1 + n_2 - 1 = n_1 + 2n_2$。
+\end{itemize}
+代入 $n_2 = n_0 - 1$：
+\[
+n_1 = n - n_0 - n_2 = n - n_0 - (n_0 - 1) = n - 2n_0 + 1.
+\]
+檢查：只有根一個節點時 $n = 1$、$n_0 = 1$，$n_1 = 1 - 2 + 1 = 0$，對；一條長 $3$ 的鏈 $n = 3$、
+$n_0 = 1$，$n_1 = 2$，對。 用同一條鏈檢查其他選項：a) 得 $1$、b) 得 $0$、d) 得 $3$，都不等於 $2$。
+\end{pastsoln}

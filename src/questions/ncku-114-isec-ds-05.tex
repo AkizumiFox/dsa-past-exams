@@ -1,0 +1,60 @@
+\begin{pastexam}[label={px:ncku-114-isec-ds-05}]{成大智慧資安學程 114 學年度 單選題第 5 題}
+（單選；每題 5 分，答錯倒扣 2 分）
+
+What will the array look like after a delete operation is applied on the maximum heap stored in the
+array?
+
+\begin{center}
+\begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{75} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29} \\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+\item \begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ } \\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ } \\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{ } \\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item \begin{tabular}{*{8}{c}}
+\cline{1-8}
+\multicolumn{1}{|c|}{-} & \multicolumn{1}{c|}{67} & \multicolumn{1}{c|}{58} & \multicolumn{1}{c|}{29} & \multicolumn{1}{c|}{42} & \multicolumn{1}{c|}{55} & \multicolumn{1}{c|}{30} & \multicolumn{1}{c|}{ } \\
+\cline{1-8}
+[0] & [1] & [2] & [3] & [4] & [5] & [6] & [7]
+\end{tabular}
+\item None of the above.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 c)。
+
+最大堆積的刪除就是刪掉根（最大值，資結書第~8.1~節）：把最後一個元素搬到根，堆積大小減 $1$，再從根
+往下調整，每次和比較大的子節點比，比它小就交換。 陣列從 $1$ 開始，$i$ 的子節點是 $2i$、$2i + 1$。
+\begin{enumerate}
+\item 拿掉 $A[1] = 75$，最後一個 $A[7] = 29$ 搬到根：$\langle 29, 58, 67, 42, 55, 30 \rangle$。
+\item $A[1] = 29$ 的子節點 $58$、$67$，較大的是 $67$，$29 < 67$，交換：
+$\langle 67, 58, 29, 42, 55, 30 \rangle$。
+\item $A[3] = 29$ 的子節點只有 $A[6] = 30$，$29 < 30$，交換：$\langle 67, 58, 30, 42, 55, 29 \rangle$。
+\item $A[6]$ 沒有子節點，停。
+\end{enumerate}
+結果 $[1..6] = 67, 58, 30, 42, 55, 29$，$[7]$ 空出來，就是 c)。
+
+其他選項：a) 把 $42$、$55$ 對調了，$A[2] = 58$ 的子樹在刪除時根本沒動到；b) 是把剩下的數排好序，
+不是堆積刪除的結果；d) 停在第 2 步，$A[3] = 29$ 比子節點 $30$ 小，違反最大堆積。
+\end{pastsoln}

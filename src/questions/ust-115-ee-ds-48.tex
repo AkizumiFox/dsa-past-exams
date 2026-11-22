@@ -1,0 +1,24 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-48}]{臺聯大電機類 115 學年度 第 48 題}
+（單選；2 分）
+
+What is the time complexity to reverse a string?
+
+(A)~$O(n^2)$ \qquad (B)~$O(n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(1)$ \qquad (E)~$O(n \log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+長度 $n$ 的字串存在陣列 $s[0..n-1]$ 裡，用兩個索引從兩端往中間走，每次交換一對：
+\begin{pseudo}{反轉字串}
+\State $i \gets 0$；$j \gets n - 1$
+\While{$i < j$}
+    \State 交換 $s[i]$ 和 $s[j]$；$i \gets i + 1$；$j \gets j - 1$
+\EndWhile
+\end{pseudo}
+迴圈跑 $\lfloor n/2 \rfloor$ 次，每次 $\Theta(1)$，共 $\Theta(n)$（資結書第~1.7~節）。 反過來，每個
+字元都必須被移動或至少讀一次，任何方法都要 $\Omega(n)$，所以 $\Theta(n)$ 是最好的。
+
+其他選項：(A)(E) 是比較慢的寫法（例如每次把字元接到新字串前面而反覆複製，會到 $O(n^2)$），不是
+這個問題的複雜度；(C)(D) 連每個字元都看不完，不可能。
+\end{pastsoln}

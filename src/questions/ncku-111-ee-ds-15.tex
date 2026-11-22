@@ -1,0 +1,15 @@
+\begin{pastexam}[label={px:ncku-111-ee-ds-15}]{成大電機所 111 學年度 單選題第 15 題}
+（單選；每題 4 分）
+
+Which of the following case does not exist in complexity theory
+
+A.~Best case \qquad B.~Worst case \qquad C.~Average case \qquad D.~Null case
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 D。
+
+分析演算法的時間時，同樣大小 $n$ 的輸入可能花不同的時間，所以分成\textbf{最好情況}（最快的輸入）、\textbf{最壞情況}（最慢的
+輸入）、\textbf{平均情況}（對所有輸入的期望值）三種（資結書第~1.8~節）。 例如插入排序最好 $\Theta(n)$（已排好）、最壞
+$\Theta(n^2)$（反向排好）、平均 $\Theta(n^2)$。 A、B、C 都存在；沒有所謂的「null case」，選 D。
+\end{pastsoln}

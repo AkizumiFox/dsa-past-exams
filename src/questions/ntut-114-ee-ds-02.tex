@@ -1,0 +1,25 @@
+\begin{pastexam}[label={px:ntut-114-ee-ds-02}]{北科大電機所（戊組） 114 學年度 第 I-2 題}
+（單選；4 分）
+
+Which of the following is the most significant advantage of AVL trees over standard binary search trees
+(BST)? \textbf{(4\%)}
+\begin{enumerate}[label=\alph*)]
+\item Guaranteed O(log n) time complexity for search, insertion, and deletion operations
+\item Uses less memory than a standard binary search tree
+\item Allows duplicate keys to be stored more efficiently
+\item Supports faster sequential access of elements than standard BST
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a)。
+
+\begin{itemize}
+\item a) 正確。 一般二元搜尋樹的高度取決於插入順序，最壞是 $n - 1$（例如依序插入排好的鍵），操作變成
+$O(n)$。 AVL 樹每個節點左右子樹高度差不超過 $1$，高度保證 $O(\log n)$（約 $1.44 \lg n$，資結書
+第~10.2.2~節），插入、刪除後用旋轉維持平衡，所以搜尋、插入、刪除最壞都是 $O(\log n)$。
+\item b) 錯。 AVL 樹每個節點還要多存高度或平衡係數，記憶體不會比較少。
+\item c) 錯。 平衡與否和重複鍵怎麼存無關。
+\item d) 錯。 依序走訪（中序）兩者都是 $\Theta(n)$，AVL 樹沒有比較快。
+\end{itemize}
+\end{pastsoln}

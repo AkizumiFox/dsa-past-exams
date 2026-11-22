@@ -1,0 +1,17 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-20}]{臺大電信所 109 學年度（B）第 20 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+The worst case time complexity of one union operation upon two Fibonacci heaps of total size n is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (A)。
+
+費氏堆積的合併只把兩條環狀雙向的根串列接起來（改四個指標），再比較兩個最小指標取小的，
+不做任何連結（資結書第~8.6~節）。 和樹的數量、元素個數都無關，最壞就是 $O(1)$。 該做的
+連結都延後到下一次 delete-min。
+\end{pastsoln}

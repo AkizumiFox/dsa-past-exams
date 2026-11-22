@@ -1,0 +1,28 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-28}]{臺大電信所 109 學年度（B）第 28 題}
+（單選；每題 2 分，答錯不倒扣）
+
+Which of the following is correct?
+\begin{enumerate}[label=(\Alph*)]
+\item $\dfrac{n^2}{\log n}=O(n^{1.5})$
+\item $2^{2n}=\Theta(2^n)$
+\item If $f(n)=O(g(n))$ and $g(n)=O(h(n))$, then $f(n)=O(h(n))$
+\item If $f(n)\neq O(g(n))$, then $g(n)=O(f(n))$
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。 以下用資結書第~1.5~節 $O$、$\Theta$ 的定義逐項檢查。
+
+\begin{itemize}
+\item \textbf{(A) 錯。} $\dfrac{n^2/\log n}{n^{1.5}} = \dfrac{n^{0.5}}{\log n} \to \infty$（任何正次方
+都比對數長得快），比值沒有上界，所以 $n^2/\log n \ne O(n^{1.5})$。
+\item \textbf{(B) 錯。} $2^{2n} = 4^n$，$4^n / 2^n = 2^n \to \infty$，$4^n$ 不是 $O(2^n)$，當然
+也不是 $\Theta(2^n)$。 指數上的常數倍不能丟。
+\item \textbf{(C) 對。} 由假設，存在 $c_1, n_1$ 使 $n \ge n_1$ 時 $f(n) \le c_1 g(n)$；存在
+$c_2, n_2$ 使 $n \ge n_2$ 時 $g(n) \le c_2 h(n)$。 取 $n_0 = \max(n_1, n_2)$，$n \ge n_0$ 時
+$f(n) \le c_1 g(n) \le c_1 c_2 h(n)$，所以 $f(n) = O(h(n))$（常數 $c_1 c_2$）。
+\item \textbf{(D) 錯。} 兩個函數可以互相比不了。 反例：$g(n) = n$，
+$f(n) = n^2$（$n$ 為偶數）、$f(n) = 1$（$n$ 為奇數）。 在偶數上 $f/g = n$ 沒有上界，所以
+$f \ne O(g)$；在奇數上 $g/f = n$ 也沒有上界，所以 $g \ne O(f)$。 前提成立、結論不成立。
+\end{itemize}
+\end{pastsoln}

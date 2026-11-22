@@ -1,0 +1,63 @@
+\begin{pastexam}[label={px:ntu-108-im-it-02}]{臺大資管所 108 學年度 問答題第 2 題}
+（問答；20 分）
+
+Double hashing is a popular collision resolution scheme that employs two hash functions to
+determine the location of an item in a hash table. One hash function computes the starting
+location of an item and the other one specifies the size of probe step.
+\begin{enumerate}[label=(\alph*)]
+\item (10 points) Explain the benefit of double hashing when resolving collisions.
+\item (5 points) What is the problem if the hash table size and the probe step size are not
+relatively prime?
+\item (5 points) Suggest a solution to the problem.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+記號：表的大小 $m$，第 $i$ 次探測（$i = 0, 1, 2, \ldots$）的位置是
+\[
+h(k, i) = (h_1(k) + i \cdot h_2(k)) \bmod m ,
+\]
+$h_1(k)$ 是起點，$h_2(k)$ 是步長（資結書第~12.3~節）。
+
+\textbf{(a) 好處。} 和另外兩種開放定址法比：
+\begin{itemize}
+\item \textbf{線性探測}（步長固定 $1$）有\textbf{主要群聚}（primary clustering）：已經佔用的
+格子連成一長串，落在這一串裡任何位置的新鍵都要走到串尾，串又因此變得更長，越長越容易變長。
+\item \textbf{二次探測}（$h_1(k) + c_1 i + c_2 i^2$）打散了長串，但兩個鍵只要起點 $h_1$ 相同，
+探測序列就完全一樣，這叫\textbf{次要群聚}（secondary clustering）。
+\end{itemize}
+雙重雜湊的步長也由鍵決定。 兩個鍵就算 $h_1$ 相同，$h_2$ 通常不同，第二步就分開了，所以主要
+和次要群聚都沒有。 例如 $m = 13$、$h_1(k) = k \bmod 13$、$h_2(k) = 1 + (k \bmod 7)$：$k = 14$
+和 $k = 27$ 的起點都是 $1$，步長分別是 $1$ 和 $7$，探測序列是 $1, 2, 3, \ldots$ 和
+$1, 8, 2, 9, \ldots$，不會擠在同一條路上。 線性探測和二次探測的探測序列由起點決定，只有 $m$
+種；雙重雜湊由 $(h_1(k), h_2(k))$ 兩個值決定，可以有大約 $m^2$ 種，行為接近「每個鍵的探測順序
+都是隨機排列」的理想情形。 在這個理想模型下，負載因子 $\alpha$ 時失敗搜尋的期望探測次數不超過
+$1/(1 - \alpha)$，成功搜尋不超過 $\frac{1}{\alpha}\ln\frac{1}{1 - \alpha}$（資結書第~12.4~節）；
+同樣的 $\alpha$ 下，探測次數比線性探測少很多，表可以裝得比較滿。 代價是每個鍵要多算一個雜湊
+函數，而且探測位置跳來跳去，快取效果比線性探測差。
+
+\textbf{(b) 不互質的問題。} 設 $d = \gcd(m, h_2(k)) > 1$。 $h(k, i) = h(k, j)$ 等價於 $m$ 整除
+$(j - i)\,h_2(k)$，也就是 $\frac{m}{d}$ 整除 $j - i$。 所以探測序列走 $m/d$ 步就回到起點，之後
+不斷重複，只會碰到 $m/d$ 個格子，其餘格子永遠不會被試到。 後果：
+\begin{itemize}
+\item 插入時，這 $m/d$ 格都滿了就找不到空位，即使表裡其他地方還是空的；程式若只檢查「試了
+$m$ 次」才放棄，會在同幾格之間白白繞圈。
+\item 搜尋不存在的鍵時，也只檢查了一部分格子，迴圈若以「回到起點」或「試滿 $m$ 次」結束，
+前者過早結束、後者重複做白工。
+\end{itemize}
+例：表的大小 $m = 10$，某個鍵的 $h_1(k) = 3$、$h_2(k) = 4$，$\gcd(10, 4) = 2$。 探測序列是
+$3$, $7$, $1$, $5$, $9$, $3$, $7$, $\ldots$，只會試 $5$ 個奇數格，偶數格全空也放不進去。
+
+\textbf{(c) 解法。} 讓每個鍵的步長都和 $m$ 互質。 互質時探測序列的前 $m$ 項兩兩不同，正好走
+遍全部 $m$ 格（資結書定理~12.4：若 $h(k, i) = h(k, j)$，$0 \le i < j < m$，則 $m$ 整除
+$(j - i)\,h_2(k)$，互質推得 $m$ 整除 $j - i$，矛盾）。 常用的兩種取法：
+\begin{itemize}
+\item \textbf{$m$ 取質數}，$h_2(k)$ 的值落在 $1$ 到 $m - 1$ 之間，例如
+$h_2(k) = 1 + (k \bmod (m - 1))$，或取一個比 $m$ 小的質數 $R$，$h_2(k) = R - (k \bmod R)$。
+質數和 $1..m-1$ 的每個數都互質。
+\item \textbf{$m$ 取 $2$ 的冪}，$h_2(k)$ 一律取奇數，例如 $h_2(k) = 2\,(k \bmod (m/2)) + 1$。
+奇數和 $2^p$ 互質。
+\end{itemize}
+無論哪一種，$h_2(k)$ 都不能是 $0$（否則原地不動）。 上面的例子改成 $m = 11$、$h_2(k) = 4$，
+序列是 $3, 7, 0, 4, 8, 1, 5, 9, 2, 6, 10$，$11$ 格都會試到。
+\end{pastsoln}

@@ -1,0 +1,31 @@
+\begin{pastexam}[label={px:ntut-113-ee-ds-04}]{北科大電機所（戊組）113 學年度 第 I.4 題}
+（選擇；4 分）
+
+Which of the following best approximates the ratio of the number of leaf nodes in a complete
+$k$-ary tree of depth $n$? (4\%)
+
+a) $1-\frac{1}{k}$\qquad b) $1-\frac{1}{n}$\qquad c) $\frac{1}{n}$\qquad d) $\frac{1}{k}$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 a)。 「ratio of the number of leaf nodes」指葉節點占全部節點的比例。
+
+\textbf{滿的情形}。 深度 $n$（根在深度 $0$）的滿 $k$ 元樹，第 $d$ 層有 $k^d$ 個節點，葉節點
+都在第 $n$ 層，共 $k^n$ 個；全部節點
+\[
+N = 1 + k + k^2 + \cdots + k^n = \frac{k^{n+1} - 1}{k - 1}.
+\]
+比例是
+\[
+\frac{k^n (k - 1)}{k^{n+1} - 1} \approx \frac{k^n (k-1)}{k^{n+1}} = \frac{k - 1}{k} = 1 - \frac{1}{k}.
+\]
+
+\textbf{一般的情形}。 只要每個內部節點都有 $k$ 個子節點（完全 $k$ 元樹除了最後一個內部節點
+以外都是這樣），設內部節點 $I$ 個、葉節點 $L$ 個。 除了根以外每個節點都是某個內部節點的
+子節點，所以 $N = kI + 1$；又 $N = I + L$，得到 $L = (k - 1)I + 1$。 比例
+\[
+\frac{L}{N} = \frac{(k-1)I + 1}{kI + 1} \to \frac{k - 1}{k} \quad (I \to \infty).
+\]
+二元樹 $k = 2$ 時就是熟悉的「大約一半是葉節點」（資結書定理~7.2 的 $n_0 = n_2 + 1$）。 比例只和
+$k$ 有關，和深度 $n$ 無關，所以 b)、c) 都不對；d) $1/k$ 是內部節點的比例。
+\end{pastsoln}

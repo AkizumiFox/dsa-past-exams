@@ -1,0 +1,55 @@
+\begin{pastexam}[label={px:ntu-110-bime-ds-04}]{臺大生機所 110 學年度 第 4 題}
+（問答；20 分）
+
+(20\%) Write a pseudocode function that removes the nodes in even positions (the second, fourth, sixth,
+and so forth) in a given \textbf{linked list}. No return values are expected.\\
+Note: A node in a null-terminated \textbf{linked list} has one pointer, named `next', that points to the
+next node if it is not null.
+\end{pastexam}
+
+\begin{pastsoln}
+輸入是串列第一個節點的指標 $\mathit{head}$（串列空時是 \NIL）。 第 1 個節點在奇數位置，不會被刪，
+所以 $\mathit{head}$ 不會變，函式不用傳回東西，這和題目「No return values」一致。
+
+\textbf{想法}。 用指標 $p$ 停在奇數位置的節點上。 $p$ 的下一個 $q = p.\mathit{next}$ 是偶數位置，
+把它跳過（$p.\mathit{next} \gets q.\mathit{next}$）、釋放，$p$ 再往前走一步，就到了下一個奇數位置。
+
+\begin{pseudo}{刪除偶數位置的節點}
+\Procedure{Remove-Even}{$\mathit{head}$}
+    \State $p \gets \mathit{head}$
+    \While{$p \ne \NIL$ \AND $p.\mathit{next} \ne \NIL$}
+        \State $q \gets p.\mathit{next}$ \Comment{偶數位置}
+        \State $p.\mathit{next} \gets q.\mathit{next}$ \Comment{跳過 $q$}
+        \State 釋放 $q$
+        \State $p \gets p.\mathit{next}$ \Comment{下一個奇數位置}
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+第 3 行的兩個條件缺一不可：$p = \NIL$ 是節點數為偶數（最後一個被刪掉，$p$ 走到 \NIL）或串列本來
+就空；$p.\mathit{next} = \NIL$ 是節點數為奇數，$p$ 停在最後一個節點，後面沒有偶數位置的節點。
+第 5 行要在第 6 行之前做，釋放 $q$ 之後就不能再讀 $q.\mathit{next}$。
+
+\textbf{追蹤}。 串列 $1 \to 2 \to 3 \to 4 \to 5$（數字是原來的位置）：
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+迴圈 & $p$ & 刪掉 $q$ & 串列 \\
+\midrule
+開始 & 1 & & $1 \to 2 \to 3 \to 4 \to 5$ \\
+1 & 1 $\to$ 3 & 2 & $1 \to 3 \to 4 \to 5$ \\
+2 & 3 $\to$ 5 & 4 & $1 \to 3 \to 5$ \\
+\multicolumn{4}{l}{$p = 5$，$p.\mathit{next} = \NIL$，結束} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{正確性}（迴圈不變量）：每次檢查第 3 行的條件時，$p$ 是原來第 $2t - 1$ 個節點
+（$t$ 是已經跑過的次數加一），從 $\mathit{head}$ 到 $p$ 剛好是原來第 $1, 3, \ldots, 2t - 1$ 個節點，
+依序相連；$p$ 之後仍是原來第 $2t, 2t + 1, \ldots$ 個節點，沒有動過。 一開始 $t = 1$、$p = \mathit{head}$，
+成立。 跑一次迴圈刪掉第 $2t$ 個、$p$ 移到第 $2t + 1$ 個，不變量對 $t + 1$ 成立。 迴圈結束時
+$p$ 之後沒有偶數位置的節點，所以剩下的正好是所有奇數位置的節點，順序不變。
+
+\textbf{複雜度}。 每次迴圈 $p$ 前進兩個原來的位置，最多跑 $\lfloor n/2 \rfloor$ 次，每次 $\Theta(1)$，
+總時間 $\Theta(n)$，額外空間 $\Theta(1)$。
+\end{pastsoln}

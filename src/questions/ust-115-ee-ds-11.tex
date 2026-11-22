@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-11}]{臺聯大電機類 115 學年度 第 11 題}
+（單選；2 分）
+
+To detect whether a cycle exists in a singly linked list, the most famous Floyd's Cycle Detection
+Algorithm (the tortoise and the rabbit algorithm) uses two metrics. Assume the distance from the
+beginning of the linked list to the start of the cycle is A, and the length of the cycle is L.
+Assume the rabbit's speed is twice that of the tortoise. When the tortoise and rabbit meet, assume
+the tortoise has traveled a distance B within the cycle. What is the total distance the rabbit has
+traveled at this point?
+
+(A)~A + B \qquad (B)~2(A + B) \qquad (C)~A + B + L \qquad (D)~2A + B
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+烏龜和兔子同時從串列開頭出發，走的時間一樣，兔子的速度是烏龜的兩倍，所以兔子走的距離是烏龜的
+兩倍（資結書第~5.6~節：做完 $k$ 輪後慢指標在 $x_k$、快指標在 $x_{2k}$）。 烏龜先走 $A$ 到環的
+起點，再在環裡走 $B$，共走 $A + B$；兔子走了
+\[
+2(A + B) .
+\]
+另一方面，相遇時兔子和烏龜在同一點，兔子比烏龜多繞了整數圈：$2(A + B) = (A + B) + kL$，
+$k \ge 1$，也就是 $A + B = kL$。 這個關係正是找環起點的依據（資結書定理~5.4）。
+
+逐項檢查：
+\begin{itemize}
+\item (A) $A + B$ 是烏龜走的距離，不是兔子的。 錯。
+\item (B) 對。
+\item (C) $A + B + L$ 是「兔子恰好比烏龜多繞一圈」（$k = 1$）時的值。 $k$ 不一定是 $1$：例如
+$A = 5$、$L = 2$，烏龜到達環的起點時兔子已經在環裡繞了好幾圈，相遇時 $A + B = 6 = 3L$，$k = 3$，
+兔子走了 $12$，不等於 $A + B + L = 8$。 不是一般的答案。 錯。
+\item (D) $2A + B$ 沒有根據；它等於 $2(A+B)$ 只在 $B = 0$ 時成立。 錯。
+\end{itemize}
+\end{pastsoln}

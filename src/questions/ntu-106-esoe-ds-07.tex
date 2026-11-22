@@ -1,0 +1,57 @@
+\begin{pastexam}[label={px:ntu-106-esoe-ds-07}]{臺大工科海洋所 106 學年度 第 7 題}
+（設計）
+
+\textbf{(10 \%)} Suppose you have a deque $D$ containing the numbers (1,2,3,4,5,6,7,8), in this
+order. Suppose further that you have an initially empty queue $Q$. Give a pseudo-code
+description of a function that uses only $D$ and $Q$ (and no other variables or objects) and
+results in $D$ storing the elements (1,2,3,5,4,6,7,8), in this order.
+\end{pastexam}
+
+\begin{pastsoln}
+\textbf{想法。} 只能用 $D$、$Q$，不能用變數暫存元素，所以元素只能從一個容器直接搬到另一個
+容器（例如 \proc{Add-Last}$(D, \proc{Remove-First}(D))$）。 雙端佇列把前端拿下來接到後端，
+等於把整列\textbf{轉一格}；目標只是把 $4$、$5$ 對調，做法是：先轉到 $4$ 在最前面，把 $4$ 暫放
+進 $Q$，讓 $5$ 先接到後面，再把 $4$ 從 $Q$ 接上，最後轉回原來的起點。 雙端佇列的前端取出、
+尾端加入（資結書第~6.2.6~節）寫成 \proc{Remove-First}、\proc{Add-Last}，佇列的加入、取出寫成
+\proc{Enqueue}、\proc{Dequeue}。
+
+\begin{pseudo}{只用 $D$ 和 $Q$ 對調 $4$ 和 $5$}
+\Procedure{Swap-Four-Five}{$D, Q$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $1$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $2$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $3$}
+    \State \proc{Enqueue}$(Q, \proc{Remove-First}(D))$ \Comment{$4$ 暫放進 $Q$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $5$}
+    \State \proc{Add-Last}$(D, \proc{Dequeue}(Q))$ \Comment{$4$ 接在 $5$ 後面}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $6$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $7$}
+    \State \proc{Add-Last}$(D, \proc{Remove-First}(D))$ \Comment{搬 $8$}
+\EndProcedure
+\end{pseudo}
+重複的列沒有寫成迴圈，是因為迴圈需要計數變數，題目不允許。
+
+\textbf{追蹤}（$D$ 由前到後，$Q$ 由前到後）：
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+做完第幾行 & $D$ & $Q$ \\
+\midrule
+開始 & $(1, 2, 3, 4, 5, 6, 7, 8)$ & $()$ \\
+3 & $(4, 5, 6, 7, 8, 1, 2, 3)$ & $()$ \\
+4 & $(5, 6, 7, 8, 1, 2, 3)$ & $(4)$ \\
+5 & $(6, 7, 8, 1, 2, 3, 5)$ & $(4)$ \\
+6 & $(6, 7, 8, 1, 2, 3, 5, 4)$ & $()$ \\
+9 & $(1, 2, 3, 5, 4, 6, 7, 8)$ & $()$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{正確性。} 第 1--3 行讓 $D$ 轉了三格，$4$ 到了最前面。 第 4--6 行把 $4$、$5$ 從前端
+移到後端，但先接 $5$ 再接 $4$，其餘元素的循環順序沒變。 到這裡 $D$ 從前端算起少轉了三格
+（$6, 7, 8$ 還在前面），第 7--9 行再轉三格，$1$ 回到最前面，得到 $(1, 2, 3, 5, 4, 6, 7, 8)$。
+結束時 $Q$ 是空的。 共 $9$ 次搬移，每次 $O(1)$。
+
+另一種寫法是把 $1, 2, 3$ 依序放進 $Q$、$4$ 先轉到 $D$ 的後端、$5$ 放進 $Q$、再用
+\proc{Remove-Last} 把 $4$ 放進 $Q$，最後把 $6, 7, 8$ 放進 $Q$ 再全部倒回 $D$。 一樣正確，只是
+要 $17$ 次搬移。
+\end{pastsoln}

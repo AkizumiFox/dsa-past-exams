@@ -1,0 +1,38 @@
+\begin{pastexam}[label={px:ncku-113-ee-07}]{成大電機所 113 學年度 是非題第 8 題}
+（是非；每題 3 分，答「錯」要指出原因，答錯倒扣 1 分）
+
+Fig. (a) show the two points x and y. The result of *x=*y is as that shown in Fig. (b).
+
+\begin{center}
+\begin{tikzpicture}[>={Straight Barb[length=4pt,width=6pt]},font=\sffamily,
+  dat/.style={draw,fill=gray!40,minimum width=1.3cm,minimum height=0.7cm,inner sep=0pt},
+  lnk/.style={draw,minimum width=0.6cm,minimum height=0.7cm,inner sep=0pt}]
+  % (a)
+  \foreach \lab/\y in {a/0.95,b/0} {
+    \node[dat] (d\lab) at (0,\y) {\textit{\lab}};
+    \node[lnk,anchor=west] (l\lab) at (d\lab.east) {};
+    \draw[->] (l\lab.center)--++(0.95,0) node[right] {...};
+  }
+  \node (x) at (-1.95,0.95) {\textit{x}}; \draw[->] (x)--(da.west);
+  \node (y) at (-1.95,0) {\textit{y}}; \draw[->] (y)--(db.west);
+  \node at (0.1,-1) {(a)};
+  % (b)
+  \begin{scope}[xshift=5.3cm]
+  \foreach \lab/\y in {a/0.95,b/0} {
+    \node[dat] (d\lab) at (0,\y) {\textit{\lab}};
+    \node[lnk,anchor=west] (l\lab) at (d\lab.east) {};
+    \draw[->] (l\lab.center)--++(0.95,0) node[right] {...};
+  }
+  \node[inner sep=1pt] at (-1.85,0.14) {\textit{x}}; \draw[->] (-1.6,0.14)--([yshift=0.14cm]db.west);
+  \node[inner sep=1pt] at (-1.85,-0.16) {\textit{y}}; \draw[->] (-1.6,-0.14)--([yshift=-0.14cm]db.west);
+  \node at (0.4,-1) {(b) *\textit{x} = *\textit{y}};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+\end{pastexam}
+
+\begin{pastsoln}
+這份考卷和成大電通所 113 學年度的「資料結構」是同一份（電機系、電通所、智慧資安學程共用），完整詳解見歷屆試題~\ref{px:ncku-113-cce-07}。
+
+錯。 圖 (b) 是 \texttt{x = y}（指標指派，兩個指標指向同一個節點）的結果，不是 \texttt{*x = *y}（複製節點內容）。
+\end{pastsoln}

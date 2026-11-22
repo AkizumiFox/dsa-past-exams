@@ -1,0 +1,52 @@
+\begin{pastexam}[label={px:ntust-111-et-ds-02}]{臺科大電子所甲組 111 學年度 第 2 題}
+（程式設計）
+
+(10\%) Please write strcat(char *dest, chat *src) function to concatenate dest and src strings, and
+return result in dest. For example, assume that s1 string is ``Hello '' and s2 string is ``World'',
+after calling strcat(s1, s2), s1 will become ``Hello World''.
+\end{pastexam}
+
+\begin{pastsoln}
+題目的 \texttt{chat *src} 是 \texttt{char *src} 的筆誤，以下照 \texttt{char} 寫；\texttt{src} 只讀不寫，所以加上
+\texttt{const}。 前提是 \texttt{dest} 的陣列夠大，放得下兩個字串接起來再加一個結尾的 \texttt{'\textbackslash 0'}
+（這是呼叫的人要負責的，標準函式庫的 \texttt{strcat} 也一樣）。
+
+C 的字串是以 \texttt{'\textbackslash 0'} 結尾的字元陣列（資結書第~4.1~節陣列的存法）。 做法分兩步：
+先找到 \texttt{dest} 結尾的 \texttt{'\textbackslash 0'}，再從那一格開始，把 \texttt{src} 的字元（連同它的
+\texttt{'\textbackslash 0'}）一個一個複製過去。
+
+\begin{minted}[fontsize=\small]{c}
+char *strcat(char *dest, const char *src)
+{
+    char *p = dest;
+
+    while (*p != '\0')        /* 1. 走到 dest 的結尾 */
+        p++;
+    while (*src != '\0') {    /* 2. 從結尾開始複製 src */
+        *p = *src;
+        p++;
+        src++;
+    }
+    *p = '\0';                /* 3. 補上新的結尾 */
+    return dest;
+}
+\end{minted}
+
+以題目的例子追蹤：\texttt{s1} 是 \texttt{"Hello "}，第一個迴圈讓 \texttt{p} 停在第 $6$ 格（原本的
+\texttt{'\textbackslash 0'}）；第二個迴圈把 \texttt{W}、\texttt{o}、\texttt{r}、\texttt{l}、\texttt{d} 依序寫進第
+$6$ 到 $10$ 格；第 $11$ 格補上 \texttt{'\textbackslash 0'}。 \texttt{s1} 變成 \texttt{"Hello World"}，函式回傳
+\texttt{dest}（也就是 \texttt{s1}），可以接著用，例如 \texttt{printf("\%s", strcat(s1, s2))}。
+
+\textbf{正確性}。 第一個迴圈結束時 \texttt{p} 指向 \texttt{dest} 的第一個 \texttt{'\textbackslash 0'}，也就是原字串
+後面的第一格。 第二個迴圈的不變量：已經把 \texttt{src} 的前 $k$ 個字元複製到原結尾開始的 $k$ 格，\texttt{p}、
+\texttt{src} 都往後移了 $k$ 格。 遇到 \texttt{src} 的結尾時停下，第 3 步補上結尾，\texttt{dest} 就是兩個字串接起來。
+\texttt{src} 是空字串時第二個迴圈一次都不跑，\texttt{dest} 不變；\texttt{dest} 是空字串時第一個迴圈一次都不跑，
+結果就是 \texttt{src} 的複本。
+
+\textbf{複雜度}。 令 $m$、$n$ 是兩個字串的長度，兩個迴圈各跑 $m$、$n$ 次，時間 $\Theta(m + n)$，額外空間 $\Theta(1)$。
+
+實際寫程式時，這個名字會和 \texttt{<string.h>} 的 \texttt{strcat} 衝突，自己寫的版本通常改名（例如
+\texttt{my\_strcat}）；第 2、3 步也常合成一行 \texttt{while ((*p++ = *src++) != '\textbackslash 0');}，連結尾一起複製。
+另外 \texttt{dest} 和 \texttt{src} 不能是重疊的同一塊記憶體（例如 \texttt{strcat(s1, s1)}），否則第二個迴圈會一直讀到
+自己剛寫進去的字元，找不到結尾。
+\end{pastsoln}

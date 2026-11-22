@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-112-bime-ds-05}]{臺大生機所 112 學年度（A）第 5 題}
+（問答）
+
+(10\%) When implementing the data structure of \textbf{queue} with a \textbf{linked list}, which
+of the following design is better, (a) or (b), when efficiency is considered? (a) insert at the
+front of the linked list and remove from the end of the linked list; (b) insert at the end of
+the linked list and remove from the front of the linked list; Please justify your answer.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(b)。 以一般的單向鏈結串列，記住頭指標 $\mathit{head}$ 和尾指標 $\mathit{tail}$ 來比較
+（資結書虛擬碼~6.5 就是 (b) 的做法）。 佇列的前端在哪一頭，取出就在哪一頭做。
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+ & 在串列前端做 & 在串列尾端做 \\
+\midrule
+插入 & $O(1)$：新節點指向舊的 $\mathit{head}$ & $O(1)$：$\mathit{tail}.\mathit{next} \gets$ 新節點 \\
+刪除 & $O(1)$：$\mathit{head} \gets \mathit{head}.\mathit{next}$ & $O(n)$：要找到倒數第二個節點 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item (a) 在前端插入、從尾端刪除。 插入 $O(1)$；但刪除尾端節點後，要把\textbf{倒數第二個}節點的
+$\mathit{next}$ 設成 \NIL，並把 $\mathit{tail}$ 改指向它。 單向串列只能往後走，找倒數第二個節點
+要從 $\mathit{head}$ 一路走過去，$\Theta(n)$。 每次 dequeue 都 $\Theta(n)$。
+\item (b) 在尾端插入、從前端刪除。 enqueue 用 $\mathit{tail}$ 直接接在後面，dequeue 把
+$\mathit{head}$ 往後移一格，兩者都 $O(1)$，不需要找任何前一個節點。
+\end{itemize}
+所以 (b) 比較好：兩個操作都是常數時間，$m$ 次操作共 $O(m)$；(a) 最壞是 $\Theta(mn)$。
+
+補充：(a) 改用雙向鏈結串列（每個節點多一個 $\mathit{prev}$ 指標）也能做到兩邊都 $O(1)$，但每個
+節點多花一個指標的空間，每次操作也要多維護一個指標，仍然不如 (b) 用單向串列就辦到。
+\end{pastsoln}

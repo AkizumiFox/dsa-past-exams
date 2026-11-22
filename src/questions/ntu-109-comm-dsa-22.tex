@@ -1,0 +1,19 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-22}]{臺大電信所 109 學年度（B）第 22 題}
+（單選；每題 2 分，答錯不倒扣）
+
+In questions that ask for time complexities, please choose the tightest bound.
+
+The worst case time complexity of one merge operation upon two leftist heaps of total size n is
+
+(A)~$O(1)$ \qquad (B)~$O(\log^* n)$ \qquad (C)~$O(\log n)$ \qquad (D)~$O(n)$ \qquad (E)~$O(n\log n)$
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (C)。
+
+合併兩棵最小左傾堆積 $a$、$b$：根較小的當新根，把它的右子樹和另一棵遞迴合併，回來時如果
+左邊的 $s$ 比右邊小就左右對調，再更新 $s$（資結書虛擬碼~8.9）。 每一層遞迴都沿著 $a$ 或
+$b$ 的最右邊路徑往下一步，遞迴次數不超過兩條最右邊路徑的長度和。 由資結書定理~8.2，大小
+$n_a$、$n_b$ 的左傾樹最右邊路徑最多 $\lg(n_a + 1)$、$\lg(n_b + 1)$ 個節點，所以合併是
+$O(\log n_a + \log n_b) = O(\log n)$。 兩棵都是完全平衡的樹時要走 $\Theta(\log n)$ 步，界是緊的。
+\end{pastsoln}

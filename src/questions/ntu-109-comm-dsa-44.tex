@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ntu-109-comm-dsa-44}]{臺大電信所 109 學年度（B）第 44 題}
+（複選；每題 2 分，每答錯一個選項倒扣 0.4 分）
+
+In a splay tree of size n
+\begin{enumerate}[label=(\Alph*),nosep]
+\item The height is $O(\log n)$.
+\item Time complexity of one insertion is $O(\log n)$.
+\item Time complexity of n insertions is $O(n\log n)$.
+\item Time complexity of one deletion is $O(\log n)$.
+\item Time complexity of n deletions is $O(n\log n)$.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(C)(E)。
+
+伸展樹不保證高度，只保證\textbf{平攤}成本：每次操作平攤 $O(\log n)$（資結書定理~10.6）。
+單一操作的最壞情形可以很差，一串操作的總和才有保證。
+
+\textbf{(A) 錯。} 依序插入 $1, 2, \ldots, n$：每次新的鍵比樹裡所有鍵都大，插在根的右邊，
+再做一次 zig 轉到根，舊的根變成它的左子節點。 最後的樹是 $n$ 往左一路到 $1$ 的一條鏈，高度
+$n - 1$。
+
+\textbf{(B) 錯。} 接著在上面那棵鏈狀的樹插入 $0$，要從根一路往左走到 $1$ 底下，走 $n$ 步，再伸展
+$n$ 層，單次是 $\Theta(n)$。
+
+\textbf{(C) 對。} 設位能 $\Phi(T) = \sum_x \lg s(x)$（$s(x)$ 是子樹大小）。 $n$ 次插入的實際總
+成本 $= \sum(\text{平攤成本}) - \Phi(T_{\text{末}}) + \Phi(T_0) \le \sum(\text{平攤成本}) + \Phi(T_0)$。
+過程中樹最多 $2n$ 個節點，每次平攤 $O(\log 2n) = O(\log n)$；一開始的樹有 $n$ 個節點，
+$\Phi(T_0) \le n \lg n$。 合計 $O(n \log n)$。 從空樹開始也一樣。
+
+\textbf{(D) 錯。} 和 (B) 同理：刪除要先搜尋，在鏈狀的樹裡刪最深的節點，單次 $\Theta(n)$。
+
+\textbf{(E) 對。} 同 (C)：每次刪除平攤 $O(\log n)$，$n$ 次共 $O(n\log n)$，再加上
+$\Phi(T_0) \le n\lg n$，仍是 $O(n\log n)$。
+\end{pastsoln}

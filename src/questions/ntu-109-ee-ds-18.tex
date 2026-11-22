@@ -1,0 +1,35 @@
+\begin{pastexam}[label={px:ntu-109-ee-ds-18}]{臺大電機所 109 學年度（B）第 18 題}
+（複選；每題 4 分，每答錯一個選項倒扣 0.8 分至該題 0 分止）
+
+In this exam: The height of a singleton tree is defined as 0. Unless otherwise specified, all
+logarithms are taken with respect to base 2, i.e., $\log_2$.
+
+Which of the following statements are true?
+\begin{enumerate}[label=(\Alph*)]
+\item The search operation in a binary search tree of size n is O($\log n$).
+\item The height of a binary search tree of size n is $\Omega(\log n)$.
+\item The search operation in an AVL tree of size n is O($\log n$).
+\item The height of an AVL tree of size n is O($\log n$).
+\item The delete operation in an AVL tree of size n is O($\log n$).
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案：(B)、(C)、(D)、(E)。
+
+\begin{itemize}
+\item (A) 錯。 一般的二元搜尋樹沒有平衡的保證，搜尋時間是 $O(\text{高度})$，高度最壞是 $n - 1$。
+例：依序插入 $1, 2, \ldots, n$，每個新鍵都接在前一個的右邊，樹是一條鏈；搜尋 $n$ 要比較 $n$ 次，
+$\Theta(n)$（資結書第~9.3~節）。 $O(\log n)$ 只是隨機插入時的期望高度。
+\item (B) 對。 任何二元樹，高度 $h$（本題數邊）時第 $d$ 層最多 $2^d$ 個節點，總共最多
+$2^{h+1} - 1$ 個節點。 $n \le 2^{h+1} - 1$ 得 $h \ge \lg(n+1) - 1$，所以高度是 $\Omega(\log n)$。 這
+是\textbf{下界}，不管樹長什麼樣都成立；和 (A) 不衝突，(A) 錯在上界。
+\item (C) 對。 搜尋只沿一條從根往下的路走，時間 $O(\text{高度})$，而 AVL 樹的高度是 $O(\log n)$
+（見 (D)）。
+\item (D) 對。 高度 $h$ 的 AVL 樹至少 $N(h) = N(h-1) + N(h-2) + 1$ 個節點，$N(h) + 1$ 是費氏數，
+$N(h) \ge \phi^{h} - 1$，所以 $h \le \log_\phi(n + 1) \approx 1.44 \lg(n+1)$（資結書定理~10.1）。
+\item (E) 對。 刪除先像二元搜尋樹一樣找到節點拿掉（有兩個子節點時用後繼取代），$O(\text{高度})$；
+再從拿掉的位置往根走回去，每一層更新高度、必要時旋轉，每次旋轉 $O(1)$，最多做 $O(\text{高度})$
+次（資結書第~10.2.6~節）。 總共 $O(\log n)$。
+\end{itemize}
+\end{pastsoln}

@@ -1,0 +1,67 @@
+\begin{pastexam}[label={px:ntu-107-bime-ds-03}]{臺大生機所 107 學年度 第 3 題}
+（設計）
+
+(20\%) Assume that you have used a \textbf{heap} to implement a \textbf{MIN priority queue}. Please
+design a mechanism that can decrease the priority (key) of an entry in the priority queue
+\textbf{in logarithmic time}.
+\end{pastexam}
+
+\begin{pastsoln}
+難處不在「降低鍵值以後怎麼調整」，而在「要改的那個元素在陣列的哪一格」。 堆積只保證父節點
+不大於子節點，不能像搜尋樹那樣依鍵值找到元素，從頭掃一遍要 $\Theta(n)$。 所以機制有兩部分：
+\textbf{記住每個元素的位置}，再\textbf{往上調整}。 這就是資結書第~8.3~節帶索引的堆積（虛擬碼~8.4）。
+
+\textbf{資料結構}。 堆積存在陣列 $H.A[1..H.\mathit{size}]$，節點 $i$ 的父節點是 $\lfloor i/2 \rfloor$，
+子節點是 $2i$、$2i + 1$。 陣列裡放的不是鍵值本身，而是元素的代號 $v$（例如 $1..n$ 的編號；插入時
+發給呼叫的人，之後用它指定要改哪一個元素），鍵值放在 $H.\mathit{key}[v]$。 另外用陣列
+$H.\mathit{pos}[v]$ 記元素 $v$ 目前在 $H.A$ 的第幾格，也就是隨時保持
+\[
+  H.A[H.\mathit{pos}[v]] = v .
+\]
+任何操作只要搬動元素，都改用下面的 \proc{Exchange} 交換，順便更新兩個元素的 $\mathit{pos}$，
+這個等式就不會壞掉。 \proc{Insert} 和 \proc{Extract-Min} 照一般的寫法，把裡面的交換換成
+\proc{Exchange}，新元素放到第 $H.\mathit{size}$ 格時設 $H.\mathit{pos}[v] \gets H.\mathit{size}$，
+被取出的元素設 $H.\mathit{pos}[v] \gets 0$。
+
+\begin{pseudo}{最小堆積的 \proc{Decrease-Key}}
+\Procedure{Exchange}{$H, i, j$}
+    \State 交換 $H.A[i]$ 和 $H.A[j]$
+    \State $H.\mathit{pos}[H.A[i]] \gets i$
+    \State $H.\mathit{pos}[H.A[j]] \gets j$
+\EndProcedure
+\Statex
+\Procedure{Decrease-Key}{$H, v, k$}
+    \If{$k > H.\mathit{key}[v]$}
+        \State \Error{新的鍵比原來大}
+    \EndIf
+    \State $H.\mathit{key}[v] \gets k$
+    \State $i \gets H.\mathit{pos}[v]$ \Comment{$O(1)$ 找到 $v$ 在哪一格}
+    \While{$i > 1$ \AND $H.\mathit{key}[H.A[\lfloor i/2 \rfloor]] > H.\mathit{key}[H.A[i]]$}
+        \State \Call{Exchange}{$H, i, \lfloor i/2 \rfloor$} \Comment{往上浮}
+        \State $i \gets \lfloor i/2 \rfloor$
+    \EndWhile
+\EndProcedure
+\end{pseudo}
+
+\textbf{正確性}。 降低之前整個陣列滿足最小堆積性質。 把 $v$ 的鍵值變小，對 $v$ 和它的子節點之間
+沒有壞處（父節點變得更小，仍然不大於子節點），唯一可能出問題的是 $v$ 和它的\textbf{父節點}。 迴圈的
+不變量：除了 $i$ 和 $\lfloor i/2 \rfloor$ 這一對以外，所有父子都滿足性質，而且 $i$ 的父節點不大於
+$i$ 的兩個子節點。 每輪交換 $i$ 和它的父節點後，原本的父節點 $y$ 移到第 $i$ 格，它比 $i$ 原本的子節點
+都小（不變量），也比 $v$ 大，所以第 $i$ 格以下沒問題；$v$ 移到上一格，只剩它和新的父節點可能不對，
+不變量保持。 迴圈停下時，要嘛 $i = 1$（$v$ 是根），要嘛父節點不大於 $v$，整個陣列又是最小堆積。
+\proc{Exchange} 每次都更新 $\mathit{pos}$，所以結束後 $H.A[H.\mathit{pos}[u]] = u$ 對每個 $u$ 仍然成立。
+
+\textbf{時間}。 第 9 行用 $\mathit{pos}$ 直接找到位置，$O(1)$。 迴圈每輪 $i$ 至少減半，最多做
+$\lfloor \lg n \rfloor$ 輪（堆積的高度），每輪常數時間，所以 \proc{Decrease-Key} 最壞 $O(\lg n)$。
+維護 $\mathit{pos}$ 只讓每次交換多做兩個指定，\proc{Insert}、\proc{Extract-Min} 仍是 $O(\lg n)$；
+空間多一個長度 $n$ 的陣列。
+
+例：最小堆積 $H.A$ 依序存著鍵值 $\langle 2, 5, 3, 9, 6, 8 \rangle$ 的元素，要把鍵值 $9$ 的那個元素
+（第 4 格）降成 $1$。 $\mathit{pos}$ 直接告訴我們它在第 4 格；$1 < 5$，和第 2 格交換；$1 < 2$，
+再和第 1 格交換，停在根。 結果是 $\langle 1, 2, 3, 5, 6, 8 \rangle$，交換兩次，和 $\lfloor \lg 6 \rfloor = 2$
+相符。
+
+元素的代號如果不是 $1..n$ 的小整數（例如字串），$\mathit{pos}$ 改用雜湊表存，期望時間不變；
+另一種做法是插入時回傳一個 handle（指向一個記著目前位置的小物件），\proc{Exchange} 時更新兩個
+handle 裡的位置，效果相同。
+\end{pastsoln}

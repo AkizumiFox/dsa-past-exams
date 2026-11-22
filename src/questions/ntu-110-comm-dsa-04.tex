@@ -1,0 +1,18 @@
+\begin{pastexam}[label={px:ntu-110-comm-dsa-04}]{臺大電信所 110 學年度（B）第 4 題}
+（是非；正確選 A，錯誤選 B；每題 2 分，答錯每題倒扣 1 分至本大題 0 分止）
+
+The running time of a dynamic programming algorithm is always $\Theta(P)$ where $P$ is the number of subproblems.
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 B（錯誤）。
+
+動態規劃的時間是「子問題個數 $\times$ 每個子問題做的選擇數」再加上組答案的時間（資結書第~18.1~節）。
+只有每個子問題都在 $O(1)$ 時間內算完時，總時間才是 $\Theta(P)$。 反例：
+\begin{itemize}
+\item 矩陣鏈乘法：子問題 $m[i][j]$ 有 $\Theta(n^2)$ 個，每個要試 $j - i$ 個切點，總時間 $\Theta(n^3)$，
+不是 $\Theta(n^2)$。
+\item 最長遞增子序列的平方解：子問題 $n$ 個，每個往前看所有 $j < i$，總時間 $\Theta(n^2)$。
+\end{itemize}
+LCS、0/1 背包這類每格只看常數個格子的，時間才剛好是 $\Theta(P)$。 所以「always」是錯的。
+\end{pastsoln}

@@ -1,0 +1,32 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-20}]{臺聯大電機類 115 學年度 第 20 題}
+（單選；2 分）
+
+Which of the following comparisons between BST and Heap is \textbf{incorrect}?
+\begin{enumerate}[label=(\Alph*)]
+\item In-order traversal of a BST is ordered, while that of a Heap is not.
+\item The time complexity of searching for any value in the Heap is O(log n).
+\item A heap is a complete binary tree, while a BST is not.
+\item Heaps are typically implemented using arrays, while BSTs are typically implemented using
+pointers.
+\end{enumerate}
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (B)。
+
+堆積只保證「父節點不小於（最大堆積）孩子」，左右子樹之間沒有大小關係。 找一個任意的值時，比較
+只能告訴我們「比目前節點大就不必往下找」，不能決定往左還是往右，最壞要看遍所有節點，是
+$\Theta(n)$。 例如最大堆積 $\langle 9, 8, 7, 1, 2, 3, 4\rangle$ 找 $4$：$4$ 比每個內部節點都小，
+每個子樹都可能有它，最後才在最後一格找到。 堆積只有找最大值是 $\Theta(1)$（資結書第~8.1~節）。
+
+逐項檢查：
+\begin{itemize}
+\item (A) BST 的中序走訪由小到大（資結書第~9.1~節）；堆積的中序沒有順序，例如最大堆積
+$\langle 3, 1, 2\rangle$ 的中序是 $1, 3, 2$。 正確的敘述。
+\item (B) 堆積搜尋任意值是 $\Theta(n)$，不是 $O(\log n)$。 \textbf{不正確}，選它。
+\item (C) 二元堆積是完全二元樹；BST 的形狀由插入順序決定，一般不是完全二元樹（依序插入
+$1, 2, 3$ 就是一條鏈）。 正確的敘述（「不一定是」的意思）。
+\item (D) 堆積是完全二元樹，用陣列存不浪費空間，父子關係用 $\lfloor i/2 \rfloor$、$2i$、$2i+1$
+算；BST 形狀不定，通常用指標節點。 正確的敘述。
+\end{itemize}
+\end{pastsoln}

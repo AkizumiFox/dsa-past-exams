@@ -1,0 +1,36 @@
+\begin{pastexam}[label={px:ust-115-ee-ds-49}]{臺聯大電機類 115 學年度 第 49 題}
+（單選；2 分）
+
+Given an array of integers and a target value, return the indices of the two numbers that add up to
+the target. What type of data structures allows to deduce a brute-force $O(n^2)$ solution down to
+$O(n)$ time complexity.
+
+(A)~Array \qquad (B)~linked list \qquad (C)~Heap \qquad (D)~Hashing \qquad (E)~Tree
+\end{pastexam}
+
+\begin{pastsoln}
+答案是 (D)。
+
+暴力法檢查每一對 $(i, j)$，$\Theta(n^2)$。 改用雜湊表：由左往右掃，對每個 $a[j]$，先查表裡有沒有
+$t - a[j]$（$t$ 是目標值），有就找到答案；沒有就把 $a[j]$ 和它的足標放進表裡。
+\begin{pseudo}{兩數和}
+\State $T \gets$ 空的雜湊表 \Comment{鍵：數值；值：足標}
+\For{$j \gets 0$ \To $n - 1$}
+    \If{$t - a[j]$ 在 $T$ 裡}
+        \State \Return $(T[t - a[j]], j)$
+    \EndIf
+    \State $T[a[j]] \gets j$
+\EndFor
+\State \Return 找不到
+\end{pseudo}
+正確性：若答案是 $i < j$，掃到 $j$ 時 $a[i]$ 已經在表裡，一定會查到。 每次查詢、插入期望
+$\Theta(1)$（資結書第~12.2~節），總共期望 $\Theta(n)$。
+
+其他選項：
+\begin{itemize}
+\item (A) 陣列本身就是暴力法用的結構；先排序再用兩個索引夾擠是 $O(n \log n)$，到不了 $O(n)$。 錯。
+\item (B) 串列不能依值快速查詢。 錯。
+\item (C) 堆積只能快速拿最大或最小，查任意值要 $\Theta(n)$。 錯。
+\item (E) 平衡搜尋樹查詢 $O(\log n)$，總共 $O(n \log n)$。 錯。
+\end{itemize}
+\end{pastsoln}

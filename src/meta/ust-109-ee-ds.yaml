@@ -1,0 +1,18 @@
+paper: ust-109-ee-ds
+volume: 3
+school: 臺聯大
+dept: 電機類
+year: 109
+subject: 資料結構
+instructions: 問答題。
+questions:
+  - {id: ust-109-ee-ds-01, label: 第 1 題, chapter: 6}
+  - {id: ust-109-ee-ds-02, label: 第 2 題, chapter: 6}
+  - {id: ust-109-ee-ds-03, label: 第 3 題, chapter: 27}
+  - {id: ust-109-ee-ds-04, label: 第 4 題, chapter: 14}
+  - {id: ust-109-ee-ds-05, label: 第 5 題, chapter: 14}
+  - {id: ust-109-ee-ds-06, label: 第 6 題, chapter: 12}
+  - {id: ust-109-ee-ds-07, label: 第 7 題, chapter: 10}
+  - {id: ust-109-ee-ds-08, label: 第 8 題, chapter: 21}
+  - {id: ust-109-ee-ds-09, label: 第 9 題, chapter: 21}
+  - {id: ust-109-ee-ds-10, label: 第 10 題, chapter: 24}

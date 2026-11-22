@@ -1,0 +1,21 @@
+\begin{pastexam}[label={px:ntu-108-comm-dsab-03}]{臺大電信所 108 學年度（B）第 3 題}
+（是非；每題 2 分，答錯倒扣 1 分，扣到本大題 0 分為止）
+
+If $f(n)\in\Omega\big(g(n)\big)$ and $g(n)\in O\big(f(n)\big)$, then $f(n)\in\Theta\big(g(n)\big)$.
+\end{pastexam}
+
+\begin{pastsoln}
+答案：錯。
+
+照定義（資結書第~1.5~節）：
+\begin{itemize}
+\item $f(n) \in \Omega(g(n))$：存在 $c > 0$、$n_0$，使 $n \ge n_0$ 時 $f(n) \ge c\, g(n)$。
+\item $g(n) \in O(f(n))$：存在 $c' > 0$、$n_0'$，使 $n \ge n_0'$ 時 $g(n) \le c' f(n)$，也就是
+$f(n) \ge (1/c')\, g(n)$。
+\end{itemize}
+兩個條件說的是同一件事：$f$ 至少和 $g$ 一樣快長大。 要得到 $\Theta$ 還缺 $f(n) \in O(g(n))$，題目
+沒有給。
+
+反例：$f(n) = n^2$、$g(n) = n$。 $n^2 \ge n$，所以 $f \in \Omega(g)$、$g \in O(f)$ 都成立；但
+$n^2 / n = n \to \infty$，$f \notin O(g)$，所以 $f \notin \Theta(g)$。
+\end{pastsoln}
