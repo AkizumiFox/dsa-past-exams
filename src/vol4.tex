@@ -1,0 +1,89 @@
+\documentclass[12pt]{report}
+
+% ---------------------------------------------------------------
+% 字型與中文排版（和 C++ 演算法解題 1、2 相同）
+% ---------------------------------------------------------------
+% 作者在 macOS 上用 Times New Roman／Songti TC／PingFang TC；
+% 其他系統（例如 Linux）找不到這些字型時，改用 TeX Gyre Termes 與
+% Noto Serif／Sans CJK TC，同一份原始碼兩邊都能編。
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\IfFontExistsTF{Times New Roman}
+    {\setmainfont{Times New Roman}}
+    {\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Songti TC}
+    {\setCJKmainfont{Songti TC}}
+    {\setCJKmainfont{Noto Serif CJK TC}}
+\IfFontExistsTF{PingFang TC}
+    {\setCJKsansfont{PingFang TC}}
+    {\setCJKsansfont{Noto Sans CJK TC}}
+% 等寬字用 Latin Modern Mono（只在 TeX Live 樹裡，用檔名讓 kpathsea 找）。
+\setmonofont{lmmono10-regular}[
+    Extension = .otf,
+    AutoFakeBold = 2.5,
+]
+
+% ---------------------------------------------------------------
+% 本書排版套件（packages/ 目錄）
+% ---------------------------------------------------------------
+\usepackage{sleek}
+\usepackage{sleek-code}
+\usepackage{sleek-diagrams}
+\usepackage{sleek-recap}
+\usepackage{sleek-aki}
+\usepackage{sleek-pseudo}   % CLRS 風格的虛擬碼框（algpseudocode）
+\usepackage{sleek-math}     % 定義、定理、證明（amsthm）
+% 注意：sleek-theorems.sty 不載入，原因見 sleek-math.sty 開頭。
+% 注意：sleek-listings.sty 不載入，程式碼一律用 sleek-code.sty 的 minted 環境。
+
+% 章節標題中文化：「第 N 章」
+\usepackage{titlesec}
+\usepackage{longtable}  % 可以跨頁的長表（附錄 B 的作答提醒總表）
+\titleformat{\chapter}{\normalfont\huge\bfseries}{第~\thechapter~章}{1em}{}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+% 頁首寫「第 N 章 章名」，不用英文的 CHAPTER。
+\renewcommand{\chaptermark}[1]{\markboth{第~\thechapter~章\quad #1}{}}
+% 目錄的頁碼欄放寬，四位數頁碼才不會超出右邊界。
+\makeatletter
+\renewcommand{\@pnumwidth}{2.2em}
+% 節號到兩位數（21.10）時，預設的 2.3em 放不下，標題會黏在號碼後面
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3.1em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.6em}{3.9em}}
+\makeatother
+
+% 行內程式碼（\texttt）不能斷行，允許 TeX 多拉開一點字距。
+\setlength{\emergencystretch}{3em}
+
+% 詳解：緊接在每一題的 pastexam 框後面
+\newenvironment{pastsoln}{\par\smallskip\noindent\textbf{詳解}\quad}{\par\medskip{\color{black!25}\hrule height 0.4pt}\medskip}
+\renewcommand{\contentsname}{目錄}
+\setlength{\headheight}{14.6pt}
+% 填空格：\blank{12} 印成有底線的 (12)
+\newcommand{\blank}[1]{\underline{\makebox[4.5em]{(#1)}}}
+% 每份考卷的作答說明（附錄「依考卷查題」裡用）
+\newenvironment{paperinfo}{\par\small\noindent}{\par\medskip}
+
+\hypersetup{
+    pdftitle={資料結構與演算法考古題詳解（四）：國家考試：高考、地方特考、關務特考三等},
+    pdfauthor={林子祐},
+}
+
+\title{資料結構與演算法\\考古題詳解\\[0.3em]{\LARGE （四）國家考試：高考、地方特考、關務特考三等}}
+\author{林子祐}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\romantableofcontents
+\input{front/howto4}
+
+\input{generated/vol4-body}
+
+\appendix
+\titleformat{\chapter}{\normalfont\huge\bfseries}{附錄~\thechapter}{1em}{}
+\renewcommand{\chaptermark}[1]{\markboth{附錄~\thechapter\quad #1}{}}
+\input{generated/vol4-math}
+\input{generated/vol4-papers}
+
+\end{document}

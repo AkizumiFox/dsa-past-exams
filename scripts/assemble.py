@@ -18,7 +18,7 @@ CHAPTERS = {
     23: '連通性：強連通元件、割點、橋與雙連通元件', 24: '最小生成樹', 25: '最短路徑',
     26: '網路流與二分匹配', 27: '字串比對', 28: 'NP 完備', 29: '近似演算法',
 }
-SCHOOLS = ['臺大', '清大', '交大', '陽明交大', '政大', '臺科大', '北科大', '中央', '中興',
+SCHOOLS = ['高考三級', '地方三等', '關務三等', '臺大', '清大', '交大', '陽明交大', '政大', '臺科大', '北科大', '中央', '中興',
            '中正', '中山', '成大', '臺聯大']
 
 def load(vol):
@@ -72,7 +72,7 @@ def main():
           '想用整份考卷計時練習時，照下表找出每一題在書裡的頁碼。'
           '只列資料結構與演算法的題目；合卷裡其他科目的題目沒有收。\n']
     for m in papers:
-        ap.append(f"\\section*{{{m['school']}{m['dept']} {m['year']} 學年度　{m['subject']}}}")
+        ap.append(f"\\section*{{{m['school']}{m['dept']} {m['year']} {m.get('year_word', '學年度')}　{m['subject']}}}")
         if m.get('instructions'):
             ap.append('\\begin{paperinfo}原卷說明：' + m['instructions'].strip() + '\\end{paperinfo}')
         ap.append('\\begin{tabular}{llr}\\toprule 題號 & 主題（章） & 頁 \\\\ \\midrule')
